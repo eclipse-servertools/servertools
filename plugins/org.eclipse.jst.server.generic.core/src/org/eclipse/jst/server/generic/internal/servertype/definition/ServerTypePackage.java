@@ -1,12 +1,9 @@
-/***************************************************************************************************
- * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
- * accompanying materials are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors: Gorkem Ercan - initial API and implementation
- *               
- **************************************************************************************************/
+/**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id: ServerTypePackage.java,v 1.8 2007/05/10 04:50:47 ndai Exp $
+ */
 package org.eclipse.jst.server.generic.internal.servertype.definition;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -83,7 +80,7 @@ public interface ServerTypePackage extends EPackage {
 	int ARCHIVE_TYPE__PATH = 0;
 
 	/**
-	 * The number of structural features of the the '<em>Archive Type</em>' class.
+	 * The number of structural features of the '<em>Archive Type</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -120,7 +117,7 @@ public interface ServerTypePackage extends EPackage {
 	int ARGUMENT_PAIR__VALUE = 1;
 
 	/**
-	 * The number of structural features of the the '<em>Argument Pair</em>' class.
+	 * The number of structural features of the '<em>Argument Pair</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -157,22 +154,59 @@ public interface ServerTypePackage extends EPackage {
 	int CLASSPATH__ARCHIVE = 1;
 
 	/**
+	 * The feature id for the '<em><b>Fileset</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CLASSPATH__FILESET = 2;
+
+	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CLASSPATH__ID = 2;
+	int CLASSPATH__ID = 3;
 
 	/**
-	 * The number of structural features of the the '<em>Classpath</em>' class.
+	 * The number of structural features of the '<em>Classpath</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CLASSPATH_FEATURE_COUNT = 3;
+	int CLASSPATH_FEATURE_COUNT = 4;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ExcludeTypeImpl <em>Exclude Type</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ExcludeTypeImpl
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getExcludeType()
+	 * @generated
+	 */
+	int EXCLUDE_TYPE = 3;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXCLUDE_TYPE__NAME = 0;
+
+	/**
+	 * The number of structural features of the '<em>Exclude Type</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXCLUDE_TYPE_FEATURE_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ExternalImpl <em>External</em>}' class.
@@ -182,7 +216,7 @@ public interface ServerTypePackage extends EPackage {
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getExternal()
 	 * @generated
 	 */
-	int EXTERNAL = 3;
+	int EXTERNAL = 4;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -203,13 +237,105 @@ public interface ServerTypePackage extends EPackage {
 	int EXTERNAL__OS = 1;
 
 	/**
-	 * The number of structural features of the the '<em>External</em>' class.
+	 * The number of structural features of the '<em>External</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int EXTERNAL_FEATURE_COUNT = 2;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.FilesetTypeImpl <em>Fileset Type</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.FilesetTypeImpl
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getFilesetType()
+	 * @generated
+	 */
+	int FILESET_TYPE = 5;
+
+	/**
+	 * The feature id for the '<em><b>Group</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILESET_TYPE__GROUP = 0;
+
+	/**
+	 * The feature id for the '<em><b>Include</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILESET_TYPE__INCLUDE = 1;
+
+	/**
+	 * The feature id for the '<em><b>Exclude</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILESET_TYPE__EXCLUDE = 2;
+
+	/**
+	 * The feature id for the '<em><b>Casesensitive</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILESET_TYPE__CASESENSITIVE = 3;
+
+	/**
+	 * The feature id for the '<em><b>Dir</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILESET_TYPE__DIR = 4;
+
+	/**
+	 * The number of structural features of the '<em>Fileset Type</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILESET_TYPE_FEATURE_COUNT = 5;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.IncludeTypeImpl <em>Include Type</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.IncludeTypeImpl
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getIncludeType()
+	 * @generated
+	 */
+	int INCLUDE_TYPE = 6;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INCLUDE_TYPE__NAME = 0;
+
+	/**
+	 * The number of structural features of the '<em>Include Type</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INCLUDE_TYPE_FEATURE_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.JndiConnectionImpl <em>Jndi Connection</em>}' class.
@@ -219,7 +345,7 @@ public interface ServerTypePackage extends EPackage {
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getJndiConnection()
 	 * @generated
 	 */
-	int JNDI_CONNECTION = 4;
+	int JNDI_CONNECTION = 7;
 
 	/**
 	 * The feature id for the '<em><b>Provider Url</b></em>' attribute.
@@ -258,7 +384,7 @@ public interface ServerTypePackage extends EPackage {
 	int JNDI_CONNECTION__INITIAL_CONTEXT_FACTORY = 3;
 
 	/**
-	 * The number of structural features of the the '<em>Jndi Connection</em>' class.
+	 * The number of structural features of the '<em>Jndi Connection</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -274,7 +400,7 @@ public interface ServerTypePackage extends EPackage {
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getLaunchConfiguration()
 	 * @generated
 	 */
-	int LAUNCH_CONFIGURATION = 5;
+	int LAUNCH_CONFIGURATION = 8;
 
 	/**
 	 * The feature id for the '<em><b>Group</b></em>' attribute list.
@@ -385,7 +511,7 @@ public interface ServerTypePackage extends EPackage {
 	int LAUNCH_CONFIGURATION__EXTERNAL = 11;
 
 	/**
-	 * The number of structural features of the the '<em>Launch Configuration</em>' class.
+	 * The number of structural features of the '<em>Launch Configuration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -401,7 +527,7 @@ public interface ServerTypePackage extends EPackage {
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getModule()
 	 * @generated
 	 */
-	int MODULE = 6;
+	int MODULE = 9;
 
 	/**
 	 * The feature id for the '<em><b>Type</b></em>' attribute.
@@ -431,7 +557,7 @@ public interface ServerTypePackage extends EPackage {
 	int MODULE__PUBLISHER_REFERENCE = 2;
 
 	/**
-	 * The number of structural features of the the '<em>Module</em>' class.
+	 * The number of structural features of the '<em>Module</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -447,7 +573,7 @@ public interface ServerTypePackage extends EPackage {
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getPort()
 	 * @generated
 	 */
-	int PORT = 7;
+	int PORT = 10;
 
 	/**
 	 * The feature id for the '<em><b>No</b></em>' attribute.
@@ -477,7 +603,7 @@ public interface ServerTypePackage extends EPackage {
 	int PORT__PROTOCOL = 2;
 
 	/**
-	 * The number of structural features of the the '<em>Port</em>' class.
+	 * The number of structural features of the '<em>Port</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -493,7 +619,7 @@ public interface ServerTypePackage extends EPackage {
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getProject()
 	 * @generated
 	 */
-	int PROJECT = 8;
+	int PROJECT = 11;
 
 	/**
 	 * The feature id for the '<em><b>Classpath Reference</b></em>' attribute.
@@ -505,7 +631,7 @@ public interface ServerTypePackage extends EPackage {
 	int PROJECT__CLASSPATH_REFERENCE = 0;
 
 	/**
-	 * The number of structural features of the the '<em>Project</em>' class.
+	 * The number of structural features of the '<em>Project</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -521,7 +647,7 @@ public interface ServerTypePackage extends EPackage {
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getProperty()
 	 * @generated
 	 */
-	int PROPERTY = 9;
+	int PROPERTY = 12;
 
 	/**
 	 * The feature id for the '<em><b>Context</b></em>' attribute.
@@ -569,7 +695,7 @@ public interface ServerTypePackage extends EPackage {
 	int PROPERTY__TYPE = 4;
 
 	/**
-	 * The number of structural features of the the '<em>Property</em>' class.
+	 * The number of structural features of the '<em>Property</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -585,7 +711,7 @@ public interface ServerTypePackage extends EPackage {
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getPublisher()
 	 * @generated
 	 */
-	int PUBLISHER = 10;
+	int PUBLISHER = 13;
 
 	/**
 	 * The feature id for the '<em><b>Group</b></em>' attribute list.
@@ -615,7 +741,7 @@ public interface ServerTypePackage extends EPackage {
 	int PUBLISHER__ID = 2;
 
 	/**
-	 * The number of structural features of the the '<em>Publisher</em>' class.
+	 * The number of structural features of the '<em>Publisher</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -631,7 +757,7 @@ public interface ServerTypePackage extends EPackage {
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getPublisherData()
 	 * @generated
 	 */
-	int PUBLISHER_DATA = 11;
+	int PUBLISHER_DATA = 14;
 
 	/**
 	 * The feature id for the '<em><b>Dataname</b></em>' attribute.
@@ -652,7 +778,7 @@ public interface ServerTypePackage extends EPackage {
 	int PUBLISHER_DATA__DATAVALUE = 1;
 
 	/**
-	 * The number of structural features of the the '<em>Publisher Data</em>' class.
+	 * The number of structural features of the '<em>Publisher Data</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -668,7 +794,7 @@ public interface ServerTypePackage extends EPackage {
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getServerRuntime()
 	 * @generated
 	 */
-	int SERVER_RUNTIME = 12;
+	int SERVER_RUNTIME = 15;
 
 	/**
 	 * The feature id for the '<em><b>Group</b></em>' attribute list.
@@ -815,7 +941,7 @@ public interface ServerTypePackage extends EPackage {
 	int SERVER_RUNTIME__VERSION = 15;
 
 	/**
-	 * The number of structural features of the the '<em>Server Runtime</em>' class.
+	 * The number of structural features of the '<em>Server Runtime</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -910,6 +1036,17 @@ public interface ServerTypePackage extends EPackage {
 	EReference getClasspath_Archive();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.jst.server.generic.servertype.definition.Classpath#getFileset <em>Fileset</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Fileset</em>'.
+	 * @see org.eclipse.jst.server.generic.servertype.definition.Classpath#getFileset()
+	 * @see #getClasspath()
+	 * @generated
+	 */
+	EReference getClasspath_Fileset();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.jst.server.generic.servertype.definition.Classpath#getId <em>Id</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -919,6 +1056,27 @@ public interface ServerTypePackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getClasspath_Id();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.jst.server.generic.servertype.definition.ExcludeType <em>Exclude Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Exclude Type</em>'.
+	 * @see org.eclipse.jst.server.generic.servertype.definition.ExcludeType
+	 * @generated
+	 */
+	EClass getExcludeType();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.jst.server.generic.servertype.definition.ExcludeType#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.eclipse.jst.server.generic.servertype.definition.ExcludeType#getName()
+	 * @see #getExcludeType()
+	 * @generated
+	 */
+	EAttribute getExcludeType_Name();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.jst.server.generic.servertype.definition.External <em>External</em>}'.
@@ -951,6 +1109,92 @@ public interface ServerTypePackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getExternal_Os();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.jst.server.generic.servertype.definition.FilesetType <em>Fileset Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Fileset Type</em>'.
+	 * @see org.eclipse.jst.server.generic.servertype.definition.FilesetType
+	 * @generated
+	 */
+	EClass getFilesetType();
+
+	/**
+	 * Returns the meta object for the attribute list '{@link org.eclipse.jst.server.generic.servertype.definition.FilesetType#getGroup <em>Group</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Group</em>'.
+	 * @see org.eclipse.jst.server.generic.servertype.definition.FilesetType#getGroup()
+	 * @see #getFilesetType()
+	 * @generated
+	 */
+	EAttribute getFilesetType_Group();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.jst.server.generic.servertype.definition.FilesetType#getInclude <em>Include</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Include</em>'.
+	 * @see org.eclipse.jst.server.generic.servertype.definition.FilesetType#getInclude()
+	 * @see #getFilesetType()
+	 * @generated
+	 */
+	EReference getFilesetType_Include();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.jst.server.generic.servertype.definition.FilesetType#getExclude <em>Exclude</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Exclude</em>'.
+	 * @see org.eclipse.jst.server.generic.servertype.definition.FilesetType#getExclude()
+	 * @see #getFilesetType()
+	 * @generated
+	 */
+	EReference getFilesetType_Exclude();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.jst.server.generic.servertype.definition.FilesetType#isCasesensitive <em>Casesensitive</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Casesensitive</em>'.
+	 * @see org.eclipse.jst.server.generic.servertype.definition.FilesetType#isCasesensitive()
+	 * @see #getFilesetType()
+	 * @generated
+	 */
+	EAttribute getFilesetType_Casesensitive();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.jst.server.generic.servertype.definition.FilesetType#getDir <em>Dir</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Dir</em>'.
+	 * @see org.eclipse.jst.server.generic.servertype.definition.FilesetType#getDir()
+	 * @see #getFilesetType()
+	 * @generated
+	 */
+	EAttribute getFilesetType_Dir();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.jst.server.generic.servertype.definition.IncludeType <em>Include Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Include Type</em>'.
+	 * @see org.eclipse.jst.server.generic.servertype.definition.IncludeType
+	 * @generated
+	 */
+	EClass getIncludeType();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.jst.server.generic.servertype.definition.IncludeType#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.eclipse.jst.server.generic.servertype.definition.IncludeType#getName()
+	 * @see #getIncludeType()
+	 * @generated
+	 */
+	EAttribute getIncludeType_Name();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.jst.server.generic.servertype.definition.JndiConnection <em>Jndi Connection</em>}'.
@@ -1589,5 +1833,700 @@ public interface ServerTypePackage extends EPackage {
 	 * @generated
 	 */
 	ServerTypeFactory getServerTypeFactory();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * Defines literals for the meta objects that represent
+	 * <ul>
+	 *   <li>each class,</li>
+	 *   <li>each feature of each class,</li>
+	 *   <li>each enum,</li>
+	 *   <li>and each data type</li>
+	 * </ul>
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	interface Literals {
+		/**
+		 * The meta object literal for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ArchiveTypeImpl <em>Archive Type</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ArchiveTypeImpl
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getArchiveType()
+		 * @generated
+		 */
+		EClass ARCHIVE_TYPE = eINSTANCE.getArchiveType();
+
+		/**
+		 * The meta object literal for the '<em><b>Path</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ARCHIVE_TYPE__PATH = eINSTANCE.getArchiveType_Path();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ArgumentPairImpl <em>Argument Pair</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ArgumentPairImpl
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getArgumentPair()
+		 * @generated
+		 */
+		EClass ARGUMENT_PAIR = eINSTANCE.getArgumentPair();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ARGUMENT_PAIR__NAME = eINSTANCE.getArgumentPair_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ARGUMENT_PAIR__VALUE = eINSTANCE.getArgumentPair_Value();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ClasspathImpl <em>Classpath</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ClasspathImpl
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getClasspath()
+		 * @generated
+		 */
+		EClass CLASSPATH = eINSTANCE.getClasspath();
+
+		/**
+		 * The meta object literal for the '<em><b>Group</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CLASSPATH__GROUP = eINSTANCE.getClasspath_Group();
+
+		/**
+		 * The meta object literal for the '<em><b>Archive</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CLASSPATH__ARCHIVE = eINSTANCE.getClasspath_Archive();
+
+		/**
+		 * The meta object literal for the '<em><b>Fileset</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CLASSPATH__FILESET = eINSTANCE.getClasspath_Fileset();
+
+		/**
+		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CLASSPATH__ID = eINSTANCE.getClasspath_Id();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ExcludeTypeImpl <em>Exclude Type</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ExcludeTypeImpl
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getExcludeType()
+		 * @generated
+		 */
+		EClass EXCLUDE_TYPE = eINSTANCE.getExcludeType();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EXCLUDE_TYPE__NAME = eINSTANCE.getExcludeType_Name();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ExternalImpl <em>External</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ExternalImpl
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getExternal()
+		 * @generated
+		 */
+		EClass EXTERNAL = eINSTANCE.getExternal();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EXTERNAL__VALUE = eINSTANCE.getExternal_Value();
+
+		/**
+		 * The meta object literal for the '<em><b>Os</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EXTERNAL__OS = eINSTANCE.getExternal_Os();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.FilesetTypeImpl <em>Fileset Type</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.FilesetTypeImpl
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getFilesetType()
+		 * @generated
+		 */
+		EClass FILESET_TYPE = eINSTANCE.getFilesetType();
+
+		/**
+		 * The meta object literal for the '<em><b>Group</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FILESET_TYPE__GROUP = eINSTANCE.getFilesetType_Group();
+
+		/**
+		 * The meta object literal for the '<em><b>Include</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference FILESET_TYPE__INCLUDE = eINSTANCE.getFilesetType_Include();
+
+		/**
+		 * The meta object literal for the '<em><b>Exclude</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference FILESET_TYPE__EXCLUDE = eINSTANCE.getFilesetType_Exclude();
+
+		/**
+		 * The meta object literal for the '<em><b>Casesensitive</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FILESET_TYPE__CASESENSITIVE = eINSTANCE.getFilesetType_Casesensitive();
+
+		/**
+		 * The meta object literal for the '<em><b>Dir</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FILESET_TYPE__DIR = eINSTANCE.getFilesetType_Dir();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.IncludeTypeImpl <em>Include Type</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.IncludeTypeImpl
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getIncludeType()
+		 * @generated
+		 */
+		EClass INCLUDE_TYPE = eINSTANCE.getIncludeType();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute INCLUDE_TYPE__NAME = eINSTANCE.getIncludeType_Name();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.JndiConnectionImpl <em>Jndi Connection</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.JndiConnectionImpl
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getJndiConnection()
+		 * @generated
+		 */
+		EClass JNDI_CONNECTION = eINSTANCE.getJndiConnection();
+
+		/**
+		 * The meta object literal for the '<em><b>Provider Url</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute JNDI_CONNECTION__PROVIDER_URL = eINSTANCE.getJndiConnection_ProviderUrl();
+
+		/**
+		 * The meta object literal for the '<em><b>Group</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute JNDI_CONNECTION__GROUP = eINSTANCE.getJndiConnection_Group();
+
+		/**
+		 * The meta object literal for the '<em><b>Jndi Property</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference JNDI_CONNECTION__JNDI_PROPERTY = eINSTANCE.getJndiConnection_JndiProperty();
+
+		/**
+		 * The meta object literal for the '<em><b>Initial Context Factory</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute JNDI_CONNECTION__INITIAL_CONTEXT_FACTORY = eINSTANCE.getJndiConnection_InitialContextFactory();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.LaunchConfigurationImpl <em>Launch Configuration</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.LaunchConfigurationImpl
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getLaunchConfiguration()
+		 * @generated
+		 */
+		EClass LAUNCH_CONFIGURATION = eINSTANCE.getLaunchConfiguration();
+
+		/**
+		 * The meta object literal for the '<em><b>Group</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LAUNCH_CONFIGURATION__GROUP = eINSTANCE.getLaunchConfiguration_Group();
+
+		/**
+		 * The meta object literal for the '<em><b>Environment Variable</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference LAUNCH_CONFIGURATION__ENVIRONMENT_VARIABLE = eINSTANCE.getLaunchConfiguration_EnvironmentVariable();
+
+		/**
+		 * The meta object literal for the '<em><b>Group1</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LAUNCH_CONFIGURATION__GROUP1 = eINSTANCE.getLaunchConfiguration_Group1();
+
+		/**
+		 * The meta object literal for the '<em><b>Program Arguments</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LAUNCH_CONFIGURATION__PROGRAM_ARGUMENTS = eINSTANCE.getLaunchConfiguration_ProgramArguments();
+
+		/**
+		 * The meta object literal for the '<em><b>Working Directory</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LAUNCH_CONFIGURATION__WORKING_DIRECTORY = eINSTANCE.getLaunchConfiguration_WorkingDirectory();
+
+		/**
+		 * The meta object literal for the '<em><b>Main Class</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LAUNCH_CONFIGURATION__MAIN_CLASS = eINSTANCE.getLaunchConfiguration_MainClass();
+
+		/**
+		 * The meta object literal for the '<em><b>Group2</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LAUNCH_CONFIGURATION__GROUP2 = eINSTANCE.getLaunchConfiguration_Group2();
+
+		/**
+		 * The meta object literal for the '<em><b>Vm Parameters</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LAUNCH_CONFIGURATION__VM_PARAMETERS = eINSTANCE.getLaunchConfiguration_VmParameters();
+
+		/**
+		 * The meta object literal for the '<em><b>Classpath Reference</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LAUNCH_CONFIGURATION__CLASSPATH_REFERENCE = eINSTANCE.getLaunchConfiguration_ClasspathReference();
+
+		/**
+		 * The meta object literal for the '<em><b>Debug Port</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LAUNCH_CONFIGURATION__DEBUG_PORT = eINSTANCE.getLaunchConfiguration_DebugPort();
+
+		/**
+		 * The meta object literal for the '<em><b>Group3</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LAUNCH_CONFIGURATION__GROUP3 = eINSTANCE.getLaunchConfiguration_Group3();
+
+		/**
+		 * The meta object literal for the '<em><b>External</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference LAUNCH_CONFIGURATION__EXTERNAL = eINSTANCE.getLaunchConfiguration_External();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ModuleImpl <em>Module</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ModuleImpl
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getModule()
+		 * @generated
+		 */
+		EClass MODULE = eINSTANCE.getModule();
+
+		/**
+		 * The meta object literal for the '<em><b>Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MODULE__TYPE = eINSTANCE.getModule_Type();
+
+		/**
+		 * The meta object literal for the '<em><b>Publish Dir</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MODULE__PUBLISH_DIR = eINSTANCE.getModule_PublishDir();
+
+		/**
+		 * The meta object literal for the '<em><b>Publisher Reference</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MODULE__PUBLISHER_REFERENCE = eINSTANCE.getModule_PublisherReference();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.PortImpl <em>Port</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.PortImpl
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getPort()
+		 * @generated
+		 */
+		EClass PORT = eINSTANCE.getPort();
+
+		/**
+		 * The meta object literal for the '<em><b>No</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PORT__NO = eINSTANCE.getPort_No();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PORT__NAME = eINSTANCE.getPort_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Protocol</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PORT__PROTOCOL = eINSTANCE.getPort_Protocol();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ProjectImpl <em>Project</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ProjectImpl
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getProject()
+		 * @generated
+		 */
+		EClass PROJECT = eINSTANCE.getProject();
+
+		/**
+		 * The meta object literal for the '<em><b>Classpath Reference</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROJECT__CLASSPATH_REFERENCE = eINSTANCE.getProject_ClasspathReference();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.PropertyImpl <em>Property</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.PropertyImpl
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getProperty()
+		 * @generated
+		 */
+		EClass PROPERTY = eINSTANCE.getProperty();
+
+		/**
+		 * The meta object literal for the '<em><b>Context</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROPERTY__CONTEXT = eINSTANCE.getProperty_Context();
+
+		/**
+		 * The meta object literal for the '<em><b>Default</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROPERTY__DEFAULT = eINSTANCE.getProperty_Default();
+
+		/**
+		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROPERTY__ID = eINSTANCE.getProperty_Id();
+
+		/**
+		 * The meta object literal for the '<em><b>Label</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROPERTY__LABEL = eINSTANCE.getProperty_Label();
+
+		/**
+		 * The meta object literal for the '<em><b>Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROPERTY__TYPE = eINSTANCE.getProperty_Type();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.PublisherImpl <em>Publisher</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.PublisherImpl
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getPublisher()
+		 * @generated
+		 */
+		EClass PUBLISHER = eINSTANCE.getPublisher();
+
+		/**
+		 * The meta object literal for the '<em><b>Group</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PUBLISHER__GROUP = eINSTANCE.getPublisher_Group();
+
+		/**
+		 * The meta object literal for the '<em><b>Publisherdata</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PUBLISHER__PUBLISHERDATA = eINSTANCE.getPublisher_Publisherdata();
+
+		/**
+		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PUBLISHER__ID = eINSTANCE.getPublisher_Id();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.PublisherDataImpl <em>Publisher Data</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.PublisherDataImpl
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getPublisherData()
+		 * @generated
+		 */
+		EClass PUBLISHER_DATA = eINSTANCE.getPublisherData();
+
+		/**
+		 * The meta object literal for the '<em><b>Dataname</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PUBLISHER_DATA__DATANAME = eINSTANCE.getPublisherData_Dataname();
+
+		/**
+		 * The meta object literal for the '<em><b>Datavalue</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PUBLISHER_DATA__DATAVALUE = eINSTANCE.getPublisherData_Datavalue();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl <em>Server Runtime</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl
+		 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getServerRuntime()
+		 * @generated
+		 */
+		EClass SERVER_RUNTIME = eINSTANCE.getServerRuntime();
+
+		/**
+		 * The meta object literal for the '<em><b>Group</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SERVER_RUNTIME__GROUP = eINSTANCE.getServerRuntime_Group();
+
+		/**
+		 * The meta object literal for the '<em><b>Property</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SERVER_RUNTIME__PROPERTY = eINSTANCE.getServerRuntime_Property();
+
+		/**
+		 * The meta object literal for the '<em><b>Group1</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SERVER_RUNTIME__GROUP1 = eINSTANCE.getServerRuntime_Group1();
+
+		/**
+		 * The meta object literal for the '<em><b>Port</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SERVER_RUNTIME__PORT = eINSTANCE.getServerRuntime_Port();
+
+		/**
+		 * The meta object literal for the '<em><b>Group2</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SERVER_RUNTIME__GROUP2 = eINSTANCE.getServerRuntime_Group2();
+
+		/**
+		 * The meta object literal for the '<em><b>Module</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SERVER_RUNTIME__MODULE = eINSTANCE.getServerRuntime_Module();
+
+		/**
+		 * The meta object literal for the '<em><b>Project</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SERVER_RUNTIME__PROJECT = eINSTANCE.getServerRuntime_Project();
+
+		/**
+		 * The meta object literal for the '<em><b>Start</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SERVER_RUNTIME__START = eINSTANCE.getServerRuntime_Start();
+
+		/**
+		 * The meta object literal for the '<em><b>Stop</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SERVER_RUNTIME__STOP = eINSTANCE.getServerRuntime_Stop();
+
+		/**
+		 * The meta object literal for the '<em><b>Group3</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SERVER_RUNTIME__GROUP3 = eINSTANCE.getServerRuntime_Group3();
+
+		/**
+		 * The meta object literal for the '<em><b>Publisher</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SERVER_RUNTIME__PUBLISHER = eINSTANCE.getServerRuntime_Publisher();
+
+		/**
+		 * The meta object literal for the '<em><b>Group4</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SERVER_RUNTIME__GROUP4 = eINSTANCE.getServerRuntime_Group4();
+
+		/**
+		 * The meta object literal for the '<em><b>Classpath</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SERVER_RUNTIME__CLASSPATH = eINSTANCE.getServerRuntime_Classpath();
+
+		/**
+		 * The meta object literal for the '<em><b>Jndi Connection</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SERVER_RUNTIME__JNDI_CONNECTION = eINSTANCE.getServerRuntime_JndiConnection();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SERVER_RUNTIME__NAME = eINSTANCE.getServerRuntime_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Version</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SERVER_RUNTIME__VERSION = eINSTANCE.getServerRuntime_Version();
+
+	}
 
 } //ServerTypePackage

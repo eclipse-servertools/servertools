@@ -1,27 +1,25 @@
 /***************************************************************************************************
- * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * Copyright (c) 2005-2007 Eteration A.S. and Gorkem Ercan All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Gorkem Ercan - initial API and implementation
+ * Contributors: Gorkem Ercan
+ * Contributors: Naci Dai
  *               
  **************************************************************************************************/
+
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 import org.eclipse.jst.server.generic.servertype.definition.Port;
-
-
-
 
 /**
  * <!-- begin-user-doc -->
@@ -114,7 +112,7 @@ public class PortImpl extends EObjectImpl implements Port {
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return ServerTypePackage.eINSTANCE.getPort();
+		return ServerTypePackage.Literals.PORT;
 	}
 
 	/**
@@ -185,8 +183,8 @@ public class PortImpl extends EObjectImpl implements Port {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case ServerTypePackage.PORT__NO:
 				return getNo();
 			case ServerTypePackage.PORT__NAME:
@@ -194,7 +192,7 @@ public class PortImpl extends EObjectImpl implements Port {
 			case ServerTypePackage.PORT__PROTOCOL:
 				return getProtocol();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -202,8 +200,8 @@ public class PortImpl extends EObjectImpl implements Port {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case ServerTypePackage.PORT__NO:
 				setNo((String)newValue);
 				return;
@@ -214,7 +212,7 @@ public class PortImpl extends EObjectImpl implements Port {
 				setProtocol((String)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -222,8 +220,8 @@ public class PortImpl extends EObjectImpl implements Port {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case ServerTypePackage.PORT__NO:
 				setNo(NO_EDEFAULT);
 				return;
@@ -234,7 +232,7 @@ public class PortImpl extends EObjectImpl implements Port {
 				setProtocol(PROTOCOL_EDEFAULT);
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -242,8 +240,8 @@ public class PortImpl extends EObjectImpl implements Port {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case ServerTypePackage.PORT__NO:
 				return NO_EDEFAULT == null ? no != null : !NO_EDEFAULT.equals(no);
 			case ServerTypePackage.PORT__NAME:
@@ -251,7 +249,7 @@ public class PortImpl extends EObjectImpl implements Port {
 			case ServerTypePackage.PORT__PROTOCOL:
 				return PROTOCOL_EDEFAULT == null ? protocol != null : !PROTOCOL_EDEFAULT.equals(protocol);
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
 	}
 
 	/**

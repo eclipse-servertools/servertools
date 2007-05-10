@@ -1,12 +1,14 @@
 /***************************************************************************************************
- * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * Copyright (c) 2005-2007 Eteration A.S. and Gorkem Ercan All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Gorkem Ercan - initial API and implementation
+ * Contributors: Gorkem Ercan
+ * Contributors: Naci Dai
  *               
  **************************************************************************************************/
+
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
 import java.util.Collection;
@@ -14,12 +16,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.notify.NotificationChain;
 
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.common.util.EList;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -31,9 +32,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 import org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration;
-
-
-
 
 /**
  * <!-- begin-user-doc -->
@@ -68,7 +66,7 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 	 * @generated
 	 * @ordered
 	 */
-	protected FeatureMap group = null;
+	protected FeatureMap group;
 
 	/**
 	 * The cached value of the '{@link #getGroup1() <em>Group1</em>}' attribute list.
@@ -78,7 +76,7 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 	 * @generated
 	 * @ordered
 	 */
-	protected FeatureMap group1 = null;
+	protected FeatureMap group1;
 
 	/**
 	 * The default value of the '{@link #getWorkingDirectory() <em>Working Directory</em>}' attribute.
@@ -103,22 +101,22 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 	/**
 	 * The default value of the '{@link #getMainClass() <em>Main Class</em>}' attribute.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #getMainClass()
 	 * @generated
 	 * @ordered
 	 */
-    protected static final String MAIN_CLASS_EDEFAULT = null;
+	protected static final String MAIN_CLASS_EDEFAULT = null;
 
 	/**
 	 * The cached value of the '{@link #getMainClass() <em>Main Class</em>}' attribute.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #getMainClass()
 	 * @generated
 	 * @ordered
 	 */
-    protected String mainClass = MAIN_CLASS_EDEFAULT;
+	protected String mainClass = MAIN_CLASS_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getGroup2() <em>Group2</em>}' attribute list.
@@ -128,7 +126,7 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 	 * @generated
 	 * @ordered
 	 */
-	protected FeatureMap group2 = null;
+	protected FeatureMap group2;
 
 	/**
 	 * The default value of the '{@link #getClasspathReference() <em>Classpath Reference</em>}' attribute.
@@ -178,7 +176,7 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 	 * @generated
 	 * @ordered
 	 */
-	protected FeatureMap group3 = null;
+	protected FeatureMap group3;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -195,28 +193,7 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return ServerTypePackage.eINSTANCE.getLaunchConfiguration();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    public String getMainClass() {
-		return mainClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    public void setMainClass(String newMainClass) {
-		String oldMainClass = mainClass;
-		mainClass = newMainClass;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.LAUNCH_CONFIGURATION__MAIN_CLASS, oldMainClass, mainClass));
+		return ServerTypePackage.Literals.LAUNCH_CONFIGURATION;
 	}
 
 	/**
@@ -224,11 +201,41 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public FeatureMap getGroup2() {
-		if (group2 == null) {
-			group2 = new BasicFeatureMap(this, ServerTypePackage.LAUNCH_CONFIGURATION__GROUP2);
+	public FeatureMap getGroup() {
+		if (group == null) {
+			group = new BasicFeatureMap(this, ServerTypePackage.LAUNCH_CONFIGURATION__GROUP);
 		}
-		return group2;
+		return group;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList getEnvironmentVariable() {
+		return getGroup().list(ServerTypePackage.Literals.LAUNCH_CONFIGURATION__ENVIRONMENT_VARIABLE);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public FeatureMap getGroup1() {
+		if (group1 == null) {
+			group1 = new BasicFeatureMap(this, ServerTypePackage.LAUNCH_CONFIGURATION__GROUP1);
+		}
+		return group1;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList getProgramArguments() {
+		return getGroup1().list(ServerTypePackage.Literals.LAUNCH_CONFIGURATION__PROGRAM_ARGUMENTS);
 	}
 
 	/**
@@ -257,8 +264,8 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public List getProgramArguments() {
-		return ((FeatureMap)getGroup1()).list(ServerTypePackage.eINSTANCE.getLaunchConfiguration_ProgramArguments());
+	public String getMainClass() {
+		return mainClass;
 	}
 
 	/**
@@ -282,8 +289,32 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public List getVmParameters() {
-		return ((FeatureMap)getGroup2()).list(ServerTypePackage.eINSTANCE.getLaunchConfiguration_VmParameters());
+	public void setMainClass(String newMainClass) {
+		String oldMainClass = mainClass;
+		mainClass = newMainClass;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.LAUNCH_CONFIGURATION__MAIN_CLASS, oldMainClass, mainClass));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public FeatureMap getGroup2() {
+		if (group2 == null) {
+			group2 = new BasicFeatureMap(this, ServerTypePackage.LAUNCH_CONFIGURATION__GROUP2);
+		}
+		return group2;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList getVmParameters() {
+		return getGroup2().list(ServerTypePackage.Literals.LAUNCH_CONFIGURATION__VM_PARAMETERS);
 	}
 
 	/**
@@ -305,42 +336,6 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 		classpathReference = newClasspathReference;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.LAUNCH_CONFIGURATION__CLASSPATH_REFERENCE, oldClasspathReference, classpathReference));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public List getExternal() {
-		return ((FeatureMap)getGroup3()).list(ServerTypePackage.eINSTANCE.getLaunchConfiguration_External());
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP:
-					return ((InternalEList)getGroup()).basicRemove(otherEnd, msgs);
-				case ServerTypePackage.LAUNCH_CONFIGURATION__ENVIRONMENT_VARIABLE:
-					return ((InternalEList)getEnvironmentVariable()).basicRemove(otherEnd, msgs);
-				case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP1:
-					return ((InternalEList)getGroup1()).basicRemove(otherEnd, msgs);
-				case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP2:
-					return ((InternalEList)getGroup2()).basicRemove(otherEnd, msgs);
-				case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP3:
-					return ((InternalEList)getGroup3()).basicRemove(otherEnd, msgs);
-				case ServerTypePackage.LAUNCH_CONFIGURATION__EXTERNAL:
-					return ((InternalEList)getExternal()).basicRemove(otherEnd, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
-		}
-		return eBasicSetContainer(null, featureID, msgs);
 	}
 
 	/**
@@ -381,11 +376,8 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public FeatureMap getGroup() {
-		if (group == null) {
-			group = new BasicFeatureMap(this, ServerTypePackage.LAUNCH_CONFIGURATION__GROUP);
-		}
-		return group;
+	public EList getExternal() {
+		return getGroup3().list(ServerTypePackage.Literals.LAUNCH_CONFIGURATION__EXTERNAL);
 	}
 
 	/**
@@ -393,35 +385,39 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public List getEnvironmentVariable() {
-		return ((FeatureMap)getGroup()).list(ServerTypePackage.eINSTANCE.getLaunchConfiguration_EnvironmentVariable());
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public FeatureMap getGroup1() {
-		if (group1 == null) {
-			group1 = new BasicFeatureMap(this, ServerTypePackage.LAUNCH_CONFIGURATION__GROUP1);
-		}
-		return group1;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
 			case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP:
-				return getGroup();
+				return ((InternalEList)getGroup()).basicRemove(otherEnd, msgs);
+			case ServerTypePackage.LAUNCH_CONFIGURATION__ENVIRONMENT_VARIABLE:
+				return ((InternalEList)getEnvironmentVariable()).basicRemove(otherEnd, msgs);
+			case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP1:
+				return ((InternalEList)getGroup1()).basicRemove(otherEnd, msgs);
+			case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP2:
+				return ((InternalEList)getGroup2()).basicRemove(otherEnd, msgs);
+			case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP3:
+				return ((InternalEList)getGroup3()).basicRemove(otherEnd, msgs);
+			case ServerTypePackage.LAUNCH_CONFIGURATION__EXTERNAL:
+				return ((InternalEList)getExternal()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
+			case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP:
+				if (coreType) return getGroup();
+				return ((FeatureMap.Internal)getGroup()).getWrapper();
 			case ServerTypePackage.LAUNCH_CONFIGURATION__ENVIRONMENT_VARIABLE:
 				return getEnvironmentVariable();
 			case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP1:
-				return getGroup1();
+				if (coreType) return getGroup1();
+				return ((FeatureMap.Internal)getGroup1()).getWrapper();
 			case ServerTypePackage.LAUNCH_CONFIGURATION__PROGRAM_ARGUMENTS:
 				return getProgramArguments();
 			case ServerTypePackage.LAUNCH_CONFIGURATION__WORKING_DIRECTORY:
@@ -429,7 +425,8 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 			case ServerTypePackage.LAUNCH_CONFIGURATION__MAIN_CLASS:
 				return getMainClass();
 			case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP2:
-				return getGroup2();
+				if (coreType) return getGroup2();
+				return ((FeatureMap.Internal)getGroup2()).getWrapper();
 			case ServerTypePackage.LAUNCH_CONFIGURATION__VM_PARAMETERS:
 				return getVmParameters();
 			case ServerTypePackage.LAUNCH_CONFIGURATION__CLASSPATH_REFERENCE:
@@ -437,11 +434,12 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 			case ServerTypePackage.LAUNCH_CONFIGURATION__DEBUG_PORT:
 				return getDebugPort();
 			case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP3:
-				return getGroup3();
+				if (coreType) return getGroup3();
+				return ((FeatureMap.Internal)getGroup3()).getWrapper();
 			case ServerTypePackage.LAUNCH_CONFIGURATION__EXTERNAL:
 				return getExternal();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -449,19 +447,17 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP:
-				getGroup().clear();
-				getGroup().addAll((Collection)newValue);
+				((FeatureMap.Internal)getGroup()).set(newValue);
 				return;
 			case ServerTypePackage.LAUNCH_CONFIGURATION__ENVIRONMENT_VARIABLE:
 				getEnvironmentVariable().clear();
 				getEnvironmentVariable().addAll((Collection)newValue);
 				return;
 			case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP1:
-				getGroup1().clear();
-				getGroup1().addAll((Collection)newValue);
+				((FeatureMap.Internal)getGroup1()).set(newValue);
 				return;
 			case ServerTypePackage.LAUNCH_CONFIGURATION__PROGRAM_ARGUMENTS:
 				getProgramArguments().clear();
@@ -474,8 +470,7 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 				setMainClass((String)newValue);
 				return;
 			case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP2:
-				getGroup2().clear();
-				getGroup2().addAll((Collection)newValue);
+				((FeatureMap.Internal)getGroup2()).set(newValue);
 				return;
 			case ServerTypePackage.LAUNCH_CONFIGURATION__VM_PARAMETERS:
 				getVmParameters().clear();
@@ -488,15 +483,14 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 				setDebugPort((String)newValue);
 				return;
 			case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP3:
-				getGroup3().clear();
-				getGroup3().addAll((Collection)newValue);
+				((FeatureMap.Internal)getGroup3()).set(newValue);
 				return;
 			case ServerTypePackage.LAUNCH_CONFIGURATION__EXTERNAL:
 				getExternal().clear();
 				getExternal().addAll((Collection)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -504,8 +498,8 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP:
 				getGroup().clear();
 				return;
@@ -543,7 +537,7 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 				getExternal().clear();
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -551,8 +545,8 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP:
 				return group != null && !group.isEmpty();
 			case ServerTypePackage.LAUNCH_CONFIGURATION__ENVIRONMENT_VARIABLE:
@@ -578,7 +572,7 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 			case ServerTypePackage.LAUNCH_CONFIGURATION__EXTERNAL:
 				return !getExternal().isEmpty();
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
 	}
 
 	/**

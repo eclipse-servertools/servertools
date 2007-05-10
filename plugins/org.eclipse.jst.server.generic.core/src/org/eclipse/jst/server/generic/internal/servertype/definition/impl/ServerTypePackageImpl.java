@@ -1,12 +1,14 @@
 /***************************************************************************************************
- * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * Copyright (c) 2005-2007 Eteration A.S. and Gorkem Ercan All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Gorkem Ercan - initial API and implementation
+ * Contributors: Gorkem Ercan
+ * Contributors: Naci Dai
  *               
  **************************************************************************************************/
+
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -18,13 +20,14 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 
-import org.eclipse.emf.ecore.xml.type.impl.XMLTypePackageImpl;
-
 import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
 import org.eclipse.jst.server.generic.servertype.definition.ArgumentPair;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
+import org.eclipse.jst.server.generic.servertype.definition.ExcludeType;
 import org.eclipse.jst.server.generic.servertype.definition.External;
+import org.eclipse.jst.server.generic.servertype.definition.FilesetType;
+import org.eclipse.jst.server.generic.servertype.definition.IncludeType;
 import org.eclipse.jst.server.generic.servertype.definition.JndiConnection;
 import org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration;
 import org.eclipse.jst.server.generic.servertype.definition.Module;
@@ -35,9 +38,6 @@ import org.eclipse.jst.server.generic.servertype.definition.Publisher;
 import org.eclipse.jst.server.generic.servertype.definition.PublisherData;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.ServerTypeFactory;
-
-
-
 
 /**
  * <!-- begin-user-doc -->
@@ -72,14 +72,35 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass excludeTypeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass externalEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass jndiConnectionEClass = null;
+	private EClass filesetTypeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass includeTypeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass jndiConnectionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -125,10 +146,10 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass publisherDataEClass = null;
+	private EClass publisherDataEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -194,7 +215,7 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 		isInited = true;
 
 		// Initialize simple dependencies
-		XMLTypePackageImpl.init();
+		XMLTypePackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
 		theServerTypePackage.createPackageContents();
@@ -264,10 +285,10 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EAttribute getClasspath_Group() {
+	public EAttribute getClasspath_Group() {
 		return (EAttribute)classpathEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -285,8 +306,35 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getClasspath_Fileset() {
+		return (EReference)classpathEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EAttribute getClasspath_Id() {
-		return (EAttribute)classpathEClass.getEStructuralFeatures().get(2);
+		return (EAttribute)classpathEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getExcludeType() {
+		return excludeTypeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getExcludeType_Name() {
+		return (EAttribute)excludeTypeEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -318,46 +366,118 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EClass getJndiConnection() {
+	public EClass getFilesetType() {
+		return filesetTypeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getFilesetType_Group() {
+		return (EAttribute)filesetTypeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getFilesetType_Include() {
+		return (EReference)filesetTypeEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getFilesetType_Exclude() {
+		return (EReference)filesetTypeEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getFilesetType_Casesensitive() {
+		return (EAttribute)filesetTypeEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getFilesetType_Dir() {
+		return (EAttribute)filesetTypeEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getIncludeType() {
+		return includeTypeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIncludeType_Name() {
+		return (EAttribute)includeTypeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getJndiConnection() {
 		return jndiConnectionEClass;
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EAttribute getJndiConnection_ProviderUrl() {
+	public EAttribute getJndiConnection_ProviderUrl() {
 		return (EAttribute)jndiConnectionEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EAttribute getJndiConnection_Group() {
+	public EAttribute getJndiConnection_Group() {
 		return (EAttribute)jndiConnectionEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EReference getJndiConnection_JndiProperty() {
+	public EReference getJndiConnection_JndiProperty() {
 		return (EReference)jndiConnectionEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EAttribute getJndiConnection_InitialContextFactory() {
+	public EAttribute getJndiConnection_InitialContextFactory() {
 		return (EAttribute)jndiConnectionEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -368,87 +488,6 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 	 */
 	public EClass getLaunchConfiguration() {
 		return launchConfigurationEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    public EAttribute getLaunchConfiguration_MainClass() {
-		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(5);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getLaunchConfiguration_Group2() {
-		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(6);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getLaunchConfiguration_WorkingDirectory() {
-		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getLaunchConfiguration_ProgramArguments() {
-		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getLaunchConfiguration_VmParameters() {
-		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(7);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getLaunchConfiguration_ClasspathReference() {
-		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(8);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getLaunchConfiguration_External() {
-		return (EReference)launchConfigurationEClass.getEStructuralFeatures().get(11);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getLaunchConfiguration_DebugPort() {
-		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(9);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getLaunchConfiguration_Group3() {
-		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(10);
 	}
 
 	/**
@@ -476,6 +515,87 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 	 */
 	public EAttribute getLaunchConfiguration_Group1() {
 		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLaunchConfiguration_ProgramArguments() {
+		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLaunchConfiguration_WorkingDirectory() {
+		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLaunchConfiguration_MainClass() {
+		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLaunchConfiguration_Group2() {
+		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLaunchConfiguration_VmParameters() {
+		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLaunchConfiguration_ClasspathReference() {
+		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLaunchConfiguration_DebugPort() {
+		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLaunchConfiguration_Group3() {
+		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getLaunchConfiguration_External() {
+		return (EReference)launchConfigurationEClass.getEStructuralFeatures().get(11);
 	}
 
 	/**
@@ -633,19 +753,19 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EAttribute getPublisher_Group() {
+	public EAttribute getPublisher_Group() {
 		return (EAttribute)publisherEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EReference getPublisher_Publisherdata() {
+	public EReference getPublisher_Publisherdata() {
 		return (EReference)publisherEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -660,28 +780,28 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EClass getPublisherData() {
+	public EClass getPublisherData() {
 		return publisherDataEClass;
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EAttribute getPublisherData_Dataname() {
+	public EAttribute getPublisherData_Dataname() {
 		return (EAttribute)publisherDataEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EAttribute getPublisherData_Datavalue() {
+	public EAttribute getPublisherData_Datavalue() {
 		return (EAttribute)publisherDataEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -696,55 +816,55 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EAttribute getServerRuntime_Group() {
+	public EAttribute getServerRuntime_Group() {
 		return (EAttribute)serverRuntimeEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EReference getServerRuntime_Property() {
+	public EReference getServerRuntime_Property() {
 		return (EReference)serverRuntimeEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EAttribute getServerRuntime_Group1() {
+	public EAttribute getServerRuntime_Group1() {
 		return (EAttribute)serverRuntimeEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EReference getServerRuntime_Port() {
+	public EReference getServerRuntime_Port() {
 		return (EReference)serverRuntimeEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EAttribute getServerRuntime_Group2() {
+	public EAttribute getServerRuntime_Group2() {
 		return (EAttribute)serverRuntimeEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EReference getServerRuntime_Module() {
+	public EReference getServerRuntime_Module() {
 		return (EReference)serverRuntimeEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -777,46 +897,46 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EAttribute getServerRuntime_Group3() {
+	public EAttribute getServerRuntime_Group3() {
 		return (EAttribute)serverRuntimeEClass.getEStructuralFeatures().get(9);
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EReference getServerRuntime_Publisher() {
+	public EReference getServerRuntime_Publisher() {
 		return (EReference)serverRuntimeEClass.getEStructuralFeatures().get(10);
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EAttribute getServerRuntime_Group4() {
+	public EAttribute getServerRuntime_Group4() {
 		return (EAttribute)serverRuntimeEClass.getEStructuralFeatures().get(11);
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EReference getServerRuntime_Classpath() {
+	public EReference getServerRuntime_Classpath() {
 		return (EReference)serverRuntimeEClass.getEStructuralFeatures().get(12);
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EReference getServerRuntime_JndiConnection() {
+	public EReference getServerRuntime_JndiConnection() {
 		return (EReference)serverRuntimeEClass.getEStructuralFeatures().get(13);
 	}
 
@@ -876,11 +996,25 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 		classpathEClass = createEClass(CLASSPATH);
 		createEAttribute(classpathEClass, CLASSPATH__GROUP);
 		createEReference(classpathEClass, CLASSPATH__ARCHIVE);
+		createEReference(classpathEClass, CLASSPATH__FILESET);
 		createEAttribute(classpathEClass, CLASSPATH__ID);
+
+		excludeTypeEClass = createEClass(EXCLUDE_TYPE);
+		createEAttribute(excludeTypeEClass, EXCLUDE_TYPE__NAME);
 
 		externalEClass = createEClass(EXTERNAL);
 		createEAttribute(externalEClass, EXTERNAL__VALUE);
 		createEAttribute(externalEClass, EXTERNAL__OS);
+
+		filesetTypeEClass = createEClass(FILESET_TYPE);
+		createEAttribute(filesetTypeEClass, FILESET_TYPE__GROUP);
+		createEReference(filesetTypeEClass, FILESET_TYPE__INCLUDE);
+		createEReference(filesetTypeEClass, FILESET_TYPE__EXCLUDE);
+		createEAttribute(filesetTypeEClass, FILESET_TYPE__CASESENSITIVE);
+		createEAttribute(filesetTypeEClass, FILESET_TYPE__DIR);
+
+		includeTypeEClass = createEClass(INCLUDE_TYPE);
+		createEAttribute(includeTypeEClass, INCLUDE_TYPE__NAME);
 
 		jndiConnectionEClass = createEClass(JNDI_CONNECTION);
 		createEAttribute(jndiConnectionEClass, JNDI_CONNECTION__PROVIDER_URL);
@@ -974,7 +1108,7 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 		setNsURI(eNS_URI);
 
 		// Obtain other dependent packages
-		XMLTypePackageImpl theXMLTypePackage = (XMLTypePackageImpl)EPackage.Registry.INSTANCE.getEPackage(XMLTypePackage.eNS_URI);
+		XMLTypePackage theXMLTypePackage = (XMLTypePackage)EPackage.Registry.INSTANCE.getEPackage(XMLTypePackage.eNS_URI);
 
 		// Add supertypes to classes
 
@@ -988,12 +1122,26 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 
 		initEClass(classpathEClass, Classpath.class, "Classpath", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getClasspath_Group(), ecorePackage.getEFeatureMapEntry(), "group", null, 0, -1, Classpath.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getClasspath_Archive(), this.getArchiveType(), null, "archive", null, 1, -1, Classpath.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEReference(getClasspath_Archive(), this.getArchiveType(), null, "archive", null, 0, -1, Classpath.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEReference(getClasspath_Fileset(), this.getFilesetType(), null, "fileset", null, 0, -1, Classpath.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getClasspath_Id(), theXMLTypePackage.getString(), "id", null, 0, 1, Classpath.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(excludeTypeEClass, ExcludeType.class, "ExcludeType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getExcludeType_Name(), theXMLTypePackage.getString(), "name", null, 0, 1, ExcludeType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(externalEClass, External.class, "External", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getExternal_Value(), theXMLTypePackage.getString(), "value", null, 0, 1, External.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getExternal_Os(), theXMLTypePackage.getString(), "os", null, 0, 1, External.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(filesetTypeEClass, FilesetType.class, "FilesetType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getFilesetType_Group(), ecorePackage.getEFeatureMapEntry(), "group", null, 0, -1, FilesetType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getFilesetType_Include(), this.getIncludeType(), null, "include", null, 0, -1, FilesetType.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEReference(getFilesetType_Exclude(), this.getExcludeType(), null, "exclude", null, 0, -1, FilesetType.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEAttribute(getFilesetType_Casesensitive(), theXMLTypePackage.getBoolean(), "casesensitive", null, 0, 1, FilesetType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getFilesetType_Dir(), theXMLTypePackage.getString(), "dir", null, 0, 1, FilesetType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(includeTypeEClass, IncludeType.class, "IncludeType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIncludeType_Name(), theXMLTypePackage.getString(), "name", null, 0, 1, IncludeType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(jndiConnectionEClass, JndiConnection.class, "JndiConnection", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getJndiConnection_ProviderUrl(), theXMLTypePackage.getString(), "providerUrl", null, 1, 1, JndiConnection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1136,11 +1284,33 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 			 "group", "#group:0"
 		   });		
 		addAnnotation
+		  (getClasspath_Fileset(), 
+		   source, 
+		   new String[] {
+			 "kind", "element",
+			 "name", "fileset",
+			 "group", "#group:0"
+		   });		
+		addAnnotation
 		  (getClasspath_Id(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "id"
+		   });		
+		addAnnotation
+		  (excludeTypeEClass, 
+		   source, 
+		   new String[] {
+			 "name", "exclude_._type",
+			 "kind", "empty"
+		   });		
+		addAnnotation
+		  (getExcludeType_Name(), 
+		   source, 
+		   new String[] {
+			 "kind", "attribute",
+			 "name", "name"
 		   });		
 		addAnnotation
 		  (externalEClass, 
@@ -1162,6 +1332,64 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "os"
+		   });		
+		addAnnotation
+		  (filesetTypeEClass, 
+		   source, 
+		   new String[] {
+			 "name", "fileset_._type",
+			 "kind", "elementOnly"
+		   });		
+		addAnnotation
+		  (getFilesetType_Group(), 
+		   source, 
+		   new String[] {
+			 "kind", "group",
+			 "name", "group:0"
+		   });		
+		addAnnotation
+		  (getFilesetType_Include(), 
+		   source, 
+		   new String[] {
+			 "kind", "element",
+			 "name", "include",
+			 "group", "#group:0"
+		   });		
+		addAnnotation
+		  (getFilesetType_Exclude(), 
+		   source, 
+		   new String[] {
+			 "kind", "element",
+			 "name", "exclude",
+			 "group", "#group:0"
+		   });		
+		addAnnotation
+		  (getFilesetType_Casesensitive(), 
+		   source, 
+		   new String[] {
+			 "kind", "attribute",
+			 "name", "casesensitive"
+		   });		
+		addAnnotation
+		  (getFilesetType_Dir(), 
+		   source, 
+		   new String[] {
+			 "kind", "attribute",
+			 "name", "dir"
+		   });		
+		addAnnotation
+		  (includeTypeEClass, 
+		   source, 
+		   new String[] {
+			 "name", "include_._type",
+			 "kind", "empty"
+		   });		
+		addAnnotation
+		  (getIncludeType_Name(), 
+		   source, 
+		   new String[] {
+			 "kind", "attribute",
+			 "name", "name"
 		   });		
 		addAnnotation
 		  (jndiConnectionEClass, 

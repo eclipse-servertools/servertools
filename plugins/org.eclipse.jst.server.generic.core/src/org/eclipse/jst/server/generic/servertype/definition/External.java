@@ -1,12 +1,14 @@
 /***************************************************************************************************
- * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * Copyright (c) 2005-2007 Eteration A.S. and Gorkem Ercan All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Gorkem Ercan - initial API and implementation
+ * Contributors: Gorkem Ercan
+ * Contributors: Naci Dai
  *               
  **************************************************************************************************/
+
 package org.eclipse.jst.server.generic.servertype.definition;
 
 import org.eclipse.emf.ecore.EObject;
@@ -28,7 +30,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='External' kind='simple'"
  * @generated
  */
-public interface External extends EObject{
+public interface External extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Value</b></em>' attribute.
 	 * <!-- begin-user-doc -->

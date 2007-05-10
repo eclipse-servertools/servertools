@@ -1,22 +1,22 @@
 /***************************************************************************************************
- * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * Copyright (c) 2005-2007 Eteration A.S. and Gorkem Ercan All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Gorkem Ercan - initial API and implementation
+ * Contributors: Gorkem Ercan
+ * Contributors: Naci Dai
  *               
  **************************************************************************************************/
+
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
 import java.util.Collection;
 
-import java.util.List;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
@@ -25,9 +25,6 @@ import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
-
-
-
 
 /**
  * <!-- begin-user-doc -->
@@ -38,6 +35,7 @@ import org.eclipse.jst.server.generic.servertype.definition.Classpath;
  * <ul>
  *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ClasspathImpl#getGroup <em>Group</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ClasspathImpl#getArchive <em>Archive</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ClasspathImpl#getFileset <em>Fileset</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ClasspathImpl#getId <em>Id</em>}</li>
  * </ul>
  * </p>
@@ -48,12 +46,12 @@ public class ClasspathImpl extends EObjectImpl implements Classpath {
 	/**
 	 * The cached value of the '{@link #getGroup() <em>Group</em>}' attribute list.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #getGroup()
 	 * @generated
 	 * @ordered
 	 */
-    protected FeatureMap group = null;
+	protected FeatureMap group;
 
 	/**
 	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
@@ -90,15 +88,15 @@ public class ClasspathImpl extends EObjectImpl implements Classpath {
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return ServerTypePackage.eINSTANCE.getClasspath();
+		return ServerTypePackage.Literals.CLASSPATH;
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public FeatureMap getGroup() {
+	public FeatureMap getGroup() {
 		if (group == null) {
 			group = new BasicFeatureMap(this, ServerTypePackage.CLASSPATH__GROUP);
 		}
@@ -110,8 +108,17 @@ public class ClasspathImpl extends EObjectImpl implements Classpath {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public List getArchive() {
-		return ((FeatureMap)getGroup()).list(ServerTypePackage.eINSTANCE.getClasspath_Archive());
+	public EList getArchive() {
+		return getGroup().list(ServerTypePackage.Literals.CLASSPATH__ARCHIVE);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList getFileset() {
+		return getGroup().list(ServerTypePackage.Literals.CLASSPATH__FILESET);
 	}
 
 	/**
@@ -140,18 +147,16 @@ public class ClasspathImpl extends EObjectImpl implements Classpath {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case ServerTypePackage.CLASSPATH__GROUP:
-					return ((InternalEList)getGroup()).basicRemove(otherEnd, msgs);
-				case ServerTypePackage.CLASSPATH__ARCHIVE:
-					return ((InternalEList)getArchive()).basicRemove(otherEnd, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case ServerTypePackage.CLASSPATH__GROUP:
+				return ((InternalEList)getGroup()).basicRemove(otherEnd, msgs);
+			case ServerTypePackage.CLASSPATH__ARCHIVE:
+				return ((InternalEList)getArchive()).basicRemove(otherEnd, msgs);
+			case ServerTypePackage.CLASSPATH__FILESET:
+				return ((InternalEList)getFileset()).basicRemove(otherEnd, msgs);
 		}
-		return eBasicSetContainer(null, featureID, msgs);
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -159,16 +164,19 @@ public class ClasspathImpl extends EObjectImpl implements Classpath {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case ServerTypePackage.CLASSPATH__GROUP:
-				return getGroup();
+				if (coreType) return getGroup();
+				return ((FeatureMap.Internal)getGroup()).getWrapper();
 			case ServerTypePackage.CLASSPATH__ARCHIVE:
 				return getArchive();
+			case ServerTypePackage.CLASSPATH__FILESET:
+				return getFileset();
 			case ServerTypePackage.CLASSPATH__ID:
 				return getId();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -176,21 +184,24 @@ public class ClasspathImpl extends EObjectImpl implements Classpath {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case ServerTypePackage.CLASSPATH__GROUP:
-				getGroup().clear();
-				getGroup().addAll((Collection)newValue);
+				((FeatureMap.Internal)getGroup()).set(newValue);
 				return;
 			case ServerTypePackage.CLASSPATH__ARCHIVE:
 				getArchive().clear();
 				getArchive().addAll((Collection)newValue);
 				return;
+			case ServerTypePackage.CLASSPATH__FILESET:
+				getFileset().clear();
+				getFileset().addAll((Collection)newValue);
+				return;
 			case ServerTypePackage.CLASSPATH__ID:
 				setId((String)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -198,19 +209,22 @@ public class ClasspathImpl extends EObjectImpl implements Classpath {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case ServerTypePackage.CLASSPATH__GROUP:
 				getGroup().clear();
 				return;
 			case ServerTypePackage.CLASSPATH__ARCHIVE:
 				getArchive().clear();
 				return;
+			case ServerTypePackage.CLASSPATH__FILESET:
+				getFileset().clear();
+				return;
 			case ServerTypePackage.CLASSPATH__ID:
 				setId(ID_EDEFAULT);
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -218,16 +232,18 @@ public class ClasspathImpl extends EObjectImpl implements Classpath {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case ServerTypePackage.CLASSPATH__GROUP:
 				return group != null && !group.isEmpty();
 			case ServerTypePackage.CLASSPATH__ARCHIVE:
 				return !getArchive().isEmpty();
+			case ServerTypePackage.CLASSPATH__FILESET:
+				return !getFileset().isEmpty();
 			case ServerTypePackage.CLASSPATH__ID:
 				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
 	}
 
 	/**

@@ -135,6 +135,18 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
        		Combo combo = SWTUtil.createLabeledCombo(property.getLabel(),values, parent);
        		combo.setData(property);
        		registerControl(combo);
+       	}else if(Property.TYPE_SELECT_EDIT.equals(property.getType())) {
+    		StringTokenizer tokenizer = new StringTokenizer(property.getDefault(),","); //$NON-NLS-1$
+    		int tokenCount = tokenizer.countTokens();
+    		String[] values = new String[tokenCount];
+    		int i =0;
+    		while(tokenizer.hasMoreTokens() && i<tokenCount){
+    			values[i]=tokenizer.nextToken();
+    			i++;
+    		}
+       		Combo combo = SWTUtil.createLabeledEditableCombo(property.getLabel(),values,getPropertyValue(property), parent);
+       		combo.setData(property);
+       		registerControl(combo);
        	}
        	else {//default is TEXT
     	    Text defaultText= SWTUtil.createLabeledText(property.getLabel(),getPropertyValue(property),parent);

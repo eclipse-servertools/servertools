@@ -1,12 +1,14 @@
 /***************************************************************************************************
- * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * Copyright (c) 2005-2007 Eteration A.S. and Gorkem Ercan All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Gorkem Ercan - initial API and implementation
+ * Contributors: Gorkem Ercan
+ * Contributors: Naci Dai
  *               
  **************************************************************************************************/
+
 package org.eclipse.jst.server.generic.internal.servertype.definition.util;
 
 import org.eclipse.emf.common.notify.Adapter;
@@ -83,8 +85,17 @@ public class ServerTypeAdapterFactory extends AdapterFactoryImpl {
 			public Object caseClasspath(Classpath object) {
 				return createClasspathAdapter();
 			}
+			public Object caseExcludeType(ExcludeType object) {
+				return createExcludeTypeAdapter();
+			}
 			public Object caseExternal(External object) {
 				return createExternalAdapter();
+			}
+			public Object caseFilesetType(FilesetType object) {
+				return createFilesetTypeAdapter();
+			}
+			public Object caseIncludeType(IncludeType object) {
+				return createIncludeTypeAdapter();
 			}
 			public Object caseJndiConnection(JndiConnection object) {
 				return createJndiConnectionAdapter();
@@ -174,6 +185,20 @@ public class ServerTypeAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.ExcludeType <em>Exclude Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.jst.server.generic.servertype.definition.ExcludeType
+	 * @generated
+	 */
+	public Adapter createExcludeTypeAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.External <em>External</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -188,16 +213,44 @@ public class ServerTypeAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.FilesetType <em>Fileset Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.jst.server.generic.servertype.definition.FilesetType
+	 * @generated
+	 */
+	public Adapter createFilesetTypeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.IncludeType <em>Include Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.jst.server.generic.servertype.definition.IncludeType
+	 * @generated
+	 */
+	public Adapter createIncludeTypeAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.JndiConnection <em>Jndi Connection</em>}'.
 	 * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
 	 * @return the new adapter.
 	 * @see org.eclipse.jst.server.generic.servertype.definition.JndiConnection
 	 * @generated
 	 */
-    public Adapter createJndiConnectionAdapter() {
+	public Adapter createJndiConnectionAdapter() {
 		return null;
 	}
 
@@ -288,14 +341,14 @@ public class ServerTypeAdapterFactory extends AdapterFactoryImpl {
 	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.PublisherData <em>Publisher Data</em>}'.
 	 * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
 	 * @return the new adapter.
 	 * @see org.eclipse.jst.server.generic.servertype.definition.PublisherData
 	 * @generated
 	 */
-    public Adapter createPublisherDataAdapter() {
+	public Adapter createPublisherDataAdapter() {
 		return null;
 	}
 

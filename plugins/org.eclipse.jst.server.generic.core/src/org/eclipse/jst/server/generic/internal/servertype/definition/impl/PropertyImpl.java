@@ -1,28 +1,26 @@
 /***************************************************************************************************
- * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * Copyright (c) 2005-2007 Eteration A.S. and Gorkem Ercan All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Gorkem Ercan - initial API and implementation
+ * Contributors: Gorkem Ercan
+ * Contributors: Naci Dai
  *               
  **************************************************************************************************/
+
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 import org.eclipse.jst.server.generic.servertype.definition.Property;
-
-
-
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.osgi.framework.Bundle;
 
@@ -159,7 +157,7 @@ public class PropertyImpl extends EObjectImpl implements Property {
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return ServerTypePackage.eINSTANCE.getProperty();
+		return ServerTypePackage.Literals.PROPERTY;
 	}
 
 	/**
@@ -225,9 +223,8 @@ public class PropertyImpl extends EObjectImpl implements Property {
 			eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.PROPERTY__ID, oldId, id));
 	}
 
-    /**
-     * <!-- begin-user-doc -->
-     * labels support "%" nls support from the plugin.xml
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated NOT
      */
@@ -239,7 +236,7 @@ public class PropertyImpl extends EObjectImpl implements Property {
 			return Platform.getResourceString(bundle,label);
 		}
 		return label;
-    }
+	}
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -279,8 +276,8 @@ public class PropertyImpl extends EObjectImpl implements Property {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case ServerTypePackage.PROPERTY__CONTEXT:
 				return getContext();
 			case ServerTypePackage.PROPERTY__DEFAULT:
@@ -292,7 +289,7 @@ public class PropertyImpl extends EObjectImpl implements Property {
 			case ServerTypePackage.PROPERTY__TYPE:
 				return getType();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -300,8 +297,8 @@ public class PropertyImpl extends EObjectImpl implements Property {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case ServerTypePackage.PROPERTY__CONTEXT:
 				setContext((String)newValue);
 				return;
@@ -318,7 +315,7 @@ public class PropertyImpl extends EObjectImpl implements Property {
 				setType((String)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -326,8 +323,8 @@ public class PropertyImpl extends EObjectImpl implements Property {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case ServerTypePackage.PROPERTY__CONTEXT:
 				setContext(CONTEXT_EDEFAULT);
 				return;
@@ -344,7 +341,7 @@ public class PropertyImpl extends EObjectImpl implements Property {
 				setType(TYPE_EDEFAULT);
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -352,8 +349,8 @@ public class PropertyImpl extends EObjectImpl implements Property {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case ServerTypePackage.PROPERTY__CONTEXT:
 				return CONTEXT_EDEFAULT == null ? context != null : !CONTEXT_EDEFAULT.equals(context);
 			case ServerTypePackage.PROPERTY__DEFAULT:
@@ -365,7 +362,7 @@ public class PropertyImpl extends EObjectImpl implements Property {
 			case ServerTypePackage.PROPERTY__TYPE:
 				return TYPE_EDEFAULT == null ? type != null : !TYPE_EDEFAULT.equals(type);
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
 	}
 
 	/**

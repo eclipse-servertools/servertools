@@ -16,7 +16,8 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import org.eclipse.core.runtime.Platform;
+
+import org.eclipse.core.runtime.FileLocator;
 
 /**
  * Utilities for file operations.
@@ -36,7 +37,7 @@ public class FileUtil {
 	 */
 	public static URL resolveURL(URL url){
 		try{
-			return Platform.resolve(url);
+			return FileLocator.resolve(url);
 		}catch(IOException e){
 			//ignore
 		}

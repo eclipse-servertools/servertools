@@ -1,18 +1,18 @@
 /***************************************************************************************************
- * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * Copyright (c) 2005-2007 Eteration A.S. and Gorkem Ercan All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Gorkem Ercan - initial API and implementation
+ * Contributors: Gorkem Ercan
+ * Contributors: Naci Dai
  *               
  **************************************************************************************************/
+
 package org.eclipse.jst.server.generic.servertype.definition;
 
-import java.util.List;
-
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.emf.ecore.util.FeatureMap;
 
 /**
@@ -34,15 +34,15 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  * @model extendedMetaData="name='jndiConnection' kind='elementOnly'"
  * @generated
  */
-public interface JndiConnection extends EObject{
+public interface JndiConnection extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Provider Url</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Provider Url</em>' attribute isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Provider Url</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Provider Url</em>' attribute.
 	 * @see #setProviderUrl(String)
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getJndiConnection_ProviderUrl()
@@ -50,7 +50,7 @@ public interface JndiConnection extends EObject{
 	 *        extendedMetaData="kind='element' name='providerUrl'"
 	 * @generated
 	 */
-    String getProviderUrl();
+	String getProviderUrl();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.JndiConnection#getProviderUrl <em>Provider Url</em>}' attribute.
@@ -83,27 +83,27 @@ public interface JndiConnection extends EObject{
 	 * Returns the value of the '<em><b>Jndi Property</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.ArgumentPair}.
 	 * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Jndi Property</em>' containment reference list isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Jndi Property</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Jndi Property</em>' containment reference list.
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getJndiConnection_JndiProperty()
-	 * @model type="org.eclipse.jst.server.generic.servertype.definition.ArgumentPair" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
+	 * @model type="org.eclipse.jst.server.generic.servertype.definition.ArgumentPair" containment="true" transient="true" volatile="true" derived="true"
 	 *        extendedMetaData="kind='element' name='jndiProperty' group='#group:1'"
 	 * @generated
 	 */
-    List getJndiProperty();
+	EList getJndiProperty();
 
 	/**
 	 * Returns the value of the '<em><b>Initial Context Factory</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Initial Context Factory</em>' attribute isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Initial Context Factory</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Initial Context Factory</em>' attribute.
 	 * @see #setInitialContextFactory(String)
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getJndiConnection_InitialContextFactory()
@@ -111,17 +111,7 @@ public interface JndiConnection extends EObject{
 	 *        extendedMetaData="kind='element' name='initialContextFactory'"
 	 * @generated
 	 */
-    String getInitialContextFactory();
-
-    /**
-     * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.JndiConnection#getInitialContextFactory <em>Initial Context Factory</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Initial Context Factory</em>' attribute.
-     * @see #getInitialContextFactory()
-     * @generated
-     */
-//    void setInitialContextFactory(String value);
+	String getInitialContextFactory();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.JndiConnection#getInitialContextFactory <em>Initial Context Factory</em>}' attribute.

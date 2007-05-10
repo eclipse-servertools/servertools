@@ -1,18 +1,18 @@
 /***************************************************************************************************
- * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * Copyright (c) 2005-2007 Eteration A.S. and Gorkem Ercan All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Gorkem Ercan - initial API and implementation
+ * Contributors: Gorkem Ercan
+ * Contributors: Naci Dai
  *               
  **************************************************************************************************/
+
 package org.eclipse.jst.server.generic.servertype.definition;
 
-import java.util.List;
-
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.emf.ecore.util.FeatureMap;
 
 /**
@@ -33,7 +33,7 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  * @model extendedMetaData="name='Publisher' kind='elementOnly'"
  * @generated
  */
-public interface Publisher extends EObject{
+public interface Publisher extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Group</b></em>' attribute list.
 	 * The list contents are of type {@link org.eclipse.emf.ecore.util.FeatureMap.Entry}.
@@ -55,18 +55,18 @@ public interface Publisher extends EObject{
 	 * Returns the value of the '<em><b>Publisherdata</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.PublisherData}.
 	 * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Publisherdata</em>' containment reference list isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Publisherdata</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Publisherdata</em>' containment reference list.
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getPublisher_Publisherdata()
-	 * @model type="org.eclipse.jst.server.generic.servertype.definition.PublisherData" containment="true" resolveProxies="false" required="true" transient="true" volatile="true" derived="true"
+	 * @model type="org.eclipse.jst.server.generic.servertype.definition.PublisherData" containment="true" required="true" transient="true" volatile="true" derived="true"
 	 *        extendedMetaData="kind='element' name='publisherdata' group='#group:0'"
 	 * @generated
 	 */
-    List getPublisherdata();
+	EList getPublisherdata();
 
 	/**
 	 * Returns the value of the '<em><b>Id</b></em>' attribute.
@@ -84,16 +84,6 @@ public interface Publisher extends EObject{
 	 * @generated
 	 */
 	String getId();
-
-    /**
-     * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.Publisher#getId <em>Id</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Id</em>' attribute.
-     * @see #getId()
-     * @generated
-     */
-//	void setId(String value);
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.Publisher#getId <em>Id</em>}' attribute.

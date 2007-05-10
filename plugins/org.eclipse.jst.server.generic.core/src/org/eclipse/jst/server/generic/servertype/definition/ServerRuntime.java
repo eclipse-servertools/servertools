@@ -1,20 +1,21 @@
 /***************************************************************************************************
- * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * Copyright (c) 2005-2007 Eteration A.S. and Gorkem Ercan All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Gorkem Ercan - initial API and implementation
+ * Contributors: Gorkem Ercan
+ * Contributors: Naci Dai
  *               
  **************************************************************************************************/
+
 package org.eclipse.jst.server.generic.servertype.definition;
 
-import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.FeatureMap;
-
 import org.eclipse.jst.server.generic.internal.xml.Resolver;
 
 /**
@@ -55,7 +56,7 @@ import org.eclipse.jst.server.generic.internal.xml.Resolver;
  * @model extendedMetaData="name='ServerRuntime' kind='elementOnly'"
  * @generated
  */
-public interface ServerRuntime extends EObject{
+public interface ServerRuntime extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Group</b></em>' attribute list.
 	 * The list contents are of type {@link org.eclipse.emf.ecore.util.FeatureMap.Entry}.
@@ -77,18 +78,18 @@ public interface ServerRuntime extends EObject{
 	 * Returns the value of the '<em><b>Property</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.Property}.
 	 * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Property</em>' containment reference list isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Property</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Property</em>' containment reference list.
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Property()
-	 * @model type="org.eclipse.jst.server.generic.servertype.definition.Property" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
+	 * @model type="org.eclipse.jst.server.generic.servertype.definition.Property" containment="true" transient="true" volatile="true" derived="true"
 	 *        extendedMetaData="kind='element' name='property' group='#group:0'"
 	 * @generated
 	 */
-    List getProperty();
+	EList getProperty();
 
 	/**
 	 * Returns the value of the '<em><b>Group1</b></em>' attribute list.
@@ -111,18 +112,18 @@ public interface ServerRuntime extends EObject{
 	 * Returns the value of the '<em><b>Port</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.Port}.
 	 * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Port</em>' containment reference list isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Port</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Port</em>' containment reference list.
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Port()
-	 * @model type="org.eclipse.jst.server.generic.servertype.definition.Port" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
+	 * @model type="org.eclipse.jst.server.generic.servertype.definition.Port" containment="true" transient="true" volatile="true" derived="true"
 	 *        extendedMetaData="kind='element' name='port' group='#group:2'"
 	 * @generated
 	 */
-    List getPort();
+	EList getPort();
 
 	/**
 	 * Returns the value of the '<em><b>Group2</b></em>' attribute list.
@@ -145,18 +146,18 @@ public interface ServerRuntime extends EObject{
 	 * Returns the value of the '<em><b>Module</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.Module}.
 	 * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Module</em>' containment reference list isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Module</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Module</em>' containment reference list.
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Module()
-	 * @model type="org.eclipse.jst.server.generic.servertype.definition.Module" containment="true" resolveProxies="false" required="true" transient="true" volatile="true" derived="true"
+	 * @model type="org.eclipse.jst.server.generic.servertype.definition.Module" containment="true" required="true" transient="true" volatile="true" derived="true"
 	 *        extendedMetaData="kind='element' name='module' group='#group:4'"
 	 * @generated
 	 */
-    List getModule();
+	EList getModule();
 
 	/**
 	 * Returns the value of the '<em><b>Project</b></em>' containment reference.
@@ -169,7 +170,7 @@ public interface ServerRuntime extends EObject{
 	 * @return the value of the '<em>Project</em>' containment reference.
 	 * @see #setProject(Project)
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Project()
-	 * @model containment="true" resolveProxies="false" required="true"
+	 * @model containment="true" required="true"
 	 *        extendedMetaData="kind='element' name='project'"
 	 * @generated
 	 */
@@ -188,11 +189,15 @@ public interface ServerRuntime extends EObject{
 	/**
 	 * Returns the value of the '<em><b>Start</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Start</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Start</em>' containment reference.
 	 * @see #setStart(LaunchConfiguration)
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Start()
-	 * @model containment="true" resolveProxies="false" required="true"
+	 * @model containment="true" required="true"
 	 *        extendedMetaData="kind='element' name='start'"
 	 * @generated
 	 */
@@ -211,11 +216,15 @@ public interface ServerRuntime extends EObject{
 	/**
 	 * Returns the value of the '<em><b>Stop</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Stop</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Stop</em>' containment reference.
 	 * @see #setStop(LaunchConfiguration)
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Stop()
-	 * @model containment="true" resolveProxies="false" required="true"
+	 * @model containment="true" required="true"
 	 *        extendedMetaData="kind='element' name='stop'"
 	 * @generated
 	 */
@@ -252,18 +261,18 @@ public interface ServerRuntime extends EObject{
 	 * Returns the value of the '<em><b>Publisher</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.Publisher}.
 	 * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Publisher</em>' containment reference list isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Publisher</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Publisher</em>' containment reference list.
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Publisher()
-	 * @model type="org.eclipse.jst.server.generic.servertype.definition.Publisher" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
+	 * @model type="org.eclipse.jst.server.generic.servertype.definition.Publisher" containment="true" transient="true" volatile="true" derived="true"
 	 *        extendedMetaData="kind='element' name='publisher' group='#group:9'"
 	 * @generated
 	 */
-    List getPublisher();
+	EList getPublisher();
 
 	/**
 	 * Returns the value of the '<em><b>Group4</b></em>' attribute list.
@@ -286,35 +295,35 @@ public interface ServerRuntime extends EObject{
 	 * Returns the value of the '<em><b>Classpath</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.Classpath}.
 	 * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Classpath</em>' containment reference list isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Classpath</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Classpath</em>' containment reference list.
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Classpath()
-	 * @model type="org.eclipse.jst.server.generic.servertype.definition.Classpath" containment="true" resolveProxies="false" required="true" transient="true" volatile="true" derived="true"
+	 * @model type="org.eclipse.jst.server.generic.servertype.definition.Classpath" containment="true" required="true" transient="true" volatile="true" derived="true"
 	 *        extendedMetaData="kind='element' name='classpath' group='#group:11'"
 	 * @generated
 	 */
-    List getClasspath();
+	EList getClasspath();
 
 	/**
 	 * Returns the value of the '<em><b>Jndi Connection</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Jndi Connection</em>' containment reference isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Jndi Connection</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Jndi Connection</em>' containment reference.
 	 * @see #setJndiConnection(JndiConnection)
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_JndiConnection()
-	 * @model containment="true" resolveProxies="false" required="true"
+	 * @model containment="true" required="true"
 	 *        extendedMetaData="kind='element' name='jndiConnection'"
 	 * @generated
 	 */
-    JndiConnection getJndiConnection();
+	JndiConnection getJndiConnection();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getJndiConnection <em>Jndi Connection</em>}' containment reference.
@@ -329,7 +338,11 @@ public interface ServerRuntime extends EObject{
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Name</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Name()
@@ -352,6 +365,10 @@ public interface ServerRuntime extends EObject{
 	/**
 	 * Returns the value of the '<em><b>Version</b></em>' attribute.
 	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Version</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Version</em>' attribute.
 	 * @see #setVersion(String)

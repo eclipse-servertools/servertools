@@ -16,8 +16,13 @@ import java.util.Map;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.jst.server.generic.internal.files.DirectoryScanner;
 import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
+import org.eclipse.jst.server.generic.servertype.definition.ExcludeType;
+import org.eclipse.jst.server.generic.servertype.definition.FilesetType;
+import org.eclipse.jst.server.generic.servertype.definition.IncludeType;
 import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.core.IModule;
@@ -60,16 +65,58 @@ public class ServerTypeDefinitionUtil
 		if(definition==null)
 			return null;
 		String ref = definition.getProject().getClasspathReference();
+		ArrayList entryList = getClasspathEntries(ref,definition,false);
+		return (IClasspathEntry[])entryList.toArray(new IClasspathEntry[entryList.size()]);
+	}
+	
+	public  static ArrayList getClasspathEntries(String ref, ServerRuntime definition, boolean isLaunch) {
 		Classpath cp = definition.getClasspath(ref);
 		Iterator archives = cp.getArchive().iterator();
 		ArrayList entryList = new ArrayList();
 		while (archives.hasNext()) {
 			ArchiveType archive = (ArchiveType) archives.next();
 			String item = definition.getResolver().resolveProperties(archive.getPath());
-			IClasspathEntry entry = JavaCore.newLibraryEntry(new Path(item),null,null );
-			entryList.add(entry);
+			IClasspathEntry entry = null;
+			if(isLaunch)
+				entryList.add(JavaRuntime.newArchiveRuntimeClasspathEntry(new Path(item)));
+			else
+				entryList.add(JavaCore.newLibraryEntry(new Path(item),null,null ));
 		}
-		return (IClasspathEntry[])entryList.toArray(new IClasspathEntry[entryList.size()]);
+		Iterator fileSets = cp.getFileset().iterator();
+		while (fileSets.hasNext()) {
+			FilesetType fileset = (FilesetType) fileSets.next();
+			String dir = definition.getResolver().resolveProperties(fileset.getDir());
+			Iterator includes = fileset.getInclude().iterator();
+			String[] inclstr = new String[fileset.getInclude().size()];
+			int i=0;
+			while (includes.hasNext()) {
+				IncludeType incl = (IncludeType) includes.next();
+				inclstr[i++] =definition.getResolver().resolveProperties(incl.getName());
+			}
+			Iterator excludes = fileset.getExclude().iterator();
+			String[] exclstr = new String[fileset.getExclude().size()];
+			i=0;
+			while (excludes.hasNext()) {
+				ExcludeType excl = (ExcludeType) excludes.next();
+				exclstr[i++] =definition.getResolver().resolveProperties(excl.getName());
+			}
+			DirectoryScanner scanner = new DirectoryScanner();
+			scanner.setBasedir(dir);
+			scanner.setIncludes(inclstr);
+			scanner.setExcludes(exclstr);
+			scanner.scan();
+			String[] filesetFiles = scanner.getIncludedFiles();
+			for (int j = 0; j < filesetFiles.length; j++) {
+				String item = dir+"/"+filesetFiles[j];
+				if(isLaunch)
+					entryList.add(JavaRuntime.newArchiveRuntimeClasspathEntry(new Path(item)));
+				else
+					entryList.add(JavaCore.newLibraryEntry(new Path(item),null,null ));
+
+			}
+		
+		}
+		return entryList;
 	}
 	/**
 	 * Given the serverDefinition and module returns the publisher id 

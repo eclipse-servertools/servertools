@@ -1,18 +1,18 @@
 /***************************************************************************************************
- * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * Copyright (c) 2005-2007 Eteration A.S. and Gorkem Ercan All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Gorkem Ercan - initial API and implementation
+ * Contributors: Gorkem Ercan
+ * Contributors: Naci Dai
  *               
  **************************************************************************************************/
+
 package org.eclipse.jst.server.generic.servertype.definition;
 
-import java.util.List;
-
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.emf.ecore.util.FeatureMap;
 
 /**
@@ -42,15 +42,118 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  * @model extendedMetaData="name='LaunchConfiguration' kind='elementOnly'"
  * @generated
  */
-public interface LaunchConfiguration extends EObject{
+public interface LaunchConfiguration extends EObject {
+	/**
+	 * Returns the value of the '<em><b>Group</b></em>' attribute list.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.util.FeatureMap.Entry}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Group</em>' attribute list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Group</em>' attribute list.
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_Group()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
+	 *        extendedMetaData="kind='group' name='group:0'"
+	 * @generated
+	 */
+	FeatureMap getGroup();
+
+	/**
+	 * Returns the value of the '<em><b>Environment Variable</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.ArgumentPair}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Environment Variable</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Environment Variable</em>' containment reference list.
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_EnvironmentVariable()
+	 * @model type="org.eclipse.jst.server.generic.servertype.definition.ArgumentPair" containment="true" transient="true" volatile="true" derived="true"
+	 *        extendedMetaData="kind='element' name='environmentVariable' group='#group:0'"
+	 * @generated
+	 */
+	EList getEnvironmentVariable();
+
+	/**
+	 * Returns the value of the '<em><b>Group1</b></em>' attribute list.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.util.FeatureMap.Entry}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Group1</em>' attribute list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Group1</em>' attribute list.
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_Group1()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
+	 *        extendedMetaData="kind='group' name='group:2'"
+	 * @generated
+	 */
+	FeatureMap getGroup1();
+
+	/**
+	 * Returns the value of the '<em><b>Program Arguments</b></em>' attribute list.
+	 * The list contents are of type {@link java.lang.String}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Program Arguments</em>' attribute list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Program Arguments</em>' attribute list.
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_ProgramArguments()
+	 * @model type="java.lang.String" unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" transient="true" volatile="true" derived="true"
+	 *        extendedMetaData="kind='element' name='programArguments' group='#group:2'"
+	 * @generated
+	 */
+	EList getProgramArguments();
+
+	/**
+	 * Returns a concatenated String of all Program Arguments
+	 * @generated NOT
+	 * @return
+	 */
+	String getProgramArgumentsAsString();
+	
+
+	/**
+	 * Returns the value of the '<em><b>Working Directory</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Working Directory</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Working Directory</em>' attribute.
+	 * @see #setWorkingDirectory(String)
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_WorkingDirectory()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+	 *        extendedMetaData="kind='element' name='workingDirectory'"
+	 * @generated
+	 */
+	String getWorkingDirectory();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getWorkingDirectory <em>Working Directory</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Working Directory</em>' attribute.
+	 * @see #getWorkingDirectory()
+	 * @generated
+	 */
+	void setWorkingDirectory(String value);
+
 	/**
 	 * Returns the value of the '<em><b>Main Class</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Main Class</em>' attribute isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Main Class</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Main Class</em>' attribute.
 	 * @see #setMainClass(String)
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_MainClass()
@@ -58,7 +161,7 @@ public interface LaunchConfiguration extends EObject{
 	 *        extendedMetaData="kind='element' name='mainClass'"
 	 * @generated
 	 */
-    String getMainClass();
+	String getMainClass();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getMainClass <em>Main Class</em>}' attribute.
@@ -88,48 +191,22 @@ public interface LaunchConfiguration extends EObject{
 	FeatureMap getGroup2();
 
 	/**
-	 * Returns the value of the '<em><b>Working Directory</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @return the value of the '<em>Working Directory</em>' attribute.
-	 * @see #setWorkingDirectory(String)
-	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_WorkingDirectory()
-	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
-	 *        extendedMetaData="kind='element' name='workingDirectory'"
-	 * @generated
-	 */
-	String getWorkingDirectory();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getWorkingDirectory <em>Working Directory</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Working Directory</em>' attribute.
-	 * @see #getWorkingDirectory()
-	 * @generated
-	 */
-	void setWorkingDirectory(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Program Arguments</b></em>' attribute list.
+	 * Returns the value of the '<em><b>Vm Parameters</b></em>' attribute list.
 	 * The list contents are of type {@link java.lang.String}.
 	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Vm Parameters</em>' attribute list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Program Arguments</em>' attribute list.
-	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_ProgramArguments()
+	 * @return the value of the '<em>Vm Parameters</em>' attribute list.
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_VmParameters()
 	 * @model type="java.lang.String" unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" transient="true" volatile="true" derived="true"
-	 *        extendedMetaData="kind='element' name='programArguments' group='#group:2'"
+	 *        extendedMetaData="kind='element' name='vmParameters' group='#group:6'"
 	 * @generated
 	 */
-	List getProgramArguments();
+	EList getVmParameters();
 
-	/**
-	 * Returns a concatenated String of all Program Arguments
-	 * @generated NOT
-	 * @return
-	 */
-	String getProgramArgumentsAsString();
-	
 	/**
 	 * Returns a concatenated String of all Vm parameters.
 	 * @generated NOT
@@ -138,21 +215,12 @@ public interface LaunchConfiguration extends EObject{
 	String getVmParametersAsString();
 
 	/**
-	 * Returns the value of the '<em><b>Vm Parameters</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Vm Parameters</em>' attribute list.
-	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_VmParameters()
-	 * @model type="java.lang.String" unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" transient="true" volatile="true" derived="true"
-	 *        extendedMetaData="kind='element' name='vmParameters' group='#group:6'"
-	 * @generated
-	 */
-	List getVmParameters();
-
-	/**
 	 * Returns the value of the '<em><b>Classpath Reference</b></em>' attribute.
 	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Classpath Reference</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Classpath Reference</em>' attribute.
 	 * @see #setClasspathReference(String)
@@ -163,16 +231,6 @@ public interface LaunchConfiguration extends EObject{
 	 */
 	String getClasspathReference();
 
-    /**
-     * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getClasspathReference <em>Classpath Reference</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Classpath Reference</em>' attribute.
-     * @see #getClasspathReference()
-     * @generated
-     */
-//	void setClasspathReference(String value);
-
 	/**
 	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getClasspathReference <em>Classpath Reference</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -182,23 +240,6 @@ public interface LaunchConfiguration extends EObject{
 	 * @generated
 	 */
 	void setClasspathReference(String value);
-
-	/**
-	 * Returns the value of the '<em><b>External</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.External}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>External</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>External</em>' containment reference list.
-	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_External()
-	 * @model type="org.eclipse.jst.server.generic.servertype.definition.External" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
-	 *        extendedMetaData="kind='element' name='external' group='#group:10'"
-	 * @generated
-	 */
-	List getExternal();
 
 	/**
 	 * Returns the value of the '<em><b>Debug Port</b></em>' attribute.
@@ -245,54 +286,20 @@ public interface LaunchConfiguration extends EObject{
 	FeatureMap getGroup3();
 
 	/**
-	 * Returns the value of the '<em><b>Group</b></em>' attribute list.
-	 * The list contents are of type {@link org.eclipse.emf.ecore.util.FeatureMap.Entry}.
+	 * Returns the value of the '<em><b>External</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.External}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Group</em>' attribute list isn't clear,
+	 * If the meaning of the '<em>External</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Group</em>' attribute list.
-	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_Group()
-	 * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
-	 *        extendedMetaData="kind='group' name='group:0'"
+	 * @return the value of the '<em>External</em>' containment reference list.
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_External()
+	 * @model type="org.eclipse.jst.server.generic.servertype.definition.External" containment="true" transient="true" volatile="true" derived="true"
+	 *        extendedMetaData="kind='element' name='external' group='#group:10'"
 	 * @generated
 	 */
-	FeatureMap getGroup();
-
-	/**
-	 * Returns the value of the '<em><b>Environment Variable</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.ArgumentPair}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Environment Variable</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Environment Variable</em>' containment reference list.
-	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_EnvironmentVariable()
-	 * @model type="org.eclipse.jst.server.generic.servertype.definition.ArgumentPair" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
-	 *        extendedMetaData="kind='element' name='environmentVariable' group='#group:0'"
-	 * @generated
-	 */
-	List getEnvironmentVariable();
-
-	/**
-	 * Returns the value of the '<em><b>Group1</b></em>' attribute list.
-	 * The list contents are of type {@link org.eclipse.emf.ecore.util.FeatureMap.Entry}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Group1</em>' attribute list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Group1</em>' attribute list.
-	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_Group1()
-	 * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
-	 *        extendedMetaData="kind='group' name='group:2'"
-	 * @generated
-	 */
-	FeatureMap getGroup1();
+	EList getExternal();
 
 } // LaunchConfiguration

@@ -274,19 +274,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
      * @return classpath
      */
     protected List serverClasspath(String cpRef) {
-    	Classpath classpath = getServerDefinition().getClasspath(cpRef);
-    	
-        List cpEntryList = new ArrayList(classpath.getArchive().size());
-        Iterator iterator= classpath.getArchive().iterator();
-        while(iterator.hasNext())
-        {
-        	ArchiveType archive = (ArchiveType)iterator.next();
-        	String cpath = getServerDefinition().getResolver().resolveProperties(archive.getPath());
-    	
-    			cpEntryList.add(JavaRuntime.newArchiveRuntimeClasspathEntry(
-    					new Path(cpath)));
-         }
-    	return cpEntryList;
+    	return ServerTypeDefinitionUtil.getClasspathEntries(cpRef, getServerDefinition(),true);
     }
 
     /**

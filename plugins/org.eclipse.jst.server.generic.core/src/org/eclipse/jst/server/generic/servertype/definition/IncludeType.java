@@ -15,46 +15,46 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Archive Type</b></em>'.
+ * A representation of the model object '<em><b>Include Type</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.ArchiveType#getPath <em>Path</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.IncludeType#getName <em>Name</em>}</li>
  * </ul>
  * </p>
  *
- * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getArchiveType()
- * @model extendedMetaData="name='archive_._type' kind='empty'"
+ * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getIncludeType()
+ * @model extendedMetaData="name='include_._type' kind='empty'"
  * @generated
  */
-public interface ArchiveType extends EObject {
+public interface IncludeType extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Path</b></em>' attribute.
+	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Path</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Name</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Path</em>' attribute.
-	 * @see #setPath(String)
-	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getArchiveType_Path()
+	 * @return the value of the '<em>Name</em>' attribute.
+	 * @see #setName(String)
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getIncludeType_Name()
 	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
-	 *        extendedMetaData="kind='attribute' name='path'"
+	 *        extendedMetaData="kind='attribute' name='name'"
 	 * @generated
 	 */
-	String getPath();
+	String getName();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.ArchiveType#getPath <em>Path</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.IncludeType#getName <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Path</em>' attribute.
-	 * @see #getPath()
+	 * @param value the new value of the '<em>Name</em>' attribute.
+	 * @see #getName()
 	 * @generated
 	 */
-	void setPath(String value);
+	void setName(String value);
 
-} // ArchiveType
+} // IncludeType

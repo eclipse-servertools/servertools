@@ -69,7 +69,7 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
                     Button b = (Button)fControls.get( property.getId() );
                     b.setSelection( "true".equals(  getPropertyValue( property ) ) ); //$NON-NLS-1$
                 }
-                else if( Property.TYPE_SELECT.equals( property.getType() )){
+                else if( Property.TYPE_SELECT.equals( property.getType() ) ||  Property.TYPE_SELECT_EDIT.equals( property.getType() )){
                     Combo c = (Combo)fControls.get( property.getId() );
                     String value = getPropertyValue( property )==null ? "": getPropertyValue( property ); //$NON-NLS-1$
                     //c.setText( getPropertyValue( property ) );
@@ -168,6 +168,30 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
     			i++;
     		}
        		final Combo combo = SWTUtil.createLabeledCombo(property.getLabel(), values, parent,toolkit);
+       		fControls.put( property.getId(), combo );
+            combo.addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					executeUpdateOperation(property.getId(),combo.getText());
+				}
+			});
+       		combo.addSelectionListener(new SelectionListener() {		
+				public void widgetSelected(SelectionEvent e) {
+					executeUpdateOperation(property.getId(),combo.getText());
+				}			
+				public void widgetDefaultSelected(SelectionEvent e) {
+					// nothing to do
+				}			
+			});	
+       	}else if(Property.TYPE_SELECT_EDIT.equals(property.getType())) {
+    		StringTokenizer tokenizer = new StringTokenizer(property.getDefault(),","); //$NON-NLS-1$
+    		int tokenCount = tokenizer.countTokens();
+    		String[] values = new String[tokenCount];
+    		int i =0;
+    		while(tokenizer.hasMoreTokens() && i<tokenCount){
+    			values[i]=tokenizer.nextToken();
+    			i++;
+    		}
+       		final Combo combo = SWTUtil.createLabeledEditableCombo(property.getLabel(), values,getPropertyValue(property), parent,toolkit);
        		fControls.put( property.getId(), combo );
             combo.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {

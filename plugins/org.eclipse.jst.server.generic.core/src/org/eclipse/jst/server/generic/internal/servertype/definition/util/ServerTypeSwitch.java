@@ -1,12 +1,14 @@
 /***************************************************************************************************
- * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * Copyright (c) 2005-2007 Eteration A.S. and Gorkem Ercan All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Gorkem Ercan - initial API and implementation
+ * Contributors: Gorkem Ercan
+ * Contributors: Naci Dai
  *               
  **************************************************************************************************/
+
 package org.eclipse.jst.server.generic.internal.servertype.definition.util;
 
 import java.util.List;
@@ -109,9 +111,27 @@ public class ServerTypeSwitch {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ServerTypePackage.EXCLUDE_TYPE: {
+				ExcludeType excludeType = (ExcludeType)theEObject;
+				Object result = caseExcludeType(excludeType);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ServerTypePackage.EXTERNAL: {
 				External external = (External)theEObject;
 				Object result = caseExternal(external);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ServerTypePackage.FILESET_TYPE: {
+				FilesetType filesetType = (FilesetType)theEObject;
+				Object result = caseFilesetType(filesetType);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ServerTypePackage.INCLUDE_TYPE: {
+				IncludeType includeType = (IncludeType)theEObject;
+				Object result = caseIncludeType(includeType);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -219,6 +239,21 @@ public class ServerTypeSwitch {
 	}
 
 	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Exclude Type</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Exclude Type</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseExcludeType(ExcludeType object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpretting the object as an instance of '<em>External</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -234,17 +269,47 @@ public class ServerTypeSwitch {
 	}
 
 	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Fileset Type</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Fileset Type</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseFilesetType(FilesetType object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Include Type</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Include Type</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseIncludeType(IncludeType object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpretting the object as an instance of '<em>Jndi Connection</em>'.
 	 * <!-- begin-user-doc -->
-     * This implementation returns null;
-     * returning a non-null result will terminate the switch.
-     * <!-- end-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpretting the object as an instance of '<em>Jndi Connection</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-    public Object caseJndiConnection(JndiConnection object) {
+	public Object caseJndiConnection(JndiConnection object) {
 		return null;
 	}
 
@@ -341,15 +406,15 @@ public class ServerTypeSwitch {
 	/**
 	 * Returns the result of interpretting the object as an instance of '<em>Publisher Data</em>'.
 	 * <!-- begin-user-doc -->
-     * This implementation returns null;
-     * returning a non-null result will terminate the switch.
-     * <!-- end-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpretting the object as an instance of '<em>Publisher Data</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-    public Object casePublisherData(PublisherData object) {
+	public Object casePublisherData(PublisherData object) {
 		return null;
 	}
 

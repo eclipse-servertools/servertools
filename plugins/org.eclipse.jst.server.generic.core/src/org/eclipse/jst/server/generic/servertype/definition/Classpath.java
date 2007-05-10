@@ -1,18 +1,18 @@
 /***************************************************************************************************
- * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * Copyright (c) 2005-2007 Eteration A.S. and Gorkem Ercan All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Gorkem Ercan - initial API and implementation
+ * Contributors: Gorkem Ercan
+ * Contributors: Naci Dai
  *               
  **************************************************************************************************/
+
 package org.eclipse.jst.server.generic.servertype.definition;
 
-import java.util.List;
-
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.emf.ecore.util.FeatureMap;
 
 /**
@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  * <ul>
  *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.Classpath#getGroup <em>Group</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.Classpath#getArchive <em>Archive</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.Classpath#getFileset <em>Fileset</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.Classpath#getId <em>Id</em>}</li>
  * </ul>
  * </p>
@@ -33,7 +34,7 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  * @model extendedMetaData="name='Classpath' kind='elementOnly'"
  * @generated
  */
-public interface Classpath extends EObject{
+public interface Classpath extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Group</b></em>' attribute list.
 	 * The list contents are of type {@link org.eclipse.emf.ecore.util.FeatureMap.Entry}.
@@ -62,11 +63,28 @@ public interface Classpath extends EObject{
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Archive</em>' containment reference list.
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getClasspath_Archive()
-	 * @model type="org.eclipse.jst.server.generic.servertype.definition.ArchiveType" containment="true" resolveProxies="false" required="true" transient="true" volatile="true" derived="true"
+	 * @model type="org.eclipse.jst.server.generic.servertype.definition.ArchiveType" containment="true" transient="true" volatile="true" derived="true"
 	 *        extendedMetaData="kind='element' name='archive' group='#group:0'"
 	 * @generated
 	 */
-	List getArchive();
+	EList getArchive();
+
+	/**
+	 * Returns the value of the '<em><b>Fileset</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.FilesetType}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Fileset</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Fileset</em>' containment reference list.
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getClasspath_Fileset()
+	 * @model type="org.eclipse.jst.server.generic.servertype.definition.FilesetType" containment="true" transient="true" volatile="true" derived="true"
+	 *        extendedMetaData="kind='element' name='fileset' group='#group:0'"
+	 * @generated
+	 */
+	EList getFileset();
 
 	/**
 	 * Returns the value of the '<em><b>Id</b></em>' attribute.
@@ -94,40 +112,5 @@ public interface Classpath extends EObject{
 	 * @generated
 	 */
 	void setId(String value);
-
-    /**
-     * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.Classpath#isIsLibrary <em>Is Library</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Is Library</em>' attribute.
-     * @see #isSetIsLibrary()
-     * @see #unsetIsLibrary()
-     * @see #isIsLibrary()
-     * @generated
-     */
-//	void setIsLibrary(boolean value);
-
-    /**
-     * Unsets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.Classpath#isIsLibrary <em>Is Library</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @see #isSetIsLibrary()
-     * @see #isIsLibrary()
-     * @see #setIsLibrary(boolean)
-     * @generated
-     */
-//	void unsetIsLibrary();
-
-    /**
-     * Returns whether the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.Classpath#isIsLibrary <em>Is Library</em>}' attribute is set.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @return whether the value of the '<em>Is Library</em>' attribute is set.
-     * @see #unsetIsLibrary()
-     * @see #isIsLibrary()
-     * @see #setIsLibrary(boolean)
-     * @generated
-     */
-//	boolean isSetIsLibrary();
 
 } // Classpath

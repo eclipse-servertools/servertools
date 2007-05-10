@@ -371,6 +371,56 @@ public class SWTUtil {
 			combo.select(0);
 		return combo;
 	}
+	
+	/**
+	 * Creates a label and an editable Combo.
+	 * 
+	 * @param title
+	 * @param values
+	 * @param parent
+	 * @return Combo
+	 */
+	public static Combo createLabeledEditableCombo(String title, String[] values,String value,Composite parent) {
+		return SWTUtil.createLabeledEditableCombo(title, values,value, parent, null);
+	}
+
+	/**
+	 * Creates a label and an editable Combo
+	 * 
+	 * @param title
+	 * @param values
+	 * @param parent
+	 * @param toolkit
+	 * @return Combo
+	 */
+	public static Combo createLabeledEditableCombo(String title, String[] values,String value, Composite parent, FormToolkit toolkit) {
+
+		Label label;
+
+		if (toolkit == null) {
+			label = new Label(parent, SWT.WRAP);
+			label.setText(title);
+		} else {
+			createFormLabel(title, parent, toolkit);
+		}
+		Combo combo = new Combo(parent, SWT.SHADOW_IN | SWT.BORDER);
+		if (toolkit != null) {
+			toolkit.adapt(combo, true, true);
+		}
+
+		GridData gridData = new GridData(GridData.FILL_HORIZONTAL
+				| GridData.GRAB_HORIZONTAL);
+		gridData.horizontalSpan = 2;
+		combo.setLayoutData(gridData);
+
+		for (int i = 0; i < values.length; i++) {
+			combo.add(values[i]);
+		}
+		if (combo.getItemCount() > 0)
+			combo.select(0);
+		combo.setText(value);
+		return combo;
+	}
 
 	private static Label createFormLabel(String title, Composite parent, FormToolkit toolkit) {
 		Label label;

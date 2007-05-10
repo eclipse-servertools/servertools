@@ -1,12 +1,14 @@
 /***************************************************************************************************
- * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * Copyright (c) 2005-2007 Eteration A.S. and Gorkem Ercan All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Gorkem Ercan - initial API and implementation
+ * Contributors: Gorkem Ercan
+ * Contributors: Naci Dai
  *               
  **************************************************************************************************/
+
 package org.eclipse.jst.server.generic.servertype.definition;
 
 import org.eclipse.emf.ecore.EFactory;
@@ -20,14 +22,14 @@ import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypeP
  * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage
  * @generated
  */
-public interface ServerTypeFactory extends EFactory{
+public interface ServerTypeFactory extends EFactory {
 	/**
 	 * The singleton instance of the factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	ServerTypeFactory eINSTANCE = new org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypeFactoryImpl();
+	ServerTypeFactory eINSTANCE = org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypeFactoryImpl.init();
 
 	/**
 	 * Returns a new object of class '<em>Archive Type</em>'.
@@ -57,6 +59,15 @@ public interface ServerTypeFactory extends EFactory{
 	Classpath createClasspath();
 
 	/**
+	 * Returns a new object of class '<em>Exclude Type</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Exclude Type</em>'.
+	 * @generated
+	 */
+	ExcludeType createExcludeType();
+
+	/**
 	 * Returns a new object of class '<em>External</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -66,13 +77,31 @@ public interface ServerTypeFactory extends EFactory{
 	External createExternal();
 
 	/**
+	 * Returns a new object of class '<em>Fileset Type</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Fileset Type</em>'.
+	 * @generated
+	 */
+	FilesetType createFilesetType();
+
+	/**
+	 * Returns a new object of class '<em>Include Type</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Include Type</em>'.
+	 * @generated
+	 */
+	IncludeType createIncludeType();
+
+	/**
 	 * Returns a new object of class '<em>Jndi Connection</em>'.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @return a new object of class '<em>Jndi Connection</em>'.
 	 * @generated
 	 */
-    JndiConnection createJndiConnection();
+	JndiConnection createJndiConnection();
 
 	/**
 	 * Returns a new object of class '<em>Launch Configuration</em>'.
@@ -131,11 +160,11 @@ public interface ServerTypeFactory extends EFactory{
 	/**
 	 * Returns a new object of class '<em>Publisher Data</em>'.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @return a new object of class '<em>Publisher Data</em>'.
 	 * @generated
 	 */
-    PublisherData createPublisherData();
+	PublisherData createPublisherData();
 
 	/**
 	 * Returns a new object of class '<em>Server Runtime</em>'.

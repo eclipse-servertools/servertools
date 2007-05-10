@@ -1,18 +1,23 @@
 /***************************************************************************************************
- * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * Copyright (c) 2005-2007 Eteration A.S. and Gorkem Ercan All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Gorkem Ercan - initial API and implementation
+ * Contributors: Gorkem Ercan
+ * Contributors: Naci Dai
  *               
  **************************************************************************************************/
+
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
 
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
+
+import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 import org.eclipse.jst.server.generic.servertype.definition.*;
@@ -24,6 +29,25 @@ import org.eclipse.jst.server.generic.servertype.definition.*;
  * @generated
  */
 public class ServerTypeFactoryImpl extends EFactoryImpl implements ServerTypeFactory {
+	/**
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static ServerTypeFactory init() {
+		try {
+			ServerTypeFactory theServerTypeFactory = (ServerTypeFactory)EPackage.Registry.INSTANCE.getEFactory("http://eclipse.org/jst/server/generic/ServerTypeDefinition"); 
+			if (theServerTypeFactory != null) {
+				return theServerTypeFactory;
+			}
+		}
+		catch (Exception exception) {
+			EcorePlugin.INSTANCE.log(exception);
+		}
+		return new ServerTypeFactoryImpl();
+	}
+
 	/**
 	 * Creates an instance of the factory.
 	 * <!-- begin-user-doc -->
@@ -44,7 +68,10 @@ public class ServerTypeFactoryImpl extends EFactoryImpl implements ServerTypeFac
 			case ServerTypePackage.ARCHIVE_TYPE: return createArchiveType();
 			case ServerTypePackage.ARGUMENT_PAIR: return createArgumentPair();
 			case ServerTypePackage.CLASSPATH: return createClasspath();
+			case ServerTypePackage.EXCLUDE_TYPE: return createExcludeType();
 			case ServerTypePackage.EXTERNAL: return createExternal();
+			case ServerTypePackage.FILESET_TYPE: return createFilesetType();
+			case ServerTypePackage.INCLUDE_TYPE: return createIncludeType();
 			case ServerTypePackage.JNDI_CONNECTION: return createJndiConnection();
 			case ServerTypePackage.LAUNCH_CONFIGURATION: return createLaunchConfiguration();
 			case ServerTypePackage.MODULE: return createModule();
@@ -94,6 +121,16 @@ public class ServerTypeFactoryImpl extends EFactoryImpl implements ServerTypeFac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public ExcludeType createExcludeType() {
+		ExcludeTypeImpl excludeType = new ExcludeTypeImpl();
+		return excludeType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public External createExternal() {
 		ExternalImpl external = new ExternalImpl();
 		return external;
@@ -101,10 +138,30 @@ public class ServerTypeFactoryImpl extends EFactoryImpl implements ServerTypeFac
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public JndiConnection createJndiConnection() {
+	public FilesetType createFilesetType() {
+		FilesetTypeImpl filesetType = new FilesetTypeImpl();
+		return filesetType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public IncludeType createIncludeType() {
+		IncludeTypeImpl includeType = new IncludeTypeImpl();
+		return includeType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public JndiConnection createJndiConnection() {
 		JndiConnectionImpl jndiConnection = new JndiConnectionImpl();
 		return jndiConnection;
 	}
@@ -171,10 +228,10 @@ public class ServerTypeFactoryImpl extends EFactoryImpl implements ServerTypeFac
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public PublisherData createPublisherData() {
+	public PublisherData createPublisherData() {
 		PublisherDataImpl publisherData = new PublisherDataImpl();
 		return publisherData;
 	}
