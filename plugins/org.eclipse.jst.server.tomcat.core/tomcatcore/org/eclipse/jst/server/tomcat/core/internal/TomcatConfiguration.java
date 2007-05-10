@@ -13,6 +13,7 @@ package org.eclipse.jst.server.tomcat.core.internal;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -128,8 +129,22 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 					}
 					
 					if (copy) {
-						InputStream in = file.getContents();
-						ms.add(FileUtil.copyFile(in, confDir.append(name).toOSString()));
+						String destPath = confDir.append(name).toOSString();
+						String destContents = null;
+						String srcContents = null;
+						File dest = new File(destPath);
+						if (dest.exists()) {
+							InputStream fis = new FileInputStream(destPath);
+							destContents = TomcatVersionHelper.getFileContents(fis);
+							if (destContents != null) {
+								fis = file.getContents();
+								srcContents = TomcatVersionHelper.getFileContents(fis);
+							}
+						}
+						if (destContents == null || srcContents == null || !srcContents.equals(destContents)) {
+							InputStream in = file.getContents();
+							ms.add(FileUtil.copyFile(in, confDir.append(name).toOSString()));
+						}
 					}
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "backupAndPublish() error", e);
