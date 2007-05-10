@@ -294,6 +294,9 @@ public class XMLElement {
 		if (element == otherElement)
 			return true;
 		
+		if (!element.getNodeName().equals(otherElement.getNodeName()))
+			return false;
+		
 		if (element.hasChildNodes()) {
 			if (otherElement.hasChildNodes() && attributesAreEqual(element, otherElement)) {
 				// Compare child nodes

@@ -143,7 +143,7 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 						}
 						if (destContents == null || srcContents == null || !srcContents.equals(destContents)) {
 							InputStream in = file.getContents();
-							ms.add(FileUtil.copyFile(in, confDir.append(name).toOSString()));
+							ms.add(FileUtil.copyFile(in, destPath));
 						}
 					}
 				} catch (Exception e) {
