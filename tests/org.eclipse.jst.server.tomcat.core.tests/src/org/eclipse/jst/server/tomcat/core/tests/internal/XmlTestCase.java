@@ -28,6 +28,8 @@ import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Listener;
 import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Server;
 import org.eclipse.jst.server.tomcat.core.internal.xml.server40.ServerInstance;
 import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Service;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * Test case for XML utility code.
@@ -66,6 +68,17 @@ public class XmlTestCase extends TestCase {
 		}
 	}
 
+	private Context getXml40Context(String testId) {
+		Factory factory = new Factory();
+		factory.setPackageName("org.eclipse.jst.server.tomcat.core.internal.xml.server40");
+		try {
+			return (Context)factory.loadDocument(getXmlInputStream(testId));
+		} catch (Exception e) {
+			fail("Exception occurred loading " + testId + " XML: " + e.getMessage());
+			return null;
+		}
+	}
+	
 	private org.eclipse.jst.server.tomcat.core.internal.xml.server32.Server getXml32Server(String testId) {
 		Factory factory = new Factory();
 		factory.setPackageName("org.eclipse.jst.server.tomcat.core.internal.xml.server32");
@@ -543,5 +556,40 @@ public class XmlTestCase extends TestCase {
 				si.getContextWorkDirectory(new Path("/Base"), si.getContext("")));
 		
 		assertEquals(si.getServerWorkDirectory(new Path("/Base")), new Path("/Base/work"));
+	}
+	
+	public void testTomcatContextComparison() {
+		Context context = getXml40Context("tomcat.context.50");
+		assertTrue(context.isEquivalentTest(context));
+
+		Context context2 = getXml40Context("tomcat.context.50");
+		assertTrue(context.isEquivalentTest(context2));
+		assertTrue(context2.isEquivalentTest(context));
+		
+		String docBase = context2.getDocBase();
+		context2.setDocBase(docBase + "X");
+		assertTrue(!context.isEquivalentTest(context2));
+		assertTrue(!context2.isEquivalentTest(context));
+		context.setDocBase(docBase + "X");
+		assertTrue(context.isEquivalentTest(context2));
+		assertTrue(context2.isEquivalentTest(context));
+		
+		Element realm = context2.getSubElement("Realm");
+		assertNotNull(realm);
+		Node parent = realm.getParentNode();
+		assertNotNull(parent);
+		assertTrue(parent == context2.getElementNode());
+		parent.removeChild(realm);
+		assertTrue(!context.isEquivalentTest(context2));
+		assertTrue(!context2.isEquivalentTest(context));
+
+		parent.insertBefore(realm, parent.getFirstChild());
+		assertTrue(!context.isEquivalentTest(context2));
+		assertTrue(!context2.isEquivalentTest(context));
+		
+		parent.removeChild(realm);
+		parent.appendChild(realm);
+		assertTrue(context.isEquivalentTest(context2));
+		assertTrue(context2.isEquivalentTest(context));
 	}
 }
