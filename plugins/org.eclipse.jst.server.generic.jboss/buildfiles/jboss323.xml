@@ -35,15 +35,15 @@
 	</target>
 	
 	<target name="undeploy.j2ee.web">
-		<delete file="${server.publish.dir}/${module.name}.war"> </delete>
+		<delete file="${server.publish.dir}/${module.name}.war" failonerror="false"> </delete>
 		<sleep seconds="${pause.undeploy}"/>
 	</target>
 	<target name="undeploy.j2ee.ejb">
-		<delete file="${server.publish.dir}/${module.name}.jar"> </delete>
+		<delete file="${server.publish.dir}/${module.name}.jar" failonerror="false"> </delete>
 		<sleep seconds="${pause.undeploy}"/>
 	</target>
 	<target name="undeploy.j2ee.ear">
-		<delete file="${server.publish.dir}/${module.name}.ear"> </delete>
+		<delete file="${server.publish.dir}/${module.name}.ear" failonerror="false"> </delete>
 		<sleep seconds="${pause.undeploy}"/>
 	</target>	
 	

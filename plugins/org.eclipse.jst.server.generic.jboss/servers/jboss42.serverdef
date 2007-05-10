@@ -3,7 +3,7 @@
 	xmlns:tns="http://eclipse.org/jst/server/generic/ServerTypeDefinition"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://eclipse.org/jst/server/generic/ServerTypeDefinition ServerTypeDefinitionSchema.xsd "
-	name="JBOSS 4.0" version="v4.0">
+	name="JBOSS 4.2" version="v4.2">
 <property id="serverRootDirectory"
 	label="%ApplicationServerDirectory"
 	type="directory"
@@ -120,6 +120,12 @@
 	       <!-- This will be ignored if EJB3 is not there 4.0.x 4.2 -->
 	       <include name="server/default/deploy/jboss-aop-jdk50.deployer/*.jar" />
 		   <include name="server/default/deploy/ejb3.deployer/*.jar" />
+
+	       <!-- This will be ignored if EJB3 is not there 5.0 -->
+	       <include name="lib/*.jar" />
+	       <include name="server/default/deployers/jbossweb.deployer/*.jar" />
+	       <include name="server/default/deployers/jboss-aop-jboss5.deployer/*.jar" />
+		   <include name="server/default/deployers/ejb3.deployer/jboss-annotations-ejb3.jar" />
 	       
 	       <!-- for validation to work this library is defined as an archive -->
 	       <exclude name="server/default/lib/mail.jar" />
