@@ -380,8 +380,9 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 				// Determine if context's path attribute should be removed
 				String id = getServer().getServerType().getId();
 				boolean noPath = id.indexOf("55") > 0 || id.indexOf("60") > 0;
+				boolean serverStopped = getServer().getServerState() == IServer.STATE_STOPPED;
 				// TODO Add a monitor
-				TomcatVersionHelper.moveContextsToSeparateFiles(baseDir, noPath, null);
+				TomcatVersionHelper.moveContextsToSeparateFiles(baseDir, noPath, serverStopped, null);
 			}
 		}
 		if (!status.isOK())
