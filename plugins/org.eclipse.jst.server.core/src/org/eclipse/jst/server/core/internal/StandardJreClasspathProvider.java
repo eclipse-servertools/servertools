@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
@@ -38,15 +37,12 @@ public final class StandardJreClasspathProvider implements IClasspathProvider {
 
 	public List getClasspathEntries(IProjectFacetVersion fv) {
 		if (fv.getProjectFacet() == JAVA_FACET) {
-			String runtimeTypeId = rc.getProperty("type-id");
-			String runtimeId = rc.getProperty("id");
-			RuntimeClasspathProviderWrapper rcpw = JavaServerPlugin.findRuntimeClasspathProvider(runtimeTypeId);
-			if (rcpw != null) {
-				IPath path = new Path(RuntimeClasspathContainer.SERVER_CONTAINER);
-				path = path.append(rcpw.getId()).append(runtimeId);
-				IClasspathEntry cpentry = JavaCore.newContainerEntry(path);
-				return Collections.singletonList(cpentry);
-			}
+			String s = rc.getProperty(JRERuntimeComponentProvider.CLASSPATH);
+			if (s == null || s.length() == 0)
+				return null;
+			
+			IClasspathEntry cpentry = JavaCore.newContainerEntry(new Path(s));
+			return Collections.singletonList(cpentry);
 		}
 		
 		return null;

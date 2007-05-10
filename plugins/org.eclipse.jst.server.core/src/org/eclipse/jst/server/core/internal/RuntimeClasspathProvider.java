@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2006 BEA Systems, Inc.
+ * Copyright (c) 2005, 2007 BEA Systems, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
@@ -36,23 +37,28 @@ public class RuntimeClasspathProvider implements IClasspathProvider {
 
 	private IRuntimeComponent rc;
 
-	public RuntimeClasspathProvider(final IRuntimeComponent rc) {
+	public RuntimeClasspathProvider(IRuntimeComponent rc) {
 		this.rc = rc;
 	}
 
-	public List getClasspathEntries(final IProjectFacetVersion fv) {
+	public List getClasspathEntries(IProjectFacetVersion fv) {
 		IProjectFacet pf = fv.getProjectFacet();
 		if (pf == null)
 			return null;
 		
 		if (pf.equals(WEB_FACET) || pf.equals(EJB_FACET) || pf.equals(EAR_FACET) ||
 				pf.equals(UTILITY_FACET) || pf.equals(CONNECTOR_FACET) || pf.equals(APP_CLIENT_FACET)) {
-			String s = rc.getProperty(JRERuntimeComponentProvider.CLASSPATH);
-			if (s == null || s.length() == 0)
+			String runtimeTypeId = rc.getProperty("type-id");
+			String runtimeId = rc.getProperty("id");
+			if (runtimeTypeId == null || runtimeId == null)
 				return null;
-			
-			IClasspathEntry cpentry = JavaCore.newContainerEntry(new Path(s));
-			return Collections.singletonList(cpentry);
+			RuntimeClasspathProviderWrapper rcpw = JavaServerPlugin.findRuntimeClasspathProviderBySupport(runtimeTypeId);
+			if (rcpw != null) {
+				IPath path = new Path(RuntimeClasspathContainer.SERVER_CONTAINER);
+				path = path.append(rcpw.getId()).append(runtimeId);
+				IClasspathEntry cpentry = JavaCore.newContainerEntry(path);
+				return Collections.singletonList(cpentry);
+			}
 		}
 		
 		return null;
@@ -61,7 +67,7 @@ public class RuntimeClasspathProvider implements IClasspathProvider {
 	public static final class Factory implements IAdapterFactory {
 		private static final Class[] ADAPTER_TYPES = { IClasspathProvider.class };
 
-		public Object getAdapter(final Object adaptable, final Class adapterType) {
+		public Object getAdapter(Object adaptable, Class adapterType) {
 			IRuntimeComponent rc = (IRuntimeComponent) adaptable;
 			return new RuntimeClasspathProvider(rc);
 		}

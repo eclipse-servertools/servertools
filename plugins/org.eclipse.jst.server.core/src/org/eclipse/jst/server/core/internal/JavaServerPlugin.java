@@ -217,7 +217,7 @@ public class JavaServerPlugin extends Plugin {
 	 *
 	 * @param runtimeType a runtime type
 	 * @return the runtime classpath provider instance, or <code>null</code> if
-	 *   there is no runtime classpath provider with the given id
+	 *   there is no runtime classpath provider that supports the given id
 	 */
 	public static RuntimeClasspathProviderWrapper findRuntimeClasspathProvider(IRuntimeType runtimeType) {
 		if (runtimeType == null)
@@ -230,6 +230,32 @@ public class JavaServerPlugin extends Plugin {
 		while (iterator.hasNext()) {
 			RuntimeClasspathProviderWrapper runtimeClasspathProvider = (RuntimeClasspathProviderWrapper) iterator.next();
 			if (runtimeClasspathProvider.supportsRuntimeType(runtimeType))
+				return runtimeClasspathProvider;
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the runtime classpath provider that supports the given runtime type id,
+	 * or <code>null</code> if none. This convenience method searches the list of known
+	 * runtime classpath providers ({@link #getRuntimeClasspathProviders()}) for the one
+	 * with a matching runtime type id. The id may not be null.
+	 *
+	 * @param id a runtime type id
+	 * @return the runtime classpath provider instance, or <code>null</code> if
+	 *   there is no runtime classpath provider that supports the given id
+	 */
+	public static RuntimeClasspathProviderWrapper findRuntimeClasspathProviderBySupport(String id) {
+		if (id == null)
+			throw new IllegalArgumentException();
+		
+		if (runtimeClasspathProviders == null)
+			loadRuntimeClasspathProviders();
+		
+		Iterator iterator = runtimeClasspathProviders.iterator();
+		while (iterator.hasNext()) {
+			RuntimeClasspathProviderWrapper runtimeClasspathProvider = (RuntimeClasspathProviderWrapper) iterator.next();
+			if (runtimeClasspathProvider.supportsRuntimeType(id))
 				return runtimeClasspathProvider;
 		}
 		return null;
@@ -249,7 +275,7 @@ public class JavaServerPlugin extends Plugin {
 	public static RuntimeClasspathProviderWrapper findRuntimeClasspathProvider(String id) {
 		if (id == null)
 			throw new IllegalArgumentException();
-
+		
 		if (runtimeClasspathProviders == null)
 			loadRuntimeClasspathProviders();
 		

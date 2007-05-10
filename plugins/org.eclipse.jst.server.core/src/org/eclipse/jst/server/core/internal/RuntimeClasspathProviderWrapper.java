@@ -91,10 +91,21 @@ public class RuntimeClasspathProviderWrapper {
 	public boolean supportsRuntimeType(IRuntimeType runtimeType) {
 		if (runtimeType == null)
 			return false;
-		String id = runtimeType.getId();
+		return supportsRuntimeType(runtimeType.getId());
+	}
+
+	/**
+	 * Returns true if the given server resource type (given by the
+	 * id) can be opened with this editor. This result is based on
+	 * the result of the getServerResources() method.
+	 *
+	 * @param id a runtime type id
+	 * @return boolean
+	 */
+	public boolean supportsRuntimeType(String id) {
 		if (id == null || id.length() == 0)
 			return false;
-
+		
 		String[] s = getRuntimeTypeIds();
 		if (s == null)
 			return false;
