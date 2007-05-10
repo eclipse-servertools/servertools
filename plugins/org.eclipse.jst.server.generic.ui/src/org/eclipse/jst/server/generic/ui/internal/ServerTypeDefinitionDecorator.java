@@ -165,7 +165,14 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
 		//user properties exist use those
 			return fDefinition.getResolver().resolveProperties((String)fProperties.get(property.getId()));
 		}	
-		return fDefinition.getResolver().resolveProperties(property.getDefault());
+		if(Property.TYPE_SELECT_EDIT.equals(property.getType())){
+			StringTokenizer tokenizer = new StringTokenizer(property.getDefault(),","); //$NON-NLS-1$
+			if( tokenizer.hasMoreTokens())
+				return fDefinition.getResolver().resolveProperties(tokenizer.nextToken());
+			else
+				return "";
+		}else
+			return fDefinition.getResolver().resolveProperties(property.getDefault());
 	}	
 
    /**
