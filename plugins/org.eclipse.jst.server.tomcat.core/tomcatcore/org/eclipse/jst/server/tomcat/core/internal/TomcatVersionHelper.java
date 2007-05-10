@@ -865,7 +865,7 @@ public class TomcatVersionHelper {
 	 * @param monitor a progress monitor
 	 * @return result of operation
 	 */
-	public static IStatus moveContextsToSeparateFiles(IPath baseDir, boolean noPath, IProgressMonitor monitor) {
+	public static IStatus moveContextsToSeparateFiles(IPath baseDir, boolean noPath, boolean serverStopped, IProgressMonitor monitor) {
 		IPath confDir = baseDir.append("conf");
 		IPath serverXml = confDir.append("server.xml");
 		try {
@@ -892,7 +892,7 @@ public class TomcatVersionHelper {
 				// Process in reverse order, since contexts may be removed
 				for (int i = wtpContexts.length - 1; i >= 0; i--) {
 					Context context = wtpContexts[i];
-					// TODO Hande non-project contexts when their removal can be addressed
+					// TODO Handle non-project contexts when their removal can be addressed
 					if (context.getSource() == null)
 						continue;
 					
@@ -909,15 +909,19 @@ public class TomcatVersionHelper {
 					if (Boolean.valueOf(context.getAttributeValue("antiResourceLocking")).booleanValue())
 						context.setAttributeValue("antiResourceLocking", "false");
 					
-					// If requested, remove path attribute
-					if (noPath)
-						context.removeAttribute("path");
-					
 					File contextFile = new File(contextDir, name + ".xml");
-					DocumentBuilder builder = XMLUtil.getDocumentBuilder();
-					Document contextDoc = builder.newDocument();
-					contextDoc.appendChild(contextDoc.importNode(context.getElementNode(), true));
-					XMLUtil.save(contextFile.getAbsolutePath(), contextDoc);
+					Context existingContext = loadContextFile(contextFile);
+					// If server is stopped or if contexts are not the equivalent, write the context file
+					if (serverStopped || !context.isEquivalent(existingContext)) {
+						// If requested, remove path attribute
+						if (noPath)
+							context.removeAttribute("path");
+						
+						DocumentBuilder builder = XMLUtil.getDocumentBuilder();
+						Document contextDoc = builder.newDocument();
+						contextDoc.appendChild(contextDoc.importNode(context.getElementNode(), true));
+						XMLUtil.save(contextFile.getAbsolutePath(), contextDoc);
+					}
 
 					host.removeElement("Context", i);
 					modified = true;
@@ -951,15 +955,41 @@ public class TomcatVersionHelper {
 		for (int j = 0; j < contextFiles.length; j++) {
 			File ctx = contextFiles[j];
 
-			FileInputStream fis = null;
-			Context context = null;
+			Context context = loadContextFile(ctx);
+			if (context != null) {
+				// TODO Handle non-project contexts when their removal can be addressed
+				String memento = context.getSource();
+				if (memento != null) {
+					projectContexts.put(ctx, context);
+				}
+			}
+		}
+	}
+	
+	private static Context loadContextFile(File contextFile) {
+		FileInputStream fis = null;
+		Context context = null;
+		if (contextFile != null && contextFile.exists()) {
 			try {
-				fis = new FileInputStream(ctx);
-				context = (Context) factory.loadDocument(fis);
+				Factory factory = new Factory();
+				factory.setPackageName("org.eclipse.jst.server.tomcat.core.internal.xml.server40");
+				fis = new FileInputStream(contextFile);
+				context = (Context)factory.loadDocument(fis);
+				if (context != null) {
+					String path = context.getPath();
+					// If path attribute is not set, derive from file name
+					if (path == null) {
+						String fileName = contextFile.getName();
+						path = fileName.substring(0, fileName.length() - ".xml".length());
+						if ("ROOT".equals(path))
+							path = "";
+						context.setPath("/" + path);
+					}
+				}
 			} catch (Exception e) {
 				// may be a spurious xml file in the host dir?
 				Trace.trace(Trace.FINER, "Unable to read context "
-						+ ctx.getAbsolutePath());
+						+ contextFile.getAbsolutePath());
 			} finally {
 				try {
 					fis.close();
@@ -967,22 +997,7 @@ public class TomcatVersionHelper {
 					// ignore
 				}
 			}
-			if (context != null) {
-				// TODO Handle non-project contexts when their removal can be addressed
-				String memento = context.getSource();
-				if (memento != null) {
-					String path = context.getPath();
-					// If path attribute is not set, derive from file name
-					if (path == null) {
-						String fileName = ctx.getName();
-						path = fileName.substring(0, fileName.length() - ".xml".length());
-						if ("ROOT".equals(path))
-							path = "";
-						context.setPath(path);
-					}
-					projectContexts.put(ctx, context);
-				}
-			}
 		}
+		return context;
 	}
 }

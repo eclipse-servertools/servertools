@@ -250,4 +250,132 @@ public class XMLElement {
 	public void importNode(Node node, boolean deep) {
 		xmlElement.appendChild(xmlElement.getOwnerDocument().importNode(node, deep));
 	}
+
+	/**
+	 * This method tries to compare two XMLElements for equivalence. Due to
+	 * the lack of normalization, they aren't compared for equality. Elements
+	 * are required to have the same attributes or the same node value
+	 * if attributes aren't present. Attributes and node value are assumed
+	 * to be mutually exclusive for Tomcat configuration XML files. The
+	 * same non-text child nodes are required to be present in an element
+	 * and appear in the same order. If a node type other than element or
+	 * comment is encountered, this method punts and returns false.
+	 * 
+	 * @param obj XMLElement to compare
+	 * @return true if the elements are equivalent
+	 */
+	public boolean isEquivalent(XMLElement obj) {
+		if (obj != null) {
+			try {
+				return elementsAreEquivalent(xmlElement, obj.getElementNode());
+			}
+			catch (Exception e) {
+				// Catch and ignore just to be safe
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Same as isEquivalent() but doesn't ignore exceptions for test purposes.
+	 * This avoids hiding an expected mismatch behind an unexpected exception.
+	 * 
+	 * @param obj XMLElement to compare
+	 * @return true if the elements are equivalent
+	 */
+	public boolean isEquivalentTest(XMLElement obj) {
+		if (obj != null) {
+			return elementsAreEquivalent(xmlElement, obj.getElementNode());
+		}
+		return false;
+	}
+	
+	private static boolean elementsAreEquivalent(Element element, Element otherElement) {
+		if (element == otherElement)
+			return true;
+		
+		if (element.hasChildNodes()) {
+			if (otherElement.hasChildNodes() && attributesAreEqual(element, otherElement)) {
+				// Compare child nodes
+				NodeList nodelist = element.getChildNodes();
+				NodeList otherNodelist = otherElement.getChildNodes();
+				if (nodelist.getLength() == otherNodelist.getLength()) {
+					Node node = nextNonTextNode(element.getFirstChild());
+					Node otherNode = nextNonTextNode(otherElement.getFirstChild());
+					while (node != null) {
+						if (otherNode == null)
+							return false;
+						short nextNodeType = node.getNodeType();
+						if (nextNodeType != otherNode.getNodeType())
+							return false;
+						// If elements, compare 
+						if (nextNodeType == Node.ELEMENT_NODE) {
+							if (!elementsAreEquivalent((Element)node, (Element)otherNode))
+								return false;
+						}
+						// Else if comment, compare
+						else if (nextNodeType == Node.COMMENT_NODE) {
+							if (!nodeValuesAreEqual(node, otherNode))
+								return false;
+						}
+						// Else punt on other node types
+						else {
+							return false;
+						}
+						node = nextNonTextNode(node.getNextSibling());
+						otherNode = nextNonTextNode(otherNode.getNextSibling());
+					}
+					// If also at end of other children, return equal
+					if (otherNode == null)
+						return true;
+				}
+			}
+		}
+		else if (!otherElement.hasChildNodes()) {
+			return attributesAreEqual(element, otherElement);
+		}
+		return false;
+	}
+	
+	private static Node nextNonTextNode(Node node) {
+		while (node != null && node.getNodeType() == Node.TEXT_NODE)
+			node = node.getNextSibling();
+		return node;
+	}
+
+	private static boolean attributesAreEqual(Element element, Element otherElement) {
+		NamedNodeMap attrs = element.getAttributes();
+		NamedNodeMap otherAttrs = otherElement.getAttributes();
+		if (attrs == null && otherAttrs == null) {
+			// Return comparison of element values if there are no attributes
+			return nodeValuesAreEqual(element, otherElement);
+		}
+		
+		if (attrs.getLength() == otherAttrs.getLength()) {
+			if (attrs.getLength() == 0)
+				// Return comparison of element values if there are no attributes
+				return nodeValuesAreEqual(element, otherElement);
+			
+			for (int i = 0; i < attrs.getLength(); i++) {
+				Node attr = attrs.item(i);
+				Node otherAttr = otherAttrs.getNamedItem(attr.getNodeName());
+				if (!nodeValuesAreEqual(attr, otherAttr))
+					return false;
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	private static boolean nodeValuesAreEqual(Node node, Node otherNode) {
+		String value = node.getNodeValue();
+		String otherValue = otherNode.getNodeValue();
+		if (value != null && otherValue != null) {
+			if (value.equals(otherValue))
+				return true;
+		}
+		else if (value == null && otherValue == null)
+			return true;
+		return false;
+	}
 }
