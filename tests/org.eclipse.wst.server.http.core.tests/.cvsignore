@@ -2,3 +2,4 @@ bin
 build.xml
 temp.folder
 servertests.jar
+javaCompiler.tests.jar.args
