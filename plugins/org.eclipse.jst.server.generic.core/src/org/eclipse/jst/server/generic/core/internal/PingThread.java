@@ -109,7 +109,7 @@ public class PingThread {
 					stop = true;
 			} catch (FileNotFoundException fe) {
 				try {
-					Thread.sleep(200);
+					Thread.sleep(PING_INTERVAL);
 				} catch (Exception e) {
 					// ignore
 				}
