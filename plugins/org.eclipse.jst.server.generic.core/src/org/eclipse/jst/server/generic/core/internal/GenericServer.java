@@ -46,20 +46,27 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 
     private static final String ATTR_GENERIC_SERVER_MODULES = "Generic_Server_Modules_List"; //$NON-NLS-1$
 
-	public IStatus canModifyModules(IModule[] add, IModule[] remove) {
-		for ( int i = 0; i < add.length; i++ ) {         
-			if( !isSupportedModule( add[i] ) ){
-                return new Status( IStatus.ERROR, CorePlugin.PLUGIN_ID, 0,
-                        GenericServerCoreMessages.moduleNotCompatible, null );
-            }
-            if ( add[i].getProject() != null ) {
-                IStatus status = FacetUtil.verifyFacets(add[i].getProject(), getServer());
-                if (status != null && !status.isOK())
-                    return status;
+	public IStatus canModifyModules( IModule[] add, IModule[] remove ) {
+        if( add != null )// remove is OK.
+        {
+            for( int i = 0; i < add.length; i++ )
+            {
+                if( !isSupportedModule( add[i] ) )
+                {
+                    return new Status( IStatus.ERROR, CorePlugin.PLUGIN_ID, 0,
+                            GenericServerCoreMessages.moduleNotCompatible, null );
+                }
+                if( add[i].getProject() != null )
+                {
+                    IStatus status = FacetUtil.verifyFacets( add[i]
+                            .getProject(), getServer() );
+                    if( status != null && !status.isOK() )
+                        return status;
+                }
             }
         }
-		return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "CanModifyModules", null); //$NON-NLS-1$ 
-	}
+        return Status.OK_STATUS;
+    }
 	
     private boolean isSupportedModule(IModule module){
         if( module == null )
@@ -184,9 +191,13 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 			port = getHttpPort();
 			port =ServerUtil.getMonitoredPort(getServer(), port, "web"); //$NON-NLS-1$
 			if (port != 80)
-				url += ":" + port;
+				url += ":" + port; //$NON-NLS-1$
 
-			url += '/'+webModule.getContextRoot();
+			String ctxRoot = webModule.getContextRoot();
+			if(!ctxRoot.startsWith( "/" )){ //$NON-NLS-1$
+			    url += '/';
+			}
+			url += webModule.getContextRoot();
 
 			if (!url.endsWith("/")) //$NON-NLS-1$
 				url += "/"; //$NON-NLS-1$
