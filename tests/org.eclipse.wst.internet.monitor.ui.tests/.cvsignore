@@ -2,3 +2,4 @@ bin
 build.xml
 temp.folder
 monitortests.jar
+javaCompiler.monitortests.jar.args

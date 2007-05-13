@@ -2,3 +2,4 @@ bin
 build.xml
 temp.folder
 performance.jar
+javaCompiler.performance.jar.args
