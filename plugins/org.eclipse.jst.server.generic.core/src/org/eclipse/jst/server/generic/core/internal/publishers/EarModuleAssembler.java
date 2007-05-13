@@ -21,6 +21,8 @@ import org.eclipse.jst.server.core.IEnterpriseApplication;
 import org.eclipse.jst.server.generic.core.internal.CorePlugin;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
 import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.internal.Server;
+import org.eclipse.wst.server.core.model.IModuleResourceDelta;
 
 /**
  * Utility for EAR module assembly.
@@ -43,13 +45,25 @@ public class EarModuleAssembler extends AbstractModuleAssembler {
 				IStatus status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0,	"unable to assemble module null uri",null ); //$NON-NLS-1$
 				throw new CoreException(status);
 			}
-				
-			packModule(module,uri, parent);
+			if( shouldRepack( module ) ){	
+			    packModule(module,uri, parent);
+            }
 		}
 		return parent;
 	}
-	
-	protected void packModule(IModule module, String deploymentUnitName, IPath destination) throws CoreException {
+	/**
+     * Checks if there has been a change in the published resources.
+     * @param module
+     * @return module changed
+	 */
+	private boolean shouldRepack( IModule module ) {
+        final Server server = (Server) fServer.getServer();
+        final IModule[] modules ={module}; 
+        IModuleResourceDelta[] deltas = server.getPublishedResourceDelta( modules );
+        return deltas.length > 0;
+    }
+
+    protected void packModule(IModule module, String deploymentUnitName, IPath destination) throws CoreException {
 		if(module.getModuleType().getId().equals("jst.web")) //$NON-NLS-1$
 		{
 			AbstractModuleAssembler assembler= AbstractModuleAssembler.Factory.getModuleAssembler(module, fServer);

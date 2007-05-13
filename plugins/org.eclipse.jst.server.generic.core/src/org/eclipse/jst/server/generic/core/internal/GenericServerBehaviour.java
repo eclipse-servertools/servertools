@@ -87,13 +87,22 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     }
 
     private void setModulePublishState( IModule[] module, IStatus[] status ) throws CoreException {
-        if(status==null || status.length < 1 ){
-            setModulePublishState(module, IServer.PUBLISH_STATE_NONE);
-        }else {
-            for (int i=0; i < status.length; i++) {
-                if (IStatus.ERROR == status[i].getSeverity()){
-                	setModulePublishState(module, IServer.PUBLISH_STATE_UNKNOWN);
-                    throw new CoreException(status[i]);
+        if( module==null )
+            return;
+        for( int i=0; i < module.length; i++)
+        {
+            if(status == null ||
+                    status.length < i ||
+                    status[i]==null || 
+                    status[i].getSeverity() == IStatus.OK )
+            {
+            setModulePublishState(module, IServer.PUBLISH_STATE_NONE);    
+            }
+            else
+            {
+                if ( IStatus.ERROR == status[i].getSeverity() ){
+                    setModulePublishState( module, IServer.PUBLISH_STATE_UNKNOWN );
+                    throw new CoreException( status[i] );
                 }
             }
         }
