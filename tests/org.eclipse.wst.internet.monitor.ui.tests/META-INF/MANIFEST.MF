@@ -9,7 +9,7 @@ Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.wst.internet.monitor.ui.tests,
  org.eclipse.wst.internet.monitor.ui.tests.extension
 Require-Bundle: org.eclipse.core.runtime,
- org.junit,
+ org.junit;bundle-version="[3.8.0,4.0.0)",
  org.eclipse.ui,
  org.eclipse.wst.internet.monitor.core,
  org.eclipse.wst.internet.monitor.ui
