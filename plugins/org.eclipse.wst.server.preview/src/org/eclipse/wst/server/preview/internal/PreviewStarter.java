@@ -11,6 +11,9 @@
 package org.eclipse.wst.server.preview.internal;
 
 import java.io.File;
+import java.util.logging.Filter;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import org.mortbay.http.HttpContext;
 import org.mortbay.http.handler.ResourceHandler;
@@ -18,6 +21,12 @@ import org.mortbay.jetty.*;
 import org.mortbay.jetty.servlet.WebApplicationContext;
 
 public class PreviewStarter {
+	private static final String[] avertedLogs = new String[] {
+		"org.mortbay.util.Container", "org.mortbay.http.HttpServer",
+		"org.mortbay.util.Credential", "org.mortbay.http.SocketListener",
+		"org.mortbay.http.HttpServer", "org.mortbay.jetty.Server"
+	};
+
 	protected String configPath;
 	protected Server server;
 
@@ -46,8 +55,44 @@ public class PreviewStarter {
 				System.out.println();
 			}
 			
+			for (int i = 0; i < avertedLogs.length; i++) {
+				Logger logger = Logger.getLogger(avertedLogs[i]);
+				logger.setFilter(new Filter() {
+					public boolean isLoggable(LogRecord record) {
+						//Trace.trace(Trace.FINEST, "Averted Jetty log: " + record.getMessage());
+						//System.out.println("averted: " + record.getLoggerName() + ": " + record.getMessage());
+						return false;
+					}
+				});
+			}
+			
+			// helper code to find jetty loggers
+			/*Logger logger = Logger.getLogger("org.mortbay.http.HttpServer");
+			logger.addHandler(new java.util.logging.Handler() {
+				public void close() throws SecurityException {
+					// ignore
+				}
+
+				public void flush() {
+					// ignore
+				}
+
+				public void publish(LogRecord record) {
+					System.out.println("Logger found: " + record.getLoggerName());
+				}
+			});*/
+			
 			server = new Server();
 			server.addListener(":" + config.getPort());
+			server.setTrace(false);
+			server.setStatsOn(false);
+			
+			/*HttpContext context2 = new HttpContext();
+			context2.setContextPath("/");
+			context2.addHandler(new WTPErrorPageHandler());
+			context2.setAttribute(HttpContext.__ErrorHandler, new WTPErrorPageHandler());
+			server.addContext(context2);
+			server.setRootWebApp("/");*/
 			
 			for (int i = 0; i < size; i++) {
 				Module module = m[i];
@@ -56,11 +101,19 @@ public class PreviewStarter {
 					context.setContextPath(module.getContext());
 					context.setResourceBase(module.getPath());
 					context.addHandler(new ResourceHandler());
+					context.addHandler(new WTPErrorPageHandler());
+					context.setAttribute(HttpContext.__ErrorHandler, new WTPErrorPageHandler());
 					server.addContext(context);
 				} else {
-					//System.out.println(module.getContext() + " - " + module.getPath());
-					WebApplicationContext context = server.addWebApplication(module.getContext(), module.getPath() + File.separator);
-					context.setResourceBase(module.getPath() + File.separator);
+					WebApplicationContext context = server.addWebApplication(module.getContext(), module.getPath());
+					context.setResourceBase(module.getPath());
+					//context.addHandler(new ResourceHandler());
+					context.addHandler(new WTPErrorPageHandler());
+					context.setAttribute(HttpContext.__ErrorHandler, new WTPErrorPageHandler());
+					
+					//context.setClassLoader(getClass().getClassLoader());
+					//context.start();
+					
 					//WebApplicationContext context = server.addWebApplication("/", module.getPath() + "/");
 					/*context.setConfigurationClassNames(new String[] { "org.mortbay.jetty.servlet.XMLConfiguration" });
 					context.setResourceBase(module.getPath());
