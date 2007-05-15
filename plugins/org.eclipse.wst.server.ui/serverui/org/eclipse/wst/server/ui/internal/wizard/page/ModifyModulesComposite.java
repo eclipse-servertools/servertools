@@ -412,7 +412,6 @@ public class ModifyModulesComposite extends Composite {
 		addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
 				font.dispose();
-				color.dispose();
 			}
 		});
 		

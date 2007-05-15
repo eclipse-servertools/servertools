@@ -519,7 +519,9 @@ public class ServerTableViewer extends TreeViewer {
 				((Server) servers[i]).removePublishListener(publishListener);
 			}
 		}
-	
+		
+		font.dispose();
+		
 		super.handleDispose(event);
 	}
 
