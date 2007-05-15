@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.PublishServerJob;
+import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFragment;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
@@ -33,7 +34,7 @@ public class ModifyModulesWizard extends TaskWizard {
 					IServerAttributes svr = (IServerAttributes) getTaskModel().getObject(TaskModel.TASK_SERVER);
 					if (svr instanceof IServer) {
 						IServer server = (IServer) svr;
-						if (server.getServerState() != IServer.STATE_STOPPED) {
+						if (server.getServerState() != IServer.STATE_STOPPED && ((Server)server).getAutoPublishSetting() != Server.AUTO_PUBLISH_DISABLE) {
 							PublishServerJob publishJob = new PublishServerJob(server);
 							publishJob.schedule();
 						}

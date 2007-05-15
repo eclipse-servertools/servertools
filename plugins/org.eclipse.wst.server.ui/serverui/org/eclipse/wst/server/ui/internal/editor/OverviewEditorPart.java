@@ -111,6 +111,36 @@ public class OverviewEditorPart extends ServerEditorPart {
 						serverConfigurationName.setForeground(colorDefault);
 				}
 				validate();
+				
+				// following code behaves poorly because there is no default local or remote
+				// publishing time per server or server type. as a result it sets the value
+				// to the default, which seems to be more harm than good until we revamp the
+				// default publishing times
+				/*if ("hostname".equals(event.getPropertyName())) {
+					final String oldHostname = (String) event.getOldValue();
+					final String newHostname = (String) event.getNewValue();
+					final boolean isNewHostnameLocalhost = SocketUtil.isLocalhost(newHostname);
+					if (isNewHostnameLocalhost != SocketUtil.isLocalhost(oldHostname)) {
+						// run this code only if the hostname changed from
+						// 'localhost' to a remote name, or vice-versa
+						hostname.getDisplay().asyncExec(new Runnable() {
+							public void run() {
+								try {
+									if (isNewHostnameLocalhost) {
+										int autoPublishTime2 = ServerPreferences.getInstance().getAutoPublishLocalTime();
+										((ServerWorkingCopy)getServer()).setAutoPublishTime(autoPublishTime2);
+									} else {
+										int autoPublishTime2 = ServerPreferences.getInstance().getAutoPublishRemoteTime();
+										((ServerWorkingCopy)getServer()).setAutoPublishTime(autoPublishTime2);
+									}
+								} catch (Exception e) {
+									Trace.trace(Trace.WARNING, "Could not update publish time to new host");
+								}
+							}
+						});
+					}
+				}*/
+				
 				if (updating)
 					return;
 				updating = true;
