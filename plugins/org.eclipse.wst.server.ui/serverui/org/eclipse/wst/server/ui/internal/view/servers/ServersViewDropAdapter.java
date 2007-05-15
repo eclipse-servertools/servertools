@@ -15,6 +15,7 @@ import java.util.Iterator;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -87,8 +88,19 @@ public class ServersViewDropAdapter extends ViewerDropAdapter {
 			if (modules != null && modules.length == 1) {
 				try {
 					IServerWorkingCopy wc = server.createWorkingCopy();
-					wc.modifyModules(modules, null, null);
-					wc.save(false, null);
+					IModule[] parents = wc.getRootModules(modules[0], null);
+					if (parents == null || parents.length == 0)
+						return false;
+					
+					if (ServerUtil.containsModule(server, parents[0], null))
+						return false;
+					
+					IModule[] add = new IModule[] { parents[0] };
+					if (wc.canModifyModules(add, null, null).getSeverity() != IStatus.ERROR) {
+						wc.modifyModules(modules, null, null);
+						wc.save(false, null);
+						return true;
+					}
 				} catch (final CoreException ce) {
 					final Shell shell = getViewer().getControl().getShell();
 					shell.getDisplay().asyncExec(new Runnable() {
@@ -96,8 +108,8 @@ public class ServersViewDropAdapter extends ViewerDropAdapter {
 							EclipseUtil.openError(shell, ce.getLocalizedMessage());
 						}
 					});
+					return true;
 				}
-				return true;
 			}
 		}
 		
