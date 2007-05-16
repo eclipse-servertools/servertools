@@ -520,8 +520,6 @@ public class ServerTableViewer extends TreeViewer {
 			}
 		}
 		
-		font.dispose();
-		
 		super.handleDispose(event);
 	}
 
