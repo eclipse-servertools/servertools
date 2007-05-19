@@ -78,7 +78,13 @@ public class ServerTypeDefinitionManager
         
         if (serverdef != null) {
             ServerRuntime runtimedef = fXmlUtils.getRuntimeTypeDefinition(runtimeTypeId);
-            serverdef = ServerRuntimeMergeUtil.combine(serverdef, runtimedef);
+            if (runtimedef == null) {
+            	// Fall back to the original usage
+                serverdef = fXmlUtils.getServerTypeDefinition(runtimeTypeId);
+            }
+            else {
+                serverdef = ServerRuntimeMergeUtil.combine(serverdef, runtimedef);
+            }
         }
         else {
             // Fall back to the original usage
