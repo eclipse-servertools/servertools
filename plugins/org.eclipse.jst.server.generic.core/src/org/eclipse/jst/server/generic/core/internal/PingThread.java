@@ -60,7 +60,7 @@ public class PingThread {
     
 	private int guessMaxPings(GenericServerBehaviour server)
     {
-    	int maxpings=60;
+    	int maxpings=-1;
     	int startTimeout = ((ServerType)server.getServer().getServerType()).getStartTimeout();
     	if(startTimeout>0)
     		maxpings=startTimeout/PING_INTERVAL;
