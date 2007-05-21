@@ -29,6 +29,27 @@
          id="org.eclipse.jst.server_core.feature"
          version="0.0.0"/>
 
+   <requires>
+      <import plugin="org.eclipse.core.runtime" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.debug.ui" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.ui" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.jdt.core" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.jdt.launching" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.jdt.junit" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.wst.server.core" version="1.0.103" match="equivalent"/>
+      <import plugin="org.eclipse.wst.server.ui" version="1.0.103" match="equivalent"/>
+      <import plugin="org.eclipse.jst.server.core" version="1.0.103" match="equivalent"/>
+      <import plugin="org.eclipse.ui.ide" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.jdt.ui" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.wst.common.project.facet.core" version="1.1.0" match="compatible"/>
+      <import plugin="org.eclipse.wst.common.project.facet.ui" version="1.1.0"/>
+      <import plugin="org.eclipse.wst.common.modulecore" version="1.1.0" match="equivalent"/>
+      <import plugin="org.eclipse.jface.text" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.jdt.debug.ui" version="3.2.100" match="compatible"/>
+      <import plugin="org.eclipse.jst.server.generic.core" version="1.0.1"/>
+      <import plugin="org.eclipse.ui.forms" version="3.2.0" match="compatible"/>
+   </requires>
+
    <plugin
          id="org.eclipse.jst.server.ui"
          download-size="0"
