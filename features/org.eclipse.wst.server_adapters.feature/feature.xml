@@ -21,6 +21,19 @@
       <update label="%updateSiteName" url="http://download.eclipse.org/webtools/updates/"/>
    </url>
 
+   <requires>
+      <import plugin="org.eclipse.core.runtime" version="3.2.0" match="compatible"/>
+      <import plugin="org.apache.commons.logging" version="1.0.4" match="compatible"/>
+      <import plugin="org.eclipse.core.resources" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.core.commands" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.wst.server.core" version="1.0.204" match="compatible"/>
+      <import plugin="org.eclipse.ui.forms" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.wst.server.ui" version="1.0.103" match="equivalent"/>
+      <import plugin="org.eclipse.wst.server.http.core" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.wst.common.project.facet.ui" version="1.2.0" match="compatible"/>
+      <import plugin="org.mortbay.jetty" version="5.1.11" match="compatible"/>
+   </requires>
+
    <plugin
          id="org.eclipse.wst.server.preview.adapter"
          download-size="0"
