@@ -49,14 +49,22 @@ public class ServerUtil {
 		if (project == null)
 			throw new IllegalArgumentException();
 		
-		IModule[] modules = getModules();
-		if (modules != null) {
-			int size = modules.length;
+		ModuleFactory[] factories = ServerPlugin.getModuleFactories();
+		if (factories != null) {
+			int size = factories.length;
 			for (int i = 0; i < size; i++) {
-				if (modules[i] != null && project.equals(modules[i].getProject()))
-					return modules[i];
+				IModule[] modules = factories[i].getModules();
+				if (modules != null) {
+					int size2 = modules.length;
+					for (int j = 0; j < size2; j++) {
+						if (project.equals(modules[j].getProject()) && isSupportedModule(factories[i].getModuleTypes(), modules[j].getModuleType())) {
+							return modules[j];
+						}
+					}
+				}
 			}
 		}
+		
 		return null;
 	}
 
@@ -276,7 +284,7 @@ public class ServerUtil {
 	 * @return a possibly empty array of modules
 	 */
 	private static IModule[] getModules() {
-		List list = new ArrayList();
+		Set set = new HashSet();
 		
 		ModuleFactory[] factories = ServerPlugin.getModuleFactories();
 		if (factories != null) {
@@ -286,9 +294,9 @@ public class ServerUtil {
 				if (modules != null) {
 					int size2 = modules.length;
 					for (int j = 0; j < size2; j++) {
-						if (!list.contains(modules[j])) {
+						if (!set.contains(modules[j])) {
 							if (isSupportedModule(factories[i].getModuleTypes(), modules[j].getModuleType()))
-								list.add(modules[j]);
+								set.add(modules[j]);
 							else
 								Trace.trace(Trace.WARNING, "Invalid module returned from factory, ignored: " + modules[j]);
 						}
@@ -296,8 +304,8 @@ public class ServerUtil {
 				}
 			}
 		}
-		IModule[] modules = new IModule[list.size()];
-		list.toArray(modules);
+		IModule[] modules = new IModule[set.size()];
+		set.toArray(modules);
 		return modules;
 	}
 
