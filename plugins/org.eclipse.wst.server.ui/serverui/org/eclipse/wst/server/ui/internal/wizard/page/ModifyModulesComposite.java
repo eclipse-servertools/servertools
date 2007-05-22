@@ -373,6 +373,8 @@ public class ModifyModulesComposite extends Composite {
 		if (b) {
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
+					if (availableTreeViewer == null || availableTreeViewer.getControl().isDisposed())
+						return;
 					try { // update trees if we can
 						availableTreeViewer.refresh();
 						deployedTreeViewer.refresh();

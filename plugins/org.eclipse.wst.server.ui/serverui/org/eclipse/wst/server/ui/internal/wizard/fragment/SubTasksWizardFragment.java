@@ -41,7 +41,8 @@ public class SubTasksWizardFragment extends WizardFragment {
 		if (comp != null)
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
-					comp.setTasks(tasks);
+					if (comp != null && !comp.isDisposed())
+						comp.setTasks(tasks);
 				}
 			});
 	}

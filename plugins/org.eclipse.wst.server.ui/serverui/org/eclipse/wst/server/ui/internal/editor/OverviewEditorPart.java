@@ -366,7 +366,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 								}
 							}
 							
-							if (runtimeCombo != null) {
+							if (runtimeCombo != null && !runtimeCombo.isDisposed()) {
 								updateRuntimeCombo();
 								
 								int size2 = runtimes.length;
@@ -382,7 +382,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 				public void runtimeAdded(final IRuntime runtime2) {
 					Display.getDefault().syncExec(new Runnable() {
 						public void run() {
-							if (runtimeCombo != null) {
+							if (runtimeCombo != null && !runtimeCombo.isDisposed()) {
 								updateRuntimeCombo();
 								
 								int size2 = runtimes.length;
@@ -398,7 +398,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 				public void runtimeRemoved(IRuntime runtime2) {
 					Display.getDefault().syncExec(new Runnable() {
 						public void run() {
-							if (runtimeCombo != null) {
+							if (runtimeCombo != null && !runtimeCombo.isDisposed()) {
 								updateRuntimeCombo();
 								
 								int size2 = runtimes.length;
