@@ -37,6 +37,7 @@ import org.eclipse.wst.server.core.internal.StartServerJob;
 import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.model.ModuleArtifactDelegate;
 import org.eclipse.wst.server.ui.internal.*;
+import org.eclipse.wst.server.ui.internal.viewers.ModuleArtifactComposite;
 import org.eclipse.wst.server.ui.internal.wizard.*;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
@@ -158,14 +159,13 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 * Run the resource on a server.
 	 */
 	protected void run() {
-		IModuleArtifact[] moduleArtifacts = ServerPlugin.getModuleArtifacts(selection);
+		final IModuleArtifact[] moduleArtifacts = ServerPlugin.getModuleArtifacts(selection);
 		if (moduleArtifacts == null || moduleArtifacts.length == 0 || moduleArtifacts[0] == null) {
 			EclipseUtil.openError(Messages.errorNoArtifact);
 			Trace.trace(Trace.FINEST, "No module artifact found");
 			return;
 		}
-		// TODO - multiple module artifacts
-		final IModuleArtifact moduleArtifact = moduleArtifacts[0];
+			
 		
 		Shell shell2 = null;
 		if (window != null)
@@ -180,6 +180,18 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				shell2 = Display.getDefault().getActiveShell();
 		}
 		final Shell shell = shell2;
+		
+		// get a valid ModuleArtifact that we can use for launching
+		// TODO The ModuleArtifactComposite should be part of the RunOnServerWizard
+		final IModuleArtifact moduleArtifact;
+		if (moduleArtifacts.length > 1) {
+			ModuleArtifactComposite artifactComposite = new ModuleArtifactComposite(shell, moduleArtifacts, launchMode);
+			if (artifactComposite.open() == Window.CANCEL)
+				return;
+			
+			moduleArtifact = artifactComposite.getSelection();
+		} else
+			moduleArtifact = moduleArtifacts[0];
 		
 		if (moduleArtifact.getModule() == null) { // 149425
 			EclipseUtil.openError(Messages.errorNoModules);

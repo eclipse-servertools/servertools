@@ -63,6 +63,7 @@ public class Messages extends NLS {
 	public static String jobUpdateServer;
 	public static String jobInstallingRuntime;
 	public static String errorMissingAdapter;
+	public static String webResource;
 	
 	public static String errorCopyingFile;
 	public static String errorDeleting;

@@ -202,6 +202,9 @@ public class Messages extends NLS {
 	public static String wizRunOnServerTitle;
 	public static String wizDebugOnServerTitle;
 	public static String wizProfileOnServerTitle;
+	public static String wizModuleArtifactsDescription;
+	public static String wizModuleArtifactsAvailableList;
+	public static String wizModuleArtifactsNoSelectionError;
 	public static String wizNewRuntimeTitle;
 	public static String wizNewRuntimeDescription;
 	public static String wizNewRuntimeCreateServer;
