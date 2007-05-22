@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
+import org.eclipse.wst.server.core.internal.PublishServerJob;
+import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.ui.internal.Messages;
+import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.swt.widgets.Shell;
 /**
  * Action for removing a module from a server.
@@ -48,9 +51,14 @@ public class RemoveModuleAction extends Action {
 			try {
 				IServerWorkingCopy wc = server.createWorkingCopy();
 				wc.modifyModules(null, new IModule[] { module }, null);
-				wc.save(true, null);
+				server = wc.save(true, null);
+				
+				if (server.getServerState() != IServer.STATE_STOPPED && ((Server)server).getAutoPublishSetting() != Server.AUTO_PUBLISH_DISABLE) {
+					PublishServerJob publishJob = new PublishServerJob(server);
+					publishJob.schedule();
+				}
 			} catch (Exception e) {
-				// ignore
+				Trace.trace(Trace.WARNING, "Could not remove module", e);
 			}
 		}
 	}
