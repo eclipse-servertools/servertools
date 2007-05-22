@@ -318,7 +318,7 @@ public class ModulePublishInfo {
 			Trace.trace(Trace.PERFORMANCE, "Time to get members() for " + module[size - 1].getName() + ": " + (System.currentTimeMillis() - time));
 			return x;
 		} catch (CoreException ce) {
-			// ignore
+			Trace.trace(Trace.WARNING, "Possible failure in getModuleResources", ce);
 		}
 		return EMPTY_MODULE_RESOURCE;
 	}
@@ -341,7 +341,7 @@ public class ModulePublishInfo {
 		try {
 			resources2 = pm.members();
 		} catch (CoreException ce) {
-			// ignore
+			Trace.trace(Trace.WARNING, "Possible failure in getDelta", ce);
 		}
 		if (resources2 == null)
 			resources2 = EMPTY_MODULE_RESOURCE;
@@ -366,7 +366,7 @@ public class ModulePublishInfo {
 		try {
 			resources2 = pm.members();
 		} catch (CoreException ce) {
-			// ignore
+			Trace.trace(Trace.WARNING, "Possible failure in hasDelta", ce);
 		}
 		if (resources2 == null)
 			resources2 = EMPTY_MODULE_RESOURCE;
@@ -385,12 +385,15 @@ public class ModulePublishInfo {
 		
 		IModule m = module[module.length - 1];
 		ModuleDelegate pm = (ModuleDelegate) m.loadAdapter(ModuleDelegate.class, null);
-		if (pm == null || (m.getProject() != null && !m.getProject().isAccessible()))
+		if (pm == null || (m.getProject() != null && !m.getProject().isAccessible())) {
 			setResources(EMPTY_MODULE_RESOURCE);
+			return;
+		}
+		
 		try {
 			setResources(pm.members());
 		} catch (CoreException ce) {
-			// ignore
+			Trace.trace(Trace.WARNING, "Possible failure in fill", ce);
 		}
 	}
 
