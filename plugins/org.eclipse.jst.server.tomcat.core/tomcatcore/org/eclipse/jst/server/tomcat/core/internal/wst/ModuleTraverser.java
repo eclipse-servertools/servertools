@@ -10,18 +10,25 @@
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.core.internal.wst;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.jdt.core.IClasspathAttribute;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
@@ -34,7 +41,6 @@ import org.eclipse.wst.common.componentcore.internal.StructureEdit;
 import org.eclipse.wst.common.componentcore.internal.WorkbenchComponent;
 import org.eclipse.wst.common.componentcore.internal.impl.ModuleURIUtil;
 import org.eclipse.wst.common.componentcore.internal.impl.PlatformURLModuleConnection;
-import org.eclipse.wst.common.componentcore.internal.resources.VirtualArchiveComponent;
 import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.server.core.IModule;
@@ -60,6 +66,19 @@ public class ModuleTraverser {
     public static final String UTILITY_MODULE = IModuleConstants.JST_UTILITY_MODULE;
 
     /**
+     * Name of the custom Java classpath entry attribute that is used to flag entries
+     * which should be exposed as module dependencies via the virtual component API.
+     */
+	public static final String CLASSPATH_COMPONENT_DEPENDENCY = "org.eclipse.jst.component.dependency"; //$NON-NLS-1
+    
+	/**
+	 * Name of the custom Java classpath entry attribute that is used to flag
+	 * the resolved entries of classpath containers that should not be exposed
+	 * via the virtual component API.
+	 */
+	public static final String CLASSPATH_COMPONENT_NON_DEPENDENCY = "org.eclipse.jst.component.nondependency"; //$NON-NLS-1
+
+	/**
      * Scans the module using the specified visitor.
      * 
      * @param module module to traverse
@@ -149,11 +168,18 @@ public class ModuleTraverser {
                 if (PlatformURLModuleConnection.CLASSPATH.equals(
                 		refHandle.segment(ModuleURIUtil.ModuleURI.SUB_PROTOCOL_INDX))) {
                     IJavaProject jproj = JavaCore.create(proj);
-                    String classpathKind = refHandle.segment(1);
-                    IPath classpathRef = getSuffixPath(refHandle, 2);
-
-                    visitor.visitClasspathEntry(rtFolder, getClasspathEntry(
-                            jproj, classpathKind, classpathRef));
+                    IPath refPath = getResolvedPathForArchiveComponent(refHandle);
+                    // If an archive component, add to list
+                    if (refPath != null) {
+                    	if (!refPath.isAbsolute()) {
+                    		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(refPath);
+                    		refPath = file.getLocation();
+                    	}
+            			visitor.visitArchiveComponent(rtFolder, refPath);
+                    }
+                    else {
+                    	// TODO Determine if any use case would arrive here.
+                    }
                 } else {
                     try {
                         WorkbenchComponent childCom = warStruct.findComponentByURI(refHandle);
@@ -175,17 +201,6 @@ public class ModuleTraverser {
         visitor.endVisitWebComponent(component);
     }
 
-    private static IPath getSuffixPath(URI uri, int index) {
-        StringBuffer result = new StringBuffer();
-        String[] segments = uri.segments();
-        for (int i = index; i < segments.length; i++) {
-            if (i > index)
-                result.append('/');
-            result.append(segments[i]);
-        }
-        return new Path(result.toString());
-    }
-
     private static void traverseWebComponentLocalEntries(
             WorkbenchComponent comp, IModuleVisitor visitor,
             IProgressMonitor monitor) throws CoreException {
@@ -204,6 +219,19 @@ public class ModuleTraverser {
             visitor.visitWebResource(childComp.getRuntimePath(), getOSPath(
                     warProject, project, cpe.getOutputLocation()));
         }
+
+        // Include tagged classpath entries
+        Map classpathDeps = getComponentClasspathDependencies(project, true);
+        for (Iterator iterator = classpathDeps.keySet().iterator(); iterator.hasNext();) {
+			IClasspathEntry entry = (IClasspathEntry)iterator.next();
+			IClasspathAttribute attrib = (IClasspathAttribute)classpathDeps.get(entry);
+			String rtFolder = attrib.getValue();
+			if (rtFolder == null) {
+				rtFolder = "/WEB-INF/lib";
+			}
+			// TODO Determine if different handling is needed for some use cases
+			visitor.visitArchiveComponent(new Path(rtFolder), entry.getPath());
+		}
     }
 
     private static void traverseDependentEntries(IModuleVisitor visitor,
@@ -228,6 +256,19 @@ public class ModuleTraverser {
                     .append(name + ".jar"), getOSPath(dependentProject,
                     project, cpe.getOutputLocation()));
         }
+
+        // Include tagged classpath entries
+        Map classpathDeps = getComponentClasspathDependencies(project, false);
+        for (Iterator iterator = classpathDeps.keySet().iterator(); iterator.hasNext();) {
+			IClasspathEntry entry = (IClasspathEntry)iterator.next();
+			IClasspathAttribute attrib = (IClasspathAttribute)classpathDeps.get(entry);
+			String rtFolder = attrib.getValue();
+			if (rtFolder == null) {
+				rtFolder = "/WEB-INF/lib";
+			}
+			// TODO Determine if different handling is needed for some use cases
+			visitor.visitArchiveComponent(new Path(rtFolder), entry.getPath());
+		}
     }
 
     private static IClasspathEntry getClasspathEntry(IJavaProject project,
@@ -241,26 +282,6 @@ public class ModuleTraverser {
         return null;
     }
 
-    private static IClasspathEntry getClasspathEntry(IJavaProject project,
-            String classpathKind, IPath classpathRef) throws JavaModelException {
-        int entryKind;
-        if (VirtualArchiveComponent.LIBARCHIVETYPE.equals(classpathKind)) {
-            entryKind = IClasspathEntry.CPE_LIBRARY;
-        } else if (VirtualArchiveComponent.VARARCHIVETYPE.equals(classpathKind)) {
-            entryKind = IClasspathEntry.CPE_VARIABLE;
-        } else {
-            return null;
-        }
-        IClasspathEntry[] cp = project.getRawClasspath();
-        for (int i = 0; i < cp.length; i++) {
-            if (entryKind == cp[i].getEntryKind()
-                    && classpathRef.equals(cp[i].getPath())) {
-                return JavaCore.getResolvedClasspathEntry(cp[i]);
-            }
-        }
-        return null;
-    }
-
     private static IPath getOSPath(IProject project, IJavaProject javaProject,
             IPath outputPath) throws JavaModelException {
         if (outputPath == null)
@@ -269,4 +290,202 @@ public class ModuleTraverser {
                 .getLocation();
     }
 
+    /*
+     * Derived from J2EEProjectUtilities.getResolvedPathForArchiveComponent()
+     */
+	private static IPath getResolvedPathForArchiveComponent(URI uri) {
+
+		String resourceType = uri.segment(1);
+		URI contenturi = ModuleURIUtil.trimToRelativePath(uri, 2);
+		String contentName = contenturi.toString();
+
+		if (resourceType.equals("lib")) { //$NON-NLS-1$
+			// module:/classpath/lib/D:/foo/foo.jar
+			return Path.fromOSString(contentName);
+
+		} else if (resourceType.equals("var")) { //$NON-NLS-1$
+
+			// module:/classpath/var/<CLASSPATHVAR>/foo.jar
+			String classpathVar = contenturi.segment(0);
+			URI remainingPathuri = ModuleURIUtil.trimToRelativePath(contenturi, 1);
+			String remainingPath = remainingPathuri.toString();
+
+			String[] classpathvars = JavaCore.getClasspathVariableNames();
+			boolean found = false;
+			for (int i = 0; i < classpathvars.length; i++) {
+				if (classpathVar.equals(classpathvars[i])) {
+					found = true;
+					break;
+				}
+			}
+			if (found) {
+				IPath path = JavaCore.getClasspathVariable(classpathVar);
+				URI finaluri = URI.createURI(path.toOSString() + IPath.SEPARATOR + remainingPath);
+				return Path.fromOSString(finaluri.toString());
+			}
+		}
+		return null;
+	}
+
+	/*
+	 * Derived from ClasspathDependencyUtil.getComponentClasspathDependencies()
+	 */
+	private static Map getComponentClasspathDependencies(final IJavaProject javaProject, final boolean isWebApp) throws CoreException {
+
+		// get the raw entries
+		final Map referencedRawEntries = getRawComponentClasspathDependencies(javaProject);
+		final Map validRawEntries = new HashMap();
+
+		// filter out non-valid referenced raw entries
+		final Iterator i = referencedRawEntries.keySet().iterator();
+		while (i.hasNext()) {
+			final IClasspathEntry entry = (IClasspathEntry) i.next();
+			final IClasspathAttribute attrib = (IClasspathAttribute) referencedRawEntries.get(entry);
+			if (isValid(entry, attrib, isWebApp, javaProject.getProject())) {
+				validRawEntries.put(entry, attrib);
+			}
+		}
+
+		// if we have no valid raw entries, return empty map
+		if (validRawEntries.isEmpty()) {
+        	return Collections.EMPTY_MAP;
+		}
+
+		// XXX Would like to replace the code below with use of a public JDT API that returns
+		// the raw IClasspathEntry for a given resolved IClasspathEntry (see see https://bugs.eclipse.org/bugs/show_bug.cgi?id=183995)
+		// The code must currently leverage IPackageFragmentRoot to determine this
+		// mapping and, because IPackageFragmentRoots do not maintain IClasspathEntry data, a prior
+		// call is needed to getResolvedClasspath() and the resolved IClasspathEntries have to be stored in a Map from IPath-to-IClasspathEntry to
+		// support retrieval using the resolved IPackageFragmentRoot
+		
+		// retrieve the resolved classpath
+		final IClasspathEntry[] entries = javaProject.getResolvedClasspath(true);
+		final Map pathToResolvedEntry = new HashMap();
+		
+		// store in a map from path to entry
+		for (int j = 0; j < entries.length; j++) {
+			pathToResolvedEntry.put(entries[j].getPath(), entries[j]);
+		}
+
+		final Map referencedEntries = new HashMap();
+		
+		// grab all IPackageFragmentRoots
+		final IPackageFragmentRoot[] roots = javaProject.getPackageFragmentRoots();
+		for (int j = 0; j < roots.length; j++) {
+			final IPackageFragmentRoot root = roots[j];
+			final IClasspathEntry rawEntry = root.getRawClasspathEntry();
+			
+			// is the raw entry valid?
+			IClasspathAttribute attrib = (IClasspathAttribute) validRawEntries.get(rawEntry);
+			if (attrib == null) {
+				continue;
+			}
+			
+			final IPath pkgFragPath = root.getPath();
+			final IClasspathEntry resolvedEntry = (IClasspathEntry) pathToResolvedEntry.get(pkgFragPath);
+			final IClasspathAttribute resolvedAttrib = checkForComponentDependencyAttribute(resolvedEntry);
+			// attribute for the resolved entry must either be unspecified or it must be the
+			// dependency attribute for it to be included
+			if (resolvedAttrib == null || resolvedAttrib.getName().equals(CLASSPATH_COMPONENT_DEPENDENCY)) {
+				// filter out resolved entry if it doesn't pass the validation rules
+				if (isValid(resolvedEntry, resolvedAttrib != null ? resolvedAttrib : attrib, isWebApp, javaProject.getProject())) {
+					if (resolvedAttrib != null) {
+						// if there is an attribute on the sub-entry, use that
+						attrib = resolvedAttrib;
+					}
+					referencedEntries.put(resolvedEntry, attrib);
+				}
+			} 
+		}
+		
+        return referencedEntries;
+	}
+
+	/*
+	 * Derived from ClasspathDependencyUtil.getRawComponentClasspathDependencies()
+	 */
+	private static Map getRawComponentClasspathDependencies(final IJavaProject javaProject) throws CoreException {
+		if (javaProject == null) {
+			return Collections.EMPTY_MAP;
+		}
+		final Map referencedRawEntries = new HashMap();
+		final IClasspathEntry[] entries = javaProject.getRawClasspath();
+        for (int i = 0; i < entries.length; i++) {
+            final IClasspathEntry entry = entries[i];
+            final IClasspathAttribute attrib = checkForComponentDependencyAttribute(entry);
+            if (attrib != null) {
+            	referencedRawEntries.put(entry, attrib);
+            }
+        }
+        return referencedRawEntries;
+	}
+
+	/*
+	 * Derived from ClasspathDependencyUtil.checkForComponentDependencyAttribute()
+	 */
+	private static IClasspathAttribute checkForComponentDependencyAttribute(final IClasspathEntry entry) {
+		if (entry == null) {
+			return null;
+		}
+	    final IClasspathAttribute[] attributes = entry.getExtraAttributes();
+	    for (int i = 0; i < attributes.length; i++) {
+	    	final IClasspathAttribute attribute = attributes[i];
+	    	final String name = attribute.getName();
+	    	if (name.equals(CLASSPATH_COMPONENT_DEPENDENCY) 
+	    			|| name.equals(CLASSPATH_COMPONENT_NON_DEPENDENCY)) {
+	    		return attribute;
+	    	}
+	    }
+	    return null;
+	}
+
+	/*
+	 * Derived from ClasspathDependencyValidator.validateVirtualComponentEntry()
+	 */
+	private static boolean isValid(final IClasspathEntry entry, final IClasspathAttribute attrib, boolean isWebApp, final IProject project) {
+		int kind = entry.getEntryKind();
+		if (kind == IClasspathEntry.CPE_LIBRARY) {
+			// does the path refer to a file or a folder?
+			final IPath entryPath = entry.getPath();
+			IPath entryLocation = entryPath;
+			final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(entryPath);
+			if (resource != null) {
+				entryLocation = resource.getLocation();
+			}
+			if (entryLocation.toFile().isDirectory()) {
+				return false;
+			}
+		}
+		else if (kind == IClasspathEntry.CPE_PROJECT || kind == IClasspathEntry.CPE_SOURCE) {
+			return false;
+		}
+
+		String runtimePath = getRuntimePath(attrib, isWebApp);
+		if (!isWebApp) {
+			if (!entry.isExported() || !runtimePath.equals("../")) {
+				return false;
+			}
+		}
+		else {
+			if (runtimePath != null && !runtimePath.equals("/WEB-INF/lib")
+					&& !runtimePath.equals("/WEB-INF/classes")
+					&& !runtimePath.equals("../")) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/*
+	 * Derived from ClasspathDependencyUtil.getRuntimePath()
+	 */
+	private static String getRuntimePath(final IClasspathAttribute attrib, boolean isWebApp) {
+    	if (attrib != null && !attrib.getName().equals(CLASSPATH_COMPONENT_DEPENDENCY)) {
+    		return null;
+    	}
+    	if (attrib == null || attrib.getValue()== null || attrib.getValue().length() == 0) {
+    		return isWebApp ? "/WEB-INF/lib" : "../";
+    	}
+    	return attrib.getValue();
+	}
 }
