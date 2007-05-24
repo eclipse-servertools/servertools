@@ -9,7 +9,7 @@
 		label = "%label.j2ee.home"
 		type="directory"
 		context="runtime"
-		default="C:/oracle/OC4J10.1.3.1/j2ee/home"/>
+		default="C:/oracle/OC4J-10.1.3.1/j2ee/home"/>
 		
 	<property id="oc4j.admin.user"
 		label="%label.admin.user"
@@ -126,7 +126,8 @@
 	
 	<classpath id="oracle_oc4j">
 		<archive path="${OC4J_HOME}/oc4j.jar"/>
-		<archive path="${OC4J_HOME}/oc4jclient.jar"/>    		
+		<archive path="${OC4J_HOME}/oc4jclient.jar"/>
+		<archive path="${OC4J_HOME}/oc4j-api.jar"/>    		
 		<archive path="${OC4J_HOME}/lib/activation.jar"/>
 		<archive path="${OC4J_HOME}/lib/asm.jar"/>
 		<archive path="${OC4J_HOME}/lib/asm-attrs.jar"/>
@@ -143,12 +144,18 @@
 		<archive path="${OC4J_HOME}/lib/mail.jar"/>
 		<archive path="${OC4J_HOME}/lib/oc4j-unsupported-api.jar"/>
 		<archive path="${OC4J_HOME}/lib/servlet.jar"/>
+		<archive path="${OC4J_HOME}/lib/ojsp.jar"/>
+        <archive path="${OC4J_HOME}/jsp/lib/taglib/ojsputil.jar"/>			
 		<archive path="${OC4J_HOME}/../../lib/xmlparserv2.jar"/>
 		<archive path="${OC4J_HOME}/../../toplink/jlib/antlr.jar"/>
 		<archive path="${OC4J_HOME}/../../toplink/jlib/toplink.jar"/>		  		
 		<archive path="${OC4J_HOME}/../../toplink/jlib/toplink-essentials.jar"/>		  				
-		<archive path="${OC4J_HOME}/../../webservices/lib/soap.jar"/>
-		<archive path="${OC4J_HOME}/../../webservices/lib/wsdl.jar"/>		
+		<archive path="${OC4J_HOME}/../../webservices/lib/wsdl.jar"/>
+		<archive path="${OC4J_HOME}/../../webservices/lib/jaxr-api.jar"/>
+		<archive path="${OC4J_HOME}/../../webservices/lib/jaxrpc-api.jar"/>
+		<archive path="${OC4J_HOME}/../../webservices/lib/saaj-api.jar"/>
+		<archive path="${OC4J_HOME}/../../webservices/lib/jws-api.jar"/>
+		<archive path="${OC4J_HOME}/../../webservices/lib/orawsmetadata.jar"/>		
 	</classpath>
 	
 	<jndiConnection>
