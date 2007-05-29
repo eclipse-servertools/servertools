@@ -229,8 +229,13 @@ public class ModuleTraverser {
 			if (rtFolder == null) {
 				rtFolder = "/WEB-INF/lib";
 			}
+			IPath entryPath = entry.getPath();
+			IResource entryRes = ResourcesPlugin.getWorkspace().getRoot().findMember(entryPath);
+			if (entryRes != null) {
+				entryPath = entryRes.getLocation();
+			}
 			// TODO Determine if different handling is needed for some use cases
-			visitor.visitArchiveComponent(new Path(rtFolder), entry.getPath());
+			visitor.visitArchiveComponent(new Path(rtFolder), entryPath);
 		}
     }
 
@@ -266,8 +271,13 @@ public class ModuleTraverser {
 			if (rtFolder == null) {
 				rtFolder = "/WEB-INF/lib";
 			}
+			IPath entryPath = entry.getPath();
+			IResource entryRes = ResourcesPlugin.getWorkspace().getRoot().findMember(entryPath);
+			if (entryRes != null) {
+				entryPath = entryRes.getLocation();
+			}
 			// TODO Determine if different handling is needed for some use cases
-			visitor.visitArchiveComponent(new Path(rtFolder), entry.getPath());
+			visitor.visitArchiveComponent(new Path(rtFolder), entryPath);
 		}
     }
 
