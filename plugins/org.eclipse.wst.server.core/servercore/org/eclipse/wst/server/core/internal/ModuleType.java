@@ -59,7 +59,7 @@ public class ModuleType implements IModuleType {
 	 * @param version the module type version
 	 * @return the module type
 	 */
-	public static ModuleType getModuleType(String id, String version) {
+	public synchronized static ModuleType getModuleType(String id, String version) {
 		if (moduleTypes == null)
 			moduleTypes = new ArrayList();
 		
