@@ -87,12 +87,12 @@ public class PreviewStarter {
 			server.setTrace(false);
 			server.setStatsOn(false);
 			
-			/*HttpContext context2 = new HttpContext();
+			HttpContext context2 = new HttpContext();
 			context2.setContextPath("/");
 			context2.addHandler(new WTPErrorPageHandler());
 			context2.setAttribute(HttpContext.__ErrorHandler, new WTPErrorPageHandler());
 			server.addContext(context2);
-			server.setRootWebApp("/");*/
+			server.setRootWebApp("/");
 			
 			for (int i = 0; i < size; i++) {
 				Module module = m[i];
@@ -106,75 +106,20 @@ public class PreviewStarter {
 					server.addContext(context);
 				} else {
 					WebApplicationContext context = server.addWebApplication(module.getContext(), module.getPath());
-					context.setResourceBase(module.getPath());
-					//context.addHandler(new ResourceHandler());
-					context.addHandler(new WTPErrorPageHandler());
+					//context.getWebApplicationHandler();
+					//context.addHandler(new WTPErrorPageHandler());
 					context.setAttribute(HttpContext.__ErrorHandler, new WTPErrorPageHandler());
-					
-					//context.setClassLoader(getClass().getClassLoader());
-					//context.start();
-					
-					//WebApplicationContext context = server.addWebApplication("/", module.getPath() + "/");
-					/*context.setConfigurationClassNames(new String[] { "org.mortbay.jetty.servlet.XMLConfiguration" });
-					context.setResourceBase(module.getPath());
-					context.setIgnoreWebJetty(true);*/
-					//System.out.println("context: " + context.getContextPath());
-					//System.out.println("resource: " + context.getResourceBase());
-					//server.addContext(context);
 				}
 			}
 			
-			/*WebApplicationContext cont = new WebApplicationContext("D:\\dev\\wtp\\runtime-workspace5\\170228\\WebContent");
-			cont.setTempDirectory(new File("C:/temp"));
-			cont.setContextPath("/");*/
-			//server.addContext(cont);
-			//server.addWebApplication("test", "D:\\dev\\wtp\\runtime-workspace5\\170228\\WebContent");
-			//WebApplicationContext cont = server.addWebApplication("/", "C:\\Temp\\Test.war");
-			//cont.setClassLoader();
-			//cont.setConfigurationClassNames(new String[] { "org.mortbay.jetty.servlet.XMLConfiguration" });
-			//cont.setIgnoreWebJetty(true);
-			//cont.setExtractWAR(true);
-			
-			//server.addListener(new SocketListener(new InetAddrPort(8080)));
-			//ResourceHandler handler = new ResourceHandler();
-			//server.addEventListener(handler);
-			//server.setRootWebApp()
-			//server.addContext(new HttpContext());
-			/*HttpContext context = new HttpContext(server, "/");
-			context.setClassLoader(new PreviewClassloader());*/
-			
-			//Context root = new Context(server,"/",Context.SESSIONS);
-			//root.addServlet(new ServletHolder(new HelloServlet("Ciao")), "/*");
-			//HttpContext context = server.getContext("/t");
-			//ServletHandler handler = new ServletHandler();
-			//handler.addServlet("Dump","/dump/*","org.mortbay.servlet.Dump");
-			//context.addHandler(handler);
-			//cont.addHandler(handler);
-			
-			//server.setStatsOn(true);
 			try {
 				server.start();
 			} catch (Exception e) {
-				// ??
+				e.printStackTrace();
 			}
-			/*System.out.println(cont.getHandlers().length);
-			System.out.println(context.getHandlers().length);
-			System.out.println(cont.getWelcomeFiles().length);
-			
-			WebApplicationHandler wah = (WebApplicationHandler) cont.getHandlers()[0];
-			//System.out.println(wah.getResource("/test.jsp"));
-			//wah.getServlets()[0].start();
-			System.out.println(wah.getServlets()[0]);
-			System.out.println(wah.getServlets()[1]);
-			System.out.println(wah.getServlets()[2]);*/
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		
-		//HttpServer server = new HttpServer();
-		/*SocketListener listener = new SocketListener();
-		listener.setPort(8080);
-		server.addListener(listener);*/
 	}
 
 	public void stop() {

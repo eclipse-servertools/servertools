@@ -35,10 +35,10 @@ import org.osgi.framework.Bundle;
  */
 public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfigurationDelegate {
 	private static final String[] REQUIRED_BUNDLE_IDS = new String[] {
-		"org.eclipse.core.runtime",
 		"org.apache.commons.logging",
 		"javax.servlet",
 		"javax.servlet.jsp",
+		"org.apache.jasper",
 		"org.mortbay.jetty",
 		"org.eclipse.wst.server.preview"
 	};

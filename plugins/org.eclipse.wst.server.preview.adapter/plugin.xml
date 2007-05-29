@@ -95,7 +95,7 @@
   <extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
     <launchConfigurationTabGroup
       id="org.eclipse.wst.server.preview.launchConfigurationTabGroup"
-      type="org.eclipse.wst.server.core.preview.launchConfigurationType"
+      type="org.eclipse.wst.server.preview.launchConfigurationType"
       class="org.eclipse.wst.server.preview.adapter.internal.ui.PreviewLaunchConfigurationTabGroup">
     </launchConfigurationTabGroup>
   </extension>

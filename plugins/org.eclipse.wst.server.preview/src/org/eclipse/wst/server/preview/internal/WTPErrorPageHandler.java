@@ -30,6 +30,11 @@ public class WTPErrorPageHandler extends AbstractHttpHandler {
 		response.setContentType(HttpFields.__TextHtml);
 		ByteArrayISO8859Writer writer = new ByteArrayISO8859Writer(2048);
 		writeErrorPage(request, writer, response.getStatus(), response.getReason());
+		
+		// workaround for IE, which overrides 404 errors to present its own page
+		if (response.getStatus() == 404)
+			response.setStatus(200, "OK"); 
+		
 		writer.flush();
 		response.setContentLength(writer.size());
 		writer.writeTo(response.getOutputStream());
