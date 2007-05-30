@@ -70,8 +70,8 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 	protected void updateModules() {
 		if (comp != null) {
 			IServerAttributes server = (IServerAttributes) getTaskModel().getObject(TaskModel.TASK_SERVER);
-			comp.setServer(server);
 			comp.setTaskModel(getTaskModel());
+			comp.setServer(server);
 		} else if (module != null) {
 			TaskModel taskModel = getTaskModel();
 			if (taskModel == null)

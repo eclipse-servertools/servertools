@@ -112,16 +112,15 @@ class TaskWizardPage extends WizardPage implements IWizardHandle {
 		if (!isCreated)
 			return;
 		
-		fragment.updateChildFragments();
-		((TaskWizard) getWizard()).updatePages();
-		
 		final IWizardContainer container = getContainer();
-		if (container.getCurrentPage() != null) {
-			getShell().getDisplay().syncExec(new Runnable() {
-				public void run() {
+		getShell().getDisplay().syncExec(new Runnable() {
+			public void run() {
+				fragment.updateChildFragments();
+				((TaskWizard) getWizard()).updatePages();
+				
+				if (container.getCurrentPage() != null)
 					container.updateButtons();
-				}
-			});
-		}
+			}
+		});
 	}
 }
