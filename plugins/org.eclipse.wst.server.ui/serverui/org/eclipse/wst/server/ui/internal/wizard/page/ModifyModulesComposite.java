@@ -241,7 +241,8 @@ public class ModifyModulesComposite extends Composite {
 					IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy) runtime;
 					if (wc.isDirty() == runtimeDirty)
 						return;
-				}
+				} else
+					return;
 			}
 		}
 		
