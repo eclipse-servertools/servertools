@@ -55,6 +55,8 @@ public class ModifyModulesComposite extends Composite {
 	protected IWizardHandle wizard;
 
 	protected IServerAttributes server;
+	protected IRuntime runtime;
+	protected boolean runtimeDirty;
 
 	protected Map childModuleMap = new HashMap();
 	protected Map parentModuleMap = new HashMap();
@@ -228,7 +230,35 @@ public class ModifyModulesComposite extends Composite {
 		if (isVisible())
 			return;
 		
+		// see bug 185875
+		if (server == this.server) {
+			if (server == null)
+				return;
+			if (runtime == this.runtime) {
+				if (runtime == null)
+					return;
+				if (runtime instanceof IRuntimeWorkingCopy) {
+					IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy) runtime;
+					if (wc.isDirty() == runtimeDirty)
+						return;
+				}
+			}
+		}
+		
 		this.server = server;
+		if (server == null)
+			runtime = null;
+		else
+			runtime = server.getRuntime();
+		runtimeDirty = false;
+		if (runtime != null) {
+			if (runtime instanceof IRuntimeWorkingCopy) {
+				IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy) runtime;
+				if (wc.isDirty())
+					runtimeDirty = true;
+			}
+		}
+		
 		originalModules = new ArrayList();
 		deployed = new ArrayList();
 		modules = new ArrayList();
