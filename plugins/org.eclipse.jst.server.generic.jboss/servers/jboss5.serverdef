@@ -116,7 +116,8 @@
 	    <fileset dir="${serverRootDirectory}">
 	       <include name="client/*.jar" />
 	       <include name="server/default/lib/*.jar" />
-	       
+	       	       
+	       <include name="server/default/deployers/jbossweb.deployer/jsf-libs/*.jar" />	       
 
 	       <!-- This will be ignored if EJB3 is not there 5.0 -->
 	       <include name="lib/*.jar" />
