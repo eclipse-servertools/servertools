@@ -118,7 +118,7 @@
 	       <include name="server/default/lib/*.jar" />
 
 	       <!-- JSF Libraries -->
-	       <include name="server/default/deploy/jboss-web.deployer/jsf-libs/*.jar />
+	       <include name="server/default/deploy/jboss-web.deployer/jsf-libs/*.jar" />
 	       
 	       <!-- This will be ignored if EJB3 is not there 4.0.x 4.2 -->
 	       <include name="server/default/deploy/jboss-aop-jdk50.deployer/*.jar" />
