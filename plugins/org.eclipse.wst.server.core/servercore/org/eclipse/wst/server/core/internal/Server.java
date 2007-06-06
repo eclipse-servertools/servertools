@@ -247,8 +247,18 @@ public class Server extends Base implements IServer {
 		return false;
 	}
 
+	protected void deleteFromFile() throws CoreException {
+		super.deleteFromFile();
+		ResourceManager.getInstance().deregisterServer(this);
+	}
+
 	protected void deleteFromMetadata() {
 		ResourceManager.getInstance().removeServer(this);
+	}
+
+	protected void saveToFile(IProgressMonitor monitor) throws CoreException {
+		super.saveToFile(monitor);
+		ResourceManager.getInstance().registerServer(this);
 	}
 
 	protected void saveToMetadata(IProgressMonitor monitor) {
