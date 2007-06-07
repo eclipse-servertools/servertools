@@ -12,7 +12,6 @@
 package org.eclipse.wst.server.core.internal.facets;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -92,7 +91,7 @@ public class RuntimeBridge implements IRuntimeBridge {
 			IRuntime runtime = runtimes[i];
 			IRuntimeType runtimeType = runtime.getRuntimeType();
 			if (runtimeType != null && mappings.containsKey(runtimeType.getId())) {
-				result.add(runtime.getName());
+				result.add(runtime.getId());
 			}
 		}
 		
@@ -106,7 +105,7 @@ public class RuntimeBridge implements IRuntimeBridge {
 		IRuntime[] runtimes = ServerCore.getRuntimes();
 		int size = runtimes.length;
 		for (int i = 0; i < size; i++) {
-			if (runtimes[i].getName().equals(name))
+			if (runtimes[i].getId().equals(name))
 				return new Stub(runtimes[i]);
 		}
 		return null;
@@ -153,9 +152,12 @@ public class RuntimeBridge implements IRuntimeBridge {
 		}
 
 		public Map getProperties() {
-			if (runtime == null)
-				return new HashMap(0);
-			return Collections.singletonMap("id", runtime.getId());
+		    final Map props = new HashMap();
+			if (runtime != null) {
+				props.put("id", runtime.getId());
+				props.put("localized-name", runtime.getName());
+			}
+			return props;
 		}
 	}
 }
