@@ -165,7 +165,6 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			Trace.trace(Trace.FINEST, "No module artifact found");
 			return;
 		}
-			
 		
 		Shell shell2 = null;
 		if (window != null)
@@ -287,6 +286,31 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			client = wizard.getSelectedClient();
 			launchableAdapter = wizard.getLaunchableAdapter();
 		}
+			
+		// if there is no client, use a dummy
+		if (client == null){		
+				client = new IClient() {
+					public String getDescription() {
+						return Messages.clientDefaultDescription;
+					}
+
+					public String getId() {
+						return "org.eclipse.wsth.server.ui.client.default";
+					}
+
+					public String getName() {
+						return Messages.clientDefaultName;
+					}
+
+					public IStatus launch(IServer server3, Object launchable2, String launchMode3, ILaunch launch) {
+						return Status.OK_STATUS;
+					}
+
+					public boolean supports(IServer server3, Object launchable2, String launchMode3) {
+						return true;
+					}
+				};
+		}		
 		
 		if (moduleArtifact instanceof ModuleArtifactDelegate) {
 			boolean canLoad = false;
@@ -311,36 +335,11 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		
 		Thread thread = new Thread("Run on Server") {
 			public void run() {
-				if (client == null) {
-					// if there is no client, use a dummy
-					client = new IClient() {
-						public String getDescription() {
-							return Messages.clientDefaultDescription;
-						}
-
-						public String getId() {
-							return "org.eclipse.wst.server.ui.client.default";
-						}
-
-						public String getName() {
-							return Messages.clientDefaultName;
-						}
-
-						public IStatus launch(IServer server3, Object launchable2, String launchMode3, ILaunch launch) {
-							return Status.OK_STATUS;
-						}
-
-						public boolean supports(IServer server3, Object launchable2, String launchMode3) {
-							return true;
-						}
-					};
-				}
-				
 				Trace.trace(Trace.FINEST, "Ready to launch");
 				
 				// start server if it's not already started
 				// and cue the client to start
-				IModule[] modules = new IModule[] { module }; // TODO: get parent heirarchy correct
+				IModule[] modules = new IModule[] { module }; // TODO: get parent hierarchy correct
 				int state = server.getServerState();
 				if (state == IServer.STATE_STARTING) {
 					LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
