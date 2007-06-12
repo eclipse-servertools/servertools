@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.server.core.internal;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,27 +29,48 @@ import org.eclipse.wst.server.core.internal.Runtime;
 public class JRERuntimeComponentProvider extends RuntimeComponentProviderDelegate {
 	public static final String CLASSPATH = "classpath";
 
-	protected int timestamp = -1;
-	protected IVMInstall vmInstall;
-	protected String jvmver;
+	private Map vmCache = new HashMap();
+
+	class VMInstallCache {
+		// cached attributes
+		IVMInstall vmInstall;
+		String jvmver;
+		
+		// caching validation
+		int timestamp;
+		File location;
+	}
 
 	public List getRuntimeComponents(IRuntime runtime) {
 		// define JRE component
 		IJavaRuntime javaRuntime = (IJavaRuntime) runtime.loadAdapter(IJavaRuntime.class, null);
 		if (javaRuntime != null) {
-			if (timestamp != ((Runtime) runtime).getTimestamp()) {
-				vmInstall = null;
-				jvmver = null;
-				timestamp = ((Runtime) runtime).getTimestamp();
+			VMInstallCache cache = (VMInstallCache) vmCache.get(runtime.getId());
+			if (cache != null) {
+				if (cache.timestamp != ((Runtime) runtime).getTimestamp())
+					cache = null;
+				if (cache.location != null && cache.vmInstall != null && !cache.location.equals(cache.vmInstall.getInstallLocation()))
+					cache = null;
 			}
-			if (vmInstall == null)
-				vmInstall = javaRuntime.getVMInstall(); 
 			
-			if (jvmver == null) {
-				IVMInstall2 vmInstall2 = (IVMInstall2) vmInstall;
-				if (vmInstall2 != null)
-					jvmver = vmInstall2.getJavaVersion();
+			if (cache == null) {
+				cache = new VMInstallCache();
+				cache.timestamp = ((Runtime) runtime).getTimestamp();
+				cache.vmInstall = javaRuntime.getVMInstall();
+				
+				if (cache.vmInstall != null) {
+					if (cache.vmInstall instanceof IVMInstall2) {
+						IVMInstall2 vmInstall2 = (IVMInstall2) cache.vmInstall;
+						if (vmInstall2 != null)
+							cache.jvmver = vmInstall2.getJavaVersion();
+					}
+					cache.location = cache.vmInstall.getInstallLocation();
+				}
+				vmCache.put(runtime.getId(), cache);
 			}
+			
+			IVMInstall vmInstall = cache.vmInstall;
+			String jvmver = cache.jvmver;
 			
 			String vmInstallName;
 			if (vmInstall != null)
