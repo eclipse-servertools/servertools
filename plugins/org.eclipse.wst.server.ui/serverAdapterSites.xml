@@ -5,4 +5,5 @@
     <site url="http://update.eclipse.org/updates/3.3/"/>
     <site url="https://dev2devclub.bea.com/updates/eclipse-3.3/wls-plugins/"/>
     <site url="https://ajax.dev.java.net/eclipse"/>
+    <site url="https://www.sdn.sap.com/downloads/updates/netweaver/nwds/sapnwserver/"/>
 </extensions>
