@@ -16,37 +16,33 @@ import org.eclipse.debug.ui.ILaunchConfigurationDialog;
 import org.eclipse.debug.ui.ILaunchConfigurationTab;
 import org.eclipse.debug.ui.sourcelookup.SourceLookupTab;
 import org.eclipse.jdt.debug.ui.launchConfigurations.JavaArgumentsTab;
-import org.eclipse.jdt.debug.ui.launchConfigurations.JavaClasspathTab;
-import org.eclipse.jdt.debug.ui.launchConfigurations.JavaJRETab;
 import org.eclipse.jst.server.generic.internal.core.util.ExtensionPointUtil;
 import org.eclipse.wst.server.ui.ServerLaunchConfigurationTab;
 
 
-public class GenericLaunchConfigurationTabGroup extends AbstractLaunchConfigurationTabGroup{
+public class ExternalLaunchConfigurationTabGroup extends AbstractLaunchConfigurationTabGroup{
 	/**
 	 * @see org.eclipse.debug.ui.ILaunchConfigurationTabGroup ILaunchConfigurationTabGroup#createTabs(ILaunchConfigurationDialog, String)
 	 */
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
-		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[7];
+		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[5];
 		tabs[0] = new ServerLaunchConfigurationTab(getTypeIds());
 		tabs[0].setLaunchConfigurationDialog(dialog);
 		tabs[1] = new JavaArgumentsTab();
 		tabs[1].setLaunchConfigurationDialog(dialog);
-		tabs[2] = new JavaClasspathTab();
+		tabs[2] = new SourceLookupTab();
 		tabs[2].setLaunchConfigurationDialog(dialog);
-		tabs[3] = new SourceLookupTab();
+		tabs[3] = new EnvironmentTab();
 		tabs[3].setLaunchConfigurationDialog(dialog);
-		tabs[4] = new EnvironmentTab();
+		tabs[4] = new CommonTab();
 		tabs[4].setLaunchConfigurationDialog(dialog);
-		tabs[5] = new JavaJRETab();
-		tabs[5].setLaunchConfigurationDialog(dialog);	 
-		tabs[6] = new CommonTab();
-		tabs[6].setLaunchConfigurationDialog(dialog);
 		setTabs(tabs);
 	}
 
-	private String[] getTypeIds() {
-	    return ExtensionPointUtil.getServerTypesFromLaunchConfig( "org.eclipse.jst.server.generic.core.launchConfigurationType" ); //$NON-NLS-1$	}
-	
+	private String[] getTypeIds() 
+	{
+	   return ExtensionPointUtil.getServerTypesFromLaunchConfig( "org.eclipse.jst.server.generic.core.ExternalLaunchConfigurationType" ); //$NON-NLS-1$
 	}
+	
+
 }

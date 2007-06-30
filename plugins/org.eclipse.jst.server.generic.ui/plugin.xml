@@ -19,11 +19,26 @@
       id="org.eclipse.jst.server.generic.ui.internal.launchConfigurationTabGroup"
       type="org.eclipse.jst.server.generic.core.launchConfigurationType"
       class="org.eclipse.jst.server.generic.ui.internal.GenericLaunchConfigurationTabGroup">
+      <launchMode
+            mode="run">
+      </launchMode>
+      <launchMode
+            mode="debug">
+      </launchMode>
+      <launchMode
+            mode="profile">
+      </launchMode>      
     </launchConfigurationTabGroup>
     <launchConfigurationTabGroup
       id="org.eclipse.jst.server.generic.ui.internal.launchConfigurationTabGroup"
       type="org.eclipse.jst.server.generic.core.ExternalLaunchConfigurationType"
-      class="org.eclipse.jst.server.generic.ui.internal.GenericLaunchConfigurationTabGroup">
+      class="org.eclipse.jst.server.generic.ui.internal.ExternalLaunchConfigurationTabGroup">
+      <launchMode
+            mode="run">
+      </launchMode>
+      <launchMode
+            mode="debug">
+      </launchMode>      
     </launchConfigurationTabGroup>
   </extension>
   <extension point="org.eclipse.wst.server.ui.editorPageSections">
