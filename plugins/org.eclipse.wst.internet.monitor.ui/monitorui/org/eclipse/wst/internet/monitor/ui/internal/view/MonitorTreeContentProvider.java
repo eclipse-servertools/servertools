@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,10 +21,8 @@ import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
 /**
  * Content provider for the monitor server view.
  */
-public class MonitorTreeContentProvider implements ITreeContentProvider{
+public class MonitorTreeContentProvider implements ITreeContentProvider {
 	protected static final String ROOT = "root";
-
-	protected boolean sortByResponseTime;
 
 	/**
 	 * ProxyTreeContentProvider constructor comment.
@@ -82,8 +80,6 @@ public class MonitorTreeContentProvider implements ITreeContentProvider{
 						list.add(req);
 				}
 			}
-			if (sortByResponseTime)
-				sortByResponseTime(list);
 			return list.toArray();
 		} else if (element instanceof Request) {
 			Request req = (Request) element;
@@ -95,8 +91,6 @@ public class MonitorTreeContentProvider implements ITreeContentProvider{
 					list.add(rr[i]);
 				}
 			}
-			if (sortByResponseTime)
-				sortByResponseTime(list);
 			return list.toArray();
 		}
 		return null;
@@ -120,8 +114,6 @@ public class MonitorTreeContentProvider implements ITreeContentProvider{
 						list.add(in);
 				}
 			}
-			if (sortByResponseTime)
-				sortByResponseTime(list);
 			return list.toArray();
 		}
 		return getChildren(element);
@@ -148,13 +140,6 @@ public class MonitorTreeContentProvider implements ITreeContentProvider{
 	}
 
 	/*
-	 * Returns true if the elements are currently being sorted by response time.
-	 */
-	public boolean getSortByResponseTime() {
-		return sortByResponseTime;
-	}
-
-	/*
 	 * Returns whether the given element has children.
 	 */
 	public boolean hasChildren(Object element) {
@@ -172,30 +157,5 @@ public class MonitorTreeContentProvider implements ITreeContentProvider{
 	 */
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		// do nothing
-	}
-
-	/**
-	 * Sets the sort by response time option.
-	 * @param b boolean
-	 */
-	public void setSortByResponseTime(boolean b) {
-		sortByResponseTime = b;
-	}
-
-	/**
-	 * 
-	 */
-	protected void sortByResponseTime(List list) {
-		int size = list.size();
-		for (int i = 0; i < size - 1; i++) {
-			for (int j = i + 1; j < size; j++) {
-				Request c1 = (Request) list.get(i);
-				Request c2 = (Request) list.get(j);
-				if (c1.getResponseTime() < c2.getResponseTime()) {
-					list.set(i, c2);
-					list.set(j, c1);
-				}
-			}
-		}
 	}
 }

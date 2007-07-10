@@ -87,8 +87,7 @@ public class MonitorView extends ViewPart {
 			public void run() {
 				if (!(rr instanceof ResendHTTPRequest)) {
 				  Integer in = new Integer(rr.getLocalPort());
-				  treeViewer.add(MonitorTreeContentProvider.ROOT, in);
-				  treeViewer.add(in, rr); 
+				  treeViewer.refresh(in);
 				  treeViewer.setSelection(new StructuredSelection(rr), true);
 				}
 			}
@@ -424,10 +423,13 @@ public class MonitorView extends ViewPart {
 			public void run() {
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
-						boolean b = contentProvider.getSortByResponseTime();
-						contentProvider.setSortByResponseTime(!b);
-						treeViewer.refresh();
-						setChecked(!b);
+						if (treeViewer.getComparator() == null) {
+							setChecked(true);
+							treeViewer.setComparator(new RequestComparator());
+						} else {
+							setChecked(false);
+							treeViewer.setComparator(null);
+						}
 					}
 				});
 			}
