@@ -13,9 +13,9 @@ package org.eclipse.wst.internet.monitor.ui.internal.viewers;
 import java.io.ByteArrayInputStream;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wst.internet.monitor.ui.internal.Messages;
@@ -28,16 +28,17 @@ public class ImageViewer extends ContentViewer {
 	protected static final byte CR = '\r';
 	protected static final byte LF = '\n';
 
+	protected ScrolledComposite scroll;
 	protected Label messageLabel;
-	
+
 	protected byte[] content;
 
 	/** (non-Javadoc)
 	 * @see ContentViewer#init(Composite)
 	 */
 	public void init(Composite parent) {
-		messageLabel = new Label(parent, SWT.NONE);
-		messageLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING));
+		scroll = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL);
+		messageLabel = new Label(scroll, SWT.NONE);
 		messageLabel.setText(Messages.imageViewInvalid);
 	}
 
@@ -77,10 +78,11 @@ public class ImageViewer extends ContentViewer {
 				messageLabel.setImage(img);
 			} catch(Exception e) {
 				messageLabel.setImage(null);
+				messageLabel.setText(Messages.imageViewInvalid);
 			}
 		}
 		
-		Composite parent = messageLabel.getParent();
+		Composite parent = scroll.getParent();
 		messageLabel.setFont(parent.getFont());
 		parent.layout(true);
 	}
@@ -96,7 +98,8 @@ public class ImageViewer extends ContentViewer {
 	 * @see ContentViewer#dispose()
 	 */
 	public void dispose() {
-		messageLabel.dispose();
+		scroll.dispose();
+		scroll = null;
 		messageLabel = null;
 		content = null;
 	}
