@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,8 +13,6 @@ package org.eclipse.wst.internet.monitor.ui.internal.viewers;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -24,26 +22,23 @@ import org.eclipse.wst.internet.monitor.core.internal.provisional.Request;
 import org.eclipse.wst.internet.monitor.ui.internal.ContextIds;
 import org.eclipse.wst.internet.monitor.ui.internal.Messages;
 import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
+import org.eclipse.wst.internet.monitor.ui.internal.custom.MonitorStackLayout;
 /**
  * An transport (header) viewer.
  */
 public class HeaderViewer {
-	private static final int HEADER_TEXT_SIZE = 110;
-
 	protected boolean displayHeader;
 
 	protected Composite headerComp;
-	protected Composite innerComp;
+	protected MonitorStackLayout layout;
 
 	protected Label headerLabel;
 	protected Text headerText;
 	protected Request rr;
 	protected byte msg;
-	protected GridLayout layout;
-	protected GridData data;
 
 	protected boolean hidden;
-	
+
 	/**
 	 * Request header constant.
 	 */
@@ -65,29 +60,26 @@ public class HeaderViewer {
 		hidden = false;
 		
 		headerComp = new Composite(parent, SWT.NONE);
-		layout = new GridLayout();
-		layout.numColumns = 1;
-		layout.marginHeight = 0;
-		layout.marginWidth = 0;
+		layout = new MonitorStackLayout();
 		headerComp.setLayout(layout);
-		data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
-		headerComp.setLayoutData(data);
-
-		innerComp = new Composite(headerComp, SWT.NONE);
-		layout = new GridLayout();
-		layout.numColumns = 1;
-		layout.marginHeight = 0;
-		layout.marginWidth = 2;
-		innerComp.setLayout(layout);
-		data = new GridData(GridData.FILL_BOTH);
-		innerComp.setLayoutData(data);
-
+		
+		headerText = new Text(headerComp, SWT.BORDER | SWT.MULTI | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
+		Display display = headerComp.getDisplay();
+		headerText.setBackground(display.getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+		headerText.setForeground(display.getSystemColor(SWT.COLOR_LIST_FOREGROUND));
+		headerText.setFont(JFaceResources.getTextFont());
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(headerText, ContextIds.VIEW_RESPONSE);
+		
+		headerLabel = new Label(headerComp, SWT.NONE);
+		
+		layout.topControl = headerText;
+		
 		rr = null;
 		msg = message;
 
 		setDisplayHeader(false);
 	}
-	
+
 	/**
 	 * 
 	 * @param request
@@ -105,54 +97,15 @@ public class HeaderViewer {
 	public void setDisplayHeader(boolean b) {
 		if (displayHeader != b) {
 			displayHeader = b;
-			if (displayHeader) {
-				innerComp.dispose();
-
-				data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
-				data.heightHint = HEADER_TEXT_SIZE;
-				headerComp.setLayoutData(data);
-								
-				innerComp = new Composite(headerComp, SWT.NONE);
-				layout = new GridLayout();
-				layout.numColumns = 1;
-				layout.marginHeight = 0;
-				layout.marginWidth = 0;
-				innerComp.setLayout(layout);
-				data = new GridData(GridData.FILL_BOTH);
-				data.heightHint = HEADER_TEXT_SIZE;
-				innerComp.setLayoutData(data);
-								
-				headerText = new Text(innerComp, SWT.BORDER | SWT.MULTI | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
-				Display display = innerComp.getDisplay();
-				headerText.setBackground(display.getSystemColor(SWT.COLOR_LIST_BACKGROUND));
-				headerText.setForeground(display.getSystemColor(SWT.COLOR_LIST_FOREGROUND));
-				headerText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL));
-				headerText.setFont(JFaceResources.getTextFont());
-				PlatformUI.getWorkbench().getHelpSystem().setHelp(headerText, ContextIds.VIEW_RESPONSE);
-
-				headerComp.getParent().layout(true);
-			} else {
-				innerComp.dispose();
-
-				data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
-				headerComp.setLayoutData(data);
-				
-				innerComp = new Composite(headerComp, SWT.NONE);
-				layout = new GridLayout();
-				layout.numColumns = 1;
-				layout.marginHeight = 0;
-				layout.marginWidth = 2;
-				innerComp.setLayout(layout);
-				data = new GridData(GridData.FILL_BOTH);
-				innerComp.setLayoutData(data);
-
-				headerLabel = new Label(innerComp, SWT.NONE);
-				headerLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
-				
-				headerComp.getParent().layout(true);
-			}
+			
+			if (displayHeader)
+				layout.topControl = headerText;
+			else
+				layout.topControl = headerLabel;
+			
+			headerComp.layout(true);
+			getView();
 		}
-		getView();
 	}
 
 	private void getView() {

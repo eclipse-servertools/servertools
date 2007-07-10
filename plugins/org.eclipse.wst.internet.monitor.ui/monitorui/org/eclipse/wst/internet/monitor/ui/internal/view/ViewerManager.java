@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,12 +14,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.eclipse.core.runtime.*;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.internet.monitor.core.internal.IContentFilter;
 import org.eclipse.wst.internet.monitor.core.internal.http.ResendHTTPRequest;
 import org.eclipse.wst.internet.monitor.core.internal.provisional.Request;
 import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
 import org.eclipse.wst.internet.monitor.ui.internal.Trace;
+import org.eclipse.wst.internet.monitor.ui.internal.custom.SashForm;
 import org.eclipse.wst.internet.monitor.ui.internal.provisional.ContentViewer;
 import org.eclipse.wst.internet.monitor.ui.internal.viewers.ByteViewer;
 import org.eclipse.wst.internet.monitor.ui.internal.viewers.HeaderViewer;
@@ -37,33 +41,54 @@ public class ViewerManager {
 	protected HeaderViewer reqHeader;
 	protected HeaderViewer respHeader;
 
-	protected Composite reqHComp;
-	protected Composite reqVComp;
-
-	protected Composite respHComp;
-	protected Composite respVComp;
+	protected Composite reqComp;
+	protected Composite respComp;
 
 	protected List viewers;
 
 	protected Request request;
 
+	protected SashForm reqSash;
+	protected SashForm respSash;
+
 	protected List filters = new ArrayList();
 
-	public ViewerManager(Composite reqHeadParent, Composite reqViewParent, Composite respHeadParent, Composite respViewParent) {
-		reqHComp = reqHeadParent;
-		respHComp = respHeadParent;
-		reqVComp = reqViewParent;
-		respVComp = respViewParent;
-		reqHeader = new HeaderViewer(reqHComp, HeaderViewer.REQUEST_HEADER);
-		respHeader = new HeaderViewer(respHComp, HeaderViewer.RESPONSE_HEADER);
+	public ViewerManager(Composite reqParent, Composite respParent) {
+		reqSash = new SashForm(reqParent, SWT.VERTICAL);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 1;
+		layout.horizontalSpacing = 0;
+		layout.verticalSpacing = 0;
+		layout.marginWidth = 0;
+		reqSash.setLayout(layout);
+		reqSash.setLayoutData(new GridData(GridData.FILL_BOTH));
+		
+		respSash = new SashForm(respParent, SWT.VERTICAL);
+		layout = new GridLayout();
+		layout.numColumns = 1;
+		layout.horizontalSpacing = 0;
+		layout.verticalSpacing = 0;
+		layout.marginWidth = 0;
+		respSash.setLayout(layout);
+		respSash.setLayoutData(new GridData(GridData.FILL_BOTH));
+		
+		reqComp = reqSash;
+		respComp = respSash;
+		
+		reqHeader = new HeaderViewer(reqSash, HeaderViewer.REQUEST_HEADER);
+		respHeader = new HeaderViewer(respSash, HeaderViewer.RESPONSE_HEADER);
 		reqViewer = new ByteViewer();
-		reqViewer.init(reqVComp);
+		reqViewer.init(reqSash);
 		respViewer = new ByteViewer();
-		respViewer.init(respVComp);
+		respViewer.init(respSash);
+		
+		reqSash.setWeights(new int[] { 10, 90 });
+		respSash.setWeights(new int[] { 10, 90 });
+		
 		setDisplayHeaderInfo(MonitorUIPlugin.getShowHeaderPreference());
 		loadAvailableViewers();
 	}
-	
+
 	protected Viewer getDefaultViewer(String name) {
 		if (name == null)
 			return null;
@@ -110,6 +135,11 @@ public class ViewerManager {
 		displayHeaderInf = b;
 		reqHeader.setDisplayHeader(b);
 		respHeader.setDisplayHeader(b);
+		reqSash.setSimpleLayout(b);
+		respSash.setSimpleLayout(b);
+		reqSash.layout(true);
+		respSash.layout(true);
+		
 		MonitorUIPlugin.setShowHeaderPreference(b);
 		if (b) {
 			reqHeader.setEditable(false);
@@ -228,7 +258,7 @@ public class ViewerManager {
 	public void setRequestViewer(Viewer viewer) {
 		if (viewer != null && viewer.equals(requestViewer))
 			return;
-
+		
 		// call set request to save and reset the request
 		setRequest(request);
 		reqViewer.dispose();
@@ -238,7 +268,7 @@ public class ViewerManager {
 		if (reqViewer == null)
 			return;
 		
-		reqViewer.init(reqVComp);
+		reqViewer.init(reqComp);
 		//reqViewer.setRequestResponse(rr);
 		byte[] b = null;
 		if (request != null) {
@@ -252,7 +282,7 @@ public class ViewerManager {
 			}
 		}
 		reqViewer.setContent(b);
-		reqVComp.layout(true);
+		reqComp.layout(true);
 	}
 
 	/* (non-Javadoc)
@@ -267,13 +297,13 @@ public class ViewerManager {
 		respViewer = viewer.createViewer();
 		if (respViewer == null)
 			return;
-		respViewer.init(respVComp);
+		respViewer.init(respComp);
 		//respViewer.setRequestResponse(rr);
 		byte[] b = null;
 		if (request != null)
 			b = filter(request.getResponse(Request.CONTENT));
 		respViewer.setContent(b);
-		respVComp.layout(true);
+		respComp.layout(true);
 	}
 
 	/* (non-Javadoc)

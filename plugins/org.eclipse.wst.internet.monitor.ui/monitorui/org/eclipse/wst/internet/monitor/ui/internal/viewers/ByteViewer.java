@@ -12,7 +12,6 @@ package org.eclipse.wst.internet.monitor.ui.internal.viewers;
 
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
@@ -34,7 +33,6 @@ public class ByteViewer extends ContentViewer {
 		Display display = parent.getDisplay();
 		text.setBackground(display.getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 		text.setForeground(display.getSystemColor(SWT.COLOR_LIST_FOREGROUND));
-		text.setLayoutData(new GridData(GridData.FILL_BOTH));
 		text.setFont(JFaceResources.getTextFont());
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(text, ContextIds.VIEW_RESPONSE);
 	}

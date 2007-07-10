@@ -180,39 +180,40 @@ public class MonitorView extends ViewPart {
 		final Label label2 = new Label(detailsPanel, SWT.NONE);
 		label2.setText(NLS.bind(Messages.viewResponseTime, ""));
 		label2.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
-
+		
 		final Label label3 = new Label(detailsPanel, SWT.NONE);
 		label3.setText(NLS.bind(Messages.viewType, ""));
 		label3.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
-
+		
 		// create center and right panels
-		SashForm sashFchild = new SashForm(sashFparent, SWT.NONE);
+		SashForm sashFchild = new SashForm(sashFparent, SWT.HORIZONTAL);
 		layout = new GridLayout();
 		layout.numColumns = 2;
 		layout.horizontalSpacing = 2;
 		layout.verticalSpacing = 4;
 		sashFchild.setLayout(layout);
 		sashFparent.setWeights(new int[] { 30, 70 });
-	
+		
 		// request panel
 		Composite request = new Composite(sashFchild, SWT.NONE);
 		layout = new GridLayout();
 		layout.verticalSpacing = 3;
-		layout.marginHeight = 2;
+		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		request.setLayout(layout);
 		request.setLayoutData(new GridData(GridData.FILL_BOTH));
-
+		
 		Composite requestHeader = new Composite(request, SWT.NONE);
 		layout = new GridLayout();
 		layout.verticalSpacing = 1;
 		layout.numColumns = 2;
 		layout.marginHeight = 0;
-		layout.marginWidth = 2;
+		layout.marginWidth = 0;
+		layout.marginLeft = 2;
 		data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
 		requestHeader.setLayout(layout);
 		requestHeader.setLayoutData(data);
-
+		
 		final Label requestLabel = new Label(requestHeader, SWT.NONE);
 		requestLabel.setText(NLS.bind(Messages.viewRequest, ""));
 		requestLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -221,16 +222,16 @@ public class MonitorView extends ViewPart {
 		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
 		data.verticalSpan = 2;
 		requestViewerCombo.setLayoutData(data);
-
+		
 		final Label requestSizeLabel = new Label(requestHeader, SWT.NONE);
 		requestSizeLabel.setText(NLS.bind(Messages.viewSize, ""));
 		requestSizeLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
+		
 		// response panel
 		Composite response = new Composite(sashFchild, SWT.NONE);
 		layout = new GridLayout();
 		layout.verticalSpacing = 3;
-		layout.marginHeight = 2;
+		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		response.setLayout(layout);
 		response.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -240,11 +241,12 @@ public class MonitorView extends ViewPart {
 		layout.verticalSpacing = 1;
 		layout.numColumns = 2;
 		layout.marginHeight = 0;
-		layout.marginWidth = 2;
+		layout.marginWidth = 0;
+		layout.marginLeft = 2;
 		data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
 		responseHeader.setLayout(layout);
 		responseHeader.setLayoutData(data);
-
+		
 		final Label responseLabel = new Label(responseHeader, SWT.NONE);
 		responseLabel.setText(NLS.bind(Messages.viewResponse, ""));
 		responseLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -253,16 +255,16 @@ public class MonitorView extends ViewPart {
 		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
 		data.verticalSpan = 2;
 		responseViewerCombo.setLayoutData(data);
-	
+		
 		final Label responseSizeLabel = new Label(responseHeader, SWT.NONE);
 		responseSizeLabel.setText(NLS.bind(Messages.viewSize, ""));
 		responseSizeLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-	
+		
 		// viewer manager
-		vm = new ViewerManager(request, request, response, response);
+		vm = new ViewerManager(request, response);
 		requestViewers = vm.getRequestViewers();
 		responseViewers = vm.getResponseViewers();
-
+		
 		// set up the viewer combo boxes
 		Iterator iterator = requestViewers.iterator();
 		int ctr = 0;

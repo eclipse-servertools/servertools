@@ -12,7 +12,6 @@ package org.eclipse.wst.internet.monitor.ui.internal.viewers;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.internet.monitor.ui.internal.Messages;
 import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
@@ -33,7 +32,6 @@ public class BrowserViewer extends ContentViewer {
 	 */
 	public void init(Composite parent) {
 		browser = new Browser(parent, SWT.BORDER);
-		browser.setLayoutData(new GridData(GridData.FILL_BOTH));
 	}
 
 	/** (non-Javadoc)
