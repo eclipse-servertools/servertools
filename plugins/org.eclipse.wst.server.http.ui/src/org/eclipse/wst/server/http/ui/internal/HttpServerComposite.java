@@ -64,7 +64,8 @@ public class HttpServerComposite extends Composite {
 			server = (HttpServer) newServer.loadAdapter(HttpServer.class, null);
 		}
 		
-		init();
+		if (!isDisposed())
+			init();
 		validate();
 	}
 

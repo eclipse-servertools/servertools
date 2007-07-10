@@ -98,6 +98,18 @@ public class HttpServer extends ServerDelegate implements IURLProvider {
 	// }
 
 	/**
+	 * Processes the host to return IPv6 addresses in square brackets, e.g.
+	 * "[4ffe:ff2f:101:21:230:6eff:fe04:d9fe]". If the host is just a host name
+	 * or IPv4 address, then it is returned as is.
+	 * 
+	 * @param host the host, an IP address or host name
+	 */
+	protected static String getURLHost(String host) {
+		// use ":" to determine if this is an IPv6 address 
+		return (host != null && host.indexOf(":") >= 0) ? "[" + host + "]" : host;
+	}
+
+	/**
 	 * Return the root URL of this module.
 	 * 
 	 * @param module a module
@@ -105,10 +117,10 @@ public class HttpServer extends ServerDelegate implements IURLProvider {
 	 */
 	public URL getModuleRootURL(IModule module) {
 		try {
-			String base = "http://" + getServer().getHost();
+			String base = "http://" + getURLHost(getServer().getHost());
 			
 			if (base.equals(""))
-				base = "http://" + getServer().getHost();
+				base = "http://" + getURLHost(getServer().getHost());
 			
 			int port = getPort();
 			URL url = null;
