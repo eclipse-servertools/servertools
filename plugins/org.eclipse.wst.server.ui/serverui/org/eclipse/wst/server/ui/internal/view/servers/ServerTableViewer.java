@@ -515,8 +515,10 @@ public class ServerTableViewer extends TreeViewer {
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {
-				servers[i].removeServerListener(serverListener);
-				((Server) servers[i]).removePublishListener(publishListener);
+				if (serverListener != null)
+					servers[i].removeServerListener(serverListener);
+				if (publishListener != null)
+					((Server) servers[i]).removePublishListener(publishListener);
 			}
 		}
 		

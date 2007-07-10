@@ -59,6 +59,7 @@ public class Messages extends NLS {
 	public static String errorStopAlreadyStopped;
 	public static String moduleTypeUnknown;
 	public static String jobStartingServer;
+	public static String jobStoppingServer;
 	public static String jobRestartingServer;
 	public static String jobUpdateServer;
 	public static String jobInstallingRuntime;

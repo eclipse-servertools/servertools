@@ -31,7 +31,6 @@ public class Messages extends NLS {
 	public static String deleteServerDialogRunningServerStop;
 	public static String deleteServerTask;
 	public static String errorCouldNotCreateServerProjectStatus;
-	public static String dialogStoppingServer;
 	public static String savingTask;
 	public static String editorSaveErrorDialog;
 	public static String editorSaveErrorMessage;

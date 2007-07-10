@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,14 +15,11 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.internal.ServerSchedulingRule;
 /**
- * A job for starting the server.
+ * A job for stopping the server.
  */
-public class StartServerJob extends ChainedJob {
-	protected String launchMode;
-
-	public StartServerJob(IServer server, String launchMode) {
-		super(NLS.bind(Messages.jobStartingServer, server.getName()), server);
-		this.launchMode = launchMode;
+public class StopServerJob extends ChainedJob {
+	public StopServerJob(IServer server) {
+		super(NLS.bind(Messages.jobStoppingServer, server.getName()), server);
 		setRule(new ServerSchedulingRule(server));
 	}
 
@@ -31,7 +28,7 @@ public class StartServerJob extends ChainedJob {
 	 */
 	protected IStatus run(IProgressMonitor monitor) {
 		final IStatus[] status = new IStatus[1];
-		getServer().start(launchMode, new IServer.IOperationListener() {
+		getServer().stop(false, new IServer.IOperationListener() {
 			public void done(IStatus result) {
 				status[0] = result;
 			}

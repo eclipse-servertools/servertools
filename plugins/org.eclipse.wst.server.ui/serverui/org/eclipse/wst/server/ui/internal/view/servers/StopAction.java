@@ -10,15 +10,13 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.internal.StopServerJob;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 /**
  * Stop (terminate) a server.
@@ -54,17 +52,8 @@ public class StopAction extends AbstractServerAction {
 	 */
 	public void perform(final IServer server) {
 		ServerUIPlugin.addTerminationWatch(shell, server, ServerUIPlugin.STOP);
-	
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				MessageDialog dialog = new MessageDialog(shell, Messages.defaultDialogTitle, null,
-						NLS.bind(Messages.dialogStoppingServer, server.getName()), MessageDialog.INFORMATION, new String[0], 0);
-				dialog.setBlockOnOpen(false);
-				dialog.open();
-	
-				server.stop(false);
-				dialog.close();
-			}
-		});
+		
+		StopServerJob stopJob = new StopServerJob(server);
+		stopJob.schedule();
 	}
 }
