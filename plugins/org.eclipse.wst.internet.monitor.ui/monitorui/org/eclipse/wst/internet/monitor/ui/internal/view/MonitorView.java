@@ -86,8 +86,7 @@ public class MonitorView extends ViewPart {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				if (!(rr instanceof ResendHTTPRequest)) {
-				  Integer in = new Integer(rr.getLocalPort());
-				  treeViewer.refresh(in);
+				  treeViewer.refresh(MonitorTreeContentProvider.ROOT);
 				  treeViewer.setSelection(new StructuredSelection(rr), true);
 				}
 			}
