@@ -208,7 +208,11 @@ public class ExtensionComposite extends Composite {
 				String provider = "" + ei.getProvider();
 				//String provider = "" + ei.getImage();
 				//String provider = "" + ExtensionUtility.getDescription(ei);
-				String version = "v" + ei.getVersionedIdentifier().getVersion().toString();
+				String ver = ei.getVersionedIdentifier().toString();
+				int ind = ver.indexOf("_");
+				if (ind >= 0)
+					ver = ver.substring(ind+1);
+				String version = "v" + ver;
 				
 				Image image = getImage(ei.getImage());
 				if (image == null)

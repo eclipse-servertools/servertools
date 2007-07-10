@@ -14,7 +14,7 @@ import org.eclipse.debug.ui.*;
 
 import org.eclipse.wst.server.ui.ServerLaunchConfigurationTab;
 /**
- * A debug tab group for launching Tomcat. 
+ * A debug tab group for launching the preview server. 
  */
 public class PreviewLaunchConfigurationTabGroup extends AbstractLaunchConfigurationTabGroup {
 	/*
@@ -24,9 +24,7 @@ public class PreviewLaunchConfigurationTabGroup extends AbstractLaunchConfigurat
 		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[2];
 		tabs[0] = new ServerLaunchConfigurationTab(new String[] { "org.eclipse.wst.server.preview" });
 		tabs[0].setLaunchConfigurationDialog(dialog);
-		/*tabs[1] = new SourceLookupTab();
-		tabs[1].setLaunchConfigurationDialog(dialog);
-		tabs[2] = new EnvironmentTab();
+		/*tabs[2] = new EnvironmentTab();
 		tabs[2].setLaunchConfigurationDialog(dialog);*/
 		tabs[1] = new CommonTab();
 		tabs[1].setLaunchConfigurationDialog(dialog);

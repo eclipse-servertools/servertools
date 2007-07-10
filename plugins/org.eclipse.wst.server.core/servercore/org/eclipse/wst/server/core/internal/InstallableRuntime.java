@@ -118,7 +118,11 @@ public class InstallableRuntime implements IInstallableRuntime {
 		ISite site = InstallableRuntime.getSite(fromSite, monitor);
 		ISiteFeatureReference[] featureRefs = site.getFeatureReferences();
 		for (int i = 0; i < featureRefs.length; i++) {
-			if (featureId.equals(featureRefs[i].getVersionedIdentifier().getIdentifier()) && featureVersion.equals(featureRefs[i].getVersionedIdentifier().getVersion().toString())) {
+			String ver = featureRefs[i].getVersionedIdentifier().toString();
+			int ind = ver.indexOf("_");
+			if (ind >= 0)
+				ver = ver.substring(ind+1);
+			if (featureId.equals(featureRefs[i].getVersionedIdentifier().getIdentifier()) && featureVersion.equals(ver)) {
 				IFeature feature = featureRefs[i].getFeature(monitor);
 				IURLEntry license = feature.getLicense();
 				if (license != null)

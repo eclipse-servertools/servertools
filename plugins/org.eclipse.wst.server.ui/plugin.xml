@@ -259,7 +259,11 @@
       class="org.eclipse.wst.server.ui.internal.ServerAdapterFactory"
       adaptableType="org.eclipse.wst.server.core.IServer">
       <adapter type="org.eclipse.ui.IActionFilter"/>
-      <adapter type="org.eclipse.ui.model.IWorkbenchAdapter"/>
+    </factory>
+    <factory
+      class="org.eclipse.wst.server.ui.internal.ServerAdapterFactory"
+      adaptableType="org.eclipse.wst.server.ui.internal.view.servers.ModuleServer">
+      <adapter type="org.eclipse.ui.IActionFilter"/>
     </factory>
   </extension>
 

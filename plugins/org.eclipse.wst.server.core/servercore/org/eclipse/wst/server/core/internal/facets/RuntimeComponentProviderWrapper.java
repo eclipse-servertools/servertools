@@ -118,7 +118,7 @@ public class RuntimeComponentProviderWrapper {
 		try {
 			return getDelegate().getRuntimeComponents(runtime);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
+			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
 		}
 		return null;
 	}

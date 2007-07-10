@@ -44,6 +44,7 @@ import org.eclipse.wst.server.ui.internal.ProgressUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.wizard.ExtensionWizard;
+import org.osgi.framework.Version;
 
 public class ExtensionUtility {
 	public static boolean launchExtensionWizard(Shell shell, String title, String message) {
@@ -107,15 +108,24 @@ public class ExtensionUtility {
 			return;
 		
 		VersionedIdentifier newVi = newFeature.getVersionedIdentifier();
+		String ver = newVi.toString();
+		int ind = ver.indexOf("_");
+		if (ind >= 0)
+			ver = ver.substring(ind+1);
+		Version newV = new Version(ver);
 		IFeature remove = null;
 		
 		Iterator iterator = list.iterator();
 		while (iterator.hasNext()) {
 			IFeature feature = (IFeature) iterator.next();
 			VersionedIdentifier vi = feature.getVersionedIdentifier(); 
-			if (vi.getIdentifier().equals(newVi.getIdentifier())) {
-				//Version nextCand = new Version(features[i].getVersionedIdentifier().getVersion().toString());
-				if (newVi.getVersion().isGreaterOrEqualTo(vi.getVersion())) {
+			if (!vi.getIdentifier().equals(newVi.getIdentifier())) {
+				ver = vi.toString();
+				ind = ver.indexOf("_");
+				if (ind >= 0)
+					ver = ver.substring(ind+1);
+				Version nextCand = new Version(ver);
+				if (nextCand.compareTo(newV) > 0) {
 					remove = feature;
 				} else // new feature is older
 					return;
@@ -128,12 +138,6 @@ public class ExtensionUtility {
 		
 		list.add(newFeature);
 		listener.featureFound(newFeature);
-		
-		try {
-			Thread.sleep(800);
-		} catch (Exception s) {
-			//
-		}
 	}
 
 	public static void addFeatures(List list, List existing, List newFeatures, FeatureListener listener) {
