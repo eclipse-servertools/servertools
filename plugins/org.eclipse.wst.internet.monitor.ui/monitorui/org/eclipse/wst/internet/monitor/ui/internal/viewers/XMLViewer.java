@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,7 +25,6 @@ import org.eclipse.jface.resource.JFaceResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -84,6 +83,7 @@ public class XMLViewer extends ContentViewer {
 				layout.topControl = messageLabel;
 				messageLabel.setVisible(true);
 				messageLabel.setText(Messages.xmlViewInvalid);
+				return;
 			} else if (xmlTagMissing && finalMsg.toLowerCase().startsWith("<?xml version=\"1.0\" encoding=\"utf-8\"?>")) {
 				int x = finalMsg.indexOf("\n") + 1;
 				String Msg = finalMsg.substring(x);
@@ -110,18 +110,28 @@ public class XMLViewer extends ContentViewer {
 				finalMsg = first_half + second_half;
 				
 				messageText.setText(finalMsg);	
-			}			
+			} else {
+				messageText.setVisible(false);
+				layout.topControl = messageLabel;
+				messageLabel.setVisible(true);
+				messageLabel.setText(Messages.xmlViewInvalid);
+				return;
+			}
 		} else
 			messageText.setText(out);
+		
+		messageLabel.setVisible(false);
+		layout.topControl = messageText;
+		messageText.setVisible(true);
 	}
-	
+
 	/**
 	 * @see ContentViewer#getContent()
 	 */
 	public byte[] getContent() {
 		return content;
 	}
-	
+
 	/** (non-Javadoc)
 	 * @see ContentViewer#init(Composite)
 	 */
@@ -131,24 +141,21 @@ public class XMLViewer extends ContentViewer {
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		viewerComp.setLayout(layout);
-		viewerComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-	
+		
 		messageText = new Text(viewerComp, SWT.BORDER | SWT.MULTI | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
 		Display display = viewerComp.getDisplay();
 		messageText.setBackground(display.getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 		messageText.setForeground(display.getSystemColor(SWT.COLOR_LIST_FOREGROUND));
-		messageText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL));
 		messageText.setFont(JFaceResources.getTextFont());
 		messageText.setVisible(true);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(messageText, ContextIds.VIEW_RESPONSE);
 		
 		messageLabel = new Label(viewerComp, SWT.NONE);
-		messageLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING));
 		messageLabel.setVisible(false);
 		
 		layout.topControl = messageText;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @#createDocument(String)
 	 */
