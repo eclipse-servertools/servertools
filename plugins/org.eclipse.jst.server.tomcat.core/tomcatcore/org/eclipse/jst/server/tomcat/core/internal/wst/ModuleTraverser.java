@@ -167,7 +167,7 @@ public class ModuleTraverser {
 
                 if (PlatformURLModuleConnection.CLASSPATH.equals(
                 		refHandle.segment(ModuleURIUtil.ModuleURI.SUB_PROTOCOL_INDX))) {
-                    IJavaProject jproj = JavaCore.create(proj);
+                    //IJavaProject jproj = JavaCore.create(proj);
                     IPath refPath = getResolvedPathForArchiveComponent(refHandle);
                     // If an archive component, add to list
                     if (refPath != null) {

@@ -72,9 +72,6 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
      * Instantiate a new TomcatPublishModuleVisitor
      * 
      * @param catalinaBase catalina base path
-     * @param webModules list of
-     * <code>org.eclipse.jst.server.tomcat.core.internal.WebModule</code>
-     * configured for this server
      */
     TomcatPublishModuleVisitor(IPath catalinaBase, ServerInstance serverInstance, String sharedLoader) {
         this.baseDir = catalinaBase;

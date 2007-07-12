@@ -173,11 +173,9 @@
       adaptable="true"
       id="org.eclipse.jst.server.tomcat.ui.serveractions"
       objectClass="org.eclipse.wst.server.core.IServer">
-      <enablement>
-        <test forcePluginActivation="true"
-          property="org.eclipse.wst.server.ui.serverType"
-          value="org.eclipse.jst.server.tomcat.*" />
-      </enablement>
+      <visibility>
+          <objectState name="serverType" value="org.eclipse.jst.server.tomcat.*"/>
+      </visibility>
       <action 
         class="org.eclipse.jst.server.tomcat.ui.internal.actions.CleanWorkDirAction"
         enablesFor="1"
@@ -189,16 +187,12 @@
       adaptable="true"
       id="org.eclipse.jst.server.tomcat.ui.serveractions"
       objectClass="org.eclipse.wst.server.ui.internal.view.servers.ModuleServer">
-      <enablement>
+      <visibility>
         <and>
-          <test forcePluginActivation="true"
-            property="org.eclipse.wst.server.ui.moduleType"
-            value="jst.web"/>
-          <test forcePluginActivation="true"
-            property="org.eclipse.wst.server.ui.serverType"
-            value="org.eclipse.jst.server.tomcat.*"/>
+          <objectState name="serverType" value="org.eclipse.jst.server.tomcat.*"/>
+          <objectState name="moduleType" value="jst.web"/>
         </and>
-      </enablement>
+      </visibility>
       <action
         class="org.eclipse.jst.server.tomcat.ui.internal.actions.CleanWorkDirAction"
         enablesFor="1"

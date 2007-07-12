@@ -390,7 +390,8 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 		// If not Tomcat 3.2, update description to mention catalina.base
 		if (runtime != null && runtime.getRuntimeType().getId().indexOf("32") < 0)
 			section.setDescription(Messages.serverEditorLocationsDescription2);
-		installDirPath = runtime.getLocation();
+		if (runtime != null)
+			installDirPath = runtime.getLocation();
 
 		// determine if editing of locations is allowed
 		allowRestrictedEditing = false;
