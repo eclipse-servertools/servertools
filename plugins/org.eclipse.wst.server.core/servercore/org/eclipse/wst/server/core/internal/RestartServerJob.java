@@ -13,7 +13,6 @@ package org.eclipse.wst.server.core.internal;
 import org.eclipse.core.runtime.*;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServer.IOperationListener;
 import org.eclipse.wst.server.core.internal.ServerSchedulingRule;
 /**
  * A job for restarting a server.
@@ -33,29 +32,20 @@ public class RestartServerJob extends ChainedJob {
 	 * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	protected IStatus run(IProgressMonitor monitor) {
-		IOperationListener listener2 = new IOperationListener() {
+		final IStatus[] status = new IStatus[1];
+		getServer().restart(launchMode, new IServer.IOperationListener() {
 			public void done(IStatus result) {
-				isRestartCompleted = true;
-				resultStatus = result;
+				status[0] = result;
 			}
-		};
-		getServer().restart(launchMode, listener2);
+		});
 		
-		// block util the restart is completed
-		while (!isRestartCompleted) {
-			if (monitor.isCanceled())
-				return Status.CANCEL_STATUS;
-			
+		while (status[0] == null & !monitor.isCanceled()) {
 			try {
-				Thread.sleep(250);
-			} catch (InterruptedException e) {
-				// Do nothing.
+				Thread.sleep(200);
+			} catch (Exception e) {
+				// ignore
 			}
 		}
-		
-		if (resultStatus != null)
-			return resultStatus;
-		
-		return Status.OK_STATUS;
+		return status[0];
 	}
 }

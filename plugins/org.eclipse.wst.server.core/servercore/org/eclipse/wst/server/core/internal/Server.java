@@ -1449,8 +1449,12 @@ public class Server extends Base implements IServer {
 		
 		try {
 			getBehaviourDelegate(null).stop(force);
+		} catch (RuntimeException e) {
+			Trace.trace(Trace.SEVERE, "Error calling delegate stop() " + toString(), e);
+			throw e;
 		} catch (Throwable t) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate stop() " + toString(), t);
+			throw new RuntimeException(t);
 		}
 	}
 
@@ -1458,8 +1462,10 @@ public class Server extends Base implements IServer {
 	 * @see IServer#start(String, IOperationListener)
 	 */
 	public void start(String mode2, IOperationListener listener2) {
-		if (getServerType() == null)
+		if (getServerType() == null) {
+			listener2.done(Status.OK_STATUS);
 			return;
+		}
 		
 		Trace.trace(Trace.FINEST, "synchronousStart 1");
 		final Object mutex = new Object();
@@ -1641,7 +1647,7 @@ public class Server extends Base implements IServer {
 						// notify waiter
 						synchronized (notified) {
 							Trace.trace(Trace.FINEST, "synchronousStart notify timeout");
-							if (!timer.alreadyDone && totalTimeout < 0)
+							if (!timer.alreadyDone && totalTimeout <= 0)
 								timer.timeout = true;
 							notified[0] = true;
 							notified.notifyAll();
@@ -1785,30 +1791,33 @@ public class Server extends Base implements IServer {
 							t.start();
 						}
 					}
-					
 				}
 			});
-	
+			
 			// stop the server
 			stop(false);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error restarting server", e);
-			listener.done(null);
+			listener.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartFailed, getName()), null));
 		}
 	}
-	
+
 	/*
 	 * @see IServer#stop(boolean, IOperationListener)
 	 */
 	public void stop(boolean force, IOperationListener listener2) {
-		if (getServerType() == null)
+		if (getServerType() == null) {
+			listener2.done(Status.OK_STATUS);
 			return;
+		}
 		
-		if (getServerState() == IServer.STATE_STOPPED)
+		if (getServerState() == IServer.STATE_STOPPED) {
+			listener2.done(Status.OK_STATUS);
 			return;
+		}
 		
 		final Object mutex = new Object();
-	
+		
 		// add listener to the server
 		IServerListener listener = new IServerListener() {
 			public void serverChanged(ServerEvent event) {
@@ -1859,10 +1868,16 @@ public class Server extends Base implements IServer {
 			thread.setDaemon(true);
 			thread.start();
 		}
-	
+		
 		// stop the server
-		stop(force);
-	
+		try {
+			stop(force);
+		} catch (RuntimeException e) {
+			removeServerListener(listener);
+			listener2.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorRestartFailed, getName()), null));
+			return;
+		}
+		
 		// wait for it! wait for it!
 		synchronized (mutex) {
 			try {
@@ -1874,15 +1889,11 @@ public class Server extends Base implements IServer {
 		}
 		removeServerListener(listener);
 		
-		/*
-		//can't throw exceptions
-		if (timer.timeout)
-			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorStartFailed", getName()), null));
-		else
-			timer.alreadyDone = true;
+		if (timer.timeout) {
+			listener2.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorRestartFailed, getName()), null));
+			return;
+		}
 		
-		if (getServerState() == IServer.STATE_STOPPED)
-			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorStartFailed", getName()), null));*/
 		listener2.done(Status.OK_STATUS);
 	}
 

@@ -663,7 +663,7 @@ public interface IServer extends IServerAttributes {
 	 * an exception will be thrown.
 	 * </p>
 	 * <p>
-	 * [issue: Since this method is ascynchronous, is there
+	 * [issue: Since this method is asynchronous, is there
 	 * any need for the progress monitor?]
 	 * </p>
 	 * <p>

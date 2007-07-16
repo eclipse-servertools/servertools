@@ -425,7 +425,7 @@ public abstract class ServerBehaviourDelegate {
 	 * the server.
 	 * </p>
 	 * <p>
-	 * [issue: Since this method is ascynchronous, is there
+	 * [issue: Since this method is asynchronous, is there
 	 * any need for the progress monitor?]
 	 * </p>
 	 * 
@@ -451,7 +451,7 @@ public abstract class ServerBehaviourDelegate {
 	 * the server.
 	 * </p>
 	 * <p>
-	 * [issue: Since this method is ascynchronous, is there
+	 * [issue: Since this method is asynchronous, is there
 	 * any need for the progress monitor?]
 	 * </p>
 	 * 
@@ -477,7 +477,7 @@ public abstract class ServerBehaviourDelegate {
 	 * the server.
 	 * </p>
 	 * <p>
-	 * [issue: Since this method is ascynchronous, is there
+	 * [issue: Since this method is asynchronous, is there
 	 * any need for the progress monitor?]
 	 * </p>
 	 * 
