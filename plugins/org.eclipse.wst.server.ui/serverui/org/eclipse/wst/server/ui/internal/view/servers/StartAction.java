@@ -10,6 +10,8 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
+import java.util.Iterator;
+
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -60,6 +62,68 @@ public class StartAction extends AbstractServerAction {
 		}
 	}
 
+	/**
+	 * Update the name of the Action label, depending on the status of the server.
+	 * @param sel the IStructuredSelection from the view
+	 */
+	private void updateText(IStructuredSelection sel){
+		if (this.launchMode == ILaunchManager.RUN_MODE) {
+			if (sel.isEmpty()) {
+				setText(Messages.actionStart);
+				return;
+			}
+			Iterator iterator = sel.iterator();
+			while (iterator.hasNext()) {
+				Object obj = iterator.next();
+				if (obj instanceof IServer) {
+					IServer server = (IServer) obj;
+					if (server.getServerState() == IServer.STATE_STARTED ||
+						 server.getServerState() == IServer.STATE_STARTING){
+						setText(Messages.actionRestart);		
+					}
+					else
+						setText(Messages.actionStart);
+				}
+			}	
+		} else if (this.launchMode == ILaunchManager.DEBUG_MODE) {
+			if (sel.isEmpty()) {
+				setText(Messages.actionDebug);
+				return;
+			}
+			Iterator iterator = sel.iterator();
+			while (iterator.hasNext()) {
+				Object obj = iterator.next();
+				if (obj instanceof IServer) {
+					IServer server = (IServer) obj;
+					if (server.getServerState() == IServer.STATE_STARTED ||
+						 server.getServerState() == IServer.STATE_STARTING){
+						setText(Messages.actionDebugRestart);		
+					}
+					else
+						setText(Messages.actionDebug);
+				}
+			}
+		} else if (this.launchMode == ILaunchManager.PROFILE_MODE) {
+			if (sel.isEmpty()) {
+				setText(Messages.actionProfile);
+				return;
+			}
+			Iterator iterator = sel.iterator();
+			while (iterator.hasNext()) {
+				Object obj = iterator.next();
+				if (obj instanceof IServer) {
+					IServer server = (IServer) obj;
+					if (server.getServerState() == IServer.STATE_STARTED ||
+						 server.getServerState() == IServer.STATE_STARTING){
+						setText(Messages.actionProfileRestart);		
+					}
+					else
+						setText(Messages.actionProfile);
+				}
+			}
+		}		
+	}
+	
 	/**
 	 * Return true if this server can currently be acted on.
 	 * @return boolean
@@ -119,5 +183,10 @@ public class StartAction extends AbstractServerAction {
 				Trace.trace(Trace.SEVERE, "Error restarting server", e);
 			}
 		}
+	}
+
+	public void selectionChanged(IStructuredSelection sel) {
+		super.selectionChanged(sel);
+		updateText(sel);		
 	}
 }

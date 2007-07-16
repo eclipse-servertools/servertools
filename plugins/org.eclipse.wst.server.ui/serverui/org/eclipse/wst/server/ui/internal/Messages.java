@@ -126,10 +126,12 @@ public class Messages extends NLS {
 	public static String actionNewServer;
 	public static String actionDebugToolTip;
 	public static String actionDebug;
+	public static String actionDebugRestart;
 	public static String actionStartToolTip;
 	public static String actionStart;
 	public static String actionProfileToolTip;
 	public static String actionProfile;
+	public static String actionProfileRestart;
 	public static String actionRestartToolTip;
 	public static String actionRestart;
 	public static String actionPublishToolTip;
