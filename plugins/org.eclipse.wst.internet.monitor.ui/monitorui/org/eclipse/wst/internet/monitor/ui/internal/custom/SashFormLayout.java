@@ -27,7 +27,7 @@ protected Point computeSize(Composite composite, int wHint, int hHint, boolean f
 	Control[] cArray = sashForm.getControls(true);
 	int width = 0;
 	int height = 0;
-	if (cArray.length == 0) {		
+	if (cArray.length == 0) {
 		if (wHint != SWT.DEFAULT) width = wHint;
 		if (hHint != SWT.DEFAULT) height = hHint;
 		return new Point(width, height);
@@ -165,7 +165,7 @@ protected void layout(Composite composite, boolean flushCache) {
 		Control c1 = controls[0];
 		Control c2 = controls[1];
 		
-		int h1 = c1.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).y * 2;
+		int h1 = area.height / 3;
 		int h2 = area.height - h1 - sashes[0].getBounds().height;
 		
 		Object data1 = c1.getLayoutData();
@@ -178,8 +178,6 @@ protected void layout(Composite composite, boolean flushCache) {
 			data2 = new SashFormData();
 			c2.setLayoutData(data2);
 		}
-		//((SashFormData)data1).weight = (((long)h1 << 16) + area.height - 1) / area.height;
-		//((SashFormData)data2).weight = (((long)h2 << 16) + area.height - 1) / area.height;
 		((SashFormData)data1).weight = ((200 << 16) + 999) / 1000 * h1 / h2;
 		((SashFormData)data2).weight = ((200 << 16) + 999) / 1000;
 		sashForm.resize = false;
@@ -237,7 +235,6 @@ protected void layout(Composite composite, boolean flushCache) {
 			height = area.height - y;
 			controls[controls.length - 1].setBounds(area.x, y, area.width, height);
 		}
-
 	}
 }
 }

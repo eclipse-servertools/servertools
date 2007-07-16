@@ -40,6 +40,9 @@ public class ImageViewer extends ContentViewer {
 		scroll = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL);
 		messageLabel = new Label(scroll, SWT.NONE);
 		messageLabel.setText(Messages.imageViewInvalid);
+		messageLabel.setFont(parent.getFont());
+		messageLabel.setSize(messageLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		scroll.setContent(messageLabel);
 	}
 
 	/** (non-Javadoc)
@@ -82,9 +85,7 @@ public class ImageViewer extends ContentViewer {
 			}
 		}
 		
-		Composite parent = scroll.getParent();
-		messageLabel.setFont(parent.getFont());
-		parent.layout(true);
+		messageLabel.setSize(messageLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 	}
 
 	/**
