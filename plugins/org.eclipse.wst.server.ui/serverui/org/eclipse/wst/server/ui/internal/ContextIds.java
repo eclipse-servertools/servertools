@@ -26,6 +26,8 @@ public interface ContextIds {
 	public static final String NEW_SERVER_WIZARD = ServerUIPlugin.PLUGIN_ID + ".swns0000";
 	public static final String NEW_SERVER_TYPE = ServerUIPlugin.PLUGIN_ID + ".swns0006";
 	
+	public static final String SERVER_PROPERTY_PAGE = ServerUIPlugin.PLUGIN_ID + ".svcp0004";
+	
 	public static final String NEW_RUNTIME_WIZARD = ServerUIPlugin.PLUGIN_ID + ".swnr0000";
 
 	public static final String LAUNCH_CONFIGURATION_SERVER_COMBO = ServerUIPlugin.PLUGIN_ID + ".swsl0000";

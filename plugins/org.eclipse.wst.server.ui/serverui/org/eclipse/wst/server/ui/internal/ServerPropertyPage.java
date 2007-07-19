@@ -22,7 +22,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PropertyPage;
+import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerType;
@@ -60,6 +62,9 @@ public class ServerPropertyPage extends PropertyPage {
 			layout.numColumns = 3;
 			composite.setLayout(layout);
 			composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+			
+			IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
+			whs.setHelp(composite, ContextIds.SERVER_PROPERTY_PAGE);			
 			
 			// name
 			Label label = new Label(composite, SWT.NONE);
