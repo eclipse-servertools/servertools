@@ -319,6 +319,7 @@ public class Messages extends NLS {
 	public static String wizNewInstallableServerConfirm;
 	public static String wizNewInstallableServerJob;
 	public static String wizNewInstallableServerRestart;
+	public static String wizNewInstallableServerSiteError;
 	public static String installableServerCompTree;
 	public static String installableServerLink;
 	public static String installableServerLocal;

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
+import java.util.List;
+
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.update.core.IFeature;
@@ -38,9 +40,6 @@ public class ExtensionTableLabelProvider extends BaseLabelProvider implements IT
 	 * @see ITableLabelProvider#getColumnImage(Object, int)
 	 */
 	public Image getColumnImage(Object element, int columnIndex) {
-		//if (columnIndex == 0)
-		//	return ImageResource.getImage(ImageResource.IMG_WIZBAN_NEW_SERVER);
-		
 		return null;
 	}
 
@@ -48,15 +47,13 @@ public class ExtensionTableLabelProvider extends BaseLabelProvider implements IT
 	 * @see ITableLabelProvider#getColumnText(Object, int)
 	 */
 	public String getColumnText(Object element, int columnIndex) {
-		if (element instanceof String) {
+		if (element instanceof List)
+			return "Some update sites failed";
+		
+		if (element instanceof String)
 			return ((String) element) + Math.random();
-		}
+		
 		IFeature item = (IFeature) element;
-		if (columnIndex == 0) {
-		//	return "";
-		//} else if (columnIndex == 1) {
-			return item.getLabel() + "\n" + item.getProvider();
-		}
-		return "";
+		return item.getLabel() + "\n" + item.getProvider();
 	}
 }

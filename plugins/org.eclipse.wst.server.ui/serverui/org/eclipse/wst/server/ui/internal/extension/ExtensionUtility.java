@@ -28,7 +28,6 @@ import org.eclipse.update.configuration.IConfiguredSite;
 import org.eclipse.update.configuration.ILocalSite;
 import org.eclipse.update.core.IFeature;
 import org.eclipse.update.core.IFeatureReference;
-import org.eclipse.update.core.ISite;
 import org.eclipse.update.core.IURLEntry;
 import org.eclipse.update.core.IVerificationListener;
 import org.eclipse.update.core.IVerificationResult;
@@ -119,13 +118,13 @@ public class ExtensionUtility {
 		while (iterator.hasNext()) {
 			IFeature feature = (IFeature) iterator.next();
 			VersionedIdentifier vi = feature.getVersionedIdentifier(); 
-			if (!vi.getIdentifier().equals(newVi.getIdentifier())) {
+			if (vi.getIdentifier().equals(newVi.getIdentifier())) {
 				ver = vi.toString();
 				ind = ver.indexOf("_");
 				if (ind >= 0)
 					ver = ver.substring(ind+1);
 				Version nextCand = new Version(ver);
-				if (nextCand.compareTo(newV) > 0) {
+				if (nextCand.compareTo(newV) < 0) {
 					remove = feature;
 				} else // new feature is older
 					return;
@@ -150,7 +149,7 @@ public class ExtensionUtility {
 	public interface FeatureListener {
 		public void featureFound(IFeature feature);
 		public void featureRemoved(IFeature feature);
-		public void siteFailure(ISite site, CoreException ce);
+		public void siteFailure(String host);
 	}
 
 	protected static List getExistingFeatures(IProgressMonitor monitor) throws CoreException {
@@ -173,31 +172,57 @@ public class ExtensionUtility {
 		return list;
 	}
 
-	public static IFeature[] getAllFeatures(String id, FeatureListener listener, IProgressMonitor monitor) throws CoreException {
+	public static IFeature[] getAllFeatures(final String id, final FeatureListener listener, IProgressMonitor monitor) throws CoreException {
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.beginTask("", 1100);
 		
 		monitor.subTask(Messages.installableServerLocal);
-		List existing = getExistingFeatures(ProgressUtil.getSubMonitorFor(monitor, 100));
+		final List existing = getExistingFeatures(ProgressUtil.getSubMonitorFor(monitor, 100));
 		
-		ExtensionSite[] items = ExtensionUtility.getExtensionItems();
+		final ExtensionSite[] items = ExtensionUtility.getExtensionItems();
 		IInstallableServer[] servers = ServerPlugin.getInstallableServers();
-		int x = 1000 / (items.length + servers.length);
+		final int x = 1000 / (items.length + servers.length);
 		
 		monitor.worked(50);
-		List list = new ArrayList();
+		final List list = new ArrayList();
 		int size = items.length;
 		
+		Thread[] threads = new Thread[size];
 		for (int i = 0; i < size; i++) {
 			try {
 				if (monitor.isCanceled())
 					return null;
 				
 				monitor.subTask(NLS.bind(Messages.installableServerSearching, items[i].getUrl()));
-				List list2 = items[i].getFeatures(id, ProgressUtil.getSubMonitorFor(monitor, x));
-				addFeatures(list, existing, list2, listener);
-			} catch (CoreException ce) {
-				ce.printStackTrace();
+				final int ii = i;
+				final IProgressMonitor monitor2 = monitor;
+				threads[i] = new Thread("Extension Checker") {
+					public void run() {
+						try {
+							List list2 = items[ii].getFeatures(id, ProgressUtil.getSubMonitorFor(monitor2, x));
+							addFeatures(list, existing, list2, listener);
+						} catch (CoreException ce) {
+							listener.siteFailure(ce.getLocalizedMessage());
+							Trace.trace(Trace.WARNING, "Error downloading server adapter info", ce);
+						}
+					}
+				};
+				threads[i].setDaemon(true);
+				threads[i].start();
+			} catch (Exception e) {
+				Trace.trace(Trace.WARNING, "Error downloading server adapter info 2", e);
+			}
+		}
+		
+		for (int i = 0; i < size; i++) {
+			try {
+				if (monitor.isCanceled())
+					return null;
+				
+				if (threads[i].isAlive())
+					threads[i].join();
+			} catch (Exception e) {
+				Trace.trace(Trace.WARNING, "Error downloading server adapter info 3", e);
 			}
 		}
 		
@@ -248,7 +273,7 @@ public class ExtensionUtility {
 			};
 			SiteManager.getLocalSite().getCurrentConfiguration().getConfiguredSites()[0].install(feature, verificationListener, monitor);
 		} catch (CoreException ce) {
-			ce.printStackTrace();
+			Trace.trace(Trace.WARNING, "Error installing server adapter", ce);
 		}
 		
 		try {

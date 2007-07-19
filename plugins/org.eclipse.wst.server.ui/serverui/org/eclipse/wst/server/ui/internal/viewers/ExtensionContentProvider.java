@@ -10,17 +10,19 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
+import java.util.List;
+
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 /**
  * Extension content provider.
  */
 public class ExtensionContentProvider implements IStructuredContentProvider {
-	protected Object[] items;
+	protected List list;
 
-	public ExtensionContentProvider(Object[] items) {
+	public ExtensionContentProvider(List list) {
 		super();
-		this.items = items;
+		this.list = list;
 	}
 
 	public void dispose() {
@@ -28,7 +30,7 @@ public class ExtensionContentProvider implements IStructuredContentProvider {
 	}
 
 	public Object[] getElements(Object inputElement) {
-		return items;
+		return list.toArray();
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {

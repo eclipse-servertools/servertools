@@ -32,6 +32,8 @@ import org.osgi.framework.Bundle;
  */
 public class InstallableRuntime implements IInstallableRuntime {
 	private IConfigurationElement element;
+	
+	private static Object LOCK = new Object();
 
 	public InstallableRuntime(IConfigurationElement element) {
 		super();
@@ -176,6 +178,20 @@ public class InstallableRuntime implements IInstallableRuntime {
 			Trace.trace(Trace.WARNING, "Could not parse site", e);
 		}
 		return null;
+	}
+
+	public static ISite getSite(URL fromSiteURL, IProgressMonitor monitor) throws IOException {
+		try {
+			synchronized (LOCK) {
+				return SiteManager.getSite(fromSiteURL, monitor);
+			}
+		} catch (CoreException e) {
+			Trace.trace(Trace.WARNING, "Could not parse site", e);
+			throw new IOException(e.getMessage());
+		} catch (Exception e) {
+			Trace.trace(Trace.WARNING, "Could not parse site", e);
+			throw new IOException(e.getMessage());
+		}
 	}
 
 	protected static String getMirror(String fromSite, ISite site, int mirror) {

@@ -22,7 +22,6 @@ import org.eclipse.swt.widgets.Shell;
 
 import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.IServerType;
-import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.extension.ExtensionUtility;
@@ -138,9 +137,7 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 	}
 
 	protected String getDetailsLabel() {
-		if (ServerPlugin.getInstallableServers().length > 0)
-			return Messages.installableServerLink;
-		return null;
+		return Messages.installableServerLink;
 	}
 
 	private void closeWizard(Composite comp) {

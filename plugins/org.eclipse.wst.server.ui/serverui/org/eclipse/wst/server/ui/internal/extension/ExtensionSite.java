@@ -10,13 +10,18 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.extension;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.update.core.ICategory;
 import org.eclipse.update.core.IFeature;
 import org.eclipse.update.core.ISite;
@@ -24,6 +29,7 @@ import org.eclipse.update.core.ISiteFeatureReference;
 import org.eclipse.wst.server.core.internal.IMemento;
 import org.eclipse.wst.server.core.internal.InstallableRuntime;
 import org.eclipse.wst.server.ui.internal.ProgressUtil;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 /**
  * 
  */
@@ -81,10 +87,21 @@ public class ExtensionSite {
 		if (fromSite == null)
 			return list;
 		
-		monitor.beginTask("Searching " + fromSite, 100);
-		ISite site = InstallableRuntime.getSite(fromSite, ProgressUtil.getSubMonitorFor(monitor, 5));
-		if (site == null)
+		URL fromSiteURL = null;
+		try {
+			fromSiteURL = new URL(fromSite);
+		} catch (MalformedURLException e) {
 			return list;
+		}
+		
+		monitor.beginTask("Searching " + fromSite, 100);
+		ISite site = null;
+		try {
+			site = InstallableRuntime.getSite(fromSiteURL, ProgressUtil.getSubMonitorFor(monitor, 5));
+		} catch (IOException e) {
+			String host = fromSiteURL.getHost();
+			throw new CoreException(new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, host, e));
+		}
 		// java.net.UnknownHostException
 		
 		ISiteFeatureReference[] featureRefs = site.getFeatureReferences();

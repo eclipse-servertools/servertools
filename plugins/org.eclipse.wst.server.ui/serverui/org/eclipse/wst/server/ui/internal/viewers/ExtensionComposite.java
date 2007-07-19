@@ -12,6 +12,7 @@ package org.eclipse.wst.server.ui.internal.viewers;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -41,7 +43,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.update.core.IFeature;
-import org.eclipse.update.core.ISite;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.Trace;
@@ -101,7 +102,8 @@ public class ExtensionComposite extends Composite {
 		//data.heightHint = 250;
 		data.widthHint = 350;
 		table.setLayoutData(data);
-		table.setLinesVisible(true);
+		//table.setLinesVisible(true);
+		table.setHeaderVisible(false);
 		tableViewer = new TableViewer(table);
 		table.addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
@@ -117,10 +119,11 @@ public class ExtensionComposite extends Composite {
 		TableColumn col2 = new TableColumn(table, SWT.NONE);
 		col2.setText("null");
 		*/
-		tableLayout.addColumnData(new ColumnWeightData(30, 250, false));
+		tableLayout.addColumnData(new ColumnWeightData(10, 250, false));
 		final TableColumn col = new TableColumn(table, SWT.NONE);
 		col.setText("null");
-		/*col.addListener(SWT.Selection, new Listener() {
+		/*col.setWidth(300);
+		col.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				col.pack();
 			}
@@ -130,21 +133,33 @@ public class ExtensionComposite extends Composite {
 		//TableColumn col2 = new TableColumn(table, SWT.NONE);
 		//col2.setText("null2");
 		
-		table.setHeaderVisible(false);
-		//table.setLinesVisible(false);
-		
 		final int TEXT_MARGIN = 3;
 		table.addListener(SWT.MeasureItem, new Listener() {
 			public void handleEvent(Event event) {
+				//System.out.println(event.width);
+				/*TableItem item = (TableItem) event.item;
+				Object obj = item.getData();
+				//System.out.println("measure " + obj);
+				if (obj instanceof CoreException) {
+					event.gc.setFont(font);
+					Point size = event.gc.textExtent("A");
+					event.gc.setFont(null);
+					//event.height = Math.max(event.height, TEXT_MARGIN * 2 + size.y);
+					event.height = TEXT_MARGIN * 2 + size.y;
+					System.out.println(event.height);
+					return;
+				}*/
 				event.gc.setFont(font);
 				Point size = event.gc.textExtent("A");
 				int h = TEXT_MARGIN * 3 + size.y;
-				event.gc.setFont(null);
 				size = event.gc.textExtent("A");
+				event.gc.setFont(null);
 				h += size.y;
 				h = Math.max(h, 40 + TEXT_MARGIN * 2);
-				event.width = 400;
+				//event.width = 400;
 				event.height = Math.max(event.height, h);
+				//System.out.println(event.height);
+				//event.width = 300;
 			}
 		});
 		table.addListener(SWT.EraseItem, new Listener() {
@@ -189,6 +204,22 @@ public class ExtensionComposite extends Composite {
 					}
 					
 					return;
+				} else if (obj instanceof List) {
+					List list = (List) obj;
+					
+					int size = list.size();
+					String[] hosts = new String[size];
+					list.toArray(hosts);
+					
+					StringBuffer sb = new StringBuffer();
+					for (int i = 0; i < size; i++) {
+						if (i > 0)
+							sb.append(", ");
+						sb.append(hosts[i]);
+					}
+					String s = NLS.bind(Messages.wizNewInstallableServerSiteError, sb.toString());
+					gc.drawText(s, event.x + TEXT_MARGIN, event.y + TEXT_MARGIN, true);
+					return;
 				}
 				IFeature ei = (IFeature) obj;
 				if (ei == null)
@@ -232,12 +263,16 @@ public class ExtensionComposite extends Composite {
 				gc.drawText(provider, event.x + iw, event.y + yOffset, true);
 				
 				size = event.gc.textExtent(version);
-				gc.drawText(version, event.x + width - TEXT_MARGIN * 2 - size.x, event.y + yOffset, true);
+				gc.drawText(version, event.x + width - TEXT_MARGIN * 3 - size.x, event.y + yOffset, true);
 			}
 		});
 		
 		tableViewer.setSorter(new ViewerSorter() {
 			public int compare(Viewer viewer, Object e1, Object e2) {
+				if ((e1 instanceof IFeature) && !(e2 instanceof IFeature))
+					return -1;
+				if (!(e1 instanceof IFeature) && (e2 instanceof IFeature))
+					return 1;
 				try {
 					IFeature f1 = (IFeature) e1;
 					IFeature f2 = (IFeature) e2;
@@ -350,14 +385,16 @@ public class ExtensionComposite extends Composite {
 	}
 
 	protected void deferInitialization() {
-		Object[] obj = new Object[] { Messages.viewInitializing };
-		tableViewer.setContentProvider(new ExtensionContentProvider(obj));
+		final List list = Collections.synchronizedList(new ArrayList());
+		list.add(Messages.viewInitializing);
+		
+		tableViewer.setContentProvider(new ExtensionContentProvider(list));
 		tableViewer.setLabelProvider(new ExtensionTableLabelProvider());
 		tableViewer.setInput(AbstractTreeContentProvider.ROOT);
 		
-		final Thread t = new Thread() {
+		final Thread t = new Thread("Deferred Initialization") {
 			public void run() {
-				deferredInitialize(new IProgressMonitor() {
+				deferredInitialize(list, new IProgressMonitor() {
 					public void beginTask(String name, int totalWork2) {
 						totalWork = totalWork2;
 						progress = name;
@@ -397,19 +434,14 @@ public class ExtensionComposite extends Composite {
 		t.start();
 		
 		final Display display = getDisplay();
-		final int SLEEP = 200;
+		final int SLEEP = 100;
 		final Runnable[] animator = new Runnable[1];
 		animator[0] = new Runnable() {
 			public void run() {
 				if (t.isAlive()) {
 					count++;
-					try {
-						Object[] rootElements = ((IStructuredContentProvider)tableViewer.getContentProvider()).getElements(null);
-						//tableViewer.update(Messages.viewInitializing, null);
-						tableViewer.update(rootElements, null);
-					} catch (Exception e) {
-						// ignore
-					}
+					if (!table.isDisposed())
+						tableViewer.refresh(AbstractTreeContentProvider.ROOT);
 					display.timerExec(SLEEP, animator[0]);
 				}
 			}
@@ -417,48 +449,42 @@ public class ExtensionComposite extends Composite {
 		display.timerExec(SLEEP, animator[0]);
 	}
 
-	public void deferredInitialize(IProgressMonitor monitor) {
-		final List list = new ArrayList();
+	public void deferredInitialize(final List list, IProgressMonitor monitor) {
+		final List failedSites = new ArrayList();
 		ExtensionUtility.FeatureListener listener2 = new ExtensionUtility.FeatureListener() {
 			public void featureFound(IFeature feature) {
 				list.add(feature);
-				int size = list.size();
-				final Object[] obj = new Object[size+1];
-				list.toArray(obj);
 				if (progress != null)
-					obj[size] = progress;
-				else
-					obj[size] = Messages.viewInitializing;
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						if (!table.isDisposed())
-							tableViewer.setContentProvider(new ExtensionContentProvider(obj));
-					}
-				});
+					list.set(0, progress);
 			}
 
 			public void featureRemoved(IFeature feature) {
 				list.remove(feature);
 			}
 
-			public void siteFailure(ISite site, CoreException ce) {
-				// 
+			public void siteFailure(String host) {
+				synchronized (failedSites) {
+					if (!list.contains(failedSites))
+						list.add(failedSites);
+					failedSites.add(host);
+				}
 			}
 		};
 		
 		String id = "org.eclipse.wst.server.core.serverAdapter";
 		try {
-			final IFeature[] ef = ExtensionUtility.getAllFeatures(id, listener2, monitor);
-			
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					if (!table.isDisposed())
-						tableViewer.setContentProvider(new ExtensionContentProvider(ef));
-				}
-			});
+			ExtensionUtility.getAllFeatures(id, listener2, monitor);
 		} catch (CoreException ce) {
-			ce.printStackTrace();
+			Trace.trace(Trace.WARNING, "Error downloading server adapter info", ce);
 		}
+		
+		list.remove(0);
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				if (!table.isDisposed())
+					tableViewer.refresh(AbstractTreeContentProvider.ROOT);
+			}
+		});
 	}
 
 	protected Object getSelection(ISelection sel2) {
