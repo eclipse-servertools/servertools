@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - Initial API and implementation
+ *     Tianchao Li (Tianchao.Li@gmail.com) - Start monitors by default 
  *******************************************************************************/
 package org.eclipse.wst.internet.monitor.core.internal.provisional;
 
@@ -80,6 +81,14 @@ public interface IMonitor {
 	 * @return the timeout
 	 */
 	public int getTimeout();
+
+	/**
+	 * Returns whether this monitor starts by default.
+	 * 
+	 * @return <code>true</code> if the monitor should be started by default, or
+	 *    <code>false</code> otherwise
+	 */
+	public boolean isAutoStart();
 
 	/**
 	 * Returns whether this monitor is currently running. Monitor working

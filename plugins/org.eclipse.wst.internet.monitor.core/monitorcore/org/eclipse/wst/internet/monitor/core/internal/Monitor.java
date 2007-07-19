@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - Initial API and implementation
+ *     Tianchao Li (Tianchao.Li@gmail.com) - Start monitors by default 
  *******************************************************************************/
 package org.eclipse.wst.internet.monitor.core.internal;
 
@@ -27,6 +28,7 @@ public class Monitor implements IMonitor {
 	private static final String MEMENTO_REMOTE_PORT = "remote-port";
 	private static final String MEMENTO_TYPE_ID = "type-id";
 	private static final String MEMENTO_TIMEOUT = "timeout";
+	private static final String MEMENTO_AUTO_START = "auto-start";
 
 	private static final int ADD = 0;
 	private static final int CHANGE = 1;
@@ -37,6 +39,7 @@ public class Monitor implements IMonitor {
 	protected int localPort = 80;
 	protected String protocolId;
 	protected int timeout;
+	protected boolean autoStart = false;
 
 	protected List requestListeners = new ArrayList(2);
 
@@ -90,6 +93,13 @@ public class Monitor implements IMonitor {
 	}
 
 	/** (non-Javadoc)
+	 * @see IMonitor#isAutoStart()
+	 */
+	public boolean isAutoStart() {
+		return autoStart;
+	}
+
+	/** (non-Javadoc)
 	 * @see IMonitor#isRunning()
 	 */
 	public boolean isRunning() {
@@ -128,6 +138,7 @@ public class Monitor implements IMonitor {
 		localPort = monitor.getLocalPort();
 		protocolId = monitor.getProtocol();
 		timeout = monitor.getTimeout();
+		autoStart = monitor.isAutoStart();
 	}
 
 	protected void save(IMemento memento) {
@@ -137,6 +148,7 @@ public class Monitor implements IMonitor {
 		memento.putString(MEMENTO_REMOTE_HOST, remoteHost);
 		memento.putInteger(MEMENTO_REMOTE_PORT, remotePort);
 		memento.putInteger(MEMENTO_TIMEOUT, timeout);
+		memento.putBoolean(MEMENTO_AUTO_START, autoStart);
 	}
 
 	protected void load(IMemento memento) {
@@ -152,6 +164,9 @@ public class Monitor implements IMonitor {
 		temp = memento.getInteger(MEMENTO_TIMEOUT);
 		if (temp != null)
 			timeout = temp.intValue();
+		Boolean temp2 = memento.getBoolean(MEMENTO_AUTO_START);
+		if (temp != null)
+			autoStart = temp2.booleanValue();
 	}
 	
 	/**

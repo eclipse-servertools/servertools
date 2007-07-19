@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *    IBM Corporation - Initial API and implementation
+ *    Tianchao Li (Tianchao.Li@gmail.com) - Start monitors by default 
  **********************************************************************/
 package org.eclipse.wst.internet.monitor.ui.internal;
 
@@ -22,6 +23,7 @@ public class Messages extends NLS {
 	public static String remotePort;
 	public static String remoteGroup;
 	public static String connectionTimeout;
+	public static String autoStart;
 	public static String parseType;
 	public static String errorDialogTitle;
 	public static String preferenceDescription;
@@ -31,6 +33,7 @@ public class Messages extends NLS {
 	public static String columnRemote;
 	public static String columnType;
 	public static String columnLocal;
+	public static String columnAutoStart;
 	public static String add;
 	public static String edit;
 	public static String remove;
@@ -55,6 +58,8 @@ public class Messages extends NLS {
 	public static String actionClearToolTip;
 	public static String actionShowHeader;
 	public static String actionProperties;
+	public static String yes;
+	public static String no;
 
 	static {
 		NLS.initializeMessages(MonitorUIPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);

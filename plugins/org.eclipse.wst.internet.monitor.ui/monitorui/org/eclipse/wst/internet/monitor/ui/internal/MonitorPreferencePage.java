@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - Initial API and implementation
+ *     Tianchao Li (Tianchao.Li@gmail.com) - Start monitors by default 
  *******************************************************************************/
 package org.eclipse.wst.internet.monitor.ui.internal;
 
@@ -132,12 +133,17 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 		
 		TableColumn httpColumn = new TableColumn(table, SWT.NONE);
 		httpColumn.setText(Messages.columnType);
-		colData = new ColumnWeightData(6, 60, true);
+		colData = new ColumnWeightData(5, 50, true);
 		tableLayout.addColumnData(colData);
 		
 		TableColumn localColumn = new TableColumn(table, SWT.NONE);
 		localColumn.setText(Messages.columnLocal);
 		colData = new ColumnWeightData(6, 60, true);
+		tableLayout.addColumnData(colData);
+		
+		TableColumn startOnStartupColumn = new TableColumn(table, SWT.NONE);
+		startOnStartupColumn.setText(Messages.columnAutoStart);
+		colData = new ColumnWeightData(7, 70, true);
 		tableLayout.addColumnData(colData);
 		
 		table.setLayout(tableLayout);

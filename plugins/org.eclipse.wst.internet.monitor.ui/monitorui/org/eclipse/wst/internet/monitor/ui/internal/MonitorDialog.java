@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - Initial API and implementation
+ *     Tianchao Li (Tianchao.Li@gmail.com) - Start monitors by default 
  *******************************************************************************/
 package org.eclipse.wst.internet.monitor.ui.internal;
 
@@ -30,6 +31,7 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.internet.monitor.core.internal.IProtocolAdapter;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitor;
 import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitorWorkingCopy;
 import org.eclipse.wst.internet.monitor.core.internal.provisional.MonitorCore;
 /**
@@ -84,7 +86,21 @@ public class MonitorDialog extends Dialog {
 		else
 			shell.setText(Messages.newMonitor);
 	}
-	
+
+	protected Button createCheckBox(Composite comp, String txt, boolean selected, final BooleanModifyListener listener) {
+		final Button button = new Button(comp, SWT.CHECK);
+		button.setText(txt);
+		button.setSelection(selected);
+		button.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_CENTER));
+		if (listener != null)
+			button.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent arg0) {
+					listener.valueChanged(button.getSelection());
+				}
+			});
+		return button;
+	}
+
 	protected Label createLabel(Composite comp, String txt) {
 		Label label = new Label(comp, SWT.NONE);
 		label.setText(txt);
@@ -213,12 +229,15 @@ public class MonitorDialog extends Dialog {
 		createLabel(group, Messages.connectionTimeout);
 		createSpinner(group, monitor.getTimeout(), new IntModifyListener() {
 			public void valueChanged(int i) {
-				try {
-					monitor.setTimeout(i);
-				} catch (Exception e) {
-					// ignore
-				}
+				monitor.setTimeout(i);
 				validateFields();
+			}
+		});
+		
+		createLabel(group, "");
+		createCheckBox(group, Messages.autoStart, monitor.isAutoStart(), new BooleanModifyListener() {
+			public void valueChanged(boolean b) {
+				monitor.setAutoStart(b);
 			}
 		});
 		
@@ -232,12 +251,19 @@ public class MonitorDialog extends Dialog {
 	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
 	 */
 	protected void okPressed() {
+		IMonitor savedMonitor = null;
 		try {
-			monitor.save();
+			savedMonitor = monitor.save();
 		} catch (CoreException ce) {
 			ErrorDialog.openError(getShell(), Messages.errorDialogTitle, ce.getLocalizedMessage(), ce.getStatus());
 			return;
 		}
+		if (savedMonitor != null && savedMonitor.isAutoStart())
+			try {
+				savedMonitor.start();
+			} catch (CoreException ce) {
+				ErrorDialog.openError(getShell(), Messages.errorDialogTitle, ce.getLocalizedMessage(), ce.getStatus());
+			}
 		super.okPressed();
 	}
 
