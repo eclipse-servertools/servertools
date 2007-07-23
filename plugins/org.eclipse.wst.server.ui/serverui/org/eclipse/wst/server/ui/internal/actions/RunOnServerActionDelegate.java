@@ -720,10 +720,13 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			}
 			
 			Trace.trace(Trace.FINEST, "checking for module artifact");
-			IModuleArtifact[] moduleArtifacts = ServerPlugin.getModuleArtifacts(globalSelection);
-			IModule module = null;
 			// TODO - multiple module artifacts
-			IModuleArtifact moduleArtifact = moduleArtifacts[0];
+			IModuleArtifact[] moduleArtifacts = ServerPlugin.getModuleArtifacts(globalSelection);
+			IModuleArtifact moduleArtifact = null;
+			if (moduleArtifacts != null)
+				moduleArtifact = moduleArtifacts[0];
+			
+			IModule module = null;
 			if (moduleArtifact != null)
 				module = moduleArtifact.getModule();
 			Trace.trace(Trace.FINEST, "moduleArtifact= " + moduleArtifact + ", module= " + module);
