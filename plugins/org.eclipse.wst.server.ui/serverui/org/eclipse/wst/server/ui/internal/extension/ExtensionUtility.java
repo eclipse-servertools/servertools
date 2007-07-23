@@ -102,8 +102,44 @@ public class ExtensionUtility {
 		}
 	}
 
-	public static void addFeature(List list, List existing, IFeature newFeature, FeatureListener listener) {
+	/**
+	 * Return true if the new feature is already installed, or a newer one is.
+	 * 
+	 * @param existing
+	 * @param newFeature
+	 * @return true if the new feature is already installed, or a newer one is.
+	 */
+	protected static boolean alreadyExists(List existing, IFeature newFeature) {
 		if (existing.contains(newFeature))
+			return true;
+		
+		VersionedIdentifier newVi = newFeature.getVersionedIdentifier();
+		String ver = newVi.toString();
+		int ind = ver.indexOf("_");
+		if (ind >= 0)
+			ver = ver.substring(ind+1);
+		Version newV = new Version(ver);
+		
+		Iterator iterator = existing.iterator();
+		while (iterator.hasNext()) {
+			IFeature feature = (IFeature) iterator.next();
+			VersionedIdentifier vi = feature.getVersionedIdentifier(); 
+			if (vi.getIdentifier().equals(newVi.getIdentifier())) {
+				ver = vi.toString();
+				ind = ver.indexOf("_");
+				if (ind >= 0)
+					ver = ver.substring(ind+1);
+				Version nextCand = new Version(ver);
+				if (nextCand.compareTo(newV) >= 0)
+					return true;
+			}
+		}
+		
+		return false;
+	}
+
+	public static void addFeature(List list, List existing, IFeature newFeature, FeatureListener listener) {
+		if (alreadyExists(existing, newFeature))
 			return;
 		
 		VersionedIdentifier newVi = newFeature.getVersionedIdentifier();
@@ -274,6 +310,7 @@ public class ExtensionUtility {
 			SiteManager.getLocalSite().getCurrentConfiguration().getConfiguredSites()[0].install(feature, verificationListener, monitor);
 		} catch (CoreException ce) {
 			Trace.trace(Trace.WARNING, "Error installing server adapter", ce);
+			throw ce;
 		}
 		
 		try {
