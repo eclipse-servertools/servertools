@@ -1603,7 +1603,7 @@ public class Server extends Base implements IServer {
 						// notify waiter
 						synchronized (notified) {
 							Trace.trace(Trace.FINEST, "synchronousStart notify timeout");
-							if (!timer.alreadyDone && totalTimeout < 0)
+							if (!timer.alreadyDone && totalTimeout <= 0)
 								timer.timeout = true;
 							notified[0] = true;
 							notified.notifyAll();
