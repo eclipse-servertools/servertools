@@ -19,7 +19,9 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModuleArtifact;
+import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
+import org.eclipse.wst.server.core.IServerAttributes;
 import org.eclipse.wst.server.core.ServerCore;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
@@ -320,6 +322,48 @@ public class ServerPlugin extends Plugin {
 			Trace.trace(Trace.WARNING, "Error waiting for shutdown job", e);
 		}
 		context.removeBundleListener(bundleListener);
+	}
+
+	private static void addAll(List list, Object[] obj) {
+		if (obj == null)
+			return;
+		
+		int size = obj.length;
+		for (int i = 0; i < size; i++) {
+			list.add(obj[i]);
+		}
+	}
+
+	/**
+	 * Returns true if a server or runtime exists with the given name.
+	 *
+	 * @param element an object
+	 * @param name a name
+	 * @return <code>true</code> if the name is in use, and <code>false</code>
+	 *    otherwise
+	 */
+	public static boolean isNameInUse(Object element, String name) {
+		if (name == null)
+			return true;
+	
+		List list = new ArrayList();
+		
+		addAll(list, ServerCore.getRuntimes());
+		addAll(list, ServerCore.getServers());
+		
+		if (element != null && list.contains(element))
+			list.remove(element);
+		
+		Iterator iterator = list.iterator();
+		while (iterator.hasNext()) {
+			Object obj = iterator.next();
+			if (obj instanceof IServerAttributes && name.equalsIgnoreCase(((IServerAttributes)obj).getName()))
+				return true;
+			if (obj instanceof IRuntime && name.equalsIgnoreCase(((IRuntime)obj).getName()))
+				return true;
+		}
+	
+		return false;
 	}
 
 	/**

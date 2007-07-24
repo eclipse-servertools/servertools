@@ -11,6 +11,7 @@
 package org.eclipse.wst.server.ui.internal.view.servers;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -31,6 +32,7 @@ import org.eclipse.ui.actions.TextActionHandler;
 
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.ui.internal.Messages;
 /**
  * Action to rename a server.
@@ -255,20 +257,17 @@ public class RenameAction extends AbstractServerAction {
 			public void run() {
 				try {
 					if (!newName.equals(editedServer.getName())) {
-						try {
-							IServerWorkingCopy wc = editedServer.createWorkingCopy();
-							wc.setName(newName);
-							wc.save(false, null);
-						} catch (CoreException ce) {
-							// ignore for now
-						}
-						/*IStatus status = server.workspace.validateName(newName,
-								inlinedResource.getType());
-						if (!status.isOK()) {
-							MessageDialog.openError(shell, Messages.defaultDialogTitle, message);
+						if (ServerPlugin.isNameInUse(editedServer, newName)) {
+							MessageDialog.openError(shell, Messages.defaultDialogTitle, Messages.errorDuplicateName);
 						} else {
-							// set name
-						}*/
+							try {
+								IServerWorkingCopy wc = editedServer.createWorkingCopy();
+								wc.setName(newName);
+								wc.save(false, null);
+							} catch (CoreException ce) {
+								// ignore for now
+							}
+						}
 					}
 					editedServer = null;
 					// Dispose the text widget regardless

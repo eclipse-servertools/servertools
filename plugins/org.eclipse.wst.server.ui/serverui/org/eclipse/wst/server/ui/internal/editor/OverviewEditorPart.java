@@ -52,6 +52,7 @@ import org.eclipse.ui.forms.widgets.*;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.internal.ServerType;
 import org.eclipse.wst.server.core.util.SocketUtil;
 import org.eclipse.wst.server.ui.editor.*;
@@ -782,6 +783,13 @@ public class OverviewEditorPart extends ServerEditorPart {
 	}
 
 	protected void validate() {
+		if (server != null && serverName != null) {
+			if (ServerPlugin.isNameInUse(server, serverName.getText().trim())) {
+				setErrorMessage(Messages.errorDuplicateName);
+				return;
+			}
+		}
+		
 		if (server != null && server.getServerType() != null && server.getServerType().hasServerConfiguration()) {
 			IFolder folder = getServer().getServerConfiguration();
 			if (folder == null || !folder.exists()) {

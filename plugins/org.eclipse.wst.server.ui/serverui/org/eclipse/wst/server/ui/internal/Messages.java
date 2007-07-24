@@ -265,6 +265,7 @@ public class Messages extends NLS {
 	public static String editorPromptIrreversible;
 	public static String editorRenameFiles;
 	public static String errorEditorCantSave;
+	public static String errorDuplicateName;
 	public static String editorReadOnly;
 	public static String editorWritable;
 	public static String editorResourceModifiedTitle;

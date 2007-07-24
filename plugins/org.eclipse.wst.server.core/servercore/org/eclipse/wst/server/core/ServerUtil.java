@@ -400,7 +400,7 @@ public class ServerUtil {
 		
 		String name = NLS.bind(Messages.defaultRuntimeName, typeName);
 		int i = 2;
-		while (isNameInUse(runtime.getOriginal(), name)) {
+		while (ServerPlugin.isNameInUse(runtime.getOriginal(), name)) {
 			name = NLS.bind(Messages.defaultRuntimeName2, new String[] {typeName, i + ""});
 			i++;
 		}
@@ -430,7 +430,7 @@ public class ServerUtil {
 		
 		String name = NLS.bind(Messages.defaultServerName, new String[] {typeName, host});
 		int i = 2;
-		while (isNameInUse(server.getOriginal(), name)) {
+		while (ServerPlugin.isNameInUse(server.getOriginal(), name)) {
 			name = NLS.bind(Messages.defaultServerName2, new String[] {typeName, host, i + ""});
 			i++;
 		}
@@ -509,47 +509,6 @@ public class ServerUtil {
 		return project.getFile(name);
 	}
 
-	/**
-	 * Returns true if a server or runtime exists with the given name.
-	 *
-	 * @param name a name
-	 * @return <code>true</code> if the name is in use, and <code>false</code>
-	 *    otherwise
-	 */
-	private static boolean isNameInUse(Object element, String name) {
-		if (name == null)
-			return true;
-	
-		List list = new ArrayList();
-		
-		addAll(list, ServerCore.getRuntimes());
-		addAll(list, ServerCore.getServers());
-		
-		if (element != null && list.contains(element))
-			list.remove(element);
-		
-		Iterator iterator = list.iterator();
-		while (iterator.hasNext()) {
-			Object obj = iterator.next();
-			if (obj instanceof IServerAttributes && name.equalsIgnoreCase(((IServerAttributes)obj).getName()))
-				return true;
-			if (obj instanceof IRuntime && name.equalsIgnoreCase(((IRuntime)obj).getName()))
-				return true;
-		}
-
-		return false;
-	}
-	
-	private static void addAll(List list, Object[] obj) {
-		if (obj == null)
-			return;
-		
-		int size = obj.length;
-		for (int i = 0; i < size; i++) {
-			list.add(obj[i]);
-		}
-	}
-	
 	/**
 	 * Returns true if an element exists with the given name.
 	 *
