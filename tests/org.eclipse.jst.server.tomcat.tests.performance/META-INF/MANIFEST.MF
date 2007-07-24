@@ -17,5 +17,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.wst.server.ui.tests,
  org.eclipse.jst.server.tomcat.core.tests,
  org.eclipse.core.resources,
- org.eclipse.wst.server.ui
+ org.eclipse.wst.server.ui,
+ org.eclipse.jst.server.core
 Bundle-RequiredExecutionEnvironment: J2SE-1.4
