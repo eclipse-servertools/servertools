@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMInstallType;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.jst.server.core.IJavaRuntime;
+import org.eclipse.jst.server.core.IJavaRuntimeWorkingCopy;
 import org.eclipse.jst.server.preview.adapter.internal.Messages;
 import org.eclipse.jst.server.preview.adapter.internal.PreviewPlugin;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
@@ -25,7 +25,7 @@ import org.osgi.framework.Bundle;
 /**
  * J2EE preview runtime.
  */
-public class PreviewRuntime extends RuntimeDelegate implements IJavaRuntime {
+public class PreviewRuntime extends RuntimeDelegate implements IJavaRuntimeWorkingCopy {
 	public static final String ID = "org.eclipse.jst.server.preview.runtime";
 
 	protected static final String PROP_VM_INSTALL_TYPE_ID = "vm-install-type-id";
