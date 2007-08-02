@@ -238,19 +238,6 @@ public class ServerTableViewer extends TreeViewer {
 		
 		setContentProvider(new ServerContentProvider());
 		labelProvider = new ServerTableLabelProvider();
-		labelProvider.addListener(new ILabelProviderListener() {
-			public void labelProviderChanged(LabelProviderChangedEvent event) {
-				Object[] obj = event.getElements();
-				if (obj == null)
-					refresh(true);
-				else {
-					obj = adaptLabelChangeObjects(obj);
-					int size = obj.length;
-					for (int i = 0; i < size; i++)
-						refresh(obj[i], true);
-				}
-			}
-		});
 		setLabelProvider(labelProvider);
 		setComparator(new ServerViewerComparator(labelProvider));
 		
@@ -322,6 +309,18 @@ public class ServerTableViewer extends TreeViewer {
 			for (int i = 0; i < size; i++)
 				fd[i].setStyle(SWT.ITALIC);
 			font = new Font(display, fd);
+		}
+	}
+
+	protected void handleLabelProviderChanged(LabelProviderChangedEvent event) {
+		Object[] obj = event.getElements();
+		if (obj == null)
+			refresh(true);
+		else {
+			obj = adaptLabelChangeObjects(obj);
+			int size = obj.length;
+			for (int i = 0; i < size; i++)
+				update(obj[i], null);
 		}
 	}
 
