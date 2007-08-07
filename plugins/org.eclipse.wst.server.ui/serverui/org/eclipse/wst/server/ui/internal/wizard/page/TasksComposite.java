@@ -97,7 +97,6 @@ public class TasksComposite extends Composite {
 				checkbox.setText(label);
 			else
 				checkbox.setText(Messages.elementUnknownName);
-			checkbox.setFocus();
 		
 			checkbox.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent event) {
@@ -120,7 +119,7 @@ public class TasksComposite extends Composite {
 				checkbox.setEnabled(false);
 				description.setEnabled(false);
 			} else
-				checkbox.setSelection(sti.getDefaultSelected());
+				checkbox.setSelection(sti.isSelected());
 		}
 		
 		if (size == 0) {

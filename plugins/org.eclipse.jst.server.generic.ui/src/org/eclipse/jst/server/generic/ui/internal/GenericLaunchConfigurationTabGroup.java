@@ -59,7 +59,7 @@ public class GenericLaunchConfigurationTabGroup extends AbstractLaunchConfigurat
 	         IConfigurationElement[] elements = ExtensionPointUtil.getConfigurationElements(extension);
 	         for (int j = 0; j < elements.length; j++) {
 	        	 IConfigurationElement element = elements[j];
-	        	 String genericRuntimeID = element.getAttribute("id"); //$NON-NLS-1$
+	        	 String genericRuntimeID = element.getAttribute("id");
 	        	 IServerType[] serverTypes = ServerCore.getServerTypes();
 	        	 for (int k = 0; k < serverTypes.length; k++) {
 					if(serverTypes[k].hasRuntime() && serverTypes[k].getRuntimeType().getId().equals(genericRuntimeID))

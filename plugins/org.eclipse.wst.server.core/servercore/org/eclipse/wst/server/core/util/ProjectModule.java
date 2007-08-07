@@ -164,7 +164,7 @@ public abstract class ProjectModule extends ModuleDelegate {
 				if (resource instanceof IContainer) {
 					IContainer container2 = (IContainer) resource;
 					if (container2 != null && container2.exists()) {
-						ModuleFolder mf = new ModuleFolder(container, container2.getName(), path);
+						ModuleFolder mf = new ModuleFolder(container2, container2.getName(), path);
 						mf.setMembers(getModuleResources(path.append(container2.getName()), container2));
 						list.add(mf);
 					}

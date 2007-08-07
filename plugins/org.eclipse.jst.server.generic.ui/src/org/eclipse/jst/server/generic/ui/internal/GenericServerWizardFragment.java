@@ -101,7 +101,7 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
     	int suffix=1;
     	String suffixName =name;
     	while(isNameInUse(suffixName)){
-    		suffixName = name+" "+suffix; //$NON-NLS-1$
+    		suffixName = name+" "+suffix;
     		suffix++;
     	}
     	return suffixName;
@@ -126,7 +126,7 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
     public String description() {
         String sName = getServerName();
         if(sName==null || sName.length()<1)
-            sName="Generic"; //$NON-NLS-1$
+            sName="Generic";
         return  GenericServerUIMessages.bind(GenericServerUIMessages.serverWizardDescription,sName);
     }
 
@@ -142,7 +142,7 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
     public String title() {
         String sName= getServerName();
         if(sName==null || sName.length()<1)
-            sName="Generic"; //$NON-NLS-1$
+            sName="Generic";
         return  GenericServerUIMessages.bind(GenericServerUIMessages.serverWizardTitle,sName);
     }
 }

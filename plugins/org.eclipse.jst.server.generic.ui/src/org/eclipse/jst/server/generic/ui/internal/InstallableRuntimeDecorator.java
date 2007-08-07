@@ -51,7 +51,7 @@ public class InstallableRuntimeDecorator implements
 										new NullProgressMonitor());
 							} catch (CoreException e) {
 								Trace.trace(Trace.SEVERE,
-										"Error installing runtime", e); //$NON-NLS-1$
+										"Error installing runtime", e);
 							}
 						}
 					};
@@ -64,7 +64,7 @@ public class InstallableRuntimeDecorator implements
 						e.printStackTrace();
 					} catch (Exception e) {
 						Trace.trace(Trace.SEVERE,
-								"Error installing runtime", e); //$NON-NLS-1$
+								"Error installing runtime", e);
 					}
 
 				}

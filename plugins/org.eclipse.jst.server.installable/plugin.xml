@@ -23,13 +23,13 @@
       featureSite="http://www.apache.org/dist/geronimo/eclipse/updates/">
     </installableServer>
     <installableServer
-      id="org.apache.geronimo.generic.runtime.10"
-      name="%runtimeTypeWASCE10Label"
-      description="%runtimeTypeWASCE10Description"
+      id="org.apache.geronimo.generic.runtime.11"
+      name="%runtimeTypeWASCE1xLabel"
+      description="%runtimeTypeWASCE1xDescription"
       vendor="%vendorIBM"
-      version="1.0"
+      version="1.1"
       featureId="com.ibm.websphere.ce.feature"
-      featureVersion="1.0.0"
+      featureVersion="1.1.0"
       featureSite="http://download.boulder.ibm.com/ibmdl/pub/software/websphere/wasce/updates/">
     </installableServer>
     <installableServer

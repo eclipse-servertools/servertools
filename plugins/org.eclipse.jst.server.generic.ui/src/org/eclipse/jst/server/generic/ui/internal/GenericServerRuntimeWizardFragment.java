@@ -123,7 +123,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	    {
 	        if((list[i].getName().equals(name)|| list[i].getName().equals(suffixName))&& !list[i].equals(dl.getRuntime()))
 	            suffix++;
-	        suffixName= name+" "+suffix; //$NON-NLS-1$
+	        suffixName= name+" "+suffix;
 	    }
 	    
 		if(suffix>1)
@@ -143,7 +143,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
     public String description() {
         String rName = getRuntimeName();
         if(rName == null || rName.length()<1)
-            rName="Generic";       //$NON-NLS-1$
+            rName="Generic";      
         return  GenericServerUIMessages.bind(GenericServerUIMessages.runtimeWizardDescription,rName);
     }
     /* (non-Javadoc)
@@ -152,7 +152,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
     public String title() {
         String rName = getRuntimeName();
         if(rName == null || rName.length()<1)
-            rName="Generic"; //$NON-NLS-1$
+            rName="Generic";
        return GenericServerUIMessages.bind(GenericServerUIMessages.runtimeWizardTitle,rName);
     }
     

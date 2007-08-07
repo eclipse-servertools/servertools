@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2006 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -245,10 +245,20 @@ public class Server extends Base implements IServer {
 		return false;
 	}
 	
-	protected void deleteFromMetadata() {
+    protected void deleteFromFile() throws CoreException {
+        super.deleteFromFile();
+        ResourceManager.getInstance().deregisterServer(this);
+    }
+
+    protected void deleteFromMetadata() {
 		ResourceManager.getInstance().removeServer(this);
 	}
-	
+
+	protected void saveToFile(IProgressMonitor monitor) throws CoreException {
+		super.saveToFile(monitor);
+		ResourceManager.getInstance().registerServer(this);
+	}
+
 	protected void saveToMetadata(IProgressMonitor monitor) {
 		super.saveToMetadata(monitor);
 		ResourceManager.getInstance().addServer(this);
@@ -302,6 +312,9 @@ public class Server extends Base implements IServer {
 					behaviourDelegate = ((ServerType) serverType).createServerBehaviourDelegate();
 					InternalInitializer.initializeServerBehaviourDelegate(behaviourDelegate, Server.this, monitor);
 					Trace.trace(Trace.PERFORMANCE, "Server.getBehaviourDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
+					
+					if (getServerState() == IServer.STATE_STARTED)
+						autoPublish();
 				} catch (Throwable t) {
 					Trace.trace(Trace.SEVERE, "Could not create behaviour delegate " + toString(), t);
 				}
@@ -1218,6 +1231,9 @@ public class Server extends Base implements IServer {
 	public void start(String mode2, IProgressMonitor monitor) throws CoreException {
 		Trace.trace(Trace.FINEST, "Starting server: " + toString() + ", launchMode: " + mode2);
 	
+		// make sure that the delegate is loaded and the server state is correct
+		loadAdapter(ServerBehaviourDelegate.class, monitor);
+		
 		try {
 			ILaunchConfiguration launchConfig = getLaunchConfiguration(true, monitor);
 			ILaunch launch = launchConfig.launch(mode2, monitor); // , true); - causes workspace lock
@@ -1412,7 +1428,10 @@ public class Server extends Base implements IServer {
 	public void start(String mode2, IOperationListener listener2) {
 		Trace.trace(Trace.FINEST, "synchronousStart 1");
 		final Object mutex = new Object();
-	
+		
+		// make sure that the delegate is loaded and the server state is correct
+		loadAdapter(ServerBehaviourDelegate.class, null);
+		
 		// add listener to the server
 		IServerListener listener = new IServerListener() {
 			public void serverChanged(ServerEvent event) {
@@ -1517,6 +1536,9 @@ public class Server extends Base implements IServer {
 	public void synchronousStart(String mode2, IProgressMonitor monitor) throws CoreException {
 		Trace.trace(Trace.FINEST, "synchronousStart 1");
 		
+		// make sure that the delegate is loaded and the server state is correct
+		loadAdapter(ServerBehaviourDelegate.class, monitor);
+		
 		final boolean[] notified = new boolean[1];
 		
 		monitor = ProgressUtil.getMonitorFor(monitor);
@@ -1581,7 +1603,7 @@ public class Server extends Base implements IServer {
 						// notify waiter
 						synchronized (notified) {
 							Trace.trace(Trace.FINEST, "synchronousStart notify timeout");
-							if (!timer.alreadyDone && totalTimeout < 0)
+							if (!timer.alreadyDone && totalTimeout <= 0)
 								timer.timeout = true;
 							notified[0] = true;
 							notified.notifyAll();

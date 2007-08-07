@@ -55,6 +55,8 @@ public class ModifyModulesComposite extends Composite {
 	protected IWizardHandle wizard;
 
 	protected IServerAttributes server;
+	protected IRuntime runtime;
+	protected boolean runtimeDirty;
 
 	protected Map childModuleMap = new HashMap();
 	protected Map parentModuleMap = new HashMap();
@@ -75,8 +77,13 @@ public class ModifyModulesComposite extends Composite {
 	protected Button remove, removeAll;
 
 	protected TaskModel taskModel;
-	protected IModule newModule;
-	protected IModule origNewModule;
+
+	// a module that must be kept on the server
+	protected IModule requiredModule;
+
+	// the parent modules of the above modules. at least one of these modules
+	// must be kept on the server
+	protected IModule[] requiredModules;
 
 	protected Map errorMap;
 
@@ -210,20 +217,49 @@ public class ModifyModulesComposite extends Composite {
 	public ModifyModulesComposite(Composite parent, IWizardHandle wizard, IModule module) {
 		super(parent, SWT.NONE);
 		this.wizard = wizard;
-		origNewModule = module;
-			
+		requiredModule = module;
+		
 		wizard.setTitle(Messages.wizModuleTitle);
 		wizard.setDescription(Messages.wizModuleDescription);
 		wizard.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_WIZBAN_SELECT_SERVER));
 		
 		createControl();
 	}
-	
-	public void setServer(IServerAttributes server) {
-		if (server == this.server)
-			return;
 
+	public void setServer(IServerAttributes server) {
+		if (isVisible())
+			return;
+		
+		// see bug 185875
+		if (server == this.server) {
+			if (server == null)
+				return;
+			if (runtime == this.runtime) {
+				if (runtime == null)
+					return;
+				if (runtime instanceof IRuntimeWorkingCopy) {
+					IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy) runtime;
+					if (wc.isDirty() == runtimeDirty)
+						return;
+				} else
+					return;
+			}
+		}
+		
 		this.server = server;
+		if (server == null)
+			runtime = null;
+		else
+			runtime = server.getRuntime();
+		runtimeDirty = false;
+		if (runtime != null) {
+			if (runtime instanceof IRuntimeWorkingCopy) {
+				IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy) runtime;
+				if (wc.isDirty())
+					runtimeDirty = true;
+			}
+		}
+		
 		originalModules = new ArrayList();
 		deployed = new ArrayList();
 		modules = new ArrayList();
@@ -244,25 +280,24 @@ public class ModifyModulesComposite extends Composite {
 		}
 		
 		// add new module
-		newModule = null;
+		requiredModules = null;
 		errorMap = new HashMap();
-		if (origNewModule != null) {
+		if (requiredModule != null) {
 			try {
-				IModule[] parents = server.getRootModules(origNewModule, null);
+				IModule[] parents = server.getRootModules(requiredModule, null);
 				if (parents != null && parents.length > 0)
-					newModule = parents[0];
+					requiredModules = parents;
 				else
-					newModule = origNewModule;
+					requiredModules = new IModule[] { requiredModule };
 			} catch (CoreException ce) {
-				errorMap.put(newModule, ce.getStatus());
-				newModule = null;
+				// ignore
+				//errorMap.put(newModule, ce.getStatus());
 			} catch (Exception e) {
 				Trace.trace(Trace.WARNING, "Could not find root module", e);
-				newModule = null;
 			}
 		}
-		if (newModule != null && !deployed.contains(newModule))
-			deployed.add(newModule);
+		if (requiredModules != null && !deployed.contains(requiredModules[0]))
+			deployed.add(requiredModules[0]);
 
 		// get remaining modules
 		IModule[] modules2 = ServerUtil.getModules(server.getServerType().getRuntimeType().getModuleTypes());
@@ -304,7 +339,7 @@ public class ModifyModulesComposite extends Composite {
 				// ignore
 			}
 		}
-
+		
 		iterator = modules.iterator();
 		while (iterator.hasNext()) {
 			IModule module = (IModule) iterator.next();
@@ -317,17 +352,25 @@ public class ModifyModulesComposite extends Composite {
 			}
 		}
 		
-		// get children recursively
+		// get children recursively one level
+		// put child elements into a different list to avoid concurrent modifications
 		iterator = childModuleMap.keySet().iterator();
+		List list = new ArrayList();
+		while (iterator.hasNext()) {
+			list.add(iterator.next());
+		}
+		
+		iterator = list.iterator();
 		while (iterator.hasNext()) {
 			ChildModuleMapKey key = (ChildModuleMapKey) iterator.next();
 			IModule[] children0 = (IModule[]) childModuleMap.get(key);
 			if (children0 != null) {
 				int size = children0.length;
 				for (int i = 0; i < size; i++) {
-					IModule[] module2 = new IModule[size + 1];
-					System.arraycopy(key.moduleTree, 0, module2, 0, size);
-					module2[size] = children0[i];
+					int size2 = key.moduleTree.length;
+					IModule[] module2 = new IModule[size2 + 1];
+					System.arraycopy(key.moduleTree, 0, module2, 0, size2);
+					module2[size2] = children0[i];
 					
 					try {
 						IModule[] children = server.getChildModules(module2, null);
@@ -557,21 +600,36 @@ public class ModifyModulesComposite extends Composite {
 				// ignore
 			}
 		}
+		
 		add.setEnabled(enabled);
 		addAll.setEnabled(modules.size() > 0);
 		
 		enabled = false;
 		module = getDeployedSelection();
-		if (module != null) {
+		if (module != null && deployed.contains(module)) {
 			try {
-				if (deployed.contains(module) && !module.equals(newModule))
+				int count = 0;
+				boolean found = false;
+				if (requiredModules != null) {
+					// count how many of newModule are deployed
+					int size = requiredModules.length;
+					for (int i = 0; i < size; i++) {
+						if (deployed.contains(requiredModules[i]))
+							count++;
+						if (module.equals(requiredModules[i]))
+							found = true;
+					}
+					if (count > 1 || !found)
+						enabled = true;
+				} else {
 					enabled = true;
+				}
 			} catch (Exception e) {
 				// ignore
 			}
 		}
 		remove.setEnabled(enabled);
-		if (newModule == null)
+		if (requiredModules == null)
 			removeAll.setEnabled(deployed.size() > 0);
 		else
 			removeAll.setEnabled(deployed.size() > 1);
@@ -589,8 +647,23 @@ public class ModifyModulesComposite extends Composite {
 
 	protected void remove(boolean all) {
 		if (all) {
-			IModule[] modules2 = new IModule[deployed.size()];
-			deployed.toArray(modules2);
+			// pick one of the required modules to keep
+			IModule keep = null;
+			if (requiredModules != null) {
+				int size2 = requiredModules.length;
+				for (int i = 0; i < size2; i++) {
+					if (keep == null && deployed.contains(requiredModules[i]))
+						keep = requiredModules[i];
+				}
+			}
+			
+			List list = new ArrayList();
+			list.addAll(deployed);
+			list.remove(keep);
+			
+			IModule[] modules2 = new IModule[list.size()];
+			list.toArray(modules2);
+			
 			moveAll(modules2, false);
 		} else
 			moveAll(new IModule[] { getDeployedSelection() }, false);
@@ -606,14 +679,14 @@ public class ModifyModulesComposite extends Composite {
 			if (status == null && !list.contains(mods[i]))
 				list.add(mods[i]);
 		}
-
+		
 		Iterator iterator = list.iterator();
 		while (iterator.hasNext()) {
 			IModule module = (IModule) iterator.next();
 			if (add2) {
 				modules.remove(module);
 				deployed.add(module);
-			} else if (!module.equals(newModule)) {
+			} else {
 				modules.add(module);
 				deployed.remove(module);
 			}
