@@ -795,8 +795,20 @@ public class ServerPlugin extends Plugin {
 			for (int i = 0; i < size; i++) {
 				try {
 					if (adapters[i].isEnabled(obj)) {
-						Trace.trace(Trace.FINER, "Run On Server for " + obj + " is enabled by " + adapters[i].getId());
-						return true;
+						Trace.trace(Trace.FINER, "ServerPlugin.hasModuleArtifact() - " + adapters[i].getId());
+						if (adapters[i].isDelegateLoaded()) {
+							long time = System.currentTimeMillis();
+							IModuleArtifact ma = adapters[i].getModuleArtifact(obj);
+							Trace.trace(Trace.FINER, "Deep enabled time: " + (System.currentTimeMillis() - time));
+							if (ma != null) {
+								Trace.trace(Trace.FINER, "Deep enabled");
+								return true;
+							}
+							Trace.trace(Trace.FINER, "Not enabled");
+						} else {
+							Trace.trace(Trace.FINER, "Enabled");
+							return true;
+						}
 					}
 				} catch (CoreException ce) {
 					Trace.trace(Trace.WARNING, "Could not use moduleArtifactAdapter", ce);
