@@ -16,8 +16,8 @@
 <extension point="org.eclipse.help.toc">
 	<toc file="org.eclipse.jst.server.ui.doc.user_build_toc.xml" />
 	<toc file="tomcat_create.xml" />
-	<toc file="tomcat_pref.xml" />
-       <index path="index/"/>     
+	<toc file="tomcat_pref.xml" /> 
+       <index path="index/"/>    
 </extension>
 <extension
       point="org.eclipse.help.index">
