@@ -124,6 +124,9 @@ public class ServerClasspathContainerPage extends WizardPage implements IClasspa
 			}
 		});
 		
+		if (tableViewer.getTable().getItemCount() != 0)
+			tableViewer.getTable().setFocus();
+		
 		setControl(comp);
 	}
 }
