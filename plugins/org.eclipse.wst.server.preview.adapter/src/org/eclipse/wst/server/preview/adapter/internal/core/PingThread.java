@@ -16,6 +16,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.internal.ServerType;
 /**
  * Thread used to ping server to test when it is started.
  */
@@ -27,7 +28,7 @@ public class PingThread {
 	private static final int PING_INTERVAL = 250;
 
 	// maximum number of pings before giving up
-	private int maxPings = 40;
+	private int maxPings;
 
 	private boolean stop = false;
 	private String url;
@@ -46,6 +47,7 @@ public class PingThread {
 		this.server = server;
 		this.url = url;
 		this.behaviour = behaviour;
+		this.maxPings = guessMaxPings();
 		Thread t = new Thread("Preview Ping Thread") {
 			public void run() {
 				ping();
@@ -53,6 +55,13 @@ public class PingThread {
 		};
 		t.setDaemon(true);
 		t.start();
+	}
+
+	private int guessMaxPings() {
+		int startTimeout = ((ServerType) server.getServerType()).getStartTimeout();
+		if (startTimeout > 0)
+			return startTimeout / PING_INTERVAL;
+		return -1;
 	}
 
 	/**
