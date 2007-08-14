@@ -36,7 +36,6 @@ import org.osgi.framework.Bundle;
  */
 public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 	private static final String[] REQUIRED_BUNDLE_IDS = new String[] {
-		"org.eclipse.core.runtime",
 		"org.apache.commons.logging",
 		"javax.servlet",
 		"javax.servlet.jsp",
@@ -72,7 +71,7 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 			if (path == null)
 				throw new CoreException(new Status(IStatus.ERROR, PreviewPlugin.PLUGIN_ID, "Could not find required bundle " + REQUIRED_BUNDLE_IDS[i]));
 			
-			if (i == 5 && path.append("bin").toFile().exists())
+			if (i == 4 && path.append("bin").toFile().exists())
 				path = path.append("bin");
 			
 			if (i > 0)
@@ -106,14 +105,50 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 			cmds.toArray(cmdLine);
 			Process p = DebugPlugin.exec(cmdLine, null);
 			if (p != null) {
-				IProcess pr = DebugPlugin.newProcess(launch, p, "Preview!");
+				IProcess pr = DebugPlugin.newProcess(launch, p, cmdLine[0]);
+				pr.setAttribute(IProcess.ATTR_CMDLINE, renderCommandLine(cmdLine));
 				if (pr != null)
 					launch.addProcess(pr);
+				previewServer.setProcess(pr);
 			}
-			previewServer.setProcess(launch.getProcesses()[0]);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Problem creating preview process");
 		}
+	}
+
+	/**
+	 * Prepares the command line from the specified array of strings.
+	 * 
+	 * @param commandLine
+	 * @return the command line string
+	 */
+	protected static String renderCommandLine(String[] commandLine) {
+		if (commandLine.length < 1)
+			return ""; //$NON-NLS-1$
+		StringBuffer buf= new StringBuffer();
+		for (int i= 0; i < commandLine.length; i++) {
+			buf.append(' ');
+			char[] characters= commandLine[i].toCharArray();
+			StringBuffer command= new StringBuffer();
+			boolean containsSpace= false;
+			for (int j = 0; j < characters.length; j++) {
+				char character= characters[j];
+				if (character == '\"') {
+					command.append('\\');
+				} else if (character == ' ') {
+					containsSpace = true;
+				}
+				command.append(character);
+			}
+			if (containsSpace) {
+				buf.append('\"');
+				buf.append(command.toString());
+				buf.append('\"');
+			} else {
+				buf.append(command.toString());
+			}
+		}	
+		return buf.toString();
 	}
 
 	protected static File getJavaExecutable() {
@@ -121,8 +156,7 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 		if (Platform.getOS().equals(Constants.OS_MACOSX))
 			return null;
 		
-		// Retrieve the 'java.home' system property.  If that directory doesn't exist, 
-		// return null.
+		// retrieve the 'java.home' system property. If that directory doesn't exist, return null
 		File javaHome; 
 		try {
 			javaHome = new File(System.getProperty("java.home")).getCanonicalFile();
@@ -132,14 +166,14 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 		if (!javaHome.exists())
 			return null;
 		
-		// Find the 'java' executable file under the java home directory.  If it can't be
-		// found, return null.
+		// find the 'java' executable file under the java home directory. If it can't be
+		// found, return null
 		return findJavaExecutable(javaHome);
 	}
 
 	protected static File findJavaExecutable(File vmInstallLocation) {
-		// Try each candidate in order.  The first one found wins.  Thus, the order
-		// of fgCandidateJavaLocations and fgCandidateJavaFiles is significant.
+		// try each candidate in order, the first one found wins. Thus, the order
+		// of fgCandidateJavaLocations and fgCandidateJavaFiles is significant
 		for (int i = 0; i < fgCandidateJavaFiles.length; i++) {
 			for (int j = 0; j < fgCandidateJavaLocations.length; j++) {
 				File javaFile = new File(vmInstallLocation, fgCandidateJavaLocations[j] + fgCandidateJavaFiles[i]);

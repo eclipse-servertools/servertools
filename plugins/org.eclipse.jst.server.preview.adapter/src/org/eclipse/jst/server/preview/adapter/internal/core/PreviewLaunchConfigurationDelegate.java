@@ -82,7 +82,7 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 			workingDirName = workingDir.getAbsolutePath();
 		
 		// Program & VM args
-		String pgmArgs = previewServer.getTempDirectory().append("preview.xml").toOSString(); 
+		String pgmArgs = "\"" + previewServer.getTempDirectory().append("preview.xml").toOSString() + "\""; 
 			//getProgramArguments(configuration);
 		String vmArgs = getVMArguments(configuration);
 		String[] envp = getEnvironment(configuration);
