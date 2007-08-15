@@ -133,7 +133,7 @@ public class GenericServerWizardFragment extends
         getServer().setName( createName() );
         for( int i = 0; i < fDecorators.length; i++ )
         {
-            if( fDecorators[i].validate() )
+            if( fDecorators[i].validate() )//failed do not continue
                 return;
         }
     }
@@ -145,7 +145,7 @@ public class GenericServerWizardFragment extends
         // validate needed to save the latest values.
         for( int i = 0; i < fDecorators.length; i++ )
         {
-            if( fDecorators[i].validate() )
+            if( fDecorators[i].validate() )//failed do not continue
                 return;
         }
     }

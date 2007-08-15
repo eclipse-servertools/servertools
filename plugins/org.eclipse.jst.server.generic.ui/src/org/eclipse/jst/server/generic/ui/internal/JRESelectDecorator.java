@@ -11,9 +11,12 @@ package org.eclipse.jst.server.generic.ui.internal;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMInstallType;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
@@ -29,15 +32,18 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 
 
 public class JRESelectDecorator implements GenericServerCompositeDecorator {
 	private List installedJREs;
 	private String[] jreNames;
 	private GenericServerRuntime fRuntime;
-	public JRESelectDecorator(GenericServerRuntime runtime){
+	private IWizardHandle fWizard; 
+	public JRESelectDecorator(GenericServerRuntime runtime, IWizardHandle wizardHandle){
 		super();
 		fRuntime = runtime;
+		fWizard = wizardHandle;
 	}
 	
 	public void decorate(final GenericServerComposite composite) {
@@ -135,6 +141,18 @@ public class JRESelectDecorator implements GenericServerCompositeDecorator {
 	
 	
 	public boolean validate() {
-		return false;
+	    IStatus status = fRuntime.validate();
+	    if( status.getSeverity() != IStatus.OK )
+	    {
+	        fWizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
+	        fWizard.update();
+	        return true;
+	    }
+	    else
+	    {
+	        fWizard.setMessage("", IMessageProvider.NONE); //$NON-NLS-1$
+	        fWizard.update();
+	        return false;
+	    }
 	}
 }
