@@ -17,8 +17,10 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -57,6 +59,12 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 
 	protected String propertiesFile;
 	
+	protected static final Map protocolHandlerMap = new HashMap();
+	static {
+		protocolHandlerMap.put("org.apache.coyote.http11.Http11Protocol", "HTTP/1.1");
+		protocolHandlerMap.put("org.apache.jk.server.JkCoyoteHandler", "AJP/1.3");
+	}
+	
 	/**
 	 * Tomcat50Configuration constructor.
 	 * 
@@ -75,7 +83,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 		while (iterator.hasNext()) {
 			ServerPort port = (ServerPort) iterator.next();
 			// Return only an HTTP port from the selected Service
-			if (port.getName().equals("HTTP") && port.getId().indexOf('/') < 0)
+			if (port.getProtocol().toLowerCase().equals("http") && port.getId().indexOf('/') < 0)
 				return port;
 		}
 		return null;
@@ -114,7 +122,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 				int size2 = service.getConnectorCount();
 				for (int j = 0; j < size2; j++) {
 					Connector connector = service.getConnector(j);
-					String name = "HTTP";
+					String name = "HTTP/1.1";
 					String protocol2 = "HTTP";
 					boolean advanced = true;
 					String[] contentTypes = null;
@@ -126,10 +134,32 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 					}
 					String protocol = connector.getProtocol();
 					if (protocol != null && protocol.length() > 0) {
-						name = protocol;
-						protocol2 = protocol; 
+						if (protocol.startsWith("HTTP")) {
+							name = protocol;
+						}
+						else if (protocol.startsWith("AJP")) {
+							name = protocol;
+							protocol2 = "AJP"; 
+						}
+						else {
+							// Get Tomcat equivalent name if protocol handler class specified
+							name = (String)protocolHandlerMap.get(protocol);
+							if (name != null) {
+								// Prepare simple protocol string for ServerPort protocol
+								int index = name.indexOf('/');
+								if (index > 0)
+									protocol2 = name.substring(0, index);
+								else
+									protocol2 = name;
+							}
+							// Specified protocol is unknown, just use as is
+							else {
+								name = protocol;
+								protocol2 = protocol;
+							}
+						}
 					}
-					if ("HTTP".equals(protocol))
+					if (protocol2.toLowerCase().equals("http"))
 						contentTypes = new String[] { "web", "webservices" };
 					String secure = connector.getSecure();
 					if (secure != null && secure.length() > 0) {
