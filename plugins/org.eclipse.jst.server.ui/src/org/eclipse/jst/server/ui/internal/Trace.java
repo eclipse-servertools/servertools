@@ -9,6 +9,9 @@
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.jst.server.ui.internal;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 /**
  * Helper class to route trace output.
  */
@@ -43,9 +46,12 @@ public class Trace {
 	 * @param t a throwable
 	 */
 	public static void trace(byte level, String s, Throwable t) {
+		if (level == SEVERE)
+			JavaServerUIPlugin.getInstance().getLog().log(new Status(IStatus.ERROR, JavaServerUIPlugin.PLUGIN_ID, s, t));
+		
 		if (!JavaServerUIPlugin.getInstance().isDebugging())
 			return;
-
+		
 		System.out.println(JavaServerUIPlugin.PLUGIN_ID + " " + s);
 		if (t != null)
 			t.printStackTrace();

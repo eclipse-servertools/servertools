@@ -13,6 +13,8 @@ package org.eclipse.wst.server.preview.adapter.internal.core;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 /**
  * Helper class to route trace output.
  */
@@ -22,16 +24,11 @@ public class Trace {
 	public static byte SEVERE = 2;
 	public static byte FINEST = 3;
 	public static byte FINER = 4;
-	
+
 	private static final String[] levelNames = new String[] { "CONFIG   ", "WARNING  ",
 		"SEVERE   ", "FINER    ", "FINEST   " };
 
-	private static final String spacer = "                                   ";
-
-	private static final SimpleDateFormat sdf = new SimpleDateFormat(
-			"dd/MM/yy HH:mm.ss.SSS");
-
-	protected static int pluginLength = -1;
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm.ss.SSS");
 
 	/**
 	 * Trace constructor comment.
@@ -58,35 +55,16 @@ public class Trace {
 	 * @param t a throwable
 	 */
 	public static void trace(byte level, String s, Throwable t) {
+		if (s == null)
+			return;
+		
+		if (level == SEVERE)
+			PreviewPlugin.getInstance().getLog().log(new Status(IStatus.ERROR, PreviewPlugin.PLUGIN_ID, s, t));
+		
 		if (!PreviewPlugin.getInstance().isDebugging())
 			return;
-
-		/*
-		 * System.out.println(ApachePlugin.PLUGIN_ID + " " + s); if (t != null)
-		 * t.printStackTrace();
-		 */
-		trace(PreviewPlugin.PLUGIN_ID, level, s, t);
-	}
-
-	/**
-	 * Trace the given message and exception.
-	 * 
-	 * @param level a trace level
-	 * @param s a message
-	 * @param t a throwable
-	 */
-	private static void trace(String pluginId, int level, String s, Throwable t) {
-		if (pluginId == null || s == null)
-			return;
-
-		if (!PreviewPlugin.getInstance().isDebugging())
-			return;
-
-		StringBuffer sb = new StringBuffer(pluginId);
-		if (pluginId.length() > pluginLength)
-			pluginLength = pluginId.length();
-		else if (pluginId.length() < pluginLength)
-			sb.append(spacer.substring(0, pluginLength - pluginId.length()));
+		
+		StringBuffer sb = new StringBuffer(PreviewPlugin.PLUGIN_ID);
 		sb.append(" ");
 		sb.append(levelNames[level]);
 		sb.append(" ");

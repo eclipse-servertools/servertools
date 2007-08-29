@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,9 @@
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.internet.monitor.core.internal;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 /**
  * Helper class to route trace output.
  */
@@ -63,9 +66,12 @@ public class Trace {
 	 * @param t a throwable
 	 */
 	public static void trace(byte level, String s, Throwable t) {
+		if (level == SEVERE)
+			MonitorPlugin.getInstance().getLog().log(new Status(IStatus.ERROR, MonitorPlugin.PLUGIN_ID, s, t));
+		
 		if (!MonitorPlugin.getInstance().isDebugging())
 			return;
-
+		
 		System.out.println(MonitorPlugin.PLUGIN_ID + " " + System.currentTimeMillis() + " " + s);
 		if (t != null)
 			t.printStackTrace();

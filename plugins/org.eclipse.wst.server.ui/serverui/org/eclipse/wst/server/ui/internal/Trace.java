@@ -12,6 +12,9 @@ package org.eclipse.wst.server.ui.internal;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 /**
  * Helper class to route trace output.
  */
@@ -24,12 +27,9 @@ public class Trace {
 	public static final byte FINER = 5;
 	public static final byte PERFORMANCE = 6;
 	public static final byte EXTENSION_POINT = 7;
-	
-	protected static int pluginLength = -1;
-	
+
 	private static final String[] levelNames = new String[] {
 		"CONFIG ", "INFO   ", "WARNING", "SEVERE ", "FINER  ", "FINEST ", "PERF   ", "EXTENSION"};
-	private static final String spacer = "                                   ";
 
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm.ss.SSS");
 
@@ -49,7 +49,7 @@ public class Trace {
 	public static void trace(byte level, String s) {
 		trace(level, s, null);
 	}
-	
+
 	/**
 	 * Trace the given message and exception.
 	 *
@@ -58,15 +58,13 @@ public class Trace {
 	 * @param t a throwable
 	 */
 	public static void trace(byte level, String s, Throwable t) {
+		if (level == SEVERE)
+			ServerUIPlugin.getInstance().getLog().log(new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, s, t));
+		
 		if (!ServerUIPlugin.getInstance().isDebugging())
 			return;
-
-		String pluginId = ServerUIPlugin.PLUGIN_ID;
-		StringBuffer sb = new StringBuffer(pluginId);
-		if (pluginId.length() > pluginLength)
-			pluginLength = pluginId.length();
-		else if (pluginId.length() < pluginLength)
-			sb.append(spacer.substring(0, pluginLength - pluginId.length()));
+		
+		StringBuffer sb = new StringBuffer(ServerUIPlugin.PLUGIN_ID);
 		sb.append(" ");
 		sb.append(levelNames[level]);
 		sb.append(" ");

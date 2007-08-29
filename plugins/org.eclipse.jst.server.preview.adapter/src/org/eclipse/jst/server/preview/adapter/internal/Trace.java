@@ -9,6 +9,9 @@
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.jst.server.preview.adapter.internal;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 /**
  * Helper class to route trace output.
  */
@@ -57,6 +60,9 @@ public class Trace {
 	 * @param t Throwable
 	 */
 	public static void trace(byte level, String s, Throwable t) {
+		if (level == SEVERE)
+			PreviewPlugin.getInstance().getLog().log(new Status(IStatus.ERROR, PreviewPlugin.PLUGIN_ID, s, t));
+		
 		if (!PreviewPlugin.getInstance().isDebugging())
 			return;
 		
