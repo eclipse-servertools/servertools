@@ -29,7 +29,7 @@ public class WorkingCopyHelper {
 	protected boolean isDirty;
 
 	// property change listeners
-	private transient List propertyListeners;
+	private transient List<PropertyChangeListener> propertyListeners;
 
 	public WorkingCopyHelper(Base base) {
 		this.base = base;
@@ -68,8 +68,8 @@ public class WorkingCopyHelper {
 		firePropertyChangeEvent(attributeName, current, value);
 	}
 
-	public void setAttribute(String attributeName, List value) {
-		List current = base.getAttribute(attributeName, (List)null);
+	public void setAttribute(String attributeName, List<String> value) {
+		List current = base.getAttribute(attributeName, (List<String>)null);
 		if (base.isAttributeSet(attributeName) && current != null && current.equals(value))
 			return;
 		
@@ -125,7 +125,7 @@ public class WorkingCopyHelper {
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		if (propertyListeners == null)
-			propertyListeners = new ArrayList(2);
+			propertyListeners = new ArrayList<PropertyChangeListener>(2);
 		propertyListeners.add(listener);
 	}
 

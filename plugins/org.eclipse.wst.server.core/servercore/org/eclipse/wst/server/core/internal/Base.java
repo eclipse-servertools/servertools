@@ -30,13 +30,14 @@ public abstract class Base {
 	protected static final String PROP_PRIVATE = "private";
 	protected static final String PROP_NAME = "name";
 	protected static final String PROP_ID = "id";
+	protected static final String PROP_ID_SET = "id-set";
 	protected static final String PROP_TIMESTAMP = "timestamp";
 
-	protected Map map = new HashMap();
-	
+	protected Map<String, Object> map = new HashMap<String, Object>();
+
 	// file loaded from, or null if it is saved in metadata
 	protected IFile file;
-	
+
 	/**
 	 * Create a new object.
 	 * 
@@ -54,8 +55,10 @@ public abstract class Base {
 	 */
 	public Base(IFile file, String id) {
 		this.file = file;
-		//this.map = map;
-		map.put(PROP_ID, id);
+		if (id != null && id.length() > 0) {
+			map.put(PROP_ID, id);
+			map.put(PROP_ID_SET, Boolean.toString(true));
+		}
 	}
 
 	/**
@@ -136,13 +139,15 @@ public abstract class Base {
 		}
 		return defaultValue;
 	}
-	
-	public List getAttribute(String attributeName, List defaultValue) {
+
+	@SuppressWarnings("unchecked")
+	public List<String> getAttribute(String attributeName, List<String> defaultValue) {
 		try {
 			Object obj = map.get(attributeName);
 			if (obj == null)
 				return defaultValue;
-			List list = (List) obj;
+			List<String> obj2 = (List<String>) obj;
+			List<String> list = obj2;
 			if (list != null)
 				return list;
 		} catch (Exception e) {
@@ -272,7 +277,7 @@ public abstract class Base {
 	protected abstract void saveState(IMemento memento);
 
 	protected void load(IMemento memento) {
-		map = new HashMap();
+		map = new HashMap<String, Object>();
 		
 		Iterator iterator = memento.getNames().iterator();
 		while (iterator.hasNext()) {
@@ -299,7 +304,7 @@ public abstract class Base {
 	
 	protected void loadMap(IMemento memento) {
 		String key = memento.getString("key");
-		Map vMap = new HashMap();
+		Map<String, String> vMap = new HashMap<String, String>();
 		List keys = memento.getNames();
 		Iterator iterator = keys.iterator();
 		while(iterator.hasNext()) {
@@ -313,7 +318,7 @@ public abstract class Base {
 	
 	protected void loadList(IMemento memento) {
 		String key = memento.getString("key");
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		int i = 0;
 		String key2 = memento.getString("value" + (i++));
 		while (key2 != null) {
@@ -367,7 +372,7 @@ public abstract class Base {
 			IMemento memento = XMLMemento.loadMemento(in);
 			load(memento);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not load from file" + e.getMessage(), e);
+			Trace.trace(Trace.SEVERE, "Could not load from file", e);
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorLoading, getFile().toString()), e));
 		} finally {
 			try {
@@ -392,7 +397,7 @@ public abstract class Base {
 			IMemento memento = XMLMemento.loadMemento(in);
 			load(memento);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not load from path: " + e.getMessage(), e);
+			Trace.trace(Trace.SEVERE, "Could not load from path", e);
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorLoading, path.toString()), e));
 		} finally {
 			try {

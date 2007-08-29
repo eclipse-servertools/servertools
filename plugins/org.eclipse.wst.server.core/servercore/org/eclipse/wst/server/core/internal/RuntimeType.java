@@ -22,7 +22,7 @@ import org.eclipse.wst.server.core.model.RuntimeDelegate;
  */
 public class RuntimeType implements IRuntimeType {
 	private IConfigurationElement element;
-	private List moduleTypes;
+	private List<IModuleType> moduleTypes;
 
 	public RuntimeType(IConfigurationElement element) {
 		super();
@@ -143,6 +143,7 @@ public class RuntimeType implements IRuntimeType {
 			return null;
 		
 		RuntimeWorkingCopy rwc = new RuntimeWorkingCopy(null, id, this);
+		ServerUtil.setRuntimeDefaultName(rwc);
 		rwc.setDefaults(monitor);
 		return rwc;
 	}

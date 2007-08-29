@@ -36,7 +36,7 @@ public class Server extends Base implements IServer {
 	 */
 	public static final String ATTR_SERVER_ID = "server-id";
 
-	protected static final List EMPTY_LIST = new ArrayList(0);
+	protected static final List<String> EMPTY_LIST = new ArrayList<String>(0);
 
 	/**
 	 * File extension (value "server") for serialized representation of
@@ -76,10 +76,10 @@ public class Server extends Base implements IServer {
 	protected IFolder configuration;
 
 	// the list of modules that are to be published to the server
-	protected List modules;
+	protected List<IModule> modules;
 
 	// the list of external modules
-	protected List externalModules;
+	protected List<IModule> externalModules;
 
 	// transient fields
 	protected transient String mode = ILaunchManager.RUN_MODE;
@@ -87,12 +87,12 @@ public class Server extends Base implements IServer {
 	protected transient int serverSyncState;
 	protected transient boolean serverRestartNeeded;
 
-	protected transient Map moduleState = new HashMap();
-	protected transient Map modulePublishState = new HashMap();
-	protected transient Map moduleRestartState = new HashMap();
+	protected transient Map<String, Integer> moduleState = new HashMap<String, Integer>();
+	protected transient Map<String, Integer> modulePublishState = new HashMap<String, Integer>();
+	protected transient Map<String, Boolean> moduleRestartState = new HashMap<String, Boolean>();
 
 	protected transient IStatus serverStatus;
-	protected transient Map moduleStatus = new HashMap();
+	protected transient Map<String, IStatus> moduleStatus = new HashMap<String, IStatus>();
 
 	protected transient ServerPublishInfo publishInfo;
 	protected transient AutoPublishThread autoPublishThread;
@@ -103,7 +103,7 @@ public class Server extends Base implements IServer {
 	};*/
 
 	// publish listeners
-	protected transient List publishListeners;
+	protected transient List<IPublishListener> publishListeners;
 
 	// Server listeners
 	protected transient ServerNotificationManager notificationManager;
@@ -164,7 +164,7 @@ public class Server extends Base implements IServer {
 
 		protected IStatus run(IProgressMonitor monitor) {
 			final boolean[] changed = new boolean[1];
-			final List modules2 = new ArrayList();
+			final List<IModule[]> modules2 = new ArrayList<IModule[]>();
 			
 			IModuleVisitor visitor = new IModuleVisitor() {
 				public boolean visit(IModule[] module2) {
@@ -354,7 +354,7 @@ public class Server extends Base implements IServer {
     * 
     * @return a list of publish operation ids
     */
-	public List getDisabledPreferredPublishOperationIds() {
+	public List<String> getDisabledPreferredPublishOperationIds() {
 		return getAttribute(PROP_DISABLED_PERFERRED_TASKS, EMPTY_LIST);		
 	}
 
@@ -364,7 +364,7 @@ public class Server extends Base implements IServer {
     * 
     * @return a list of publish operation ids
     */
-	public List getEnabledOptionalPublishOperationIds() {
+	public List<String> getEnabledOptionalPublishOperationIds() {
 		return getAttribute(PROP_ENABLED_OPTIONAL_TASKS, EMPTY_LIST);
 	}
 
@@ -538,12 +538,12 @@ public class Server extends Base implements IServer {
 			return;
 		
 		Boolean b = new Boolean(r);
-		moduleState.put(getKey(module), b);
+		moduleRestartState.put(getKey(module), b);
 		fireModuleRestartChangeEvent(module);
 	}
 
 	public void setExternalModules(IModule[] modules) {
-		externalModules = new ArrayList();
+		externalModules = new ArrayList<IModule>();
 		if (modules != null) {
 			int size = modules.length;
 			for (int i = 0; i < size; i++)
@@ -551,7 +551,7 @@ public class Server extends Base implements IServer {
 		}
 	}
 
-	protected List getExternalModules() {
+	protected List<IModule> getExternalModules() {
 		return externalModules;
  	}
 
@@ -658,7 +658,7 @@ public class Server extends Base implements IServer {
 		Trace.trace(Trace.LISTENERS, "Adding publish listener " + listener + " to " + this);
 
 		if (publishListeners == null)
-			publishListeners = new ArrayList();
+			publishListeners = new ArrayList<IPublishListener>();
 		publishListeners.add(listener);
 	}
 
@@ -886,7 +886,7 @@ public class Server extends Base implements IServer {
 			getServerPublishInfo().startCaching();
 			IStatus status = getBehaviourDelegate(monitor).publish(kind, monitor);
 			
-			final List modules2 = new ArrayList();
+			final List<IModule[]> modules2 = new ArrayList<IModule[]>();
 			visit(new IModuleVisitor() {
 				public boolean visit(IModule[] module) {
 					if (getModulePublishState(module) == IServer.PUBLISH_STATE_NONE)
@@ -919,7 +919,7 @@ public class Server extends Base implements IServer {
 	 * @return a possibly empty array of IOptionalTasks
 	 */
 	public PublishOperation[] getTasks(int kind, List moduleList, List kindList) {
-		List tasks = new ArrayList();
+		List<PublishOperation> tasks = new ArrayList<PublishOperation>();
 		
 		String serverTypeId = getServerType().getId();
 		
@@ -963,11 +963,11 @@ public class Server extends Base implements IServer {
 		
 		Collections.sort(tasks, PUBLISH_OPERATION_COMPARTOR);
 		
-		return (PublishOperation[]) tasks.toArray(new PublishOperation[tasks.size()]);
+		return tasks.toArray(new PublishOperation[tasks.size()]);
 	}
 
 	/**
-	 * Returns all publish tasks that have been targetted to this server type.
+	 * Returns all publish tasks that have been targeted to this server type.
 	 * The tasks will not be initialized with a task model. 
 	 * 
 	 * @param moduleList a list of modules
@@ -978,7 +978,7 @@ public class Server extends Base implements IServer {
 		if (serverTypeId == null)
 			return new PublishOperation[0];
 		
-		List tasks = new ArrayList();
+		List<PublishOperation> tasks = new ArrayList<PublishOperation>();
 		
 		IPublishTask[] publishTasks = ServerPlugin.getPublishTasks();
 		if (publishTasks != null) {
@@ -994,7 +994,7 @@ public class Server extends Base implements IServer {
 		
 		Collections.sort(tasks, PUBLISH_OPERATION_COMPARTOR);
 		
-		return (PublishOperation[])tasks.toArray(new PublishOperation[tasks.size()]);
+		return tasks.toArray(new PublishOperation[tasks.size()]);
 	}
 
 	public String getPublishOperationId(PublishOperation op) {
@@ -1008,7 +1008,7 @@ public class Server extends Base implements IServer {
 	 * @return a list of IModule[]
 	 */
 	public List getAllModules() {
-		final List moduleList = new ArrayList();
+		final List<IModule[]> moduleList = new ArrayList<IModule[]>();
 		
 		IModuleVisitor visitor = new IModuleVisitor() {
 			public boolean visit(IModule[] module) {
@@ -2112,7 +2112,7 @@ public class Server extends Base implements IServer {
 	}
 
 	protected void setInternal(ServerWorkingCopy wc) {
-		map = new HashMap(wc.map);
+		map = new HashMap<String, Object>(wc.map);
 		configuration = wc.configuration;
 		runtime = wc.runtime;
 		serverSyncState = wc.serverSyncState;
@@ -2189,7 +2189,7 @@ public class Server extends Base implements IServer {
 			return getDelegate(monitor).canModifyModules(add, remove);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate canModifyModules() " + toString(), e);
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, e.getMessage(), null);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, e.getMessage(), e);
 		}
 	}
 
@@ -2199,11 +2199,11 @@ public class Server extends Base implements IServer {
 	public IModule[] getModules() {
 		if (modules == null) {
 			// convert from attribute
-			List list = getAttribute(MODULE_LIST, (List) null);
+			List<String> list = getAttribute(MODULE_LIST, (List<String>) null);
 			if (list == null)
-				list = new ArrayList(1);
+				list = new ArrayList<String>(1);
 			
-			modules = new ArrayList(list.size() + 1);
+			modules = new ArrayList<IModule>(list.size() + 1);
 			Iterator iterator = list.iterator();
 			while (iterator.hasNext()) {
 				String moduleId = (String) iterator.next();
@@ -2258,7 +2258,7 @@ public class Server extends Base implements IServer {
 		if (module == null || module.length == 0)
 			throw new IllegalArgumentException("Module cannot be null or empty");
 		try {
-			Integer in = (Integer) moduleState.get(getKey(module));
+			Integer in = moduleState.get(getKey(module));
 			if (in != null)
 				return in.intValue();
 		} catch (Exception e) {
@@ -2274,7 +2274,7 @@ public class Server extends Base implements IServer {
 		if (module == null || module.length == 0)
 			throw new IllegalArgumentException("Module cannot be null or empty");
 		try {
-			Integer in = (Integer) modulePublishState.get(getKey(module));
+			Integer in = modulePublishState.get(getKey(module));
 			if (in != null)
 				return in.intValue();
 		} catch (Exception e) {
@@ -2316,7 +2316,7 @@ public class Server extends Base implements IServer {
 		try {
 			return getDelegate(monitor).getRootModules(module);
 		} catch (CoreException se) {
-			//Trace.trace(Trace.FINER, "CoreException calling delegate getParentModules() " + toString() + ": " + se.getMessage());
+			//Trace.trace(Trace.FINER, "CoreException calling delegate getParentModules() " + toString(), se);
 			throw se;
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate getParentModules() " + toString(), e);
@@ -2360,7 +2360,7 @@ public class Server extends Base implements IServer {
 		if (module == null || module.length == 0)
 			throw new IllegalArgumentException("Module cannot be null or empty");
 		try {
-			Boolean b = (Boolean) moduleRestartState.get(getKey(module));
+			Boolean b = moduleRestartState.get(getKey(module));
 			if (b != null)
 				return b.booleanValue();
 		} catch (Exception e) {
@@ -2499,7 +2499,7 @@ public class Server extends Base implements IServer {
 		if (module == null || module.length == 0)
 			throw new IllegalArgumentException("Module cannot be null or empty");
 		try {
-			return (IStatus) moduleStatus.get(getKey(module));
+			return moduleStatus.get(getKey(module));
 		} catch (Exception e) {
 			return null;
 		}

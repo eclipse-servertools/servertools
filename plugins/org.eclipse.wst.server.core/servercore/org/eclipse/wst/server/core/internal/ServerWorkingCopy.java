@@ -34,24 +34,23 @@ import org.eclipse.wst.server.core.model.ServerDelegate;
 public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	protected Server server;
 	protected WorkingCopyHelper wch;
-	
+
 	protected ServerDelegate workingCopyDelegate;
-	
+
 	// working copy
 	public ServerWorkingCopy(Server server) {
 		super(server.getFile());
 		this.server = server;
 		
-		map = new HashMap(server.map);
+		map = new HashMap<String, Object>(server.map);
 		wch = new WorkingCopyHelper(this);
 		
 		resolve();
 	}
-	
+
 	// creation
 	public ServerWorkingCopy(String id, IFile file, IRuntime runtime, IServerType serverType) {
 		super(id, file, runtime, serverType);
-		//server = this;
 		wch = new WorkingCopyHelper(this);
 		wch.setDirty(true);
 		serverState = ((ServerType)serverType).getInitialState();
@@ -185,7 +184,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		wch.setAttribute(attributeName, value);
 	}
 
-	public void setAttribute(String attributeName, List value) {
+	public void setAttribute(String attributeName, List<String> value) {
 		wch.setAttribute(attributeName, value);
 	}
 
@@ -198,6 +197,9 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	 */
 	public void setName(String name) {
 		setAttribute(PROP_NAME, name);
+		boolean set = getAttribute(PROP_ID_SET, false);
+		if (runtime == null && !set)
+			setAttribute(PROP_ID, name);
 	}
 
 	public void setReadOnly(boolean b) {
@@ -245,9 +247,9 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	 * @return true if change is made. 
 	 */
 	public boolean disablePreferredPublishOperations(PublishOperation op) {
-		List list = getAttribute(PROP_DISABLED_PERFERRED_TASKS, (List)null);
+		List<String> list = getAttribute(PROP_DISABLED_PERFERRED_TASKS, (List<String>)null);
 		if (list == null)
-			list = new ArrayList();
+			list = new ArrayList<String>();
 		
 		String opId = getPublishOperationId(op);
 		if (list.contains(opId))
@@ -264,9 +266,9 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	 * @return true if change is made. 
 	 */
 	public boolean enableOptionalPublishOperations(PublishOperation op) {
-		List list = getAttribute(PROP_ENABLED_OPTIONAL_TASKS, (List)null);
+		List<String> list = getAttribute(PROP_ENABLED_OPTIONAL_TASKS, (List<String>)null);
 		if (list == null)
-			list = new ArrayList();
+			list = new ArrayList<String>();
 		
 		String opId = getPublishOperationId(op);
 		if (list.contains(opId))
@@ -280,14 +282,14 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	 * Reset all preferred operations to default
 	 */
 	public void resetPreferredPublishOperations() {
-		setAttribute(PROP_DISABLED_PERFERRED_TASKS, (List)null);
+		setAttribute(PROP_DISABLED_PERFERRED_TASKS, (List<String>)null);
 	}
 
 	/**
 	 * Reset all optional operations to default
 	 */
 	public void resetOptionalPublishOperations() {
-		setAttribute(PROP_ENABLED_OPTIONAL_TASKS, (List)null);
+		setAttribute(PROP_ENABLED_OPTIONAL_TASKS, (List<String>)null);
 	}
 
 	/**
@@ -530,7 +532,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			}
 			
 			// convert to attribute
-			List list = new ArrayList();
+			List<String> list = new ArrayList<String>();
 			Iterator iterator = modules.iterator();
 			while (iterator.hasNext()) {
 				IModule module = (IModule) iterator.next();
@@ -727,7 +729,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		super.setExternalModules(modules);
 	}
 
-	public List getExternalModules() {
+	public List<IModule> getExternalModules() {
 		if (server != null)
 			return server.getExternalModules();
 		return super.getExternalModules();

@@ -187,11 +187,10 @@ public class ServerType implements IServerType {
 		if (element == null)
 			return null;
 		
-		if (id == null || id.length() == 0)
-			id = ServerPlugin.generateId();
 		ServerWorkingCopy swc = new ServerWorkingCopy(id, file, runtime, this);
 		if (hasRuntime())
 			swc.setRuntime(runtime);
+		ServerUtil.setServerDefaultName(swc);
 		swc.setDefaults(monitor);
 		
 		if (hasServerConfiguration() && runtime != null && runtime.getLocation() != null && !runtime.getLocation().isEmpty())
@@ -215,7 +214,7 @@ public class ServerType implements IServerType {
 	 * of the given runtime type
 	 */
 	protected static IRuntime[] getRuntimes(IRuntimeType runtimeType) {
-		List list = new ArrayList();
+		List<IRuntime> list = new ArrayList<IRuntime>();
 		IRuntime[] runtimes = ServerCore.getRuntimes();
 		if (runtimes != null) {
 			int size = runtimes.length;
@@ -234,9 +233,6 @@ public class ServerType implements IServerType {
 		if (element == null)
 			return null;
 		
-		if (id == null || id.length() == 0)
-			id = ServerPlugin.generateId();
-		
 		IRuntime runtime = null;
 		if (hasRuntime()) {
 			// look for existing runtime
@@ -247,7 +243,7 @@ public class ServerType implements IServerType {
 			else {
 				// create runtime
 				try {
-					IRuntimeWorkingCopy runtimeWC = runtimeType.createRuntime(id + "-runtime", monitor);
+					IRuntimeWorkingCopy runtimeWC = runtimeType.createRuntime(id, monitor);
 					ServerUtil.setRuntimeDefaultName(runtimeWC);
 					runtime = runtimeWC;
 				} catch (Exception e) {
@@ -255,11 +251,11 @@ public class ServerType implements IServerType {
 				}
 			}
 		}
-
+		
 		ServerWorkingCopy swc = new ServerWorkingCopy(id, file, runtime, this);
-		ServerUtil.setServerDefaultName(swc);
 		if (runtime != null)
 			swc.setRuntime(runtime);
+		ServerUtil.setServerDefaultName(swc);
 		
 		swc.setDefaults(monitor);
 		if (swc.getServerType().hasServerConfiguration())

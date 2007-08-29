@@ -29,7 +29,6 @@ import org.eclipse.wst.server.core.model.RuntimeDelegate;
  * 
  */
 public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
-	protected String PROP_ID_SET = "id-set";
 	protected Runtime runtime;
 	protected WorkingCopyHelper wch;
 	
@@ -46,10 +45,10 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 		
 		runtimeType = runtime.getRuntimeType();
 		
-		map = new HashMap(runtime.map);
+		map = new HashMap<String, Object>(runtime.map);
 		wch = new WorkingCopyHelper(this);
 	}
-	
+
 	/**
 	 * Create a new runtime working copy for a new runtime.
 	 * 
@@ -61,14 +60,6 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 		super(file, id, runtimeType);
 		wch = new WorkingCopyHelper(this);
 		wch.setDirty(true);
-		
-		if (id == null || id.length() == 0) {
-			id = ServerPlugin.generateId();
-			map.put(PROP_ID, id);
-		} else
-			setAttribute(PROP_ID_SET, true);
-		
-		// throw CoreException if the id already exists
 	}
 
 	/**
@@ -92,12 +83,12 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 	public void setAttribute(String attributeName, boolean value) {
 		wch.setAttribute(attributeName, value);
 	}
-	
+
 	public void setAttribute(String attributeName, String value) {
 		wch.setAttribute(attributeName, value);
 	}
 
-	public void setAttribute(String attributeName, List value) {
+	public void setAttribute(String attributeName, List<String> value) {
 		wch.setAttribute(attributeName, value);
 	}
 
@@ -118,7 +109,7 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 	public void setTestEnvironment(boolean b) {
 		setAttribute(PROP_TEST_ENVIRONMENT, b);
 	}
-	
+
 	/**
 	 * @see IRuntimeWorkingCopy#setStub(boolean)
 	 */
