@@ -176,7 +176,7 @@ public class ServerTableViewer extends TreeViewer {
 		stopAnimation = false;
 		
 		final Display display = getTree().getDisplay();
-		final int SLEEP = 50;
+		final int SLEEP = 200;
 		final Runnable[] animator = new Runnable[1];
 		animator[0] = new Runnable() {
 			public void run() {
