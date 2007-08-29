@@ -173,8 +173,8 @@ public interface IServerType {
 	 * delegate's setDefaults() method.
 	 * </p>
 	 * 
-	 * @param id the id to assign to the server instance; a generated
-	 *    id is used if id is <code>null</code> or an empty string
+	 * @param id the id to assign to the server instance; the default name is
+	 *    used if id is <code>null</code> or an empty string
 	 * @param file the file in the workspace where the server instance
 	 *    is to be serialized, or <code>null</code> if the information is
 	 *    instead to be persisted with the workspace but not with any
@@ -210,8 +210,8 @@ public interface IServerType {
 	 * Consider combining the method with the other.]
 	 * </p>
 	 * 
-	 * @param id the id to assign to the server instance; a generated
-	 *    id is used if id is <code>null</code> or an empty string
+	 * @param id the id to assign to the server instance; the default name is
+	 *    used if id is <code>null</code> or an empty string
 	 * @param file the file in the workspace where the server instance
 	 *    is to be serialized, or <code>null</code> if the information is
 	 *    instead to be persisted with the workspace but not with any

@@ -132,8 +132,8 @@ public interface IRuntimeType {
 	 * not set and must be explicitly set by the client.
 	 * </p>
 	 * 
-	 * @param id the id to assign to the runtime instance; a generated
-	 *    id is used if id is <code>null</code> or an empty string
+	 * @param id the id to assign to the runtime instance; the default name is
+	 *    used if id is <code>null</code> or an empty string
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @return a new runtime working copy with the given id
