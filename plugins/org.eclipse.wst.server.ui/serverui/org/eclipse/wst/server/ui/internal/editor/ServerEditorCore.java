@@ -24,8 +24,8 @@ import org.eclipse.wst.server.ui.internal.Trace;
  */
 public class ServerEditorCore {
 	// cached copy of all editor factories and actions
-	private static List editorPageFactories;
-	private static List editorPageSectionFactories;
+	private static List<ServerEditorPartFactory> editorPageFactories;
+	private static List<ServerEditorPageSectionFactory> editorPageSectionFactories;
 	private static List editorActionFactories;
 
 	/**
@@ -33,7 +33,7 @@ public class ServerEditorCore {
 	 *
 	 * @return java.util.List
 	 */
-	public static List getServerEditorPageFactories() {
+	public static List<ServerEditorPartFactory> getServerEditorPageFactories() {
 		if (editorPageFactories == null)
 			loadEditorPageFactories();
 		return editorPageFactories;
@@ -57,7 +57,7 @@ public class ServerEditorCore {
 		Trace.trace(Trace.CONFIG, "->- Loading .editorPages extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, ServerUIPlugin.EXTENSION_EDITOR_PAGES);
-		List list = new ArrayList(cf.length);
+		List<ServerEditorPartFactory> list = new ArrayList<ServerEditorPartFactory>(cf.length);
 		loadEditorPageFactories(cf, list);
 		editorPageFactories = list;
 		ServerUIPlugin.addRegistryListener();
@@ -67,7 +67,7 @@ public class ServerEditorCore {
 	/**
 	 * Load the editor page factory extension point.
 	 */
-	private static void loadEditorPageFactories(IConfigurationElement[] cf, List list) {
+	private static void loadEditorPageFactories(IConfigurationElement[] cf, List<ServerEditorPartFactory> list) {
 		int size = cf.length;
 		for (int i = 0; i < size; i++) {
 			try {
@@ -88,7 +88,7 @@ public class ServerEditorCore {
 		
 		IConfigurationElement[] cf = delta.getExtension().getConfigurationElements();
 		
-		List list = new ArrayList(editorPageFactories);
+		List<ServerEditorPartFactory> list = new ArrayList<ServerEditorPartFactory>(editorPageFactories);
 		if (delta.getKind() == IExtensionDelta.ADDED)
 			loadEditorPageFactories(cf, list);
 		else {
@@ -115,7 +115,7 @@ public class ServerEditorCore {
 		Trace.trace(Trace.CONFIG, "->- Loading .editorPageSections extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, ServerUIPlugin.EXTENSION_EDITOR_PAGE_SECTIONS);
-		List list = new ArrayList(cf.length);
+		List<ServerEditorPageSectionFactory> list = new ArrayList<ServerEditorPageSectionFactory>(cf.length);
 		loadEditorPageSectionFactories(cf, list);
 		editorPageSectionFactories = list;
 		ServerUIPlugin.addRegistryListener();
@@ -125,7 +125,7 @@ public class ServerEditorCore {
 	/**
 	 * Load the editor page section factory extension point.
 	 */
-	private static void loadEditorPageSectionFactories(IConfigurationElement[] cf, List list) {
+	private static void loadEditorPageSectionFactories(IConfigurationElement[] cf, List<ServerEditorPageSectionFactory> list) {
 		int size = cf.length;
 		for (int i = 0; i < size; i++) {
 			try {
@@ -146,7 +146,7 @@ public class ServerEditorCore {
 		
 		IConfigurationElement[] cf = delta.getExtension().getConfigurationElements();
 		
-		List list = new ArrayList(editorPageSectionFactories);
+		List<ServerEditorPageSectionFactory> list = new ArrayList<ServerEditorPageSectionFactory>(editorPageSectionFactories);
 		if (delta.getKind() == IExtensionDelta.ADDED)
 			loadEditorPageSectionFactories(cf, list);
 		else {
@@ -186,7 +186,7 @@ public class ServerEditorCore {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "editorActions");
 
 		int size = cf.length;
-		List list = new ArrayList(size);
+		List<ServerEditorActionFactory> list = new ArrayList<ServerEditorActionFactory>(size);
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new ServerEditorActionFactory(cf[i]));

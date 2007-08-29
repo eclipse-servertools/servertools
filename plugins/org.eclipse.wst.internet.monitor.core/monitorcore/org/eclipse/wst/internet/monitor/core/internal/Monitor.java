@@ -41,7 +41,7 @@ public class Monitor implements IMonitor {
 	protected int timeout;
 	protected boolean autoStart = false;
 
-	protected List requestListeners = new ArrayList(2);
+	protected List<IRequestListener> requestListeners = new ArrayList<IRequestListener>(2);
 
 	/**
 	 * Create a new monitor.

@@ -37,13 +37,13 @@ public class PreviewSourcePathComputerDelegate implements ISourcePathComputerDel
 	 * @see org.eclipse.debug.core.sourcelookup.ISourcePathComputerDelegate#computeSourceContainers(org.eclipse.debug.core.ILaunchConfiguration, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public ISourceContainer[] computeSourceContainers(ILaunchConfiguration configuration, IProgressMonitor monitor) throws CoreException {
-		List classpaths = new ArrayList();
+		List<IRuntimeClasspathEntry> classpaths = new ArrayList<IRuntimeClasspathEntry>();
 		classpaths.addAll(Arrays.asList(JavaRuntime.computeUnresolvedSourceLookupPath(configuration)));
-		List sourcefolderList = new ArrayList();
+		List<ISourceContainer> sourcefolderList = new ArrayList<ISourceContainer>();
 		
 		IServer server = ServerUtil.getServer(configuration);
 		if (server != null) {
-			List list = new ArrayList();
+			List<IJavaProject> list = new ArrayList<IJavaProject>();
 			IModule[] modules = server.getModules();
 			for (int i = 0; i < modules.length; i++) {
 				IProject project = modules[i].getProject();

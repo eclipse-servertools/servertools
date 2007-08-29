@@ -24,8 +24,8 @@ public class MonitorPlugin extends Plugin {
 
 	private static MonitorPlugin singleton;
 	
-	protected Map protocolAdapters;
-	protected Map contentFilters;
+	protected Map<String, ProtocolAdapter> protocolAdapters;
+	protected Map<String, IContentFilter> contentFilters;
 	protected boolean startupsLoaded;
 
 	/**
@@ -67,7 +67,7 @@ public class MonitorPlugin extends Plugin {
 	 *   is no protocol adapter with the given id
 	 */
 	public ProtocolAdapter getProtocolAdapter(String id) {
-		return (ProtocolAdapter) protocolAdapters.get(id);
+		return protocolAdapters.get(id);
 	}
 
 	/**
@@ -84,8 +84,8 @@ public class MonitorPlugin extends Plugin {
 	 * @return a possibly-empty array of protocol adapter instances
 	 */
 	public ProtocolAdapter[] getProtocolAdapters() {
-		List list = new ArrayList();
-		Iterator iterator = protocolAdapters.values().iterator();
+		List<ProtocolAdapter> list = new ArrayList<ProtocolAdapter>();
+		Iterator<ProtocolAdapter> iterator = protocolAdapters.values().iterator();
 		while (iterator.hasNext()) {
 			list.add(iterator.next());
 		}
@@ -100,8 +100,8 @@ public class MonitorPlugin extends Plugin {
 	 * @return an array of content filters
 	 */
 	public IContentFilter[] getContentFilters() {
-		List list = new ArrayList();
-		Iterator iterator = contentFilters.values().iterator();
+		List<IContentFilter> list = new ArrayList<IContentFilter>();
+		Iterator<IContentFilter> iterator = contentFilters.values().iterator();
 		while (iterator.hasNext()) {
 			list.add(iterator.next());
 		}
@@ -119,7 +119,7 @@ public class MonitorPlugin extends Plugin {
 	public IContentFilter findContentFilter(String id) {
 		if (id == null)
 			throw new IllegalArgumentException();
-		return (IContentFilter) contentFilters.get(id);
+		return contentFilters.get(id);
 	}
 
 	protected synchronized void loadProtocolAdapters() {
@@ -130,7 +130,7 @@ public class MonitorPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(MonitorPlugin.PLUGIN_ID, "internalProtocolAdapters");
 
 		int size = cf.length;
-		Map map = new HashMap(size);
+		Map<String, ProtocolAdapter> map = new HashMap<String, ProtocolAdapter>(size);
 		for (int i = 0; i < size; i++) {
 			String id = cf[i].getAttribute("id");
 			Trace.trace(Trace.CONFIG, "Loading adapter: " + id);
@@ -147,7 +147,7 @@ public class MonitorPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(MonitorPlugin.PLUGIN_ID, "internalContentFilters");
 
 		int size = cf.length;
-		Map map = new HashMap(size);
+		Map<String, IContentFilter> map = new HashMap<String, IContentFilter>(size);
 		for (int i = 0; i < size; i++) {
 			String id = cf[i].getAttribute("id");
 			Trace.trace(Trace.CONFIG, "Loading filter: " + id);

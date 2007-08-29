@@ -51,7 +51,7 @@ public class RunOnServerWizardFragment extends WizardFragment {
 		this.moduleArtifact = moduleArtifact;
 	}
 
-	protected void createChildFragments(List list) {
+	protected void createChildFragments(List<WizardFragment> list) {
 		if (server == null) {
 			list.add(new NewServerWizardFragment(module));
 			

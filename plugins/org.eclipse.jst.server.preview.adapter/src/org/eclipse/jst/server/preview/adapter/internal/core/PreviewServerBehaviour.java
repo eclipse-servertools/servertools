@@ -110,11 +110,13 @@ public class PreviewServerBehaviour extends ServerBehaviourDelegate {
 			String type = modules[i].getModuleType().getId();
 			if ("wst.web".equals(type)) {
 				IStaticWeb staticWeb = (IStaticWeb) modules[i].loadAdapter(IStaticWeb.class, null);
-				mod.putString("context", staticWeb.getContextRoot());
+				if (staticWeb != null)
+					mod.putString("context", staticWeb.getContextRoot());
 				mod.putString("type", "static");
 			} else if ("jst.web".equals(type)) {
 				IWebModule webModule = (IWebModule) modules[i].loadAdapter(IWebModule.class, null);
-				mod.putString("context", webModule.getContextRoot());
+				if (webModule != null)
+					mod.putString("context", webModule.getContextRoot());
 				mod.putString("type", "j2ee");
 			}
 			mod.putString("path", getModulePublishDirectory(modules[i]).toPortableString());

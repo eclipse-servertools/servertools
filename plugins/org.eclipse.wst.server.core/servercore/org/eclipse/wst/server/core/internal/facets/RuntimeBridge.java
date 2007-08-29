@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeBridge;
+import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponent;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponentVersion;
 import org.eclipse.wst.common.project.facet.core.runtime.RuntimeManager;
 import org.eclipse.wst.server.core.IRuntime;
@@ -30,22 +31,22 @@ import org.eclipse.wst.server.core.internal.RuntimeType;
  * 
  */
 public class RuntimeBridge implements IRuntimeBridge {
-	protected static Map mappings = new HashMap();
+	protected static Map<String, List<IRuntimeComponentVersion>> mappings = new HashMap<String, List<IRuntimeComponentVersion>>();
 
 	static {
 		initialize();
 	}
 
 	private static void addMapping(String id, String id2, String version) {
-		ArrayList list = null;
+		List<IRuntimeComponentVersion> list = null;
 		try {
-			list = (ArrayList) mappings.get(id);
+			list = mappings.get(id);
 		} catch (Exception e) {
 			// ignore
 		}
 		
 		if (list == null)
-			list = new ArrayList(2);
+			list = new ArrayList<IRuntimeComponentVersion>(2);
 		
 		try {
 			list.add(RuntimeManager.getRuntimeComponentType(id2).getVersion(version));
@@ -83,9 +84,9 @@ public class RuntimeBridge implements IRuntimeBridge {
 		addMapping("org.eclipse.jst.server.generic.runtime.websphere.6", "org.eclipse.jst.server.generic.runtime.websphere", "6.0");
 	}
 
-	public Set getExportedRuntimeNames() throws CoreException {
+	public Set<String> getExportedRuntimeNames() throws CoreException {
 		IRuntime[] runtimes = ServerCore.getRuntimes();
-		Set result = new HashSet(runtimes.length);
+		Set<String> result = new HashSet<String>(runtimes.length);
 		
 		for (int i = 0; i < runtimes.length; i++) {
 			IRuntime runtime = runtimes[i];
@@ -107,6 +108,8 @@ public class RuntimeBridge implements IRuntimeBridge {
 		for (int i = 0; i < size; i++) {
 			if (runtimes[i].getId().equals(name))
 				return new Stub(runtimes[i]);
+			if (runtimes[i].getName().equals(name))
+				return new Stub(runtimes[i]);
 		}
 		return null;
 	}
@@ -118,13 +121,13 @@ public class RuntimeBridge implements IRuntimeBridge {
 			this.runtime = runtime;
 		}
 
-		public List getRuntimeComponents() {
-			List components = new ArrayList(2);
+		public List<IRuntimeComponent> getRuntimeComponents() {
+			List<IRuntimeComponent> components = new ArrayList<IRuntimeComponent>(2);
 			if (runtime == null)
 				return components;
 			
 			// define server runtime component
-			Map properties = new HashMap(5);
+			Map<String, String> properties = new HashMap<String, String>(5);
 			if (runtime.getLocation() != null)
 				properties.put("location", runtime.getLocation().toPortableString());
 			else
@@ -151,8 +154,8 @@ public class RuntimeBridge implements IRuntimeBridge {
 			return components;
 		}
 
-		public Map getProperties() {
-		    final Map props = new HashMap();
+		public Map<String, String> getProperties() {
+			final Map<String, String> props = new HashMap<String, String>();
 			if (runtime != null) {
 				props.put("id", runtime.getId());
 				props.put("localized-name", runtime.getName());

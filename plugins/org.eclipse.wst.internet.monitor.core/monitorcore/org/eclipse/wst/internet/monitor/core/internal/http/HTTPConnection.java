@@ -28,7 +28,7 @@ public class HTTPConnection {
 	protected int req = -1;
 	protected int resp = -1;
 
-	protected List requests = new ArrayList();
+	protected List<Request> requests = new ArrayList<Request>();
 
 	/**
 	 * HTTPConnection constructor comment.
@@ -101,7 +101,7 @@ public class HTTPConnection {
 				requests.add(request);
 				return request;
 			}
-			return (Request) requests.get(i);
+			return requests.get(i);
 		}
 	}
 

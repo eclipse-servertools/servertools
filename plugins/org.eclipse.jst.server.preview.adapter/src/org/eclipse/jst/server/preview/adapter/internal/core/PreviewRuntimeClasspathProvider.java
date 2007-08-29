@@ -35,7 +35,7 @@ public class PreviewRuntimeClasspathProvider extends RuntimeClasspathProviderDel
 	 * @see RuntimeClasspathProviderDelegate#resolveClasspathContainer(IProject, IRuntime)
 	 */
 	public IClasspathEntry[] resolveClasspathContainer(IProject project, IRuntime runtime) {
-		List list = new ArrayList();
+		List<IClasspathEntry> list = new ArrayList<IClasspathEntry>();
 		
 		int size = REQUIRED_BUNDLE_IDS.length;
 		for (int i = 0; i < size; i++) {
@@ -45,6 +45,6 @@ public class PreviewRuntimeClasspathProvider extends RuntimeClasspathProviderDel
 				list.add(JavaCore.newLibraryEntry(path, null, null));
 		}
 		
-		return (IClasspathEntry[])list.toArray(new IClasspathEntry[list.size()]);
+		return list.toArray(new IClasspathEntry[list.size()]);
 	}
 }

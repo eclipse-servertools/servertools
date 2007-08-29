@@ -331,7 +331,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		if (runtimeWorkingCopy == null) {
 			title = Messages.wizNewRuntimeWizardTitle;
 			fragment = new WizardFragment() {
-				protected void createChildFragments(List list) {
+				protected void createChildFragments(List<WizardFragment> list) {
 					list.add(new NewRuntimeWizardFragment());
 					list.add(WizardTaskUtil.SaveRuntimeFragment);
 				}
@@ -345,7 +345,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 			}
 			taskModel.putObject(TaskModel.TASK_RUNTIME, runtimeWorkingCopy);
 			fragment = new WizardFragment() {
-				protected void createChildFragments(List list) {
+				protected void createChildFragments(List<WizardFragment> list) {
 					list.add(fragment2);
 					list.add(WizardTaskUtil.SaveRuntimeFragment);
 				}

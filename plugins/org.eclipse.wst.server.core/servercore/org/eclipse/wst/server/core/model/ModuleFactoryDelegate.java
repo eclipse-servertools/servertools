@@ -162,7 +162,7 @@ public abstract class ModuleFactoryDelegate {
 	public IModule[] getModules(IProject project) {
 		IModule[] modules = getModules();
 		if (project != null && modules != null) {
-			List list = new ArrayList(modules.length);
+			List<IModule> list = new ArrayList<IModule>(modules.length);
 			int size = modules.length;
 			for (int i = 0; i < size; i++) {
 				if (project.equals(modules[i].getProject()))

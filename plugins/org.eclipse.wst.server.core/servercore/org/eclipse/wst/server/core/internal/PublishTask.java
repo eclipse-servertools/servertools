@@ -68,7 +68,7 @@ public class PublishTask implements IPublishTask {
 				delegate = (PublishTaskDelegate) element.createExecutableExtension("class");
 				Trace.trace(Trace.PERFORMANCE, "PublishTask.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getId());
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString() + ": " + t.getMessage());
+				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString(), t);
 			}
 		}
 		return delegate;
@@ -84,7 +84,7 @@ public class PublishTask implements IPublishTask {
 			if (po != null)
 				return po;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
+			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
 		}
 		return new PublishOperation[0];
 	}
@@ -99,7 +99,7 @@ public class PublishTask implements IPublishTask {
 			if (po != null)
 				return po;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
+			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
 		}
 		return new PublishOperation[0];
 	}

@@ -27,8 +27,7 @@ import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
  * @since 1.0
  */
 public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate {
-	// map of IProject to IModule[]
-	private Map modules = new HashMap();
+	private Map<IProject, IModule[]> modules = new HashMap<IProject, IModule[]>();
 
 	/**
 	 * Construct a new ProjectModuleFactoryDelegate.
@@ -49,7 +48,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 		
 		IModule[] m = null;
 		try {
-			m = (IModule[]) modules.get(project);
+			m = modules.get(project);
 			if (m != null)
 				return m;
 		} catch (Exception e) {
@@ -117,7 +116,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	public final IModule[] getModules() {
 		cacheModules();
 		
-		List list = new ArrayList();
+		List<IModule> list = new ArrayList<IModule>();
 		Iterator iter = modules.values().iterator();
 		while (iter.hasNext()) {
 			IModule[] m = (IModule[]) iter.next();
@@ -207,8 +206,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * @since 2.0
 	 */
 	protected void clearCache(IProject project) {
-		//modules.put(project, null);
-		modules = new HashMap();
+		modules = new HashMap<IProject, IModule[]>();
 	}
 
 	/**

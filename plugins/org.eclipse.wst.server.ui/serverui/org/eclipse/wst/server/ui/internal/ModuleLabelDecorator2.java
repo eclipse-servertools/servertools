@@ -11,22 +11,27 @@
 package org.eclipse.wst.server.ui.internal;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.jface.viewers.ILabelDecorator;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.jface.viewers.IDecoration;
+import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
 import org.eclipse.wst.server.ui.internal.viewers.BaseLabelProvider;
 
-public class ModuleLabelDecorator extends BaseLabelProvider implements ILabelDecorator {
-	public ModuleLabelDecorator() {
+public class ModuleLabelDecorator2 extends BaseLabelProvider implements ILightweightLabelDecorator {
+	public ModuleLabelDecorator2() {
 		super(false);
 	}
 
-	public Image decorateImage(Image image, Object element) {
+	public void decorate(Object element, IDecoration decoration) {
 		try {
 			IModule module = null;
+			System.out.println("decorate2");
+			
+			if (element instanceof IServer) {
+				decoration.addSuffix(" *");
+				return;
+			}
 			
 			if (element instanceof IModule) {
 				module = (IModule) element;
@@ -35,43 +40,20 @@ public class ModuleLabelDecorator extends BaseLabelProvider implements ILabelDec
 				module = modules[modules.length - 1];
 			}
 			if (module == null)
-				return null;
+				return;
 			
 			IProject project = module.getProject();
-			
 			if (project == null)
-				return null;
+				return;
 			
-			return PlatformUI.getWorkbench().getDecoratorManager().decorateImage(image, project);
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
-	public String decorateText(String text, Object element) {
-		try {
-			IModule module = null;
-			System.out.println("decorate");
-			
-			if (element instanceof IModule) {
-				module = (IModule) element;
-			} else if (element instanceof ModuleServer) {
-				IModule[] modules = ((ModuleServer) element).module;
-				module = modules[modules.length - 1];
-			}
-			if (module == null)
-				return null;
-			
-			IProject project = module.getProject();
-			
-			if (project == null)
-				return null;
+			String text = module.getName();
 			
 			if (!project.getName().equals(text))
-				text = NLS.bind(Messages.moduleDecoratorProject, new String[] {text, project.getName()});
-			return PlatformUI.getWorkbench().getDecoratorManager().decorateText(text, project);
+				decoration.addSuffix(" (" + project.getName() + ")");
+				//text = NLS.bind(Messages.moduleDecoratorProject, new String[] {text, project.getName()});
+			//return PlatformUI.getWorkbench().getDecoratorManager().decorateText(text, project);
 		} catch (Exception e) {
-			return null;
+			return;
 		}
 	}
 }

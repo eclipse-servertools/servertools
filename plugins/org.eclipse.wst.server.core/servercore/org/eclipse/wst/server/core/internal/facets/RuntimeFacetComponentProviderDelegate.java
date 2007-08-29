@@ -12,6 +12,7 @@ package org.eclipse.wst.server.core.internal.facets;
 
 import java.util.List;
 
+import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponent;
 import org.eclipse.wst.server.core.IRuntime;
 /**
  * A runtime component provider can provide additional runtime components for a facet runtime.
@@ -42,5 +43,5 @@ public abstract class RuntimeFacetComponentProviderDelegate {
 	 * @param runtime a server runtime
 	 * @return a list of runtimes, or an empty list or null if there are no additional components
 	 */
-	public abstract List getRuntimeComponents(IRuntime runtime);
+	public abstract List<IRuntimeComponent> getRuntimeComponents(IRuntime runtime);
 }

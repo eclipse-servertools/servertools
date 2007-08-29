@@ -25,7 +25,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 	
 	protected static ServerMonitorManager instance;
 
-	protected List ports = new ArrayList(); 
+	protected List<MonitoredPort> ports = new ArrayList<MonitoredPort>(); 
 	protected ServerMonitor monitor;
 	
 	class MonitoredPort implements IMonitoredServerPort {
@@ -212,7 +212,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 	 * @return a possibly empty array of monitored server ports
 	 */
 	public IMonitoredServerPort[] getMonitoredPorts(IServer server) {
-		List list = new ArrayList();
+		List<IMonitoredServerPort> list = new ArrayList<IMonitoredServerPort>();
 		Iterator iterator = ports.iterator();
 		while (iterator.hasNext()) {
 			MonitoredPort mp = (MonitoredPort) iterator.next();
@@ -220,9 +220,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 				list.add(mp);
 		}
 		
-		IMonitoredServerPort[] msp = new IMonitoredServerPort[list.size()];
-		list.toArray(msp);
-		return msp;
+		return list.toArray(new IMonitoredServerPort[list.size()]);
 	}
 
 	/**
@@ -365,7 +363,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not load monitor info: " + e.getMessage());
+			Trace.trace(Trace.WARNING, "Could not load monitor info", e);
 		}
 	}
 }

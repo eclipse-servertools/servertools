@@ -44,14 +44,14 @@ public class ViewerManager {
 	protected Composite reqComp;
 	protected Composite respComp;
 
-	protected List viewers;
+	protected List<Viewer> viewers;
 
 	protected Request request;
 
 	protected SashForm reqSash;
 	protected SashForm respSash;
 
-	protected List filters = new ArrayList();
+	protected List<IContentFilter> filters = new ArrayList<IContentFilter>();
 
 	public ViewerManager(Composite reqParent, Composite respParent) {
 		reqSash = new SashForm(reqParent, SWT.VERTICAL);
@@ -122,7 +122,7 @@ public class ViewerManager {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(MonitorUIPlugin.PLUGIN_ID, "viewers");
 		int size = cf.length;
-		viewers = new ArrayList(size);
+		viewers = new ArrayList<Viewer>(size);
 		for (int i = 0; i < size; i++) {
 			viewers.add(new Viewer(cf[i]));
 		}
@@ -229,7 +229,7 @@ public class ViewerManager {
 	 */
 	public List getRequestViewers() {
 		Iterator iterator = viewers.iterator();
-		List temp = new ArrayList();
+		List<Viewer> temp = new ArrayList<Viewer>();
 		while (iterator.hasNext()) {
 			Viewer viewer = (Viewer) iterator.next();
 			if (viewer.isRequestViewer())
@@ -243,7 +243,7 @@ public class ViewerManager {
 	 */
 	public List getResponseViewers() {
 		Iterator iterator = viewers.iterator();
-		List temp = new ArrayList();
+		List<Viewer> temp = new ArrayList<Viewer>();
 		while (iterator.hasNext()) {
 			Viewer viewer = (Viewer) iterator.next();
 			if (viewer.isResponseViewer())

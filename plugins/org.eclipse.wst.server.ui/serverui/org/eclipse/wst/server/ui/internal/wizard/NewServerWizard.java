@@ -35,7 +35,7 @@ public class NewServerWizard extends TaskWizard implements INewWizard {
 
 	public NewServerWizard(final String[] ids, final String[] values) {
 		super(Messages.wizNewServerWizardTitle, new WizardFragment() {
-			protected void createChildFragments(List list) {
+			protected void createChildFragments(List<WizardFragment> list) {
 				list.add(new NewServerWizardFragment());
 				
 				list.add(WizardTaskUtil.TempSaveRuntimeFragment);

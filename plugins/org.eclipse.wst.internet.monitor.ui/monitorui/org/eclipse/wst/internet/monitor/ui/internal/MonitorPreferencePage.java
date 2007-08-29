@@ -57,7 +57,7 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 	protected Button start;
 	protected Button stop;
 	
-	protected List selection2;
+	protected List<Object> selection2;
 
 	/**
 	 * MonitorPreferencePage constructor comment.
@@ -236,7 +236,7 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 					try {
 						monitor.start();
 					} catch (CoreException ce) {
-					MessageDialog.openError(getShell(), Messages.errorDialogTitle, ce.getStatus().getMessage());
+						MessageDialog.openError(getShell(), Messages.errorDialogTitle, ce.getStatus().getMessage());
 					} catch (Exception ce) {
 						MessageDialog.openError(getShell(), Messages.errorDialogTitle, ce.getMessage());
 					}
@@ -308,7 +308,7 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 	protected void setSelection(ISelection sel2) {
 		IStructuredSelection sel = (IStructuredSelection) sel2;
 		Iterator iterator = sel.iterator();
-		selection2 = new ArrayList();
+		selection2 = new ArrayList<Object>();
 		
 		while (iterator.hasNext()) {
 			Object obj = iterator.next();

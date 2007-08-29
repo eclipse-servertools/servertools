@@ -30,15 +30,15 @@ public class MonitorManager {
 	private static final int REMOVE = 2;
 
 	// monitors
-	protected List monitors;
-	protected Map threads = new HashMap();
+	protected List<IMonitor> monitors;
+	protected Map<IMonitor, AcceptThread> threads = new HashMap<IMonitor, AcceptThread>();
 	
-	protected List monitorListeners = new ArrayList();
+	protected List<IMonitorListener> monitorListeners = new ArrayList<IMonitorListener>();
 
 	private Preferences.IPropertyChangeListener pcl;
 	protected boolean ignorePreferenceChanges = false;
 	
-	protected Map resendMap = new HashMap();
+	protected Map<Request, List<ResendHTTPRequest>> resendMap = new HashMap<Request, List<ResendHTTPRequest>>();
 	
 	protected static MonitorManager instance;
 	
@@ -95,8 +95,8 @@ public class MonitorManager {
 	 * 
 	 * @return the list of monitors
 	 */
-	public List getMonitors() {
-		return new ArrayList(monitors);
+	public List<IMonitor> getMonitors() {
+		return new ArrayList<IMonitor>(monitors);
 	}
 
 	protected synchronized void addMonitor(IMonitor monitor) {
@@ -137,7 +137,7 @@ public class MonitorManager {
 		if (!monitors.contains(monitor))
 			return;
 		
-		AcceptThread thread = (AcceptThread) threads.get(monitor);
+		AcceptThread thread = threads.get(monitor);
 		if (thread != null) {
 			thread.stopServer();
 			threads.remove(monitor);
@@ -205,7 +205,7 @@ public class MonitorManager {
 	protected synchronized void loadMonitors() {
 		Trace.trace(Trace.FINEST, "Loading monitors");
 		
-		monitors = new ArrayList();
+		monitors = new ArrayList<IMonitor>();
 		Preferences prefs = MonitorPlugin.getInstance().getPluginPreferences();
 		String xmlString = prefs.getString("monitors");
 		if (xmlString != null && xmlString.length() > 0) {
@@ -223,7 +223,7 @@ public class MonitorManager {
 					}
 				}
 			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Could not load monitors: " + e.getMessage());
+				Trace.trace(Trace.WARNING, "Could not load monitors", e);
 			}
 		}
 	}
@@ -272,15 +272,15 @@ public class MonitorManager {
 		if (request == null || resendReq == null)
 			return;
 		
-		List list = null;
+		List<ResendHTTPRequest> list = null;
 		try {
-			list = (List) resendMap.get(request);
+			list = resendMap.get(request);
 		} catch (Exception e) {
 			// ignore
 		}
 		
 		if (list == null) {
-			list = new ArrayList();
+			list = new ArrayList<ResendHTTPRequest>();
 			resendMap.put(request, list);
 		}
 		list.add(resendReq);
@@ -293,10 +293,10 @@ public class MonitorManager {
 	 * @return the array of resend requests based on this request
 	 */
 	public ResendHTTPRequest[] getResendRequests(Request request) {
-		List list = (List) resendMap.get(request);
+		List<ResendHTTPRequest> list = resendMap.get(request);
 		if (list != null)
-			return (ResendHTTPRequest[]) list.toArray(new ResendHTTPRequest[list.size()]);
-
+			return list.toArray(new ResendHTTPRequest[list.size()]);
+		
 		return new ResendHTTPRequest[0];
 	}
 

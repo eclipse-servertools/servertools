@@ -33,17 +33,17 @@ public class AudioCore {
 	public static final String DISABLED_FILE = "disabled-sounds.xml";
 
 	// Categories - map of String id to String names
-	private Map categories;
+	private Map<String, String> categories;
 
 	// Sounds - map of String id to Sound
-	private Map sounds;
+	private Map<String, Sound> sounds;
 
 	// specific sounds or categories that have been disabled, by id
-	private List disabledSounds;
-	private List disabledCategories;
+	private List<String> disabledSounds;
+	private List<String> disabledCategories;
 
 	// SoundMap - map of String id to an IPath
-	private Map userSoundMap;
+	private Map<String, IPath> userSoundMap;
 
 	/**
 	 * AudioCore constructor comment.
@@ -191,7 +191,7 @@ public class AudioCore {
 	 */
 	protected Sound getSound(String id) {
 		try {
-			return (Sound) sounds.get(id);
+			return sounds.get(id);
 		} catch (Exception e) {
 			return null;
 		}
@@ -228,7 +228,7 @@ public class AudioCore {
 			if (userSoundMap == null)
 				loadSoundMap();
 	
-			IPath path = (IPath) userSoundMap.get(id);
+			IPath path = userSoundMap.get(id);
 			if (path != null)
 				return path;
 		} catch (Exception e) {
@@ -303,8 +303,8 @@ public class AudioCore {
 		String filename = ServerUIPlugin.getInstance().getStateLocation().append(DISABLED_FILE).toOSString();
 	
 		FileInputStream in = null;
-		disabledCategories = new ArrayList();
-		disabledSounds = new ArrayList();
+		disabledCategories = new ArrayList<String>();
+		disabledSounds = new ArrayList<String>();
 		try {
 			in = new FileInputStream(filename);
 			IMemento memento = XMLMemento.loadMemento(in);
@@ -360,8 +360,8 @@ public class AudioCore {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "audio");
 	
 		int size = cf.length;
-		categories = new HashMap();
-		sounds = new HashMap();
+		categories = new HashMap<String, String>();
+		sounds = new HashMap<String, Sound>();
 	
 		for (int i = 0; i < size; i++) {
 			try {
@@ -397,7 +397,7 @@ public class AudioCore {
 		String filename = ServerUIPlugin.getInstance().getStateLocation().append(SOUNDS_FILE).toOSString();
 	
 		InputStream in = null;
-		userSoundMap = new HashMap();
+		userSoundMap = new HashMap<String, IPath>();
 		try {
 			in = new FileInputStream(filename);
 			IMemento memento = XMLMemento.loadMemento(in);
@@ -444,7 +444,7 @@ public class AudioCore {
 			return;
 	
 		try {
-			Sound sound = (Sound) sounds.get(id);
+			Sound sound = sounds.get(id);
 			String category = sound.getCategory();
 			if (category != null && categories.containsKey(category)) {
 				if (!isCategoryEnabled(category))
@@ -570,7 +570,7 @@ public class AudioCore {
 				IMemento child = memento.createChild("map");
 				String id = (String) iterator.next();
 				child.putString("id", id);
-				IPath path = (IPath) userSoundMap.get(id);
+				IPath path = userSoundMap.get(id);
 				child.putString("path", path.toString());
 			}
 	
@@ -676,7 +676,7 @@ public class AudioCore {
 	 *
 	 * @param map the sound map
 	 */
-	protected void setUserSoundMap(Map map) {
+	protected void setUserSoundMap(Map<String, IPath> map) {
 		if (map != null) {
 			userSoundMap = map;
 			saveSoundMap();

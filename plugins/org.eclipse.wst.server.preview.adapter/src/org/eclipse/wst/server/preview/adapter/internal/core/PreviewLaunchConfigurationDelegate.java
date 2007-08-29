@@ -79,7 +79,7 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 			cp.append(path.toOSString());
 		}
 		
-		List cmds = new ArrayList();
+		List<String> cmds = new ArrayList<String>();
 		
 		// jre
 		File java = getJavaExecutable();

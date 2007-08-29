@@ -25,7 +25,7 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
  */
 public class ModifyModulesWizard extends TaskWizard {
 	static class ModifyModulesWizard2 extends WizardFragment {
-		protected void createChildFragments(List list) {
+		protected void createChildFragments(List<WizardFragment> list) {
 			list.add(new ModifyModulesWizardFragment());
 			list.add(WizardTaskUtil.SaveServerFragment);
 			

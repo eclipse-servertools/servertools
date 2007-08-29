@@ -113,7 +113,7 @@ public class TasksWizardFragment extends WizardFragment {
 		// do nothing
 	}
 
-	protected void createChildFragments(List list) {
+	protected void createChildFragments(List<WizardFragment> list) {
 		if (tasks == null || tasks.isEmpty())
 			return;
 		

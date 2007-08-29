@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.*;
+import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponent;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.internal.Trace;
@@ -23,10 +24,10 @@ import org.eclipse.wst.server.core.internal.Trace;
  */
 public class FacetMappingUtil extends Plugin {
 	//	cached copy of all runtime component providers
-	private static List runtimeComponentProviders;
+	private static List<RuntimeComponentProviderWrapper> runtimeComponentProviders;
 
 	//	cached copy of all runtime facet mappings
-	private static List runtimeFacetMappings;
+	private static List<RuntimeFacetMapping> runtimeFacetMappings;
 
 	/**
 	 * Returns an array of all known runtime facet mapping instances.
@@ -54,18 +55,18 @@ public class FacetMappingUtil extends Plugin {
 	 * @param runtime a runtime
 	 * @param components the existing list of components
 	 */
-	public static void addFacetRuntimeComponents(IRuntime runtime, List components) {
+	public static void addFacetRuntimeComponents(IRuntime runtime, List<IRuntimeComponent> components) {
 		if (runtime == null || runtime.getRuntimeType() == null)
 			throw new IllegalArgumentException();
 		
 		if (runtimeComponentProviders == null)
 			loadRuntimeComponentProviders();
 		
-		Iterator iterator = runtimeComponentProviders.iterator();
+		Iterator<RuntimeComponentProviderWrapper> iterator = runtimeComponentProviders.iterator();
 		while (iterator.hasNext()) {
-			RuntimeComponentProviderWrapper runtimeComponentProvider = (RuntimeComponentProviderWrapper) iterator.next();
+			RuntimeComponentProviderWrapper runtimeComponentProvider = iterator.next();
 			if (runtimeComponentProvider.supportsRuntimeType(runtime.getRuntimeType())) {
-				List list = runtimeComponentProvider.getComponents(runtime);
+				List<IRuntimeComponent> list = runtimeComponentProvider.getComponents(runtime);
 				if (list != null)
 					components.addAll(list);
 			}
@@ -84,7 +85,7 @@ public class FacetMappingUtil extends Plugin {
 		
 		// load new wst extension point
 		int size = cf.length;
-		List list = new ArrayList(size);
+		List<RuntimeComponentProviderWrapper> list = new ArrayList<RuntimeComponentProviderWrapper>(size);
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new RuntimeComponentProviderWrapper(cf[i]));
@@ -122,7 +123,7 @@ public class FacetMappingUtil extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor("org.eclipse.jst.server.core.runtimeFacetMappings");
 		
 		int size = cf.length;
-		List list = new ArrayList(size);
+		List<RuntimeFacetMapping> list = new ArrayList<RuntimeFacetMapping>(size);
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new RuntimeFacetMapping(cf[i]));

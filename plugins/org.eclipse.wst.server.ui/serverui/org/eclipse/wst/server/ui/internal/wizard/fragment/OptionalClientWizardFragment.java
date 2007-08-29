@@ -35,7 +35,7 @@ public class OptionalClientWizardFragment extends WizardFragment {
 		this.moduleArtifact = moduleArtifact;
 	}
 
-	protected void createChildFragments(List list) {
+	protected void createChildFragments(List<WizardFragment> list) {
 		if (clients != null && clients.length > 1)
 			list.add(new SelectClientWizardFragment());
 	}

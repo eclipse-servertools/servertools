@@ -318,7 +318,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not load source path info: " + e.getMessage());
+			Trace.trace(Trace.WARNING, "Could not load source path info", e);
 		}
 	}
 

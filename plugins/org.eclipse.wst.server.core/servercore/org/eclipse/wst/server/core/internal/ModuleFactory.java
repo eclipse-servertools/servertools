@@ -27,7 +27,7 @@ import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
 public class ModuleFactory implements IOrdered {
 	private IConfigurationElement element;
 	public ModuleFactoryDelegate delegate;
-	private List moduleTypes;
+	private List<IModuleType> moduleTypes;
 
 	/**
 	 * ModuleFactory constructor comment.
@@ -95,7 +95,7 @@ public class ModuleFactory implements IOrdered {
 				InternalInitializer.initializeModuleFactoryDelegate(delegate, this, monitor);
 				Trace.trace(Trace.PERFORMANCE, "ModuleFactory.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getId());
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + t.getMessage());
+				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
 			}
 		}
 		return delegate;
@@ -177,7 +177,7 @@ public class ModuleFactory implements IOrdered {
 			return modules;
 		
 		getModuleTypes();
-		List list = new ArrayList();
+		List<IModule> list = new ArrayList<IModule>();
 		
 		int size = modules.length;
 		for (int i = 0; i < size; i++) {

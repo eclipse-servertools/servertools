@@ -40,15 +40,15 @@ public class ResourceManager {
 	private static ResourceManager instance;
 
 	// currently active runtimes and servers
-	protected List runtimes;
-	protected List servers;
+	protected List<IRuntime> runtimes;
+	protected List<IServer> servers;
 
 	// lifecycle listeners
-	protected transient List runtimeListeners;
-	protected transient List serverListeners;
+	protected transient List<IRuntimeLifecycleListener> runtimeListeners;
+	protected transient List<IServerLifecycleListener> serverListeners;
 
 	// cache for disposing servers & runtimes
-	protected List activeBundles;
+	protected List<String> activeBundles;
 
 	// resource change listeners
 	private IResourceChangeListener resourceChangeListener;
@@ -61,7 +61,7 @@ public class ResourceManager {
 	private static boolean initialized;
 	private static boolean initializing;
 	
-	protected static List serverProjects = new ArrayList();
+	protected static List<String> serverProjects = new ArrayList<String>();
 
 	/**
 	 * Server resource change listener.
@@ -217,8 +217,8 @@ public class ResourceManager {
 			e.printStackTrace();
 		}*/
 		
-		servers = new ArrayList();
-		activeBundles = new ArrayList();
+		servers = new ArrayList<IServer>();
+		activeBundles = new ArrayList<String>();
 		
 		loadRuntimesList();
 		loadServersList();
@@ -375,7 +375,7 @@ public class ResourceManager {
 		Trace.trace(Trace.LISTENERS, "Adding server resource listener " + listener + " to " + this);
 	
 		if (runtimeListeners == null)
-			runtimeListeners = new ArrayList(3);
+			runtimeListeners = new ArrayList<IRuntimeLifecycleListener>(3);
 		runtimeListeners.add(listener);
 	}
 	
@@ -396,7 +396,7 @@ public class ResourceManager {
 		Trace.trace(Trace.LISTENERS, "Adding server resource listener " + listener + " to " + this);
 	
 		if (serverListeners == null)
-			serverListeners = new ArrayList(3);
+			serverListeners = new ArrayList<IServerLifecycleListener>(3);
 		serverListeners.add(listener);
 	}
 	
@@ -556,7 +556,7 @@ public class ResourceManager {
 		Preferences prefs = ServerPlugin.getInstance().getPluginPreferences();
 		String xmlString = prefs.getString("runtimes");
 		
-		runtimes = new ArrayList();
+		runtimes = new ArrayList<IRuntime>();
 		if (xmlString != null && xmlString.length() > 0) {
 			try {
 				ByteArrayInputStream in = new ByteArrayInputStream(xmlString.getBytes("UTF-8"));
@@ -571,7 +571,7 @@ public class ResourceManager {
 					runtimes.add(runtime);
 				}
 			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Could not load runtimes: " + e.getMessage());
+				Trace.trace(Trace.WARNING, "Could not load runtimes", e);
 			}
 		}
 	}
@@ -592,7 +592,7 @@ public class ResourceManager {
 				servers.add(server);
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not load servers: " + e.getMessage());
+			Trace.trace(Trace.WARNING, "Could not load servers", e);
 		}
 		
 		if (ServerPreferences.getInstance().isSyncOnStartup()) {
@@ -666,7 +666,7 @@ public class ResourceManager {
 		if (!initialized)
 			init();
 		
-		List list = new ArrayList(runtimes);
+		List<IRuntime> list = new ArrayList<IRuntime>(runtimes);
 		
 		IRuntime[] r = new IRuntime[list.size()];
 		list.toArray(r);
@@ -928,7 +928,7 @@ public class ResourceManager {
 				((Server) server).loadFromFile(monitor);
 				fireServerEvent(server, EVENT_CHANGED);
 			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error reloading server " + server.getName() + " from " + file + ": " + e.getMessage());
+				Trace.trace(Trace.SEVERE, "Error reloading server " + server.getName() + " from " + file, e);
 				deregisterServer(server);
 			}
 		} else

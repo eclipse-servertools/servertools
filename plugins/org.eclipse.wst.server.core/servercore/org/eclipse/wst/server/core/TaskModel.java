@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,7 +17,7 @@ import java.util.Map;
  * tasks in a common workflow.
  * <p>
  * The task model contains information about the overall task flow and allows
- * tasks to store and retreive data. Its usage allows mutliple tasks to be
+ * tasks to store and retrieve data. Its usage allows multiple tasks to be
  * chained together and share data from the output of one task to the input
  * of another.
  * </p>
@@ -58,13 +58,13 @@ public class TaskModel {
 	 */
 	public static final String TASK_LAUNCH_MODE = "launch-mode";
 	
-	private Map map = new HashMap();
+	private Map<String, Object> map = new HashMap<String, Object>();
 
 	/**
 	 * Returns the object in the task model with the given id.
 	 * <p>
 	 * The id can be any of the predefined ids within TaskModel, or
-	 * any other key to retreive task-specific data.
+	 * any other key to retrieve task-specific data.
 	 * </p>
 	 * 
 	 * @param id an id for the object

@@ -84,7 +84,7 @@ public interface IMonitorWorkingCopy extends IMonitor {
 	/**
 	 * Sets whether this monitor starts by default.
 	 * 
-	 * @param autoStart run the monitor on plug-in startup
+	 * @param startByDefault run the monitor on plug-in startup
 	 * @see IMonitor#isAutoStart()
 	 */
 	public void setAutoStart(boolean startByDefault);

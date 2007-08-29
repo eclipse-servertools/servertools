@@ -39,8 +39,8 @@ public abstract class ServerEditorPart extends EditorPart {
 	public static final int PROP_ERROR = 5;
 
 	private String errorMessage = null;
-	private Map sectionToInsertionId = null;
-	private List sections = null;
+	private Map<String, List<ServerEditorSection>> sectionToInsertionId = null;
+	private List<ServerEditorSection> sections = null;
 	private ServerResourceCommandManager commandManager;
 	private FormToolkit toolkit;
 
@@ -140,7 +140,7 @@ public abstract class ServerEditorPart extends EditorPart {
 	 */
 	public IStatus[] getSaveStatus() {
 		Iterator iterator = getSections().iterator();
-		List list = new ArrayList();
+		List<IStatus> list = new ArrayList<IStatus>();
 		while (iterator.hasNext()) {
 			ServerEditorSection section = (ServerEditorSection) iterator.next();
 			IStatus[] status = section.getSaveStatus();
@@ -159,8 +159,8 @@ public abstract class ServerEditorPart extends EditorPart {
 
 	private List getSections() {
 		if (sections == null) {
-			sections = new ArrayList();
-			sectionToInsertionId = new HashMap();
+			sections = new ArrayList<ServerEditorSection>();
+			sectionToInsertionId = new HashMap<String, List<ServerEditorSection>>();
 			ServerEditor serverEditor = commandManager.getServerEditor();
 			Iterator iterator = ServerEditorCore.getServerEditorPageSectionFactories().iterator();
 			while (iterator.hasNext()) {
@@ -178,14 +178,14 @@ public abstract class ServerEditorPart extends EditorPart {
 						if (section != null) {
 							section.setServerEditorPart(this);
 							sections.add(section);
-							List list = null;
+							List<ServerEditorSection> list = null;
 							try {
-								list = (List) sectionToInsertionId.get(insertionId);
+								list = sectionToInsertionId.get(insertionId);
 							} catch (Exception e) {
 								// ignore
 							}
 							if (list == null)
-								list = new ArrayList();
+								list = new ArrayList<ServerEditorSection>();
 							list.add(section);
 							sectionToInsertionId.put(insertionId, list);
 						}
@@ -201,11 +201,11 @@ public abstract class ServerEditorPart extends EditorPart {
 			return null;
 		
 		getSections();
-		List list = new ArrayList();
+		List<ServerEditorSection> list = new ArrayList<ServerEditorSection>();
 		try {
-			List sections2 = (List) sectionToInsertionId.get(insertionId);
+			List<ServerEditorSection> sections2 = sectionToInsertionId.get(insertionId);
 			if (sections2 != null) {
-				Iterator iterator = sections2.iterator();
+				Iterator<ServerEditorSection> iterator = sections2.iterator();
 				while (iterator.hasNext()) {
 					list.add(iterator.next());
 				}

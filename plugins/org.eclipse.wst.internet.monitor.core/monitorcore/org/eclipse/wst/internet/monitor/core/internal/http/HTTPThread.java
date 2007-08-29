@@ -594,7 +594,7 @@ Host: localhost:8081
 			Trace.trace(Trace.PARSING, "Closing: " + this);
 			out.close();
 		} catch (Exception e) {
-			Trace.trace(Trace.PARSING, "Error closing connection " + this + " " + e.getMessage());
+			Trace.trace(Trace.PARSING, "Error closing connection " + this, e);
 		}
 	}
 
@@ -605,7 +605,7 @@ Host: localhost:8081
 				isWaiting = true;
 				wait();
 			} catch (Exception e) {
-				Trace.trace(Trace.PARSING, "Error in waitForResponse() " + this + " " + e.getMessage());
+				Trace.trace(Trace.PARSING, "Error in waitForResponse() " + this, e);
 			}
 			isWaiting = false;
 		}

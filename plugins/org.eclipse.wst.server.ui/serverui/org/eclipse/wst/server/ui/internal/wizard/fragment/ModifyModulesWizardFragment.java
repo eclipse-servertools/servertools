@@ -82,7 +82,7 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 				return;
 			}
 			
-			final List moduleList = new ArrayList();
+			final List<IModule[]> moduleList = new ArrayList<IModule[]>();
 			if (server != null) {
 				((Server) server).visit(new IModuleVisitor() {
 					public boolean visit(IModule[] module2) {
@@ -96,7 +96,7 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 			IModule parent = null;
 			try {
 				IModule[] parents = server.getRootModules(module, null);
-				List list = new ArrayList();
+				List<IModule> list = new ArrayList<IModule>();
 				
 				if (parents != null && parents.length > 0) {
 					parent = parents[0];

@@ -84,7 +84,7 @@ public class Client implements IClient {
 			try {
 				delegate = (ClientDelegate) element.createExecutableExtension("class");
 			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString() + ": " + e.getMessage());
+				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString(), e);
 			}
 		}
 		return delegate;
@@ -101,7 +101,7 @@ public class Client implements IClient {
 		try {
 			return getDelegate().supports(server, launchable, launchMode);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
+			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
 			return false;
 		}
 	}
@@ -113,7 +113,7 @@ public class Client implements IClient {
 		try {
 			return getDelegate().launch(server, launchable, launchMode, launch);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
+			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
 		}
 		return null;
 	}

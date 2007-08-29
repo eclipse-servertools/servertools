@@ -59,7 +59,7 @@ public class ServerProfiler {
 			try {
 				delegate = (ServerProfilerDelegate) element.createExecutableExtension("class");
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + t.getMessage());
+				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
 			}
 		}
 		return delegate;
@@ -79,7 +79,7 @@ public class ServerProfiler {
 			if (del != null)
 				del.process(launch, vmInstall, vmConfig, monitor);
 		} catch (Throwable t) {
-			Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + t.getMessage());
+			Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
 		}
 	}
 

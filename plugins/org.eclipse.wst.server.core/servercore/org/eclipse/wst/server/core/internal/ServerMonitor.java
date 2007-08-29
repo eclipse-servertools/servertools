@@ -66,7 +66,7 @@ public class ServerMonitor implements IServerMonitor {
 			try {
 				delegate = (ServerMonitorDelegate) element.createExecutableExtension("class");
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString() + ": " + t.getMessage());
+				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString(), t);
 			}
 		}
 		return delegate;
@@ -88,7 +88,7 @@ public class ServerMonitor implements IServerMonitor {
 		} catch (CoreException ce) {
 			throw ce;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
+			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
 			return -1;
 		}
 	}
@@ -103,7 +103,7 @@ public class ServerMonitor implements IServerMonitor {
 		try {
 			getDelegate().stopMonitoring(server, port);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
+			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
 		}
 	}
 

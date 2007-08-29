@@ -69,7 +69,7 @@ public class Module {
 			
 			IMemento[] servlets2 = memento.getChildren("servlet");
 			int size = servlets.length;
-			List list = new ArrayList(size);
+			List<Servlet> list = new ArrayList<Servlet>(size);
 			for (int i = 0; i < size; i++) {
 				Servlet s = new Servlet();
 				IMemento m = servlets2[i].getChild("servlet-name");

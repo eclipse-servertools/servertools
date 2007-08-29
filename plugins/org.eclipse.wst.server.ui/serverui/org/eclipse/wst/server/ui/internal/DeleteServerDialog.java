@@ -49,7 +49,7 @@ public class DeleteServerDialog extends MessageDialog {
 	protected IServer[] servers;
 	protected IFolder[] configs;
 
-	protected List runningServersList;
+	protected List<IServer> runningServersList;
 	protected boolean runningServerCanStop;
 
 	protected Button checkDeleteConfigs;
@@ -73,7 +73,7 @@ public class DeleteServerDialog extends MessageDialog {
 		this.servers = servers;
 		this.configs = configs;
 		
-		runningServersList = new ArrayList();
+		runningServersList = new ArrayList<IServer>();
 		for (int i = 0 ; i < servers.length ; ++i) {
 			if (servers[i].getServerState() != IServer.STATE_STOPPED)
 				runningServersList.add(servers[i]);
@@ -202,7 +202,7 @@ public class DeleteServerDialog extends MessageDialog {
 			// don't delete servers or configurations
 			int size = runningServersList.size();
 			for (int i = 0; i < size; i++) {
-				IServer server = (IServer) runningServersList.get(i);
+				IServer server = runningServersList.get(i);
 				serversList.remove(server);
 				if (server.getServerConfiguration() != null)
 					configsList.remove(server.getServerConfiguration());

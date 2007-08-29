@@ -26,7 +26,7 @@ public class HttpUIPlugin extends AbstractUIPlugin {
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.eclipse.wst.server.http.ui";
 
-	private Map imageDescriptors = new HashMap();
+	private Map<String, ImageDescriptor> imageDescriptors = new HashMap<String, ImageDescriptor>();
 
 	// base url for icons
 	private static URL ICON_BASE_URL;
@@ -78,7 +78,7 @@ public class HttpUIPlugin extends AbstractUIPlugin {
 	public static ImageDescriptor getImageDescriptor(String key) {
 		try {
 			getInstance().getImageRegistry();
-			return (ImageDescriptor) getInstance().imageDescriptors.get(key);
+			return getInstance().imageDescriptors.get(key);
 		} catch (Exception e) {
 			return null;
 		}

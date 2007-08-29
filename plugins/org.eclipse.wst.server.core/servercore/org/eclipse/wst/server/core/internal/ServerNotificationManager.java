@@ -20,7 +20,7 @@ import org.eclipse.wst.server.core.ServerEvent;
  * Notification manager for server.
  */
 public class ServerNotificationManager {
-	private List listenerList = new ArrayList();
+	private List<ListenerEntry> listenerList = new ArrayList<ListenerEntry>();
 
 	/**
 	 * For masking event on all changes.
@@ -91,7 +91,7 @@ public class ServerNotificationManager {
 		ListenerEntry[] listeners;
 		synchronized (listenerList) {
 			size = listenerList.size();
-			listeners = (ListenerEntry[]) listenerList.toArray(new ListenerEntry[size]);
+			listeners = listenerList.toArray(new ListenerEntry[size]);
 		}
 		for (int i = 0; i < size; i++) {
 			ListenerEntry curEntry = listeners[i];

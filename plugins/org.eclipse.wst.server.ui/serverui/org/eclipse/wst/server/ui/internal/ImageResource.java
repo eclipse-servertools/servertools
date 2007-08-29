@@ -34,7 +34,7 @@ public class ImageResource {
 
 	// map of image descriptors since these
 	// will be lost by the image registry
-	private static Map imageDescriptors;
+	private static Map<String, ImageDescriptor> imageDescriptors;
 
 	// base urls for images
 	private static URL ICON_BASE_URL;
@@ -187,7 +187,7 @@ public class ImageResource {
 	public static ImageDescriptor getImageDescriptor(String key) {
 		if (imageRegistry == null)
 			initializeImageRegistry();
-		ImageDescriptor id = (ImageDescriptor) imageDescriptors.get(key);
+		ImageDescriptor id = imageDescriptors.get(key);
 		if (id != null)
 			return id;
 		
@@ -199,7 +199,7 @@ public class ImageResource {
 	 */
 	protected static void initializeImageRegistry() {
 		imageRegistry = new ImageRegistry();
-		imageDescriptors = new HashMap();
+		imageDescriptors = new HashMap<String, ImageDescriptor>();
 
 		// wizard banners
 		registerImage(IMG_WIZBAN_NEW_SERVER, URL_WIZBAN + "new_server_wiz.png");

@@ -179,7 +179,7 @@ public class ServerEditor extends MultiPageEditorPart {
 	}
 
 	protected void createActions() {
-		List actionList = new ArrayList();
+		List<IAction> actionList = new ArrayList<IAction>();
 		
 		// add server actions
 		if (server != null && server.getServerType() != null) {
@@ -315,30 +315,38 @@ public class ServerEditor extends MultiPageEditorPart {
 		java.util.List errors = new ArrayList();
 		Iterator iterator = serverPages.iterator();
 		int count = 0;
+		int maxSeverity = -1;
 		while (iterator.hasNext()) {
 			IEditorPart part = (IEditorPart) iterator.next();
 			if (part instanceof ServerEditorPart) {
 				IStatus[] status2 = ((ServerEditorPart) part).getSaveStatus();
 				if (status2 != null) {
 					int size = status2.length;
-					for (int i = 0; i < size; i++)
+					for (int i = 0; i < size; i++) {
 						errors.add("[" + getPageText(count) + "] " + status2[i].getMessage());
+						maxSeverity = Math.max(maxSeverity, status2[i].getSeverity());
+					}
 				}
 			}
 			count ++;
 		}
-		if (!errors.isEmpty()) {
+		if (!errors.isEmpty() && maxSeverity > IStatus.OK) {
 			StringBuffer sb = new StringBuffer();
 			sb.append(Messages.errorEditorCantSave + "\n");
 			iterator = errors.iterator();
 			while (iterator.hasNext())
 				sb.append("\t" + ((String) iterator.next()) + "\n");
-
-			EclipseUtil.openError(getEditorSite().getShell(), sb.toString());
-			monitor.setCanceled(true);
-			// reset the isSaving flag
-			isSaving = false;
-			return;
+			
+			if (maxSeverity == IStatus.ERROR) {
+				MessageDialog.openError(getEditorSite().getShell(), getPartName(), sb.toString());
+				monitor.setCanceled(true);
+				// reset the isSaving flag
+				isSaving = false;
+				return;
+			} else if (maxSeverity == IStatus.WARNING)
+				MessageDialog.openWarning(getEditorSite().getShell(), getPartName(), sb.toString());
+			else // if (maxSeverity == IStatus.INFO)
+				MessageDialog.openInformation(getEditorSite().getShell(), getPartName(), sb.toString());
 		}
 		
 		try {

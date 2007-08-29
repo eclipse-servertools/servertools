@@ -602,7 +602,7 @@ public abstract class ServerBehaviourDelegate {
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishNoRuntime, null);
 		
 		final List moduleList = getAllModules();
-		final List deltaKindList = new ArrayList();
+		final List<Integer> deltaKindList = new ArrayList<Integer>();
 		
 		Iterator iterator = moduleList.iterator();
 		while (iterator.hasNext()) {

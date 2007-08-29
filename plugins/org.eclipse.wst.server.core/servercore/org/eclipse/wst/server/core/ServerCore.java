@@ -34,10 +34,10 @@ public final class ServerCore {
 	private static final String EXTENSION_RUNTIME_TYPE = "runtimeTypes";
 
 	//	cached copy of all runtime types
-	private static List runtimeTypes;
+	private static List<IRuntimeType> runtimeTypes;
 
 	//	cached copy of all server and configuration types
-	private static List serverTypes;
+	private static List<IServerType> serverTypes;
 
 	private static IRegistryChangeListener registryListener;
 
@@ -190,7 +190,7 @@ public final class ServerCore {
 		
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, EXTENSION_RUNTIME_TYPE);
-		List list = new ArrayList(cf.length);
+		List<IRuntimeType> list = new ArrayList<IRuntimeType>(cf.length);
 		addRuntimeTypes(cf, list);
 		addRegistryListener();
 		runtimeTypes = list;
@@ -201,7 +201,7 @@ public final class ServerCore {
 	/**
 	 * Load the runtime types.
 	 */
-	private static synchronized void addRuntimeTypes(IConfigurationElement[] cf, List list) {
+	private static synchronized void addRuntimeTypes(IConfigurationElement[] cf, List<IRuntimeType> list) {
 		for (int i = 0; i < cf.length; i++) {
 			try {
 				list.add(new RuntimeType(cf[i]));
@@ -223,7 +223,7 @@ public final class ServerCore {
 		
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, EXTENSION_SERVER_TYPE);
-		List list = new ArrayList(cf.length);
+		List<IServerType> list = new ArrayList<IServerType>(cf.length);
 		addServerTypes(cf, list);
 		addRegistryListener();
 		serverTypes = list;
@@ -234,7 +234,7 @@ public final class ServerCore {
 	/**
 	 * Load the server types.
 	 */
-	private static synchronized void addServerTypes(IConfigurationElement[] cf, List list) {
+	private static synchronized void addServerTypes(IConfigurationElement[] cf, List<IServerType> list) {
 		for (int i = 0; i < cf.length; i++) {
 			try {
 				list.add(new ServerType(cf[i]));
@@ -385,7 +385,7 @@ public final class ServerCore {
 		
 		IConfigurationElement[] cf = delta.getExtension().getConfigurationElements();
 		
-		List list = new ArrayList(serverTypes);
+		List<IServerType> list = new ArrayList<IServerType>(serverTypes);
 		if (delta.getKind() == IExtensionDelta.ADDED) {
 			addServerTypes(cf, list);
 		} else {
@@ -419,7 +419,7 @@ public final class ServerCore {
 		
 		IConfigurationElement[] cf = delta.getExtension().getConfigurationElements();
 		
-		List list = new ArrayList(runtimeTypes);
+		List<IRuntimeType> list = new ArrayList<IRuntimeType>(runtimeTypes);
 		if (delta.getKind() == IExtensionDelta.ADDED) {
 			addRuntimeTypes(cf, list);
 		} else {

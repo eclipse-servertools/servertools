@@ -38,7 +38,7 @@ public class StopAction extends AbstractServerAction {
 	/**
 	 * Return true if this server can currently be acted on.
 	 * @return boolean
-	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param server a server
 	 */
 	public boolean accept(IServer server) {
 		if (server.getServerType() == null)
@@ -48,7 +48,7 @@ public class StopAction extends AbstractServerAction {
 
 	/**
 	 * Perform action on this server.
-	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param server a server
 	 */
 	public void perform(final IServer server) {
 		ServerUIPlugin.addTerminationWatch(shell, server, ServerUIPlugin.STOP);

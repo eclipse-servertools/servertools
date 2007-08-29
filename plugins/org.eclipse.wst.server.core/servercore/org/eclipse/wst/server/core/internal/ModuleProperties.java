@@ -25,7 +25,7 @@ public class ModuleProperties {
 	private static final String MODULE_DATA_FILE = "modules.xml";
 
 	protected static ModuleProperties instance;
-	protected Map modules;
+	protected Map<String, String> modules;
 
 	/**
 	 * ModuleProperties constructor.
@@ -53,7 +53,7 @@ public class ModuleProperties {
 	private void load() {
 		Trace.trace(Trace.FINEST, "Loading module info");
 		String filename = ServerPlugin.getInstance().getStateLocation().append(MODULE_DATA_FILE).toOSString();
-		modules = new HashMap();
+		modules = new HashMap<String, String>();
 		if (!(new File(filename).exists()))
 			return;
 		
@@ -69,7 +69,7 @@ public class ModuleProperties {
 				modules.put(moduleId, serverId);
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not load servers: " + e.getMessage());
+			Trace.trace(Trace.WARNING, "Could not load servers", e);
 		}
 	}
 
@@ -82,7 +82,7 @@ public class ModuleProperties {
 			Iterator iterator = modules.keySet().iterator();
 			while (iterator.hasNext()) {
 				String moduleId = (String) iterator.next();
-				String serverId = (String) modules.get(moduleId);
+				String serverId = modules.get(moduleId);
 				
 				IMemento child = memento.createChild("module");
 				child.putString("moduleId", moduleId);
@@ -102,7 +102,7 @@ public class ModuleProperties {
 		if (module == null)
 			throw new IllegalArgumentException();
 		
-		String serverId = (String) modules.get(module.getId());
+		String serverId = modules.get(module.getId());
 		if (serverId == null || serverId.length() == 0)
 			return null;
 		
@@ -120,7 +120,7 @@ public class ModuleProperties {
 		if (server != null)
 			newServerId = server.getId();
 		
-		String serverId = (String) modules.get(module.getId());
+		String serverId = modules.get(module.getId());
 		if (serverId == null && newServerId == null)
 			return;
 		if (serverId != null && serverId.equals(newServerId))

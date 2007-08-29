@@ -74,7 +74,7 @@ public class ProjectProperties {
 			else
 				serverProject = false;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not load preferences: " + e.getMessage());
+			Trace.trace(Trace.SEVERE, "Could not load preferences", e);
 		} finally {
 			try {
 				if (in != null)

@@ -53,7 +53,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	private IServer server;
 
 	// list of servers that are in combo
-	private List servers;
+	private List<IServer> servers;
 
 	private ILaunchConfigurationWorkingCopy wc;
 
@@ -122,7 +122,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		
 		// initialize
 		IServer[] servers2 = ServerCore.getServers();
-		servers = new ArrayList();
+		servers = new ArrayList<IServer>();
 		if (servers2 != null) {
 			int size = servers2.length;
 			for (int i = 0; i < size; i++) {
@@ -171,7 +171,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		if (servers.isEmpty())
 			server = null;
 		else
-			server = (IServer) servers.get(serverCombo.getSelectionIndex());
+			server = servers.get(serverCombo.getSelectionIndex());
 		IRuntime runtime = null;
 		if (server != null) {
 			runtime = server.getRuntime();
@@ -214,7 +214,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		}
 		
 		if (servers != null) {
-			server = (IServer) servers.get(serverCombo.getSelectionIndex());
+			server = servers.get(serverCombo.getSelectionIndex());
 			if (server != null)
 				((Server) server).setupLaunchConfiguration(configuration, null);
 		}

@@ -52,7 +52,7 @@ public final class MonitorCore {
 	 * @return a possibly-empty array of monitor instances
 	 */
 	public static IMonitor[] getMonitors() {
-		List list = getManager().getMonitors();
+		List<IMonitor> list = getManager().getMonitors();
 		IMonitor[] m = new IMonitor[list.size()];
 		list.toArray(m);
 		return m;

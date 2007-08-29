@@ -27,7 +27,7 @@ public class NewRuntimeWizard extends TaskWizard implements INewWizard {
 	 */
 	public NewRuntimeWizard() {
 		super(Messages.wizNewRuntimeWizardTitle, new WizardFragment() {
-			protected void createChildFragments(List list) {
+			protected void createChildFragments(List<WizardFragment> list) {
 				list.add(new NewRuntimeWizardFragment());
 				list.add(WizardTaskUtil.SaveRuntimeFragment);
 			}

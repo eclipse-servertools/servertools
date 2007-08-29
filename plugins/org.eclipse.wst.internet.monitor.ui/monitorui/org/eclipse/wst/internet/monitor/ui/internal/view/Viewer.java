@@ -49,7 +49,7 @@ public class Viewer {
 		try {
 			return (ContentViewer) element.createExecutableExtension("class");
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not create viewer" + toString() + ": " + e.getMessage());
+			Trace.trace(Trace.SEVERE, "Could not create viewer" + toString(), e);
 			return null;
 		}
 	}

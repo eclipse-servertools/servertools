@@ -130,12 +130,13 @@ public class RuntimeClasspathProviderWrapper {
 				delegate = (RuntimeClasspathProviderDelegate) element.createExecutableExtension("class");
 				delegate.initialize(getId());
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + t.getMessage());
+				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
 			}
 		}
 		return delegate;
 	}
 
+	private int count;
 	/*
 	 * @see RuntimeClasspathProviderDelegate#resolveClasspathContainerImpl(IProject, IRuntime)
 	 */
@@ -143,9 +144,12 @@ public class RuntimeClasspathProviderWrapper {
 		if (runtime == null)
 			return null;
 		try {
+			count++;
+			if (count % 500 == 0)
+				System.out.println(count);
 			return getDelegate().resolveClasspathContainerImpl(project, runtime);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
+			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
 		}
 		return null;
 	}
@@ -159,7 +163,7 @@ public class RuntimeClasspathProviderWrapper {
 		try {
 			getDelegate().requestClasspathContainerUpdate(runtime, entries);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
+			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
 		}
 	}
 
@@ -172,7 +176,7 @@ public class RuntimeClasspathProviderWrapper {
 		try {
 			return getDelegate().hasRuntimeClasspathChanged(runtime);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
+			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
 		}
 		return false;
 	}

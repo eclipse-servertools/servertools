@@ -34,7 +34,7 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 
 	private static MonitorUIPlugin singleton;
 
-	protected Map imageDescriptors = new HashMap();
+	protected Map<String, ImageDescriptor> imageDescriptors = new HashMap<String, ImageDescriptor>();
 
 	private static final String lineSeparator = System.getProperty("line.separator");
 
@@ -64,7 +64,7 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 	private static final String SHOW_VIEW_ON_ACTIVITY = "show-view";
 	private static final String SHOW_HEADER = "show-header";
 
-	protected List requests = new ArrayList();
+	protected List<Request> requests = new ArrayList<Request>();
 
 	protected IMonitorListener monitorListener = new IMonitorListener() {
 		public void monitorAdded(IMonitor monitor) {
@@ -153,7 +153,7 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 	public static ImageDescriptor getImageDescriptor(String key) {
 		try {
 			getInstance().getImageRegistry();
-			return (ImageDescriptor) getInstance().imageDescriptors.get(key);
+			return getInstance().imageDescriptors.get(key);
 		} catch (Exception e) {
 			return null;
 		}
@@ -316,7 +316,7 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 	/**
 	 * Returns a list of the current requests.
 	 *
-	 * @return java.util.List
+	 * @return an array of requests
 	 */
 	public Request[] getRequests() {
 		Request[] r = new Request[requests.size()];
@@ -325,6 +325,6 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 	}
 	
 	public void clearRequests() {
-		requests = new ArrayList();
+		requests = new ArrayList<Request>();
 	}
 }

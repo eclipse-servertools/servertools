@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModuleArtifact;
+import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.IServerAttributes;
@@ -39,34 +40,34 @@ public class ServerPlugin extends Plugin {
 	protected static int num = 0;
 
 	// cached copy of all launchable adapters
-	private static List launchableAdapters;
+	private static List<ILaunchableAdapter> launchableAdapters;
 
 	// cached copy of all launchable clients
-	private static List clients;
+	private static List<IClient> clients;
 
 	// cached copy of all module factories
-	private static List moduleFactories;
+	private static List<ModuleFactory> moduleFactories;
 
 	// singleton instance of this class
 	private static ServerPlugin singleton;
 
 	// cached copy of all publish tasks
-	private static List publishTasks;
+	private static List<IPublishTask> publishTasks;
 
 	//	cached copy of all server monitors
-	private static List monitors;
+	private static List<IServerMonitor> monitors;
 
 	//	cached copy of all runtime locators
-	private static List runtimeLocators;
+	private static List<IRuntimeLocator> runtimeLocators;
 
 	// cached copy of all module artifact adapters
-	private static List moduleArtifactAdapters;
+	private static List<ModuleArtifactAdapter> moduleArtifactAdapters;
 
 	//	cached copy of all installable servers
-	private static List installableServers;
+	private static List<IInstallableServer> installableServers;
 
 	//	cached copy of all installable runtimes
-	private static List installableRuntimes;
+	private static List<IInstallableRuntime> installableRuntimes;
 
 	// registry listener
 	private static IRegistryChangeListener registryListener;
@@ -84,7 +85,7 @@ public class ServerPlugin extends Plugin {
 	}
 
 	// temp directories - String key to TempDir
-	protected Map tempDirHash;
+	protected Map<String, TempDir> tempDirHash;
 
 	/**
 	 * server core plugin id
@@ -134,7 +135,7 @@ public class ServerPlugin extends Plugin {
 		// first, look through hash of current directories
 		IPath statePath = ServerPlugin.getInstance().getStateLocation();
 		try {
-			TempDir dir = (TempDir) tempDirHash.get(key);
+			TempDir dir = tempDirHash.get(key);
 			if (dir != null) {
 				dir.age = 0;
 				return statePath.append(dir.path);
@@ -174,7 +175,7 @@ public class ServerPlugin extends Plugin {
 		
 		IPath statePath = ServerPlugin.getInstance().getStateLocation();
 		try {
-			TempDir dir = (TempDir) tempDirHash.get(key);
+			TempDir dir = tempDirHash.get(key);
 			if (dir != null) {
 				tempDirHash.remove(key);
 				saveTempDirInfo();
@@ -193,7 +194,7 @@ public class ServerPlugin extends Plugin {
 		IPath statePath = ServerPlugin.getInstance().getStateLocation();
 		String filename = statePath.append(TEMP_DATA_FILE).toOSString();
 		
-		tempDirHash = new HashMap();
+		tempDirHash = new HashMap<String, TempDir>();
 		try {
 			IMemento memento = XMLMemento.loadMemento(filename);
 			
@@ -210,7 +211,7 @@ public class ServerPlugin extends Plugin {
 				tempDirHash.put(key, d);
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not load temporary directory information: " + e.getMessage());
+			Trace.trace(Trace.WARNING, "Could not load temporary directory information", e);
 		}
 	}
 
@@ -237,7 +238,7 @@ public class ServerPlugin extends Plugin {
 			Iterator iterator = tempDirHash.keySet().iterator();
 			while (iterator.hasNext()) {
 				String key = (String) iterator.next();
-				TempDir d = (TempDir) tempDirHash.get(key);
+				TempDir d = tempDirHash.get(key);
 	
 				if (d.age < 5) {
 					IMemento child = memento.createChild("temp-directory");
@@ -324,7 +325,7 @@ public class ServerPlugin extends Plugin {
 		context.removeBundleListener(bundleListener);
 	}
 
-	private static void addAll(List list, Object[] obj) {
+	private static void addAll(List<Object> list, Object[] obj) {
 		if (obj == null)
 			return;
 		
@@ -345,8 +346,8 @@ public class ServerPlugin extends Plugin {
 	public static boolean isNameInUse(Object element, String name) {
 		if (name == null)
 			return true;
-	
-		List list = new ArrayList();
+		
+		List<Object> list = new ArrayList<Object>();
 		
 		addAll(list, ServerCore.getRuntimes());
 		addAll(list, ServerCore.getServers());
@@ -377,7 +378,7 @@ public class ServerPlugin extends Plugin {
 		if (str == null)
 			return new String[0];
 		
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		
 		StringTokenizer st = new StringTokenizer(str, delim);
 		while (st.hasMoreTokens()) {
@@ -391,8 +392,8 @@ public class ServerPlugin extends Plugin {
 		return s;
 	}
 
-	protected static List getModuleTypes(IConfigurationElement[] elements) {
-		List list = new ArrayList();
+	protected static List<org.eclipse.wst.server.core.IModuleType> getModuleTypes(IConfigurationElement[] elements) {
+		List<IModuleType> list = new ArrayList<IModuleType>();
 		if (elements == null)
 			return list;
 		
@@ -408,15 +409,6 @@ public class ServerPlugin extends Plugin {
 			}
 		}
 		return list;
-	}
-
-	public static String generateId() {
-		String s = df.format(new Date()).toString() + num++;
-		s = s.replace(' ', '_');
-		s = s.replace(':', '_');
-		s = s.replace('/', '_');
-		s = s.replace('\\', '_');
-		return s;
 	}
 
 	/**
@@ -522,7 +514,7 @@ public class ServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "launchableAdapters");
 
 		int size = cf.length;
-		List list = new ArrayList(size);
+		List<ILaunchableAdapter> list = new ArrayList<ILaunchableAdapter>(size);
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new LaunchableAdapter(cf[i]));
@@ -546,7 +538,7 @@ public class ServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "clients");
 		
 		int size = cf.length;
-		List list = new ArrayList(size);
+		List<IClient> list = new ArrayList<IClient>(size);
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new Client(cf[i]));
@@ -600,7 +592,7 @@ public class ServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "publishTasks");
 		
 		int size = cf.length;
-		List list = new ArrayList(size);
+		List<IPublishTask> list = new ArrayList<IPublishTask>(size);
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new PublishTask(cf[i]));
@@ -720,7 +712,7 @@ public class ServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "moduleFactories");
 		
 		int size = cf.length;
-		List list = new ArrayList(size);
+		List<ModuleFactory> list = new ArrayList<ModuleFactory>(size);
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new ModuleFactory(cf[i]));
@@ -733,8 +725,8 @@ public class ServerPlugin extends Plugin {
 		size = list.size();
 		for (int i = 0; i < size - 1; i++) {
 			for (int j = i + 1; j < size; j++) {
-				ModuleFactory a = (ModuleFactory) list.get(i);
-				ModuleFactory b = (ModuleFactory) list.get(j);
+				ModuleFactory a = list.get(i);
+				ModuleFactory b = list.get(j);
 				if (a.getOrder() > b.getOrder()) {
 					list.set(i, b);
 					list.set(j, a);
@@ -773,7 +765,7 @@ public class ServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "internalServerMonitors");
 
 		int size = cf.length;
-		List list = new ArrayList(size);
+		List<IServerMonitor> list = new ArrayList<IServerMonitor>(size);
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new ServerMonitor(cf[i]));
@@ -814,7 +806,7 @@ public class ServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "runtimeLocators");
 
 		int size = cf.length;
-		List list = new ArrayList(size);
+		List<IRuntimeLocator> list = new ArrayList<IRuntimeLocator>(size);
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new RuntimeLocator(cf[i]));
@@ -853,7 +845,7 @@ public class ServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "moduleArtifactAdapters");
 
 		int size = cf.length;
-		List list = new ArrayList(size);
+		List<ModuleArtifactAdapter> list = new ArrayList<ModuleArtifactAdapter>(size);
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new ModuleArtifactAdapter(cf[i]));
@@ -867,8 +859,8 @@ public class ServerPlugin extends Plugin {
 		size = list.size();
 		for (int i = 0; i < size-1; i++) {
 			for (int j = i+1; j < size; j++) {
-				ModuleArtifactAdapter a = (ModuleArtifactAdapter) list.get(i);
-				ModuleArtifactAdapter b = (ModuleArtifactAdapter) list.get(j);
+				ModuleArtifactAdapter a = list.get(i);
+				ModuleArtifactAdapter b = list.get(j);
 				if (a.getPriority() < b.getPriority()) {
 					list.set(i, b);
 					list.set(j, a);
@@ -961,7 +953,7 @@ public class ServerPlugin extends Plugin {
 		if (installableServers == null)
 			loadInstallableServers();
 		
-		List availableServers = new ArrayList();
+		List<IInstallableServer> availableServers = new ArrayList<IInstallableServer>();
 		Iterator iterator = installableServers.iterator();
 		IRuntimeType[] runtimeTypes = ServerCore.getRuntimeTypes();
 		int size = runtimeTypes.length;
@@ -1039,7 +1031,7 @@ public class ServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "installableServers");
 		
 		int size = cf.length;
-		List list = new ArrayList(size);
+		List<IInstallableServer> list = new ArrayList<IInstallableServer>(size);
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new InstallableServer(cf[i]));
@@ -1065,7 +1057,7 @@ public class ServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "installableRuntimes");
 		
 		int size = cf.length;
-		List list = new ArrayList(size);
+		List<IInstallableRuntime> list = new ArrayList<IInstallableRuntime>(size);
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new InstallableRuntime(cf[i]));

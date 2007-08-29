@@ -120,7 +120,7 @@ public class ModulePublishInfo {
 			
 			resources = loadResource(memento, new Path(""));
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not load module publish info information: " + e.getMessage());
+			Trace.trace(Trace.WARNING, "Could not load module publish info information", e);
 		}
 	}
 
@@ -131,7 +131,7 @@ public class ModulePublishInfo {
 		if (memento == null)
 			return EMPTY_MODULE_RESOURCE;
 		
-		List list = new ArrayList(10);
+		List<IModuleResource> list = new ArrayList<IModuleResource>(10);
 		
 		// load files
 		IMemento[] children = memento.getChildren(FILE);

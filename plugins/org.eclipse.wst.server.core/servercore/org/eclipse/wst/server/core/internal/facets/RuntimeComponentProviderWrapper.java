@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponent;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.internal.Trace;
@@ -49,7 +50,7 @@ public class RuntimeComponentProviderWrapper {
 
 	public String[] getRuntimeTypeIds() {
 		try {
-			List list = new ArrayList();
+			List<String> list = new ArrayList<String>();
 			StringTokenizer st = new StringTokenizer(element.getAttribute("runtimeTypeIds"), ",");
 			while (st.hasMoreTokens()) {
 				String str = st.nextToken();
@@ -103,7 +104,7 @@ public class RuntimeComponentProviderWrapper {
 			try {
 				delegate = (RuntimeFacetComponentProviderDelegate) element.createExecutableExtension("class");
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + t.getMessage());
+				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
 			}
 		}
 		return delegate;
@@ -112,7 +113,7 @@ public class RuntimeComponentProviderWrapper {
 	/*
 	 * @see RuntimeFacetComponentProviderDelegate#getRuntimeComponents(IRuntime)
 	 */
-	public List getComponents(IRuntime runtime) {
+	public List<IRuntimeComponent> getComponents(IRuntime runtime) {
 		if (runtime == null)
 			return null;
 		try {

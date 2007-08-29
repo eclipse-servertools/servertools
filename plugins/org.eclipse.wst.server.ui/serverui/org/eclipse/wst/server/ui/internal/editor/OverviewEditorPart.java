@@ -646,7 +646,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 		taskModel.putObject(TaskModel.TASK_RUNTIME, runtimeWorkingCopy);
 
 		WizardFragment fragment = new WizardFragment() {
-			protected void createChildFragments(List list) {
+			protected void createChildFragments(List<WizardFragment> list) {
 				list.add(fragment2);
 				list.add(WizardTaskUtil.SaveRuntimeFragment);
 			}
@@ -663,7 +663,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 		runtimes = ServerUIPlugin.getRuntimes(runtimeType);
 		
 		if (SocketUtil.isLocalhost(server.getHost()) && runtimes != null) {
-			List runtimes2 = new ArrayList();
+			List<IRuntime> runtimes2 = new ArrayList<IRuntime>();
 			int size = runtimes.length;
 			for (int i = 0; i < size; i++) {
 				IRuntime runtime2 = runtimes[i];

@@ -44,7 +44,7 @@ public class Connection {
 			out.shutdownOutput();
 			Trace.trace(Trace.FINEST, "Connection closed");
 		} catch (Exception ex) {
-			Trace.trace(Trace.WARNING, "Error closing connection " + this + " " + ex.getMessage());
+			Trace.trace(Trace.WARNING, "Error closing connection " + this, ex);
 		}
 	}
 }

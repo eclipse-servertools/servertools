@@ -158,7 +158,7 @@ public abstract class ProjectModule extends ModuleDelegate {
 		IResource[] resources = container.members();
 		if (resources != null) {
 			int size = resources.length;
-			List list = new ArrayList(size);
+			List<IModuleResource> list = new ArrayList<IModuleResource>(size);
 			for (int i = 0; i < size; i++) {
 				IResource resource = resources[i];
 				if (resource != null && resource.exists()) {

@@ -37,7 +37,7 @@ public class ServerConfig {
 				
 				IMemento[] modules2 = memento.getChildren("module");
 				int size = modules2.length;
-				List list = new ArrayList(size);
+				List<Module> list = new ArrayList<Module>(size);
 				for (int i = 0; i < size; i++) {
 					String name = modules2[i].getString("name");
 					boolean isStatic = "static".equals(modules2[i].getString("type"));

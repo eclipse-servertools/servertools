@@ -88,7 +88,7 @@ public class ServerUtil {
 			throw new IllegalArgumentException();
 		
 		// use a set for better contains() performance
-		Set set = new HashSet();
+		Set<IModule> set = new HashSet<IModule>();
 		
 		ModuleFactory[] factories = ServerPlugin.getModuleFactories();
 		if (factories != null) {
@@ -151,7 +151,7 @@ public class ServerUtil {
 	 * @return a possibly empty array of modules
 	 */
 	public static IModule[] getModules(IModuleType[] moduleTypes) {
-		List list = new ArrayList();
+		List<IModule> list = new ArrayList<IModule>();
 		
 		ModuleFactory[] factories = ServerPlugin.getModuleFactories();
 		if (factories != null) {
@@ -186,7 +186,7 @@ public class ServerUtil {
 	 * @return a possibly empty array of modules
 	 */
 	public static IModule[] getModules(String type) {
-		List list = new ArrayList();
+		List<IModule> list = new ArrayList<IModule>();
 		
 		ModuleFactory[] factories = ServerPlugin.getModuleFactories();
 		if (factories != null) {
@@ -338,13 +338,13 @@ public class ServerUtil {
 				throw new IllegalArgumentException("Cannot add null entries");
 		}
 		
-		List addParentModules = new ArrayList();
+		List<IModule> addParentModules = new ArrayList<IModule>();
 		for (int i = 0; i < size; i++) {
 			boolean found = false;
 			try {
 				IModule[] parents = server.getRootModules(add[i], monitor);
 				if (parents != null && parents.length > 0) {				
-					Object parent = parents[0];
+					IModule parent = parents[0];
 					found = true;
 					if (!addParentModules.contains(parent))
 						addParentModules.add(parent);
@@ -363,13 +363,13 @@ public class ServerUtil {
 				throw new IllegalArgumentException("Cannot remove null entries");
 		}
 		
-		List removeParentModules = new ArrayList();
+		List<IModule> removeParentModules = new ArrayList<IModule>();
 		for (int i = 0; i < size; i++) {
 			boolean found = false;
 			try {
 				IModule[] parents = server.getRootModules(remove[i], monitor);
 				if (parents != null && parents.length > 0) {				
-					Object parent = parents[0];
+					IModule parent = parents[0];
 					found = true;
 					if (!removeParentModules.contains(parent))
 						removeParentModules.add(parent);
@@ -538,7 +538,7 @@ public class ServerUtil {
 	 * @return a possibly-empty array of runtime instances {@link IRuntime}
 	 */
 	public static IRuntime[] getRuntimes(String type, String version) {
-		List list = new ArrayList();
+		List<IRuntime> list = new ArrayList<IRuntime>();
 		IRuntime[] runtimes = ServerCore.getRuntimes();
 		if (runtimes != null) {
 			int size = runtimes.length;
@@ -564,7 +564,7 @@ public class ServerUtil {
 	 * @return a possibly-empty array of runtime type instances {@link IRuntimeType}
 	 */
 	public static IRuntimeType[] getRuntimeTypes(String type, String version) {
-		List list = new ArrayList();
+		List<IRuntimeType> list = new ArrayList<IRuntimeType>();
 		IRuntimeType[] runtimeTypes = ServerCore.getRuntimeTypes();
 		if (runtimeTypes != null) {
 			int size = runtimeTypes.length;
@@ -591,7 +591,7 @@ public class ServerUtil {
 	 * @return a possibly-empty array of runtime type instances {@link IRuntimeType}
 	 */
 	public static IRuntimeType[] getRuntimeTypes(String type, String version, String runtimeTypeId) {
-		List list = new ArrayList();
+		List<IRuntimeType> list = new ArrayList<IRuntimeType>();
 		IRuntimeType[] runtimeTypes = ServerCore.getRuntimeTypes();
 		if (runtimeTypes != null) {
 			int size = runtimeTypes.length;
@@ -628,7 +628,7 @@ public class ServerUtil {
 		// do it the slow way - go through all servers and
 		// see if this deployable is not configured in it
 		// but could be added
-		List list = new ArrayList();
+		List<IServer> list = new ArrayList<IServer>();
 		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
 			int size = servers.length;
@@ -684,7 +684,7 @@ public class ServerUtil {
 
 		// do it the slow way - go through all servers and
 		// see if this module is configured in it
-		List list = new ArrayList();
+		List<IServer> list = new ArrayList<IServer>();
 		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
 			int size = servers.length;

@@ -69,7 +69,7 @@ public class MonitorTreeContentProvider implements ITreeContentProvider {
 	public Object[] getChildren(Object element) {
 		if (element instanceof Integer) {
 			Integer in = (Integer) element;
-			List list = new ArrayList();
+			List<Request> list = new ArrayList<Request>();
 			Request[] requests = MonitorUIPlugin.getInstance().getRequests();
 			if (requests != null) {
 				int size = requests.length;
@@ -84,7 +84,7 @@ public class MonitorTreeContentProvider implements ITreeContentProvider {
 		} else if (element instanceof Request) {
 			Request req = (Request) element;
 			ResendHTTPRequest[] rr = MonitorManager.getInstance().getResendRequests(req);
-			List list = new ArrayList();
+			List<Request> list = new ArrayList<Request>();
 			if (rr != null) {
 				int size = rr.length;
 				for (int i = 0; i < size; i++) {
@@ -103,7 +103,7 @@ public class MonitorTreeContentProvider implements ITreeContentProvider {
 	 */
 	public Object[] getElements(Object element) {
 		if (ROOT.equals(element)) {
-			List list = new ArrayList();
+			List<Integer> list = new ArrayList<Integer>();
 			Request[] requests = MonitorUIPlugin.getInstance().getRequests();
 			if (requests != null) {
 				int size = requests.length;

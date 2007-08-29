@@ -25,10 +25,10 @@ public class PublishInfo {
 	protected static final String PUBLISH_DIR = "publish";
 
 	// map of server ids to Strings of filename containing publish data
-	protected Map serverIdToPath;
+	protected Map<String, String> serverIdToPath;
 
 	// map of loaded serverIds to publish info
-	protected Map serverIdToPublishInfo;
+	protected Map<String, ServerPublishInfo> serverIdToPublishInfo;
 
 	/**
 	 * PublishInfo constructor comment.
@@ -36,8 +36,8 @@ public class PublishInfo {
 	private PublishInfo() {
 		super();
 	
-		serverIdToPath = new HashMap();
-		serverIdToPublishInfo = new HashMap();
+		serverIdToPath = new HashMap<String, String>();
+		serverIdToPublishInfo = new HashMap<String, ServerPublishInfo>();
 		load();
 	}
 
@@ -66,10 +66,10 @@ public class PublishInfo {
 		String serverId = server.getId();
 		if (serverIdToPath.containsKey(serverId)) {
 			if (serverIdToPublishInfo.containsKey(serverId))
-				return (ServerPublishInfo) serverIdToPublishInfo.get(serverId);
+				return serverIdToPublishInfo.get(serverId);
 			
 			// force .dat extension
-			String partialPath = (String) serverIdToPath.get(serverId);
+			String partialPath = serverIdToPath.get(serverId);
 			partialPath = partialPath.substring(0, partialPath.length() - 3) + "dat";
 			IPath path = ServerPlugin.getInstance().getStateLocation().append(PUBLISH_DIR).append(partialPath);
 			ServerPublishInfo spi = new ServerPublishInfo(path);
@@ -116,7 +116,7 @@ public class PublishInfo {
 			return;
 		
 		String serverId = server.getId();
-		String path2 = (String) serverIdToPath.get(serverId);
+		String path2 = serverIdToPath.get(serverId);
 		synchronized (PUBLISH_DIR) {
 			serverIdToPath.remove(serverId);
 			serverIdToPublishInfo.remove(serverId);
@@ -143,7 +143,7 @@ public class PublishInfo {
 			
 			IMemento[] serverChild = memento.getChildren("server");
 			int size = serverChild.length;
-			serverIdToPath = new HashMap(size + 2);
+			serverIdToPath = new HashMap<String, String>(size + 2);
 			
 			for (int i = 0; i < size; i++) {
 				String id = serverChild[i].getString("id");
@@ -151,7 +151,7 @@ public class PublishInfo {
 				serverIdToPath.put(id, partialPath);
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not load global publish info: " + e.getMessage());
+			Trace.trace(Trace.WARNING, "Could not load global publish info", e);
 		}
 	}
 
@@ -167,7 +167,7 @@ public class PublishInfo {
 			Iterator iterator = serverIdToPath.keySet().iterator();
 			while (iterator.hasNext()) {
 				String serverId = (String) iterator.next();
-				String partialPath = (String) serverIdToPath.get(serverId);
+				String partialPath = serverIdToPath.get(serverId);
 				
 				IMemento server = memento.createChild("server");
 				server.putString("id", serverId);

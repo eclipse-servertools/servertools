@@ -26,9 +26,9 @@ public class ModuleType implements IModuleType {
 	protected String version;
 
 	//	cached copy of all module kinds
-	private static List moduleKinds;
+	private static List<ModuleKind> moduleKinds;
 
-	private static List moduleTypes;
+	private static List<ModuleType> moduleTypes;
 
 	public ModuleType(String id, String version) {
 		super();
@@ -61,7 +61,7 @@ public class ModuleType implements IModuleType {
 	 */
 	public synchronized static ModuleType getModuleType(String id, String version) {
 		if (moduleTypes == null)
-			moduleTypes = new ArrayList();
+			moduleTypes = new ArrayList<ModuleType>();
 		
 		// look for an existing one first
 		Iterator iterator = moduleTypes.iterator();
@@ -116,7 +116,7 @@ public class ModuleType implements IModuleType {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "moduleTypes");
 
 		int size = cf.length;
-		moduleKinds = new ArrayList(size);
+		moduleKinds = new ArrayList<ModuleKind>(size);
 		for (int i = 0; i < size; i++) {
 			try {
 				ModuleKind moduleType = new ModuleKind(cf[i]);

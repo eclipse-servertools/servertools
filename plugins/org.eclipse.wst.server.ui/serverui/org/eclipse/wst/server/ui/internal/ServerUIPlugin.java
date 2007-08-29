@@ -78,7 +78,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	protected Map imageDescriptors = new HashMap();
 
 	// cached copy of all runtime wizards
-	private static Map wizardFragments;
+	private static Map<String, WizardFragmentData> wizardFragments;
 
 	// cached initial selection provider
 	private static InitialSelectionProvider selectionProvider;
@@ -128,7 +128,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	protected static List terminationWatches = new ArrayList();
+	protected static List<IServer> terminationWatches = new ArrayList<IServer>();
 
 	protected IServerLifecycleListener serverLifecycleListener = new IServerLifecycleListener() {
 		public void serverAdded(IServer server) {
@@ -374,7 +374,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	 * of the given runtime type
 	 */
 	public static IRuntime[] getRuntimes(IRuntimeType runtimeType) {
-		List list = new ArrayList();
+		List<IRuntime> list = new ArrayList<IRuntime>();
 		IRuntime[] runtimes = ServerCore.getRuntimes();
 		if (runtimes != null) {
 			int size = runtimes.length;
@@ -533,7 +533,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	 */
 	public static boolean showNewRuntimeWizard(Shell shell, final String type, final String version, final String runtimeTypeId) {
 		WizardFragment fragment = new WizardFragment() {
-			protected void createChildFragments(List list) {
+			protected void createChildFragments(List<WizardFragment> list) {
 				list.add(new NewRuntimeWizardFragment(type, version, runtimeTypeId));
 				list.add(WizardTaskUtil.SaveRuntimeFragment);
 			}
@@ -562,7 +562,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 				taskModel.putObject(TaskModel.TASK_RUNTIME, runtime);
 				
 				WizardFragment fragment = new WizardFragment() {
-					protected void createChildFragments(List list) {
+					protected void createChildFragments(List<WizardFragment> list) {
 						list.add(getWizardFragment(runtimeTypeId));
 						list.add(WizardTaskUtil.SaveRuntimeFragment);
 					}
@@ -590,7 +590,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	 */
 	public static boolean showNewServerWizard(Shell shell, final String typeId, final String versionId, final String serverTypeId) {
 		WizardFragment fragment = new WizardFragment() {
-			protected void createChildFragments(List list) {
+			protected void createChildFragments(List<WizardFragment> list) {
 				list.add(new NewServerWizardFragment(new ModuleType(typeId, versionId), serverTypeId));
 				
 				list.add(WizardTaskUtil.TempSaveRuntimeFragment);
@@ -628,7 +628,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		while (iterator.hasNext()) {
 			String key = (String) iterator.next();
 			if (typeId.equals(key)) {
-				WizardFragmentData data = (WizardFragmentData) wizardFragments.get(key);
+				WizardFragmentData data = wizardFragments.get(key);
 				return getWizardFragment(data);
 			}
 		}
@@ -645,7 +645,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, EXTENSION_WIZARD_FRAGMENTS);
 		
-		Map map = new HashMap(cf.length);
+		Map<String, WizardFragmentData> map = new HashMap<String, WizardFragmentData>(cf.length);
 		loadWizardFragments(cf, map);
 		addRegistryListener();
 		wizardFragments = map;
@@ -656,7 +656,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	/**
 	 * Load wizard fragments.
 	 */
-	private static synchronized void loadWizardFragments(IConfigurationElement[] cf, Map map) {
+	private static synchronized void loadWizardFragments(IConfigurationElement[] cf, Map<String, WizardFragmentData> map) {
 		for (int i = 0; i < cf.length; i++) {
 			try {
 				String id = cf[i].getAttribute("typeIds");
@@ -757,7 +757,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		
 		IConfigurationElement[] cf = delta.getExtension().getConfigurationElements();
 		
-		Map map = new HashMap(wizardFragments);
+		Map<String, WizardFragmentData> map = new HashMap<String, WizardFragmentData>(wizardFragments);
 		if (delta.getKind() == IExtensionDelta.ADDED) {
 			loadWizardFragments(cf, map);
 		} else {
@@ -789,7 +789,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		if (str == null)
 			return new String[0];
 		
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		
 		StringTokenizer st = new StringTokenizer(str, delim);
 		while (st.hasMoreTokens()) {
@@ -816,7 +816,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		if (server == null || launchable == null)
 			return new IClient[0];
 		
-		ArrayList list = new ArrayList(5);
+		ArrayList<IClient> list = new ArrayList<IClient>(5);
 		IClient[] clients = ServerPlugin.getClients();
 		if (clients != null) {
 			int size = clients.length;
@@ -881,7 +881,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		if (obj == null)
 			return obj;
 		
-		List list = new ArrayList();
+		List<Object> list = new ArrayList<Object>();
 		int size = obj.length;
 		for (int i = 0; i < size; i++) {
 			if (obj[i] instanceof IModule) {

@@ -130,7 +130,7 @@ public final class PublishUtil {
 		if (!dir.exists() || !dir.isDirectory())
 			return new IStatus[] { new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorNotADirectory, dir.getAbsolutePath()), null) };
 		
-		List status = new ArrayList(2);
+		List<IStatus> status = new ArrayList<IStatus>(2);
 		
 		try {
 			File[] files = dir.listFiles();
@@ -185,7 +185,7 @@ public final class PublishUtil {
 		
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		
-		List status = new ArrayList(2);
+		List<IStatus> status = new ArrayList<IStatus>(2);
 		File toDir = path.toFile();
 		int fromSize = resources.length;
 		String[] fromFileNames = new String[fromSize];
@@ -338,7 +338,7 @@ public final class PublishUtil {
 		
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		
-		List status = new ArrayList(2);
+		List<IStatus> status = new ArrayList<IStatus>(2);
 		int size2 = delta.length;
 		for (int i = 0; i < size2; i++) {
 			IStatus[] stat = publishDelta(delta[i], path, monitor);
@@ -360,7 +360,7 @@ public final class PublishUtil {
 	 * @return a possibly-empty array of error and warning status
 	 */
 	public static IStatus[] publishDelta(IModuleResourceDelta delta, IPath path, IProgressMonitor monitor) {
-		List status = new ArrayList(2);
+		List<IStatus> status = new ArrayList<IStatus>(2);
 		
 		IModuleResource resource = delta.getModuleResource();
 		int kind2 = delta.getKind();
@@ -457,7 +457,7 @@ public final class PublishUtil {
 		
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		
-		List status = new ArrayList(2);
+		List<IStatus> status = new ArrayList<IStatus>(2);
 		int size = resources.length;
 		for (int i = 0; i < size; i++) {
 			IStatus[] stat = copy(resources[i], path, monitor);
@@ -472,7 +472,7 @@ public final class PublishUtil {
 	private static IStatus[] copy(IModuleResource resource, IPath path, IProgressMonitor monitor) {
 		String name = resource.getName();
 		Trace.trace(Trace.PUBLISHING, "Copying: " + name + " to " + path.toString());
-		List status = new ArrayList(2);
+		List<IStatus> status = new ArrayList<IStatus>(2);
 		if (resource instanceof IModuleFolder) {
 			IModuleFolder folder = (IModuleFolder) resource;
 			IStatus[] stat = publishFull(folder.members(), path, monitor);
@@ -744,7 +744,7 @@ public final class PublishUtil {
 		return false;
 	}
 
-	private static void addArrayToList(List list, IStatus[] a) {
+	private static void addArrayToList(List<IStatus> list, IStatus[] a) {
 		if (list == null || a == null || a.length == 0)
 			return;
 		

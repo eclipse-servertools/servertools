@@ -310,10 +310,10 @@ public class ServerUIPreferences {
 	 * 
 	 * @return the hostnames
 	 */
-	public List getHostnames() {
+	public List<String> getHostnames() {
 		String s = preferences.getString(PREF_HOST_NAMES);
 		StringTokenizer st = new StringTokenizer(s, "|*|");
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		while (st.hasMoreTokens()) {
 			list.add(st.nextToken());
 		}
@@ -329,7 +329,7 @@ public class ServerUIPreferences {
 		if ("localhost".equals(hostname))
 			return;
 		
-		List list = getHostnames();
+		List<String> list = getHostnames();
 		
 		// remove duplicates
 		if (list.contains(hostname))

@@ -42,7 +42,7 @@ import org.eclipse.wst.server.core.TaskModel;
 public abstract class WizardFragment {
 	private TaskModel taskModel;
 	private boolean isComplete = true;
-	private List listImpl;
+	private List<WizardFragment> listImpl;
 
 	/**
 	 * Returns <code>true</code> if this fragment has an associated UI,
@@ -161,7 +161,7 @@ public abstract class WizardFragment {
 	 */
 	public List getChildFragments() {
 		if (listImpl == null) {
-			listImpl = new ArrayList();
+			listImpl = new ArrayList<WizardFragment>();
 			createChildFragments(listImpl);
 		}
 		return listImpl;
@@ -184,7 +184,7 @@ public abstract class WizardFragment {
 	 * 
 	 * @param list a list to add the child fragments to
 	 */
-	protected void createChildFragments(List list) {
+	protected void createChildFragments(List<WizardFragment> list) {
 		// do nothing
 	}
 

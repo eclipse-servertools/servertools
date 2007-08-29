@@ -93,12 +93,12 @@ public class NewServerWizardFragment extends WizardFragment {
 	}
 
 	public List getChildFragments() {
-		List listImpl = new ArrayList();
+		List<WizardFragment> listImpl = new ArrayList<WizardFragment>();
 		createChildFragments(listImpl);
 		return listImpl;
 	}
 
-	protected void createChildFragments(List list) {
+	protected void createChildFragments(List<WizardFragment> list) {
 		if (getTaskModel() == null)
 			return;
 		

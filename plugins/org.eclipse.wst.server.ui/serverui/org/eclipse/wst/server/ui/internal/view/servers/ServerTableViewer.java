@@ -11,8 +11,10 @@
 package org.eclipse.wst.server.ui.internal.view.servers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
@@ -51,8 +53,8 @@ public class ServerTableViewer extends TreeViewer {
 	protected static Object deletedElement = null;
 
 	// servers that are currently publishing and starting
-	protected static List publishing = new ArrayList();
-	protected static List starting = new ArrayList();
+	protected static Set<String> publishing = new HashSet<String>(4);
+	protected static Set<String> starting = new HashSet<String>(4);
 
 	protected ServerTableLabelProvider labelProvider;
 	//protected ISelectionListener dsListener;
@@ -64,7 +66,7 @@ public class ServerTableViewer extends TreeViewer {
 
 	public class ServerContentProvider implements IStructuredContentProvider, ITreeContentProvider {
 		public Object[] getElements(Object element) {
-			List list = new ArrayList();
+			List<IServer> list = new ArrayList<IServer>();
 			IServer[] servers = ServerCore.getServers();
 			if (servers != null) {
 				int size = servers.length;
@@ -174,16 +176,27 @@ public class ServerTableViewer extends TreeViewer {
 		stopAnimation = false;
 		
 		final Display display = getTree().getDisplay();
-		final int SLEEP = 200;
+		final int SLEEP = 50;
 		final Runnable[] animator = new Runnable[1];
 		animator[0] = new Runnable() {
 			public void run() {
 				if (!stopAnimation) {
 					try {
 						labelProvider.animate();
-						final Object[] rootElements = ((ITreeContentProvider)getContentProvider()).getElements(null); 
-						if (getTree() != null && !getTree().isDisposed())
-							update(rootElements, null);
+						
+						int size = 0;
+						String[] servers;
+						synchronized (starting) {
+							size = starting.size();
+							servers = new String[size];
+							starting.toArray(servers);
+						}
+						
+						for (int i = 0; i < size; i++) {
+							IServer server = ServerCore.findServer(servers[i]);
+							if (server != null && getTree() != null && !getTree().isDisposed())
+								updateAnimation(server);
+						}
 					} catch (Exception e) {
 						Trace.trace(Trace.FINEST, "Error in Servers view animation", e);
 					}
@@ -364,7 +377,7 @@ public class ServerTableViewer extends TreeViewer {
 		if (obj == null)
 			return obj;
 		
-		List list = new ArrayList();
+		List<Object> list = new ArrayList<Object>();
 		int size = obj.length;
 		for (int i = 0; i < size; i++) {
 			if (obj[i] instanceof IModule) {
@@ -376,7 +389,7 @@ public class ServerTableViewer extends TreeViewer {
 			} else if (obj[i] instanceof IProject) {
 				IProject proj = (IProject) obj[i];
 
-				List list2 = new ArrayList();
+				List<Object> list2 = new ArrayList<Object>();
 				getTreeChildren(list2, view.treeTable);
 				
 				Iterator iterator = list2.iterator();
@@ -396,7 +409,7 @@ public class ServerTableViewer extends TreeViewer {
 		return o;
 	}
 
-	private void getTreeChildren(List list, Widget widget) {
+	private void getTreeChildren(List<Object> list, Widget widget) {
 		Item[] items = getChildren(widget);
 		for (int i = 0; i < items.length; i++) {
 			Item item = items[i];
@@ -454,16 +467,20 @@ public class ServerTableViewer extends TreeViewer {
 						int state = event.getState();
 						String id = server.getId();
 						if (state == IServer.STATE_STARTING || state == IServer.STATE_STOPPING) {
-							if (!starting.contains(id)) {
-								if (starting.isEmpty())
-									startThread();
-								starting.add(id);
+							synchronized (starting) {
+								if (!starting.contains(id)) {
+									if (starting.isEmpty())
+										startThread();
+									starting.add(id);
+								}
 							}
 						} else {
-							if (starting.contains(id)) {
-								starting.remove(id);
-								if (starting.isEmpty())
-									stopThread();
+							synchronized (starting) {
+								if (starting.contains(id)) {
+									starting.remove(id);
+									if (starting.isEmpty())
+										stopThread();
+								}
 							}
 						}
 					} else
@@ -487,7 +504,7 @@ public class ServerTableViewer extends TreeViewer {
 			}
 		}
 	}
-	
+
 	protected void refreshServer(final IServer server) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
@@ -637,5 +654,16 @@ public class ServerTableViewer extends TreeViewer {
 			}
 		}
 		super.doUpdateItem(widget, element, fullMap);
+	}
+
+	protected void updateAnimation(IServer server) {
+		try {
+			Widget widget = doFindItem(server);
+			TreeItem item = (TreeItem) widget;
+			item.setText(1, labelProvider.getColumnText(server, 1));
+			item.setImage(1, labelProvider.getColumnImage(server, 1));
+		} catch (Exception e) {
+			Trace.trace(Trace.WARNING, "Error in optimized animation", e);
+		}
 	}
 }

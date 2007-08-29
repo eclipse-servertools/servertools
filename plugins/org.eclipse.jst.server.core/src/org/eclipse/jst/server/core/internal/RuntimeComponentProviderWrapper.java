@@ -102,7 +102,7 @@ public class RuntimeComponentProviderWrapper {
 			try {
 				delegate = (RuntimeComponentProviderDelegate) element.createExecutableExtension("class");
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + t.getMessage());
+				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
 			}
 		}
 		return delegate;
@@ -117,7 +117,7 @@ public class RuntimeComponentProviderWrapper {
 		try {
 			return getDelegate().getRuntimeComponents(runtime);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
+			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
 		}
 		return null;
 	}

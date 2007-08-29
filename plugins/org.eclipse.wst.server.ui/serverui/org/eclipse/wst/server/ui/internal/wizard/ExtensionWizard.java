@@ -43,7 +43,7 @@ public class ExtensionWizard extends TaskWizard {
 	 */
 	public ExtensionWizard(String title, String message) {
 		super(title, new WizardFragment() {
-			protected void createChildFragments(List list) {
+			protected void createChildFragments(List<WizardFragment> list) {
 				list.add(new ExtensionWizardFragment());
 				list.add(new LicenseWizardFragment());
 				list.add(new WizardFragment() {

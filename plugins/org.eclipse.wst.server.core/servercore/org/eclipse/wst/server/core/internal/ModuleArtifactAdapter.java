@@ -160,7 +160,7 @@ public class ModuleArtifactAdapter {
 			try {
 				delegate = (ModuleArtifactAdapterDelegate) element.createExecutableExtension("class");
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString() + ": " + t.getMessage());
+				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString(), t);
 			}
 		}
 		return delegate;

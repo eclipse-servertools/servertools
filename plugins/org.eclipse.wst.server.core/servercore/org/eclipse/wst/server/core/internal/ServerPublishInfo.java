@@ -43,7 +43,7 @@ public class ServerPublishInfo {
 	protected IPath path;
 
 	// map of module ids to ModulePublishInfo
-	protected Map modulePublishInfo;
+	protected Map<String, ModulePublishInfo> modulePublishInfo;
 
 	/**
 	 * ServerPublishInfo constructor comment.
@@ -52,7 +52,7 @@ public class ServerPublishInfo {
 		super();
 		
 		this.path = path;
-		modulePublishInfo = new HashMap();
+		modulePublishInfo = new HashMap<String, ModulePublishInfo>();
 		load();
 	}
 
@@ -82,7 +82,7 @@ public class ServerPublishInfo {
 		if (moduleId == null || moduleId.length() == 0)
 			return new IModule[0];
 		
-		List list = new ArrayList();
+		List<IModule> list = new ArrayList<IModule>();
 		StringTokenizer st = new StringTokenizer(moduleId, "#");
 		while (st.hasMoreTokens()) {
 			String mid = st.nextToken();
@@ -131,7 +131,7 @@ public class ServerPublishInfo {
 	 */
 	public void removeDeletedModulePublishInfo(Server server, List moduleList) {
 		int size = moduleList.size();
-		List removed = new ArrayList();
+		List<String> removed = new ArrayList<String>();
 		
 		Iterator iterator = modulePublishInfo.keySet().iterator();
 		while (iterator.hasNext()) {
@@ -147,7 +147,7 @@ public class ServerPublishInfo {
 			
 			if (server != null) {
 				try {
-					Integer in = (Integer) server.modulePublishState.get(key);
+					Integer in = server.modulePublishState.get(key);
 					if (in != null && in.intValue() != IServer.PUBLISH_STATE_NONE)
 						found = true;
 				} catch (Exception e) {
@@ -174,7 +174,7 @@ public class ServerPublishInfo {
 		
 		// check if it now exists
 		if (modulePublishInfo.containsKey(key))
-			return (ModulePublishInfo) modulePublishInfo.get(key);
+			return modulePublishInfo.get(key);
 		
 		// have to create a new one
 		IModule mod = module[module.length - 1];
@@ -183,22 +183,22 @@ public class ServerPublishInfo {
 		return mpi;
 	}
 
-	public void addRemovedModules(List moduleList, List kindList) {
+	public void addRemovedModules(List<IModule[]> moduleList, List<Integer> kindList) {
 		int size = moduleList.size();
-		List removed = new ArrayList();
+		List<ModulePublishInfo> removed = new ArrayList<ModulePublishInfo>();
 		Iterator iterator = modulePublishInfo.keySet().iterator();
 		while (iterator.hasNext()) {
 			String key = (String) iterator.next();
 		
 			boolean found = false;
 			for (int i = 0; i < size; i++) {
-				IModule[] module = (IModule[]) moduleList.get(i);
+				IModule[] module = moduleList.get(i);
 				String key2 = getKey(module);
 				if (key != null && key.equals(key2))
 					found = true;
 			}
 			if (!found) {
-				ModulePublishInfo mpi = (ModulePublishInfo) modulePublishInfo.get(key);
+				ModulePublishInfo mpi = modulePublishInfo.get(key);
 				removed.add(mpi);
 			}
 		}
@@ -220,7 +220,7 @@ public class ServerPublishInfo {
 						if (i == depth - 1)
 							module2[i] = mpi.getDeletedModule();
 						else {
-							ModulePublishInfo mpi2 = (ModulePublishInfo) modulePublishInfo.get(s);
+							ModulePublishInfo mpi2 = modulePublishInfo.get(s);
 							if (mpi2 != null)
 								module2[i] = mpi2.getDeletedModule();
 						}
@@ -242,7 +242,7 @@ public class ServerPublishInfo {
 	 */
 	private String[] getModuleIds(String moduleId) {
 		StringTokenizer st = new StringTokenizer(moduleId, "#");
-		List list = new ArrayList(2);
+		List<String> list = new ArrayList<String>(2);
 		while (st.hasMoreTokens()) {
 			list.add(st.nextToken());
 		}
@@ -277,7 +277,7 @@ public class ServerPublishInfo {
 					return;
 				}
 			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Could not load publish information: " + e.getMessage());
+				Trace.trace(Trace.WARNING, "Could not load publish information", e);
 			}
 		}
 		
@@ -299,7 +299,7 @@ public class ServerPublishInfo {
 					modulePublishInfo.put(getKey(mpi.getModuleId()), mpi);
 				}
 			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Could not load publish information: " + e.getMessage());
+				Trace.trace(Trace.WARNING, "Could not load publish information", e);
 			}
 		}
 	}
@@ -323,7 +323,7 @@ public class ServerPublishInfo {
 			Iterator iterator = modulePublishInfo.keySet().iterator();
 			while (iterator.hasNext()) {
 				String controlRef = (String) iterator.next();
-				ModulePublishInfo mpi = (ModulePublishInfo) modulePublishInfo.get(controlRef);
+				ModulePublishInfo mpi = modulePublishInfo.get(controlRef);
 				mpi.save(out);
 			}
 		} catch (Exception e) {
@@ -371,17 +371,17 @@ public class ServerPublishInfo {
 		if (original == null || current == null)
 			return new IModuleResourceDelta[0];
 		
-		List list = new ArrayList();
+		List<ModuleResourceDelta> list = new ArrayList<ModuleResourceDelta>();
 		int size = original.length;
 		int size2 = current.length;
 		
-		Map originalMap = new HashMap(size);
+		Map<IModuleResource, IModuleResource> originalMap = new HashMap<IModuleResource, IModuleResource>(size);
 		for (int i = 0; i < size; i++)
 			originalMap.put(original[i], original[i]);
 		
 		// added and changed resources
 		for (int i = 0; i < size2; i++) {
-			IModuleResource old = (IModuleResource) originalMap.remove(current[i]);
+			IModuleResource old = originalMap.remove(current[i]);
 			if (old == null) {
 				ModuleResourceDelta delta = new ModuleResourceDelta(current[i], IModuleResourceDelta.ADDED);
 				if (current[i] instanceof IModuleFolder) {
@@ -423,7 +423,7 @@ public class ServerPublishInfo {
 			}
 		}
 		
-		return (IModuleResourceDelta[]) list.toArray(new IModuleResourceDelta[list.size()]);
+		return list.toArray(new IModuleResourceDelta[list.size()]);
 	}
 
 	protected boolean hasDelta(IModule[] module) {
@@ -441,13 +441,13 @@ public class ServerPublishInfo {
 		int size = original.length;
 		int size2 = current.length;
 		
-		Map originalMap = new HashMap(size);
+		Map<IModuleResource, IModuleResource> originalMap = new HashMap<IModuleResource, IModuleResource>(size);
 		for (int i = 0; i < size; i++)
 			originalMap.put(original[i], original[i]);
 		
 		// added and changed resources
 		for (int i = 0; i < size2; i++) {
-			IModuleResource old = (IModuleResource) originalMap.remove(current[i]);
+			IModuleResource old = originalMap.remove(current[i]);
 			if (old == null)
 				return true;
 			
@@ -477,7 +477,7 @@ public class ServerPublishInfo {
 		if (resources == null)
 			return new IModuleResourceDelta[0];
 		
-		List list = new ArrayList();
+		List<ModuleResourceDelta> list = new ArrayList<ModuleResourceDelta>();
 		
 		// look for duplicates
 		int size = resources.length;
@@ -490,9 +490,7 @@ public class ServerPublishInfo {
 			list.add(mrd);
 		}
 		
-		IModuleResourceDelta[] delta = new IModuleResourceDelta[list.size()];
-		list.toArray(delta);
-		return delta;
+		return list.toArray(new IModuleResourceDelta[list.size()]);
 	}
 
 	/**

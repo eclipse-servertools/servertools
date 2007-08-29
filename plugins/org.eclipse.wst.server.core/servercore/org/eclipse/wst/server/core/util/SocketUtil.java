@@ -37,20 +37,20 @@ public class SocketUtil {
 
 	protected static final Object lock = new Object();
 
-	private static Set localHostCache;
-	private static Set notLocalHostCache = new HashSet();
-	private static Map threadMap = new HashMap();
+	private static Set<String> localHostCache;
+	private static Set<String> notLocalHostCache = new HashSet<String>();
+	private static Map<String, CacheThread> threadMap = new HashMap<String, CacheThread>();
 
-	private static Set addressCache;
+	private static Set<InetAddress> addressCache;
 
 	static class CacheThread extends Thread {
-		private Set currentAddresses;
-		private Set addressList;
+		private Set<InetAddress> currentAddresses;
+		private Set<String> addressList;
 		private String host;
-		private Set nonAddressList;
+		private Set<String> nonAddressList;
 		private Map threadMap2;
 
-		public CacheThread(String host, Set currentAddresses, Set addressList, Set nonAddressList, Map threadMap2) {
+		public CacheThread(String host, Set<InetAddress> currentAddresses, Set<String> addressList, Set<String> nonAddressList, Map threadMap2) {
 			super("Caching localhost information");
 			this.host = host;
 			this.currentAddresses = currentAddresses;
@@ -251,7 +251,7 @@ public class SocketUtil {
 		try {
 			Thread t = null;
 			synchronized (lock) {
-				t = (Thread) threadMap.get(host);
+				t = threadMap.get(host);
 			}
 			if (t != null && t.isAlive()) {
 				currentThread = true;
@@ -265,25 +265,25 @@ public class SocketUtil {
 		boolean refreshedCache = false;
 		try {
 			// get network interfaces
-			final Set currentAddresses = new HashSet();
+			final Set<InetAddress> currentAddresses = new HashSet<InetAddress>();
 			currentAddresses.add(InetAddress.getLocalHost());
 			Enumeration nis = NetworkInterface.getNetworkInterfaces();
 			while (nis.hasMoreElements()) {
 				NetworkInterface inter = (NetworkInterface) nis.nextElement();
-				Enumeration ias = inter.getInetAddresses();
+				Enumeration<InetAddress> ias = inter.getInetAddresses();
 				while (ias.hasMoreElements())
 					currentAddresses.add(ias.nextElement());
 			}
 			
 			// check if cache is empty or old and refill it if necessary
 			if (addressCache == null || !addressCache.containsAll(currentAddresses) || !currentAddresses.containsAll(addressCache)) {
-				Thread cacheThread = null;
+				CacheThread cacheThread = null;
 				refreshedCache = true;
 				
 				synchronized (lock) {
 					addressCache = currentAddresses;
-					notLocalHostCache = new HashSet();
-					localHostCache = new HashSet(currentAddresses.size() * 3);
+					notLocalHostCache = new HashSet<String>();
+					localHostCache = new HashSet<String>(currentAddresses.size() * 3);
 					
 					Iterator iter = currentAddresses.iterator();
 					while (iter.hasNext()) {
@@ -315,7 +315,7 @@ public class SocketUtil {
 		// if the cache hasn't been cleared, maybe we still need to lookup the host  
 		if (!refreshedCache && !currentThread) {
 			try {
-				Thread cacheThread = null;
+				CacheThread cacheThread = null;
 				synchronized (lock) {
 					cacheThread = new CacheThread(host, null, localHostCache, notLocalHostCache, threadMap);
 					threadMap.put(host, cacheThread);
