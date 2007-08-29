@@ -56,8 +56,8 @@ public class ModuleSloshAction extends AbstractServerAction {
 		
 		// check if there are any modules first
 		// get currently deployed modules
-		List deployed = new ArrayList();
-		List modules = new ArrayList();
+		List<IModule> deployed = new ArrayList<IModule>();
+		List<IModule> modules = new ArrayList<IModule>();
 		IModule[] currentModules = server.getModules();
 		if (currentModules != null) {
 			int size = currentModules.length;

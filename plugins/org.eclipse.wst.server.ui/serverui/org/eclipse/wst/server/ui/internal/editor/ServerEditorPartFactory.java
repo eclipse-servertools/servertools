@@ -65,7 +65,7 @@ public class ServerEditorPartFactory implements IServerEditorPartFactory {
 	protected String[] getInsertionIds() {
 		try {
 			String insertionIds = element.getAttribute("insertionIds");
-			List list = new ArrayList();
+			List<String> list = new ArrayList<String>();
 			if (insertionIds != null && insertionIds.length() > 0) {
 				StringTokenizer st = new StringTokenizer(insertionIds, ",");
 				while (st.hasMoreTokens()) {
@@ -123,11 +123,11 @@ public class ServerEditorPartFactory implements IServerEditorPartFactory {
 	 * Return the ids of the server and server configuration type ids (specified
 	 * using Java-import style) that this page may support.
 	 * 
-	 * @return java.lang.String[]
+	 * @return an array of type ids
 	 */
 	protected String[] getTypeIds() {
 		try {
-			List list = new ArrayList();
+			List<String> list = new ArrayList<String>();
 			StringTokenizer st = new StringTokenizer(element.getAttribute("typeIds"), ",");
 			while (st.hasMoreTokens()) {
 				String str = st.nextToken();

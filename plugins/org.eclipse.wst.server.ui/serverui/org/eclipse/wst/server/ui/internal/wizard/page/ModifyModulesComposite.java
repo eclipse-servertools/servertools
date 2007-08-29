@@ -70,17 +70,17 @@ public class ModifyModulesComposite extends Composite {
 	protected IRuntime runtime;
 	protected boolean runtimeDirty;
 
-	protected Map childModuleMap = new HashMap();
-	protected Map parentModuleMap = new HashMap();
+	protected Map<ChildModuleMapKey, IModule[]> childModuleMap = new HashMap<ChildModuleMapKey, IModule[]>();
+	protected Map<IModule, IModule[]> parentModuleMap = new HashMap<IModule, IModule[]>();
 
 	// original modules on the server
-	protected List originalModules = new ArrayList();
+	protected List<IModule> originalModules = new ArrayList<IModule>();
 
 	// modules available to be added to the server
-	protected List modules = new ArrayList();
+	protected List<IModule> modules = new ArrayList<IModule>();
 
 	// current modules on the server
-	protected List deployed = new ArrayList();
+	protected List<IModule> deployed = new ArrayList<IModule>();
 
 	protected TreeViewer availableTreeViewer;
 	protected TreeViewer deployedTreeViewer;
@@ -98,7 +98,7 @@ public class ModifyModulesComposite extends Composite {
 	// must be kept on the server
 	protected IModule[] requiredModules;
 
-	protected Map errorMap;
+	protected Map<IModule, IStatus> errorMap;
 
 	abstract class TreeContentProvider implements ITreeContentProvider {
 		public void dispose() {
@@ -112,9 +112,9 @@ public class ModifyModulesComposite extends Composite {
 		public Object[] getChildren(Object parentElement) {
 			ModuleServer ms = (ModuleServer) parentElement;
 			IModule[] parent = ms.module;
-			IModule[] children = (IModule[]) childModuleMap.get(new ChildModuleMapKey(parent));
+			IModule[] children = childModuleMap.get(new ChildModuleMapKey(parent));
 			
-			List list = new ArrayList();
+			List<ModuleServer> list = new ArrayList<ModuleServer>();
 			if (children != null) {
 				int size = children.length;
 				for (int i = 0; i < size; i++) {
@@ -135,7 +135,7 @@ public class ModifyModulesComposite extends Composite {
 		public Object getParent(Object element) {
 			ModuleServer ms = (ModuleServer) element;
 			IModule[] child = ms.module;
-			IModule[] modules2 = (IModule[]) parentModuleMap.get(child);
+			IModule[] modules2 = parentModuleMap.get(child);
 			if (modules2 == null)
 				return null;
 			return new ModuleServer(null, modules2);
@@ -144,14 +144,14 @@ public class ModifyModulesComposite extends Composite {
 		public boolean hasChildren(Object element) {
 			ModuleServer ms = (ModuleServer) element;
 			IModule[] parent = ms.module;
-			IModule[] children = (IModule[]) childModuleMap.get(new ChildModuleMapKey(parent));
+			IModule[] children = childModuleMap.get(new ChildModuleMapKey(parent));
 			return (children != null && children.length > 0);
 		}
 	}
 
 	class AvailableContentProvider extends TreeContentProvider {
 		public Object[] getElements(Object inputElement) {
-			List list = new ArrayList();
+			List<ModuleServer> list = new ArrayList<ModuleServer>();
 			Iterator iterator = modules.iterator();
 			while (iterator.hasNext()) {
 				IModule module = (IModule) iterator.next();
@@ -163,7 +163,7 @@ public class ModifyModulesComposite extends Composite {
 
 	class DeployedContentProvider extends TreeContentProvider {
 		public Object[] getElements(Object inputElement) {
-			List list = new ArrayList();
+			List<ModuleServer> list = new ArrayList<ModuleServer>();
 			Iterator iterator = deployed.iterator();
 			while (iterator.hasNext()) {
 				IModule module = (IModule) iterator.next();
@@ -273,11 +273,11 @@ public class ModifyModulesComposite extends Composite {
 			}
 		}
 		
-		originalModules = new ArrayList();
-		deployed = new ArrayList();
-		modules = new ArrayList();
+		originalModules = new ArrayList<IModule>();
+		deployed = new ArrayList<IModule>();
+		modules = new ArrayList<IModule>();
 		
-		childModuleMap = new HashMap();
+		childModuleMap = new HashMap<ChildModuleMapKey, IModule[]>();
 		
 		if (server == null)
 			return;
@@ -294,7 +294,7 @@ public class ModifyModulesComposite extends Composite {
 		
 		// add new module
 		requiredModules = null;
-		errorMap = new HashMap();
+		errorMap = new HashMap<IModule, IStatus>();
 		if (requiredModule != null) {
 			try {
 				IModule[] parents = server.getRootModules(requiredModule, null);
@@ -368,16 +368,16 @@ public class ModifyModulesComposite extends Composite {
 		
 		// get children recursively one level
 		// put child elements into a different list to avoid concurrent modifications
-		iterator = childModuleMap.keySet().iterator();
-		List list = new ArrayList();
-		while (iterator.hasNext()) {
-			list.add(iterator.next());
+		Iterator<ChildModuleMapKey> iterator2 = childModuleMap.keySet().iterator();
+		List<ChildModuleMapKey> list = new ArrayList<ChildModuleMapKey>();
+		while (iterator2.hasNext()) {
+			list.add(iterator2.next());
 		}
 		
 		iterator = list.iterator();
 		while (iterator.hasNext()) {
 			ChildModuleMapKey key = (ChildModuleMapKey) iterator.next();
-			IModule[] children0 = (IModule[]) childModuleMap.get(key);
+			IModule[] children0 = childModuleMap.get(key);
 			if (children0 != null) {
 				int size = children0.length;
 				for (int i = 0; i < size; i++) {
@@ -710,7 +710,7 @@ public class ModifyModulesComposite extends Composite {
 				IModule module = getModule(ms[i]);
 				if (module != null) {
 					try {
-						IStatus status = (IStatus) errorMap.get(module);
+						IStatus status = errorMap.get(module);
 						if (modules.contains(module) && status != null) {
 							if (status.getSeverity() == IStatus.ERROR) {
 								enabled = false;
@@ -776,7 +776,7 @@ public class ModifyModulesComposite extends Composite {
 				}
 			}
 			
-			List list = new ArrayList();
+			List<IModule> list = new ArrayList<IModule>();
 			list.addAll(deployed);
 			list.remove(keep);
 			
@@ -791,9 +791,9 @@ public class ModifyModulesComposite extends Composite {
 
 	protected void moveAll(IModule[] mods, boolean add2) {
 		int size = mods.length;
-		List list = new ArrayList();
+		List<IModule> list = new ArrayList<IModule>();
 		for (int i = 0; i < size; i++) {
-			IStatus status = (IStatus) errorMap.get(mods[i]);
+			IStatus status = errorMap.get(mods[i]);
 			
 			if (status == null && !list.contains(mods[i]))
 				list.add(mods[i]);
@@ -831,7 +831,7 @@ public class ModifyModulesComposite extends Composite {
 	}
 
 	public List getModulesToRemove() {
-		List list = new ArrayList();
+		List<IModule> list = new ArrayList<IModule>();
 		Iterator iterator = originalModules.iterator();
 		while (iterator.hasNext()) {
 			IModule module = (IModule) iterator.next();
@@ -842,7 +842,7 @@ public class ModifyModulesComposite extends Composite {
 	}
 
 	public List getModulesToAdd() {
-		List list = new ArrayList();
+		List<IModule> list = new ArrayList<IModule>();
 		Iterator iterator = deployed.iterator();
 		while (iterator.hasNext()) {
 			IModule module = (IModule) iterator.next();
@@ -852,7 +852,7 @@ public class ModifyModulesComposite extends Composite {
 		return list;
 	}
 	
-	private void addChildMap(List map, IModule[] parents, IModule[] children) {
+	private void addChildMap(List<IModule[]> map, IModule[] parents, IModule[] children) {
 		if (children == null)
 			return;
 		
@@ -866,21 +866,21 @@ public class ModifyModulesComposite extends Composite {
 			modules2[size2] = module;
 			map.add(modules2);
 			
-			IModule[] children2 = (IModule[]) childModuleMap.get(new ChildModuleMapKey(module));
+			IModule[] children2 = childModuleMap.get(new ChildModuleMapKey(module));
 			if (children2 != null)
 				addChildMap(map, modules2, children2);
 		}
 	}
 
 	public List getModuleMap() {
-		final List map = new ArrayList();
+		final List<IModule[]> map = new ArrayList<IModule[]>();
 	
 		Iterator iterator = deployed.iterator();
 		while (iterator.hasNext()) {
 			IModule module = (IModule) iterator.next();
 			IModule[] moduleTree = new IModule[] { module };
 			map.add(moduleTree);
-			IModule[] children = (IModule[]) childModuleMap.get(new ChildModuleMapKey(module));
+			IModule[] children = childModuleMap.get(new ChildModuleMapKey(module));
 			if (children != null)
 				addChildMap(map, moduleTree, children);
 		}

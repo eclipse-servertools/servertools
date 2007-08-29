@@ -67,11 +67,11 @@ public class ServerEditorPageSectionFactory implements IServerEditorPageSectionF
 			return -1;
 		}
 	}
-	
+
 	/**
 	 * Returns the insertion id of this factory.
 	 *
-	 * @return java.lang.String
+	 * @return the insertion id
 	 */
 	public String getInsertionId() {
 		return element.getAttribute("insertionId");
@@ -81,11 +81,11 @@ public class ServerEditorPageSectionFactory implements IServerEditorPageSectionF
 	 * Return the ids of the server resource factories (specified
 	 * using Java-import style) that this page may support.
 	 * 
-	 * @return java.lang.String[]
+	 * @return an array of type ids
 	 */
 	protected String[] getTypeIds() {
 		try {
-			List list = new ArrayList();
+			List<String> list = new ArrayList<String>();
 			StringTokenizer st = new StringTokenizer(element.getAttribute("typeIds"), ",");
 			while (st.hasMoreTokens()) {
 				String str = st.nextToken();

@@ -45,7 +45,7 @@ public class ExtensionSite {
 		return memento.getString("url");
 	}
 
-	private List featureList;
+	private List<IFeature> featureList;
 
 	protected static boolean hasCategory(ISiteFeatureReference ref, String category) {
 		ICategory[] cat = ref.getCategories();
@@ -77,13 +77,13 @@ public class ExtensionSite {
 		return false;
 	}
 
-	public synchronized List getFeatures(String category, IProgressMonitor monitor) throws CoreException {
+	public synchronized List<IFeature> getFeatures(String category, IProgressMonitor monitor) throws CoreException {
 		if (featureList != null)
 			return featureList;
 		
 		String fromSite = getUrl();
 		
-		List list = new ArrayList();
+		List<IFeature> list = new ArrayList<IFeature>();
 		if (fromSite == null)
 			return list;
 		

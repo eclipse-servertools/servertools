@@ -265,7 +265,7 @@ public class NewManualServerComposite extends Composite {
 		newRuntime = null;
 		
 		if (server != null && runtimes != null) {
-			List runtimes2 = new ArrayList();
+			List<IRuntime> runtimes2 = new ArrayList<IRuntime>();
 			int size = runtimes.length;
 			for (int i = 0; i < size; i++) {
 				IRuntime runtime2 = runtimes[i];

@@ -46,23 +46,23 @@ class AudioTableContentProvider implements IStructuredContentProvider {
 	public Object[] getElements(Object inputElement) {
 		AudioCore core = AudioCore.getInstance();
 	
-		Map categories = core.getCategories();
-		Map sounds = core.getSounds();
+		Map<String, String> categories = core.getCategories();
+		Map<String, Sound> sounds = core.getSounds();
 	
-		List list = new ArrayList(sounds.size());
+		List<Object> list = new ArrayList<Object>(sounds.size());
 	
 		// first, find all the categories and sort
-		List cats = new ArrayList();
+		List<String> cats = new ArrayList<String>();
 		Iterator iterator = categories.keySet().iterator();
 		while (iterator.hasNext())
-			cats.add(iterator.next());
+			cats.add((String) iterator.next());
 		sortCategories(cats);
-	
+		
 		// list them, ignoring empty ones
 		iterator = categories.keySet().iterator();
 		while (iterator.hasNext()) {
 			String id = (String) iterator.next();
-			List l = getSoundsByCategory(id);
+			List<Sound> l = getSoundsByCategory(id);
 			if (!l.isEmpty()) {
 				list.add(id);
 				sortSounds(l);
@@ -74,7 +74,7 @@ class AudioTableContentProvider implements IStructuredContentProvider {
 		}
 	
 		// finally, list the "misc" sounds
-		List l = getSoundsByCategory(null);
+		List<Sound> l = getSoundsByCategory(null);
 		if (!l.isEmpty()) {
 			list.add(MISC_CATEGORY);
 			sortSounds(l);
@@ -95,17 +95,17 @@ class AudioTableContentProvider implements IStructuredContentProvider {
 	 * @return java.util.List
 	 * @param category java.lang.String
 	 */
-	protected static List getSoundsByCategory(String category) {
+	protected static List<Sound> getSoundsByCategory(String category) {
 		AudioCore core = AudioCore.getInstance();
 	
-		Map sounds = core.getSounds();
-		Map categories = core.getCategories();
-		List list = new ArrayList();
+		Map<String, Sound> sounds = core.getSounds();
+		Map<String, String> categories = core.getCategories();
+		List<Sound> list = new ArrayList<Sound>();
 	
 		Iterator iterator = sounds.keySet().iterator();
 		while (iterator.hasNext()) {
 			String id = (String) iterator.next();
-			Sound sound = (Sound) sounds.get(id);
+			Sound sound = sounds.get(id);
 			if (category != null && category.equals(sound.getCategory()))
 				list.add(sound);
 			else if (category == null && (sound.getCategory() == null || !categories.containsKey(sound.getCategory())))
@@ -139,19 +139,19 @@ class AudioTableContentProvider implements IStructuredContentProvider {
 	 *
 	 * @param list java.util.List
 	 */
-	protected void sortCategories(List list) {
+	protected void sortCategories(List<String> list) {
 		int size = list.size();
 		if (size < 2)
 			return;
-	
-		Map categories = AudioCore.getInstance().getCategories();
-	
+		
+		Map<String, String> categories = AudioCore.getInstance().getCategories();
+		
 		for (int i = 0; i < size - 1; i++) {
 			for (int j = i+1; j < size; j++) {
-				String a = (String) list.get(i);
-				String aa = (String) categories.get(a);
-				String b = (String) list.get(j);
-				String bb = (String) categories.get(b);
+				String a = list.get(i);
+				String aa = categories.get(a);
+				String b = list.get(j);
+				String bb = categories.get(b);
 				if (aa.compareTo(bb) > 0) {
 					list.set(i, b);
 					list.set(j, a);
@@ -165,15 +165,15 @@ class AudioTableContentProvider implements IStructuredContentProvider {
 	 *
 	 * @param sounds java.util.List
 	 */
-	protected void sortSounds(List sounds) {
+	protected void sortSounds(List<Sound> sounds) {
 		int size = sounds.size();
 		if (size < 2)
 			return;
 	
 		for (int i = 0; i < size - 1; i++) {
 			for (int j = i+1; j < size; j++) {
-				Sound a = (Sound) sounds.get(i);
-				Sound b = (Sound) sounds.get(j);
+				Sound a = sounds.get(i);
+				Sound b = sounds.get(j);
 				if (a.getName().compareTo(b.getName()) > 0) {
 					sounds.set(i, b);
 					sounds.set(j, a);

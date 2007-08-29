@@ -33,7 +33,7 @@ public class DefaultViewerSorter extends ViewerSorter {
 		}
 
 		public static Version parseVersion(String version) {
-			List list = new ArrayList();
+			List<String> list = new ArrayList<String>();
 			StringTokenizer st = new StringTokenizer(version, SEPARATORS, false);
 			while (st.hasMoreTokens())
 				list.add(st.nextToken());

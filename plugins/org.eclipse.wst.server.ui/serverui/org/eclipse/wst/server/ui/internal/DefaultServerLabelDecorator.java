@@ -24,14 +24,14 @@ import org.eclipse.wst.server.core.internal.Server;
  * 
  */
 public class DefaultServerLabelDecorator implements ILabelDecorator {
-	protected Map map = new HashMap();
+	protected Map<Object, Image> map = new HashMap<Object, Image>();
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ILabelDecorator#decorateImage(org.eclipse.swt.graphics.Image, java.lang.Object)
 	 */
 	public Image decorateImage(Image image, Object element) {
 		try {
-			Image img = (Image) map.get(element);
+			Image img = map.get(element);
 			if (img != null)
 				return img;
 		} catch (Exception e) {

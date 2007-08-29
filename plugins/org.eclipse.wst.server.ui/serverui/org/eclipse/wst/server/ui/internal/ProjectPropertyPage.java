@@ -176,8 +176,8 @@ public class ProjectPropertyPage extends PropertyPage {
 	/**
 	 * Returns a list of all servers that this module is configured on.
 	 *
-	 * @param module org.eclipse.wst.server.core.IModule
-	 * @return java.util.List
+	 * @param module a module
+	 * @return an array of servers
 	 */
 	protected static IServer[] getServersBySupportedModule(IModule module) {
 		if (module == null)
@@ -185,7 +185,7 @@ public class ProjectPropertyPage extends PropertyPage {
 		
 		// do it the slow way - go through all servers and
 		// see if this module is configured in it
-		List list = new ArrayList();
+		List<IServer> list = new ArrayList<IServer>();
 		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
 			int size = servers.length;
@@ -197,9 +197,7 @@ public class ProjectPropertyPage extends PropertyPage {
 			}
 		}
 		
-		IServer[] allServers = new IServer[list.size()];
-		list.toArray(allServers);
-		return allServers;
+		return list.toArray(new IServer[list.size()]);
 	}
 
 	protected void performDefaults() {

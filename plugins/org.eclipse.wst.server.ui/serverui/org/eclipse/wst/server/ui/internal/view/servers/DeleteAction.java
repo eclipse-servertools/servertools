@@ -55,7 +55,7 @@ public class DeleteAction extends Action {
 		
 		this.servers = servers;
 		
-		List list = new ArrayList();
+		List<IFolder> list = new ArrayList<IFolder>();
 		
 		int size = servers.length;
 		for (int i = 0; i < size; i++) {

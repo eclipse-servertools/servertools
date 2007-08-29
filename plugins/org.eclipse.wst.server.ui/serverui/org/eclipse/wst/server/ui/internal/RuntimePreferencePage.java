@@ -188,7 +188,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 					final IProgressMonitor monitor = dialog.getProgressMonitor();
 					final IRuntimeLocator[] locators = ServerPlugin.getRuntimeLocators();
 					monitor.beginTask(Messages.dialogRuntimeSearchProgress, 100 * locators.length + 10);
-					final List list = new ArrayList();
+					final List<IRuntimeWorkingCopy> list = new ArrayList<IRuntimeWorkingCopy>();
 					
 					final IRuntimeLocator.IRuntimeSearchListener listener = new IRuntimeLocator.IRuntimeSearchListener() {
 						public void runtimeFound(final IRuntimeWorkingCopy runtime) {
@@ -229,7 +229,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 						monitor.worked(5);
 						// remove duplicates from list (based on location)
 						Trace.trace(Trace.FINER, "Removing duplicates");
-						List good = new ArrayList();
+						List<IRuntime> good = new ArrayList<IRuntime>();
 						Iterator iterator2 = list.iterator();
 						while (iterator2.hasNext()) {
 							boolean dup = false;
@@ -279,7 +279,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 
 		// check for use
 		IServer[] servers = ServerCore.getServers();
-		List list = new ArrayList();
+		List<IServer> list = new ArrayList<IServer>();
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {

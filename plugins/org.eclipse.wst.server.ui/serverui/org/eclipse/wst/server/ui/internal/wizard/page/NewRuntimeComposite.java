@@ -48,8 +48,8 @@ public class NewRuntimeComposite extends Composite {
 	protected IRuntimeWorkingCopy runtime;
 
 	// cache of created runtimes and servers
-	protected Map cache = new HashMap();
-	protected Map serverCache = new HashMap();
+	protected Map<IRuntimeType, IRuntimeWorkingCopy> cache = new HashMap<IRuntimeType, IRuntimeWorkingCopy>();
+	protected Map<IRuntime, IServerWorkingCopy> serverCache = new HashMap<IRuntime, IServerWorkingCopy>();
 
 	protected TaskModel taskModel;
 	protected IWizardHandle wizard;
@@ -113,7 +113,7 @@ public class NewRuntimeComposite extends Composite {
 		else {
 			try {
 				runtime = null;
-				runtime = (IRuntimeWorkingCopy) cache.get(runtimeType);
+				runtime = cache.get(runtimeType);
 			} catch (Exception e) {
 				// ignore
 			}
@@ -149,7 +149,7 @@ public class NewRuntimeComposite extends Composite {
 	}
 
 	protected static IServerType getCompatibleServerType(IRuntimeType runtimeType) {
-		List list = new ArrayList();
+		List<IServerType> list = new ArrayList<IServerType>();
 		IServerType[] serverTypes = ServerCore.getServerTypes();
 		int size = serverTypes.length;
 		for (int i = 0; i < size; i++) {
@@ -158,7 +158,7 @@ public class NewRuntimeComposite extends Composite {
 				list.add(serverTypes[i]);
 		}
 		if (list.size() == 1)
-			return (IServerType) list.get(0);
+			return list.get(0);
 		return null;
 	}
 
@@ -169,7 +169,7 @@ public class NewRuntimeComposite extends Composite {
 		if (serverType == null || runtime == null || !serverType.hasRuntime())
 			return null;
 		
-		IServerWorkingCopy server = (IServerWorkingCopy) serverCache.get(runtime);
+		IServerWorkingCopy server = serverCache.get(runtime);
 		if (server != null)
 			return server;
 		

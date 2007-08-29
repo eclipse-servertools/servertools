@@ -25,7 +25,7 @@ import org.eclipse.wst.server.core.internal.Trace;
  */
 public abstract class BaseLabelProvider implements ILabelProvider {
 	protected ILabelDecorator decorator;
-	private transient List listeners;
+	private transient List<ILabelProviderListener> listeners;
 	private ILabelProviderListener providerListener;
 
 	/**
@@ -73,7 +73,7 @@ public abstract class BaseLabelProvider implements ILabelProvider {
 			throw new IllegalArgumentException("Listener cannot be null");
 		
 		if (listeners == null)
-			listeners = new ArrayList();
+			listeners = new ArrayList<ILabelProviderListener>();
 		listeners.add(listener);
 	}
 

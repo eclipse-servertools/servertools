@@ -25,7 +25,7 @@ import org.eclipse.ui.IActionDelegate;
  * 
  */
 public abstract class AbstractServerActionDelegate implements IActionDelegate {
-	protected List servers;
+	protected List<IServer> servers;
 
 	/**
 	 * Return true if this server can currently be acted on.
@@ -62,7 +62,7 @@ public abstract class AbstractServerActionDelegate implements IActionDelegate {
 	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
-		servers = new ArrayList();
+		servers = new ArrayList<IServer>();
 		if (selection.isEmpty() || !(selection instanceof StructuredSelection)) {
 			action.setEnabled(false);
 			return;

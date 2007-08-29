@@ -69,7 +69,7 @@ public class ExtensionUtility {
 			IMemento memento = XMLMemento.loadMemento(in);
 			IMemento children[] = memento.getChildren("site");
 			int size = children.length;
-			List list = new ArrayList(size);
+			List<ExtensionSite> list = new ArrayList<ExtensionSite>(size);
 			for (int i = 0; i < size; i++) {
 				ExtensionSite item = new ExtensionSite(children[i]);
 				list.add(item);
@@ -138,7 +138,7 @@ public class ExtensionUtility {
 		return false;
 	}
 
-	public static void addFeature(List list, List existing, IFeature newFeature, FeatureListener listener) {
+	public static void addFeature(List<IFeature> list, List<IFeature> existing, IFeature newFeature, FeatureListener listener) {
 		if (alreadyExists(existing, newFeature))
 			return;
 		
@@ -175,7 +175,7 @@ public class ExtensionUtility {
 		listener.featureFound(newFeature);
 	}
 
-	public static void addFeatures(List list, List existing, List newFeatures, FeatureListener listener) {
+	public static void addFeatures(List<IFeature> list, List<IFeature> existing, List newFeatures, FeatureListener listener) {
 		Iterator iterator = newFeatures.iterator();
 		while (iterator.hasNext()) {
 			addFeature(list, existing, (IFeature) iterator.next(), listener);
@@ -188,12 +188,12 @@ public class ExtensionUtility {
 		public void siteFailure(String host);
 	}
 
-	protected static List getExistingFeatures(IProgressMonitor monitor) throws CoreException {
+	protected static List<IFeature> getExistingFeatures(IProgressMonitor monitor) throws CoreException {
 		monitor.beginTask(Messages.installableServerLocal, 100);
 		ILocalSite site = SiteManager.getLocalSite();
 		IConfiguredSite[] sites = site.getCurrentConfiguration().getConfiguredSites();
 		int size = sites.length;
-		List list = new ArrayList(200);
+		List<IFeature> list = new ArrayList<IFeature>(200);
 		for (int i = 0; i < size; i++) {
 			IFeatureReference[] refs = sites[i].getFeatureReferences();
 			int size2 = refs.length;
@@ -213,14 +213,14 @@ public class ExtensionUtility {
 		monitor.beginTask("", 1100);
 		
 		monitor.subTask(Messages.installableServerLocal);
-		final List existing = getExistingFeatures(ProgressUtil.getSubMonitorFor(monitor, 100));
+		final List<IFeature> existing = getExistingFeatures(ProgressUtil.getSubMonitorFor(monitor, 100));
 		
 		final ExtensionSite[] items = ExtensionUtility.getExtensionItems();
 		IInstallableServer[] servers = ServerPlugin.getInstallableServers();
 		final int x = 1000 / (items.length + servers.length);
 		
 		monitor.worked(50);
-		final List list = new ArrayList();
+		final List<IFeature> list = new ArrayList<IFeature>();
 		int size = items.length;
 		
 		Thread[] threads = new Thread[size];
@@ -235,7 +235,7 @@ public class ExtensionUtility {
 				threads[i] = new Thread("Extension Checker") {
 					public void run() {
 						try {
-							List list2 = items[ii].getFeatures(id, ProgressUtil.getSubMonitorFor(monitor2, x));
+							List<IFeature> list2 = items[ii].getFeatures(id, ProgressUtil.getSubMonitorFor(monitor2, x));
 							addFeatures(list, existing, list2, listener);
 						} catch (CoreException ce) {
 							listener.siteFailure(ce.getLocalizedMessage());

@@ -67,12 +67,12 @@ public class DeleteActionDelegate implements IWorkbenchWindowActionDelegate {
 		IStructuredSelection select = (IStructuredSelection) selection;
 		Iterator iterator = select.iterator();
 		
-		List list = new ArrayList();
+		List<IServer> list = new ArrayList<IServer>();
 		
 		while (iterator.hasNext()) {
 			Object obj = iterator.next();
 			if (obj instanceof IServer)
-				list.add(obj);
+				list.add((IServer)obj);
 			else {
 				action.setEnabled(false);
 				return;

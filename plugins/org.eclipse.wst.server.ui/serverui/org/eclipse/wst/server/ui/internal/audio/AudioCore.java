@@ -64,7 +64,7 @@ public class AudioCore {
 	 *
 	 * @return java.util.Map
 	 */
-	protected Map getCategories() {
+	protected Map<String, String> getCategories() {
 		return categories;
 	}
 
@@ -202,7 +202,7 @@ public class AudioCore {
 	 *
 	 * @return java.util.Map
 	 */
-	protected Map getSounds() {
+	protected Map<String, Sound> getSounds() {
 		return sounds;
 	}
 
@@ -211,7 +211,7 @@ public class AudioCore {
 	 *
 	 * @return java.util.Map
 	 */
-	protected Map getUserSoundMap() {
+	protected Map<String, IPath> getUserSoundMap() {
 		if (userSoundMap == null)
 			loadSoundMap();
 		return userSoundMap;

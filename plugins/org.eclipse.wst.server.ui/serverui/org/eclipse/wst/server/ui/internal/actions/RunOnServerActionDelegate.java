@@ -57,7 +57,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 
 	protected static Object globalSelection;
 
-	protected static Map globalLaunchMode;
+	protected static Map<String, Boolean> globalLaunchMode;
 	protected String launchMode = ILaunchManager.RUN_MODE;
 
 	protected boolean tasksAndClientShown;
@@ -656,7 +656,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 
 	protected boolean isEnabled() {
 		try {
-			Boolean b = (Boolean) globalLaunchMode.get(getLaunchMode());
+			Boolean b = globalLaunchMode.get(getLaunchMode());
 			return b.booleanValue();
 		} catch (Exception e) {
 			// ignore
@@ -713,7 +713,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			if (selection != null)	
 				Trace.trace(Trace.FINEST, "Selection type: " + selection.getClass().getName());
 			globalSelection = selection;
-			globalLaunchMode = new HashMap();
+			globalLaunchMode = new HashMap<String, Boolean>();
 			if (!ServerPlugin.hasModuleArtifact(globalSelection)) {
 				action.setEnabled(false);
 				return;

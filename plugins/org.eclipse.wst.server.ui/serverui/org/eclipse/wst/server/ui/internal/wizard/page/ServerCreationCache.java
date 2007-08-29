@@ -23,14 +23,14 @@ import org.eclipse.wst.server.core.IServerWorkingCopy;
  * A helper class used to cache the creation of servers.
  */
 public class ServerCreationCache {
-	protected Map cache;
+	protected Map<String, IServerWorkingCopy> cache;
 
 	/**
 	 * ServerCreationCache constructor comment.
 	 */
 	public ServerCreationCache() {
 		super();
-		cache = new HashMap();
+		cache = new HashMap<String, IServerWorkingCopy>();
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class ServerCreationCache {
 	 */
 	public IServerWorkingCopy getCachedServer(IServerType type, boolean isLocalhost) {
 		try {
-			IServerWorkingCopy server = (IServerWorkingCopy) cache.get(getKey(type, isLocalhost));
+			IServerWorkingCopy server = cache.get(getKey(type, isLocalhost));
 			if (server != null)
 				return server;
 		} catch (Exception e) {

@@ -40,7 +40,7 @@ public class AudioPreferencePage extends PreferencePage implements IWorkbenchPre
 	protected Button enableButton;
 	protected Spinner volume;
 
-	protected Map userSoundMap;
+	protected Map<String, IPath> userSoundMap;
 
 	protected CategoryTableViewer viewer;
 	
@@ -305,13 +305,13 @@ public class AudioPreferencePage extends PreferencePage implements IWorkbenchPre
 	protected void setCheckState(CheckboxTableViewer viewer) {
 		AudioCore core = AudioCore.getInstance();
 		
-		Map categories = core.getCategories();
+		Map<String, String> categories = core.getCategories();
 		
 		// first, find all the categories and sort
-		List cats = new ArrayList();
+		List<String> cats = new ArrayList<String>();
 		Iterator iterator = categories.keySet().iterator();
 		while (iterator.hasNext())
-			cats.add(iterator.next());
+			cats.add((String)iterator.next());
 		
 		// list them, ignoring empty ones
 		iterator = categories.keySet().iterator();
@@ -350,7 +350,7 @@ public class AudioPreferencePage extends PreferencePage implements IWorkbenchPre
 	 */
 	protected URL getSoundURL(String id) {
 		try {
-			IPath path = (IPath) userSoundMap.get(id);
+			IPath path = userSoundMap.get(id);
 			if (path != null)
 				return path.toFile().toURL();
 		} catch (Exception e) {
@@ -367,7 +367,7 @@ public class AudioPreferencePage extends PreferencePage implements IWorkbenchPre
 	 */
 	protected IPath getUserSoundPath(String id) {
 		try {
-			IPath path = (IPath) userSoundMap.get(id);
+			IPath path = userSoundMap.get(id);
 			if (path != null)
 				return path;
 		} catch (Exception e) {
@@ -394,13 +394,13 @@ public class AudioPreferencePage extends PreferencePage implements IWorkbenchPre
 	 */
 	protected void loadUserMapInfo() {
 		// create a copy of the user sound map
-		Map map = AudioCore.getInstance().getUserSoundMap();
-		userSoundMap = new HashMap(map.size());
-	
+		Map<String, IPath> map = AudioCore.getInstance().getUserSoundMap();
+		userSoundMap = new HashMap<String, IPath>(map.size());
+		
 		Iterator iterator = map.keySet().iterator();
 		while (iterator.hasNext()) {
 			String id = (String) iterator.next();
-			IPath path = (IPath) map.get(id);
+			IPath path = map.get(id);
 			userSoundMap.put(id, path);
 		}
 	}
@@ -414,7 +414,7 @@ public class AudioPreferencePage extends PreferencePage implements IWorkbenchPre
 		enableButton.setSelection(core.getDefaultSoundsEnabled());
 		volume.setSelection(core.getDefaultVolume());
 	
-		userSoundMap = new HashMap();
+		userSoundMap = new HashMap<String, IPath>();
 		viewer.refresh();
 	
 		super.performDefaults();
@@ -448,7 +448,7 @@ public class AudioPreferencePage extends PreferencePage implements IWorkbenchPre
 	protected void saveUserMapInfo() {
 		// create a copy of the user sound map
 		Map map = AudioCore.getInstance().getUserSoundMap();
-		userSoundMap = new HashMap(map.size());
+		userSoundMap = new HashMap<String, IPath>(map.size());
 	
 		Iterator iterator = map.keySet().iterator();
 		while (iterator.hasNext()) {

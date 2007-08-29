@@ -33,7 +33,7 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 
 	protected Object[] elements;
 	protected Map elementToParentMap = new HashMap(2);
-	protected Map textMap = new HashMap(2);
+	protected Map<String, TreeElement> textMap = new HashMap<String, TreeElement>(2);
 
 	/**
 	 * AbstractTreeContentProvider constructor comment.
@@ -53,12 +53,12 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 	protected void clean() {
 		elements = null;
 		elementToParentMap = new HashMap(2);
-		textMap = new HashMap(2);
+		textMap = new HashMap<String, TreeElement>(2);
 		
 		initialSelection = null;
 	}
 
-	protected TreeElement getOrCreate(List list, String text) {
+	protected TreeElement getOrCreate(List<TreeElement> list, String text) {
 		try {
 			Object obj = textMap.get(text);
 			if (obj != null)
@@ -75,7 +75,7 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 		return element;
 	}
 	
-	protected TreeElement getOrCreate(List list, String id, String text) {
+	protected TreeElement getOrCreate(List<TreeElement> list, String id, String text) {
 		try {
 			Object obj = textMap.get(id);
 			if (obj != null)
@@ -94,7 +94,7 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 
 	protected TreeElement getByText(String text) {
 		try {
-			return (TreeElement) textMap.get(text);
+			return textMap.get(text);
 		} catch (Exception e) {
 			return null;
 		}
@@ -167,7 +167,7 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 	}
 
 	private Object[] getAllObjects() {
-		List list = new ArrayList();
+		List<Object> list = new ArrayList<Object>();
 		Object[] obj = getElements(null);
 		if (obj != null) {
 			int size = obj.length;
@@ -180,7 +180,7 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 		return list.toArray();
 	}
 
-	private void getAllChildren(List list, Object element) {
+	private void getAllChildren(List<Object> list, Object element) {
 		Object[] obj = getChildren(element);
 		if (obj != null) {
 			int size = obj.length;

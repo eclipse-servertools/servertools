@@ -118,7 +118,7 @@ public class ServerEditor extends MultiPageEditorPart {
 
 	protected IAction[] editorActions;
 
-	protected java.util.List serverPages;
+	protected java.util.List<IEditorPart> serverPages;
 
 	// on focus change flag
 	protected boolean resourceDeleted;
@@ -136,7 +136,7 @@ public class ServerEditor extends MultiPageEditorPart {
 	// used for disabling resource change check when saving through editor
 	protected boolean isSaving = false;
 
-	protected Map pageToFactory = new HashMap();
+	protected Map<IEditorPart, IServerEditorPartFactory> pageToFactory = new HashMap<IEditorPart, IServerEditorPartFactory>();
 
 	/**
 	 * ServerEditor constructor comment.
@@ -198,7 +198,7 @@ public class ServerEditor extends MultiPageEditorPart {
 
 	public IServerEditorPartFactory getPageFactory(ServerEditorPart part) {
 		try {
-			return (IServerEditorPartFactory) pageToFactory.get(part);
+			return pageToFactory.get(part);
 		} catch (Exception e) {
 			// ignore
 		}
@@ -214,7 +214,7 @@ public class ServerEditor extends MultiPageEditorPart {
 	protected void createPages() {
 		try {
 			int index = 0;
-			serverPages = new ArrayList();
+			serverPages = new ArrayList<IEditorPart>();
 			
 			// add editor pages
 			int pageCount = 0;
@@ -312,7 +312,7 @@ public class ServerEditor extends MultiPageEditorPart {
 		isSaving = true;
 		
 		// check pages for errors first
-		java.util.List errors = new ArrayList();
+		java.util.List<String> errors = new ArrayList<String>();
 		Iterator iterator = serverPages.iterator();
 		int count = 0;
 		int maxSeverity = -1;

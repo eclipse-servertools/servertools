@@ -73,7 +73,7 @@ public class HostnameComposite extends Composite {
 		label.setText(Messages.hostname);
 		label.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		
-		List hosts = ServerUIPlugin.getPreferences().getHostnames();
+		List<String> hosts = ServerUIPlugin.getPreferences().getHostnames();
 		String[] s = new String[hosts.size()];
 		hosts.toArray(s);
 		

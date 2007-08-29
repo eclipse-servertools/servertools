@@ -45,13 +45,13 @@ public class GlobalCommandManager {
 	}
 
 	// commands in the undo history
-	protected List undoList = new ArrayList();
+	protected List<ServerResourceCommand> undoList = new ArrayList<ServerResourceCommand>();
 
 	// size of the undo stack on last save
 	protected int undoSaveIndex = 0;
 
 	// commands in the redo history
-	protected List redoList = new ArrayList();
+	protected List<ServerResourceCommand> redoList = new ArrayList<ServerResourceCommand>();
 
 	class CommandManagerInfo {
 		// number of open editors on this resource
@@ -71,15 +71,15 @@ public class GlobalCommandManager {
 		IServerWorkingCopy wc;
 		
 		// files and timestamps
-		Map fileMap;
+		Map<IFile, Long> fileMap;
 		
 		int timestamp;
 	}
 
-	protected Map commandManagers = new HashMap();
+	protected Map<String, CommandManagerInfo> commandManagers = new HashMap<String, CommandManagerInfo>();
 
 	// property change listeners
-	protected List propertyListeners;
+	protected List<PropertyChangeListener> propertyListeners;
 	public static final String PROP_DIRTY = "dirtyState";
 	public static final String PROP_UNDO = "undoAction";
 	public static final String PROP_REDO = "redoAction";
@@ -100,7 +100,7 @@ public class GlobalCommandManager {
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		if (propertyListeners == null)
-			propertyListeners = new ArrayList();
+			propertyListeners = new ArrayList<PropertyChangeListener>();
 		propertyListeners.add(listener);
 	}
 
@@ -147,7 +147,7 @@ public class GlobalCommandManager {
 	public void getCommandManager(String id) {
 		Trace.trace(Trace.FINEST, "Getting command manager for " + id);
 		try {
-			CommandManagerInfo info = (CommandManagerInfo) commandManagers.get(id);
+			CommandManagerInfo info = commandManagers.get(id);
 			if (info != null) {
 				info.count ++;
 				return;
@@ -183,7 +183,7 @@ public class GlobalCommandManager {
 	public void releaseCommandManager(String id) {
 		Trace.trace(Trace.FINEST, "Releasing command manager for " + id);
 		try {
-			CommandManagerInfo info = (CommandManagerInfo) commandManagers.get(id);
+			CommandManagerInfo info = commandManagers.get(id);
 			if (info != null) {
 				info.count --;
 				if (info.count == 0) {
@@ -228,7 +228,7 @@ public class GlobalCommandManager {
 	 */
 	protected CommandManagerInfo getExistingCommandManagerInfo(String id) {
 		try {
-			return (CommandManagerInfo) commandManagers.get(id);
+			return commandManagers.get(id);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not find existing command manager info");
 		}
@@ -343,7 +343,7 @@ public class GlobalCommandManager {
 		int i = 0;
 		boolean modified = false;
 		while (i < undoList.size()) {
-			ServerResourceCommand src = (ServerResourceCommand) undoList.get(i);
+			ServerResourceCommand src = undoList.get(i);
 			if (src.id.equals(id)) {
 				modified = true;
 				undoList.remove(i);
@@ -361,7 +361,7 @@ public class GlobalCommandManager {
 		int i = 0;
 		boolean modified = false;
 		while (i < redoList.size()) {
-			ServerResourceCommand src = (ServerResourceCommand) redoList.get(i);
+			ServerResourceCommand src = redoList.get(i);
 			if (src.id.equals(id)) {
 				redoList.remove(i);
 				modified = true;
@@ -409,7 +409,7 @@ public class GlobalCommandManager {
 	public IUndoableOperation getUndoCommand(String a) {
 		int size = undoList.size();
 		for (int i = size - 1; i >= 0; i--) {
-			ServerResourceCommand src = (ServerResourceCommand) undoList.get(i);
+			ServerResourceCommand src = undoList.get(i);
 			if (src.id == a)
 				return src.command;
 		}
@@ -425,7 +425,7 @@ public class GlobalCommandManager {
 	public IUndoableOperation getRedoCommand(String a) {
 		int size = redoList.size();
 		for (int i = size - 1; i >= 0; i--) {
-			ServerResourceCommand src = (ServerResourceCommand) redoList.get(i);
+			ServerResourceCommand src = redoList.get(i);
 			if (src.id == a)
 				return src.command;
 		}
@@ -581,7 +581,7 @@ public class GlobalCommandManager {
 	 */
 	public static IFile[] getReadOnlyFiles(IServerAttributes server) {
 		try {
-			List list = new ArrayList();
+			List<IFile> list = new ArrayList<IFile>();
 			IFile file = ((Server)server).getFile();
 			
 			if (file != null)
@@ -611,7 +611,7 @@ public class GlobalCommandManager {
 	}
 
 	protected IFile[] getReadOnlyFiles(String id) {
-		List list = new ArrayList();
+		List<IFile> list = new ArrayList<IFile>();
 		IFile[] files = getServerResourceFiles(id);
 		int size = files.length;
 		for (int i = 0; i < size; i++) {
@@ -634,7 +634,7 @@ public class GlobalCommandManager {
 		if (info == null)
 			return;
 		
-		info.fileMap = new HashMap();
+		info.fileMap = new HashMap<IFile, Long>();
 		IFile[] files = getServerResourceFiles(id);
 		if (files != null) {
 			int size = files.length;
@@ -675,7 +675,7 @@ public class GlobalCommandManager {
 			count++;
 			File f = files[i].getLocation().toFile();
 			try {
-				Long time = (Long) info.fileMap.get(files[i]);
+				Long time = info.fileMap.get(files[i]);
 				if (time.longValue() != f.lastModified())
 					return true;
 			} catch (Exception e) {

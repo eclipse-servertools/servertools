@@ -35,7 +35,7 @@ import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
  */
 public class ServerLabelProvider implements ILabelProvider, IColorProvider {
 	private ILabelDecorator decorator;
-	protected transient List listeners;
+	protected transient List<ILabelProviderListener> listeners;
 	protected ILabelProviderListener providerListener;
 
 	public ServerLabelProvider() {
@@ -53,7 +53,7 @@ public class ServerLabelProvider implements ILabelProvider, IColorProvider {
 			throw new IllegalArgumentException("Listener cannot be null");
 		
 		if (listeners == null)
-			listeners = new ArrayList();
+			listeners = new ArrayList<ILabelProviderListener>();
 		listeners.add(listener);
 	}
 

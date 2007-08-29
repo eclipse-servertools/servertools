@@ -86,7 +86,7 @@ public class ServerEditorActionFactory implements IServerEditorActionFactory {
 	 */
 	public String[] getTypeIds() {
 		try {
-			List list = new ArrayList();
+			List<String> list = new ArrayList<String>();
 			StringTokenizer st = new StringTokenizer(element.getAttribute("typeIds"), ",");
 			while (st.hasMoreTokens()) {
 				String str = st.nextToken();
