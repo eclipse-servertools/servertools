@@ -12,6 +12,9 @@ package org.eclipse.wst.server.core.internal;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 /**
  * Helper class to route trace output.
  */
@@ -77,7 +80,10 @@ public class Trace {
 	private static void trace(String pluginId, int level, String s, Throwable t) {
 		if (pluginId == null || s == null)
 			return;
-
+		
+		if (level == SEVERE)
+			ServerPlugin.log(new Status(IStatus.ERROR, pluginId, s, t));
+		
 		if (!ServerPlugin.getInstance().isDebugging())
 			return;
 		
