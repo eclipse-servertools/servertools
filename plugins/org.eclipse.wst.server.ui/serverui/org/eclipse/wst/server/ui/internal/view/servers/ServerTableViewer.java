@@ -181,9 +181,20 @@ public class ServerTableViewer extends TreeViewer {
 				if (!stopAnimation) {
 					try {
 						labelProvider.animate();
-						final Object[] rootElements = ((ITreeContentProvider)getContentProvider()).getElements(null); 
-						if (getTree() != null && !getTree().isDisposed())
-							update(rootElements, null);
+						
+						int size = 0;
+						String[] servers;
+						synchronized (starting) {
+							size = starting.size();
+							servers = new String[size];
+							starting.toArray(servers);
+						}
+						
+						for (int i = 0; i < size; i++) {
+							IServer server = ServerCore.findServer(servers[i]);
+							if (server != null && getTree() != null && !getTree().isDisposed())
+								updateAnimation(server);
+						}
 					} catch (Exception e) {
 						Trace.trace(Trace.FINEST, "Error in Servers view animation", e);
 					}
@@ -454,16 +465,20 @@ public class ServerTableViewer extends TreeViewer {
 						int state = event.getState();
 						String id = server.getId();
 						if (state == IServer.STATE_STARTING || state == IServer.STATE_STOPPING) {
-							if (!starting.contains(id)) {
-								if (starting.isEmpty())
-									startThread();
-								starting.add(id);
+							synchronized (starting) {
+								if (!starting.contains(id)) {
+									if (starting.isEmpty())
+										startThread();
+									starting.add(id);
+								}
 							}
 						} else {
-							if (starting.contains(id)) {
-								starting.remove(id);
-								if (starting.isEmpty())
-									stopThread();
+							synchronized (starting) {
+								if (starting.contains(id)) {
+									starting.remove(id);
+									if (starting.isEmpty())
+										stopThread();
+								}
 							}
 						}
 					} else
@@ -637,5 +652,16 @@ public class ServerTableViewer extends TreeViewer {
 			}
 		}
 		super.doUpdateItem(widget, element, fullMap);
+	}
+
+	protected void updateAnimation(IServer server) {
+		try {
+			Widget widget = doFindItem(server);
+			TreeItem item = (TreeItem) widget;
+			item.setText(1, labelProvider.getColumnText(server, 1));
+			item.setImage(1, labelProvider.getColumnImage(server, 1));
+		} catch (Exception e) {
+			Trace.trace(Trace.WARNING, "Error in optimized animation", e);
+		}
 	}
 }
