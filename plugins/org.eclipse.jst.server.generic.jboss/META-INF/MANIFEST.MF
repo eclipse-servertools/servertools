@@ -6,8 +6,8 @@ Bundle-Version: 1.5.102.qualifier
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.jst.server.core;bundle-version="[1.0.102,1.1.0)",
- org.eclipse.jst.server.generic.core;bundle-version="[1.0.100,1.1.0)",
- org.eclipse.jst.server.generic.ui;bundle-version="[1.0.100,1.1.0)",
+ org.eclipse.jst.server.generic.core;bundle-version="[1.1.0,1.2.0)",
+ org.eclipse.jst.server.generic.ui;bundle-version="[1.1.0,1.2.0)",
  org.eclipse.jst.server.ui;bundle-version="[1.0.102,1.1.0)",
  org.eclipse.jst.common.project.facet.core;bundle-version="[1.1.0,1.2.0)",
  org.eclipse.wst.common.project.facet.core;bundle-version="[1.1.0,2.0.0)",
