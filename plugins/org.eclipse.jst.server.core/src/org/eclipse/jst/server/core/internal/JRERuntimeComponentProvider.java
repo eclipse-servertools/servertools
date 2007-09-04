@@ -21,6 +21,7 @@ import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMInstall2;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.core.IJavaRuntime;
+import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponent;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponentVersion;
 import org.eclipse.wst.common.project.facet.core.runtime.RuntimeManager;
 import org.eclipse.wst.server.core.IRuntime;
@@ -29,7 +30,7 @@ import org.eclipse.wst.server.core.internal.Runtime;
 public class JRERuntimeComponentProvider extends RuntimeComponentProviderDelegate {
 	public static final String CLASSPATH = "classpath";
 
-	private Map vmCache = new HashMap();
+	private Map<String, VMInstallCache> vmCache = new HashMap<String, VMInstallCache>();
 
 	class VMInstallCache {
 		// cached attributes
@@ -41,11 +42,11 @@ public class JRERuntimeComponentProvider extends RuntimeComponentProviderDelegat
 		File location;
 	}
 
-	public List getRuntimeComponents(IRuntime runtime) {
+	public List<IRuntimeComponent> getRuntimeComponents(IRuntime runtime) {
 		// define JRE component
 		IJavaRuntime javaRuntime = (IJavaRuntime) runtime.loadAdapter(IJavaRuntime.class, null);
 		if (javaRuntime != null) {
-			VMInstallCache cache = (VMInstallCache) vmCache.get(runtime.getId());
+			VMInstallCache cache = vmCache.get(runtime.getId());
 			if (cache != null) {
 				if (cache.timestamp != ((Runtime) runtime).getTimestamp())
 					cache = null;
@@ -99,7 +100,7 @@ public class JRERuntimeComponentProvider extends RuntimeComponentProviderDelegat
 			}
 			
 			if (rcv != null) {
-				Map properties = new HashMap(3);
+				Map<String, String> properties = new HashMap<String, String>(3);
 				String name = "-";
 				if (vmInstallName != null)
 					name = vmInstallName;
@@ -119,7 +120,7 @@ public class JRERuntimeComponentProvider extends RuntimeComponentProviderDelegat
 				else
 					properties.put(CLASSPATH, JavaRuntime.newJREContainerPath(vmInstall).toPortableString());
 				
-				List list = new ArrayList();
+				List<IRuntimeComponent> list = new ArrayList<IRuntimeComponent>();
 				list.add(RuntimeManager.createRuntimeComponent(rcv, properties));
 				return list;
 			}

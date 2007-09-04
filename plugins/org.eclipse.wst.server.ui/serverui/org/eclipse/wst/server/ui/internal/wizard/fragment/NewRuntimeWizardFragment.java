@@ -38,7 +38,7 @@ public class NewRuntimeWizardFragment extends WizardFragment {
 	// filter by partial runtime type id
 	protected String runtimeTypeId;
 
-	protected Map fragmentMap = new HashMap();
+	protected Map<String, WizardFragment> fragmentMap = new HashMap<String, WizardFragment>();
 
 	public NewRuntimeWizardFragment() {
 		// do nothing
@@ -111,7 +111,7 @@ public class NewRuntimeWizardFragment extends WizardFragment {
 
 	protected WizardFragment getWizardFragment(String typeId) {
 		try {
-			WizardFragment fragment = (WizardFragment) fragmentMap.get(typeId);
+			WizardFragment fragment = fragmentMap.get(typeId);
 			if (fragment != null)
 				return fragment;
 		} catch (Exception e) {

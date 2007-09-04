@@ -13,7 +13,6 @@ package org.eclipse.jst.server.ui.internal.cactus;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -95,11 +94,11 @@ public class JUnitClientDelegate extends ClientDelegate {
 		String javaProjectName = launchable.getProjectName();
 		String container = "";
 		ILaunchConfigurationType configType = getJUnitLaunchConfigType();
-		List candidateConfigs = Collections.EMPTY_LIST;
+		List<ILaunchConfiguration> candidateConfigs = new ArrayList<ILaunchConfiguration>();
 		try {
 			ILaunchConfiguration[] configs = DebugPlugin.getDefault()
 					.getLaunchManager().getLaunchConfigurations(configType);
-			candidateConfigs = new ArrayList(configs.length);
+			candidateConfigs = new ArrayList<ILaunchConfiguration>(configs.length);
 			for (int i = 0; i < configs.length; i++) {
 				ILaunchConfiguration config = configs[i];
 				// we should probably extract the JUnit internal stuff and
@@ -126,7 +125,7 @@ public class JUnitClientDelegate extends ClientDelegate {
 		if (candidateCount < 1)
 			return null;
 		else if (candidateCount == 1)
-			return (ILaunchConfiguration) candidateConfigs.get(0);
+			return candidateConfigs.get(0);
 		else {
 			// Prompt the user to choose a config. A null result means the user
 			// cancelled the dialog, in which case this method returns null,

@@ -45,10 +45,10 @@ public class JavaServerPlugin extends Plugin {
 	private static JavaServerPlugin singleton;
 
 	//	cached copy of all runtime classpath providers
-	private static List runtimeClasspathProviders;
+	private static List<RuntimeClasspathProviderWrapper> runtimeClasspathProviders;
 
 	// cached copy of all server profilers
-	private static List serverProfilers;
+	private static List<ServerProfiler> serverProfilers;
 	
 	// runtime listener
 	private static IRuntimeLifecycleListener runtimeListener;
@@ -299,7 +299,7 @@ public class JavaServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(JavaServerPlugin.PLUGIN_ID, "runtimeClasspathProviders");
 		
 		int size = cf.length;
-		List list = new ArrayList(size);
+		List<RuntimeClasspathProviderWrapper> list = new ArrayList<RuntimeClasspathProviderWrapper>(size);
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new RuntimeClasspathProviderWrapper(cf[i]));
@@ -342,7 +342,7 @@ public class JavaServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(JavaServerPlugin.PLUGIN_ID, "serverProfilers");
 		
 		int size = cf.length;
-		List list = new ArrayList(size);
+		List<ServerProfiler> list = new ArrayList<ServerProfiler>(size);
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new ServerProfiler(cf[i]));

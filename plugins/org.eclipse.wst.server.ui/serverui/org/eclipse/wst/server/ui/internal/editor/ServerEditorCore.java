@@ -220,7 +220,7 @@ public class ServerEditorCore {
 				IOrdered a = (IOrdered) list.get(i);
 				IOrdered b = (IOrdered) list.get(j);
 				if (a.getOrder() > b.getOrder()) {
-					Object temp = a;
+					IOrdered temp = a;
 					list.set(i, b);
 					list.set(j, temp);
 				}

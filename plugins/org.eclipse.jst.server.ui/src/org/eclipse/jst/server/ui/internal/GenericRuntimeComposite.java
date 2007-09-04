@@ -46,7 +46,7 @@ public class GenericRuntimeComposite extends Composite {
 	protected Text name;
 	protected Text installDir;
 	protected Combo combo;
-	protected List installedJREs;
+	protected List<IVMInstall> installedJREs;
 	protected String[] jreNames;
 
 	/**
@@ -149,7 +149,7 @@ public class GenericRuntimeComposite extends Composite {
 				int sel = combo.getSelectionIndex();
 				IVMInstall vmInstall = null;
 				if (sel > 0)
-					vmInstall = (IVMInstall) installedJREs.get(sel - 1);
+					vmInstall = installedJREs.get(sel - 1);
 				
 				runtime.setVMInstall(vmInstall);
 				validate();
@@ -184,7 +184,7 @@ public class GenericRuntimeComposite extends Composite {
 	
 	protected void updateJREs() {
 		// get all installed JVMs
-		installedJREs = new ArrayList();
+		installedJREs = new ArrayList<IVMInstall>();
 		IVMInstallType[] vmInstallTypes = JavaRuntime.getVMInstallTypes();
 		int size = vmInstallTypes.length;
 		for (int i = 0; i < size; i++) {
@@ -200,7 +200,7 @@ public class GenericRuntimeComposite extends Composite {
 		jreNames = new String[size+1];
 		jreNames[0] = Messages.runtimeTypeDefaultJRE;
 		for (int i = 0; i < size; i++) {
-			IVMInstall vmInstall = (IVMInstall) installedJREs.get(i);
+			IVMInstall vmInstall = installedJREs.get(i);
 			jreNames[i+1] = vmInstall.getName();
 		}
 	}
@@ -240,7 +240,7 @@ public class GenericRuntimeComposite extends Composite {
 			boolean found = false;
 			int size = installedJREs.size();
 			for (int i = 0; i < size; i++) {
-				IVMInstall vmInstall = (IVMInstall) installedJREs.get(i);
+				IVMInstall vmInstall = installedJREs.get(i);
 				if (vmInstall.equals(runtime.getVMInstall())) {
 					combo.select(i + 1);
 					found = true;

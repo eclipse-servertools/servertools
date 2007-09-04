@@ -30,7 +30,7 @@ import org.eclipse.wst.server.core.util.SocketUtil;
  * 
  */
 public class DefaultMonitorDelegate extends ServerMonitorDelegate {
-	protected Map monitors = new HashMap();
+	protected Map<ServerPort, IMonitor> monitors = new HashMap<ServerPort, IMonitor>();
 	protected IMonitorListener listener;
 
 	private void addListener() {
@@ -74,7 +74,7 @@ public class DefaultMonitorDelegate extends ServerMonitorDelegate {
 	 */
 	public int startMonitoring(IServer server, ServerPort port, int monitorPort) throws CoreException {
 		try {
-			IMonitor monitor = (IMonitor) monitors.get(port);
+			IMonitor monitor = monitors.get(port);
 			int mport = -1;
 			if (monitor == null) {
 				mport = monitorPort;
@@ -106,7 +106,7 @@ public class DefaultMonitorDelegate extends ServerMonitorDelegate {
 	 */
 	public void stopMonitoring(IServer server, ServerPort port) {
 		try {
-			IMonitor monitor = (IMonitor) monitors.get(port);
+			IMonitor monitor = monitors.get(port);
 			if (monitor != null)
 				monitor.stop();
 		} catch (Exception e) {

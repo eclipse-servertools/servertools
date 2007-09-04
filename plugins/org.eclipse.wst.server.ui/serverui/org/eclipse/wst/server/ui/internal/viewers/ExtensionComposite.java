@@ -60,7 +60,7 @@ public class ExtensionComposite extends Composite {
 
 	protected Font font;
 
-	protected HashMap images;
+	protected HashMap<String, Image> images;
 
 	protected String progress;
 	protected int totalWork;
@@ -205,7 +205,7 @@ public class ExtensionComposite extends Composite {
 					
 					return;
 				} else if (obj instanceof List) {
-					List list = (List) obj;
+					List<String> list = (List<String>) obj;
 					
 					int size = list.size();
 					String[] hosts = new String[size];
@@ -345,7 +345,7 @@ public class ExtensionComposite extends Composite {
 			return null;
 		
 		try {
-			Image image = (Image) images.get(url.toString());
+			Image image = images.get(url.toString());
 			if (image != null)
 				return image;
 		} catch (Exception e) {
@@ -355,7 +355,7 @@ public class ExtensionComposite extends Composite {
 			ImageDescriptor id = ImageDescriptor.createFromURL(url);
 			Image image = id.createImage();
 			if (images == null)
-				images = new HashMap();
+				images = new HashMap<String, Image>();
 			images.put(url.toString(), image);
 			return image;
 		} catch (Exception e) {
@@ -385,7 +385,7 @@ public class ExtensionComposite extends Composite {
 	}
 
 	protected void deferInitialization() {
-		final List list = Collections.synchronizedList(new ArrayList());
+		final List<Object> list = Collections.synchronizedList(new ArrayList<Object>());
 		list.add(Messages.viewInitializing);
 		
 		tableViewer.setContentProvider(new ExtensionContentProvider(list));
@@ -449,8 +449,8 @@ public class ExtensionComposite extends Composite {
 		display.timerExec(SLEEP, animator[0]);
 	}
 
-	public void deferredInitialize(final List list, IProgressMonitor monitor) {
-		final List failedSites = new ArrayList();
+	public void deferredInitialize(final List<Object> list, IProgressMonitor monitor) {
+		final List<String> failedSites = new ArrayList<String>();
 		ExtensionUtility.FeatureListener listener2 = new ExtensionUtility.FeatureListener() {
 			public void featureFound(IFeature feature) {
 				list.add(feature);

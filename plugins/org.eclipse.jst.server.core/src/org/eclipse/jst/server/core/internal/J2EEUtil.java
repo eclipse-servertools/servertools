@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,7 +35,7 @@ public class J2EEUtil {
 	 * @return a possibly empty array of enterprise applications
 	 */
 	public static IModule[] getEnterpriseApplications(IJ2EEModule module, IProgressMonitor monitor) {
-		List list = new ArrayList();
+		List<IModule> list = new ArrayList<IModule>();
 		IModule[] modules = ServerUtil.getModules(EAR_MODULE);
 		if (modules != null) {
 			int size = modules.length;
@@ -69,7 +69,7 @@ public class J2EEUtil {
 	 * @return a possibly empty array of enterprise applications
 	 */
 	public static IModule[] getEnterpriseApplications(IModule module, IProgressMonitor monitor) {
-		List list = new ArrayList();
+		List<IModule> list = new ArrayList<IModule>();
 		IModule[] modules = ServerUtil.getModules(EAR_MODULE);
 		if (modules != null) {
 			int size = modules.length;
@@ -103,7 +103,7 @@ public class J2EEUtil {
 	 * @return a possibly empty array of web modules
 	 */
 	public static IModule[] getWebModules(IModule module, IProgressMonitor monitor) {
-		List list = new ArrayList();
+		List<IModule> list = new ArrayList<IModule>();
 		IModule[] modules = ServerUtil.getModules(WEB_MODULE);
 		if (modules != null) {
 			int size = modules.length;

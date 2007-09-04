@@ -196,8 +196,8 @@ public class DeleteServerDialog extends MessageDialog {
 	 */
 	protected void prepareForDeletion(boolean deleteRunning, boolean stopRunning) {
 		// converts servers & configs to list to facilitate removal
-		List serversList = new LinkedList(Arrays.asList(servers));
-		List configsList = new LinkedList(Arrays.asList(configs));
+		List<IServer> serversList = new LinkedList<IServer>(Arrays.asList(servers));
+		List<IFolder> configsList = new LinkedList<IFolder>(Arrays.asList(configs));
 		if (!deleteRunning) {
 			// don't delete servers or configurations
 			int size = runningServersList.size();

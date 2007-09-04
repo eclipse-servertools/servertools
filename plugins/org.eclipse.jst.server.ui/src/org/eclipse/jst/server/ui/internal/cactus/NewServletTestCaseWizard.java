@@ -388,7 +388,7 @@ public class NewServletTestCaseWizard extends Wizard implements INewWizard {
 
 		IJavaProject project = root.getJavaProject();
 
-		List missingLibraries = new ArrayList();
+		List<String> missingLibraries = new ArrayList<String>();
 		try {
 			for (int i = 0; i < CLASSES_TO_CHECK.length; i++) {
 				IType type = project.findType(CLASSES_TO_CHECK[i]);

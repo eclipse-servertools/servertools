@@ -30,7 +30,7 @@ public class RuntimeTreeContentProvider extends AbstractTreeContentProvider {
 
 	public void fillTree() {
 		clean();
-		List list = new ArrayList();
+		List<TreeElement> list = new ArrayList<TreeElement>();
 		IRuntime[] runtimes = ServerCore.getRuntimes();
 		if (runtimes != null) {
 			int size = runtimes.length;

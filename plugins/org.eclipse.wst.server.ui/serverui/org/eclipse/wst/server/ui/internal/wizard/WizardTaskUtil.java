@@ -188,7 +188,7 @@ public class WizardTaskUtil {
 		taskModel.putObject(TaskModel.TASK_SERVER, workingCopy.save(false, monitor));
 	}
 
-	public static void modifyModules(List add, List remove, TaskModel taskModel, IProgressMonitor monitor) throws CoreException {
+	public static void modifyModules(List<IModule> add, List<IModule> remove, TaskModel taskModel, IProgressMonitor monitor) throws CoreException {
 		if ((add == null || add.isEmpty()) && (remove == null || remove.isEmpty()))
 			return;
 		

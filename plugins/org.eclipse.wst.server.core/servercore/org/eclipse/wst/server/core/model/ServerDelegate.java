@@ -153,7 +153,7 @@ public abstract class ServerDelegate {
 	 * @return the attribute value
 	 * @see #setAttribute(String, List)
 	 */
-	protected final List getAttribute(String id, List defaultValue) {
+	protected final List getAttribute(String id, List<String> defaultValue) {
 		return server.getAttribute(id, defaultValue);
 	}
 
@@ -309,7 +309,7 @@ public abstract class ServerDelegate {
 	 * @param value the value of the specified attribute
 	 * @see #getAttribute(String, List)
 	 */
-	protected final void setAttribute(String id, List value) {
+	protected final void setAttribute(String id, List<String> value) {
 		serverWC.setAttribute(id, value);
 	}
 

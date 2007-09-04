@@ -28,11 +28,11 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 
 	public class TreeElement {
 		String text;
-		List contents;
+		List<Object> contents;
 	}
 
 	protected Object[] elements;
-	protected Map elementToParentMap = new HashMap(2);
+	protected Map<Object, TreeElement> elementToParentMap = new HashMap<Object, TreeElement>(2);
 	protected Map<String, TreeElement> textMap = new HashMap<String, TreeElement>(2);
 
 	/**
@@ -52,7 +52,7 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 
 	protected void clean() {
 		elements = null;
-		elementToParentMap = new HashMap(2);
+		elementToParentMap = new HashMap<Object, TreeElement>(2);
 		textMap = new HashMap<String, TreeElement>(2);
 		
 		initialSelection = null;
@@ -69,7 +69,7 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 		
 		TreeElement element = new TreeElement();
 		element.text = text;
-		element.contents = new ArrayList();
+		element.contents = new ArrayList<Object>();
 		textMap.put(text, element);
 		list.add(element);
 		return element;
@@ -86,7 +86,7 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 		
 		TreeElement element = new TreeElement();
 		element.text = text;
-		element.contents = new ArrayList();
+		element.contents = new ArrayList<Object>();
 		textMap.put(id, element);
 		list.add(element);
 		return element;
@@ -102,7 +102,7 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 	
 	protected TreeElement getParentImpl(Object obj) {
 		try {
-			return (TreeElement) elementToParentMap.get(obj);
+			return elementToParentMap.get(obj);
 		} catch (Exception e) {
 			return null;
 		}

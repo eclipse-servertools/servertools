@@ -601,7 +601,7 @@ public abstract class ServerBehaviourDelegate {
 		if (getServer().getServerType().hasRuntime() && getServer().getRuntime() == null)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishNoRuntime, null);
 		
-		final List moduleList = getAllModules();
+		final List<IModule[]> moduleList = getAllModules();
 		final List<Integer> deltaKindList = new ArrayList<Integer>();
 		
 		Iterator iterator = moduleList.iterator();
@@ -784,7 +784,7 @@ public abstract class ServerBehaviourDelegate {
 	 * @param moduleList a list of modules
 	 * @param kindList a list of publish kinds
 	 */
-	protected void addRemovedModules(List moduleList, List kindList) {
+	protected void addRemovedModules(List<IModule[]> moduleList, List<Integer> kindList) {
 		server.getServerPublishInfo().addRemovedModules(moduleList, kindList);
 	}
 
@@ -857,7 +857,7 @@ public abstract class ServerBehaviourDelegate {
 	 * 
 	 * @return a list of IModule[]s
 	 */
-	protected final List getAllModules() {
+	protected final List<IModule[]> getAllModules() {
 		return server.getAllModules();
 	}
 

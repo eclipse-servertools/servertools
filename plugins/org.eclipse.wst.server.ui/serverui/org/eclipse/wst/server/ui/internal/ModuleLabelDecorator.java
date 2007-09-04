@@ -51,7 +51,6 @@ public class ModuleLabelDecorator extends BaseLabelProvider implements ILabelDec
 	public String decorateText(String text, Object element) {
 		try {
 			IModule module = null;
-			System.out.println("decorate");
 			
 			if (element instanceof IModule) {
 				module = (IModule) element;

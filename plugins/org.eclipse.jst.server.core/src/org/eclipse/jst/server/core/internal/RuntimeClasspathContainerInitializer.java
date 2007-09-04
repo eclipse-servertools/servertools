@@ -96,7 +96,7 @@ public class RuntimeClasspathContainerInitializer extends ClasspathContainerInit
 
 			public IStatus run(IProgressMonitor monitor) {
 				IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-				List list = new ArrayList();
+				List<IJavaProject> list = new ArrayList<IJavaProject>();
 				if (projects != null) {
 					int size = projects.length;
 					for (int i = 0; i < size; i++) {

@@ -45,7 +45,7 @@ public class RuntimeTypeTreeContentProvider extends AbstractTreeContentProvider 
 
 	public void fillTree() {
 		clean();
-		List list = new ArrayList();
+		List<TreeElement> list = new ArrayList<TreeElement>();
 		IRuntimeType[] runtimeTypes = ServerUtil.getRuntimeTypes(type, version, runtimeTypeId);
 		if (runtimeTypes != null) {
 			int size = runtimeTypes.length;

@@ -40,10 +40,10 @@ public class TasksWizardFragment extends WizardFragment {
 				return false;
 			
 			if (selectedTaskMap.containsKey(id))
-				return ((Boolean) selectedTaskMap.get(id)).booleanValue();
+				return (selectedTaskMap.get(id)).booleanValue();
 			
 			if (selectedTaskMap.containsKey(DEFAULT + id))
-				return ((Boolean) selectedTaskMap.get(DEFAULT + id)).booleanValue();
+				return (selectedTaskMap.get(DEFAULT + id)).booleanValue();
 
 			return false;
 		}
@@ -53,7 +53,7 @@ public class TasksWizardFragment extends WizardFragment {
 		}
 
 		public boolean getDefaultSelected() {
-			return ((Boolean) selectedTaskMap.get(DEFAULT + id)).booleanValue();
+			return (selectedTaskMap.get(DEFAULT + id)).booleanValue();
 		}
 
 		public void setSelected(boolean sel) {
@@ -107,7 +107,7 @@ public class TasksWizardFragment extends WizardFragment {
 	protected boolean hasOptionalTasks;
 	protected boolean hasPreferredTasks;
 
-	protected Map selectedTaskMap = new HashMap();
+	protected Map<String, Boolean> selectedTaskMap = new HashMap<String, Boolean>();
 
 	public TasksWizardFragment() {
 		// do nothing
@@ -152,7 +152,7 @@ public class TasksWizardFragment extends WizardFragment {
 		List modules = (List) getTaskModel().getObject(TaskModel.TASK_MODULES);
 		
 		if (server != null && modules == null) {
-			final List moduleList = new ArrayList();
+			final List<IModule[]> moduleList = new ArrayList<IModule[]>();
 			((Server) server).visit(new IModuleVisitor() {
 				public boolean visit(IModule[] module2) {
 					moduleList.add(module2);
@@ -166,7 +166,7 @@ public class TasksWizardFragment extends WizardFragment {
 		if (server != null && modules != null) {
 			hasOptionalTasks = false;
 			hasPreferredTasks = false;
-			List taskList = new ArrayList(5);
+			List<TaskInfo> taskList = new ArrayList<TaskInfo>(5);
 			createTasks(taskList, server, modules);
 			
 			if (tasks == null || !tasks.equals(taskList)) {
@@ -181,12 +181,12 @@ public class TasksWizardFragment extends WizardFragment {
 		}
 	}
 
-	protected void createTasks(List taskList, IServerAttributes server, List modules) {
+	protected void createTasks(List<TaskInfo> taskList, IServerAttributes server, List modules) {
 		if (server == null)
 			return;
 		
-		List enabledTasks = ((Server)server).getEnabledOptionalPublishOperationIds();
-		List disabledTasks = ((Server)server).getDisabledPreferredPublishOperationIds();
+		List<String> enabledTasks = ((Server)server).getEnabledOptionalPublishOperationIds();
+		List<String> disabledTasks = ((Server)server).getDisabledPreferredPublishOperationIds();
 		PublishOperation[] tasks2 = ((Server)server).getAllTasks(modules);
 		for (int j = 0; j < tasks2.length; j++) {
 			int kind = tasks2[j].getKind();

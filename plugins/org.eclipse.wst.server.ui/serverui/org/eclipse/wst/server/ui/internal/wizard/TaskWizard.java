@@ -43,9 +43,9 @@ public class TaskWizard implements IWizard {
 	private static final byte FINISH = 2;
 	private static final byte CANCEL = 3;
 
-	private List pages;
+	private List<IWizardPage> pages;
 	private boolean addingPages;
-	private Map fragmentData = new HashMap();
+	private Map<WizardFragment, TaskWizardPage> fragmentData = new HashMap<WizardFragment, TaskWizardPage>();
 	protected TaskModel taskModel;
 	
 	private IWizardContainer container = null;
@@ -295,8 +295,8 @@ public class TaskWizard implements IWizard {
 		currentFragment.enter();
 	}
 	
-	private List getAllWizardFragments() {
-		List list = new ArrayList();
+	private List<WizardFragment> getAllWizardFragments() {
+		List<WizardFragment> list = new ArrayList<WizardFragment>();
 		list.add(rootFragment);
 		addSubWizardFragments(rootFragment, list);
 		
@@ -309,7 +309,7 @@ public class TaskWizard implements IWizard {
 		return list;
 	}
 
-	private void addSubWizardFragments(WizardFragment fragment, List list) {
+	private void addSubWizardFragments(WizardFragment fragment, List<WizardFragment> list) {
 		Iterator iterator = fragment.getChildFragments().iterator();
 		while (iterator.hasNext()) {
 			WizardFragment child = (WizardFragment) iterator.next();
@@ -327,10 +327,10 @@ public class TaskWizard implements IWizard {
 		
 		try {
 			addingPages = true;
-			pages = new ArrayList();
-			Iterator iterator = getAllWizardFragments().iterator();
+			pages = new ArrayList<IWizardPage>();
+			Iterator<WizardFragment> iterator = getAllWizardFragments().iterator();
 			while (iterator.hasNext()) {
-				WizardFragment fragment = (WizardFragment) iterator.next();
+				WizardFragment fragment = iterator.next();
 				TaskWizardPage page = getFragmentData(fragment);
 				if (fragment.hasComposite()) {
 					if (page != null)
@@ -360,7 +360,7 @@ public class TaskWizard implements IWizard {
 
 	private TaskWizardPage getFragmentData(WizardFragment fragment) {
 		try {
-			TaskWizardPage page = (TaskWizardPage) fragmentData.get(fragment);
+			TaskWizardPage page = fragmentData.get(fragment);
 			if (page != null)
 				return page;
 		} catch (Exception e) {
@@ -380,7 +380,7 @@ public class TaskWizard implements IWizard {
 	public boolean canFinish() {
 		// Default implementation is to check if all pages are complete.
 		for (int i= 0; i < pages.size(); i++) {
-			if (!((IWizardPage)pages.get(i)).isPageComplete())
+			if (!(pages.get(i)).isPageComplete())
 				return false;
 		}
 		return true;
@@ -392,7 +392,7 @@ public class TaskWizard implements IWizard {
 	public void createPageControls(Composite pageContainer) {
 		// the default behavior is to create all the pages controls
 		for (int i = 0; i < pages.size(); i++){
-			IWizardPage page = (IWizardPage) pages.get(i);
+			IWizardPage page = pages.get(i);
 			page.createControl(pageContainer);
 		}
 	}
@@ -402,8 +402,8 @@ public class TaskWizard implements IWizard {
 	 */
 	public void dispose() {
 		// notify pages
-		for (int i = 0; i < pages.size(); i++){
-			((IWizardPage)pages.get(i)).dispose();
+		for (int i = 0; i < pages.size(); i++) {
+			pages.get(i).dispose();
 		}
 
 		// dispose of image
@@ -443,7 +443,7 @@ public class TaskWizard implements IWizard {
 			// last page or page not found
 			return null;
 		
-		return (IWizardPage)pages.get(index + 1);
+		return pages.get(index + 1);
 	}
 
 	/* (non-Javadoc)
@@ -451,7 +451,7 @@ public class TaskWizard implements IWizard {
 	 */
 	public IWizardPage getPage(String name) {
 		for (int i= 0; i < pages.size(); i++) {
-			IWizardPage page = (IWizardPage)pages.get(i);
+			IWizardPage page = pages.get(i);
 			String pageName = page.getName();
 			if (pageName.equals(name))
 				return page;
@@ -470,7 +470,7 @@ public class TaskWizard implements IWizard {
 	 * @see org.eclipse.jface.wizard.IWizard#getPages()
 	 */
 	public IWizardPage[] getPages() {
-		return (IWizardPage[])pages.toArray(new IWizardPage[pages.size()]);
+		return pages.toArray(new IWizardPage[pages.size()]);
 	}
 
 	/* (non-Javadoc)
@@ -481,7 +481,7 @@ public class TaskWizard implements IWizard {
 		if (index == 0 || index == -1)
 			// first page or page not found
 			return null;
-		return (IWizardPage)pages.get(index - 1);
+		return pages.get(index - 1);
 	}
 
 	/* (non-Javadoc)
@@ -491,7 +491,7 @@ public class TaskWizard implements IWizard {
 		if (pages.size() == 0)
 			return null;
 		
-		return (IWizardPage) pages.get(0);
+		return pages.get(0);
 	}
 
 	/* (non-Javadoc)

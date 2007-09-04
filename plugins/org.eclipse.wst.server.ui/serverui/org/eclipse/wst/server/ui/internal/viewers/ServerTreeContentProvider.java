@@ -49,7 +49,7 @@ public class ServerTreeContentProvider extends AbstractTreeContentProvider {
 	
 	protected void fillTree() {
 		clean();
-		List list = new ArrayList();
+		List<TreeElement> list = new ArrayList<TreeElement>();
 		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
 			int size = servers.length;

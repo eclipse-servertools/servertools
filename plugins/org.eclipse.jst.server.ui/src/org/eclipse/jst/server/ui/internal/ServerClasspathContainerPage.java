@@ -41,7 +41,7 @@ import org.eclipse.wst.server.ui.internal.viewers.RuntimeTableLabelProvider;
 public class ServerClasspathContainerPage extends WizardPage implements IClasspathContainerPage {
 	protected IClasspathEntry selection;
 
-	protected Map runtimeMap = new HashMap();
+	protected Map<IRuntime, IClasspathEntry> runtimeMap = new HashMap<IRuntime, IClasspathEntry>();
 
 	public ServerClasspathContainerPage() {
 		super("server.container");
@@ -115,7 +115,7 @@ public class ServerClasspathContainerPage extends WizardPage implements IClasspa
 			public void selectionChanged(SelectionChangedEvent event) {
 				try {
 					IStructuredSelection sel = (IStructuredSelection) event.getSelection();
-					selection = (IClasspathEntry) runtimeMap.get(sel.getFirstElement());
+					selection = runtimeMap.get(sel.getFirstElement());
 					setPageComplete(true);
 				} catch (Exception e) {
 					selection = null;

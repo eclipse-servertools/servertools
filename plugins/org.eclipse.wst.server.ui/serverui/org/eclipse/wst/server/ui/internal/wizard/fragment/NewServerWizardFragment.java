@@ -37,8 +37,7 @@ public class NewServerWizardFragment extends WizardFragment {
 	protected IModuleType moduleType;
 	protected String serverTypeId;
 
-	protected Map fragmentMap = new HashMap();
-	protected Map configMap = new HashMap();
+	protected Map<String, WizardFragment> fragmentMap = new HashMap<String, WizardFragment>();
 	protected IPath runtimeLocation = null;
 
 	public NewServerWizardFragment() {
@@ -79,7 +78,7 @@ public class NewServerWizardFragment extends WizardFragment {
 
 	protected WizardFragment getWizardFragment(String typeId) {
 		try {
-			WizardFragment fragment = (WizardFragment) fragmentMap.get(typeId);
+			WizardFragment fragment = fragmentMap.get(typeId);
 			if (fragment != null)
 				return fragment;
 		} catch (Exception e) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2006 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,7 +13,6 @@ package org.eclipse.jst.server.ui.internal;
 import java.net.URL;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Iterator;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
@@ -26,10 +25,7 @@ public class ImageResource {
 
 	// map of image descriptors since these
 	// will be lost by the image registry
-	private static Map imageDescriptors;
-
-	// map of IElement images
-	private static Map elementImages;
+	private static Map<String, ImageDescriptor> imageDescriptors;
 
 	// base urls for images
 	private static URL ICON_BASE_URL;
@@ -56,22 +52,6 @@ public class ImageResource {
 	}
 
 	/**
-	 * Dispose of element images that were created.
-	 */
-	protected static void dispose() {
-		try {
-			Trace.trace(Trace.FINEST, "Disposing of element images");
-			Iterator iterator = elementImages.values().iterator();
-			while (iterator.hasNext()) {
-				Image image = (Image) iterator.next();
-				image.dispose();
-			}
-		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not dispose of images");
-		}
-	}
-	
-	/**
 	 * Return the image with the given key.
 	 *
 	 * @param key java.lang.String
@@ -82,7 +62,7 @@ public class ImageResource {
 			initializeImageRegistry();
 		return imageRegistry.get(key);
 	}
-	
+
 	/**
 	 * Return the image descriptor with the given key.
 	 *
@@ -92,7 +72,7 @@ public class ImageResource {
 	public static ImageDescriptor getImageDescriptor(String key) {
 		if (imageRegistry == null)
 			initializeImageRegistry();
-		return (ImageDescriptor) imageDescriptors.get(key);
+		return imageDescriptors.get(key);
 	}
 
 	/**
@@ -100,7 +80,7 @@ public class ImageResource {
 	 */
 	protected static void initializeImageRegistry() {
 		imageRegistry = new ImageRegistry();
-		imageDescriptors = new HashMap();
+		imageDescriptors = new HashMap<String, ImageDescriptor>();
 		
 		registerImage(IMG_WIZ_RUNTIME_TYPE, URL_WIZBAN + "new_runtime_wiz.png");
 		registerImage(IMG_WIZ_CACTUS_TEST, URL_WIZBAN + "new_test_wiz.png");

@@ -64,7 +64,7 @@ public class RuntimeClasspathProviderWrapper {
 
 	public String[] getRuntimeTypeIds() {
 		try {
-			List list = new ArrayList();
+			List<String> list = new ArrayList<String>();
 			StringTokenizer st = new StringTokenizer(element.getAttribute("runtimeTypeIds"), ",");
 			while (st.hasMoreTokens()) {
 				String str = st.nextToken();

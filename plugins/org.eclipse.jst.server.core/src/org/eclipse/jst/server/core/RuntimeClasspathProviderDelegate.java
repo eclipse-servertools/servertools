@@ -59,13 +59,13 @@ public abstract class RuntimeClasspathProviderDelegate {
 		IClasspathAttribute[] attributes;
 	}
 
-	private List sourceAttachments;
+	private List<SourceAttachmentUpdate> sourceAttachments;
 
 	private String extensionId;
 
-	private Map runtimePathMap = new HashMap();
+	private Map<String, IPath> runtimePathMap = new HashMap<String, IPath>();
 
-	private Map previousClasspath = new HashMap();
+	private Map<String, IClasspathEntry[]> previousClasspath = new HashMap<String, IClasspathEntry[]>();
 
 	public RuntimeClasspathProviderDelegate() {
 		// default constructor
@@ -149,7 +149,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 		int size2 = sourceAttachments.size();
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size2; j++) {
-				SourceAttachmentUpdate sau = (SourceAttachmentUpdate) sourceAttachments.get(j);
+				SourceAttachmentUpdate sau = sourceAttachments.get(j);
 				if (sau.runtimeId.equals(runtime.getId()) && sau.entry.equals(entries[i].getPath())) {
 					entries[i] = JavaCore.newLibraryEntry(entries[i].getPath(), sau.sourceAttachmentPath, sau.sourceAttachmentRootPath, new IAccessRule[0], sau.attributes, false);
 				}
@@ -160,7 +160,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 		if (!previousClasspath.containsKey(key))
 			previousClasspath.put(key, entries);
 		else {
-			IClasspathEntry[] previousEntries = (IClasspathEntry[]) previousClasspath.get(key);
+			IClasspathEntry[] previousEntries = previousClasspath.get(key);
 			
 			if ((previousEntries == null && entries != null) || (previousEntries != null && entries == null)
 					|| (previousEntries != null && entries != null && previousEntries.length != entries.length)) {
@@ -194,7 +194,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 	 */
 	public boolean hasRuntimeClasspathChanged(IRuntime runtime) {
 		try {
-			IPath path = (IPath) runtimePathMap.get(runtime.getId());
+			IPath path = runtimePathMap.get(runtime.getId());
 			return (path != null && !path.equals(runtime.getLocation()));
 		} catch (Exception e) {
 			// ignore
@@ -202,14 +202,14 @@ public abstract class RuntimeClasspathProviderDelegate {
 		return false;
 	}
 
-	private static void addJarFiles(File dir, List list, boolean includeSubdirectories) {
+	private static void addJarFiles(File dir, List<IClasspathEntry> list, boolean includeSubdirectories) {
 		int depth = 0;
 		if (includeSubdirectories)
 			depth = 2;
 		addJarFiles(dir, list, depth);
 	}
 
-	private static void addJarFiles(File dir, List list, int depth) {
+	private static void addJarFiles(File dir, List<IClasspathEntry> list, int depth) {
 		if (dir == null)
 			throw new IllegalArgumentException();
 		
@@ -236,7 +236,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 	 * @param includeSubdirectories <code>true</code> to include subdirectories, and
 	 *    <code>false</code> otherwise
 	 */
-	protected static void addLibraryEntries(List list, File dir, boolean includeSubdirectories) {
+	protected static void addLibraryEntries(List<IClasspathEntry> list, File dir, boolean includeSubdirectories) {
 		if (dir == null)
 			throw new IllegalArgumentException();
 		addJarFiles(dir, list, includeSubdirectories);
@@ -255,7 +255,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 			return;
 		
 		// find the source attachments
-		sourceAttachments = new ArrayList();
+		sourceAttachments = new ArrayList<SourceAttachmentUpdate>();
 		
 		int size = entries.length;
 		for (int i = 0; i < size; i++) {
@@ -276,7 +276,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 	 * Load source attachment info.
 	 */
 	private void load() {
-		sourceAttachments = new ArrayList();
+		sourceAttachments = new ArrayList<SourceAttachmentUpdate>();
 		
 		String id = extensionId;
 		String filename = JavaServerPlugin.getInstance().getStateLocation().append(id + ".xml").toOSString();

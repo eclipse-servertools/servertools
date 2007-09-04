@@ -1007,7 +1007,7 @@ public class Server extends Base implements IServer {
 	 * 
 	 * @return a list of IModule[]
 	 */
-	public List getAllModules() {
+	public List<IModule[]> getAllModules() {
 		final List<IModule[]> moduleList = new ArrayList<IModule[]>();
 		
 		IModuleVisitor visitor = new IModuleVisitor() {

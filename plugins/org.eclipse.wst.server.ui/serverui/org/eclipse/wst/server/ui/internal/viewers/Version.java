@@ -21,7 +21,7 @@ public class Version {
 
 	public Version(String s) {
 		StringTokenizer st = new StringTokenizer(s, SEPARATOR);
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		
 		while (st.hasMoreTokens()) {
 			String str = st.nextToken();

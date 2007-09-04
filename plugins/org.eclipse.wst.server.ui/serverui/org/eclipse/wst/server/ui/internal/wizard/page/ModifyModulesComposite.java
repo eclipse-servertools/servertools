@@ -830,7 +830,7 @@ public class ModifyModulesComposite extends Composite {
 		wizard.update();
 	}
 
-	public List getModulesToRemove() {
+	public List<IModule> getModulesToRemove() {
 		List<IModule> list = new ArrayList<IModule>();
 		Iterator iterator = originalModules.iterator();
 		while (iterator.hasNext()) {
@@ -841,7 +841,7 @@ public class ModifyModulesComposite extends Composite {
 		return list;
 	}
 
-	public List getModulesToAdd() {
+	public List<IModule> getModulesToAdd() {
 		List<IModule> list = new ArrayList<IModule>();
 		Iterator iterator = deployed.iterator();
 		while (iterator.hasNext()) {
