@@ -31,7 +31,7 @@ public class TestRuntimeDelegate extends RuntimeDelegate {
 		}
 		
 		try {
-		getAttribute("test", new ArrayList());
+		getAttribute("test", new ArrayList<String>());
 		} catch (Exception e) {
 			// ignore
 		}
@@ -61,7 +61,7 @@ public class TestRuntimeDelegate extends RuntimeDelegate {
 		}
 		
 		try {
-			setAttribute("test", new ArrayList());
+			setAttribute("test", new ArrayList<String>());
 		} catch (Exception e) {
 			// ignore
 		}

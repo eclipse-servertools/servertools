@@ -27,7 +27,7 @@ public class TestRuntimeClasspathProviderDelegate extends RuntimeClasspathProvid
 	}
 
 	public void testAddMethods() {
-		List list = new ArrayList();
+		List<IClasspathEntry> list = new ArrayList<IClasspathEntry>();
 		try {
 			addLibraryEntries(list, null, false);
 		} catch (Exception e) {

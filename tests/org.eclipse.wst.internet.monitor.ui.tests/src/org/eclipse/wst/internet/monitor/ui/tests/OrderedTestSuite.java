@@ -21,9 +21,9 @@ class OrderedTestSuite extends TestSuite {
 	}
 
 	public Enumeration tests() {
-		Enumeration enum2 = super.tests();
+		Enumeration<TestCase> enum2 = super.tests();
 		
-		Vector list = new Vector();
+		Vector<TestCase> list = new Vector<TestCase>();
 		while (enum2.hasMoreElements()) {
 			list.add(enum2.nextElement());
 		}
@@ -31,10 +31,10 @@ class OrderedTestSuite extends TestSuite {
 		int size = list.size();
 		for (int i = 0; i < size - 1; i++) {
 			for (int j = i + 1; j < size; j++) {
-				TestCase t1 = (TestCase) list.get(i);
-				TestCase t2 = (TestCase) list.get(j);
+				TestCase t1 = list.get(i);
+				TestCase t2 = list.get(j);
 				if (t1.getName().compareTo(t2.getName()) > 0) {
-					Object obj = list.get(i);
+					TestCase obj = list.get(i);
 					list.set(i, list.get(j));
 					list.set(j, obj);
 				}

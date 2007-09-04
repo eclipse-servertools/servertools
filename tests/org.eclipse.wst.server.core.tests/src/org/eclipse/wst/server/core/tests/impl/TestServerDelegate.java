@@ -51,7 +51,7 @@ public class TestServerDelegate extends ServerDelegate {
 		}
 		
 		try {
-			getAttribute("test", new ArrayList());
+			getAttribute("test", new ArrayList<String>());
 		} catch (Exception e) {
 			// ignore
 		}
@@ -81,7 +81,7 @@ public class TestServerDelegate extends ServerDelegate {
 		}
 		
 		try {
-			setAttribute("test", new ArrayList());
+			setAttribute("test", new ArrayList<String>());
 		} catch (Exception e) {
 			// ignore
 		}

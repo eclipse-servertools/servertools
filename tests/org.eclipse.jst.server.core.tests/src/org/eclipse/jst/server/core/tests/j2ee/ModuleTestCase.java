@@ -134,7 +134,7 @@ public class ModuleTestCase extends TestCase {
 	public void _test030EAR() throws Exception {
 		IModule[] modules = ent.getModules();
 		int size = modules.length;
-		List list = new ArrayList(size);
+		List<String> list = new ArrayList<String>(size);
 		for (int i = 0; i < size; i++) {
 			System.out.println(modules[i].getName());
 			list.add(modules[i].getName());

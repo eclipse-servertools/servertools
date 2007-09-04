@@ -108,7 +108,7 @@ public class NoSourceTestCase extends TestCase {
 	public void test029EAR() throws Exception {
 		IModule[] modules = ent.getModules();
 		int size = modules.length;
-		List list = new ArrayList(size);
+		List<String> list = new ArrayList<String>(size);
 		for (int i = 0; i < size; i++)
 			list.add(modules[i].getName());
 		

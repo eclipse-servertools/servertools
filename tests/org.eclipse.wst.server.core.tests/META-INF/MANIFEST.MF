@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.wst.server.core.tests
 Bundle-SymbolicName: org.eclipse.wst.server.core.tests
-Bundle-Version: 1.0.200.qualifier
+Bundle-Version: 1.0.300.qualifier
 Bundle-ClassPath: servertests.jar
 Bundle-Activator: org.eclipse.wst.server.core.tests.TestsPlugin
 Bundle-Vendor: Eclipse.org
