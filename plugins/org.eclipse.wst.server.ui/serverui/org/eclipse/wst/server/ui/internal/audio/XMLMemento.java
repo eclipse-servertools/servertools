@@ -18,8 +18,6 @@ import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import org.eclipse.ui.IMemento;
 /**
  * A Memento is a class independent container for persistence
  * info.  It is a reflection of 3 storage requirements.
@@ -34,9 +32,15 @@ import org.eclipse.ui.IMemento;
  * ObjectOutputStream, DataOutputStream, or Hashtable.  However 
  * all of these approaches fail to meet the second requirement.
  *
- * Memento supports binary persistance with a version ID.
+ * Memento supports binary persistence with a version ID.
  */
 public final class XMLMemento implements IMemento {
+	/**
+	 * Special reserved key used to store the memento id 
+	 * (value <code>"org.eclipse.ui.id"</code>).
+	 */
+	private static final String TAG_ID = "IMemento.internal.id"; //$NON-NLS-1$
+
 	private Document factory;
 	private Element element;
 
@@ -58,17 +62,7 @@ public final class XMLMemento implements IMemento {
 		element.appendChild(child);
 		return new XMLMemento(factory, child);
 	}
-	
-	/*
-	 * @see IMemento
-	 */
-	public IMemento createChild(String type, String id) {
-		Element child = factory.createElement(type);
-		child.setAttribute(TAG_ID, id);
-		element.appendChild(child);
-		return new XMLMemento(factory, child);
-	}
-	
+
 	/**
 	 * Create a Document from a Reader and answer a root memento for reading 
 	 * a document.
@@ -161,44 +155,14 @@ public final class XMLMemento implements IMemento {
 		}
 		return results;
 	}
-	
-	/*
-	 * @see IMemento
-	 */
-	public Float getFloat(String key) {
-		Attr attr = element.getAttributeNode(key);
-		if (attr == null)
-			return null; 
-		String strValue = attr.getValue();
-		try {
-			return new Float(strValue);
-		} catch (NumberFormatException e) {
-			return null;
-		}
-	}
-	
+
 	/*
 	 * @see IMemento
 	 */
 	public String getID() {
 		return element.getAttribute(TAG_ID);
 	}
-	
-	/*
-	 * @see IMemento
-	 */
-	public Integer getInteger(String key) {
-		Attr attr = element.getAttributeNode(key);
-		if (attr == null)
-			return null; 
-		String strValue = attr.getValue();
-		try {
-			return new Integer(strValue);
-		} catch (NumberFormatException e) {
-			return null;
-		}
-	}
-	
+
 	/*
 	 * @see IMemento
 	 */
@@ -235,51 +199,7 @@ public final class XMLMemento implements IMemento {
 		}
 		return null;
 	}
-	
-	/*
-	 * @see IMemento
-	 */
-	private void putElement(Element element2) {
-		NamedNodeMap nodeMap = element2.getAttributes();
-		int size = nodeMap.getLength();
-		for (int i = 0; i < size; i++){
-			Attr attr = (Attr)nodeMap.item(i);
-			putString(attr.getName(),attr.getValue());
-		}
-					
-		NodeList nodes = element2.getChildNodes();
-		size = nodes.getLength();
-		for (int i = 0; i < size; i ++) {
-			Node node = nodes.item(i);
-			if (node instanceof Element) {
-				XMLMemento child = (XMLMemento)createChild(node.getNodeName());
-				child.putElement((Element)node);
-			}
-		}
-	}
-	
-	/*
-	 * @see IMemento
-	 */
-	public void putFloat(String key, float f) {
-		element.setAttribute(key, String.valueOf(f));
-	}
-	
-	/*
-	 * @see IMemento
-	 */
-	public void putInteger(String key, int n) {
-		element.setAttribute(key, String.valueOf(n));
-	}
-	
-	/*
-	 * @see IMemento
-	 */
-	public void putMemento(IMemento memento) {
-		XMLMemento xmlMemento = (XMLMemento) memento;
-		putElement(xmlMemento.element);
-	}
-	
+
 	/*
 	 * @see IMemento
 	 */
