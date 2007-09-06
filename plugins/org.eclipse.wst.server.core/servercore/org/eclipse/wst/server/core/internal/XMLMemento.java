@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2006 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,16 +54,6 @@ public final class XMLMemento implements IMemento {
 	 */
 	public IMemento createChild(String type) {
 		Element child = factory.createElement(type);
-		element.appendChild(child);
-		return new XMLMemento(factory, child);
-	}
-
-	/*
-	 * @see IMemento
-	 */
-	public IMemento createChild(String type, String id) {
-		Element child = factory.createElement(type);
-		child.setAttribute(TAG_ID, id);
 		element.appendChild(child);
 		return new XMLMemento(factory, child);
 	}
@@ -207,20 +197,6 @@ public final class XMLMemento implements IMemento {
 	/*
 	 * @see IMemento
 	 */
-	public String getId() {
-		return element.getAttribute(TAG_ID);
-	}
-	
-	/*
-	 * @see IMemento
-	 */
-	public String getName() {
-		return element.getNodeName();
-	}
-
-	/*
-	 * @see IMemento
-	 */
 	public Integer getInteger(String key) {
 		Attr attr = element.getAttributeNode(key);
 		if (attr == null)
@@ -290,45 +266,8 @@ public final class XMLMemento implements IMemento {
 	/*
 	 * @see IMemento
 	 */
-	private void putElement(Element element2) {
-		NamedNodeMap nodeMap = element2.getAttributes();
-		int size = nodeMap.getLength();
-		for (int i = 0; i < size; i++){
-			Attr attr = (Attr)nodeMap.item(i);
-			putString(attr.getName(),attr.getValue());
-		}
-		
-		NodeList nodes = element2.getChildNodes();
-		size = nodes.getLength();
-		for (int i = 0; i < size; i ++) {
-			Node node = nodes.item(i);
-			if (node instanceof Element) {
-				XMLMemento child = (XMLMemento)createChild(node.getNodeName());
-				child.putElement((Element)node);
-			}
-		}
-	}
-
-	/*
-	 * @see IMemento
-	 */
-	public void putFloat(String key, float f) {
-		element.setAttribute(key, String.valueOf(f));
-	}
-
-	/*
-	 * @see IMemento
-	 */
 	public void putInteger(String key, int n) {
 		element.setAttribute(key, String.valueOf(n));
-	}
-
-	/*
-	 * @see IMemento
-	 */
-	public void putMemento(IMemento memento) {
-		XMLMemento xmlMemento = (XMLMemento) memento;
-		putElement(xmlMemento.element);
 	}
 
 	/*

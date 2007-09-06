@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,8 +9,6 @@
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.internet.monitor.core.internal;
-
-import java.util.List;
 /**
  * Interface to a memento used for saving the important state of an object
  * in a form that can be persisted in the file system.
@@ -40,14 +38,6 @@ import java.util.List;
  */
 public interface IMemento {
 	/**
-	 * Special reserved key used to store the memento id 
-	 * (value <code>"org.eclipse.ui.id"</code>).
-	 *
-	 * @see #getId
-	 */
-	public static final String TAG_ID = "IMemento.internal.id"; //$NON-NLS-1$
-
-	/**
 	 * Creates a new child of this memento with the given type.
 	 * <p>
 	 * The <code>getChild</code> and <code>getChildren</code> methods
@@ -60,22 +50,6 @@ public interface IMemento {
 	 * @see #getChildren
 	 */
 	public IMemento createChild(String type);
-	
-	/**
-	 * Creates a new child of this memento with the given type and id.
-	 * The id is stored in the child memento (using a special reserved
-	 * key, <code>TAG_ID</code>) and can be retrieved using <code>getId</code>.
-	 * <p>
-	 * The <code>getChild</code> and <code>getChildren</code> methods
-	 * are used to retrieve children of a given type.
-	 * </p>
-	 *
-	 * @param type the type
-	 * @param id the child id
-	 * @return a new child memento with the given type and id
-	 * @see #getId
-	 */
-	public IMemento createChild(String type, String id);
 	
 	/**
 	 * Returns the first child with the given type id.
@@ -92,31 +66,6 @@ public interface IMemento {
 	 * @return the list of children with the given type
 	 */
 	public IMemento[] getChildren(String type);
-	
-	/**
-	 * Returns the floating point value of the given key.
-	 *
-	 * @param key the key
-	 * @return the value, or <code>null</code> if the key was not found or was found
-	 *   but was not a floating point number
-	 */
-	public Float getFloat(String key);
-	
-	/**
-	 * Returns the id for this memento.
-	 *
-	 * @return the memento id, or <code>null</code> if none
-	 * @see #createChild(java.lang.String,java.lang.String)
-	 */
-	public String getId();
-	
-	/**
-	 * Returns the name for this memento.
-	 *
-	 * @return the memento name, or <code>null</code> if none
-	 * @see #createChild(java.lang.String,java.lang.String)
-	 */
-	public String getName();
 
 	/**
 	 * Returns the integer value of the given key.
@@ -144,22 +93,7 @@ public interface IMemento {
 	 *  but was not a boolean
 	 */
 	public Boolean getBoolean(String key);
-	
-	/**
-	 * Returns a list of all the names in this memento.
-	 * 
-	 * @return a list of names
-	 */
-	public List getNames();
-	
-	/**
-	 * Sets the value of the given key to the given floating point number.
-	 *
-	 * @param key the key
-	 * @param value the value
-	 */
-	public void putFloat(String key, float value);
-	
+
 	/**
 	 * Sets the value of the given key to the given integer.
 	 *
@@ -175,14 +109,6 @@ public interface IMemento {
 	 * @param value the value
 	 */
 	public void putBoolean(String key, boolean value);
-
-	/**
-	 * Copy the attributes and children from  <code>memento</code>
-	 * to the receiver.
-	 *
-	 * @param memento the IMemento to be copied.
-	 */
-	public void putMemento(IMemento memento);
 
 	/**
 	 * Sets the value of the given key to the given string.

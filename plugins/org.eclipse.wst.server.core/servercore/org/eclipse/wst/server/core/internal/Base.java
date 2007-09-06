@@ -279,9 +279,9 @@ public abstract class Base {
 	protected void load(IMemento memento) {
 		map = new HashMap<String, Object>();
 		
-		Iterator iterator = memento.getNames().iterator();
+		Iterator<String> iterator = memento.getNames().iterator();
 		while (iterator.hasNext()) {
-			String key = (String) iterator.next();
+			String key = iterator.next();
 			map.put(key, memento.getString(key));
 		}
 		IMemento[] children = memento.getChildren("list");
@@ -301,21 +301,18 @@ public abstract class Base {
 		loadState(memento);
 	}
 
-	
 	protected void loadMap(IMemento memento) {
 		String key = memento.getString("key");
 		Map<String, String> vMap = new HashMap<String, String>();
-		List keys = memento.getNames();
-		Iterator iterator = keys.iterator();
+		Iterator<String> iterator = memento.getNames().iterator();
 		while(iterator.hasNext()) {
-			String s = (String)iterator.next();
+			String s = iterator.next();
 			String v = memento.getString(s);
 			vMap.put(s,v);
 		}
 		map.put(key, vMap);
 	}
-	
-	
+
 	protected void loadList(IMemento memento) {
 		String key = memento.getString("key");
 		List<String> list = new ArrayList<String>();

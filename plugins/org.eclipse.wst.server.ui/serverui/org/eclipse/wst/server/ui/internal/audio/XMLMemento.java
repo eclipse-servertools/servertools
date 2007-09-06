@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,12 +35,6 @@ import javax.xml.transform.stream.StreamResult;
  * Memento supports binary persistence with a version ID.
  */
 public final class XMLMemento implements IMemento {
-	/**
-	 * Special reserved key used to store the memento id 
-	 * (value <code>"org.eclipse.ui.id"</code>).
-	 */
-	private static final String TAG_ID = "IMemento.internal.id"; //$NON-NLS-1$
-
 	private Document factory;
 	private Element element;
 
@@ -81,14 +75,14 @@ public final class XMLMemento implements IMemento {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Answer a root memento for writing a document.
 	 * 
 	 * @param type a type
 	 * @return a memento
 	 */
-	public static XMLMemento createWriteRoot(String type) {
+	protected static XMLMemento createWriteRoot(String type) {
 		Document document;
 		try {
 			document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
@@ -159,13 +153,6 @@ public final class XMLMemento implements IMemento {
 	/*
 	 * @see IMemento
 	 */
-	public String getID() {
-		return element.getAttribute(TAG_ID);
-	}
-
-	/*
-	 * @see IMemento
-	 */
 	public String getString(String key) {
 		Attr attr = element.getAttributeNode(key);
 		if (attr == null)
@@ -208,7 +195,7 @@ public final class XMLMemento implements IMemento {
 			return;
 		element.setAttribute(key, value);
 	}
-	
+
 	/**
 	 * Save this Memento to a Writer.
 	 */
@@ -228,27 +215,5 @@ public final class XMLMemento implements IMemento {
 		catch (TransformerException e) {
 			throw (IOException) (new IOException().initCause(e));
 		}
-	}
-
-	/**
-	 * Returns the data of the Text node of the memento. Each memento is allowed
-	 * only one Text node.
-	 * 
-	 * @return the data of the Text node of the memento, or <code>null</code>
-	 * if the memento has no Text node.
-	 */
-	public String getTextData() {
-		return null;
-	}
-	
-	/**
-	 * Sets the memento's Text node to contain the given data. Creates the Text node if
-	 * none exists. If a Text node does exist, it's current contents are replaced. 
-	 * Each memento is allowed only one text node.
-	 *
-	 * @param data the data to be placed on the Text node
-	 */
-	public void putTextData(String data) {
-		// do nothing
 	}
 }

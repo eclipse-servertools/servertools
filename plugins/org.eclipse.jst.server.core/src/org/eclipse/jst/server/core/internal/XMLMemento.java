@@ -60,20 +60,10 @@ public final class XMLMemento implements IMemento {
 	}
 
 	/**
-	 * @see IMemento#createChild(String, String)
-	 */
-	public IMemento createChild(String type, String id) {
-		Element child = factory.createElement(type);
-		child.setAttribute(TAG_ID, id);
-		element.appendChild(child);
-		return new XMLMemento(factory, child);
-	}
-
-	/**
 	 * Create a Document from a Reader and answer a root memento for reading 
 	 * a document.
 	 */
-	protected static XMLMemento createReadRoot(InputStream in) {
+	private static XMLMemento createReadRoot(InputStream in) {
 		Document document = null;
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -166,74 +156,6 @@ public final class XMLMemento implements IMemento {
 		return results;
 	}
 
-	/**
-	 * Return the contents of this memento as a byte array.
-	 *
-	 * @return byte[]
-	 * @throws IOException if anything goes wrong
-	 */
-	public byte[] getContents() throws IOException {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		save(out);
-		return out.toByteArray();
-	}
-
-	/**
-	 * Returns an input stream for writing to the disk with a local locale.
-	 *
-	 * @return java.io.InputStream
-	 * @throws IOException if anything goes wrong
-	 */
-	public InputStream getInputStream() throws IOException {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		save(out);
-		return new ByteArrayInputStream(out.toByteArray());
-	}
-
-	/*
-	 * @see IMemento
-	 */
-	public Float getFloat(String key) {
-		Attr attr = element.getAttributeNode(key);
-		if (attr == null)
-			return null; 
-		String strValue = attr.getValue();
-		try {
-			return new Float(strValue);
-		} catch (NumberFormatException e) {
-			return null;
-		}
-	}
-
-	/*
-	 * @see IMemento
-	 */
-	public String getId() {
-		return element.getAttribute(TAG_ID);
-	}
-	
-	/*
-	 * @see IMemento
-	 */
-	public String getName() {
-		return element.getNodeName();
-	}
-
-	/*
-	 * @see IMemento
-	 */
-	public Integer getInteger(String key) {
-		Attr attr = element.getAttributeNode(key);
-		if (attr == null)
-			return null; 
-		String strValue = attr.getValue();
-		try {
-			return new Integer(strValue);
-		} catch (NumberFormatException e) {
-			return null;
-		}
-	}
-
 	/*
 	 * @see IMemento
 	 */
@@ -242,18 +164,6 @@ public final class XMLMemento implements IMemento {
 		if (attr == null)
 			return null; 
 		return attr.getValue();
-	}
-	
-	public List<String> getNames() {
-		NamedNodeMap map = element.getAttributes();
-		int size = map.getLength();
-		List<String> list = new ArrayList<String>();
-		for (int i = 0; i < size; i++) {
-			Node node = map.item(i);
-			String name = node.getNodeName();
-			list.add(name);
-		}
-		return list;
 	}
 
 	/**
@@ -281,50 +191,6 @@ public final class XMLMemento implements IMemento {
 	/*
 	 * @see IMemento
 	 */
-	private void putElement(Element element2) {
-		NamedNodeMap nodeMap = element2.getAttributes();
-		int size = nodeMap.getLength();
-		for (int i = 0; i < size; i++){
-			Attr attr = (Attr)nodeMap.item(i);
-			putString(attr.getName(),attr.getValue());
-		}
-		
-		NodeList nodes = element2.getChildNodes();
-		size = nodes.getLength();
-		for (int i = 0; i < size; i ++) {
-			Node node = nodes.item(i);
-			if (node instanceof Element) {
-				XMLMemento child = (XMLMemento)createChild(node.getNodeName());
-				child.putElement((Element)node);
-			}
-		}
-	}
-
-	/*
-	 * @see IMemento
-	 */
-	public void putFloat(String key, float f) {
-		element.setAttribute(key, String.valueOf(f));
-	}
-
-	/*
-	 * @see IMemento
-	 */
-	public void putInteger(String key, int n) {
-		element.setAttribute(key, String.valueOf(n));
-	}
-
-	/*
-	 * @see IMemento
-	 */
-	public void putMemento(IMemento memento) {
-		XMLMemento xmlMemento = (XMLMemento) memento;
-		putElement(xmlMemento.element);
-	}
-
-	/*
-	 * @see IMemento
-	 */
 	public void putString(String key, String value) {
 		if (value == null)
 			return;
@@ -337,7 +203,7 @@ public final class XMLMemento implements IMemento {
 	 * @param os an output stream
 	 * @throws IOException if anything goes wrong
 	 */
-	public void save(OutputStream os) throws IOException {
+	private void save(OutputStream os) throws IOException {
 		Result result = new StreamResult(os);
 		Source source = new DOMSource(factory);
 		try {
@@ -376,25 +242,5 @@ public final class XMLMemento implements IMemento {
 				}
 			}
 		}
-	}
-	
-	/*
-	 * @see IMemento#getBoolean(String)
-	 */
-	public Boolean getBoolean(String key) {
-		Attr attr = element.getAttributeNode(key);
-		if (attr == null)
-			return null;
-		String strValue = attr.getValue();
-		if ("true".equalsIgnoreCase(strValue))
-			return new Boolean(true);
-		return new Boolean(false);
-	}
-
-	/*
-	 * @see IMemento#putBoolean(String, boolean)
-	 */
-	public void putBoolean(String key, boolean value) {
-		element.setAttribute(key, value ? "true" : "false");
 	}
 }
