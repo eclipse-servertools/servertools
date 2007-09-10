@@ -204,7 +204,7 @@ public class ServerTableViewer extends TreeViewer {
 				}
 			}
 		};
-		Display.getDefault().syncExec(new Runnable() {
+		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				display.timerExec(SLEEP, animator[0]);
 			}
@@ -455,9 +455,9 @@ public class ServerTableViewer extends TreeViewer {
 		
 		serverListener = new IServerListener() {
 			public void serverChanged(ServerEvent event) {
-				if (event == null) {
+				if (event == null)
 					return;
-				}
+				
 				int eventKind = event.getKind();
 				IServer server = event.getServer();
 				if ((eventKind & ServerEvent.SERVER_CHANGE) != 0) {
@@ -467,21 +467,27 @@ public class ServerTableViewer extends TreeViewer {
 						int state = event.getState();
 						String id = server.getId();
 						if (state == IServer.STATE_STARTING || state == IServer.STATE_STOPPING) {
+							boolean startThread = false;
 							synchronized (starting) {
 								if (!starting.contains(id)) {
 									if (starting.isEmpty())
-										startThread();
+										startThread = true;
 									starting.add(id);
 								}
 							}
+							if (startThread)
+								startThread();
 						} else {
+							boolean stopThread = false;
 							synchronized (starting) {
 								if (starting.contains(id)) {
 									starting.remove(id);
 									if (starting.isEmpty())
-										stopThread();
+										stopThread = true;
 								}
 							}
+							if (stopThread)
+								stopThread();
 						}
 					} else
 						refreshServer(server);
