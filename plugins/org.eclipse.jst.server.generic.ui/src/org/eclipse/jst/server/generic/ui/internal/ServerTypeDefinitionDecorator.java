@@ -190,7 +190,13 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
     		else if(fPropertyControls.get(i) instanceof Combo){
     			Combo combo = (Combo)fPropertyControls.get(i);
      			int index = combo.getSelectionIndex();
-    			propertyMap.put(prop.getId(),combo.getItem(index));
+     			if ( index > 0 ){//is there a selection?
+     			    propertyMap.put(prop.getId(),combo.getItem(index));
+     			}
+     			else{
+     			   propertyMap.put(prop.getId(),combo.getText());
+     			}
+     			
     		}else{
     			Text text = (Text)fPropertyControls.get(i);
     			propertyMap.put(prop.getId(),text.getText());

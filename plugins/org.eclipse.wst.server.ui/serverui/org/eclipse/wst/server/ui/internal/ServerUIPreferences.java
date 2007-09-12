@@ -73,7 +73,7 @@ public class ServerUIPreferences {
 		preferences.setDefault(PREF_SAVE_EDITORS, getDefaultSaveEditors());
 		preferences.setDefault(PREF_HOST_NAMES, "localhost");
 		preferences.setDefault(PREF_SHOW_ON_ACTIVITY, true);
-		preferences.setDefault(PREF_CREATE_SERVER_WITH_RUNTIME, true);
+		preferences.setDefault(PREF_CREATE_SERVER_WITH_RUNTIME, false);
 	}
 
 	/**

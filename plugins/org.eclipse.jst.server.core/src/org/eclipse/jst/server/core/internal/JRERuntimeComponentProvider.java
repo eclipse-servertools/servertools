@@ -49,7 +49,7 @@ public class JRERuntimeComponentProvider extends RuntimeComponentProviderDelegat
 			if (cache != null) {
 				if (cache.timestamp != ((Runtime) runtime).getTimestamp())
 					cache = null;
-				if (cache.location != null && cache.vmInstall != null && !cache.location.equals(cache.vmInstall.getInstallLocation()))
+				if (cache != null && cache.location != null && cache.vmInstall != null && !cache.location.equals(cache.vmInstall.getInstallLocation()))
 					cache = null;
 			}
 			

@@ -13,6 +13,8 @@ package org.eclipse.wst.internet.monitor.ui.internal.viewers;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.wst.internet.monitor.ui.internal.Messages;
 import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
 import org.eclipse.wst.internet.monitor.ui.internal.provisional.ContentViewer;
@@ -31,7 +33,12 @@ public class BrowserViewer extends ContentViewer {
 	 * @see ContentViewer#init(Composite)
 	 */
 	public void init(Composite parent) {
-		browser = new Browser(parent, SWT.BORDER);
+		browser = new Browser(parent, SWT.NONE);
+		browser.addListener(SWT.MenuDetect, new Listener() {
+			public void handleEvent(Event event) {
+				event.doit = false;
+			}
+		});
 	}
 
 	/** (non-Javadoc)
