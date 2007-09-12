@@ -202,7 +202,7 @@ public class ServerTableViewer extends TreeViewer {
 				}
 			}
 		};
-		Display.getDefault().syncExec(new Runnable() {
+		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				display.timerExec(SLEEP, animator[0]);
 			}
