@@ -21,16 +21,20 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.DebugUITools;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
-import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -71,7 +75,7 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
  */
 public class OverviewEditorPart extends ServerEditorPart {
 	protected Text serverName;
-	protected Text serverConfigurationName;
+	protected Text serverConfiguration;
 	protected Text hostname;
 	protected Combo runtimeCombo;
 	protected Button browse;
@@ -80,8 +84,8 @@ public class OverviewEditorPart extends ServerEditorPart {
 	protected Button autoPublishOverride;
 	protected Spinner autoPublishTime;
 
-	protected Color colorDefault;
-	protected Color colorRed;
+	protected ControlDecoration serverConfigurationDecoration;
+	protected ControlDecoration serverNameDecoration;
 
 	protected boolean updating;
 
@@ -104,12 +108,16 @@ public class OverviewEditorPart extends ServerEditorPart {
 	protected void addChangeListener() {
 		listener = new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
-				if (event.getPropertyName().equals("configuration-id") && serverConfigurationName != null) {
+				if (event.getPropertyName().equals("configuration-id") && serverConfiguration != null) {
 					IFolder folder = getServer().getServerConfiguration();
-					if (folder == null || !folder.exists())
-						serverConfigurationName.setForeground(colorRed);
-					else
-						serverConfigurationName.setForeground(colorDefault);
+					if (folder == null || !folder.exists()) {
+						FieldDecorationRegistry registry = FieldDecorationRegistry.getDefault();
+						FieldDecoration fd = registry.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
+						serverConfigurationDecoration.setImage(fd.getImage());
+						serverConfigurationDecoration.setDescriptionText(Messages.errorMissingConfiguration);
+						serverConfigurationDecoration.show();
+					} else
+						serverConfigurationDecoration.hide();
 				}
 				validate();
 				
@@ -161,9 +169,9 @@ public class OverviewEditorPart extends ServerEditorPart {
 								runtimeCombo.select(i);
 						}
 					}
-				} else if (event.getPropertyName().equals("configuration-id") && serverConfigurationName != null) {
+				} else if (event.getPropertyName().equals("configuration-id") && serverConfiguration != null) {
 					String path = (String) event.getNewValue();
-					serverConfigurationName.setText(path);
+					serverConfiguration.setText(path);
 				} else if (event.getPropertyName().equals(Server.PROP_AUTO_PUBLISH_TIME)) {
 					Integer curAutoPublishTime = (Integer)event.getNewValue();
 					autoPublishTime.setSelection(curAutoPublishTime.intValue());
@@ -266,6 +274,8 @@ public class OverviewEditorPart extends ServerEditorPart {
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
 		
+		int decorationWidth = FieldDecorationRegistry.getDefault().getMaximumDecorationWidth(); 
+		
 		// server name
 		if (server != null) {
 			createLabel(toolkit, composite, Messages.serverEditorOverviewServerName);
@@ -273,6 +283,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			serverName = toolkit.createText(composite, server.getName());
 			GridData data = new GridData(GridData.FILL_HORIZONTAL);
 			data.horizontalSpan = 2;
+			data.horizontalIndent = decorationWidth;
 			serverName.setLayoutData(data);
 			serverName.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
@@ -284,13 +295,15 @@ public class OverviewEditorPart extends ServerEditorPart {
 				}
 			});
 			whs.setHelp(serverName, ContextIds.EDITOR_SERVER);
-		
+			
 			// hostname
 			createLabel(toolkit, composite, Messages.serverEditorOverviewServerHostname);
 			
 			hostname = toolkit.createText(composite, server.getHost());
+			//ControlDecoration hostnameDecoration = new ControlDecoration(hostname, SWT.TOP | SWT.LEAD);
 			data = new GridData(GridData.FILL_HORIZONTAL);
 			data.horizontalSpan = 2;
+			data.horizontalIndent = decorationWidth;
 			hostname.setLayoutData(data);
 			hostname.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
@@ -302,6 +315,16 @@ public class OverviewEditorPart extends ServerEditorPart {
 				}
 			});
 			whs.setHelp(hostname, ContextIds.EDITOR_HOSTNAME);
+			
+			/*FieldDecorationRegistry registry = FieldDecorationRegistry.getDefault();
+			FieldDecoration fd = registry.getFieldDecoration(FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
+			hostnameDecoration.setImage(fd.getImage());
+			hostnameDecoration.setDescriptionText(fd.getDescription());
+			hostnameDecoration.show();*/
+			
+			//updateDecoration(hostnameDecoration, new Status(IStatus.INFO, ServerUIPlugin.PLUGIN_ID, "Press Ctrl-Space"));
+			
+			//AutoCompleteField acf = new AutoCompleteField(hostname, new TextContentAdapter(), new String[] { "Testing", "A hostname"});
 		}
 		
 		// runtime
@@ -313,7 +336,9 @@ public class OverviewEditorPart extends ServerEditorPart {
 			runtimes = ServerUIPlugin.getRuntimes(runtimeType);
 			
 			runtimeCombo = new Combo(composite, SWT.READ_ONLY);
-			runtimeCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			GridData data = new GridData(GridData.FILL_HORIZONTAL);
+			data.horizontalIndent = decorationWidth;
+			runtimeCombo.setLayoutData(data);
 			updateRuntimeCombo();
 			
 			int size = runtimes.length;
@@ -422,25 +447,31 @@ public class OverviewEditorPart extends ServerEditorPart {
 			
 			IFolder folder = server.getServerConfiguration();
 			if (folder == null)
-				serverConfigurationName = toolkit.createText(composite, Messages.elementUnknownName);
+				serverConfiguration = toolkit.createText(composite, Messages.elementUnknownName);
 			else
-				serverConfigurationName = toolkit.createText(composite, "" + server.getServerConfiguration().getFullPath());
-			colorDefault = serverConfigurationName.getForeground();
-			colorRed = serverConfigurationName.getDisplay().getSystemColor(SWT.COLOR_RED); 
-			if (folder == null || !folder.exists())
-				serverConfigurationName.setForeground(colorRed);
+				serverConfiguration = toolkit.createText(composite, "" + server.getServerConfiguration().getFullPath());
+			serverConfigurationDecoration = new ControlDecoration(serverConfiguration, SWT.TOP | SWT.LEAD);
+			if (folder == null || !folder.exists()) {
+				FieldDecorationRegistry registry = FieldDecorationRegistry.getDefault();
+				FieldDecoration fd = registry.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
+				serverConfigurationDecoration.setImage(fd.getImage());
+				serverConfigurationDecoration.setDescriptionText(Messages.errorMissingConfiguration);
+				serverConfigurationDecoration.show();
+			}
 			//if (!server.getServerConfiguration().getFullPath().toFile().exists())
 			
-			serverConfigurationName.setEditable(false);
-			serverConfigurationName.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			serverConfiguration.setEditable(false);
+			GridData data = new GridData(GridData.FILL_HORIZONTAL);
+			data.horizontalIndent = decorationWidth;
+			serverConfiguration.setLayoutData(data);
 			
-			whs.setHelp(serverConfigurationName, ContextIds.EDITOR_CONFIGURATION);
+			whs.setHelp(serverConfiguration, ContextIds.EDITOR_CONFIGURATION);
 			
 			final IFolder currentFolder = server.getServerConfiguration();
 			browse = toolkit.createButton(composite, Messages.serverEditorOverviewServerConfigurationBrowse, SWT.PUSH);
 			browse.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
-					ContainerSelectionDialog dialog = new ContainerSelectionDialog(serverConfigurationName.getShell(),
+					ContainerSelectionDialog dialog = new ContainerSelectionDialog(serverConfiguration.getShell(),
 						currentFolder, true, Messages.serverEditorOverviewServerConfigurationBrowseMessage);
 					dialog.showClosedProjects(false);
 					
@@ -458,7 +489,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 									return;
 								updating = true;
 								execute(new SetServerConfigurationFolderCommand(getServer(), folder2));
-								serverConfigurationName.setText(folder2.getFullPath().toString());
+								serverConfiguration.setText(folder2.getFullPath().toString());
 								updating = false;
 							}
 						}
@@ -743,17 +774,17 @@ public class OverviewEditorPart extends ServerEditorPart {
 					runtimeCombo.setEnabled(true);
 			}
 			
-			if (serverConfigurationName != null) {
+			if (serverConfiguration != null) {
 				IFolder folder = server.getServerConfiguration();
 				if (folder == null)
-					serverConfigurationName.setText(Messages.elementUnknownName);
+					serverConfiguration.setText(Messages.elementUnknownName);
 				else
-					serverConfigurationName.setText("" + server.getServerConfiguration().getFullPath());
+					serverConfiguration.setText("" + server.getServerConfiguration().getFullPath());
 				if (readOnly) {
-					serverConfigurationName.setEditable(false);
+					serverConfiguration.setEditable(false);
 					browse.setEnabled(false);
 				} else {
-					serverConfigurationName.setEditable(true);
+					serverConfiguration.setEditable(true);
 					browse.setEnabled(true);
 				}
 			}
@@ -809,13 +840,37 @@ public class OverviewEditorPart extends ServerEditorPart {
 		setErrorMessage(null);
 	}
 
+	protected void updateDecoration(ControlDecoration decoration, IStatus status) {
+		if (status != null) {
+			Image newImage = null;
+			FieldDecorationRegistry registry = FieldDecorationRegistry.getDefault();
+			switch (status.getSeverity()) {
+				case IStatus.INFO:
+					//newImage = registry.getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage();
+					newImage = registry.getFieldDecoration(FieldDecorationRegistry.DEC_REQUIRED).getImage();
+					break;
+				case IStatus.WARNING:
+					newImage = registry.getFieldDecoration(FieldDecorationRegistry.DEC_WARNING).getImage();
+					break;
+				case IStatus.ERROR:
+					newImage = registry.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage();
+			}
+			decoration.setDescriptionText(status.getMessage());
+			decoration.setImage(newImage);
+			decoration.show();
+		} else {
+			decoration.setDescriptionText(null);
+			decoration.hide();
+		}
+	}
+
 	/*
 	 * @see IWorkbenchPart#setFocus()
 	 */
 	public void setFocus() {
 		if (serverName != null)
 			serverName.setFocus();
-		else if (serverConfigurationName != null)
-			serverConfigurationName.setFocus();
+		else if (serverConfiguration != null)
+			serverConfiguration.setFocus();
 	}
 }
