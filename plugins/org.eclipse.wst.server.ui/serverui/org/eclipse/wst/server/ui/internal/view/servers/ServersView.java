@@ -275,8 +275,7 @@ public class ServersView extends ViewPart {
 		actions[2] = new StartAction(shell, provider, ILaunchManager.PROFILE_MODE);
 		
 		// create the stop action
-		//actions[3] = new StopAction(shell, provider);
-		actions[3] = new StartAction(shell, provider, ILaunchManager.DEBUG_MODE);
+		actions[3] = new StopAction(shell, provider);
 		
 		// create the publish actions
 		actions[4] = new PublishAction(shell, provider);
