@@ -1461,62 +1461,62 @@ public class Server extends Base implements IServer {
 	/**
 	 * @see IServer#start(String, IOperationListener)
 	 */
-	public void start(String mode2, IOperationListener listener2) {
+	public void start(String mode2, final IOperationListener opListener) {
 		if (getServerType() == null) {
-			listener2.done(Status.OK_STATUS);
+			opListener.done(Status.OK_STATUS);
 			return;
 		}
 		
-		Trace.trace(Trace.FINEST, "synchronousStart 1");
-		final Object mutex = new Object();
+		Trace.trace(Trace.FINEST, "start 1");
 		
 		// make sure that the delegate is loaded and the server state is correct
 		loadAdapter(ServerBehaviourDelegate.class, null);
 		
+		class Operation {
+			public boolean isDone;
+			public IServerListener listener;
+			
+			public synchronized void complete(IStatus status) {
+				if (isDone)
+					return;
+				
+				isDone = true;
+				opListener.done(status);
+				removeServerListener(listener);
+			}
+		}
+		final Operation operation = new Operation();
+		
 		// add listener to the server
 		IServerListener listener = new IServerListener() {
 			public void serverChanged(ServerEvent event) {
+				if (operation.isDone)
+					return;
 				int eventKind = event.getKind();
 				IServer server = event.getServer();
 				if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
 					int state = server.getServerState();
-					if (state == IServer.STATE_STARTED || state == IServer.STATE_STOPPED) {
-						// notify waiter
-						synchronized (mutex) {
-							try {
-								Trace.trace(Trace.FINEST, "synchronousStart notify");
-								mutex.notifyAll();
-							} catch (Exception e) {
-								Trace.trace(Trace.SEVERE, "Error notifying server start", e);
-							}
-						}
-					}
+					if (state == IServer.STATE_STARTED)
+						operation.complete(Status.OK_STATUS);
+					else if (state == IServer.STATE_STOPPED)
+						operation.complete(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartFailed, getName()), null));
 				}
 			}
 		};
+		operation.listener = listener;
 		addServerListener(listener);
 		
-		class Timer {
-			boolean timeout;
-			boolean alreadyDone;
-		}
-		final Timer timer = new Timer();
-		
+		// add timeout thread
 		final int serverTimeout = ((ServerType) getServerType()).getStartTimeout();
 		if (serverTimeout > 0) {
 			Thread thread = new Thread("Server start timeout") {
 				public void run() {
 					try {
 						Thread.sleep(serverTimeout);
-						if (!timer.alreadyDone) {
-							// notify waiter
-							synchronized (mutex) {
-								Trace.trace(Trace.FINEST, "start notify timeout");
-								if (!timer.alreadyDone)
-									timer.timeout = true;
-								mutex.notifyAll();
-							}
-						}
+						if (operation.isDone)
+							return;
+						Server.this.stop(false);
+						operation.complete(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartTimeout, new String[] { getName(), (serverTimeout / 1000) + "" }), null));
 					} catch (Exception e) {
 						Trace.trace(Trace.SEVERE, "Error notifying server start timeout", e);
 					}
@@ -1526,52 +1526,22 @@ public class Server extends Base implements IServer {
 			thread.start();
 		}
 		
-		Trace.trace(Trace.FINEST, "synchronousStart 2");
+		Trace.trace(Trace.FINEST, "start 2");
 		
 		// start the server
 		IProgressMonitor monitor = new NullProgressMonitor();
 		try {
 			start(mode2, monitor);
 		} catch (CoreException e) {
-			removeServerListener(listener);
-			timer.alreadyDone = true;
-			listener2.done(e.getStatus());
+			operation.complete(e.getStatus());
 			return;
 		}
 		if (monitor.isCanceled()) {
-			removeServerListener(listener);
-			timer.alreadyDone = true;
-			listener2.done(Status.CANCEL_STATUS);
+			operation.complete(Status.CANCEL_STATUS);
 			return;
 		}
 		
-		Trace.trace(Trace.FINEST, "synchronousStart 3");
-		
-		// wait for it! wait for it! ...
-		synchronized (mutex) {
-			try {
-				while (!timer.timeout && !(getServerState() == IServer.STATE_STARTED || getServerState() == IServer.STATE_STOPPED))
-					mutex.wait();
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error waiting for server start", e);
-			}
-			timer.alreadyDone = true;
-		}
-		removeServerListener(listener);
-		
-		if (timer.timeout) {
-			listener2.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartTimeout, new String[] { getName(), (serverTimeout / 1000) + "" }), null));
-			stop(false);
-			return;
-		}
-		
-		if (getServerState() == IServer.STATE_STOPPED) {
-			listener2.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartFailed, getName()), null));
-			return;
-		}
-		
-		Trace.trace(Trace.FINEST, "synchronousStart 4");
-		listener2.done(Status.OK_STATUS);
+		Trace.trace(Trace.FINEST, "start 3");
 	}
 
 	public void synchronousStart(String mode2, IProgressMonitor monitor) throws CoreException {
@@ -1805,18 +1775,31 @@ public class Server extends Base implements IServer {
 	/*
 	 * @see IServer#stop(boolean, IOperationListener)
 	 */
-	public void stop(boolean force, IOperationListener listener2) {
+	public void stop(boolean force, final IOperationListener opListener) {
 		if (getServerType() == null) {
-			listener2.done(Status.OK_STATUS);
+			opListener.done(Status.OK_STATUS);
 			return;
 		}
 		
 		if (getServerState() == IServer.STATE_STOPPED) {
-			listener2.done(Status.OK_STATUS);
+			opListener.done(Status.OK_STATUS);
 			return;
 		}
 		
-		final Object mutex = new Object();
+		class Operation {
+			public boolean isDone;
+			public IServerListener listener;
+			
+			public synchronized void complete(IStatus status) {
+				if (isDone)
+					return;
+				
+				isDone = true;
+				opListener.done(status);
+				removeServerListener(listener);
+			}
+		}
+		final Operation operation = new Operation();
 		
 		// add listener to the server
 		IServerListener listener = new IServerListener() {
@@ -1825,26 +1808,13 @@ public class Server extends Base implements IServer {
 				IServer server = event.getServer();
 				if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
 					int state = server.getServerState();
-					if (Server.this == server && state == IServer.STATE_STOPPED) {
-						// notify waiter
-						synchronized (mutex) {
-							try {
-								mutex.notifyAll();
-							} catch (Exception e) {
-								Trace.trace(Trace.SEVERE, "Error notifying server stop", e);
-							}
-						}
-					}
+					if (state == IServer.STATE_STOPPED)
+						operation.complete(Status.OK_STATUS);
 				}
 			}
 		};
+		operation.listener = listener;
 		addServerListener(listener);
-		
-		class Timer {
-			boolean timeout;
-			boolean alreadyDone;
-		}
-		final Timer timer = new Timer();
 		
 		final int serverTimeout = ((ServerType) getServerType()).getStopTimeout();
 		if (serverTimeout > 0) {
@@ -1852,14 +1822,9 @@ public class Server extends Base implements IServer {
 				public void run() {
 					try {
 						Thread.sleep(serverTimeout);
-						if (!timer.alreadyDone) {
-							timer.timeout = true;
-							// notify waiter
-							synchronized (mutex) {
-								Trace.trace(Trace.FINEST, "stop notify timeout");
-								mutex.notifyAll();
-							}
-						}
+						if (operation.isDone)
+							return;
+						operation.complete(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorRestartFailed, getName()), null));
 					} catch (Exception e) {
 						Trace.trace(Trace.SEVERE, "Error notifying server stop timeout", e);
 					}
@@ -1873,28 +1838,9 @@ public class Server extends Base implements IServer {
 		try {
 			stop(force);
 		} catch (RuntimeException e) {
-			removeServerListener(listener);
-			listener2.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorRestartFailed, getName()), null));
+			operation.complete(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorRestartFailed, getName()), null));
 			return;
 		}
-		
-		// wait for it! wait for it!
-		synchronized (mutex) {
-			try {
-				while (!timer.timeout && getServerState() != IServer.STATE_STOPPED)
-					mutex.wait();
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error waiting for server stop", e);
-			}
-		}
-		removeServerListener(listener);
-		
-		if (timer.timeout) {
-			listener2.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorRestartFailed, getName()), null));
-			return;
-		}
-		
-		listener2.done(Status.OK_STATUS);
 	}
 
 	/*
