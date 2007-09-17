@@ -213,7 +213,7 @@ public class NewServerComposite extends Composite {
 		createAutoComposite(stack);
 		createManualComposite(stack);
 	
-		if (existingComp != null) {
+		if (existingComp != null && existing != null) {
 			if (isExistingServer()) {
 				mode = MODE_EXISTING;
 				stackLayout.topControl = existingComp;
@@ -345,7 +345,8 @@ public class NewServerComposite extends Composite {
 					if (wizard.getMessage() == null) {
 						IModule[] rootModules = null;
 						try {
-							rootModules = server.getRootModules(module, null);
+							if (server != null)
+								rootModules = server.getRootModules(module, null);
 						} catch (CoreException ce) {
 							IStatus status = ce.getStatus();
 							if (status != null) {
@@ -370,7 +371,8 @@ public class NewServerComposite extends Composite {
 								boolean found = false;
 								for (int i = 0; i < size; i++) {
 									try {
-										status = server.canModifyModules(new IModule[] {rootModules[i]}, null, null);
+										if (server != null)
+											status = server.canModifyModules(new IModule[] {rootModules[i]}, null, null);
 										if (status != null && status.isOK())
 											found = true;
 									} catch (Exception e) {
@@ -378,15 +380,13 @@ public class NewServerComposite extends Composite {
 									}
 								}
 								if (!found && status != null) {
-									if (status != null) {
-										if (status.getSeverity() == IStatus.ERROR)
-											wizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
-										else if (status.getSeverity() == IStatus.WARNING)
-											wizard.setMessage(status.getMessage(), IMessageProvider.WARNING);
-										else if (status.getSeverity() == IStatus.INFO)
-											wizard.setMessage(status.getMessage(), IMessageProvider.INFORMATION);
-										server = null;
-									}
+									if (status.getSeverity() == IStatus.ERROR)
+										wizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
+									else if (status.getSeverity() == IStatus.WARNING)
+										wizard.setMessage(status.getMessage(), IMessageProvider.WARNING);
+									else if (status.getSeverity() == IStatus.INFO)
+										wizard.setMessage(status.getMessage(), IMessageProvider.INFORMATION);
+									server = null;
 								}
 							}
 						}

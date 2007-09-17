@@ -783,8 +783,6 @@ public class ResourceManager {
 					handleRemovedFile(file);
 				else
 					handleChangedFile(file, monitor);
-				if (monitor != null)
-					monitor.done();
 			}
 			return false;
 		}

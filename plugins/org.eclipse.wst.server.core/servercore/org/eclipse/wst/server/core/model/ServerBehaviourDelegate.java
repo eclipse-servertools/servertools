@@ -704,7 +704,9 @@ public abstract class ServerBehaviourDelegate {
 			multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.publishingStatusWarning, null);
 		else if (tempMulti.getSeverity() == IStatus.ERROR)
 			multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.publishingStatusError, null);
-		multi.addAll(tempMulti);
+		
+		if (multi != null)
+			multi.addAll(tempMulti);
 		
 		return multi;
 	}

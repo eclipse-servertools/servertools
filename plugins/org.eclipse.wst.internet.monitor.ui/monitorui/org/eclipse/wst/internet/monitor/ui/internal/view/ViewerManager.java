@@ -264,7 +264,10 @@ public class ViewerManager {
 		reqViewer.dispose();
 		
 		requestViewer = viewer;
-		reqViewer = viewer.createViewer();
+		if (viewer != null)
+			reqViewer = viewer.createViewer();
+		else
+			reqViewer = null;
 		if (reqViewer == null)
 			return;
 		
@@ -294,9 +297,13 @@ public class ViewerManager {
 		respViewer.dispose();
 		
 		responseViewer = viewer;
-		respViewer = viewer.createViewer();
+		if (viewer != null)
+			respViewer = viewer.createViewer();
+		else
+			respViewer = null;
 		if (respViewer == null)
 			return;
+		
 		respViewer.init(respComp);
 		//respViewer.setRequestResponse(rr);
 		byte[] b = null;

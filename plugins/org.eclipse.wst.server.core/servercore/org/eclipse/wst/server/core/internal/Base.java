@@ -146,10 +146,7 @@ public abstract class Base {
 			Object obj = map.get(attributeName);
 			if (obj == null)
 				return defaultValue;
-			List<String> obj2 = (List<String>) obj;
-			List<String> list = obj2;
-			if (list != null)
-				return list;
+			return (List<String>) obj;
 		} catch (Exception e) {
 			// ignore
 		}
@@ -161,9 +158,7 @@ public abstract class Base {
 			Object obj = map.get(attributeName);
 			if (obj == null)
 				return defaultValue;
-			Map map2 = (Map) obj;
-			if (map2 != null)
-				return map2;
+			return (Map) obj;
 		} catch (Exception e) {
 			// ignore
 		}
@@ -373,7 +368,8 @@ public abstract class Base {
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorLoading, getFile().toString()), e));
 		} finally {
 			try {
-				in.close();
+				if (in != null)
+					in.close();
 			} catch (Exception e) {
 				// ignore
 			}
@@ -398,7 +394,8 @@ public abstract class Base {
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorLoading, path.toString()), e));
 		} finally {
 			try {
-				in.close();
+				if (in != null)
+					in.close();
 			} catch (Exception e) {
 				// ignore
 			}

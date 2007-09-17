@@ -115,7 +115,7 @@ public class JRERuntimeComponentProvider extends RuntimeComponentProviderDelegat
 				
 				if (vmInstall == null) {
 					// no classpath
-				} else if (vmInstall == null || javaRuntime.isUsingDefaultJRE())
+				} else if (javaRuntime.isUsingDefaultJRE())
 					properties.put(CLASSPATH, new Path(JavaRuntime.JRE_CONTAINER).toPortableString());
 				else
 					properties.put(CLASSPATH, JavaRuntime.newJREContainerPath(vmInstall).toPortableString());

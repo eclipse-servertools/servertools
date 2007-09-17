@@ -330,7 +330,8 @@ public class ServerPublishInfo {
 			Trace.trace(Trace.SEVERE, "Could not save publish information", e);
 		} finally {
 			try {
-				out.close();
+				if (out != null)
+					out.close();
 			} catch (Exception e) {
 				// ignore
 			}

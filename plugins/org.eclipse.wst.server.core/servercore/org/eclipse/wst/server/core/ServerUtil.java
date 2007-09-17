@@ -230,13 +230,12 @@ public class ServerUtil {
 		if (typeId == null && versionId == null)
 			return true;
 		
-		if (moduleTypes != null) {
-			int size = moduleTypes.length;
-			for (int i = 0; i < size; i++) {
-				if (isSupportedModule(moduleTypes[i], typeId, versionId))
-					return true;
-			}
+		int size = moduleTypes.length;
+		for (int i = 0; i < size; i++) {
+			if (isSupportedModule(moduleTypes[i], typeId, versionId))
+				return true;
 		}
+		
 		return false;
 	}
 
@@ -638,15 +637,13 @@ public class ServerUtil {
 						IModule[] parents = servers[i].getRootModules(module, monitor);
 						if (parents != null && parents.length > 0) {
 							boolean found = false;
-							if (parents != null) {
-								int size2 = parents.length;
-								for (int j = 0; !found && j < size2; j++) {
-									IModule parent = parents[j];
-									IStatus status = servers[i].canModifyModules(new IModule[] { parent }, new IModule[0], monitor);
-									if (status == null || status.isOK()){
-										list.add(servers[i]);
-										found = true;
-									}
+							int size2 = parents.length;
+							for (int j = 0; !found && j < size2; j++) {
+								IModule parent = parents[j];
+								IStatus status = servers[i].canModifyModules(new IModule[] { parent }, new IModule[0], monitor);
+								if (status == null || status.isOK()){
+									list.add(servers[i]);
+									found = true;
 								}
 							}
 						}

@@ -114,7 +114,7 @@ public class NewServerWizardFragment extends WizardFragment {
 			if (server != null) {
 				if (server.getServerType().hasServerConfiguration() && server instanceof ServerWorkingCopy) {
 					ServerWorkingCopy swc = (ServerWorkingCopy) server;
-					if (swc != null && runtime != null && runtime.getLocation() != null && !runtime.getLocation().isEmpty()) {
+					if (runtime != null && runtime.getLocation() != null && !runtime.getLocation().isEmpty()) {
 						if (runtimeLocation == null || !runtimeLocation.equals(runtime.getLocation()))
 							try {
 								swc.importRuntimeConfiguration(runtime, null);

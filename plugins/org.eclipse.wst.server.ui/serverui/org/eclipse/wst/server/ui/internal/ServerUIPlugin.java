@@ -323,7 +323,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 				int eventKind = event.getKind();
 				IServer server2 = event.getServer();
 				if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
-					if (server2.getServerState() == IServer.STATE_STOPPED && t != null)
+					if (server2.getServerState() == IServer.STATE_STOPPED)
 						t.alive = false;
 				}
 			}

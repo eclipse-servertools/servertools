@@ -68,7 +68,7 @@ public class ModuleSloshAction extends AbstractServerAction {
 		
 		// get remaining modules
 		IModule[] modules2 = ServerUtil.getModules(server.getServerType().getRuntimeType().getModuleTypes());
-		if (modules != null) {
+		if (modules2 != null) {
 			int size = modules2.length;
 			for (int i = 0; i < size; i++) {
 				IModule module = modules2[i];

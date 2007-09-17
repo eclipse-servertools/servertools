@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,10 +11,7 @@
 package org.eclipse.wst.server.ui.internal.wizard.page;
 
 import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
@@ -22,7 +19,6 @@ import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.widgets.Shell;
 /**
  * A helper class for wizards.
  */
@@ -126,107 +122,6 @@ public class WizardUtil {
 		return null;
 	}
 
-	/**
-	 * Return the full pathname of a container.
-	 *
-	 * @param container org.eclipse.core.resources.Container
-	 * @return java.lang.String
-	 */
-	public static String getContainerText(IContainer container) {
-		String name = container.getName();
-		while (container != null && !(container instanceof IProject)) {
-			container = container.getParent();
-			name = container.getName() + "/" + name;
-		}
-		return name;
-	}
-
-	/**
-	 * Returns the selected container from this selection.
-	 *
-	 * @param selection the selection
-	 * @return the container
-	 */
-	public static IContainer getSelectionContainer(IStructuredSelection selection) {
-		if (selection == null || selection.isEmpty())
-			return null;
-	
-		Object obj = selection.getFirstElement();
-		if (obj instanceof IResource)
-			return findServerProjectContainer((IResource) obj);
-	
-		return null;
-	}
-
-	/**
-	 * Return true if the container is a valid server project
-	 * folder and is not "within" a server instance or configuration.
-	 *
-	 * @param name a container name
-	 * @return <code>null</code> if the container is fine, and an error message
-	 *    otherwise 
-	 */
-	public static String validateContainer(String name) {
-		IContainer container = WizardUtil.findContainer(name);
-		if (container == null || !container.exists()) {
-			IStatus status = ResourcesPlugin.getWorkspace().validateName(name, IResource.PROJECT);
-			if (status.isOK())
-				return null; // we can create one later
-			return status.getMessage();
-		}
-		
-		String error = Messages.wizErrorInvalidFolder;
-		try {
-			// find project of this container
-			IProject project = null;
-			if (container instanceof IProject) {
-				project = (IProject) container;
-			} else {
-				// look up hierarchy for project
-				IContainer temp = container.getParent();
-				while (project == null && temp != null && !(temp instanceof IProject)) {
-					temp = temp.getParent();
-				}
-				if (temp != null && temp instanceof IProject)
-					project = (IProject) temp;
-			}
-	
-			// validate the project
-			if (project != null && !project.isOpen())
-				return Messages.wizErrorClosedProject;
-
-			if (project == null || !project.exists() || !project.isOpen())
-				return error;
-	
-			// make sure we're not embedding in another server element
-			IResource temp = container;
-			while (temp != null && !(temp instanceof IProject)) {
-				if (temp instanceof IFile) {
-					IFile file = (IFile) temp;
-					if (ServerUIPlugin.findServer(file) != null)
-						return error;
-				}
-				temp = temp.getParent();
-			}
-		} catch (Exception e) {
-			return error;
-		}
-		return null;
-	}
-
-	/**
-	 * Returns true if the user said okay to creating a new server
-	 * project.
-	 * 
-	 * @param shell a shell
-	 * @param projectName a project name
-	 * @return <code>true</code> if the user wants to create a server project
-	 */
-	public static boolean promptForServerProjectCreation(Shell shell, String projectName) {
-		String msg = NLS.bind(Messages.createServerProjectDialogMessage, projectName);
-		return MessageDialog.openQuestion(shell, Messages.createServerProjectDialogTitle, msg);
-	}
-	
 	/**
 	 * Handles default selection within a wizard by going to the next
 	 * page, or finishing the wizard if possible.

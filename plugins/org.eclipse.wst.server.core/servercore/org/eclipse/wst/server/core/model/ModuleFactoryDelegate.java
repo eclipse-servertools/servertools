@@ -200,7 +200,7 @@ public abstract class ModuleFactoryDelegate {
 			return null;
 		
 		IModule[] modules = getModules();
-		if (id != null && modules != null) {
+		if (modules != null) {
 			int size = modules.length;
 			for (int i = 0; i < size; i++) {
 				String id2 = modules[i].getId();

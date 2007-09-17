@@ -233,7 +233,7 @@ Host: localhost:8081
 					System.arraycopy(x, 0, temp, body.length, x.length);
 					body = temp;
 				}
-				if (b.length < BUFFER)
+				if (b == null || b.length < BUFFER)
 					b = new byte[BUFFER];
 				n = in.read(b);
 				Thread.yield();

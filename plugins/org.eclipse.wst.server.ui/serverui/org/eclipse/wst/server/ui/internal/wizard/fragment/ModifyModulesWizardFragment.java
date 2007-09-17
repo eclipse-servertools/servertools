@@ -83,14 +83,12 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 			}
 			
 			final List<IModule[]> moduleList = new ArrayList<IModule[]>();
-			if (server != null) {
-				((Server) server).visit(new IModuleVisitor() {
-					public boolean visit(IModule[] module2) {
-						moduleList.add(module2);
-						return true;
-					}
-				}, null);
-			}
+			((Server) server).visit(new IModuleVisitor() {
+				public boolean visit(IModule[] module2) {
+					moduleList.add(module2);
+					return true;
+				}
+			}, null);
 			
 			// add module
 			IModule parent = null;

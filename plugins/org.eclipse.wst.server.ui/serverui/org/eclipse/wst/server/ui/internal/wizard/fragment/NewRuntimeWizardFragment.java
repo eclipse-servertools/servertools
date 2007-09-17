@@ -79,33 +79,31 @@ public class NewRuntimeWizardFragment extends WizardFragment {
 		if (sub != null)
 			list.add(sub);
 		
-		if (runtime != null) {
-			IServerWorkingCopy server = (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
-			if (server != null) {
-				if (server.getServerType().hasServerConfiguration() && server instanceof ServerWorkingCopy) {
-					ServerWorkingCopy swc = (ServerWorkingCopy) server;
-					try {
-						if (swc != null && runtime != null && runtime.getLocation() != null && !runtime.getLocation().isEmpty())
-							swc.importRuntimeConfiguration(runtime, null);
-					} catch (CoreException ce) {
-						// ignore
-					}
+		IServerWorkingCopy server = (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
+		if (server != null) {
+			if (server.getServerType().hasServerConfiguration() && server instanceof ServerWorkingCopy) {
+				ServerWorkingCopy swc = (ServerWorkingCopy) server;
+				try {
+					if (runtime.getLocation() != null && !runtime.getLocation().isEmpty())
+						swc.importRuntimeConfiguration(runtime, null);
+				} catch (CoreException ce) {
+					// ignore
 				}
-				
-				list.add(new WizardFragment() {
-					public void enter() {
-						IRuntimeWorkingCopy runtime2 = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
-						IServerWorkingCopy server2 = (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
-						server2.setRuntime(runtime2);
-					}
-				});
-				
-				sub = getWizardFragment(server.getServerType().getId());
-				if (sub != null)
-					list.add(sub);
-				
-				list.add(WizardTaskUtil.SaveServerFragment);
 			}
+			
+			list.add(new WizardFragment() {
+				public void enter() {
+					IRuntimeWorkingCopy runtime2 = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
+					IServerWorkingCopy server2 = (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
+					server2.setRuntime(runtime2);
+				}
+			});
+			
+			sub = getWizardFragment(server.getServerType().getId());
+			if (sub != null)
+				list.add(sub);
+			
+			list.add(WizardTaskUtil.SaveServerFragment);
 		}
 	}
 

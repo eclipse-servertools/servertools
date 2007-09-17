@@ -375,6 +375,9 @@ public void setWeights(int[] weights) {
 		SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 	}
 	
+	if (weights == null)
+		return;
+	
 	int total = 0;
 	for (int i = 0; i < weights.length; i++) {
 		if (weights[i] < 0) {

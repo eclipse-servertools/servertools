@@ -250,11 +250,12 @@ public final class PublishUtil {
 		
 		// cycle through files and only copy when it doesn't exist
 		// or is newer
-		if (toFiles == null)
+		if (toFiles == null) {
 			toFiles = toDir.listFiles();
-		int toSize = 0;
-		if (toFiles != null)
-			toSize = toFiles.length;
+			if (toFiles == null)
+				toFiles = new File[0];
+		}
+		int toSize = toFiles.length;
 		
 		int dw = 0;
 		if (toSize > 0)

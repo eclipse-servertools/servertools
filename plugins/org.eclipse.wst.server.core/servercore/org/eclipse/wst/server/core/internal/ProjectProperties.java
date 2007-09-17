@@ -124,7 +124,8 @@ public class ProjectProperties {
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, "", e));
 		} finally {
 			try {
-				in.close();
+				if (in != null)
+					in.close();
 			} catch (Exception e) {
 				// ignore
 			}

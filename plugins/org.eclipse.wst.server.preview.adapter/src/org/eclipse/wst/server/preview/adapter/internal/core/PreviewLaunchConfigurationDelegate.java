@@ -107,8 +107,7 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 			if (p != null) {
 				IProcess pr = DebugPlugin.newProcess(launch, p, cmdLine[0]);
 				pr.setAttribute(IProcess.ATTR_CMDLINE, renderCommandLine(cmdLine));
-				if (pr != null)
-					launch.addProcess(pr);
+				launch.addProcess(pr);
 				previewServer.setProcess(pr);
 			}
 		} catch (Exception e) {

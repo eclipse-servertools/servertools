@@ -203,16 +203,14 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 					
 					IRunnableWithProgress runnable = new IRunnableWithProgress() {
 						public void run(IProgressMonitor monitor2) {
-							if (locators != null) {
-								int size = locators.length;
-								for (int i = 0; i < size; i++) {
-									if (!monitor2.isCanceled())
-										try {
-											locators[i].searchForRuntimes(path, listener, monitor2);
-										} catch (CoreException ce) {
-											Trace.trace(Trace.WARNING, "Error locating runtimes: " + locators[i].getId(), ce);
-										}
-								}
+							int size = locators.length;
+							for (int i = 0; i < size; i++) {
+								if (!monitor2.isCanceled())
+									try {
+										locators[i].searchForRuntimes(path, listener, monitor2);
+									} catch (CoreException ce) {
+										Trace.trace(Trace.WARNING, "Error locating runtimes: " + locators[i].getId(), ce);
+									}
 							}
 							Trace.trace(Trace.INFO, "Done search");
 						}

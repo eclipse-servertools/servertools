@@ -672,8 +672,11 @@ public class ServerEditor extends MultiPageEditorPart {
 				if (server2 != null)
 					serverId = server2.getId();
 			}
-			if (serverId == null)
+			if (serverId == null) {
+				if (file == null)
+					throw new PartInitException(NLS.bind(Messages.errorEditor, Messages.elementUnknownName));
 				throw new PartInitException(NLS.bind(Messages.errorEditor, file.getName()));
+			}
 		} else if (input instanceof IServerEditorInput) {
 			IServerEditorInput sei = (IServerEditorInput) input;
 			serverId = sei.getServerId();

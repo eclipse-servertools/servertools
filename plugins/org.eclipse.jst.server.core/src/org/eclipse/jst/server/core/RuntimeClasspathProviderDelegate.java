@@ -162,8 +162,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 		else {
 			IClasspathEntry[] previousEntries = previousClasspath.get(key);
 			
-			if ((previousEntries == null && entries != null) || (previousEntries != null && entries == null)
-					|| (previousEntries != null && entries != null && previousEntries.length != entries.length)) {
+			if ((previousEntries == null) || (previousEntries.length != entries.length)) {
 				Trace.trace(Trace.FINEST, "Classpath update: " + key + " " + entries);
 				previousClasspath.put(key, entries);
 				
