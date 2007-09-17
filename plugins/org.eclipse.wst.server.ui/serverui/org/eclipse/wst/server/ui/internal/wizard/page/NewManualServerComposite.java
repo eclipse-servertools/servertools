@@ -27,11 +27,11 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
@@ -40,6 +40,10 @@ import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
 import org.eclipse.wst.server.core.util.SocketUtil;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.viewers.ServerTypeComposite;
+import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
+import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
+import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
+import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * Wizard page used to create a server and configuration at the same time.
  */
@@ -60,7 +64,8 @@ public class NewManualServerComposite extends Composite {
 
 	protected Label runtimeLabel;
 	protected Combo runtimeCombo;
-	protected Button runtimeButton;
+	protected Link configureRuntimes;
+	protected Link addRuntime;
 	protected IRuntime[] runtimes;
 	protected IRuntime newRuntime;
 
@@ -148,9 +153,23 @@ public class NewManualServerComposite extends Composite {
 			}
 		});
 		
-		runtimeButton = SWTUtil.createButton(this, Messages.installedRuntimes);
-		runtimeButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-		runtimeButton.addSelectionListener(new SelectionAdapter() {
+		addRuntime = new Link(this, SWT.NONE);
+		addRuntime.setText("<a>" + Messages.addRuntime + "</a>");
+		addRuntime.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		addRuntime.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				IServerType serverType = serverTypeComposite.getSelectedServerType();
+				if (showRuntimeWizard(serverType) != Window.CANCEL)
+					updateRuntimeCombo(serverType);
+			}
+		});
+		
+		configureRuntimes = new Link(this, SWT.NONE);
+		configureRuntimes.setText("<a>" + Messages.configureRuntimes + "</a>");
+		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
+		data.horizontalSpan = 3;
+		configureRuntimes.setLayoutData(data);
+		configureRuntimes.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				if (showPreferencePage()) {
 					runtime = null;
@@ -167,6 +186,33 @@ public class NewManualServerComposite extends Composite {
 		String id2 = "org.eclipse.wst.server.ui.runtime.preferencePage";
 		final PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), id2, new String[] { id, id2 }, null);
 		return (dialog.open() == Window.OK);
+	}
+
+	protected int showRuntimeWizard(IServerType serverType) {
+		WizardFragment fragment = null;
+		TaskModel taskModel = new TaskModel();
+		IRuntimeType runtimeType = serverType.getRuntimeType();
+		final WizardFragment fragment2 = ServerUIPlugin.getWizardFragment(runtimeType.getId());
+		if (fragment2 == null)
+			return Window.CANCEL;
+		
+		try {
+			IRuntimeWorkingCopy runtimeWorkingCopy = runtimeType.createRuntime(null, null);
+			taskModel.putObject(TaskModel.TASK_RUNTIME, runtimeWorkingCopy);
+		} catch (CoreException ce) {
+			Trace.trace(Trace.SEVERE, "Error creating runtime", ce);
+			return Window.CANCEL;
+		}
+		fragment = new WizardFragment() {
+			protected void createChildFragments(List<WizardFragment> list) {
+				list.add(fragment2);
+				list.add(WizardTaskUtil.SaveRuntimeFragment);
+			}
+		};
+		TaskWizard wizard2 = new TaskWizard(Messages.wizNewRuntimeWizardTitle, fragment, taskModel);
+		wizard2.setForcePreviousAndNextButtons(true);
+		ClosableWizardDialog dialog = new ClosableWizardDialog(getShell(), wizard2);
+		return dialog.open();
 	}
 
 	public void setHost(String host) {
@@ -298,8 +344,10 @@ public class NewManualServerComposite extends Composite {
 				runtimeCombo.setEnabled(false);
 				runtimeLabel.setVisible(false);
 				runtimeCombo.setVisible(false);
-				runtimeButton.setEnabled(false);
-				runtimeButton.setVisible(false);
+				configureRuntimes.setEnabled(false);
+				configureRuntimes.setVisible(false);
+				addRuntime.setEnabled(false);
+				addRuntime.setVisible(false);
 			}
 			runtimes = new IRuntime[0];
 			setRuntime(null);
@@ -340,10 +388,12 @@ public class NewManualServerComposite extends Composite {
 			boolean showRuntime = ServerUIPlugin.getRuntimes(runtimeType).length >=1;
 			runtimeCombo.setEnabled(showRuntime);
 			runtimeLabel.setEnabled(showRuntime);
-			runtimeButton.setEnabled(showRuntime);
+			configureRuntimes.setEnabled(showRuntime);
+			addRuntime.setEnabled(showRuntime);
 			runtimeLabel.setVisible(showRuntime);
 			runtimeCombo.setVisible(showRuntime);
-			runtimeButton.setVisible(showRuntime);
+			configureRuntimes.setVisible(showRuntime);
+			addRuntime.setVisible(showRuntime);
 		}
 	}
 
