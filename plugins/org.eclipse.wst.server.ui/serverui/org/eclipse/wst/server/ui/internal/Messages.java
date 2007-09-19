@@ -239,6 +239,8 @@ public class Messages extends NLS {
 	public static String wizNewServerSelectExisting;
 	public static String elementUnknownName;
 	public static String serverTypeCompLabel;
+	public static String serverName;
+	public static String serverNameDefault;
 	public static String viewServers;
 	public static String viewNoModules;
 	public static String actionProperties;

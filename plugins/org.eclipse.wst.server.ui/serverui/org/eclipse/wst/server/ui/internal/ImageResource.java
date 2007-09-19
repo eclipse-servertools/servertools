@@ -122,11 +122,13 @@ public class ImageResource {
 	public static final String IMG_ETOOL_DEBUG_ON_SERVER = "IMG_ETOOL_CLIENT2";
 	public static final String IMG_ETOOL_PROFILE_ON_SERVER = "IMG_ETOOL_CLIENT3";
 	public static final String IMG_ETOOL_MODIFY_MODULES = "IMG_ETOOL_MODIFY_MODULES";
+	public static final String IMG_ETOOL_RESET_DEFAULT = "IMG_ETOOL_RESET_DEFAULT";
 
 	public static final String IMG_DTOOL_RUN_ON_SERVER = "IMG_DTOOL_CLIENT";
 	public static final String IMG_DTOOL_DEBUG_ON_SERVER = "IMG_DTOOL_CLIENT2";
 	public static final String IMG_DTOOL_PROFILE_ON_SERVER = "IMG_DTOOL_CLIENT3";
 	public static final String IMG_DTOOL_MODIFY_MODULES = "IMG_DTOOL_MODIFY_MODULES";
+	public static final String IMG_DTOOL_RESET_DEFAULT = "IMG_DTOOL_RESET_DEFAULT";
 
 	// General Object Images
 	public static final String IMG_SERVER = "server";
@@ -212,6 +214,7 @@ public class ImageResource {
 		registerImage(IMG_ETOOL_DEBUG_ON_SERVER, URL_ETOOL + "debug_on_server.gif");
 		registerImage(IMG_ETOOL_PROFILE_ON_SERVER, URL_ETOOL + "profile_on_server.gif");
 		registerImage(IMG_ETOOL_MODIFY_MODULES, URL_ETOOL + "wiz_modify_modules.gif");
+		registerImage(IMG_ETOOL_RESET_DEFAULT, URL_ETOOL + "clear.gif");
 
 		registerImage(IMG_CTOOL_RUN_ON_SERVER, URL_CTOOL + "run_on_server.gif");
 		registerImage(IMG_CTOOL_DEBUG_ON_SERVER, URL_CTOOL + "debug_on_server.gif");
@@ -224,6 +227,7 @@ public class ImageResource {
 		registerImage(IMG_DTOOL_DEBUG_ON_SERVER, URL_DTOOL + "debug_on_server.gif");
 		registerImage(IMG_DTOOL_PROFILE_ON_SERVER, URL_DTOOL + "profile_on_server.gif");
 		registerImage(IMG_DTOOL_MODIFY_MODULES, URL_DTOOL + "wiz_modify_modules.gif");
+		registerImage(IMG_DTOOL_RESET_DEFAULT, URL_DTOOL + "clear.gif");
 	
 		// load server state images
 		registerImage(IMG_SERVER_STATE_STARTED, URL_OBJ + "server_started.gif");

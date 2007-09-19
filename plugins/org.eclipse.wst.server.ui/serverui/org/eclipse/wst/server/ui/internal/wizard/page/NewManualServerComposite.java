@@ -15,6 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -22,6 +26,8 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -32,6 +38,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
@@ -69,6 +76,12 @@ public class NewManualServerComposite extends Composite {
 	protected IRuntime[] runtimes;
 	protected IRuntime newRuntime;
 
+	protected Text serverName;
+	protected String defaultServerName;
+	protected boolean serverNameModified;
+	protected boolean updatingServerName;
+	protected ToolBarManager serverNameToolBar;
+
 	protected IRuntime runtime;
 	protected IServerWorkingCopy server;
 	protected ServerSelectionListener listener;
@@ -76,6 +89,7 @@ public class NewManualServerComposite extends Composite {
 	protected String host;
 
 	protected IModuleType moduleType;
+	protected IModule module;
 	protected String serverTypeId;
 	protected boolean includeIncompatible;
 
@@ -89,16 +103,18 @@ public class NewManualServerComposite extends Composite {
 	 * @param parent a parent composite
 	 * @param wizard a wizard handle
 	 * @param moduleType a module type
+	 * @param module an optional module
 	 * @param serverTypeId a server type id, or null
 	 * @param includeIncompatible true to include incompatible servers that support similar module types
 	 * @param listener a server selection listener
 	 */
-	public NewManualServerComposite(Composite parent, IWizardHandle2 wizard, IModuleType moduleType, String serverTypeId, boolean includeIncompatible, ServerSelectionListener listener) {
+	public NewManualServerComposite(Composite parent, IWizardHandle2 wizard, IModuleType moduleType, IModule module, String serverTypeId, boolean includeIncompatible, ServerSelectionListener listener) {
 		super(parent, SWT.NONE);
 		this.wizard = wizard;
 		this.listener = listener;
 		
 		this.moduleType = moduleType;
+		this.module = module;
 		this.serverTypeId = serverTypeId;
 		this.includeIncompatible = includeIncompatible;
 		
@@ -134,6 +150,63 @@ public class NewManualServerComposite extends Composite {
 		data.horizontalSpan = 3;
 		serverTypeComposite.setLayoutData(data);
 		whs.setHelp(serverTypeComposite, ContextIds.NEW_SERVER_TYPE);
+		
+		Label serverNameLabel = new Label(this, SWT.NONE);
+		serverNameLabel.setText(Messages.serverName);
+		
+		serverName = new Text(this, SWT.SINGLE | SWT.BORDER | SWT.CANCEL);
+		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		if ((serverName.getStyle() & SWT.CANCEL) != 0)
+			data.horizontalSpan = 2;
+		serverName.setLayoutData(data);
+		
+		if (server != null)
+			serverName.setText(server.getName());
+		
+		serverName.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				if (updatingServerName)
+					return;
+				
+				String name = serverName.getText();
+				server.setName(name);
+				IRuntime runtime2 = server.getRuntime();
+				if (runtime2 != null && runtime2 instanceof IRuntimeWorkingCopy) {
+					IRuntimeWorkingCopy rwc = (IRuntimeWorkingCopy) runtime2;
+					rwc.setName(name);
+				}
+				
+				if (serverNameModified)
+					return;
+				
+				serverNameModified = true;
+				if (serverNameToolBar != null)
+					serverNameToolBar.getControl().setVisible(true);
+			}
+		});
+		
+		if ((serverName.getStyle() & SWT.CANCEL) == 0) {
+			serverNameToolBar = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL);
+			serverNameToolBar.createControl(this);
+			
+			IAction resetDefaultAction = new Action("", IAction.AS_PUSH_BUTTON) {//$NON-NLS-1$
+				public void run() {
+					ServerUtil.setServerDefaultName(server);
+					serverName.setText(server.getName());
+					serverNameModified = false;
+					if (serverNameToolBar != null)
+						serverNameToolBar.getControl().setVisible(false);
+				}
+			};
+			
+			resetDefaultAction.setToolTipText(Messages.serverNameDefault);
+			resetDefaultAction.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ETOOL_RESET_DEFAULT));
+			resetDefaultAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DTOOL_RESET_DEFAULT));
+			
+			serverNameToolBar.add(resetDefaultAction);
+			serverNameToolBar.update(false);
+			serverNameToolBar.getControl().setVisible(false);
+		}
 		
 		runtimeLabel = new Label(this, SWT.NONE);
 		runtimeLabel.setText(Messages.wizNewServerRuntime);
@@ -431,7 +504,29 @@ public class NewManualServerComposite extends Composite {
 		} else {
 			wizard.setMessage(null, IMessageProvider.NONE);
 			loadServerImpl(serverType);
+			if (server != null && module != null) {
+				IStatus status = NewServerComposite.isSupportedModule(server, module);
+				if (status != null) {
+					if (status.getSeverity() == IStatus.ERROR)
+						wizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
+					else if (status.getSeverity() == IStatus.WARNING)
+						wizard.setMessage(status.getMessage(), IMessageProvider.WARNING);
+					else if (status.getSeverity() == IStatus.INFO)
+						wizard.setMessage(status.getMessage(), IMessageProvider.INFORMATION);
+					server = null;
+				}
+			}
 		}
+		
+		if (serverName != null && !serverNameModified) {
+			updatingServerName = true;
+			if (server == null)
+				serverName.setText("");
+			else
+				serverName.setText(server.getName());
+			updatingServerName = false;
+		}
+		
 		updateRuntimeCombo(serverType);
 		listener.serverSelected(server);
 		wizard.update();
