@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -72,8 +72,8 @@ public class ScanAction extends TestCase {
 		}
 		//System.out.println(props.size() + " found");
 		
-		List propsFound = new ArrayList();
-		List newProps = new ArrayList();
+		List<String> propsFound = new ArrayList<String>();
+		List<String> newProps = new ArrayList<String>();
 		
 		scanContainer(project, props, propsFound, newProps);
 		
@@ -101,7 +101,7 @@ public class ScanAction extends TestCase {
 		}
 	}
 	
-	protected void scanContainer(IContainer container, Properties props, List propsFound, List newProps) {
+	protected void scanContainer(IContainer container, Properties props, List<String> propsFound, List<String> newProps) {
 		if (container == null || !container.exists())
 			return;
 		
@@ -145,7 +145,7 @@ public class ScanAction extends TestCase {
 			return new String[0];
 
 		//System.out.println("  File: " + file.getName());
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new InputStreamReader(file.getContents()));
