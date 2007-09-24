@@ -36,6 +36,11 @@ public class Server extends Base implements IServer {
 	 */
 	public static final String ATTR_SERVER_ID = "server-id";
 
+	/**
+	 * The most recent launch used to start the server.
+	 */
+	private static ILaunch launch;
+
 	protected static final List<String> EMPTY_LIST = new ArrayList<String>(0);
 
 	/**
@@ -1124,26 +1129,9 @@ public class Server extends Base implements IServer {
 		return Status.OK_STATUS;
 	}
 
-	public ILaunch getExistingLaunch() {
-		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
-		
-		ILaunch[] launches = launchManager.getLaunches();
-		int size = launches.length;
-		for (int i = 0; i < size; i++) {
-			ILaunchConfiguration launchConfig = launches[i].getLaunchConfiguration();
-			try {
-				if (launchConfig != null) {
-					String serverId = launchConfig.getAttribute(SERVER_ID, (String) null);
-					if (getId().equals(serverId)) {
-						if (!launches[i].isTerminated())
-							return launches[i];
-					}
-				}
-			} catch (CoreException e) {
-				// ignore
-			}
-		}
-		
+	public ILaunch getLaunch() {
+		if (launch != null && !launch.isTerminated())
+			return launch;
 		return null;
 	}
 
@@ -1262,7 +1250,7 @@ public class Server extends Base implements IServer {
 			ILaunchConfiguration launchConfig = getLaunchConfiguration(true, monitor);
 			//if (launchConfig == null)
 			//	throw new CoreException();
-			ILaunch launch = launchConfig.launch(mode2, monitor); // , true); - causes workspace lock
+			launch = launchConfig.launch(mode2, monitor); // , true); - causes workspace lock
 			Trace.trace(Trace.FINEST, "Launch: " + launch);
 		} catch (CoreException e) {
 			Trace.trace(Trace.SEVERE, "Error starting server " + toString(), e);

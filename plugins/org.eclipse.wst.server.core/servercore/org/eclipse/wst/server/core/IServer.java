@@ -11,6 +11,7 @@
 package org.eclipse.wst.server.core;
 
 import org.eclipse.core.runtime.*;
+import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 /**
  * Represents a server instance. Every server is an instance of a
@@ -699,4 +700,14 @@ public interface IServer extends IServerAttributes {
 	 * @since 2.0
 	 */
 	public ILaunchConfiguration getLaunchConfiguration(boolean create, IProgressMonitor monitor) throws CoreException;
+
+	/**
+	 * Returns the launch that was used to start the server, if available. If the server
+	 * is not running, will return <code>null</code>. 
+	 * 
+	 * @return the launch used to start the currently running server, or <code>null</code>
+	 *    if the launch is unavailable or could not be found
+	 * @since 3.0
+	 */
+	public ILaunch getLaunch();
 }

@@ -76,7 +76,7 @@ public class LaunchClientJob extends ChainedJob {
 				Trace.trace(Trace.FINEST, "Attempting to load client: " + client);
 				try {
 					Object launchable = launchableAdapter.getLaunchable(server, moduleArtifact);
-					IStatus status = client.launch(server, launchable, launchMode, server.getExistingLaunch());
+					IStatus status = client.launch(server, launchable, launchMode, server.getLaunch());
 					if (status != null && status.getSeverity() == IStatus.ERROR)
 						EclipseUtil.openError(null, status);
 				} catch (CoreException ce) {
