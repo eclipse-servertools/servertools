@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.wst.server.core.*;
 
@@ -180,6 +181,9 @@ public class ServerEventTestCase extends TestCase {
 			}
 			public ILaunchConfiguration getLaunchConfiguration(boolean create,
 					IProgressMonitor monitor) throws CoreException {
+				return null;
+			}
+			public ILaunch getLaunch() {
 				return null;
 			}
 		};
