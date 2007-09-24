@@ -26,9 +26,11 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.DebugUITools;
+import org.eclipse.jface.fieldassist.AutoCompleteField;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
+import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
@@ -300,7 +302,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			createLabel(toolkit, composite, Messages.serverEditorOverviewServerHostname);
 			
 			hostname = toolkit.createText(composite, server.getHost());
-			//ControlDecoration hostnameDecoration = new ControlDecoration(hostname, SWT.TOP | SWT.LEAD);
+			final ControlDecoration hostnameDecoration = new ControlDecoration(hostname, SWT.TOP | SWT.LEAD);
 			data = new GridData(GridData.FILL_HORIZONTAL);
 			data.horizontalSpan = 2;
 			data.horizontalIndent = decorationWidth;
@@ -316,15 +318,27 @@ public class OverviewEditorPart extends ServerEditorPart {
 			});
 			whs.setHelp(hostname, ContextIds.EDITOR_HOSTNAME);
 			
-			/*FieldDecorationRegistry registry = FieldDecorationRegistry.getDefault();
+			FieldDecorationRegistry registry = FieldDecorationRegistry.getDefault();
 			FieldDecoration fd = registry.getFieldDecoration(FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
 			hostnameDecoration.setImage(fd.getImage());
 			hostnameDecoration.setDescriptionText(fd.getDescription());
-			hostnameDecoration.show();*/
+			hostnameDecoration.hide();
+			
+			hostname.addFocusListener(new FocusListener() {
+				public void focusGained(FocusEvent e) {
+					hostnameDecoration.show();
+				}
+
+				public void focusLost(FocusEvent e) {
+					hostnameDecoration.hide();
+				}
+			});
 			
 			//updateDecoration(hostnameDecoration, new Status(IStatus.INFO, ServerUIPlugin.PLUGIN_ID, "Press Ctrl-Space"));
 			
-			//AutoCompleteField acf = new AutoCompleteField(hostname, new TextContentAdapter(), new String[] { "Testing", "A hostname"});
+			List<String> hosts = ServerUIPlugin.getPreferences().getHostnames();
+			String[] hosts2 = hosts.toArray(new String[hosts.size()]);
+			new AutoCompleteField(hostname, new TextContentAdapter(), hosts2);
 		}
 		
 		// runtime
