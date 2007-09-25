@@ -13,8 +13,8 @@ package org.eclipse.wst.server.core.tests.model;
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.wst.server.core.internal.ModuleFile;
 import org.eclipse.wst.server.core.model.IModuleFile;
+import org.eclipse.wst.server.core.util.ModuleFile;
 
 public class ModuleFileTestCase extends TestCase {
 	protected static IModuleFile delegate;

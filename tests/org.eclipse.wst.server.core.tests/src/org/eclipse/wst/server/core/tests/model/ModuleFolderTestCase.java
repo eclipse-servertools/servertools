@@ -12,8 +12,8 @@ package org.eclipse.wst.server.core.tests.model;
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.server.core.internal.ModuleFolder;
 import org.eclipse.wst.server.core.model.IModuleFolder;
+import org.eclipse.wst.server.core.util.ModuleFolder;
 
 public class ModuleFolderTestCase extends TestCase {
 	protected static IModuleFolder delegate;
