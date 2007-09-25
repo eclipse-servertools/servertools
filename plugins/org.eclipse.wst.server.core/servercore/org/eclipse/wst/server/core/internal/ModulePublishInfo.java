@@ -22,6 +22,8 @@ import org.eclipse.wst.server.core.model.IModuleFolder;
 import org.eclipse.wst.server.core.model.IModuleResource;
 import org.eclipse.wst.server.core.model.IModuleResourceDelta;
 import org.eclipse.wst.server.core.model.ModuleDelegate;
+import org.eclipse.wst.server.core.util.ModuleFile;
+import org.eclipse.wst.server.core.util.ModuleFolder;
 /**
  * Publish information for a specific module on a specific server.
  */

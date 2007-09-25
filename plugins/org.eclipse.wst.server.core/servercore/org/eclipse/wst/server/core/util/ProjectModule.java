@@ -17,8 +17,6 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.internal.ModuleFile;
-import org.eclipse.wst.server.core.internal.ModuleFolder;
 import org.eclipse.wst.server.core.model.*;
 /**
  * A simple IModuleProject that maps a folder within a project
