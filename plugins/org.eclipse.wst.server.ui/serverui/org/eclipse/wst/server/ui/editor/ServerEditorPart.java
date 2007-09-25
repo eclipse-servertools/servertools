@@ -19,6 +19,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.forms.IManagedForm;
+import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
@@ -43,6 +45,7 @@ public abstract class ServerEditorPart extends EditorPart {
 	private List<ServerEditorSection> sections = null;
 	private ServerResourceCommandManager commandManager;
 	private FormToolkit toolkit;
+	private IManagedForm managedForm;
 
 	/**
 	 * The server currently being edited.
@@ -91,9 +94,31 @@ public abstract class ServerEditorPart extends EditorPart {
 	}
 
 	/**
+	 * Set the managed form that this part is using.
+	 * 
+	 * @param managedForm a managed form
+	 */
+	protected void setManagedForm(IManagedForm managedForm) {
+		this.managedForm = managedForm;
+	}
+
+	/**
+	 * Returns the managed form that this part is using, or <code>null</code> if no
+	 * managed form has been set.
+	 * 
+	 * @return managedForm the managed form that this part is using, or <code>null</code>
+	 *    if no managed form has been set
+	 */
+	protected IManagedForm getManagedForm() {
+		return managedForm;
+	}
+
+	/**
 	 * Set an error message for this page.
 	 * 
-	 * @param error java.lang.String
+	 * @param error the error message
+	 * @see #getManagedForm() Use forms UI based for errors via {@link IMessageManager}
+	 *    on the message form instead of this method
 	 */
 	public void setErrorMessage(String error) {
 		if (error == null && errorMessage == null)
@@ -108,6 +133,9 @@ public abstract class ServerEditorPart extends EditorPart {
 
 	/**
 	 * Updates the error message shown in the editor.
+	 * 
+	 * @see #getManagedForm() Use forms UI based for errors via {@link IMessageManager}
+	 *    on the message form instead of this method
 	 */
 	public void updateErrorMessage() {
 		super.firePropertyChange(PROP_ERROR);
@@ -116,7 +144,9 @@ public abstract class ServerEditorPart extends EditorPart {
 	/**
 	 * Return the error message for this page.
 	 * 
-	 * @return java.lang.String
+	 * @return the error message
+	 * @see #getManagedForm() Use forms UI based for errors via {@link IMessageManager}
+	 *    on the message form instead of this method
 	 */
 	public String getErrorMessage() {
 		if (errorMessage == null) {
@@ -136,7 +166,9 @@ public abstract class ServerEditorPart extends EditorPart {
 	 * server resource is saved. If there are any error messages, the
 	 * user will be unable to save the editor.
 	 * 
-	 * @return org.eclipse.core.runtime.IStatus
+	 * @return a set of status
+	 * @see #getManagedForm() Use forms UI based for errors via {@link IMessageManager}
+	 *    on the message form instead of this method
 	 */
 	public IStatus[] getSaveStatus() {
 		Iterator iterator = getSections().iterator();
@@ -247,7 +279,7 @@ public abstract class ServerEditorPart extends EditorPart {
 	}
 
 	/**
-	 * Return the server that is being editted.
+	 * Return the server that is being edited.
 	 * 
 	 * @return a server working copy
 	 */
@@ -295,13 +327,16 @@ public abstract class ServerEditorPart extends EditorPart {
 	}
 
 	/**
-	 * Get a form toolkit to create widgets. It will automatically be disposed
-	 * when the editor is disposed.
+	 * Get a form toolkit to create widgets. It will be disposed automatically
+	 * when the editor is closed.
 	 * 
 	 * @param display the display
 	 * @return FormToolkit
 	 */
 	protected FormToolkit getFormToolkit(Display display) {
+		if (managedForm != null)
+			return managedForm.getToolkit();
+		
 		if (toolkit == null)
 			toolkit = new FormToolkit(display);
 		return toolkit;

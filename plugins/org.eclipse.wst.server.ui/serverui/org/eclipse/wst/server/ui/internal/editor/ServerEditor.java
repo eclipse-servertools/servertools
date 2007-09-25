@@ -400,7 +400,7 @@ public class ServerEditor extends MultiPageEditorPart {
 	/**
 	 * Fire a property change event.
 	 *
-	 * @param i int
+	 * @param i a property change value
 	 */
 	protected void firePropertyChange(int i) {
 		if (i == ServerEditorPart.PROP_ERROR)

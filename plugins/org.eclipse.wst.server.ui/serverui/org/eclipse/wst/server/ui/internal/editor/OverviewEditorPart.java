@@ -26,6 +26,7 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.DebugUITools;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.fieldassist.AutoCompleteField;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecoration;
@@ -33,7 +34,6 @@ import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.window.Window;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Image;
@@ -52,6 +52,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.forms.IFormColors;
+import org.eclipse.ui.forms.IManagedForm;
+import org.eclipse.ui.forms.ManagedForm;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.*;
@@ -86,9 +88,6 @@ public class OverviewEditorPart extends ServerEditorPart {
 	protected Button autoPublishOverride;
 	protected Spinner autoPublishTime;
 
-	protected ControlDecoration serverConfigurationDecoration;
-	protected ControlDecoration serverNameDecoration;
-
 	protected boolean updating;
 
 	protected IRuntime[] runtimes;
@@ -110,18 +109,8 @@ public class OverviewEditorPart extends ServerEditorPart {
 	protected void addChangeListener() {
 		listener = new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
-				if (event.getPropertyName().equals("configuration-id") && serverConfiguration != null) {
-					IFolder folder = getServer().getServerConfiguration();
-					if (folder == null || !folder.exists()) {
-						FieldDecorationRegistry registry = FieldDecorationRegistry.getDefault();
-						FieldDecoration fd = registry.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
-						serverConfigurationDecoration.setImage(fd.getImage());
-						serverConfigurationDecoration.setDescriptionText(Messages.errorMissingConfiguration);
-						serverConfigurationDecoration.show();
-					} else
-						serverConfigurationDecoration.hide();
-				}
-				validate();
+				if (event.getPropertyName().equals("configuration-id") && serverConfiguration != null)
+					validate();
 				
 				// following code behaves poorly because there is no default local or remote
 				// publishing time per server or server type. as a result it sets the value
@@ -205,9 +194,10 @@ public class OverviewEditorPart extends ServerEditorPart {
 	 * @param parent the parent control
 	 */
 	public final void createPartControl(final Composite parent) {
-		FormToolkit toolkit = getFormToolkit(parent.getDisplay());
-		
-		ScrolledForm form = toolkit.createScrolledForm(parent);
+		IManagedForm mForm = new ManagedForm(parent);
+		setManagedForm(mForm);
+		ScrolledForm form = mForm.getForm();
+		FormToolkit toolkit = mForm.getToolkit();
 		toolkit.decorateFormHeading(form.getForm());
 		form.setText(Messages.serverEditorOverviewPageTitle);
 		form.setImage(ImageResource.getImage(ImageResource.IMG_SERVER));
@@ -294,6 +284,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 					updating = true;
 					execute(new SetServerNameCommand(getServer(), serverName.getText()));
 					updating = false;
+					validate();
 				}
 			});
 			whs.setHelp(serverName, ContextIds.EDITOR_SERVER);
@@ -344,7 +335,12 @@ public class OverviewEditorPart extends ServerEditorPart {
 		// runtime
 		if (server != null && server.getServerType() != null && server.getServerType().hasRuntime()) {
 			final IRuntime runtime = server.getRuntime();
-			createLabel(toolkit, composite, Messages.serverEditorOverviewRuntime);
+			Hyperlink link = toolkit.createHyperlink(composite, Messages.serverEditorOverviewRuntime, SWT.NONE);
+			link.addHyperlinkListener(new HyperlinkAdapter() {
+				public void linkActivated(HyperlinkEvent e) {
+					editRuntime(runtime);
+				}
+			});
 			
 			IRuntimeType runtimeType = server.getServerType().getRuntimeType();
 			runtimes = ServerUIPlugin.getRuntimes(runtimeType);
@@ -352,6 +348,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			runtimeCombo = new Combo(composite, SWT.READ_ONLY);
 			GridData data = new GridData(GridData.FILL_HORIZONTAL);
 			data.horizontalIndent = decorationWidth;
+			data.horizontalSpan = 2;
 			runtimeCombo.setLayoutData(data);
 			updateRuntimeCombo();
 			
@@ -379,14 +376,6 @@ public class OverviewEditorPart extends ServerEditorPart {
 				}
 			});
 			whs.setHelp(runtimeCombo, ContextIds.EDITOR_RUNTIME);
-			
-			Hyperlink link = toolkit.createHyperlink(composite, Messages.serverEditorOverviewRuntimeEdit, SWT.NONE);
-			link.addHyperlinkListener(new HyperlinkAdapter() {
-				public void linkActivated(HyperlinkEvent e) {
-					editRuntime(runtime);
-				}
-			});
-			link.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 			
 			// add runtime listener
 			runtimeListener = new IRuntimeLifecycleListener() {
@@ -464,15 +453,6 @@ public class OverviewEditorPart extends ServerEditorPart {
 				serverConfiguration = toolkit.createText(composite, Messages.elementUnknownName);
 			else
 				serverConfiguration = toolkit.createText(composite, "" + server.getServerConfiguration().getFullPath());
-			serverConfigurationDecoration = new ControlDecoration(serverConfiguration, SWT.TOP | SWT.LEAD);
-			if (folder == null || !folder.exists()) {
-				FieldDecorationRegistry registry = FieldDecorationRegistry.getDefault();
-				FieldDecoration fd = registry.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
-				serverConfigurationDecoration.setImage(fd.getImage());
-				serverConfigurationDecoration.setDescriptionText(Messages.errorMissingConfiguration);
-				serverConfigurationDecoration.show();
-			}
-			//if (!server.getServerConfiguration().getFullPath().toFile().exists())
 			
 			serverConfiguration.setEditable(false);
 			GridData data = new GridData(GridData.FILL_HORIZONTAL);
@@ -828,30 +808,31 @@ public class OverviewEditorPart extends ServerEditorPart {
 	}
 
 	protected void validate() {
+		IManagedForm mForm = getManagedForm();
+		if (mForm == null)
+			return;
+		
+		mForm.getMessageManager().removeMessage("name", serverName);
 		if (server != null && serverName != null) {
-			if (ServerPlugin.isNameInUse(server, serverName.getText().trim())) {
-				setErrorMessage(Messages.errorDuplicateName);
-				return;
-			}
+			if (ServerPlugin.isNameInUse(server, serverName.getText().trim()))
+				mForm.getMessageManager().addMessage("name", Messages.errorDuplicateName, null, IMessageProvider.WARNING, serverName);
 		}
 		
+		mForm.getMessageManager().removeMessage("config", serverConfiguration);
 		if (server != null && server.getServerType() != null && server.getServerType().hasServerConfiguration()) {
 			IFolder folder = getServer().getServerConfiguration();
-			if (folder == null || !folder.exists()) {
-				setErrorMessage(Messages.errorMissingConfiguration);
-				return;
-			}
+			if (folder == null || !folder.exists())
+				mForm.getMessageManager().addMessage("config", Messages.errorMissingConfiguration, null, IMessageProvider.WARNING, serverConfiguration);
 		}
 		
+		mForm.getMessageManager().removeMessage("auto-publish", autoPublishTime);
 		if (autoPublishTime != null && autoPublishTime.isEnabled() && autoPublishOverride.getSelection()) {
 			int i = autoPublishTime.getSelection();
-			if (i < 1) {
-				setErrorMessage(NLS.bind(Messages.serverEditorOverviewAutoPublishInvalid, "1"));
-				return;
-			}
+			if (i < 1)
+				mForm.getMessageManager().addMessage("auto-publish", Messages.serverEditorOverviewAutoPublishInvalid, null, IMessageProvider.WARNING, autoPublishTime);
 		}
 		
-		setErrorMessage(null);
+		mForm.getMessageManager().update();
 	}
 
 	protected void updateDecoration(ControlDecoration decoration, IStatus status) {

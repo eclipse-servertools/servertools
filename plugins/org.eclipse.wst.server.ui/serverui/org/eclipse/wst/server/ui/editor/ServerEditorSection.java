@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.forms.IManagedForm;
+import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorPartInput;
@@ -89,9 +91,11 @@ public abstract class ServerEditorSection {
 	}
 
 	/**
-	 * Return the error message for this page.
+	 * Return the error message for this section.
 	 * 
 	 * @return the error message
+	 * @see #getManagedForm() Use forms UI based for errors via {@link IMessageManager}
+	 *    on the message form instead of this method
 	 */
 	public String getErrorMessage() {
 		return errorMessage;
@@ -105,6 +109,8 @@ public abstract class ServerEditorSection {
 	 * @return a status object with code <code>IStatus.OK</code> if this
 	 *   server can be saved, otherwise a status object indicating why
 	 *   it can't be
+	 * @see #getManagedForm() Use forms UI based for errors via {@link IMessageManager}
+	 *    on the message form instead of this method
 	 */
 	public IStatus[] getSaveStatus() {
 		return null;
@@ -120,9 +126,11 @@ public abstract class ServerEditorSection {
 	}
 
 	/**
-	 * Set an error message for this page.
+	 * Set an error message for this section.
 	 * 
 	 * @param error an error message
+	 * @see #getManagedForm() Use forms UI based for errors via {@link IMessageManager}
+	 *    on the message form instead of this method
 	 */
 	public void setErrorMessage(String error) {
 		if (error == null && errorMessage == null)
@@ -137,14 +145,25 @@ public abstract class ServerEditorSection {
 	}
 
 	/**
-	 * Get a form toolkit to create widgets. It will automatically be disposed
-	 * when the editor is disposed.
+	 * Get a form toolkit to create widgets. It will be disposed automatically
+	 * when the editor is closed.
 	 * 
 	 * @param display the display
-	 * @return FormToolkit
+	 * @return a FormToolkit
 	 */
 	protected FormToolkit getFormToolkit(Display display) {
 		return editor.getFormToolkit(display);
+	}
+
+	/**
+	 * Returns the managed form that the editor is using, or <code>null</code> if no
+	 * managed form has been set.
+	 * 
+	 * @return the managed form that the editor is using, or <code>null</code> if no
+	 *    managed form has been set.
+	 */
+	protected IManagedForm getManagedForm() {
+		return editor.getManagedForm();
 	}
 
 	/**
