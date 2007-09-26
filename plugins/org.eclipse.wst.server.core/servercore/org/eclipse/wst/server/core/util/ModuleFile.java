@@ -74,6 +74,22 @@ public class ModuleFile implements IModuleFile {
 		this.stamp = stamp;
 	}
 
+	/**
+	 * Creates a workspace module file with a specific modification stamp.
+	 * 
+	 * @param file
+	 * @param name
+	 * @param path
+	 * @param stamp
+	 * @deprecated use one of the top two constructors instead
+	 */
+	public ModuleFile(IFile file, String name, IPath path, long stamp) {
+		this.file = file;
+		this.name = name;
+		this.path = path;
+		this.stamp = stamp;
+	}
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.IModuleFile#getModificationStamp()
 	 */

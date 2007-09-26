@@ -25,8 +25,15 @@ public class ModuleFile extends org.eclipse.wst.server.core.util.ModuleFile {
 	public ModuleFile(String name, IPath path, long stamp) {
 		super(name, path, stamp);
 	}
-	
+
 	public ModuleFile(File file, String name, IPath path) {
 		super(file, name, path);
+	}
+
+	/**
+	 * @deprecated use another constructor
+	 */
+	public ModuleFile(IFile file, String name, IPath path, long stamp) {
+		super(file, name, path, stamp);
 	}
 }
