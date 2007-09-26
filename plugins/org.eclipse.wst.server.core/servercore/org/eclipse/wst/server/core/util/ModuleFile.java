@@ -34,12 +34,13 @@ public class ModuleFile implements IModuleFile {
 	 * @param path the path to the file
 	 */
 	public ModuleFile(IFile file, String name, IPath path) {
-		if (file == null || name == null || path == null)
+		if (name == null)
 			throw new IllegalArgumentException();
 		this.file = file;
 		this.name = name;
 		this.path = path;
-		stamp = file.getModificationStamp() + file.getLocalTimeStamp();
+		if (file != null)
+			stamp = file.getModificationStamp() + file.getLocalTimeStamp();
 	}
 
 	/**
@@ -50,12 +51,13 @@ public class ModuleFile implements IModuleFile {
 	 * @param path
 	 */
 	public ModuleFile(File file, String name, IPath path) {
-		if (file == null || name == null || path == null)
+		if (name == null)
 			throw new IllegalArgumentException();
 		this.file2 = file;
 		this.name = name;
 		this.path = path;
-		stamp = file2.lastModified();
+		if (file2 != null)
+			stamp = file2.lastModified();
 	}
 
 	/**
@@ -67,7 +69,7 @@ public class ModuleFile implements IModuleFile {
 	 * @param stamp
 	 */
 	public ModuleFile(String name, IPath path, long stamp) {
-		if (name == null || path == null)
+		if (name == null)
 			throw new IllegalArgumentException();
 		this.name = name;
 		this.path = path;

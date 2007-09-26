@@ -14,10 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.model.*;
+import org.eclipse.wst.server.core.model.IModuleResource;
+import org.eclipse.wst.server.core.model.ModuleDelegate;
 /**
  * A simple IModuleProject that maps a folder within a project
  * (or the root of the project itself) to the module.
@@ -163,7 +167,7 @@ public abstract class ProjectModule extends ModuleDelegate {
 					String name = resource.getName();
 					if (resource instanceof IContainer) {
 						IContainer container2 = (IContainer) resource;
-						ModuleFolder mf = new ModuleFolder(container2, name, path);
+						ModuleFolder mf = new org.eclipse.wst.server.core.internal.ModuleFolder(container2, name, path);
 						mf.setMembers(getModuleResources(path.append(name), container2));
 						list.add(mf);
 					} else if (resource instanceof IFile) {

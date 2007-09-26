@@ -35,7 +35,7 @@ public class ModuleFolder implements IModuleFolder {
 	 * @param path the module relative path to the folder
 	 */
 	public ModuleFolder(IContainer container, String name, IPath path) {
-		if (name == null || path == null)
+		if (name == null)
 			throw new IllegalArgumentException();
 		this.container = container;
 		this.name = name;
