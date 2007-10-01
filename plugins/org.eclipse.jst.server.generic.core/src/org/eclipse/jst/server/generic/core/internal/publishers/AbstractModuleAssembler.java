@@ -60,7 +60,7 @@ public abstract class AbstractModuleAssembler {
 	
 	/**
 	 * Factory for creating concrete module assemblers for 
-	 * corressponding module types.
+	 * corresponding module types.
 	 *
 	 */
 	public static class Factory {		
@@ -157,7 +157,9 @@ public abstract class AbstractModuleAssembler {
 
 	protected IPath copyModule(IModule module, IProgressMonitor monitor) throws CoreException {
 		ProjectModule pm =(ProjectModule)module.loadAdapter(ProjectModule.class, monitor);
-		PublishUtil.smartCopy(pm.members(), fAssembleRoot, monitor);
+		IStatus[] status = PublishUtil.publishSmart(pm.members(), fAssembleRoot, monitor);
+		if (status != null && status.length > 0)
+			throw new CoreException(status[0]);
 		return fAssembleRoot;
 	}
 }
