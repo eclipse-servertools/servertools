@@ -6,7 +6,7 @@ Bundle-Version: 1.0.205.qualifier
 Bundle-Activator: org.eclipse.jst.server.generic.core.internal.CorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.jst.server.generic.core.internal;x-internal:=true,
+Export-Package: org.eclipse.jst.server.generic.core.internal;x-friends:="org.eclipse.jst.server.generic.ui",
  org.eclipse.jst.server.generic.core.internal.publishers;x-internal:=true,
  org.eclipse.jst.server.generic.internal.core.util;x-friends:="org.eclipse.jst.server.generic.ui",
  org.eclipse.jst.server.generic.internal.servertype.definition;x-internal:=true,
