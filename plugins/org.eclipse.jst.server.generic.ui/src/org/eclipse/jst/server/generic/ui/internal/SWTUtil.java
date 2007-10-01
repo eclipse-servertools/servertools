@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.FormColors;
+import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
@@ -425,7 +425,7 @@ public class SWTUtil {
 	private static Label createFormLabel(String title, Composite parent, FormToolkit toolkit) {
 		Label label;
 		label = toolkit.createLabel(parent, title);
-		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		return label;
 	}
 }
