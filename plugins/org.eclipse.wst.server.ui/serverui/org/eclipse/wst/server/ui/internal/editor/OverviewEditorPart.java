@@ -818,11 +818,13 @@ public class OverviewEditorPart extends ServerEditorPart {
 				mForm.getMessageManager().addMessage("name", Messages.errorDuplicateName, null, IMessageProvider.WARNING, serverName);
 		}
 		
-		mForm.getMessageManager().removeMessage("config", serverConfiguration);
-		if (server != null && server.getServerType() != null && server.getServerType().hasServerConfiguration()) {
-			IFolder folder = getServer().getServerConfiguration();
-			if (folder == null || !folder.exists())
-				mForm.getMessageManager().addMessage("config", Messages.errorMissingConfiguration, null, IMessageProvider.WARNING, serverConfiguration);
+		if (serverConfiguration != null) {
+			mForm.getMessageManager().removeMessage("config", serverConfiguration);
+			if (server != null && server.getServerType() != null && server.getServerType().hasServerConfiguration()) {
+				IFolder folder = getServer().getServerConfiguration();
+				if (folder == null || !folder.exists())
+					mForm.getMessageManager().addMessage("config", Messages.errorMissingConfiguration, null, IMessageProvider.WARNING, serverConfiguration);
+			}
 		}
 		
 		mForm.getMessageManager().removeMessage("auto-publish", autoPublishTime);

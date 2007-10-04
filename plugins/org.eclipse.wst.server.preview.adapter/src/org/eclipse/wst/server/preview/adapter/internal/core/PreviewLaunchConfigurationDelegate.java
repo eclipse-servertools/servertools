@@ -108,7 +108,7 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 				IProcess pr = DebugPlugin.newProcess(launch, p, cmdLine[0]);
 				pr.setAttribute(IProcess.ATTR_CMDLINE, renderCommandLine(cmdLine));
 				launch.addProcess(pr);
-				previewServer.setProcess(pr);
+				previewServer.addProcessListener(pr);
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Problem creating preview process");

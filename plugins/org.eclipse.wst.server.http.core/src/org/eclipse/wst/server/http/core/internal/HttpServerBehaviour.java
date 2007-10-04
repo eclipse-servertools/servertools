@@ -121,21 +121,6 @@ public class HttpServerBehaviour extends ServerBehaviourDelegate {
 	}
 
 	/**
-	 * Terminates the server.
-	 */
-	protected void terminate() {
-		if (getServer().getServerState() == IServer.STATE_STOPPED)
-			return;
-		
-		try {
-			setServerState(IServer.STATE_STOPPING);
-			Trace.trace(Trace.FINER, "Killing the HTTP process");
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error killing the process", e);
-		}
-	}
-
-	/**
 	 * Return a string representation of this object.
 	 * 
 	 * @return java.lang.String

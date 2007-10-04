@@ -22,7 +22,6 @@ import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IDebugEventSetListener;
 import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModule;
@@ -35,12 +34,11 @@ import org.eclipse.wst.server.core.util.IStaticWeb;
 import org.eclipse.wst.server.core.util.PublishUtil;
 import org.eclipse.wst.server.core.util.SocketUtil;
 /**
- * Generic Http server.
+ * Preview server.
  */
 public class PreviewServerBehaviour extends ServerBehaviourDelegate {
 	// the thread used to ping the server to check for startup
 	protected transient PingThread ping = null;
-	protected transient IProcess process;
 	protected transient IDebugEventSetListener processListener;
 
 	/**
@@ -130,14 +128,8 @@ public class PreviewServerBehaviour extends ServerBehaviourDelegate {
 		}
 	}
 
-	protected void setProcess(final IProcess newProcess) {
-		if (process != null)
-			return;
-		
-		process = newProcess;
-		if (processListener != null)
-			DebugPlugin.getDefault().removeDebugEventListener(processListener);
-		if (newProcess == null)
+	protected void addProcessListener(final IProcess newProcess) {
+		if (processListener != null || newProcess == null)
 			return;
 		
 		processListener = new IDebugEventSetListener() {
@@ -145,18 +137,8 @@ public class PreviewServerBehaviour extends ServerBehaviourDelegate {
 				if (events != null) {
 					int size = events.length;
 					for (int i = 0; i < size; i++) {
-						Object obj = events[i].getSource();
-						
-						if (!(obj instanceof IDebugTarget))
-							continue;
-						
-						IDebugTarget target = (IDebugTarget) obj;
-						IProcess targetProcess = target.getProcess();
-						
-						if (process != null && process.equals(targetProcess)
-								&& events[i].getKind() == DebugEvent.TERMINATE) {
-							DebugPlugin.getDefault().removeDebugEventListener(this);
-							stopImpl();
+						if (newProcess != null && newProcess.equals(events[i].getSource()) && events[i].getKind() == DebugEvent.TERMINATE) {
+							stop(true);
 						}
 					}
 				}
@@ -167,19 +149,6 @@ public class PreviewServerBehaviour extends ServerBehaviourDelegate {
 
 	protected void setServerStarted() {
 		setServerState(IServer.STATE_STARTED);
-	}
-
-	protected void stopImpl() {
-		if (ping != null) {
-			ping.stop();
-			ping = null;
-		}
-		if (process != null) {
-			process = null;
-			DebugPlugin.getDefault().removeDebugEventListener(processListener);
-			processListener = null;
-		}
-		setServerState(IServer.STATE_STOPPED);
 	}
 
 	protected void publishServer(int kind, IProgressMonitor monitor) throws CoreException {
@@ -238,39 +207,32 @@ public class PreviewServerBehaviour extends ServerBehaviourDelegate {
 	 * @param force <code>true</code> to kill the server
 	 */
 	public void stop(boolean force) {
-		if (force) {
-			terminate();
-			return;
-		}
 		int state = getServer().getServerState();
 		if (state == IServer.STATE_STOPPED)
 			return;
-		else if (state == IServer.STATE_STARTING || state == IServer.STATE_STOPPING) {
-			terminate();
-			return;
+		
+		setServerState(IServer.STATE_STOPPING);
+		
+		if (ping != null) {
+			ping.stop();
+			ping = null;
 		}
 		
-		// should really try to stop normally
-		terminate();
-	}
-
-	/**
-	 * Terminates the server.
-	 */
-	protected void terminate() {
-		if (getServer().getServerState() == IServer.STATE_STOPPED)
-			return;
+		if (processListener != null) {
+			DebugPlugin.getDefault().removeDebugEventListener(processListener);
+			processListener = null;
+		}
 		
 		try {
-			setServerState(IServer.STATE_STOPPING);
-			Trace.trace(Trace.FINEST, "Killing the HTTP process");
-			if (process != null && !process.isTerminated())
-				process.terminate();
-			
-			stopImpl();
+			Trace.trace(Trace.FINEST, "Killing the process");
+			ILaunch launch = getServer().getLaunch();
+			if (launch != null)
+				launch.terminate();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error killing the process", e);
 		}
+		
+		setServerState(IServer.STATE_STOPPED);
 	}
 
 	protected IPath getTempDirectory() {

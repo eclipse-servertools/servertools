@@ -69,7 +69,7 @@ public final class ServerCore {
 	/**
 	 * Returns the resource manager.
 	 *
-	 * @return org.eclipse.wst.server.core.internal.ResourceManager
+	 * @return the resource manager
 	 */
 	private final static ResourceManager getResourceManager() {
 		return ResourceManager.getInstance();

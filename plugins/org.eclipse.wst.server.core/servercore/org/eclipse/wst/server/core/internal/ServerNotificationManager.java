@@ -96,7 +96,7 @@ public class ServerNotificationManager {
 		for (int i = 0; i < size; i++) {
 			ListenerEntry curEntry = listeners[i];
 			int mask = curEntry.getEventMask();
-
+			
 			// check if the type of the event matches the mask, e.g. server or module change
 			boolean isTypeMatch = ((mask & eventKind & ServerEvent.SERVER_CHANGE) != 0) 
 					|| ((mask & eventKind & ServerEvent.MODULE_CHANGE) != 0);
@@ -111,21 +111,22 @@ public class ServerNotificationManager {
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "  Error firing server event: " + curEntry.getListener(), e);
 				}
-				Trace.trace(Trace.LISTENERS, "-<- Done Firing server event -<-");
+				Trace.trace(Trace.LISTENERS, "-<- Done firing server event -<-");
 			}
 		}
 		Trace.trace(Trace.FINEST, "-<- Done broadcasting server event -<-");
 	}
-	
+
 	/**
 	 * Returns true if the listener list is not empty; otherwise, returns false.
+	 * TODO: this actually returns the negative
 	 * 
 	 * @return true if the listener list is not empty; otherwise, returns false
 	 */
 	protected boolean hasListenerEntries() {
-		return listenerList.size() == 0;
+		return listenerList.isEmpty();
 	}
-	
+
 	/**
 	 * Remove a listener from notification.
 	 * 
@@ -133,9 +134,9 @@ public class ServerNotificationManager {
 	 */
 	public void removeListener(IServerListener curListener) {
 		Trace.trace(Trace.FINEST, "->- Removing server listener from notification manager: " + curListener + " ->-");
-		if (curListener == null) {
+		if (curListener == null)
 			return;
-		}
+		
 		ListenerEntry matchedListenerEntry = null;
 		Iterator listenerIter = listenerList.iterator();
 		while (matchedListenerEntry == null && listenerIter.hasNext()) {

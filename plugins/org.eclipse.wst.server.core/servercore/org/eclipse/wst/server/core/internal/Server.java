@@ -622,15 +622,20 @@ public class Server extends Base implements IServer {
 		}
 	}
 
+	/**
+	 * Returns the event notification manager.
+	 * 
+	 * @return the notification manager
+	 */
 	private ServerNotificationManager getServerNotificationManager() {
-		if (notificationManager == null) {
+		if (notificationManager == null)
 			notificationManager = new ServerNotificationManager();
-		}
+		
 		return notificationManager;
 	}
 
 	/**
-	 * Returns the configuration's sync state.
+	 * Returns the server's publish sync state.
 	 *
 	 * @return int
 	 */
@@ -639,7 +644,7 @@ public class Server extends Base implements IServer {
 	}
 
 	/**
-	 * Sets the configuration sync state.
+	 * Sets the server's publish sync state.
 	 *
 	 * @param state int
 	 */
@@ -661,7 +666,7 @@ public class Server extends Base implements IServer {
 		if (listener == null)
 			throw new IllegalArgumentException("Listener cannot be null");
 		Trace.trace(Trace.LISTENERS, "Adding publish listener " + listener + " to " + this);
-
+		
 		if (publishListeners == null)
 			publishListeners = new ArrayList<IPublishListener>();
 		publishListeners.add(listener);

@@ -36,6 +36,7 @@ import org.osgi.framework.Bundle;
 public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfigurationDelegate {
 	private static final String[] REQUIRED_BUNDLE_IDS = new String[] {
 		"org.apache.commons.logging",
+		"org.apache.commons.el",
 		"javax.servlet",
 		"javax.servlet.jsp",
 		"org.apache.jasper",
@@ -67,8 +68,8 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 			jars[i] = path.toOSString();
 		}
 		
-		if (new File(jars[5] + "bin").exists())
-			jars[5] = jars[5] + "bin";
+		if (new File(jars[6] + "bin").exists())
+			jars[6] = jars[6] + "bin";
 		
 		IVMInstall vm = verifyVMInstall(configuration);
 		
@@ -121,7 +122,7 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 		
 		try {
 			runner.run(runConfig, launch, monitor);
-			previewServer.setProcess(launch.getProcesses()[0]);
+			previewServer.addProcessListener(launch.getProcesses()[0]);
 		} catch (Exception e) {
 			// ignore - process failed
 		}
