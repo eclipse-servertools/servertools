@@ -53,7 +53,7 @@ public class ServerUtil {
 		if (factories != null) {
 			int size = factories.length;
 			for (int i = 0; i < size; i++) {
-				IModule[] modules = factories[i].getModules();
+				IModule[] modules = factories[i].getModules(project);
 				if (modules != null) {
 					int size2 = modules.length;
 					for (int j = 0; j < size2; j++) {
