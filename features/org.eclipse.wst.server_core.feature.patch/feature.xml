@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.wst.server_core.feature.patch"
-      label="Patch Feature for Server Core"
-      version="1.0.0.qualifier"
-      provider-name="Eclipse.org">
+      label="%featureName"
+      version="1.5.5.qualifier"
+      provider-name="%providerName">
 
    <description>
       %description
@@ -18,7 +18,7 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.wst.server_core.feature" version="1.5.4.v200704150133-----1G955H5G5Ep" patch="true"/>
+      <import feature="org.eclipse.wst.server_core.feature" version="1.5.5.v200707311635--1G955H5K5K2629" patch="true"/>
    </requires>
 
    <plugin
