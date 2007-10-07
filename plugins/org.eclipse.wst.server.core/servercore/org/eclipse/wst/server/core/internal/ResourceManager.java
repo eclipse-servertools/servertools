@@ -245,7 +245,7 @@ public class ResourceManager {
 		return name.substring(index + 1);
 	}
 
-	public static ResourceManager getInstance() {
+	public synchronized static ResourceManager getInstance() {
 		if (instance == null)
 			new ResourceManager();
 

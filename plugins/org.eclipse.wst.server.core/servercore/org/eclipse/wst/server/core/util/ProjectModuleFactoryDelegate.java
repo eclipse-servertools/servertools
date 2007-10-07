@@ -96,6 +96,13 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 		return modules2;
 	}
 
+	/*
+	 * Temporary method to patch 204165. Do not use, see equivalent API in 2.0.
+	 */
+	public IModule[] getModules204165(IProject project) {
+		return createModules(project);
+	}
+
 	/**
 	 * Handle changes to a project.
 	 * 

@@ -13,6 +13,7 @@ package org.eclipse.wst.server.core.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -20,6 +21,7 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.model.InternalInitializer;
 import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
+import org.eclipse.wst.server.core.util.ProjectModuleFactoryDelegate;
 /**
  * 
  */
@@ -116,6 +118,17 @@ public class ModuleFactory implements IOrdered {
 			}
 		}
 		return null;
+	}
+
+	/*
+	 * Temporary method to patch 204165. Do not use, see equivalent API in 2.0.
+	 */
+	public IModule[] getModules(IProject project) {
+		ModuleFactoryDelegate mfd = getDelegate(null);
+		if (mfd instanceof ProjectModuleFactoryDelegate) {
+			return ((ProjectModuleFactoryDelegate) mfd).getModules204165(project);
+		}
+		return mfd.getModules();
 	}
 
 	public void clearModuleCache() {
