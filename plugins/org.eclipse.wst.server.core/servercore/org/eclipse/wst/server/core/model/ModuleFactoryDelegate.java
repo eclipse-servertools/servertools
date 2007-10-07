@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.model;
 
+import java.util.ArrayList;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.IModule;
@@ -136,4 +138,22 @@ public abstract class ModuleFactoryDelegate {
 	 * @return a possibly-empty array of modules {@link IModule}
 	 */
 	public abstract IModule[] getModules();
+	
+	/**
+	 * Return the modules for the given project.
+	 * This default implementation is not optimized and subclasses should override
+	 * @param project
+	 * @return
+	 */
+	public IModule[] getModules(IProject project) {
+		if (project == null) throw new IllegalArgumentException();
+		IModule[] modules = getModules();
+		ArrayList projectModules = new ArrayList();
+		for(int i=0;i<modules.length;i++) {
+			if (modules[i].getProject().equals(project)) {
+				projectModules.add(modules[i]);
+			}
+		}
+		return (IModule[])projectModules.toArray(new IModule[projectModules.size()]);
+	}
 }

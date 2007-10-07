@@ -95,11 +95,8 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 		modules.toArray(modules2);
 		return modules2;
 	}
-
-	/*
-	 * Temporary method to patch 204165. Do not use, see equivalent API in 2.0.
-	 */
-	public IModule[] getModules204165(IProject project) {
+	
+	public IModule[] getModules(IProject project) {
 		return createModules(project);
 	}
 
