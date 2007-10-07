@@ -95,10 +95,6 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 		modules.toArray(modules2);
 		return modules2;
 	}
-	
-	public IModule[] getModules(IProject project) {
-		return createModules(project);
-	}
 
 	/**
 	 * Handle changes to a project.
