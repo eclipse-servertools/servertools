@@ -227,7 +227,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	 */
 	public boolean isServeModulesWithoutPublish() {
 		// If feature is supported, return current setting
-		if (versionHandler.supportsServeModulesWithoutPublish())
+		if (getTomcatVersionHandler().supportsServeModulesWithoutPublish())
 			return getAttribute(PROPERTY_SERVE_MODULES_WITHOUT_PUBLISH, false);
 		return false;
 	}
@@ -240,7 +240,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	 */
 	public boolean isSaveSeparateContextFiles() {
 		// If feature is supported, return current setting
-		if (versionHandler.supportsSeparateContextFiles())
+		if (getTomcatVersionHandler().supportsSeparateContextFiles())
 			return getAttribute(PROPERTY_SAVE_SEPARATE_CONTEXT_FILES, false);
 		return false;
 	}
