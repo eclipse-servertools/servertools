@@ -307,7 +307,7 @@ public class Server extends Base implements IServer {
 		if (behaviourDelegate != null || serverType == null)
 			return behaviourDelegate;
 		
-		synchronized (this) {
+		synchronized (moduleState) {
 			if (behaviourDelegate == null) {
 				try {
 					long time = System.currentTimeMillis();
