@@ -312,7 +312,7 @@ public class Server extends Base implements IServer {
 		if (behaviourDelegate != null || serverType == null)
 			return behaviourDelegate;
 		
-		synchronized (this) {
+		synchronized (moduleState) {
 			if (behaviourDelegate == null) {
 				try {
 					long time = System.currentTimeMillis();
@@ -859,7 +859,7 @@ public class Server extends Base implements IServer {
 	 * Publish to the server using the progress monitor. The result of the
 	 * publish operation is returned as an IStatus.
 	 */
-	public IStatus publish(final int kind, IProgressMonitor monitor) {
+	public IStatus publish(int kind, IProgressMonitor monitor) {
 		if (getServerType() == null)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorMissingAdapter, null);
 
@@ -885,6 +885,43 @@ public class Server extends Base implements IServer {
 		firePublishFinished(status);
 		Trace.trace(Trace.PERFORMANCE, "Server.publish(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
 		return status;
+	}
+
+	/*
+	 * Publish the given modules to the server.
+	 * TODO: Implementation!
+	 */
+	public void publish(int kind, IModule[] modules2, IOperationListener listener) {
+		if (getServerType() == null) {
+			listener.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorMissingAdapter, null));
+			return;
+		}
+		
+		// check what is out of sync and publish
+		if (getServerType().hasServerConfiguration() && configuration == null) {
+			listener.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorNoConfiguration, null));
+			return;
+		}
+		
+		// make sure that the delegate is loaded and the server state is correct
+		loadAdapter(ServerBehaviourDelegate.class, null);
+		
+		if (((ServerType)getServerType()).startBeforePublish() && (getServerState() == IServer.STATE_STOPPED)) {
+			try {
+				synchronousStart(ILaunchManager.RUN_MODE, new NullProgressMonitor());
+			} catch (CoreException ce) {
+				Trace.trace(Trace.SEVERE, "Error starting server", ce);
+				listener.done(ce.getStatus());
+				return;
+			}
+		}
+		
+		long time = System.currentTimeMillis();
+		firePublishStarted();
+		IStatus status = doPublish(kind, new NullProgressMonitor());
+		firePublishFinished(status);
+		Trace.trace(Trace.PERFORMANCE, "Server.publish(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
+		listener.done(status);
 	}
 
 	protected IStatus doPublish(int kind, IProgressMonitor monitor) {
@@ -919,7 +956,7 @@ public class Server extends Base implements IServer {
 	}
 
 	/**
-	 * Returns the publish tasks that have been targetted to this server.
+	 * Returns the publish tasks that have been targeted to this server.
 	 * These tasks should be run during publishing and will be initialized
 	 * with a task model.
 	 * 

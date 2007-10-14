@@ -307,9 +307,9 @@ public interface IServer extends IServerAttributes {
 	 * and the risk of UI deadlock is high. 
 	 * </p>
 	 * 
-	 * @param kind the kind of publish being requested. Valid values are
+	 * @param kind the kind of publish being requested. Valid values are:
 	 *    <ul>
-	 *    <li><code>PUBLSIH_FULL</code>- indicates a full publish.</li>
+	 *    <li><code>PUBLISH_FULL</code>- indicates a full publish.</li>
 	 *    <li><code>PUBLISH_INCREMENTAL</code>- indicates a incremental publish.
 	 *    <li><code>PUBLISH_CLEAN</code>- indicates a clean request. Clean throws
 	 *      out all state and cleans up the module on the server before doing a
@@ -318,8 +318,40 @@ public interface IServer extends IServerAttributes {
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @return status indicating what (if anything) went wrong
+	 * @see #publish(int, IModule[], org.eclipse.wst.server.core.IServer.IOperationListener)
 	 */
 	public IStatus publish(int kind, IProgressMonitor monitor);
+
+	/**
+	 * Publish one or more modules to the server.
+	 * <p>
+	 * The operation listener can be used to add a listener for notification
+	 * of the publish result. The listener will be called with a
+	 * single successful status (severity OK) when the server has
+	 * finished publishing, or a single failure (severity ERROR) if
+	 * there was an error publishing to the server.
+	 * </p><p>
+	 * This method should not be called from the UI thread. Publishing is long-
+	 * running and may trigger resource change events or builds. Although this
+	 * framework is safe, there is no guarantee that other bundles are UI-safe
+	 * and the risk of UI deadlock is high. 
+	 * </p>
+	 * 
+	 * @param kind the kind of publish being requested. Valid values are:
+	 *    <ul>
+	 *    <li><code>PUBLISH_FULL</code>- indicates a full publish.</li>
+	 *    <li><code>PUBLISH_INCREMENTAL</code>- indicates a incremental publish.
+	 *    <li><code>PUBLISH_CLEAN</code>- indicates a clean request. Clean throws
+	 *      out all state and cleans up the module on the server before doing a
+	 *      full publish.
+	 *    </ul>
+	 * @param modules an array of modules, or <code>null</code> to publish all
+	 *    modules
+	 *  @param listener an operation listener to receive notification when this
+	 *    operation is done, or <code>null</code> if notification is not
+	 *    required
+	 */
+	public void publish(int kind, IModule[] modules, IOperationListener listener);
 
 	/**
 	 * Returns whether this server is in a state that it can
@@ -342,7 +374,7 @@ public interface IServer extends IServerAttributes {
 	 * <p>
 	 * If the caller wants to listen for failure or success of the
 	 * server starting, it can add a server listener or use the
-	 * version of this method that takes a status listener as a
+	 * version of this method that takes an operation listener as a
 	 * parameter.
 	 * </p>
 	 *
@@ -352,9 +384,10 @@ public interface IServer extends IServerAttributes {
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @exception CoreException if an error occurs while trying to start the server
+	 * @see #start(String, org.eclipse.wst.server.core.IServer.IOperationListener)
 	 */
 	public void start(String launchMode, IProgressMonitor monitor) throws CoreException;
-	
+
 	/**
 	 * Asynchronously starts this server in the given launch mode.
 	 * <p>
@@ -377,26 +410,6 @@ public interface IServer extends IServerAttributes {
 	 *    required
 	 */
 	public void start(String launchMode, IOperationListener listener);
-
-	/**
-	 * Starts this server in the given launch mode and waits until the server
-	 * has finished starting.
-	 * <p>
-	 * This convenience method uses {@link #start(String, IProgressMonitor)}
-	 * to start the server, and an internal thread and listener to detect
-	 * when the server has finished starting.
-	 * </p>
-	 *
-	 * @param launchMode a mode in which a server can be launched,
-	 *    one of the mode constants defined by
-	 *    {@link org.eclipse.debug.core.ILaunchManager}
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 * @deprecated this method is deprecated. use start(String,
-	 *    IProgressMonitor, IOperationListener) instead
-	 * @exception CoreException if an error occurs while trying to start the server
-	 */
-	public void synchronousStart(String launchMode, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Returns whether this server is in a state that it can
@@ -445,7 +458,7 @@ public interface IServer extends IServerAttributes {
 	 * <p>
 	 * If the caller wants to listen for failure or success of the
 	 * server restarting, it can add a server listener or use the
-	 * version of this method that takes a status listener as a
+	 * version of this method that takes an operation listener as a
 	 * parameter.
 	 * </p>
 	 *
@@ -454,6 +467,7 @@ public interface IServer extends IServerAttributes {
 	 *    {@link org.eclipse.debug.core.ILaunchManager}
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
+	 * @see #restart(String, org.eclipse.wst.server.core.IServer.IOperationListener)
 	 */
 	public void restart(String launchMode, IProgressMonitor monitor);
 
@@ -480,28 +494,6 @@ public interface IServer extends IServerAttributes {
 	public void restart(String launchMode, IOperationListener listener);
 
 	/**
-	 * Synchronously restarts this server. This operation does
-	 * nothing if this server cannot be stopped ({@link #canRestart(String)}
-	 * returns <code>false</code>.
-	 * <p>
-	 * [issue: There is no way to communicate failure to the
-	 * client. Given that this operation can go awry, there probably
-	 * should be a mechanism that allows failing asynch operations
-	 * to be diagnosed.]
-	 * </p>
-	 *
-	 * @param launchMode a mode in which a server can be launched,
-	 *    one of the mode constants defined by
-	 *    {@link org.eclipse.debug.core.ILaunchManager}
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 * @throws CoreException if there was an error
-	 * @deprecated this method is deprecated. use restart(String,
-	 *    IProgressMonitor, IOperationListener) instead
-	 */
-	public void synchronousRestart(String launchMode, IProgressMonitor monitor) throws CoreException;
-
-	/**
 	 * Returns whether this server is in a state that it can
 	 * be stopped.
 	 * Servers can be stopped if they are not already stopped and if
@@ -524,12 +516,13 @@ public interface IServer extends IServerAttributes {
 	 * <p>
 	 * If the caller wants to listen for success or failure of the
 	 * server stopping, it can add a server listener or use the
-	 * version of this method that takes a status listener as a
+	 * version of this method that takes an operation listener as a
 	 * parameter.
 	 * </p>
 	 * 
 	 * @param force <code>true</code> to kill the server, or <code>false</code>
 	 *    to stop normally
+	 * @see #start(String, org.eclipse.wst.server.core.IServer.IOperationListener)
 	 */
 	public void stop(boolean force);
 
@@ -557,21 +550,6 @@ public interface IServer extends IServerAttributes {
 	 *    required
 	 */
 	public void stop(boolean force, IOperationListener listener);
-
-	/**
-	 * Stops this server and waits until the server has completely stopped.
-	 * <p>
-	 * This convenience method uses {@link #stop(boolean)}
-	 * to stop the server, and an internal thread and listener to detect
-	 * when the server has complied.
-	 * </p>
-	 * 
-	 * @param force <code>true</code> to kill the server, or <code>false</code>
-	 *    to stop normally
-	 * @deprecated this method is deprecated. use stop(boolean,
-	 *    IOperationListener) instead
-	 */
-	public void synchronousStop(boolean force);
 
 	/**
 	 * Returns the current state of the given module on this server.
@@ -664,14 +642,6 @@ public interface IServer extends IServerAttributes {
 	 * an exception will be thrown.
 	 * </p>
 	 * <p>
-	 * [issue: Since this method is asynchronous, is there
-	 * any need for the progress monitor?]
-	 * </p>
-	 * <p>
-	 * [issue: IServer.synchronousModuleRestart throws CoreException
-	 * if anything goes wrong.]
-	 * </p>
-	 * <p>
 	 * [issue: If the module was just published to the server
 	 * and had never been started, would is be ok to "start"
 	 * the module using this method?]
@@ -710,4 +680,56 @@ public interface IServer extends IServerAttributes {
 	 * @since 3.0
 	 */
 	public ILaunch getLaunch();
+
+	/**
+	 * Starts this server in the given launch mode and waits until the server
+	 * has finished starting.
+	 * <p>
+	 * This convenience method uses {@link #start(String, IProgressMonitor)}
+	 * to start the server, and an internal thread and listener to detect
+	 * when the server has finished starting.
+	 * </p>
+	 *
+	 * @param launchMode a mode in which a server can be launched,
+	 *    one of the mode constants defined by
+	 *    {@link org.eclipse.debug.core.ILaunchManager}
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @deprecated use {@link #start(String, org.eclipse.wst.server.core.IServer.IOperationListener)}
+	 *    instead
+	 * @exception CoreException if an error occurs while trying to start the server
+	 */
+	public void synchronousStart(String launchMode, IProgressMonitor monitor) throws CoreException;
+
+	/**
+	 * Stops this server and waits until the server has completely stopped.
+	 * <p>
+	 * This convenience method uses {@link #stop(boolean)}
+	 * to stop the server, and an internal thread and listener to detect
+	 * when the server has complied.
+	 * </p>
+	 * 
+	 * @param force <code>true</code> to kill the server, or <code>false</code>
+	 *    to stop normally
+	 * @deprecated use {@link #stop(boolean, org.eclipse.wst.server.core.IServer.IOperationListener)}
+	 *    instead
+	 */
+	public void synchronousStop(boolean force);
+
+	/**
+	 * Synchronously restarts this server. This operation does
+	 * nothing if this server cannot be stopped ({@link #canRestart(String)}
+	 * returns <code>false</code>.
+	 * <p>
+	 *
+	 * @param launchMode a mode in which a server can be launched,
+	 *    one of the mode constants defined by
+	 *    {@link org.eclipse.debug.core.ILaunchManager}
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException if there was an error
+	 * @deprecated use {@link #restart(String, org.eclipse.wst.server.core.IServer.IOperationListener)} 
+	 *    instead
+	 */
+	public void synchronousRestart(String launchMode, IProgressMonitor monitor) throws CoreException;
 }
