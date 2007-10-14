@@ -14,9 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.jface.action.Action;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.ui.internal.DeleteServerDialog;
@@ -25,36 +26,26 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * Action for deleting server resources.
  */
-public class DeleteAction extends Action {
+public class DeleteAction extends AbstractServerAction {
 	protected IServer[] servers;
 	protected IFolder[] configs;
-	protected Shell shell;
 
 	/**
 	 * DeleteAction constructor.
 	 * 
 	 * @param shell a shell
-	 * @param server a server
+	 * @param sp a selection provider
 	 */
-	public DeleteAction(Shell shell, IServer server) {
-		this(shell, new IServer[] { server });
-	}
-
-	/**
-	 * DeleteAction constructor.
-	 * 
-	 * @param shell a shell
-	 * @param servers an array of servers
-	 */
-	public DeleteAction(Shell shell, IServer[] servers) {
-		super(Messages.actionDelete);
+	public DeleteAction(Shell shell, ISelectionProvider sp) {
+		super(shell, sp, Messages.actionDelete);
 		ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
 		setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
 		setDisabledImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE_DISABLED));
-		this.shell = shell;
-		
-		this.servers = servers;
-		
+		setActionDefinitionId(IWorkbenchActionDefinitionIds.DELETE);
+	}
+
+	public boolean accept(IServer server) {
+		servers = new IServer[] { server };
 		List<IFolder> list = new ArrayList<IFolder>();
 		
 		int size = servers.length;
@@ -83,12 +74,10 @@ public class DeleteAction extends Action {
 		
 		configs = new IFolder[list.size()];
 		list.toArray(configs);
+		return true;
 	}
 
-	/**
-	 * Invoked when an action occurs. 
-	 */
-	public void run() {
+	public void perform(IServer server) {
 		DeleteServerDialog dsd = new DeleteServerDialog(shell, servers, configs);
 		dsd.open();
 	}

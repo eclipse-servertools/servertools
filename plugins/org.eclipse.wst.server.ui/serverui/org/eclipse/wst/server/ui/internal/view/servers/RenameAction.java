@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.actions.TextActionHandler;
+import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
@@ -60,6 +61,7 @@ public class RenameAction extends AbstractServerAction {
 
 	public RenameAction(Shell shell, TreeViewer viewer, ISelectionProvider selectionProvider) {
 		super(shell, selectionProvider, Messages.actionRename);
+		setActionDefinitionId(IWorkbenchActionDefinitionIds.RENAME);
 		this.tree = viewer.getTree();
 		this.treeEditor = new TreeEditor(tree);
 		try {

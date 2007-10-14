@@ -17,14 +17,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.debug.ui.IDebugUIConstants;
-import org.eclipse.debug.ui.IDebugView;
 import org.eclipse.jface.action.*;
+import org.eclipse.jface.bindings.TriggerSequence;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.model.ServerDelegate;
 import org.eclipse.wst.server.ui.internal.*;
+import org.eclipse.wst.server.ui.internal.actions.NewServerWizardAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
@@ -41,11 +41,13 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.*;
+import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 /**
- * View of server, their configurations and status.
+ * A view of servers, their modules, and status.
  */
 public class ServersView extends ViewPart {
 	private static final String TAG_COLUMN_WIDTH = "columnWidth";
@@ -62,7 +64,8 @@ public class ServersView extends ViewPart {
 	// actions on a server
 	protected Action[] actions;
 	protected Action actionModifyModules;
-	protected Action actionProperties;
+	protected Action openAction, showInConsoleAction, showInDebugAction, propertiesAction;
+	protected Action copyAction, pasteAction, deleteAction, renameAction;
 
 	/**
 	 * ServersView constructor comment.
@@ -169,22 +172,7 @@ public class ServersView extends ViewPart {
 					label += " (";
 					label += ServerCore.getResourceManager().getServerResourceLocation(resource).getFullPath().toString().substring(1);
 					label += ")";
-					getViewSite().getActionBars().getStatusLineManager().setMessage(ServerLabelProvider.getInstance().getImage(factory), label);
-					
-					if (resource instanceof IServer) {
-						IServer server = (IServer) resource;
-						ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
-						ILaunch[] launches = launchManager.getLaunches();
-						int size = launches.length;
-						for (int i = size-1; i >= 0; i--) {
-							ILaunchConfiguration config = launches[i].getLaunchConfiguration();
-							if (LAUNCH_CONFIGURATION_TYPE_ID.equals(config.getType().getIdentifier()) &&
-									ServerCore.getServerRef(server).equals(config.getAttribute(SERVER_REF, (String)null))) {
-								selectServerProcess(launches[i]);
-								return;
-							}
-						}
-					}*/
+					getViewSite().getActionBars().getStatusLineManager().setMessage(ServerLabelProvider.getInstance().getImage(factory), label);*/
 				} catch (Exception e) {
 					getViewSite().getActionBars().getStatusLineManager().setMessage(null, "");
 				}
@@ -241,25 +229,6 @@ public class ServersView extends ViewPart {
 		}
 	}
 
-	protected void selectServerProcess(Object process) {
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow() ;
-		if (window != null) {
-			IWorkbenchPage page = window.getActivePage();
-			if (page != null) {
-				IWorkbenchPart part = page.findView(IDebugUIConstants.ID_DEBUG_VIEW);
-				if (part != null) {
-					IDebugView view = (IDebugView)part.getAdapter(IDebugView.class);
-					if (view != null) {
-						Viewer viewer = view.getViewer();
-						if (viewer != null) {
-							viewer.setSelection(new StructuredSelection(process));
-						}
-					}
-				}
-			}
-		}
-	}
-
 	/**
 	 * Initialize actions
 	 * 
@@ -267,7 +236,8 @@ public class ServersView extends ViewPart {
 	 */
 	public void initializeActions(ISelectionProvider provider) {
 		Shell shell = getSite().getShell();
-				
+		IActionBars actionBars = getViewSite().getActionBars();
+		
 		actions = new Action[6];
 		// create the start actions
 		actions[0] = new StartAction(shell, provider, ILaunchManager.DEBUG_MODE);
@@ -281,16 +251,39 @@ public class ServersView extends ViewPart {
 		actions[4] = new PublishAction(shell, provider);
 		actions[5] = new PublishCleanAction(shell, provider);
 		
-		// create the module slosh dialog action
+		// create the open action
+		openAction = new OpenAction(provider);
+		actionBars.setGlobalActionHandler("org.eclipse.ui.navigator.Open", openAction);
+		
+		// create copy, paste, and delete actions
+		pasteAction = new PasteAction(shell, provider, tableViewer.clipboard);
+		copyAction = new CopyAction(provider, tableViewer.clipboard, pasteAction);
+		deleteAction = new DeleteAction(shell, provider);
+		renameAction = new RenameAction(shell, tableViewer, provider);
+		actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), copyAction);
+		actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), pasteAction);
+		actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), deleteAction);
+		actionBars.setGlobalActionHandler(ActionFactory.RENAME.getId(), renameAction);
+		
+		// create the other actions
 		actionModifyModules = new ModuleSloshAction(shell, provider);
+		showInConsoleAction = new ShowInConsoleAction(provider);
+		showInDebugAction = new ShowInDebugAction(provider);
 		
 		// create the properties action
-		actionProperties = new PropertiesAction(shell, provider);
+		propertiesAction = new PropertiesAction(shell, provider);
+		actionBars.setGlobalActionHandler(ActionFactory.PROPERTIES.getId(), propertiesAction);
 		
 		// add toolbar buttons
 		IContributionManager cm = getViewSite().getActionBars().getToolBarManager();
 		for (int i = 0; i < actions.length - 1; i++)
 			cm.add(actions[i]);
+	}
+
+	private static void fillNewContextMenu(Shell shell, ISelection selection, IMenuManager menu) {
+		IAction newServerAction = new NewServerWizardAction();
+		newServerAction.setText(Messages.actionNewServer);
+		menu.add(newServerAction);
 	}
 
 	protected void fillContextMenu(Shell shell, IMenuManager menu) {
@@ -316,21 +309,40 @@ public class ServersView extends ViewPart {
 		
 		// new action
 		MenuManager newMenu = new MenuManager(Messages.actionNew);
-		ServerActionHelper.fillNewContextMenu(null, selection, newMenu);
+		fillNewContextMenu(null, selection, newMenu);
 		menu.add(newMenu);
 		
 		// open action
 		if (server != null && module == null) {
-			menu.add(new OpenAction(server));
+			menu.add(openAction);
 			menu.add(new UpdateStatusAction(server));
+			
+			String text = Messages.actionShowIn;
+			final IWorkbench workbench = PlatformUI.getWorkbench();
+			final IBindingService bindingService = (IBindingService) workbench
+					.getAdapter(IBindingService.class);
+			final TriggerSequence[] activeBindings = bindingService
+					.getActiveBindingsFor("org.eclipse.ui.navigate.showInQuickMenu");
+			if (activeBindings.length > 0) {
+				text += "\t" + activeBindings[0].format();
+			}
+			
+			MenuManager showInMenu = new MenuManager(text);
+			showInMenu.add(showInConsoleAction);
+			showInMenu.add(showInDebugAction);
+			//IActionBars actionBars = getViewSite().getActionBars();
+			//actionBars.setGlobalActionHandler("group.show", showInMenu);
+			menu.add(showInMenu);
 			menu.add(new Separator());
 		} else
 			menu.add(new Separator());
 		
 		if (server != null) {
 			if (module == null) {
-				menu.add(new DeleteAction(shell, server));
-				menu.add(new RenameAction(shell, tableViewer, tableViewer));
+				menu.add(copyAction);
+				menu.add(pasteAction);
+				menu.add(deleteAction);
+				menu.add(renameAction);
 			} else if (module.length == 1)
 				menu.add(new RemoveModuleAction(shell, server, module[0]));
 			menu.add(new Separator());
@@ -388,7 +400,7 @@ public class ServersView extends ViewPart {
 		
 		if (server != null) {
 			menu.add(new Separator());
-			menu.add(actionProperties);
+			menu.add(propertiesAction);
 		}
 	}
 

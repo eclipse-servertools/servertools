@@ -25,6 +25,7 @@ import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.util.PublishAdapter;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -35,9 +36,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
-import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.ActionFactory;
 /**
  * Tree view showing servers and their associations.
  */
@@ -45,6 +44,7 @@ public class ServerTableViewer extends TreeViewer {
 	protected static final String ROOT = "root";
 	protected static Color color;
 	protected static Font font;
+	protected Clipboard clipboard;
 
 	protected IServerLifecycleListener serverResourceListener;
 	protected IPublishListener publishListener;
@@ -224,6 +224,7 @@ public class ServerTableViewer extends TreeViewer {
 	public ServerTableViewer(final ServersView view, final Tree tree) {
 		super(tree);
 		this.view = view;
+		clipboard = new Clipboard(tree.getDisplay());
 	}
 	
 	protected void initialize() {
@@ -256,8 +257,6 @@ public class ServerTableViewer extends TreeViewer {
 		
 		setInput(ROOT);
 		addListeners();
-		IActionBars actionBars = view.getViewSite().getActionBars();
-		actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), new ServerAction(getControl().getShell(), this, "Delete it!", ServerActionHelper.ACTION_DELETE));
 		
 		/*dsListener = new ISelectionListener() {
 			public void selectionChanged(IWorkbenchPart part, ISelection selection) {
@@ -543,6 +542,8 @@ public class ServerTableViewer extends TreeViewer {
 					((Server) servers[i]).removePublishListener(publishListener);
 			}
 		}
+		
+		clipboard.dispose();
 		
 		super.handleDispose(event);
 	}

@@ -78,10 +78,9 @@ public class StartAction extends AbstractServerAction {
 				if (obj instanceof IServer) {
 					IServer server = (IServer) obj;
 					if (server.getServerState() == IServer.STATE_STARTED ||
-						 server.getServerState() == IServer.STATE_STARTING){
+						 server.getServerState() == IServer.STATE_STARTING) {
 						setText(Messages.actionRestart);		
-					}
-					else
+					} else
 						setText(Messages.actionStart);
 				}
 			}	
@@ -96,10 +95,9 @@ public class StartAction extends AbstractServerAction {
 				if (obj instanceof IServer) {
 					IServer server = (IServer) obj;
 					if (server.getServerState() == IServer.STATE_STARTED ||
-						 server.getServerState() == IServer.STATE_STARTING){
+						 server.getServerState() == IServer.STATE_STARTING) {
 						setText(Messages.actionDebugRestart);		
-					}
-					else
+					} else
 						setText(Messages.actionDebug);
 				}
 			}
@@ -114,10 +112,9 @@ public class StartAction extends AbstractServerAction {
 				if (obj instanceof IServer) {
 					IServer server = (IServer) obj;
 					if (server.getServerState() == IServer.STATE_STARTED ||
-						 server.getServerState() == IServer.STATE_STARTING){
+						 server.getServerState() == IServer.STATE_STARTING) {
 						setText(Messages.actionProfileRestart);		
-					}
-					else
+					} else
 						setText(Messages.actionProfile);
 				}
 			}

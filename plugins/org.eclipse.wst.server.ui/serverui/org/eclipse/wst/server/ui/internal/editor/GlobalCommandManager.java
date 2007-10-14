@@ -28,7 +28,6 @@ import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
 import org.eclipse.wst.server.ui.internal.Messages;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -275,19 +274,19 @@ public class GlobalCommandManager {
 
 	/**
 	 * Execute the given command and place it in the undo stack.
-	 * If the command cannot be undone, the user will be notifed
+	 * If the command cannot be undone, the user will be notified
 	 * before it is executed.
 	 *
 	 * @param id an id
 	 * @param command a task
 	 */
 	public void executeCommand(String id, IUndoableOperation command) {
-		if (!command.canUndo() && !undoList.isEmpty() && ServerUIPlugin.getPreferences().getPromptBeforeIrreversibleChange()) {
+		if (!command.canUndo() && !undoList.isEmpty()) {
 			try {
 				Display d = Display.getCurrent();
 				if (d == null)
 					d = Display.getDefault();
-		
+				
 				Shell shell = d.getActiveShell();
 				if (!MessageDialog.openConfirm(shell, Messages.editorServerEditor, Messages.editorPromptIrreversible))
 					return;
@@ -299,13 +298,13 @@ public class GlobalCommandManager {
 		ServerResourceCommand src = new ServerResourceCommand();
 		src.id = id;
 		src.command = command;
-
+		
 		try {
 			command.execute(new NullProgressMonitor(), null);
 		} catch (ExecutionException ce) {
 			return;
 		}
-
+		
 		CommandManagerInfo info = getExistingCommandManagerInfo(id);
 		if (info == null)
 			return;

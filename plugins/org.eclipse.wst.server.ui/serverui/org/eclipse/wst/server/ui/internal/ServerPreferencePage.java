@@ -35,8 +35,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	protected ServerPreferences preferences;
 	protected ServerUIPreferences uiPreferences;
 
-	protected Button promptIrreversible;
-
 	protected Button showOnActivity;
 
 	protected Button syncOnStartup;
@@ -163,14 +161,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 			}
 		});
 		
-		promptIrreversible = new Button(composite, SWT.CHECK);
-		promptIrreversible.setText(Messages.prefPromptIrreversible);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 3;
-		promptIrreversible.setLayoutData(data);
-		promptIrreversible.setSelection(uiPreferences.getPromptBeforeIrreversibleChange());
-		whs.setHelp(promptIrreversible, ContextIds.PREF_GENERAL_PROMPT_IRREVERSIBLE);
-		
 		Label label = new Label(composite, SWT.NONE);
 		data = new GridData();
 		data.horizontalSpan = 3;
@@ -217,7 +207,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	 * Performs special processing when this page's Defaults button has been pressed.
 	 */
 	protected void performDefaults() {
-		promptIrreversible.setSelection(uiPreferences.getDefaultPromptBeforeIrreversibleChange());
 		showOnActivity.setSelection(uiPreferences.getDefaultShowOnActivity());
 		
 		syncOnStartup.setSelection(preferences.getDefaultSyncOnStartup());
@@ -236,7 +225,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	 */
 	public boolean performOk() {
 		preferences.setSyncOnStartup(syncOnStartup.getSelection());
-		uiPreferences.setPromptBeforeIrreversibleChange(promptIrreversible.getSelection());
 		uiPreferences.setShowOnActivity(showOnActivity.getSelection());
 		
 		preferences.setAutoPublishLocal(autoPublishLocal.getSelection());

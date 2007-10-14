@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.Preferences;
  * Helper class that stores preference information for server tools UI.
  */
 public class ServerUIPreferences {
-	private static final String PREF_PROMPT_IRREVERSIBLE = "prompt-irreversible";
 	private static final String PREF_IMPORT_LOCATION = "import-location";
 	private static final String PREF_SAVE_EDITORS = "save-editors";
 	private static final String PREF_HOST_NAMES = "host-names";
@@ -65,7 +64,6 @@ public class ServerUIPreferences {
 	}
 
 	public void setDefaults() {
-		preferences.setDefault(PREF_PROMPT_IRREVERSIBLE, getDefaultPromptBeforeIrreversibleChange());
 		preferences.setDefault(PREF_LAUNCH_MODE, getDefaultLaunchMode());
 		preferences.setDefault(PREF_LAUNCH_MODE2, getDefaultLaunchMode2());
 		preferences.setDefault(PREF_ENABLE_BREAKPOINTS, getDefaultEnableBreakpoints());
@@ -74,37 +72,6 @@ public class ServerUIPreferences {
 		preferences.setDefault(PREF_HOST_NAMES, "localhost");
 		preferences.setDefault(PREF_SHOW_ON_ACTIVITY, true);
 		preferences.setDefault(PREF_CREATE_SERVER_WITH_RUNTIME, false);
-	}
-
-	/**
-	 * Returns whether the user should be prompted before making an
-	 * irreversible change in the editor.
-	 * 
-	 * @return boolean
-	 */
-	public boolean getPromptBeforeIrreversibleChange() {
-		return preferences.getBoolean(PREF_PROMPT_IRREVERSIBLE);
-	}
-
-	/**
-	 * Returns the default value of whether the user should be prompted
-	 * before making an irreversible change in the editor.
-	 *
-	 * @return boolean
-	 */
-	public boolean getDefaultPromptBeforeIrreversibleChange() {
-		return true;
-	}
-
-	/**
-	 * Sets whether the user should be prompted before making an
-	 * irreversible change in the editor.
-	 *
-	 * @param b <code>true</code> to prompt before irreversible changes
-	 */
-	public void setPromptBeforeIrreversibleChange(boolean b) {
-		preferences.setValue(PREF_PROMPT_IRREVERSIBLE, b);
-		ServerUIPlugin.getInstance().savePluginPreferences();
 	}
 
 	/**

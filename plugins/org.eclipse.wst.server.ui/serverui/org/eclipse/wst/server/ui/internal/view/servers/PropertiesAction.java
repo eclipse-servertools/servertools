@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.PreferencesUtil;
+import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.Messages;
@@ -24,6 +25,7 @@ import org.eclipse.wst.server.ui.internal.Messages;
 public class PropertiesAction extends AbstractServerAction {
 	public PropertiesAction(Shell shell, ISelectionProvider selectionProvider) {
 		super(shell, selectionProvider, Messages.actionProperties);
+		setActionDefinitionId(IWorkbenchActionDefinitionIds.PROPERTIES);
 		try {
 			selectionChanged((IStructuredSelection) selectionProvider.getSelection());
 		} catch (Exception e) {

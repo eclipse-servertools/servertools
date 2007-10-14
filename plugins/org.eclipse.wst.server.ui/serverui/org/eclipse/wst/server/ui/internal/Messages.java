@@ -91,7 +91,6 @@ public class Messages extends NLS {
 	public static String prefAutoPublishLocalTime;
 	public static String prefAutoPublishRemote;
 	public static String prefAutoPublishRemoteTime;
-	public static String prefPromptIrreversible;
 	public static String prefLaunchMode;
 	public static String prefLaunchModeRestart;
 	public static String prefLaunchModeContinue;
@@ -124,6 +123,11 @@ public class Messages extends NLS {
 	public static String prefMachineSpeedVeryFast;
 	public static String actionNew;
 	public static String actionNewServer;
+	public static String actionProperties;
+	public static String actionOpen;
+	public static String actionShowIn;
+	public static String actionCopy;
+	public static String actionPaste;
 	public static String actionDebugToolTip;
 	public static String actionDebug;
 	public static String actionDebugRestart;
@@ -243,8 +247,6 @@ public class Messages extends NLS {
 	public static String serverNameDefault;
 	public static String viewServers;
 	public static String viewNoModules;
-	public static String actionProperties;
-	public static String actionOpen;
 	public static String viewServer;
 	public static String viewStatus;
 	public static String viewState;

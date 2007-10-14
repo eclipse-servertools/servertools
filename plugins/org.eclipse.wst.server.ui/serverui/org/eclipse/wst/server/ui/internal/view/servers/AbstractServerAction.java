@@ -22,7 +22,11 @@ import org.eclipse.wst.server.core.IServer;
  * An abstract class for an action on a server.
  */
 public abstract class AbstractServerAction extends SelectionProviderAction {
-	public Shell shell;
+	protected Shell shell;
+
+	public AbstractServerAction(ISelectionProvider selectionProvider, String text) {
+		this(null, selectionProvider, text);
+	}
 
 	public AbstractServerAction(Shell shell, ISelectionProvider selectionProvider, String text) {
 		super(selectionProvider, text);
@@ -34,7 +38,7 @@ public abstract class AbstractServerAction extends SelectionProviderAction {
 	 * Return true if this server can currently be acted on.
 	 *
 	 * @return boolean
-	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param server a server
 	 */
 	public boolean accept(IServer server) {
 		return true;
@@ -42,7 +46,8 @@ public abstract class AbstractServerAction extends SelectionProviderAction {
 
 	/**
 	 * Perform action on this server.
-	 * @param server org.eclipse.wst.server.core.IServer
+	 * 
+	 * @param server a server
 	 */
 	public abstract void perform(IServer server);
 
@@ -58,7 +63,7 @@ public abstract class AbstractServerAction extends SelectionProviderAction {
 	}
 
 	/**
-	 * Update the enable state.
+	 * Update the enabled state.
 	 * 
 	 * @param sel a selection
 	 */
@@ -80,6 +85,6 @@ public abstract class AbstractServerAction extends SelectionProviderAction {
 				return;
 			}
 		}
-		setEnabled(enabled);	
+		setEnabled(enabled);
 	}
 }

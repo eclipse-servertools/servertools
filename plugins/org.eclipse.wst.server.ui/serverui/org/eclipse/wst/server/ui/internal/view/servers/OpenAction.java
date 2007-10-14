@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2006 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
-import org.eclipse.jface.action.Action;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -18,25 +18,20 @@ import org.eclipse.wst.server.ui.internal.Trace;
 /**
  * "Open" menu action.
  */
-public class OpenAction extends Action {
-	protected IServer server;
-
+public class OpenAction extends AbstractServerAction {
 	/**
 	 * OpenAction constructor.
 	 * 
-	 * @param server a server
+	 * @param sp a selection provider
 	 */
-	public OpenAction(IServer server) {
-		super(Messages.actionOpen);
-	
-		this.server = server;
-		setEnabled(server.getServerType() != null);
+	public OpenAction(ISelectionProvider sp) {
+		super(sp, Messages.actionOpen);
+		
+		//setActionDefinitionId("org.eclipse.ui.navigator.Open");
+		setActionDefinitionId("org.eclipse.jdt.ui.edit.text.java.open.editor");
 	}
 
-	/**
-	 * Implementation of method defined on <code>IAction</code>.
-	 */
-	public void run() {
+	public void perform(IServer server) {
 		try {
 			ServerUIPlugin.editServer(server);
 		} catch (Exception e) {

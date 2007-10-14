@@ -388,7 +388,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		list.toArray(r);
 		return r;
 	}
-	
+
 	/**
 	 * Open the given server with the server editor.
 	 *
@@ -397,7 +397,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	public static void editServer(IServer server) {
 		if (server == null)
 			return;
-
+		
 		editServer(server.getId());
 	}
 
@@ -409,10 +409,10 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	protected static void editServer(String serverId) {
 		if (serverId == null)
 			return;
-
+		
 		IWorkbenchWindow workbenchWindow = ServerUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow();
 		IWorkbenchPage page = workbenchWindow.getActivePage();
-
+		
 		try {
 			IServerEditorInput input = new ServerEditorInput(serverId);
 			page.openEditor(input, IServerEditorInput.EDITOR_ID);
@@ -420,7 +420,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 			Trace.trace(Trace.SEVERE, "Error opening server editor", e);
 		}
 	}
-	
+
 	/**
 	 * Use the preference to prompt the user to save dirty editors, if applicable.
 	 * 
