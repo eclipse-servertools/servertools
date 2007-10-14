@@ -186,6 +186,9 @@ public class ServerEventTestCase extends TestCase {
 			public ILaunch getLaunch() {
 				return null;
 			}
+			public void publish(int kind, IModule[] modules, IOperationListener listener) {
+				// do nothing
+			}
 		};
 	}
 
