@@ -22,22 +22,8 @@ public class ServerUIPreferencesTestCase extends TestCase {
 		prefs = ServerUIPlugin.getPreferences();
 	}
 
-	public void test01GetPref() throws Exception {
-		prefs.getPromptBeforeIrreversibleChange();
-	}
-
 	public void test02GetPref() throws Exception {
 		prefs.getSaveEditors();
-	}
-
-	public void test03SetPref() throws Exception {
-		prefs.setPromptBeforeIrreversibleChange(false);
-		assertFalse(prefs.getPromptBeforeIrreversibleChange());
-	}
-
-	public void test04SetPref() throws Exception {
-		prefs.setPromptBeforeIrreversibleChange(true);
-		assertTrue(prefs.getPromptBeforeIrreversibleChange());
 	}
 
 	public void test05SetPref() throws Exception {
@@ -103,11 +89,6 @@ public class ServerUIPreferencesTestCase extends TestCase {
 	public void test17SetPref() throws Exception {
 		prefs.setEnableBreakpoints(ServerUIPreferences.ENABLE_BREAKPOINTS_PROMPT);
 		assertEquals(prefs.getEnableBreakpoints(), ServerUIPreferences.ENABLE_BREAKPOINTS_PROMPT);
-	}
-
-	public void test18DefaultPref() throws Exception {
-		prefs.setPromptBeforeIrreversibleChange(prefs.getDefaultPromptBeforeIrreversibleChange());
-		assertEquals(prefs.getPromptBeforeIrreversibleChange(), prefs.getDefaultPromptBeforeIrreversibleChange());
 	}
 
 	public void test19DefaultPref() throws Exception {
