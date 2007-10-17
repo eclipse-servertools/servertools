@@ -42,7 +42,7 @@
    <element name="image">
       <annotation>
          <appInfo>
-            <meta.element labelAttribute="name"/>
+            <meta.element labelAttribute="id"/>
          </appInfo>
       </annotation>
       <complexType>

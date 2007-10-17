@@ -12,8 +12,6 @@ package org.eclipse.wst.server.ui.internal.view.servers;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerType;
@@ -23,12 +21,12 @@ import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.provisional.UIDecoratorManager;
-import org.eclipse.wst.server.ui.internal.viewers.BaseLabelProvider;
+import org.eclipse.wst.server.ui.internal.viewers.BaseCellLabelProvider;
 import org.eclipse.swt.graphics.Image;
 /**
  * Server table label provider.
  */
-public class ServerTableLabelProvider extends BaseLabelProvider implements ITableLabelProvider {
+public class ServerTableLabelProvider extends BaseCellLabelProvider{
 	public static final String[] syncState = new String[] {
 		Messages.viewSyncOkay,
 		Messages.viewSyncRestart,

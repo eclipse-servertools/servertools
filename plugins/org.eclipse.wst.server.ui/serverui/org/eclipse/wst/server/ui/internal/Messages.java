@@ -70,6 +70,7 @@ public class Messages extends NLS {
 	public static String propServerInfoName;
 	public static String propServerInfoType;
 	public static String propServerInfoVendor;
+	public static String toolTipEnableFocus;
 	public static String errorCouldNotSavePreference;
 	public static String preferenceRuntimesDescription;
 	public static String add;

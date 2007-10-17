@@ -32,6 +32,7 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -205,6 +206,15 @@ public class ServersView extends ViewPart {
 		getSite().setSelectionProvider(tableViewer);
 		
 		initDragAndDrop();
+		
+		// Init the tooltip
+		ServerToolTip toolTip;
+		toolTip = new ServerToolTip(treeTable);
+		toolTip.setShift(new Point(-5, -5));
+		// time is in miliseconds
+		toolTip.setPopupDelay(100);
+		toolTip.setHideOnMouseDown(false);
+		toolTip.activate();
 	}
 
 	public void init(IViewSite site, IMemento memento) throws PartInitException {

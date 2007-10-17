@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
-import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 
@@ -19,13 +18,13 @@ public class ServerViewerComparator extends ViewerComparator {
 	public static final int ASCENDING = 1;
 	public static final int DESCENDING = -1;
 
-	protected ITableLabelProvider labelProvider;
+	protected ServerTableLabelProvider labelProvider;
 
 	protected int[] priorities = new int[] { 0 };
 
 	protected int[] directions = new int[] { ASCENDING };
 
-	public ServerViewerComparator(ITableLabelProvider labelProvider) {
+	public ServerViewerComparator(ServerTableLabelProvider labelProvider) {
 		this.labelProvider = labelProvider;
 	}
 

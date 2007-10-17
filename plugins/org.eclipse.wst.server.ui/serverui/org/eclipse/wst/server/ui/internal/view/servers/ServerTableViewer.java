@@ -146,29 +146,6 @@ public class ServerTableViewer extends TreeViewer {
 		}
 	}
 
-	/*protected void createHoverHelp(Shell parent, Point p) {
-		if (fShell != null) {
-			fShell.dispose();
-			fShell = null;
-		}
-		fShell = new Shell(parent, SWT.NO_FOCUS | SWT.ON_TOP | SWT.RESIZE | SWT.NO_TRIM);
-		GridLayout layout = new GridLayout();
-		layout.marginHeight = 3;
-		layout.marginWidth = 3;
-		fShell.setLayout(layout);
-		
-		Display display = parent.getDisplay();
-		StyledText text = new StyledText(fShell, SWT.NONE);
-		text.setForeground(display.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-		text.setBackground(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-		text.append("Testing\nThis is multi-line");
-		
-		fShell.setLocation(p.x, p.y);
-		fShell.setBackground(display.getSystemColor(SWT.COLOR_BLACK));
-		fShell.pack();
-		fShell.setVisible(true);
-	}*/
-
 	protected void startThread() {
 		if (animationActive)
 			return;
@@ -228,31 +205,11 @@ public class ServerTableViewer extends TreeViewer {
 	}
 	
 	protected void initialize() {
-		/*tree.addMouseMoveListener(new MouseMoveListener() {
-			public void mouseMove(MouseEvent e) {
-				if (fShell != null) {
-					fShell.dispose();
-					fShell = null;
-				}
-			}
-		});
-		tree.addMouseTrackListener(new MouseTrackListener() {
-			public void mouseEnter(MouseEvent event) {
-				// ignore
-			}
-
-			public void mouseExit(MouseEvent event) {
-				// ignore
-			}
-
-			public void mouseHover(MouseEvent event) {
-				createHoverHelp(tree.getShell(), tree.toDisplay(event.x, event.y));
-			}
-		});*/
-		
+		ColumnViewerToolTipSupport.enableFor(this);
 		setContentProvider(new ServerContentProvider());
-		labelProvider = new ServerTableLabelProvider();
-		setLabelProvider(labelProvider);
+		labelProvider = new ServerTableLabelProvider();		
+		setLabelProvider(labelProvider);		
+		
 		setComparator(new ServerViewerComparator(labelProvider));
 		
 		setInput(ROOT);

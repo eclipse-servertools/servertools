@@ -40,6 +40,11 @@
    </element>
 
    <element name="serverType">
+      <annotation>
+         <appInfo>
+            <meta.element labelAttribute="id"/>
+         </appInfo>
+      </annotation>
       <complexType>
          <attribute name="id" type="string" use="required">
             <annotation>
