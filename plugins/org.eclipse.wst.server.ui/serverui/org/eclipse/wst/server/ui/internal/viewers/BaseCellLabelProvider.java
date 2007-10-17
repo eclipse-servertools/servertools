@@ -70,7 +70,7 @@ public abstract class BaseCellLabelProvider extends ColumnLabelProvider {
 	 * being passed
 	 * @param element
 	 * @param index
-	 * @return
+	 * @return an image
 	 */
 	public abstract Image getColumnImage(Object element, int index);
 
@@ -79,7 +79,7 @@ public abstract class BaseCellLabelProvider extends ColumnLabelProvider {
     * being passed 
 	 * @param element
 	 * @param index
-	 * @return
+	 * @return a string
 	 */
 	public abstract String getColumnText(Object element, int index);
 }

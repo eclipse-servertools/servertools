@@ -16,15 +16,18 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.server.core.IServer;
 
 public class GeneralToolTip implements IServerToolTip {
-
 	public GeneralToolTip() {
 		// do nothing
 	}
 
-	public Composite createContent(Composite parent,IServer server) {
+	public Composite createContent(Composite parent, IServer server) {
 		Text text = new Text(parent,SWT.NONE);
 		text.setBackground(parent.getBackground());
-		text.setText("The WebTools project</a>");
+		String s = "";
+		if (server.getRuntime() != null)
+			s += server.getRuntime().getName() + " - ";
+		s += server.getModules().length + " modules";
+		text.setText(s);
 		text.setCapture(true);
 		
 		return parent;
