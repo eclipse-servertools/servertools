@@ -136,7 +136,6 @@ public class RuntimeClasspathProviderWrapper {
 		return delegate;
 	}
 
-	private int count;
 	/*
 	 * @see RuntimeClasspathProviderDelegate#resolveClasspathContainerImpl(IProject, IRuntime)
 	 */
@@ -144,9 +143,6 @@ public class RuntimeClasspathProviderWrapper {
 		if (runtime == null)
 			return null;
 		try {
-			count++;
-			if (count % 500 == 0)
-				System.out.println(count);
 			return getDelegate().resolveClasspathContainerImpl(project, runtime);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
