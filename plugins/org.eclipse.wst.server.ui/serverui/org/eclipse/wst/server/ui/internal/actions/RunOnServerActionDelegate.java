@@ -444,13 +444,21 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	}
 
 	protected void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy config, IServer server, ModuleArtifactDelegate moduleArtifact, ILaunchableAdapter launchableAdapter, IClient client) {
+		String launchName = NLS.bind(Messages.runOnServerLaunchConfigName, moduleArtifact.getName());
+		launchName = getValidLaunchConfigurationName(launchName);
+		if (!launchName.equals(config.getName())) {
+			ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
+			launchName = launchManager.generateUniqueLaunchConfigurationNameFrom(launchName);
+			config.rename(launchName);
+		}
+		
 		config.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_SERVER_ID, server.getId());
 		config.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_MODULE_ARTIFACT, moduleArtifact.serialize());
 		config.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_MODULE_ARTIFACT_CLASS, moduleArtifact.getClass().getName());
 		config.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_LAUNCHABLE_ADAPTER_ID, launchableAdapter.getId());
 		config.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_CLIENT_ID, client.getId());
-	}
-
+	}            
+		       
 	protected ILaunchConfiguration getLaunchConfiguration(IServer server, ModuleArtifactDelegate moduleArtifact, ILaunchableAdapter launchableAdapter2, IClient client2, IProgressMonitor monitor) throws CoreException {
 		String serverId = server.getId();
 		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
@@ -498,7 +506,6 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		return wc.doSave();
 	}
 
-	//protected static final char[] INVALID_CHARS = new char[] {'\\', '/', ':', '*', '?', '"', '<', '>', '|', '\0', '@', '&'};
 	protected static final char[] INVALID_CHARS = new char[] {'\\', ':', '*', '?', '"', '<', '>', '|', '\0', '@', '&'};
 	protected String getValidLaunchConfigurationName(String s) {
 		if (s == null || s.length() == 0)

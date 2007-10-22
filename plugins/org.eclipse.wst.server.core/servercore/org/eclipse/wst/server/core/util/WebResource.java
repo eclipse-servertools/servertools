@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.internal.Messages;
 import org.eclipse.wst.server.core.model.ModuleArtifactDelegate;
 /**
  * A Web module resource.
@@ -53,7 +52,7 @@ public class WebResource extends ModuleArtifactDelegate {
 	 */
 	public String getName() {
 		if (path == null || path.toString().length() == 0)
-			return Messages.webResource;
+			return getModule().getName();
 		return path.toString();
 	}
 
