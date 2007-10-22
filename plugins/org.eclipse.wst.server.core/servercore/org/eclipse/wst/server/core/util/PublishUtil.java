@@ -52,7 +52,7 @@ public final class PublishUtil {
 
 	private static final IStatus[] EMPTY_STATUS = new IStatus[0];
 
-	private static final File tempDir = ServerPlugin.getInstance().getStateLocation().toFile();
+	private static final File defaultTempDir = ServerPlugin.getInstance().getStateLocation().toFile();
 	
 	private static final String TEMPFILE_PREFIX = "tmp";
 
@@ -69,14 +69,18 @@ public final class PublishUtil {
 	 * @param in an input stream
 	 * @param to a path to copy to. the directory must already exist
 	 * @param ts timestamp
+	 * @param tempDir a temporary directory to use for copying, or <code>null</code> to
+	 *    use a default temporary directory
 	 * @throws CoreException if anything goes wrong
 	 */
-	private static void copyFile(InputStream in, IPath to, long ts, IModuleFile mf) throws CoreException {
+	private static void copyFile(InputStream in, IPath to, long ts, IModuleFile mf, File tempDir) throws CoreException {
 		OutputStream out = null;
 		
 		File tempFile = null;
 		try {
 			File file = to.toFile();
+			if (tempDir == null)
+				tempDir = defaultTempDir;
 			tempFile = File.createTempFile(TEMPFILE_PREFIX, "." + to.getFileExtension(), tempDir);
 			
 			out = new FileOutputStream(tempFile);
@@ -180,6 +184,21 @@ public final class PublishUtil {
 	 * @return a possibly-empty array of error and warning status 
 	 */
 	public static IStatus[] publishSmart(IModuleResource[] resources, IPath path, IProgressMonitor monitor) {
+		return publishSmart(resources, path, null, monitor);
+	}
+
+	/**
+	 * Smart copy the given module resources to the given path.
+	 * 
+	 * @param resources an array of module resources
+	 * @param path an external path to copy to
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @param tempDir a temporary directory to use for copying, or <code>null</code> to
+	 *    use a default temporary directory
+	 * @return a possibly-empty array of error and warning status 
+	 */
+	public static IStatus[] publishSmart(IModuleResource[] resources, IPath path, File tempDir, IProgressMonitor monitor) {
 		if (resources == null)
 			return EMPTY_STATUS;
 		
@@ -299,7 +318,7 @@ public final class PublishUtil {
 				
 				if (copy) {
 					try {
-						copyFile(mf, path.append(name));
+						copyFile(mf, path.append(name), tempDir);
 					} catch (CoreException ce) {
 						status.add(ce.getStatus());
 					}
@@ -361,6 +380,21 @@ public final class PublishUtil {
 	 * @return a possibly-empty array of error and warning status
 	 */
 	public static IStatus[] publishDelta(IModuleResourceDelta delta, IPath path, IProgressMonitor monitor) {
+		return publishDelta(delta, path, null, monitor);
+	}
+
+	/**
+	 * Handle a delta publish.
+	 * 
+	 * @param delta a module resource delta
+	 * @param path the path to publish to
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @param tempDir a temporary directory to use for copying, or <code>null</code> to
+	 *    use a default temporary directory
+	 * @return a possibly-empty array of error and warning status
+	 */
+	public static IStatus[] publishDelta(IModuleResourceDelta delta, IPath path, File tempDir, IProgressMonitor monitor) {
 		List<IStatus> status = new ArrayList<IStatus>(2);
 		
 		IModuleResource resource = delta.getModuleResource();
@@ -377,7 +411,7 @@ public final class PublishUtil {
 					if (!f.exists())
 						f.mkdirs();
 					
-					copyFile(file, path2);
+					copyFile(file, path2, tempDir);
 				}
 			} catch (CoreException ce) {
 				status.add(ce.getStatus());
@@ -425,12 +459,12 @@ public final class PublishUtil {
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDeleting, path2), null));
 	}
 
-	private static void copyFile(IModuleFile mf, IPath path) throws CoreException {
+	private static void copyFile(IModuleFile mf, IPath path, File tempDir) throws CoreException {
 		Trace.trace(Trace.PUBLISHING, "Copying: " + mf.getName() + " to " + path.toString());
 		
 		IFile file = (IFile) mf.getAdapter(IFile.class);
 		if (file != null)
-			copyFile(file.getContents(), path, file.getLocalTimeStamp(), mf);
+			copyFile(file.getContents(), path, file.getLocalTimeStamp(), mf, tempDir);
 		else {
 			File file2 = (File) mf.getAdapter(File.class);
 			InputStream in = null;
@@ -439,7 +473,7 @@ public final class PublishUtil {
 			} catch (IOException e) {
 				throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorReading, file2.getAbsolutePath()), e));
 			}
-			copyFile(in, path, file2.lastModified(), mf);
+			copyFile(in, path, file2.lastModified(), mf, tempDir);
 		}
 	}
 
@@ -453,6 +487,21 @@ public final class PublishUtil {
 	 * @return a possibly-empty array of error and warning status
 	 */
 	public static IStatus[] publishFull(IModuleResource[] resources, IPath path, IProgressMonitor monitor) {
+		return publishFull(resources, path, null, monitor);
+	}
+
+	/**
+	 * Publish the given module resources to the given path.
+	 * 
+	 * @param resources an array of module resources
+	 * @param path a path to publish to
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @param tempDir a temporary directory to use for copying, or <code>null</code> to
+	 *    use a default temporary directory
+	 * @return a possibly-empty array of error and warning status
+	 */
+	public static IStatus[] publishFull(IModuleResource[] resources, IPath path, File tempDir, IProgressMonitor monitor) {
 		if (resources == null)
 			return EMPTY_STATUS;
 		
@@ -461,7 +510,7 @@ public final class PublishUtil {
 		List<IStatus> status = new ArrayList<IStatus>(2);
 		int size = resources.length;
 		for (int i = 0; i < size; i++) {
-			IStatus[] stat = copy(resources[i], path, monitor);
+			IStatus[] stat = copy(resources[i], path, tempDir, monitor);
 			addArrayToList(status, stat);
 		}
 		
@@ -470,7 +519,7 @@ public final class PublishUtil {
 		return stat;
 	}
 
-	private static IStatus[] copy(IModuleResource resource, IPath path, IProgressMonitor monitor) {
+	private static IStatus[] copy(IModuleResource resource, IPath path, File tempDir, IProgressMonitor monitor) {
 		String name = resource.getName();
 		Trace.trace(Trace.PUBLISHING, "Copying: " + name + " to " + path.toString());
 		List<IStatus> status = new ArrayList<IStatus>(2);
@@ -485,7 +534,7 @@ public final class PublishUtil {
 			if (!f.exists())
 				f.mkdirs();
 			try {
-				copyFile(mf, path);
+				copyFile(mf, path, tempDir);
 			} catch (CoreException ce) {
 				status.add(ce.getStatus());
 			}
@@ -506,6 +555,22 @@ public final class PublishUtil {
 	 * @return a possibly-empty array of error and warning status
 	 */
 	public static IStatus[] publishZip(IModuleResource[] resources, IPath path, IProgressMonitor monitor) {
+		return publishZip(resources, path, null, monitor);
+	}
+
+	/**
+	 * Creates a new zip file containing the given module resources. Deletes the existing file
+	 * (and doesn't create a new one) if resources is null or empty.
+	 * 
+	 * @param resources an array of module resources
+	 * @param path the path where the zip file should be created 
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @param tempDir a temporary directory to use for copying, or <code>null</code> to
+	 *    use a default temporary directory
+	 * @return a possibly-empty array of error and warning status
+	 */
+	public static IStatus[] publishZip(IModuleResource[] resources, IPath path, File tempDir, IProgressMonitor monitor) {
 		if (resources == null || resources.length == 0) {
 			// should also check if resources consists of all empty directories
 			File file = path.toFile();
@@ -519,6 +584,8 @@ public final class PublishUtil {
 		File tempFile = null;
 		try {
 			File file = path.toFile();
+			if (tempDir == null)
+				tempDir = defaultTempDir;
 			tempFile = File.createTempFile(TEMPFILE_PREFIX, "." + path.getFileExtension(), tempDir);
 			
 			BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(tempFile));
