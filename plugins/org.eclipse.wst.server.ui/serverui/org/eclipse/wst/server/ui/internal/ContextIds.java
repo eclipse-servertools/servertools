@@ -43,7 +43,6 @@ public interface ContextIds {
 	public static final String PREF_GENERAL_AUTOPUBLISH_LOCAL = ServerUIPlugin.PLUGIN_ID + ".spge0002";
 	public static final String PREF_GENERAL_AUTOPUBLISH_REMOTE = ServerUIPlugin.PLUGIN_ID + ".spge0006";
 	public static final String PREF_GENERAL_PUBLISH_BEFORE_START = ServerUIPlugin.PLUGIN_ID + ".spge0012";
-	public static final String PREF_GENERAL_PROMPT_LAUNCH_MODE = ServerUIPlugin.PLUGIN_ID + ".spge0030";
 	public static final String PREF_GENERAL_SHOW_ON_ACTIVITY = ServerUIPlugin.PLUGIN_ID + ".spge0022";
 	public static final String PREF_GENERAL_SAVE_EDITORS = ServerUIPlugin.PLUGIN_ID + ".spge0024";
 	public static final String PREF_GENERAL_TIMEOUT_DELAY = ServerUIPlugin.PLUGIN_ID + ".spge0026";
