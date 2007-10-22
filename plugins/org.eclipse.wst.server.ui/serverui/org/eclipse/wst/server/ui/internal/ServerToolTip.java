@@ -176,28 +176,27 @@ public class ServerToolTip extends ToolTip {
 	}
 
 	private void loadExtensions() {
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading ServerToolTip extension point ->-");
-
-		// Search for extension points 
+		Trace.trace(Trace.EXTENSION_POINT, "->- Loading serverToolTip extension point ->-");
+		
+		// search for extension points 
 		IExtensionRegistry reg = Platform.getExtensionRegistry();
 		IConfigurationElement[] extensions = reg.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID + ".serverToolTip");
-			
+		
 		IServerType[] serverTypes = ServerCore.getServerTypes();
 		
 		for (int i=0; i < extensions.length; i++){			
 			IConfigurationElement exElement = extensions[i];
 			
-			// Sort the extensions based on ServerType
+			// Sort the extensions based on serverType
 			String exServerType = exElement.getAttribute("serverTypes");
 			
 			for (IServerType serverType : serverTypes) {
-				
 				if (exServerType.compareTo("*") == 0 || 
 						exServerType.startsWith(serverType.getId()) == true) {
 					try {
 						IServerToolTip exTooltip = (IServerToolTip) exElement.createExecutableExtension("class");
 						ArrayList<IServerToolTip> listOfProviders = new ArrayList<IServerToolTip>(); 
-						if (toolTipProviders.containsKey(serverType)){
+						if (toolTipProviders.containsKey(serverType)) {
 							listOfProviders = toolTipProviders.get(serverType);
 						}						
 						listOfProviders.add(exTooltip);
@@ -205,10 +204,9 @@ public class ServerToolTip extends ToolTip {
 					} catch (CoreException e){
 						Trace.trace(Trace.SEVERE, "Tooltip failed to load" + extensions[i].toString(), e);
 					}
-					Trace.trace(Trace.EXTENSION_POINT, "  Loaded startup: " + extensions[i].getAttribute("id"));
+					Trace.trace(Trace.EXTENSION_POINT, "  Loaded serverToolTip: " + extensions[i].getAttribute("id"));
 				}
 			}
-	
 		}
 	}
 
