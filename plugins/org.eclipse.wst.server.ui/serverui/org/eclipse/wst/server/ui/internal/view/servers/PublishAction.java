@@ -28,6 +28,7 @@ public class PublishAction extends AbstractServerAction {
 		setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_PUBLISH));
 		setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_PUBLISH));
 		setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_PUBLISH));
+		setActionDefinitionId("org.eclipse.wst.server.publish");
 		try {
 			selectionChanged((IStructuredSelection) selectionProvider.getSelection());
 		} catch (Exception e) {
@@ -35,21 +36,16 @@ public class PublishAction extends AbstractServerAction {
 		}
 	}
 
-	/**
-	 * Return true if this server can currently be acted on.
-	 * @return boolean
-	 * @param server org.eclipse.wst.server.core.IServer
-	 */
 	public boolean accept(IServer server) {
 		return server.canPublish().isOK();
 	}
 
-	/**
-	 * Perform action on this server.
-	 * @param server org.eclipse.wst.server.core.IServer
-	 */
 	public void perform(IServer server) {
-		if (!ServerUIPlugin.promptIfDirty(shell, server))
+		publish(server, shell);
+	}
+
+	public static void publish(IServer server, Shell shell) {
+		if (shell != null && !ServerUIPlugin.promptIfDirty(shell, server))
 			return;
 		
 		if (!ServerUIPlugin.saveEditors())

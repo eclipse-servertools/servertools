@@ -42,18 +42,21 @@ public class StartAction extends AbstractServerAction {
 			setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_START));
 			setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_START));
 			setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_START));
+			setActionDefinitionId("org.eclipse.wst.server.run");
 		} else if (launchMode == ILaunchManager.DEBUG_MODE) {
 			setToolTipText(Messages.actionDebugToolTip);
 			setText(Messages.actionDebug);
 			setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_START_DEBUG));
 			setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_START_DEBUG));
 			setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_START_DEBUG));
+			setActionDefinitionId("org.eclipse.wst.server.debug");
 		} else if (launchMode == ILaunchManager.PROFILE_MODE) {
 			setToolTipText(Messages.actionProfileToolTip);
 			setText(Messages.actionProfile);
 			setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_START_PROFILE));
 			setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_START_PROFILE));
 			setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_START_PROFILE));
+			setActionDefinitionId("org.eclipse.wst.server.profile");
 		}
 		try {
 			selectionChanged((IStructuredSelection) selectionProvider.getSelection());
@@ -142,6 +145,10 @@ public class StartAction extends AbstractServerAction {
 	 * @param server a server
 	 */
 	public void perform(IServer server) {
+		start(server, launchMode, shell);
+	}
+
+	public static void start(IServer server, String launchMode, Shell shell) {
 		if (server.getServerState() != IServer.STATE_STARTED) {
 			if (!ServerUIPlugin.saveEditors())
 				return;
@@ -167,7 +174,7 @@ public class StartAction extends AbstractServerAction {
 				Trace.trace(Trace.SEVERE, "Error starting server", e);
 			}
 		} else {
-			if (!ServerUIPlugin.promptIfDirty(shell, server))
+			if (shell != null && !ServerUIPlugin.promptIfDirty(shell, server))
 				return;
 			
 			try {

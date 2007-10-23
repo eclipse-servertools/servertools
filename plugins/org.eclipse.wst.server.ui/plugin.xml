@@ -361,23 +361,23 @@ M4 = Platform-specific fourth key
 -->
 <extension point="org.eclipse.ui.commands">
   <command
+    id="org.eclipse.wst.server.launchShortcut.debug"
     name="%actionDebugOnServer"
     description="%actionDebugOnServer"
     categoryId="org.eclipse.debug.ui.category.run"
-    id="org.eclipse.wst.server.launchShortcut.debug">
-  </command>
+    defaultHandler="org.eclipse.wst.server.ui.internal.view.servers.ServerActionHandler"/>
   <command
+    id="org.eclipse.wst.server.launchShortcut.run"
     name="%actionRunOnServer"
     description="%actionRunOnServer"
     categoryId="org.eclipse.debug.ui.category.run"
-    id="org.eclipse.wst.server.launchShortcut.run">
-  </command>
+    defaultHandler="org.eclipse.wst.server.ui.internal.view.servers.ServerActionHandler"/>
   <command
-    name="%actionProfileOnServer"
-    description="%actionProfileOnServer"
+    id="org.eclipse.wst.server.publish"
+    name="%actionPublish"
+    description="%actionPublish"
     categoryId="org.eclipse.debug.ui.category.run"
-    id="org.eclipse.wst.server.launchShortcut.profile">
-  </command>
+    defaultHandler="org.eclipse.wst.server.ui.internal.view.servers.ServerActionHandler"/>
 </extension>
 
 <extension point="org.eclipse.ui.bindings">
@@ -394,7 +394,7 @@ M4 = Platform-specific fourth key
   <key
     sequence="M3+M2+P R"
     contextId="org.eclipse.ui.globalScope"
-    commandId="org.eclipse.wst.server.launchShortcut.profile"
+    commandId="org.eclipse.wst.server.publish"
     schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 </extension>
 

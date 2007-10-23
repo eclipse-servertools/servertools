@@ -251,14 +251,18 @@ public class ServersView extends ViewPart {
 		actions = new Action[6];
 		// create the start actions
 		actions[0] = new StartAction(shell, provider, ILaunchManager.DEBUG_MODE);
+		actionBars.setGlobalActionHandler("org.eclipse.wst.server.debug", actions[0]);
 		actions[1] = new StartAction(shell, provider, ILaunchManager.RUN_MODE);
+		actionBars.setGlobalActionHandler("org.eclipse.wst.server.run", actions[1]);
 		actions[2] = new StartAction(shell, provider, ILaunchManager.PROFILE_MODE);
+		actionBars.setGlobalActionHandler("org.eclipse.wst.server.profile", actions[2]);
 		
 		// create the stop action
 		actions[3] = new StopAction(shell, provider);
 		
 		// create the publish actions
 		actions[4] = new PublishAction(shell, provider);
+		actionBars.setGlobalActionHandler("org.eclipse.wst.server.publish", actions[4]);
 		actions[5] = new PublishCleanAction(shell, provider);
 		
 		// create the open action
