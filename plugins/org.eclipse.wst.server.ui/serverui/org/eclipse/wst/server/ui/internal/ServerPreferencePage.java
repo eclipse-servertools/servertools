@@ -36,8 +36,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 
 	protected Button showOnActivity;
 
-	protected Button syncOnStartup;
-
 	protected Button autoPublishOnAction;
 	protected Button autoPublishLocal;
 	protected Spinner autoPublishLocalTime;
@@ -83,14 +81,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		showOnActivity.setLayoutData(data);
 		showOnActivity.setSelection(uiPreferences.getShowOnActivity());
 		whs.setHelp(showOnActivity, ContextIds.PREF_GENERAL_SHOW_ON_ACTIVITY);
-		
-		syncOnStartup = new Button(composite, SWT.CHECK);
-		syncOnStartup.setText(Messages.prefSyncStartup);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 3;
-		syncOnStartup.setLayoutData(data);
-		syncOnStartup.setSelection(preferences.isSyncOnStartup());
-		whs.setHelp(syncOnStartup, ContextIds.PREF_GENERAL_SYNC_STARTUP);
 		
 		autoPublishLocal = new Button(composite, SWT.CHECK);
 		autoPublishLocal.setText(Messages.prefAutoPublishLocal);
@@ -178,12 +168,10 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	protected void performDefaults() {
 		showOnActivity.setSelection(uiPreferences.getDefaultShowOnActivity());
 		
-		syncOnStartup.setSelection(preferences.getDefaultSyncOnStartup());
 		autoPublishLocal.setSelection(preferences.getDefaultAutoPublishLocal());
 		autoPublishLocalTime.setSelection(preferences.getDefaultAutoPublishLocalTime());
 		autoPublishRemote.setSelection(preferences.getDefaultAutoPublishRemote());
 		autoPublishRemoteTime.setSelection(preferences.getDefaultAutoPublishRemoteTime());
-		
 		
 		super.performDefaults();
 	}
@@ -192,7 +180,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
 	 */
 	public boolean performOk() {
-		preferences.setSyncOnStartup(syncOnStartup.getSelection());
 		uiPreferences.setShowOnActivity(showOnActivity.getSelection());
 		
 		preferences.setAutoPublishLocal(autoPublishLocal.getSelection());

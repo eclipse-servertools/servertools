@@ -235,8 +235,8 @@ public class Server extends Base implements IServer {
 		this.serverType = serverType;
 		map.put("server-type-id", serverType.getId());
 		map.put(PROP_HOSTNAME, "localhost");
-		map.put(PROP_START_TIMEOUT, ((ServerType)serverType).getStartTimeout() );
-		map.put(PROP_STOP_TIMEOUT, ((ServerType)serverType).getStopTimeout() );
+		map.put(PROP_START_TIMEOUT, ((ServerType)serverType).getStartTimeout());
+		map.put(PROP_STOP_TIMEOUT, ((ServerType)serverType).getStopTimeout());
 		if (runtime != null && runtime.getRuntimeType() != null) {
 			String name = runtime.getRuntimeType().getName();
 			map.put(PROP_NAME, name);

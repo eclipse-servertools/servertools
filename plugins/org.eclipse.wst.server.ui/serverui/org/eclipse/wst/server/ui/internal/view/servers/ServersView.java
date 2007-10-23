@@ -22,6 +22,7 @@ import org.eclipse.jface.bindings.TriggerSequence;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
+import org.eclipse.wst.server.core.internal.UpdateServerJob;
 import org.eclipse.wst.server.core.model.ServerDelegate;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.actions.NewServerWizardAction;
@@ -207,14 +208,35 @@ public class ServersView extends ViewPart {
 		
 		initDragAndDrop();
 		
-		// Init the tooltip
+		// init the tooltip
 		ServerToolTip toolTip;
 		toolTip = new ServerToolTip(treeTable);
 		toolTip.setShift(new Point(-5, -5));
-		// time is in miliseconds
-		toolTip.setPopupDelay(200);
+		toolTip.setPopupDelay(200); // in ms
 		toolTip.setHideOnMouseDown(true);
 		toolTip.activate();
+		
+		Thread thread = new Thread() {
+			public void run() {
+				try {
+					Thread.sleep(5000);
+				} catch (Exception e) {
+					// ignore
+				}
+				IServer[] servers = ServerCore.getServers();
+				int size = servers.length;
+				for (int i = 0; i < size; i++) {
+					IServer server = servers[i];
+					if (server.getServerType() != null && server.getServerState() == IServer.STATE_UNKNOWN) {
+						UpdateServerJob job = new UpdateServerJob(server);
+						job.schedule();
+					}
+				}
+			}
+		};
+		thread.setDaemon(true);
+		thread.setPriority(Thread.MIN_PRIORITY + 1);
+		thread.start();
 	}
 
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
@@ -329,7 +351,6 @@ public class ServersView extends ViewPart {
 		// open action
 		if (server != null && module == null) {
 			menu.add(openAction);
-			menu.add(new UpdateStatusAction(server));
 			
 			String text = Messages.actionShowIn;
 			final IWorkbench workbench = PlatformUI.getWorkbench();

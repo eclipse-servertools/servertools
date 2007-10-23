@@ -23,10 +23,6 @@ public class ServerPreferences {
 	private static final String PREF_AUTO_PUBLISH_REMOTE = "auto-publish-remote";
 	private static final String PREF_AUTO_PUBLISH_REMOTE_TIME = "auto-publish-remote-time";
 	
-	private static final String PREF_MACHINE_SPEED = "machine-speed";
-
-	private static final String PREF_SYNC_ON_STARTUP = "sync-on-startup";
-
 	private Preferences preferences;
 
 	protected static ServerPreferences instance;
@@ -97,65 +93,6 @@ public class ServerPreferences {
 	 */
 	public int getModuleStartTimeout() {
 		return preferences.getInt(PREF_MODULE_START_TIMEOUT);
-	}
-
-	/**
-	 * Return the relative machine speed index, from 1 to 9. A value of -1 means
-	 * no timeouts, and a value of 5 is an average machine. 1-4 are slower
-	 * machines and 6-9 are faster machines.
-	 * 
-	 * @return the relative speed
-	 */
-	public int getMachineSpeed() {
-		return preferences.getInt(PREF_MACHINE_SPEED);
-	}
-
-	/**
-	 * Return the default relative machine speed index, 5.
-	 * 
-	 * @return the default speed index
-	 */
-	public int getDefaultMachineSpeed() {
-		return 5;
-	}
-
-	/**
-	 * Sets the relative machine speed index, from 1 to 9. A value of -1 means
-	 * no timeouts, and a value of 5 is an average machine. 1-4 are slower
-	 * machines and 6-9 are faster machines.
-	 * 
-	 * @param speed the relative speed 
-	 */
-	public void setMachineSpeed(int speed) {
-		preferences.setValue(PREF_MACHINE_SPEED, speed);
-		ServerPlugin.getInstance().savePluginPreferences();
-	}
-
-	/**
-	 * Return the sync on startup value.
-	 * 
-	 * @return the sync on startup value
-	 */
-	public boolean isSyncOnStartup() {
-		return preferences.getBoolean(PREF_SYNC_ON_STARTUP);
-	}
-
-	/**
-	 * Return the default sync on startup value.
-	 * 
-	 * @return the default sync on startup value
-	 */
-	public boolean getDefaultSyncOnStartup() {
-		return false;
-	}
-
-	/**
-	 * Sets the sync on startup value.
-	 * 
-	 * @param sync the sync on startup value 
-	 */
-	public void setSyncOnStartup(boolean sync) {
-		preferences.setValue(PREF_SYNC_ON_STARTUP, sync);
 	}
 
 	/**
@@ -275,14 +212,11 @@ public class ServerPreferences {
 	 */
 	public void setDefaults() {
 		preferences.setDefault(PREF_AUTO_PUBLISH, isDefaultAutoPublishing());
-		preferences.setDefault(PREF_MACHINE_SPEED, getDefaultMachineSpeed());
 		
 		preferences.setDefault(PREF_AUTO_PUBLISH_LOCAL, getDefaultAutoPublishLocal());
 		preferences.setDefault(PREF_AUTO_PUBLISH_LOCAL_TIME, getDefaultAutoPublishLocalTime());
 		preferences.setDefault(PREF_AUTO_PUBLISH_REMOTE, getDefaultAutoPublishRemote());
 		preferences.setDefault(PREF_AUTO_PUBLISH_REMOTE_TIME, getDefaultAutoPublishRemoteTime());
-		
-		preferences.setDefault(PREF_SYNC_ON_STARTUP, getDefaultSyncOnStartup());
 		
 		preferences.setDefault(PREF_MODULE_START_TIMEOUT, 300001);
 		boolean save = false;

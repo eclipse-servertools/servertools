@@ -111,7 +111,6 @@ public class Messages extends NLS {
 	public static String prefRestartNever;
 	public static String prefRestartPrompt;
 	public static String prefShowOnActivity;
-	public static String prefSyncStartup;
 	public static String prefSaveEditors;
 	public static String prefSaveEditorsAlways;
 	public static String prefSaveEditorsNever;
@@ -148,7 +147,6 @@ public class Messages extends NLS {
 	public static String actionStopModule;
 	public static String actionStartModule;
 	public static String actionRestartModule;
-	public static String actionUpdateStatus;
 	public static String actionSwitchServerLocation;
 	public static String switchServerLocation;
 	public static String switchServerLocationMetadata;

@@ -49,45 +49,39 @@ import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.ui.IServerToolTip;
-
-
-
+/**
+ * 
+ */
 public class ServerToolTip extends ToolTip {	
 	protected Hashtable<String,ArrayList> toolTipProviders = new Hashtable<String,ArrayList>();	
 	protected static Shell CURRENT_TOOLTIP;
 	private Label hintLabel;
 	protected Server server;
 	protected Tree tree;
-	private int x;
-	private int y;
-		
+	protected int x;
+	protected int y;
 
 	public ServerToolTip(final Control control) {
 		super(control);
 		if (control instanceof Tree) {
 			tree =(Tree)control;
-		}		
+		}
 		
-		control.addMouseMoveListener(new MouseMoveListener(){
-
+		control.addMouseMoveListener(new MouseMoveListener() {
 			public void mouseMove(MouseEvent e) {
 				x=e.x;
 				y=e.y;
 			}
-			
 		});
 		
 		control.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent  e) {
-				if (e.keyCode == SWT.ESC){
-					System.out.println("[ESC]");
+				if (e.keyCode == SWT.ESC) {
 					CURRENT_TOOLTIP.setVisible(false);
 					CURRENT_TOOLTIP.dispose();
 					activate();
-					
 				}
-				if (e.keyCode == SWT.F3){
-					System.out.println("[F3]");
+				if (e.keyCode == SWT.F3) {
 					deactivate();
 					hide();
 					createFocusedTooltip(control);					
@@ -98,12 +92,10 @@ public class ServerToolTip extends ToolTip {
 			}
 		});
 		
-		
-		
 		loadExtensions();
 	}
 	
-	protected void createFocusedTooltip(final Control control){
+	protected void createFocusedTooltip(final Control control) {
 		final Shell stickyTooltip = new Shell(control.getShell(), SWT.ON_TOP | SWT.TOOL
 				| SWT.NO_FOCUS);
 		stickyTooltip.setLayout(new FillLayout());
@@ -129,8 +121,6 @@ public class ServerToolTip extends ToolTip {
 			}
 		});
 		CURRENT_TOOLTIP = stickyTooltip;
-		
-		
 	}
 
 //  read the createFocusedTooltip method for information on why this is commented out
@@ -154,7 +144,6 @@ public class ServerToolTip extends ToolTip {
 	}
 
 	protected Composite createToolTipContentArea(Event event, Composite parent) {
-		
 		Object o = tree.getItem(new Point(event.x,event.y));
 		if (o == null) {
 			hide();
@@ -212,7 +201,6 @@ public class ServerToolTip extends ToolTip {
 			
 		return parent;
 	}
-	
 
 	protected void parseText(String htmlText,StyledText sText){	
 		TextPresentation presentation = new TextPresentation();
@@ -292,6 +280,5 @@ public class ServerToolTip extends ToolTip {
 //			
 //		}
 //		
-//	}
-	
+//	}	
 }
