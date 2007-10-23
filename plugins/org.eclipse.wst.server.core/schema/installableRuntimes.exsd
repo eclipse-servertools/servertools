@@ -13,7 +13,8 @@
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="installableRuntime" minOccurs="1" maxOccurs="unbounded"/>
+            <element ref="installableRuntime" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="runtime" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -42,7 +43,7 @@
    <element name="installableRuntime">
       <annotation>
          <appInfo>
-            <meta.element labelAttribute="name"/>
+            <meta.element labelAttribute="name" deprecated="true"/>
          </appInfo>
       </annotation>
       <complexType>
@@ -79,6 +80,9 @@
                <documentation>
                   the id of the bundle in which the runtime zip is in
                </documentation>
+               <appInfo>
+                  <meta.attribute deprecated="true"/>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="bundleVersion" type="string">
@@ -86,12 +90,56 @@
                <documentation>
                   the optional version of the bundle in which the runtime zip is in
                </documentation>
+               <appInfo>
+                  <meta.attribute deprecated="true"/>
+               </appInfo>
             </annotation>
          </attribute>
-         <attribute name="path" type="string" use="required">
+         <attribute name="path" type="string">
             <annotation>
                <documentation>
                   if bundleId is specified then represents the relative path of the runtime zip inside the bundle, otherwise it assumes a relative path of the runtime archive inside the feature directory
+               </documentation>
+               <appInfo>
+                  <meta.attribute deprecated="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="runtime">
+      <annotation>
+         <appInfo>
+            <meta.element labelAttribute="id"/>
+         </appInfo>
+      </annotation>
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  specifies a unique identifier for this extension point
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="url" type="string" use="required">
+            <annotation>
+               <documentation>
+                  a URL to the runtime download
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="licenseUrl" type="string">
+            <annotation>
+               <documentation>
+                  a URL to the runtime license
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="platform" type="string">
+            <annotation>
+               <documentation>
+                  
                </documentation>
             </annotation>
          </attribute>

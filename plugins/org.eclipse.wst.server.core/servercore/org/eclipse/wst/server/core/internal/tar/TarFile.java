@@ -8,7 +8,7 @@
  * Contributors:
  * IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.ui.internal.downloadableRuntime;
+package org.eclipse.wst.server.core.internal.tar;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,8 +20,9 @@ import java.util.zip.GZIPInputStream;
  * Reads a .tar or .tar.gz archive file, providing an index enumeration
  * and allows for accessing an InputStream for arbitrary files in the
  * archive.
- * 
- * @since 3.1
+ * <p>
+ * Copied from org.eclipse.ui.internal.wizards.datatransfer.
+ * </p>
  */
 public class TarFile {
 	private File file;

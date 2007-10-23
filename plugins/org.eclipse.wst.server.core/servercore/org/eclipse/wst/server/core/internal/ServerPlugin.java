@@ -1060,7 +1060,12 @@ public class ServerPlugin extends Plugin {
 		List<IInstallableRuntime> list = new ArrayList<IInstallableRuntime>(size);
 		for (int i = 0; i < size; i++) {
 			try {
-				list.add(new InstallableRuntime(cf[i]));
+				if ("runtime".equals(cf[i].getName())) {
+					String platform = cf[i].getAttribute("platform");
+					//if (platform == null || Swt.g) TODO
+						list.add(new InstallableRuntime2(cf[i]));
+				} else
+					list.add(new InstallableRuntime(cf[i]));
 				Trace.trace(Trace.EXTENSION_POINT, "  Loaded installableRuntime: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load installableRuntime: " + cf[i].getAttribute("id"), t);

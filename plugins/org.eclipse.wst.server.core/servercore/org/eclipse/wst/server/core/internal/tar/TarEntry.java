@@ -8,15 +8,14 @@
  * Contributors:
  * IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.ui.internal.downloadableRuntime;
-
+package org.eclipse.wst.server.core.internal.tar;
 /**
  * Representation of a file in a tar archive.
- * 
- * @since 3.1
+ * <p>
+ * Copied from org.eclipse.ui.internal.wizards.datatransfer.
+ * </p>
  */
-public class TarEntry implements Cloneable
-{	
+public class TarEntry implements Cloneable {
 	private String name;
 	private long mode, time, size;
 	private int type;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,21 +8,20 @@
  * Contributors:
  * IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.ui.internal.downloadableRuntime;
+package org.eclipse.wst.server.core.internal.tar;
 
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 /**
  * Input stream for reading files in ustar format (tar) compatible
  * with the specification in IEEE Std 1003.1-2001.  Also supports
  * long filenames encoded using the GNU @LongLink extension.
- * 
- * @since 3.1
+ * <p>
+ * Copied from org.eclipse.ui.internal.wizards.datatransfer.
+ * </p>
  */
-public class TarInputStream extends FilterInputStream
-{
+public class TarInputStream extends FilterInputStream {
 	private int nextEntry = 0;
 	private int nextEOF = 0;
 	private int filepos = 0;
@@ -243,7 +242,7 @@ public class TarInputStream extends FilterInputStream
 			long fileMode = Long.decode(mode.toString()).longValue();
 			entry.setMode(fileMode);
 		} catch(NumberFormatException nfe) { // TODO
-			throw new TarException("TarImport_invalid_tar_format", nfe);
+			throw new TarException("TarImport_invalid_tar_format" + nfe);
 		}
 		
 		pos = 100 + 24;
@@ -264,7 +263,7 @@ public class TarInputStream extends FilterInputStream
 		try {
 			fileSize = Integer.decode(size.toString()).intValue();
 		} catch(NumberFormatException nfe) { // TODO
-			throw new TarException("DataTransferMessages.TarImport_invalid_tar_format", nfe);
+			throw new TarException("DataTransferMessages.TarImport_invalid_tar_format" + nfe);
 		}
 
 		entry.setSize(fileSize);
