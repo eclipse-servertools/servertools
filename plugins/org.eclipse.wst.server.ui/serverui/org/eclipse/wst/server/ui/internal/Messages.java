@@ -71,6 +71,7 @@ public class Messages extends NLS {
 	public static String propServerInfoType;
 	public static String propServerInfoVendor;
 	public static String toolTipEnableFocus;
+	public static String toolTipDisableFocus;
 	public static String errorCouldNotSavePreference;
 	public static String preferenceRuntimesDescription;
 	public static String add;
@@ -115,13 +116,6 @@ public class Messages extends NLS {
 	public static String prefSaveEditorsAlways;
 	public static String prefSaveEditorsNever;
 	public static String prefSaveEditorsPrompt;
-	public static String prefMachineSpeed;
-	public static String prefMachineSpeedUnlimited;
-	public static String prefMachineSpeedVerySlow;
-	public static String prefMachineSpeedSlow;
-	public static String prefMachineSpeedAverage;
-	public static String prefMachineSpeedFast;
-	public static String prefMachineSpeedVeryFast;
 	public static String actionNew;
 	public static String actionNewServer;
 	public static String actionProperties;
@@ -298,6 +292,11 @@ public class Messages extends NLS {
 	public static String serverEditorOverviewAutoPublishOverrideInterval;
 	public static String serverEditorOverviewAutoPublishCommand;
 	public static String serverEditorOverviewAutoPublishInvalid;
+	public static String serverEditorOverviewTimeoutSection;
+	public static String serverEditorOverviewTimeoutDescription;	
+	public static String serverEditorOverviewTimeoutCommand;	
+	public static String serverEditorOverviewStartTimeout;	
+	public static String serverEditorOverviewStopTimeout;
 	public static String serverEditorOverviewServerHostnameCommand;
 	public static String serverEditorOverviewServerNameCommand;
 	public static String serverEditorOverviewRuntimeCommand;

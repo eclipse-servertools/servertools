@@ -12,14 +12,12 @@ package org.eclipse.wst.server.ui.internal;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.wst.server.core.internal.ServerPreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -28,6 +26,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
+import org.eclipse.wst.server.core.internal.ServerPreferences;
 /**
  * The preference page that holds server properties.
  */
@@ -44,8 +43,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	protected Spinner autoPublishLocalTime;
 	protected Button autoPublishRemote;
 	protected Spinner autoPublishRemoteTime;
-
-	protected Combo machineSpeedCombo;
 
 	/**
 	 * ServerPreferencesPage constructor comment.
@@ -161,34 +158,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 			}
 		});
 		
-		Label label = new Label(composite, SWT.NONE);
-		data = new GridData();
-		data.horizontalSpan = 3;
-		label.setLayoutData(data);
-		
-		label = new Label(composite, SWT.NONE);
-		label.setText(Messages.prefMachineSpeed);
-		
-		machineSpeedCombo = new Combo(composite, SWT.READ_ONLY);
-		String[] items = new String[] {
-			Messages.prefMachineSpeedUnlimited,
-			Messages.prefMachineSpeedVerySlow,
-			Messages.prefMachineSpeedSlow,
-			Messages.prefMachineSpeedAverage,
-			Messages.prefMachineSpeedFast,
-			Messages.prefMachineSpeedVeryFast
-		};
-		machineSpeedCombo.setItems(items);
-		int speed = preferences.getMachineSpeed();
-		if (speed < 0)
-			machineSpeedCombo.select(0);
-		else
-			machineSpeedCombo.select((speed - 1) / 2 + 1);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		data.horizontalSpan = 2;
-		machineSpeedCombo.setLayoutData(data);
-		whs.setHelp(machineSpeedCombo, ContextIds.PREF_GENERAL_TIMEOUT_DELAY);
-		
 		Dialog.applyDialogFont(composite);
 		
 		return composite;
@@ -215,7 +184,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		autoPublishRemote.setSelection(preferences.getDefaultAutoPublishRemote());
 		autoPublishRemoteTime.setSelection(preferences.getDefaultAutoPublishRemoteTime());
 		
-		machineSpeedCombo.select((preferences.getDefaultMachineSpeed() - 1) / 2 + 1);
 		
 		super.performDefaults();
 	}
@@ -232,12 +200,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		preferences.setAutoPublishRemote(autoPublishRemote.getSelection());
 		preferences.setAutoPublishRemoteTime(autoPublishRemoteTime.getSelection());
 		
-		int speed = machineSpeedCombo.getSelectionIndex();
-		if (speed == 0)
-			speed = -1;
-		else
-			speed = (speed - 1) * 2 + 1;
-		preferences.setMachineSpeed(speed);
 		
 		return true;
 	}

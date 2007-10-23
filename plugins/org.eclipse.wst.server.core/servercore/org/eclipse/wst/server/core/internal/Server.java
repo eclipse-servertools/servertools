@@ -70,6 +70,8 @@ public class Server extends Base implements IServer {
 	protected static final String PROP_ENABLED_OPTIONAL_TASKS = "enabled-optional-publish-tasks";
 	public static final String PROP_AUTO_PUBLISH_TIME = "auto-publish-time";
 	public static final String PROP_AUTO_PUBLISH_SETTING = "auto-publish-setting";
+	public static final String PROP_START_TIMEOUT = "start-timeout";
+	public static final String PROP_STOP_TIMEOUT = "stop-timeout";	
 
 	protected static final char[] INVALID_CHARS = new char[] {'\\', '/', ':', '*', '?', '"', '<', '>', '|', '\0', '@', '&'};
 
@@ -233,6 +235,8 @@ public class Server extends Base implements IServer {
 		this.serverType = serverType;
 		map.put("server-type-id", serverType.getId());
 		map.put(PROP_HOSTNAME, "localhost");
+		map.put(PROP_START_TIMEOUT, ((ServerType)serverType).getStartTimeout() );
+		map.put(PROP_STOP_TIMEOUT, ((ServerType)serverType).getStopTimeout() );
 		if (runtime != null && runtime.getRuntimeType() != null) {
 			String name = runtime.getRuntimeType().getName();
 			map.put(PROP_NAME, name);
@@ -352,6 +356,15 @@ public class Server extends Base implements IServer {
 	public int getAutoPublishSetting() {
 		return getAttribute(PROP_AUTO_PUBLISH_SETTING, AUTO_PUBLISH_DEFAULT);
 	}
+	
+	public int getStartTimeoutSetting() {
+		return getAttribute(PROP_START_TIMEOUT, ((ServerType)getServerType()).getStartTimeout());
+	}
+	
+	public int getStopTimoutSetting() {
+		return getAttribute(PROP_STOP_TIMEOUT, ((ServerType)getServerType()).getStopTimeout());
+	}
+	
 
 	/**
     * Returns a list of id (String) of preferred publish operations that will not be run
@@ -1537,7 +1550,7 @@ public class Server extends Base implements IServer {
 		addServerListener(listener);
 		
 		// add timeout thread
-		final int serverTimeout = ((ServerType) getServerType()).getStartTimeout();
+		final int serverTimeout = getStartTimeoutSetting();
 		if (serverTimeout > 0) {
 			Thread thread = new Thread("Server start timeout") {
 				public void run() {
@@ -1846,7 +1859,7 @@ public class Server extends Base implements IServer {
 		operation.listener = listener;
 		addServerListener(listener);
 		
-		final int serverTimeout = ((ServerType) getServerType()).getStopTimeout();
+		final int serverTimeout = getStopTimoutSetting();
 		if (serverTimeout > 0) {
 			Thread thread = new Thread("Server stop timeout") {
 				public void run() {

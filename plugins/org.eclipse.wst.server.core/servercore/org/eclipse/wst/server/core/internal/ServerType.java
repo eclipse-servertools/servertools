@@ -29,8 +29,6 @@ import org.eclipse.wst.server.core.model.ServerDelegate;
  */
 public class ServerType implements IServerType {
 	private static final int DEFAULT_TIMEOUT = 1000 * 60 * 4; // 4 minutes
-	private static final float[] SERVER_TIMEOUTS =
-		new float[] { 4f, 3f, 2f, 1.5f, 1f, 0.75f, 0.5f, 0.35f, 0.25f };
 	private IConfigurationElement element;
 
 	/**
@@ -301,15 +299,11 @@ public class ServerType implements IServerType {
 	 * Return the timeout (in ms) that should be used to wait for the server to start.
 	 * The default is 2 minutes.
 	 * 
-	 * @return the server startup timeout, or -1 if there is no timeout
+	 * @return the server startup timeout
 	 */
 	public int getStartTimeout() {
 		try {
-			int i = Integer.parseInt(element.getAttribute("startTimeout"));
-			int s = ServerPreferences.getInstance().getMachineSpeed();
-			if (s < 0)
-				return -1;
-			return (int) (i * SERVER_TIMEOUTS[s-1]);
+			return Integer.parseInt(element.getAttribute("startTimeout"));
 		} catch (NumberFormatException e) {
 			// ignore
 		}
@@ -320,15 +314,11 @@ public class ServerType implements IServerType {
 	 * Return the timeout (in ms) to wait before assuming that the server
 	 * has failed to stop. The default is 2 minutes.
 	 * 
-	 * @return the server shutdown timeout, or -1 if there is no timeout
+	 * @return the server shutdown timeout
 	 */
 	public int getStopTimeout() {
 		try {
-			int i = Integer.parseInt(element.getAttribute("stopTimeout"));
-			int s = ServerPreferences.getInstance().getMachineSpeed();
-			if (s < 0)
-				return -1;
-			return (int) (i * SERVER_TIMEOUTS[s-1]);
+			return Integer.parseInt(element.getAttribute("stopTimeout"));
 		} catch (NumberFormatException e) {
 			// ignore
 		}

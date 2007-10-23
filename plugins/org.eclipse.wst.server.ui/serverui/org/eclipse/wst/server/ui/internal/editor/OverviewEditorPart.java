@@ -87,6 +87,8 @@ public class OverviewEditorPart extends ServerEditorPart {
 	protected Button autoPublishDisable;
 	protected Button autoPublishOverride;
 	protected Spinner autoPublishTime;
+	protected Spinner startTimeoutSpinner;
+	protected Spinner stopTimeoutSpinner;
 
 	protected boolean updating;
 
@@ -238,6 +240,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 		rightColumnComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 		
 		createAutoPublishSection(rightColumnComp, toolkit);
+		createTimeoutSection(rightColumnComp, toolkit);
 		
 		insertSections(rightColumnComp, "org.eclipse.wst.server.editor.overview.right");
 		
@@ -642,6 +645,108 @@ public class OverviewEditorPart extends ServerEditorPart {
 				}
 			});
 		}
+	}
+	
+	protected void createTimeoutSection(Composite rightColumnComp, FormToolkit toolkit) {
+		Section section = toolkit.createSection(rightColumnComp, ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
+		section.setText(Messages.serverEditorOverviewTimeoutSection);
+		section.setDescription(Messages.serverEditorOverviewTimeoutDescription);
+		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
+
+		Composite composite = toolkit.createComposite(section);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 4;
+		layout.marginHeight = 5;
+		layout.marginWidth = 10;
+		layout.verticalSpacing = 5;
+		layout.horizontalSpacing = 15;
+		composite.setLayout(layout);
+		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
+		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
+		whs.setHelp(composite, ContextIds.EDITOR_OVERVIEW_PAGE);
+		toolkit.paintBordersFor(composite);
+		section.setClient(composite);
+
+		//	 timeouts
+		if (server != null) {
+			final Server svr = (Server) server;
+			
+			// start timeout label
+			final Label startTimeoutLabel = toolkit.createLabel(composite, Messages.serverEditorOverviewStartTimeout);
+			GridData data = new GridData();
+			data.horizontalIndent = 20;
+			startTimeoutLabel.setLayoutData(data);			
+			
+			startTimeoutSpinner = new Spinner(composite, SWT.BORDER);
+			startTimeoutSpinner.setEnabled(true);
+			startTimeoutSpinner.setMinimum(0);
+			startTimeoutSpinner.setMaximum(1000*60*30); // 30 minutes
+			startTimeoutSpinner.setSelection(svr.getStartTimeoutSetting());
+			setSpinnerTooltip(startTimeoutSpinner);
+			data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+			data.widthHint = 60;
+			startTimeoutSpinner.setLayoutData(data);
+
+			// stop timeout label
+			final Label stopTimeoutLabel = toolkit.createLabel(composite, Messages.serverEditorOverviewStopTimeout);
+			data = new GridData();
+			data.horizontalIndent = 20;
+			stopTimeoutLabel.setLayoutData(data);			
+			
+			stopTimeoutSpinner = new Spinner(composite, SWT.BORDER);
+			stopTimeoutSpinner.setEnabled(true);
+			stopTimeoutSpinner.setMinimum(0);
+			stopTimeoutSpinner.setMaximum(1000*60*30); // 30 minutes
+			stopTimeoutSpinner.setSelection(svr.getStopTimoutSetting());
+			setSpinnerTooltip(stopTimeoutSpinner);
+			data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+			data.widthHint = 60;
+			stopTimeoutSpinner.setLayoutData(data);
+			
+			startTimeoutSpinner.addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					if (updating)
+						return;
+					updating = true;
+					try {
+						setSpinnerTooltip(startTimeoutSpinner);
+						execute(new SetServerStartTimeoutCommand(getServer(), startTimeoutSpinner.getSelection()));
+					} catch (Exception ex) {
+						// ignore
+					}
+					updating = false;
+					validate();
+				}
+			});
+			stopTimeoutSpinner.addModifyListener(new ModifyListener(){
+				public void modifyText(ModifyEvent e) {
+					if (updating)
+						return;
+					updating = true;
+					try {
+						setSpinnerTooltip(stopTimeoutSpinner);
+						execute(new SetServerStopTimeoutCommand(getServer(), stopTimeoutSpinner.getSelection()));
+					} catch (Exception ex) {
+						// ignore
+					}
+					updating = false;
+					validate();			
+				}
+			});
+		}
+	}
+
+	protected void setSpinnerTooltip(Spinner spinner) {
+		float miliSeconds = new Float(spinner.getSelection()).floatValue();		
+		float seconds = miliSeconds / 1000f;
+		
+		if (seconds < 60) {
+			spinner.setToolTipText(  seconds +" seconds");
+			return;
+		}
+		
+		int minutes = new Float(seconds).intValue() / 60;		
+		spinner.setToolTipText(  minutes +" minutes");		
 	}
 
 	protected void editRuntime(IRuntime runtime) {

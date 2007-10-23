@@ -228,6 +228,14 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		setAttribute(PROP_AUTO_PUBLISH_TIME, p);
 	}
 
+	public void setStartTimeout(int p) {
+		setAttribute(PROP_START_TIMEOUT, p);
+	}
+
+	public void setStopTimeout(int p) {
+		setAttribute(PROP_STOP_TIMEOUT, p);
+	}
+
 	public void setAutoPublishSetting(int s) {
 		setAttribute(PROP_AUTO_PUBLISH_SETTING, s);
 	}
