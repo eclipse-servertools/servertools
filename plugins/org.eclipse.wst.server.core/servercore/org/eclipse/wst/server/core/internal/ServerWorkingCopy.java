@@ -198,7 +198,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	public void setName(String name) {
 		setAttribute(PROP_NAME, name);
 		boolean set = getAttribute(PROP_ID_SET, false);
-		if (runtime == null && !set)
+		if (server == null && !set)
 			setAttribute(PROP_ID, name);
 	}
 
@@ -733,6 +733,18 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		if (server != null)
 			return server.getExternalModules();
 		return super.getExternalModules();
+	}
+
+	/*
+	 * Break connection with the original server so that this working copy can
+	 * be duplicated. The name *must* be set afterwards to change the id. 
+	 */
+	public void disassociate() {
+		server = null;
+		if (getAttribute(PROP_LOCKED, false))
+			setAttribute(PROP_LOCKED, false);
+		if (getAttribute(PROP_ID_SET, false))
+			setAttribute(PROP_ID_SET, false);
 	}
 
 	public String toString() {

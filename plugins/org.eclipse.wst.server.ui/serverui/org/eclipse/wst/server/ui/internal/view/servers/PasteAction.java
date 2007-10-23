@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.dnd.Clipboard;
@@ -20,12 +20,15 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.SelectionProviderAction;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerWorkingCopy;
+import org.eclipse.wst.server.core.ServerUtil;
+import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
 import org.eclipse.wst.server.ui.internal.Messages;
+import org.eclipse.wst.server.ui.internal.Trace;
 /**
  * "Paste" menu action.
  */
 public class PasteAction extends SelectionProviderAction {
-	private Shell shell;
 	private Clipboard clipboard;
 
 	/**
@@ -42,7 +45,6 @@ public class PasteAction extends SelectionProviderAction {
 		setDisabledImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE_DISABLED));
 		setActionDefinitionId(IWorkbenchActionDefinitionIds.PASTE);
 		
-		this.shell = shell;
 		this.clipboard = clipboard;
 		//setEnabled(false);
 	}
@@ -65,8 +67,21 @@ public class PasteAction extends SelectionProviderAction {
 		ServerTransfer serverTransfer = ServerTransfer.getInstance();
 		IServer[] servers = (IServer[]) clipboard.getContents(serverTransfer);
 		
+		if (servers == null)
+			return;
+		
 		int size = servers.length;
-		System.err.println("Servers transferred! " + size);
-		MessageDialog.openInformation(shell, "Server Paste", "Paste support coming shortly");
+		for (int i = 0; i < size; i++) {
+			try {
+				IServerWorkingCopy wc = servers[i].createWorkingCopy();
+				((ServerWorkingCopy)wc).disassociate();
+				wc.setName("Temp"); // sets the name from the current one so that the
+						// default name generation will work
+				ServerUtil.setServerDefaultName(wc);
+				wc.save(false, null);
+			} catch (CoreException ce) {
+				Trace.trace(Trace.SEVERE, "Failure to copy server", ce);
+			}
+		}
 	}
 }
