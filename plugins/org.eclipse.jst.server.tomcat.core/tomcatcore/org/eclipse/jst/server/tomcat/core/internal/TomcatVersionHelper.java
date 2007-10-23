@@ -862,7 +862,6 @@ public class TomcatVersionHelper {
 	 * 
 	 * @param baseDir directory where the Catalina instance is found
 	 * @param noPath true if path attribute should be removed from the context
-	 * @param serverStopped true if the server is stopped
 	 * @param monitor a progress monitor
 	 * @return result of operation
 	 */

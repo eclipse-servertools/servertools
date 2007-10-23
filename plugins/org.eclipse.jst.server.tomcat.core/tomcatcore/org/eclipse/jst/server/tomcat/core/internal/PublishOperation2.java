@@ -145,9 +145,11 @@ public class PublishOperation2 extends PublishOperation {
 	 * @throws CoreException
 	 */
 	protected static void throwException(List status) throws CoreException {
+		if (status == null)
+			status = new ArrayList();
+		
 		if (status == null || status.size() == 0)
 			return;
-		
 		if (status.size() == 1) {
 			IStatus status2 = (IStatus) status.get(0);
 			throw new CoreException(status2);
