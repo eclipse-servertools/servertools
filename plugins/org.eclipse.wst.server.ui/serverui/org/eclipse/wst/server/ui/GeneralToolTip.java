@@ -28,7 +28,6 @@ public class GeneralToolTip implements IServerToolTip {
 			s += server.getRuntime().getName() + " - ";
 		s += server.getModules().length + " modules";
 		text.setText(s);
-		text.setCapture(true);
 		
 		return parent;
 	}

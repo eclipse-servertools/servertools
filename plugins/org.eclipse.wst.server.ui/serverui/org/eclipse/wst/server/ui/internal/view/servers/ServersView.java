@@ -212,8 +212,8 @@ public class ServersView extends ViewPart {
 		toolTip = new ServerToolTip(treeTable);
 		toolTip.setShift(new Point(-5, -5));
 		// time is in miliseconds
-		toolTip.setPopupDelay(100);
-		toolTip.setHideOnMouseDown(false);
+		toolTip.setPopupDelay(200);
+		toolTip.setHideOnMouseDown(true);
 		toolTip.activate();
 	}
 
