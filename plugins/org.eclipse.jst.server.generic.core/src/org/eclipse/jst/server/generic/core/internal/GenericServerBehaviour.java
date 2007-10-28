@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugPlugin;
@@ -34,9 +33,7 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
 import org.eclipse.jst.server.generic.servertype.definition.ArgumentPair;
-import org.eclipse.jst.server.generic.servertype.definition.Classpath;
 import org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.osgi.util.NLS;
@@ -49,14 +46,15 @@ import org.eclipse.wst.server.core.model.ServerDelegate;
 import org.eclipse.wst.server.core.util.SocketUtil;
 
 /**
- * Server behaviour delegate implementation for generic server.
+ * Server behavior delegate implementation for generic server.
  *
  * @author Gorkem Ercan
  */
 public class GenericServerBehaviour extends ServerBehaviourDelegate {
 	
-	private static final String ATTR_STOP = "stop-server"; //$NON-NLS-1$
-    
+	public static final String ATTR_STOP = "stop-server"; //$NON-NLS-1$
+	public static final String ATTR_SERVER_ID = "server-id"; //$NON-NLS-1$
+	
 	// the thread used to ping the server to check for startup
 	protected transient PingThread ping;
     protected transient IDebugEventSetListener processListener;
@@ -184,7 +182,8 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 			wc.setAttribute(IDebugUIConstants.ATTR_PRIVATE, true);		
 			// Set the stop attribute so that we know we are stopping
 			wc.setAttribute(ATTR_STOP, "true"); //$NON-NLS-1$
-			
+			// Set the server ID so that we can distinguish stops
+			wc.setAttribute( ATTR_SERVER_ID, this.getServer().getId());
 			// Setup the launch config for stopping the server
 			setupStopLaunchConfiguration(runtime, wc);
 			
