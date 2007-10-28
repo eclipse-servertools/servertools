@@ -176,6 +176,9 @@ public class ModulePackager {
 	public void pack(File directory, String root) throws CoreException, IOException
 	{
         File[] files = directory.listFiles();
+        if ( files == null ){
+        	return;
+        }
         for( int i = 0; i < files.length; i++ )
         {
         	String relativeFolder = makeRelative( files[i].getAbsolutePath(), root );
