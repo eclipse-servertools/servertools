@@ -5,7 +5,6 @@ package org.eclipse.jst.server.generic.ui.internal.editor;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.AbstractOperation;
 import org.eclipse.core.runtime.IAdaptable;
@@ -44,6 +43,8 @@ public class UpdateServerPropertyOperation extends AbstractOperation {
 		return new Status(IStatus.ERROR,GenericUiPlugin.PLUGIN_ID,0,"Property does not exist",null);
 	}
 
+	
+	
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		return execute(monitor,info);
 	}

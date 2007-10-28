@@ -8,11 +8,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.core.ILaunchesListener2;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
+import org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour;
 import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.Property;
 import org.eclipse.jst.server.generic.ui.internal.GenericServerUIMessages;
+import org.eclipse.jst.server.generic.ui.internal.GenericUiPlugin;
 import org.eclipse.jst.server.generic.ui.internal.SWTUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -33,12 +44,15 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.wst.server.ui.editor.ServerEditorSection;
 
 public class ServerPropertiesEditorSection extends ServerEditorSection{
+	private static final String MESSAGE_ID_SERVER_RUNNING = "server_running"; //$NON-NLS-1$
 	private GenericServer fServer;
 	private PropertyChangeListener fPropertyChangeListener;
+	private ILaunchesListener2 fLaunchListener;
 	private Map fControls = new HashMap();
     private boolean fUpdating;
+   
     
-	public void init(IEditorSite site, IEditorInput input) {
+	public void init(final IEditorSite site, IEditorInput input) {
 		super.init(site, input);
 		if(server!=null){
 			fServer = (GenericServer)server.loadAdapter(GenericServer.class, new NullProgressMonitor());
@@ -57,6 +71,80 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 			}
 		};
 		server.addPropertyChangeListener( fPropertyChangeListener );
+		fLaunchListener = new ILaunchesListener2() {
+		
+			public void launchesRemoved(ILaunch[] launches) {
+			}
+			
+			private ILaunchConfiguration getServerLaunchConfig(ILaunch[] launches){
+				for (int i=0; i< launches.length; i++)
+				{
+					ILaunchConfiguration launchConfig = launches[i].getLaunchConfiguration();
+						if (launchConfig != null) {
+							String serverId;
+							try {
+								serverId = launchConfig.getAttribute( GenericServerBehaviour.ATTR_SERVER_ID, (String) null);
+								if (fServer.getServer().getId().equals(serverId)) {
+									return launchConfig;
+							}
+							} catch (CoreException e) {
+							}
+
+						}
+				}
+				return null;
+
+			}
+			public void launchesChanged(ILaunch[] launches) {		
+			}
+		
+			public void launchesAdded(ILaunch[] launches) {
+				ILaunchConfiguration lc = getServerLaunchConfig(launches);
+				try {
+					if( lc  != null){
+						if ("true".equals(lc.getAttribute(GenericServerBehaviour.ATTR_STOP, "false"))){ //$NON-NLS-1$ //$NON-NLS-2$						
+						site.getWorkbenchWindow().getWorkbench().getDisplay().asyncExec( new Runnable() {						
+								public void run() {
+									getManagedForm().getMessageManager().removeMessage(MESSAGE_ID_SERVER_RUNNING);
+									getManagedForm().getMessageManager().update();
+							
+								}
+							
+							});
+						}
+						else{
+							site.getWorkbenchWindow().getWorkbench().getDisplay().asyncExec( new Runnable() {						
+								public void run() {
+									getManagedForm().getMessageManager().addMessage(MESSAGE_ID_SERVER_RUNNING,GenericServerUIMessages.serverRunningCanNotSave , null, IMessageProvider.WARNING);
+							
+								}
+							
+							});
+							
+						}
+					}
+				} catch (CoreException e) {
+					GenericUiPlugin.getDefault().getLog().log(e.getStatus());
+				}					
+			}
+		
+			public void launchesTerminated(ILaunch[] launches) {
+				if(getServerLaunchConfig(launches) != null )
+				{
+					site.getWorkbenchWindow().getWorkbench().getDisplay().asyncExec( new Runnable() {
+						
+						public void run() {
+							getManagedForm().getMessageManager().removeMessage(MESSAGE_ID_SERVER_RUNNING);
+						}			
+					});
+				}					
+					
+			}
+		
+		};
+		
+		getLaunchManager().addLaunchListener(fLaunchListener);
+		
 	}
     
 	protected void updateControls() {
@@ -114,6 +202,11 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 
 		formToolkit.paintBordersFor(composite);
 		section.setClient(composite);
+	
+		
+		if ( getExistingLaunch() != null ){
+			getManagedForm().getMessageManager().addMessage(MESSAGE_ID_SERVER_RUNNING,GenericServerUIMessages.serverRunningCanNotSave , null, IMessageProvider.WARNING);
+		}
 	}
 	
 	private void executeUpdateOperation(String propertyName, String propertyValue)
@@ -226,6 +319,52 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 	    super.dispose();
         if( server!= null )
             server.removePropertyChangeListener( fPropertyChangeListener );
+       
+        getLaunchManager().removeLaunchListener( fLaunchListener );
 	}
 	
+	
+	public ILaunch getExistingLaunch() {
+		ILaunchManager launchManager = getLaunchManager();
+		
+		ILaunch[] launches = launchManager.getLaunches();
+		int size = launches.length;
+		for (int i = 0; i < size; i++) {
+			ILaunchConfiguration launchConfig = launches[i].getLaunchConfiguration();
+			try {
+				if (launchConfig != null) {
+					String serverId = launchConfig.getAttribute(GenericServerBehaviour.ATTR_SERVER_ID, (String) null);
+					if (fServer.getServer().getId().equals(serverId)) {
+						if (!launches[i].isTerminated())
+							return launches[i];
+					}
+				}
+			} catch (CoreException e) {
+				// ignore
+			}
+		}		
+		return null;
+	}
+
+	private ILaunchManager getLaunchManager() {
+		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
+		return launchManager;
+	}
+	
+	private IStatus validate(){
+		if (getExistingLaunch() != null){
+			return new Status(IStatus.WARNING,GenericUiPlugin.PLUGIN_ID, GenericServerUIMessages.serverRunningCanNotSave); //$NON-NLS-1$
+			}
+		return null;
+
+	}
+	
+	public IStatus[] getSaveStatus() {
+		IStatus status = validate();
+		if (status != null ){
+			IStatus[] statusArray = {status};
+			return statusArray;
+		}
+		return super.getSaveStatus();
+	}
 }
