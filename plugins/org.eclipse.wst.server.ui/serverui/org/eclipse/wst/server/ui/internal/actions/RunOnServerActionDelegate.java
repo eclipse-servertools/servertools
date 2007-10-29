@@ -444,6 +444,14 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	}
 
 	protected void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy config, IServer server, ModuleArtifactDelegate moduleArtifact, ILaunchableAdapter launchableAdapter, IClient client) {
+		String launchName = NLS.bind(Messages.runOnServerLaunchConfigName, moduleArtifact.getName());
+		launchName = getValidLaunchConfigurationName(launchName);
+		if (!launchName.equals(config.getName())) {
+			ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
+			launchName = launchManager.generateUniqueLaunchConfigurationNameFrom(launchName);
+			config.rename(launchName);
+		}
+		
 		config.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_SERVER_ID, server.getId());
 		config.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_MODULE_ARTIFACT, moduleArtifact.serialize());
 		config.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_MODULE_ARTIFACT_CLASS, moduleArtifact.getClass().getName());
@@ -720,10 +728,13 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			}
 			
 			Trace.trace(Trace.FINEST, "checking for module artifact");
-			IModuleArtifact[] moduleArtifacts = ServerPlugin.getModuleArtifacts(globalSelection);
-			IModule module = null;
 			// TODO - multiple module artifacts
-			IModuleArtifact moduleArtifact = moduleArtifacts[0];
+			IModuleArtifact[] moduleArtifacts = ServerPlugin.getModuleArtifacts(globalSelection);
+			IModuleArtifact moduleArtifact = null;
+			if (moduleArtifacts != null)
+				moduleArtifact = moduleArtifacts[0];
+			
+			IModule module = null;
 			if (moduleArtifact != null)
 				module = moduleArtifact.getModule();
 			Trace.trace(Trace.FINEST, "moduleArtifact= " + moduleArtifact + ", module= " + module);
