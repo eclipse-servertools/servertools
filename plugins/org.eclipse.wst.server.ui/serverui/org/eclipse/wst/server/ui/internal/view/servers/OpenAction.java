@@ -27,8 +27,8 @@ public class OpenAction extends AbstractServerAction {
 	public OpenAction(ISelectionProvider sp) {
 		super(sp, Messages.actionOpen);
 		
-		setActionDefinitionId("org.eclipse.ui.navigator.Open");
-		//setActionDefinitionId("org.eclipse.jdt.ui.edit.text.java.open.editor");
+		//setActionDefinitionId("org.eclipse.ui.navigator.Open");
+		setActionDefinitionId("org.eclipse.jdt.ui.edit.text.java.open.editor");
 	}
 
 	public void perform(IServer server) {

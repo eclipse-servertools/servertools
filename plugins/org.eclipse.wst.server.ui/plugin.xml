@@ -352,6 +352,50 @@
 </extension>
 -->
 
+<extension point="org.eclipse.ui.commands">
+  <category
+    id="org.eclipse.wst.server.ui"
+    name="%category"
+    description="%category"/>
+  <command
+    id="org.eclipse.wst.server.launchShortcut.run"
+    name="%actionRunOnServer"
+    description="%actionRunOnServerDescription"
+    categoryId="org.eclipse.debug.ui.category.run"/>
+  <command
+    id="org.eclipse.wst.server.launchShortcut.debug"
+    name="%actionDebugOnServer"
+    description="%actionDebugOnServerDescription"
+    categoryId="org.eclipse.debug.ui.category.run"/>
+  <command
+    id="org.eclipse.wst.server.run"
+    name="%actionRun"
+    description="%actionRunDescription"
+    categoryId="org.eclipse.wst.server.ui"
+    defaultHandler="org.eclipse.wst.server.ui.internal.view.servers.ServerActionHandler"/>
+  <command
+    id="org.eclipse.wst.server.debug"
+    name="%actionDebug"
+    description="%actionDebugDescription"
+    categoryId="org.eclipse.wst.server.ui"
+    defaultHandler="org.eclipse.wst.server.ui.internal.view.servers.ServerActionHandler"/>
+  <command
+    id="org.eclipse.wst.server.publish"
+    name="%actionPublish"
+    description="%actionPublishDescription"
+    categoryId="org.eclipse.wst.server.ui"
+    defaultHandler="org.eclipse.wst.server.ui.internal.view.servers.ServerActionHandler"/>
+</extension>
+
+<extension point="org.eclipse.ui.contexts">
+  <context
+    id="org.eclipse.ui.serverViewScope"
+    name="%context"
+    description="%context"
+    parentId="org.eclipse.ui.contexts.window">
+  </context>
+</extension>
+
 <!-- commands and their bindings
 NOTE:
 M1 = CTRL/COMMAND
@@ -359,41 +403,30 @@ M2 = SHIFT
 M3 = ALT
 M4 = Platform-specific fourth key
 -->
-<extension point="org.eclipse.ui.commands">
-  <command
-    id="org.eclipse.wst.server.launchShortcut.debug"
-    name="%actionDebugOnServer"
-    description="%actionDebugOnServer"
-    categoryId="org.eclipse.debug.ui.category.run"
-    defaultHandler="org.eclipse.wst.server.ui.internal.view.servers.ServerActionHandler"/>
-  <command
-    id="org.eclipse.wst.server.launchShortcut.run"
-    name="%actionRunOnServer"
-    description="%actionRunOnServer"
-    categoryId="org.eclipse.debug.ui.category.run"
-    defaultHandler="org.eclipse.wst.server.ui.internal.view.servers.ServerActionHandler"/>
-  <command
-    id="org.eclipse.wst.server.publish"
-    name="%actionPublish"
-    description="%actionPublish"
-    categoryId="org.eclipse.debug.ui.category.run"
-    defaultHandler="org.eclipse.wst.server.ui.internal.view.servers.ServerActionHandler"/>
-</extension>
-
 <extension point="org.eclipse.ui.bindings">
-  <key
-    sequence="M3+M2+D R"
-    contextId="org.eclipse.ui.globalScope"
-    commandId="org.eclipse.wst.server.launchShortcut.debug"
-    schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
   <key
     sequence="M3+M2+X R"
     contextId="org.eclipse.ui.globalScope"
     commandId="org.eclipse.wst.server.launchShortcut.run"
     schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
   <key
-    sequence="M3+M2+P R"
+    sequence="M3+M2+D R"
     contextId="org.eclipse.ui.globalScope"
+    commandId="org.eclipse.wst.server.launchShortcut.debug"
+    schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+  <key
+    sequence="M1+M3+R"
+    contextId="org.eclipse.ui.serverViewScope"
+    commandId="org.eclipse.wst.server.run"
+    schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+  <key
+    sequence="M1+M3+D"
+    contextId="org.eclipse.ui.serverViewScope"
+    commandId="org.eclipse.wst.server.debug"
+    schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+  <key
+    sequence="M1+M3+P"
+    contextId="org.eclipse.ui.serverViewScope"
     commandId="org.eclipse.wst.server.publish"
     schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 </extension>

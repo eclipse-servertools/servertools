@@ -44,6 +44,7 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.eclipse.ui.part.ViewPart;
@@ -53,6 +54,7 @@ import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
  */
 public class ServersView extends ViewPart {
 	private static final String TAG_COLUMN_WIDTH = "columnWidth";
+	private static final String SERVERS_VIEW_CONTEXT = "org.eclipse.ui.serverViewScope";
 
 	protected Action noneAction = new Action(Messages.dialogMonitorNone) {
 		// dummy action
@@ -120,6 +122,9 @@ public class ServersView extends ViewPart {
 		column3.setText(Messages.viewStatus);
 		column3.setWidth(cols[2]);
 		column3.addSelectionListener(getHeaderListener(2));
+		
+		IContextService contextSupport = (IContextService)getSite().getService(IContextService.class);
+		contextSupport.activateContext(SERVERS_VIEW_CONTEXT);
 		
 		deferInitialization();
 	}
@@ -209,8 +214,7 @@ public class ServersView extends ViewPart {
 		initDragAndDrop();
 		
 		// init the tooltip
-		ServerToolTip toolTip;
-		toolTip = new ServerToolTip(treeTable);
+		ServerToolTip toolTip = new ServerToolTip(treeTable);
 		toolTip.setShift(new Point(-5, -5));
 		toolTip.setPopupDelay(200); // in ms
 		toolTip.setHideOnMouseDown(true);
@@ -277,7 +281,6 @@ public class ServersView extends ViewPart {
 		actions[1] = new StartAction(shell, provider, ILaunchManager.RUN_MODE);
 		actionBars.setGlobalActionHandler("org.eclipse.wst.server.run", actions[1]);
 		actions[2] = new StartAction(shell, provider, ILaunchManager.PROFILE_MODE);
-		actionBars.setGlobalActionHandler("org.eclipse.wst.server.profile", actions[2]);
 		
 		// create the stop action
 		actions[3] = new StopAction(shell, provider);

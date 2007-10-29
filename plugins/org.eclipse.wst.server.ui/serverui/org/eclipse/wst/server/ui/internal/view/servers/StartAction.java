@@ -56,7 +56,6 @@ public class StartAction extends AbstractServerAction {
 			setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_START_PROFILE));
 			setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_START_PROFILE));
 			setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_START_PROFILE));
-			setActionDefinitionId("org.eclipse.wst.server.profile");
 		}
 		try {
 			selectionChanged((IStructuredSelection) selectionProvider.getSelection());
