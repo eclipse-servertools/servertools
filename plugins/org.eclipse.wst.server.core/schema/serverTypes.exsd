@@ -147,14 +147,14 @@ Server instances of this type will delegate to instances of this class. Delegate
          <attribute name="startTimeout" type="string">
             <annotation>
                <documentation>
-                  the timeout value that the tool will wait for the server to be started. The default is 2 minutes
+                  the timeout value (in ms) that the tool will wait for the server to be started. The default is 2 minutes
                </documentation>
             </annotation>
          </attribute>
          <attribute name="stopTimeout" type="string">
             <annotation>
                <documentation>
-                  the timeout value that the tool will wait for the server to be stopped. The default is 2 minutes
+                  the timeout value (in ms) that the tool will wait for the server to be stopped. The default is 2 minutes
                </documentation>
             </annotation>
          </attribute>

@@ -1650,7 +1650,7 @@ public class Server extends Base implements IServer {
 							setServerState(IServer.STATE_STOPPED);
 							// notify waiter
 							synchronized (notified) {
-								Trace.trace(Trace.FINEST, "synchronousStart user cancelled.");
+								Trace.trace(Trace.FINEST, "synchronousStart user cancelled");
 								notified[0] = true;
 								notified.notifyAll();
 							}
