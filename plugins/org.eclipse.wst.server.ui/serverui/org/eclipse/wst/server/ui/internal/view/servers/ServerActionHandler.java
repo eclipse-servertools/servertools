@@ -47,10 +47,15 @@ public class ServerActionHandler extends AbstractHandler {
 			mode = ILaunchManager.DEBUG_MODE;
 		else if (id.endsWith("profile"))
 			mode = ILaunchManager.PROFILE_MODE;
+		else if (id.endsWith("stop"))
+			mode = null;
 		
 		if (obj instanceof IServer) {
 			IServer server = (IServer) obj;
-			StartAction.start(server, mode, HandlerUtil.getActiveShell(event));
+			if (mode == null)
+				StopAction.stop(server, HandlerUtil.getActiveShell(event));
+			else
+				StartAction.start(server, mode, HandlerUtil.getActiveShell(event));
 			return null;
 		}
 		

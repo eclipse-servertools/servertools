@@ -284,6 +284,7 @@ public class ServersView extends ViewPart {
 		
 		// create the stop action
 		actions[3] = new StopAction(shell, provider);
+		actionBars.setGlobalActionHandler("org.eclipse.wst.server.stop", actions[3]);
 		
 		// create the publish actions
 		actions[4] = new PublishAction(shell, provider);

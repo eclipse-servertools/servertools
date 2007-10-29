@@ -28,6 +28,7 @@ public class StopAction extends AbstractServerAction {
 		setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_STOP));
 		setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_STOP));
 		setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_STOP));
+		setActionDefinitionId("org.eclipse.wst.server.stop");
 		try {
 			selectionChanged((IStructuredSelection) selectionProvider.getSelection());
 		} catch (Exception e) {
@@ -50,7 +51,11 @@ public class StopAction extends AbstractServerAction {
 	 * Perform action on this server.
 	 * @param server a server
 	 */
-	public void perform(final IServer server) {
+	public void perform(IServer server) {
+		stop(server, shell);
+	}
+
+	public static void stop(IServer server, Shell shell) {
 		ServerUIPlugin.addTerminationWatch(shell, server, ServerUIPlugin.STOP);
 		
 		StopServerJob stopJob = new StopServerJob(server);
