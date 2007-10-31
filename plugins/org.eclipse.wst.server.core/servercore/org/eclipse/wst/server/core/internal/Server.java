@@ -356,15 +356,14 @@ public class Server extends Base implements IServer {
 	public int getAutoPublishSetting() {
 		return getAttribute(PROP_AUTO_PUBLISH_SETTING, AUTO_PUBLISH_DEFAULT);
 	}
-	
-	public int getStartTimeoutSetting() {
-		return getAttribute(PROP_START_TIMEOUT, ((ServerType)getServerType()).getStartTimeout());
+
+	public int getStartTimeout() {
+		return getAttribute(PROP_START_TIMEOUT, ((ServerType)getServerType()).getStartTimeout()/1000);
 	}
-	
-	public int getStopTimoutSetting() {
-		return getAttribute(PROP_STOP_TIMEOUT, ((ServerType)getServerType()).getStopTimeout());
+
+	public int getStopTimeout() {
+		return getAttribute(PROP_STOP_TIMEOUT, ((ServerType)getServerType()).getStopTimeout()/1000);
 	}
-	
 
 	/**
     * Returns a list of id (String) of preferred publish operations that will not be run
@@ -1550,7 +1549,7 @@ public class Server extends Base implements IServer {
 		addServerListener(listener);
 		
 		// add timeout thread
-		final int serverTimeout = getStartTimeoutSetting();
+		final int serverTimeout = getStartTimeout()*1000;
 		if (serverTimeout > 0) {
 			Thread thread = new Thread("Server start timeout") {
 				public void run() {
@@ -1858,8 +1857,8 @@ public class Server extends Base implements IServer {
 		};
 		operation.listener = listener;
 		addServerListener(listener);
-		
-		final int serverTimeout = getStopTimoutSetting();
+	
+		final int serverTimeout = getStopTimeout()*1000;
 		if (serverTimeout > 0) {
 			Thread thread = new Thread("Server stop timeout") {
 				public void run() {

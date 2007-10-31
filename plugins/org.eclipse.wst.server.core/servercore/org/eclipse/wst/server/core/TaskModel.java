@@ -32,7 +32,7 @@ public class TaskModel {
 	 * @see #putObject(String, Object)
 	 */
 	public static final String TASK_RUNTIME = "runtime";
-	
+
 	/**
 	 * Task model id for an IServer.
 	 * 
@@ -49,7 +49,7 @@ public class TaskModel {
 	 * @see TaskModel#putObject(String, Object)
 	 */
 	public static final String TASK_MODULES = "modules";
-	
+
 	/**
 	 * Task model id for a launch mode.
 	 * 
@@ -57,7 +57,7 @@ public class TaskModel {
 	 * @see #putObject(String, Object)
 	 */
 	public static final String TASK_LAUNCH_MODE = "launch-mode";
-	
+
 	private Map<String, Object> map = new HashMap<String, Object>();
 
 	/**

@@ -682,6 +682,22 @@ public interface IServer extends IServerAttributes {
 	public ILaunch getLaunch();
 
 	/**
+	 * Returns the start timeout in seconds.
+	 * 
+	 * @return the start timeout in seconds
+	 * @since 3.0
+	 */
+	public int getStartTimeout();
+
+	/**
+	 * Returns the stop timeout in seconds.
+	 * 
+	 * @return the stop timeout in seconds
+	 * @since 3.0
+	 */
+	public int getStopTimeout();
+
+	/**
 	 * Starts this server in the given launch mode and waits until the server
 	 * has finished starting.
 	 * <p>
