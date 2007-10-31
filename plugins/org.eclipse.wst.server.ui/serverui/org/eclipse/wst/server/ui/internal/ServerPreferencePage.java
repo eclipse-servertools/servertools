@@ -13,6 +13,8 @@ package org.eclipse.wst.server.ui.internal;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -101,8 +103,10 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		autoPublishLocalTime = new Spinner(composite, SWT.BORDER);
 		autoPublishLocalTime.setMinimum(0);
 		autoPublishLocalTime.setMaximum(120);
+		autoPublishLocalTime.setIncrement(5);
 		autoPublishLocalTime.setSelection(preferences.getAutoPublishLocalTime());
 		autoPublishLocalTime.setEnabled(autoPublishLocal.getSelection());
+		SWTUtil.setSpinnerTooltip(autoPublishLocalTime);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		data.widthHint = 60;
 		autoPublishLocalTime.setLayoutData(data);
@@ -112,6 +116,11 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 			public void widgetSelected(SelectionEvent e) {
 				autoPublishLocalTimeLabel.setEnabled(autoPublishLocal.getSelection());
 				autoPublishLocalTime.setEnabled(autoPublishLocal.getSelection());
+			}
+		});
+		autoPublishLocalTime.addModifyListener(new ModifyListener(){
+			public void modifyText(ModifyEvent e) {
+				SWTUtil.setSpinnerTooltip(autoPublishLocalTime);
 			}
 		});
 		
@@ -133,9 +142,11 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		
 		autoPublishRemoteTime = new Spinner(composite, SWT.BORDER);
 		autoPublishRemoteTime.setMinimum(0);
+		autoPublishRemoteTime.setIncrement(5);
 		autoPublishRemoteTime.setMaximum(120);
 		autoPublishRemoteTime.setSelection(preferences.getAutoPublishRemoteTime());
 		autoPublishRemoteTime.setEnabled(autoPublishRemote.getSelection());
+		SWTUtil.setSpinnerTooltip(autoPublishRemoteTime);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		data.widthHint = 60;
 		autoPublishRemoteTime.setLayoutData(data);
@@ -145,6 +156,11 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 			public void widgetSelected(SelectionEvent e) {
 				autoPublishRemoteTimeLabel.setEnabled(autoPublishRemote.getSelection());
 				autoPublishRemoteTime.setEnabled(autoPublishRemote.getSelection());
+			}
+		});
+		autoPublishRemoteTime.addModifyListener(new ModifyListener(){
+			public void modifyText(ModifyEvent e) {
+				SWTUtil.setSpinnerTooltip(autoPublishRemoteTime);
 			}
 		});
 		

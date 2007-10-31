@@ -339,6 +339,7 @@ public class Messages extends NLS {
 	public static String clientDefaultName;
 	public static String clientDefaultDescription;
 	public static String moduleDecoratorProject;
+	public static String minutes;
 
 	public static String errorStartingMonitor;
 	public static String audioPrefSelectFile;

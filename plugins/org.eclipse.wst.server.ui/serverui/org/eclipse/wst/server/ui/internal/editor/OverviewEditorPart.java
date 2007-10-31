@@ -67,6 +67,7 @@ import org.eclipse.wst.server.ui.editor.*;
 import org.eclipse.wst.server.ui.internal.ContextIds;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
+import org.eclipse.wst.server.ui.internal.SWTUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.command.*;
@@ -177,6 +178,14 @@ public class OverviewEditorPart extends ServerEditorPart {
 					autoPublishDisable.setSelection(setting == Server.AUTO_PUBLISH_DISABLE);
 					autoPublishTime.setEnabled(setting == Server.AUTO_PUBLISH_OVERRIDE);
 					validate();
+				} else if (event.getPropertyName().equals(Server.PROP_START_TIMEOUT)) {
+					Integer time = (Integer)event.getNewValue();
+					startTimeoutSpinner.setSelection(time.intValue());
+					SWTUtil.setSpinnerTooltip(startTimeoutSpinner);
+				} else if (event.getPropertyName().equals(Server.PROP_STOP_TIMEOUT)) {
+					Integer time = (Integer)event.getNewValue();
+					stopTimeoutSpinner.setSelection(time.intValue());
+					SWTUtil.setSpinnerTooltip(stopTimeoutSpinner);
 				}
 				updating = false;
 			}
@@ -575,7 +584,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			autoPublishOverride.setLayoutData(data);
 			whs.setHelp(autoPublishOverride, ContextIds.EDITOR_AUTOPUBLISH_OVERRIDE);
 			
-			final Label autoPublishTimeLabel = toolkit.createLabel(composite, Messages.serverEditorOverviewAutoPublishOverrideInterval);
+			final Label autoPublishTimeLabel = createLabel(toolkit,composite, Messages.serverEditorOverviewAutoPublishOverrideInterval);
 			data = new GridData();
 			data.horizontalIndent = 20;
 			autoPublishTimeLabel.setLayoutData(data);
@@ -583,12 +592,14 @@ public class OverviewEditorPart extends ServerEditorPart {
 			
 			autoPublishTime = new Spinner(composite, SWT.BORDER);
 			autoPublishTime.setMinimum(0);
+			autoPublishTime.setIncrement(5);
 			autoPublishTime.setMaximum(120);
 			autoPublishTime.setSelection(svr.getAutoPublishTime());
-			data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-			data.widthHint = 60;
+			data = new GridData();
+			data.widthHint = 30;
 			autoPublishTime.setLayoutData(data);
 			autoPublishTime.setEnabled(autoPublishOverride.getSelection());
+			SWTUtil.setSpinnerTooltip(autoPublishTime);
 			whs.setHelp(autoPublishTime, ContextIds.EDITOR_AUTOPUBLISH_OVERRIDE);
 			
 			autoPublishOverride.addSelectionListener(new SelectionAdapter() {
@@ -635,11 +646,8 @@ public class OverviewEditorPart extends ServerEditorPart {
 					if (updating)
 						return;
 					updating = true;
-					try {
-						execute(new SetServerAutoPublishTimeCommand(getServer(), autoPublishTime.getSelection()));
-					} catch (Exception ex) {
-						// ignore
-					}
+					execute(new SetServerAutoPublishTimeCommand(getServer(), autoPublishTime.getSelection()));
+					SWTUtil.setSpinnerTooltip(autoPublishTime);
 					updating = false;
 					validate();
 				}
@@ -652,10 +660,10 @@ public class OverviewEditorPart extends ServerEditorPart {
 		section.setText(Messages.serverEditorOverviewTimeoutSection);
 		section.setDescription(Messages.serverEditorOverviewTimeoutDescription);
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
-
+		
 		Composite composite = toolkit.createComposite(section);
 		GridLayout layout = new GridLayout();
-		layout.numColumns = 4;
+		layout.numColumns = 2;
 		layout.marginHeight = 5;
 		layout.marginWidth = 10;
 		layout.verticalSpacing = 5;
@@ -666,41 +674,43 @@ public class OverviewEditorPart extends ServerEditorPart {
 		whs.setHelp(composite, ContextIds.EDITOR_OVERVIEW_PAGE);
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
-
+		
 		//	 timeouts
 		if (server != null) {
 			final Server svr = (Server) server;
 			
 			// start timeout label
-			final Label startTimeoutLabel = toolkit.createLabel(composite, Messages.serverEditorOverviewStartTimeout);
-			GridData data = new GridData();
+			final Label startTimeoutLabel = createLabel(toolkit, composite, Messages.serverEditorOverviewStartTimeout);
+			GridData data = new GridData(GridData.FILL_HORIZONTAL);
 			data.horizontalIndent = 20;
 			startTimeoutLabel.setLayoutData(data);			
 			
 			startTimeoutSpinner = new Spinner(composite, SWT.BORDER);
 			startTimeoutSpinner.setEnabled(true);
-			startTimeoutSpinner.setMinimum(0);
-			startTimeoutSpinner.setMaximum(1000*60*30); // 30 minutes
-			startTimeoutSpinner.setSelection(svr.getStartTimeoutSetting());
-			setSpinnerTooltip(startTimeoutSpinner);
-			data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-			data.widthHint = 60;
+			startTimeoutSpinner.setMinimum(1);
+			startTimeoutSpinner.setMaximum(60*30); // 30 minutes
+			startTimeoutSpinner.setIncrement(5);
+			startTimeoutSpinner.setSelection(svr.getStartTimeout());
+			SWTUtil.setSpinnerTooltip(startTimeoutSpinner);
+			data = new GridData(GridData.HORIZONTAL_ALIGN_END);
+			data.widthHint = 30;
 			startTimeoutSpinner.setLayoutData(data);
-
+			
 			// stop timeout label
-			final Label stopTimeoutLabel = toolkit.createLabel(composite, Messages.serverEditorOverviewStopTimeout);
-			data = new GridData();
+			final Label stopTimeoutLabel = createLabel(toolkit, composite, Messages.serverEditorOverviewStopTimeout);
+			data = new GridData(GridData.FILL_HORIZONTAL);
 			data.horizontalIndent = 20;
 			stopTimeoutLabel.setLayoutData(data);			
 			
 			stopTimeoutSpinner = new Spinner(composite, SWT.BORDER);
 			stopTimeoutSpinner.setEnabled(true);
-			stopTimeoutSpinner.setMinimum(0);
-			stopTimeoutSpinner.setMaximum(1000*60*30); // 30 minutes
-			stopTimeoutSpinner.setSelection(svr.getStopTimoutSetting());
-			setSpinnerTooltip(stopTimeoutSpinner);
-			data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-			data.widthHint = 60;
+			stopTimeoutSpinner.setMinimum(1);
+			stopTimeoutSpinner.setMaximum(60*30); // 30 minutes
+			stopTimeoutSpinner.setIncrement(5);
+			stopTimeoutSpinner.setSelection(svr.getStopTimeout());
+			SWTUtil.setSpinnerTooltip(stopTimeoutSpinner);
+			data = new GridData(GridData.HORIZONTAL_ALIGN_END);
+			data.widthHint = 30;
 			stopTimeoutSpinner.setLayoutData(data);
 			
 			startTimeoutSpinner.addModifyListener(new ModifyListener() {
@@ -708,12 +718,8 @@ public class OverviewEditorPart extends ServerEditorPart {
 					if (updating)
 						return;
 					updating = true;
-					try {
-						setSpinnerTooltip(startTimeoutSpinner);
-						execute(new SetServerStartTimeoutCommand(getServer(), startTimeoutSpinner.getSelection()));
-					} catch (Exception ex) {
-						// ignore
-					}
+					execute(new SetServerStartTimeoutCommand(getServer(), startTimeoutSpinner.getSelection()));
+					SWTUtil.setSpinnerTooltip(startTimeoutSpinner);
 					updating = false;
 					validate();
 				}
@@ -723,30 +729,13 @@ public class OverviewEditorPart extends ServerEditorPart {
 					if (updating)
 						return;
 					updating = true;
-					try {
-						setSpinnerTooltip(stopTimeoutSpinner);
-						execute(new SetServerStopTimeoutCommand(getServer(), stopTimeoutSpinner.getSelection()));
-					} catch (Exception ex) {
-						// ignore
-					}
+					execute(new SetServerStopTimeoutCommand(getServer(), stopTimeoutSpinner.getSelection()));
+					SWTUtil.setSpinnerTooltip(stopTimeoutSpinner);
 					updating = false;
 					validate();			
 				}
 			});
 		}
-	}
-
-	protected void setSpinnerTooltip(Spinner spinner) {
-		float miliSeconds = new Float(spinner.getSelection()).floatValue();		
-		float seconds = miliSeconds / 1000f;
-		
-		if (seconds < 60) {
-			spinner.setToolTipText(  seconds +" seconds");
-			return;
-		}
-		
-		int minutes = new Float(seconds).intValue() / 60;		
-		spinner.setToolTipText(  minutes +" minutes");		
 	}
 
 	protected void editRuntime(IRuntime runtime) {

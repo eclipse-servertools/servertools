@@ -36,7 +36,7 @@ public class SetServerStartTimeoutCommand extends ServerCommand {
 	 */
 	public void execute() {
 		ServerWorkingCopy swc = (ServerWorkingCopy) server;
-		oldTime = swc.getStartTimeoutSetting();
+		oldTime = swc.getStartTimeout();
 		swc.setStartTimeout(time);
 	}
 

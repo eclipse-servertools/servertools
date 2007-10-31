@@ -13,6 +13,7 @@ package org.eclipse.wst.server.ui.internal;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
@@ -20,6 +21,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Spinner;
 /**
  * SWT Utility class.
  */
@@ -84,5 +86,27 @@ public class SWTUtil {
 		if (fontMetrics == null)
 			initializeDialogUnits(comp);
 		return Dialog.convertVerticalDLUsToPixels(fontMetrics, y);
+	}
+
+	/**
+	 * Set the tooltip of a spinner that represents a time in seconds.
+	 * 
+	 * @param spinner
+	 */
+	public static void setSpinnerTooltip(Spinner spinner) {		
+		int seconds = spinner.getSelection();
+		String tooltipText;
+		if (seconds <= 60)
+			tooltipText = null;
+		else if ((seconds % 60) == 0) { // the seconds are exact minutes
+			int minutes = seconds / 60;
+			tooltipText = NLS.bind(Messages.minutes, minutes + "");
+		} else {
+			int minutes = seconds / 60;
+			int modSec = (seconds % 60);
+			String secondsText = (modSec < 10) ? "0" + modSec : Integer.toString(modSec); 
+			tooltipText = NLS.bind(Messages.minutes, minutes + ":" + secondsText);
+		}
+		spinner.setToolTipText(tooltipText);
 	}
 }
