@@ -189,6 +189,12 @@ public class ServerEventTestCase extends TestCase {
 			public void publish(int kind, IModule[] modules, IOperationListener listener) {
 				// do nothing
 			}
+			public int getStartTimeout() {
+				return 0;
+			}
+			public int getStopTimeout() {
+				return 0;
+			}
 		};
 	}
 
