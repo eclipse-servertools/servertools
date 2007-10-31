@@ -60,6 +60,8 @@ import org.eclipse.wst.server.ui.wizard.IWizardHandle;
  * A wizard page used to add and remove modules.
  */
 public class ModifyModulesComposite extends Composite {
+	public static final String TASK_REFRESH_MODULES = "refresh-modules";
+
 	private static final String ROOT = "root";
 	protected static Color color;
 	protected static Font font;
@@ -69,6 +71,7 @@ public class ModifyModulesComposite extends Composite {
 	protected IServerAttributes server;
 	protected IRuntime runtime;
 	protected boolean runtimeDirty;
+	protected Object refreshModules;
 
 	protected Map childModuleMap = new HashMap();
 	protected Map parentModuleMap = new HashMap();
@@ -243,11 +246,11 @@ public class ModifyModulesComposite extends Composite {
 		if (isVisible())
 			return;
 		
-		// see bug 185875
-		if (server == this.server) {
+		// see bug 185875, 205869
+		if (refreshModules == taskModel.getObject(TASK_REFRESH_MODULES) && server == this.server) {
 			if (server == null)
 				return;
-			if (runtime == this.runtime) {
+			if (runtime == server.getRuntime()) {
 				if (runtime == null)
 					return;
 				if (runtime instanceof IRuntimeWorkingCopy) {
@@ -259,6 +262,7 @@ public class ModifyModulesComposite extends Composite {
 			}
 		}
 		
+		refreshModules = taskModel.getObject(TASK_REFRESH_MODULES);
 		this.server = server;
 		if (server == null)
 			runtime = null;
