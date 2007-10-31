@@ -157,12 +157,14 @@
 </extension>
 
 <extension point="org.eclipse.debug.ui.launchShortcuts">
-   <shortcut id="org.eclipse.wst.server.launchShortcut"
-      label="%actionRunOnServer"
-      class="org.eclipse.wst.server.ui.internal.ServerLaunchShortcut"
-      modes="run, debug, profile"
-      path="aa"
-      icon="icons/etool16/run_on_server.gif">
+   <shortcut
+         id="org.eclipse.wst.server.launchShortcut"
+         label="%actionRunOnServer"
+         description="actionRunOnServerDescription"
+         modes="run, debug, profile"
+         path="aa"
+         icon="icons/etool16/run_on_server.gif"
+         class="org.eclipse.wst.server.ui.internal.ServerLaunchShortcut">
       <contextualLaunch>
         <enablement>
            <with variable="selection">
@@ -172,7 +174,6 @@
              </iterate>
            </with>
          </enablement>
-      
         <contextLabel
            mode="run"
            label="%actionRunOnServer"/>
@@ -183,6 +184,9 @@
            mode="profile"
            label="%actionProfileOnServer"/>
       </contextualLaunch>
+      <configurationType
+           id="org.eclipse.wst.server.ui.launchConfigurationType">
+      </configurationType>
    </shortcut>
 </extension>
 
@@ -476,9 +480,11 @@ M4 = Platform-specific fourth key
 <extension point="org.eclipse.debug.core.launchConfigurationTypes">
   <launchConfigurationType
     id="org.eclipse.wst.server.ui.launchConfigurationType"
-    name="%runOnServerLaunchConfiguration"
     delegate="org.eclipse.wst.server.ui.internal.actions.RunOnServerLaunchConfigurationDelegate"
-    modes="run,debug,profile"/>
+    delegateName="%launchConfigurationDelegateName"
+    delegateDescription="%launchConfigurationDelegateDescription"
+    modes="run,debug,profile"
+    name="%runOnServerLaunchConfiguration"/>
 </extension>
 
 <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
@@ -491,9 +497,10 @@ M4 = Platform-specific fourth key
 
 <extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
   <launchConfigurationTabGroup
-    id="org.eclipse.wst.server.ui.launchConfigurationTabGroup"
-    type="org.eclipse.wst.server.ui.launchConfigurationType"
-    class="org.eclipse.wst.server.ui.internal.RunOnServerLaunchConfigurationTabGroup">
+        class="org.eclipse.wst.server.ui.internal.RunOnServerLaunchConfigurationTabGroup"
+        description="%launchConfigurationTabGroupDescription"
+        id="org.eclipse.wst.server.ui.launchConfigurationTabGroup"
+        type="org.eclipse.wst.server.ui.launchConfigurationType">
   </launchConfigurationTabGroup>
 </extension>
 

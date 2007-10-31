@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.*;
@@ -457,8 +459,15 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		config.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_MODULE_ARTIFACT_CLASS, moduleArtifact.getClass().getName());
 		config.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_LAUNCHABLE_ADAPTER_ID, launchableAdapter.getId());
 		config.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_CLIENT_ID, client.getId());
-	}            
-		       
+		
+		try {
+			IProject project = moduleArtifact.getModule().getProject();
+			config.setMappedResources(new IResource[] { project });
+		} catch (Exception e) {
+			Trace.trace(Trace.WARNING, "Could not associate launch with a project", e);
+		}
+	}
+
 	protected ILaunchConfiguration getLaunchConfiguration(IServer server, ModuleArtifactDelegate moduleArtifact, ILaunchableAdapter launchableAdapter2, IClient client2, IProgressMonitor monitor) throws CoreException {
 		String serverId = server.getId();
 		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();

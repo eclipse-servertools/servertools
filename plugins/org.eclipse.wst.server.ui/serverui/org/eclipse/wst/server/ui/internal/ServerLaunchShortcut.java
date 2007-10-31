@@ -11,7 +11,9 @@
 package org.eclipse.wst.server.ui.internal;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.debug.ui.ILaunchShortcut;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.ui.ILaunchShortcut2;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -25,9 +27,9 @@ import org.eclipse.ui.IFileEditorInput;
 /**
  * 
  */
-public class ServerLaunchShortcut implements ILaunchShortcut {
+public class ServerLaunchShortcut implements ILaunchShortcut2 {
 	/* (non-Javadoc)
-	 * @see org.eclipse.debug.ui.ILaunchShortcut#launch(org.eclipse.jface.viewers.ISelection, java.lang.String)
+	 * @see ILaunchShortcut#launch(ISelection, String)
 	 */
 	public void launch(ISelection selection, final String mode) {
 		RunOnServerActionDelegate ros = new RunOnServerActionDelegate();
@@ -40,7 +42,7 @@ public class ServerLaunchShortcut implements ILaunchShortcut {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.debug.ui.ILaunchShortcut#launch(org.eclipse.ui.IEditorPart, java.lang.String)
+	 * @see ILaunchShortcut#launch(IEditorPart, String)
 	 */
 	public void launch(IEditorPart editor, String mode) {
 		if (editor == null)
@@ -58,5 +60,75 @@ public class ServerLaunchShortcut implements ILaunchShortcut {
 			if (ServerPlugin.hasModuleArtifact(file))
 				launch(new StructuredSelection(file), mode);
 		}
+	}
+
+	/**
+	 * Given the specified <code>ISelection</code> this method returns an array of 
+	 * <code>ILaunchConfiguration</code>s that apply to the current selection, 
+	 * i.e. all of the launch configurations that could be used to launch the given 
+	 * selection.
+	 * @param selection the current selection
+	 * @return an array of <code>ILaunchConfiguration</code>s that could be 
+	 * used to launch the given selection, or an empty array, never <code>null</code>
+	 */
+	public ILaunchConfiguration[] getLaunchConfigurations(ISelection selection) {
+		return new ILaunchConfiguration[0];
+	}
+
+	/* (non-Javadoc)
+	 * @see ILaunchShortcut2#getLaunchConfigurations(IEditorPart)
+	 */
+	public ILaunchConfiguration[] getLaunchConfigurations(IEditorPart editor) {
+		if (editor == null)
+			return new ILaunchConfiguration[0];
+		
+		// check if the editor input itself can be run. Otherwise, check if
+		// the editor has a file input that can be run
+		IEditorInput input = editor.getEditorInput();
+		
+		if (ServerPlugin.hasModuleArtifact(input)) {
+			return getLaunchConfigurations(new StructuredSelection(input));
+		} else if (input instanceof IFileEditorInput) {
+			IFileEditorInput fei = (IFileEditorInput) input;
+			IFile file = fei.getFile();
+			if (ServerPlugin.hasModuleArtifact(file))
+				return getLaunchConfigurations(new StructuredSelection(file));
+		}
+		return new ILaunchConfiguration[0];
+	}
+
+	/**
+	 * Given the specified <code>ISelection</code> this method returns an
+	 * <code>IResource</code> that directly maps to the current selection.
+	 * This mapping is then leveraged by the context launching framework
+	 * to try and launch the resource. 
+	 * @param selection the current selection
+	 * @return an <code>IResource</code> that would be used during context
+	 * sensitive launching or <code>null</code> if one is not to be provided or does not exist.
+	 */
+	public IResource getLaunchableResource(ISelection selection) {
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see ILaunchShortcut2#getLaunchableResource(IEditorPart)
+	 */
+	public IResource getLaunchableResource(IEditorPart editor) {
+		if (editor == null)
+			return null;
+		
+		// check if the editor input itself can be run. Otherwise, check if
+		// the editor has a file input that can be run
+		IEditorInput input = editor.getEditorInput();
+		
+		if (ServerPlugin.hasModuleArtifact(input)) {
+			return getLaunchableResource(new StructuredSelection(input));
+		} else if (input instanceof IFileEditorInput) {
+			IFileEditorInput fei = (IFileEditorInput) input;
+			IFile file = fei.getFile();
+			if (ServerPlugin.hasModuleArtifact(file))
+				return getLaunchableResource(new StructuredSelection(file));
+		}
+		return null;
 	}
 }
