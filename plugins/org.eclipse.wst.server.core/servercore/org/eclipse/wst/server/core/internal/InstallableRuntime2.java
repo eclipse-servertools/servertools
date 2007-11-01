@@ -32,6 +32,7 @@ import org.eclipse.wst.server.core.internal.tar.TarInputStream;
  */
 public class InstallableRuntime2 implements IInstallableRuntime {
 	private IConfigurationElement element;
+	private byte[] BUFFER = null;
 
 	public InstallableRuntime2(IConfigurationElement element) {
 		super();
@@ -50,9 +51,18 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 		}
 	}
 
-	public String getURL() {
+	public String getArchiveUrl() {
 		try {
-			return element.getAttribute("url");
+			return element.getAttribute("archiveUrl");
+		} catch (Exception e) {
+			// ignore
+		}
+		return null;
+	}
+
+	public String getArchivePath() {
+		try {
+			return element.getAttribute("archivePath");
 		} catch (Exception e) {
 			// ignore
 		}
@@ -73,18 +83,29 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 	 */
 	public String getLicense(IProgressMonitor monitor) throws CoreException {
 		URL url = null;
+		ByteArrayOutputStream out = null;
 		try {
-			url = new URL(getLicenseURL());
+			String licenseURL = getLicenseURL();
+			if (licenseURL == null)
+				return null;
+			
+			url = new URL(licenseURL);
 			InputStream in = url.openStream();
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			byte[] buf = new byte[8192];
-			copy(buf, in, out);
+			out = new ByteArrayOutputStream();
+			copy(in, out);
 			return new String(out.toByteArray());
 		} catch (Exception e) {
-			e.printStackTrace();
+			Trace.trace(Trace.WARNING, "Error loading license", e);
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
+					NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
+		} finally {
+			try {
+				if (out != null)
+					out.close();
+			} catch (IOException e) {
+				// ignore
+			}
 		}
-		
-		return null;
 	}
 
 	/*
@@ -110,11 +131,13 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 		installRuntimeJob.schedule();
 	}
 
-	private void copy(byte[] buf, InputStream in, OutputStream out) throws IOException {
-		int r = in.read(buf);
+	private void copy(InputStream in, OutputStream out) throws IOException {
+		if (BUFFER == null)
+			BUFFER = new byte[8192];
+		int r = in.read(BUFFER);
 		while (r >= 0) {
-			out.write(buf, 0, r);
-			r = in.read(buf);
+			out.write(BUFFER, 0, r);
+			r = in.read(BUFFER);
 		}
 	}
 
@@ -125,26 +148,38 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 		URL url = null;
 		File temp = null;
 		try {
-			url = new URL(getURL());
+			url = new URL(getArchiveUrl());
 			temp = File.createTempFile("runtime", "");
 			temp.deleteOnExit();
 		} catch (IOException e) {
-			throw new CoreException(null);
+			Trace.trace(Trace.WARNING, "Error creating url and temp file", e);
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
+				NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
 		}
 		String name = url.getPath();
 		
 		// download
+		FileOutputStream fout = null;
 		try {
 			InputStream in = url.openStream();
-			FileOutputStream fout = new FileOutputStream(temp);
-			byte[] buf = new byte[8192];
-			copy(buf, in, null);
+			fout = new FileOutputStream(temp);
+			copy(in, fout);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Trace.trace(Trace.WARNING, "Error downloading runtime", e);
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
+				NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
+		} finally {
+			try {
+				if (fout != null)
+					fout.close();
+			} catch (IOException e) {
+				// ignore
+			}
 		}
 		
+		FileInputStream in = null;
 		try {
-			FileInputStream in = new FileInputStream(temp);
+			in = new FileInputStream(temp);
 			if (name.endsWith("zip"))
 				unzip(in, path, monitor);
 			else if (name.endsWith("tar"))
@@ -152,25 +187,47 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error uncompressing runtime", e);
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
-					NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
+				NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
+		} finally {
+			try {
+				if (in != null)
+					in.close();
+			} catch (IOException e) {
+				// ignore
+			}
 		}
 	}
 
+	/**
+	 * Unzip the input stream into the given path.
+	 * 
+	 * @param in
+	 * @param path
+	 * @param monitor
+	 * @throws IOException
+	 */
 	private void unzip(InputStream in, IPath path, IProgressMonitor monitor) throws IOException {
-		// unzip from bundle into path
+		String archivePath = getArchivePath();
 		BufferedInputStream bin = new BufferedInputStream(in);
 		ZipInputStream zin = new ZipInputStream(bin);
 		ZipEntry entry = zin.getNextEntry();
-		byte[] buf = new byte[8192];
 		while (entry != null) {
 			String name = entry.getName();
 			monitor.setTaskName("Unzipping: " + name);
+			if (archivePath != null && name.startsWith(archivePath)) {
+				name = name.substring(archivePath.length());
+				if (name.length() > 1)
+					name = name.substring(1);
+			}
 			
-			if (entry.isDirectory())
-				path.append(name).toFile().mkdirs();
-			else {
-				FileOutputStream fout = new FileOutputStream(path.append(name).toFile());
-				copy(buf, zin, fout);
+			if (name != null && name.length() > 0) {
+				if (entry.isDirectory())
+					path.append(name).toFile().mkdirs();
+				else {
+					FileOutputStream fout = new FileOutputStream(path.append(name).toFile());
+					copy(zin, fout);
+					fout.close();
+				}
 			}
 			zin.closeEntry();
 			entry = zin.getNextEntry();
@@ -178,21 +235,36 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 		zin.close();
 	}
 
+	/**
+	 * Untar the input stream into the given path.
+	 * 
+	 * @param in
+	 * @param path
+	 * @param monitor
+	 * @throws IOException
+	 */
 	protected void untar(InputStream in, IPath path, IProgressMonitor monitor) throws IOException {
-		// untar from bundle into path
+		String archivePath = getArchivePath();
 		BufferedInputStream bin = new BufferedInputStream(in);
 		TarInputStream zin = new TarInputStream(bin);
 		TarEntry entry = zin.getNextEntry();
-		byte[] buf = new byte[8192];
 		while (entry != null) {
 			String name = entry.getName();
 			monitor.setTaskName("Untarring: " + name);
+			if (archivePath != null && name.startsWith(archivePath)) {
+				name = name.substring(archivePath.length());
+				if (name.length() > 1)
+					name = name.substring(1);
+			}
 			
-			if (entry.getFileType() == TarEntry.DIRECTORY)
-				path.append(name).toFile().mkdirs();
-			else {
-				FileOutputStream fout = new FileOutputStream(path.append(name).toFile());
-				copy(buf, zin, fout);
+			if (name != null && name.length() > 0) {
+				if (entry.getFileType() == TarEntry.DIRECTORY)
+					path.append(name).toFile().mkdirs();
+				else {
+					FileOutputStream fout = new FileOutputStream(path.append(name).toFile());
+					copy(zin, fout);
+					fout.close();
+				}
 			}
 			zin.close();
 			entry = zin.getNextEntry();

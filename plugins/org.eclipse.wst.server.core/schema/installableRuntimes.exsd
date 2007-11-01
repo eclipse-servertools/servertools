@@ -43,7 +43,7 @@
    <element name="installableRuntime">
       <annotation>
          <appInfo>
-            <meta.element labelAttribute="name" deprecated="true"/>
+            <meta.element labelAttribute="id" deprecated="true"/>
          </appInfo>
       </annotation>
       <complexType>
@@ -122,10 +122,17 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="url" type="string" use="required">
+         <attribute name="archiveUrl" type="string" use="required">
             <annotation>
                <documentation>
-                  a URL to the runtime download
+                  a URL to the runtime archive download
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="archivePath" type="string">
+            <annotation>
+               <documentation>
+                  optional path within the archive to the root of the runtime
                </documentation>
             </annotation>
          </attribute>
@@ -136,10 +143,10 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="platform" type="string">
+         <attribute name="os" type="string">
             <annotation>
                <documentation>
-                  
+                  optional operating system specification. A comma-separated list of operating system designators defined by Eclipse (see Javadoc for org.eclipse.core.runtime.Platform). Indicates this installable runtime should only be used on one of the specified OS systems. If this attribute is not specified, the feature can be installed on all systems (portable implementation)
                </documentation>
             </annotation>
          </attribute>

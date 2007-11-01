@@ -1061,8 +1061,8 @@ public class ServerPlugin extends Plugin {
 		for (int i = 0; i < size; i++) {
 			try {
 				if ("runtime".equals(cf[i].getName())) {
-					String platform = cf[i].getAttribute("platform");
-					//if (platform == null || Swt.g) TODO
+					String os = cf[i].getAttribute("os");
+					if (os == null || os.contains(Platform.getOS()))
 						list.add(new InstallableRuntime2(cf[i]));
 				} else
 					list.add(new InstallableRuntime(cf[i]));
