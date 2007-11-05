@@ -315,7 +315,7 @@
   <actionSet
     id="org.eclipse.wst.server.ui.internal.webbrowser.actionSet"
     label="%actionSetWebBrowserTitle"
-    visible="true">
+    visible="false">
     <action
       id="org.eclipse.wst.server.ui.internal.webbrowser.action.open"
       toolbarPath="browser"
