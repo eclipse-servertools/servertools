@@ -31,6 +31,13 @@ public interface IInstallableRuntime {
 	public String getId();
 
 	/**
+	 * Provides a name for this runtime.
+	 * 
+	 * @return a name
+	 */
+	public String getName();
+
+	/**
 	 * Downloads the license from the update site.
 	 * 
 	 * @param monitor a progress monitor

@@ -1006,14 +1006,14 @@ public class ServerPlugin extends Plugin {
 			loadInstallableRuntimes();
 		
 		Iterator iterator = installableRuntimes.iterator();
-		IRuntimeType[] runtimeTypes = ServerCore.getRuntimeTypes();
-		int size = runtimeTypes.length;
+		//IRuntimeType[] runtimeTypes = ServerCore.getRuntimeTypes();
+		//int size = runtimeTypes.length;
 		while (iterator.hasNext()) {
 			IInstallableRuntime runtime = (IInstallableRuntime) iterator.next();
-			for (int i = 0; i < size; i++) {
+			//for (int i = 0; i < size; i++) {
 				if (runtime.getId().equals(runtimeTypeId))
 					return runtime;
-			}
+			//}
 		}
 		
 		return null;

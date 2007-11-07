@@ -52,6 +52,10 @@ public class InstallableRuntime implements IInstallableRuntime {
 		}
 	}
 
+	public String getName() {
+		return getPath() + "";
+	}
+
 	public String getFeatureVersion() {
 		try {
 			return element.getAttribute("featureVersion");

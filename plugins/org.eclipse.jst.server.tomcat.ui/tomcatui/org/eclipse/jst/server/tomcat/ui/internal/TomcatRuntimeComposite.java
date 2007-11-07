@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2006 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,7 +13,9 @@ package org.eclipse.jst.server.tomcat.ui.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMInstallType;
@@ -24,6 +26,7 @@ import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatRuntimeWorkingCopy;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -42,9 +45,13 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
+import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.core.internal.IInstallableRuntime;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
+import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
+import org.eclipse.wst.server.ui.internal.wizard.fragment.LicenseWizardFragment;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
+import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * Wizard page to set the server install directory.
  */
@@ -59,6 +66,9 @@ public class TomcatRuntimeComposite extends Composite {
 	protected Combo combo;
 	protected List installedJREs;
 	protected String[] jreNames;
+	protected IInstallableRuntime ir;
+	protected Label installLabel;
+	protected Button install;
 
 	/**
 	 * TomcatRuntimeWizardPage constructor comment.
@@ -76,7 +86,7 @@ public class TomcatRuntimeComposite extends Composite {
 		
 		createControl();
 	}
-	
+
 	protected void setRuntime(IRuntimeWorkingCopy newRuntime) {
 		if (newRuntime == null) {
 			runtimeWC = null;
@@ -84,6 +94,16 @@ public class TomcatRuntimeComposite extends Composite {
 		} else {
 			runtimeWC = newRuntime;
 			runtime = (ITomcatRuntimeWorkingCopy) newRuntime.loadAdapter(ITomcatRuntimeWorkingCopy.class, null);
+		}
+		
+		if (runtimeWC == null) {
+			ir = null;
+			install.setEnabled(false);
+			installLabel.setText("");
+		} else {
+			ir = ServerPlugin.findInstallableRuntime(runtimeWC.getRuntimeType().getId());
+			install.setEnabled(true);
+			installLabel.setText(ir.getName());
 		}
 		
 		init();
@@ -144,24 +164,44 @@ public class TomcatRuntimeComposite extends Composite {
 			}
 		});
 		
-		final IInstallableRuntime ir = ServerPlugin.findInstallableRuntime("org.eclipse.jst.server.timcat.runtime.32");
-		if (ir != null) {
-			label = new Label(this, SWT.NONE);
-			
-			Button install = SWTUtil.createButton(this, Messages.install);
-			install.addSelectionListener(new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent se) {
-					DirectoryDialog dialog = new DirectoryDialog(TomcatRuntimeComposite.this.getShell());
-					dialog.setMessage(Messages.selectInstallDir);
-					dialog.setFilterPath(installDir.getText());
-					String selectedDirectory = dialog.open();
-					if (selectedDirectory != null) {
-						ir.install(new Path(selectedDirectory));
-						installDir.setText(selectedDirectory);
-					}
+		installLabel = new Label(this, SWT.RIGHT);
+		data = new GridData(GridData.FILL_HORIZONTAL);
+		data.horizontalIndent = 10;
+		installLabel.setLayoutData(data);
+		
+		install = SWTUtil.createButton(this, Messages.install);
+		install.setEnabled(false);
+		install.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent se) {
+				String license = null;
+				try {
+					license = ir.getLicense(new NullProgressMonitor());
+				} catch (CoreException e) {
+					Trace.trace(Trace.SEVERE, "Error getting license", e);
 				}
-			});
-		}
+				TaskModel taskModel = new TaskModel();
+				taskModel.putObject(LicenseWizardFragment.LICENSE, license);
+				TaskWizard wizard2 = new TaskWizard(Messages.install, new WizardFragment() {
+					protected void createChildFragments(List<WizardFragment> list) {
+						list.add(new LicenseWizardFragment());
+					}
+				}, taskModel);
+				
+				WizardDialog dialog2 = new WizardDialog(getShell(), wizard2);
+				if (dialog2.open() == Window.CANCEL)
+					return;
+				
+				
+				DirectoryDialog dialog = new DirectoryDialog(TomcatRuntimeComposite.this.getShell());
+				dialog.setMessage(Messages.selectInstallDir);
+				dialog.setFilterPath(installDir.getText());
+				String selectedDirectory = dialog.open();
+				if (selectedDirectory != null) {
+					ir.install(new Path(selectedDirectory));
+					installDir.setText(selectedDirectory);
+				}
+			}
+		});
 		
 		updateJREs();
 		

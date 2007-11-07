@@ -51,6 +51,10 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 		}
 	}
 
+	public String getName() {
+		return getArchivePath();
+	}
+
 	public String getArchiveUrl() {
 		try {
 			return element.getAttribute("archiveUrl");
