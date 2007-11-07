@@ -12,11 +12,12 @@
 </relheader>
 <relrow>
 <relcell>
-<topicref href="topics/cwflow.dita" navtitle="Which test server will start">
+<topicref href="topics/cwflow.dita" locktitle="yes" navtitle="Which test server will start">
 </topicref>
 </relcell>
 <relcell>
-<topicref href="topics/twsrtins.dita" navtitle="Starting a server"></topicref>
+<topicref href="topics/twsrtins.dita" locktitle="yes" navtitle="Starting a server">
+</topicref>
 </relcell>
 <relcell></relcell>
 <relcell></relcell>
@@ -24,34 +25,35 @@
 <relrow>
 <relcell></relcell>
 <relcell>
-<topicref href="topics/twtcpprf.dita" navtitle="Defining the TCP/IP Monitor preference">
+<topicref href="topics/twtcpprf.dita" locktitle="yes" navtitle="Defining the TCP/IP Monitor preference">
 </topicref>
 </relcell>
 <relcell>
-<topicref href="topics/rwtcpvw.dita" navtitle="TCP/IP Monitor view"></topicref>
+<topicref href="topics/rwtcpvw.dita" locktitle="yes" navtitle="TCP/IP Monitor view">
+</topicref>
 </relcell>
 <relcell></relcell>
 </relrow>
 <relrow>
 <relcell>
-<topicref href="topics/cwres.dita" navtitle="Resources used by the Server Tools">
+<topicref href="topics/cwres.dita" locktitle="yes" navtitle="Resources used by the Server Tools">
 </topicref>
 </relcell>
 <relcell>
-<topicref href="topics/tmetasrv.dita" linking="targetonly" navtitle="Displaying or hiding the metadata of the server">
-</topicref>
-<topicref href="topics/twinstprf.dita" linking="targetonly" navtitle="Defining the installed server runtime environments">
-</topicref>
+<topicref href="topics/tmetasrv.dita" linking="targetonly" locktitle="yes"
+navtitle="Displaying or hiding the metadata of the server"></topicref>
+<topicref href="topics/twinstprf.dita" linking="targetonly" locktitle="yes"
+navtitle="Defining the installed server runtime environments"></topicref>
 </relcell>
 <relcell></relcell>
 <relcell></relcell>
 </relrow>
-<relrow><?Pub Caret1?>
+<relrow>
 <relcell></relcell>
 <relcell collection-type="family">
-<topicref href="topics/twsrvprf.dita" navtitle="Defining the server preferences">
+<topicref href="topics/twsrvprf.dita" locktitle="yes" navtitle="Defining the server preferences">
 </topicref>
-<topicref href="topics/twpub.dita" navtitle="Publishing your application">
+<topicref href="topics/twpub.dita" locktitle="yes" navtitle="Publishing your application">
 </topicref>
 </relcell>
 <relcell></relcell>
@@ -59,4 +61,4 @@
 </relrow>
 </reltable>
 </map>
-<?Pub *0000001722?>
+<?Pub *0000001852?>

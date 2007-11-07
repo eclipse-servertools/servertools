@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
-  "map.dtd">
+ "map.dtd">
 <?Pub Inc?>
 <map title="Managing Servers">
-<topicref href="topics/twmanage.dita" id="manage_server" navtitle="Managing servers ">
+<topicref href="topics/twmanage.dita" id="manage_server" locktitle="yes" navtitle="Managing servers ">
 <topicref href="topics/twaddprj.dita" locktitle="yes" navtitle="Adding projects to a server ">
 </topicref>
 <topicref href="topics/twremprj.dita" locktitle="yes" navtitle="Removing a project from a server">
@@ -17,8 +17,8 @@
 </topicref>
 <topicref href="topics/twprefin.dita" locktitle="yes" navtitle="Setting a default server">
 </topicref>
-<topicref href="topics/tmetasrv.dita" navtitle="Displaying or hiding the metadata of the server">
+<topicref href="topics/tmetasrv.dita" locktitle="yes" navtitle="Displaying or hiding the metadata of the server"><?Pub Caret?>
 </topicref>
-</topicref><?Pub Caret1?>
+</topicref>
 </map>
-<?Pub *0000001064?>
+<?Pub *0000001090?>
