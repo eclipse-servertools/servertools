@@ -1434,7 +1434,7 @@ public class Server extends Base implements IServer {
 											Trace.trace(Trace.SEVERE, "Error while restarting server", e);
 										}
 									}
-									if (ServerPreferences.getInstance().isAutoPublishing() && shouldPublish()) {
+									if (ServerCore.isAutoPublishing() && shouldPublish()) {
 										publish(PUBLISH_INCREMENTAL, null);
 									}
 									if (getServerState() != IServer.STATE_STARTED) {
@@ -1471,7 +1471,7 @@ public class Server extends Base implements IServer {
 		if (getServerType() == null)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorMissingAdapter, null);
 		
-		if (getServerState() == STATE_STOPPED)
+		if (getServerState() == STATE_STOPPED || getServerState() == STATE_STOPPING)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorStopAlreadyStopped, null);
 		
 		if (!getServerType().supportsLaunchMode(getMode()))
@@ -1786,7 +1786,7 @@ public class Server extends Base implements IServer {
 											Trace.trace(Trace.SEVERE, "Error while restarting server", e);
 										}
 									}
-									if (ServerPreferences.getInstance().isAutoPublishing() && shouldPublish()) {
+									if (ServerCore.isAutoPublishing() && shouldPublish()) {
 										publish(PUBLISH_INCREMENTAL, null);
 									}
 									if (getServerState() != IServer.STATE_STARTED) {

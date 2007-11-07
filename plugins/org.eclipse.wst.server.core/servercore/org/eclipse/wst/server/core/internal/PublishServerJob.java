@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.ServerCore;
 /**
  * Job to publish to a particular server.
  */
@@ -62,10 +63,10 @@ public class PublishServerJob extends ChainedJob {
 	 */
 	protected IStatus run(IProgressMonitor monitor) {
 		if (check) {
-			// don't run if we're autopublishing and there is no need for a publish.
+			// don't run if we're auto-publishing and there is no need for a publish.
 			// can't execute this code in shouldRun() because it will cancel the job
 			// instead of returning immediately
-			if (!ServerPreferences.getInstance().isAutoPublishing() || !((Server)getServer()).shouldPublish())
+			if (!ServerCore.isAutoPublishing() || !getServer().shouldPublish())
 				return Status.OK_STATUS;
 		}
 		

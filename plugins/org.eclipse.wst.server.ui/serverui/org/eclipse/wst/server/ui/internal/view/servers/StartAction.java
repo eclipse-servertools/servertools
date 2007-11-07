@@ -16,9 +16,9 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.PublishServerJob;
 import org.eclipse.wst.server.core.internal.RestartServerJob;
-import org.eclipse.wst.server.core.internal.ServerPreferences;
 import org.eclipse.wst.server.core.internal.ServerType;
 import org.eclipse.wst.server.core.internal.StartServerJob;
 import org.eclipse.wst.server.ui.internal.ImageResource;
@@ -152,7 +152,7 @@ public class StartAction extends AbstractServerAction {
 			if (!ServerUIPlugin.saveEditors())
 				return;
 			
-			if (!ServerPreferences.getInstance().isAutoPublishing()) {
+			if (!ServerCore.isAutoPublishing()) {
 				StartServerJob startJob = new StartServerJob(server, launchMode);
 				startJob.schedule();
 				return;

@@ -26,6 +26,7 @@ import org.eclipse.jdt.launching.IVMRunner;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.eclipse.jst.server.core.ServerProfilerDelegate;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.eclipse.wst.server.core.util.SocketUtil;
@@ -47,6 +48,10 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 			abort(GenericServerCoreMessages.missingServer, null,
 					IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
 		}
+		
+		if (server.shouldPublish() && ServerCore.isAutoPublishing())
+			server.publish(IServer.PUBLISH_INCREMENTAL, monitor);
+		
 		GenericServerBehaviour genericServer = (GenericServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
 
 		try {

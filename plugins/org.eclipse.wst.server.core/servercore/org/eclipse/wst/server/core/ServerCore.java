@@ -451,4 +451,16 @@ public final class ServerCore {
 		registry.addRegistryChangeListener(registryListener, ServerPlugin.PLUGIN_ID);
 		ServerPlugin.setRegistryListener(registryListener);
 	}
+
+	/**
+	 * Returns <code>true</code> if the preference is set to automatically
+	 * publish when starting servers, or <code>false</code> otherwise
+	 * 
+	 * @return <code>true</code> if the preference is set to automatically
+	 *    publish when starting servers, or <code>false</code> otherwise
+	 * @since 3.0
+	 */
+	public static boolean isAutoPublishing() {
+		return ServerPreferences.getInstance().isAutoPublishing();
+	}
 }

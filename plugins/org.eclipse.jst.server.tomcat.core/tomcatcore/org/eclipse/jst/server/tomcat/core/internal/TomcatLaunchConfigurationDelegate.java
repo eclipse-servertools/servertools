@@ -22,6 +22,7 @@ import org.eclipse.jdt.launching.*;
 import org.eclipse.jst.server.core.ServerProfilerDelegate;
 
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
 /**
  * 
@@ -35,6 +36,9 @@ public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 			// throw CoreException();
 			return;
 		}
+		
+		if (server.shouldPublish() && ServerCore.isAutoPublishing())
+			server.publish(IServer.PUBLISH_INCREMENTAL, monitor);
 		
 		TomcatServerBehaviour tomcatServer = (TomcatServerBehaviour) server.loadAdapter(TomcatServerBehaviour.class, null);
 		

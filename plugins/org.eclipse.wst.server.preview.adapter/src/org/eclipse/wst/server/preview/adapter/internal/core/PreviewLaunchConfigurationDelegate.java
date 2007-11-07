@@ -29,6 +29,7 @@ import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.osgi.service.environment.Constants;
 
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.osgi.framework.Bundle;
 /**
@@ -57,6 +58,9 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 			// throw CoreException();
 			return;
 		}
+		
+		if (server.shouldPublish() && ServerCore.isAutoPublishing())
+			server.publish(IServer.PUBLISH_INCREMENTAL, monitor);
 		
 		PreviewServerBehaviour previewServer = (PreviewServerBehaviour) server.loadAdapter(PreviewServerBehaviour.class, null);
 		
