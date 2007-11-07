@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS type="org.eclipse.help.contexts"?>
 <!-- /*******************************************************************************
- * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * Copyright (c) 2000, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -60,18 +60,6 @@
 <description>Specifies that all the files should automatically be published before starting the server.
 </description>
 </context>
-
-<context id="spge0014">
-<description>Specifies that the server tools can automatically restart the server when it detects that the server must be restarted to handle resource changes in the workspace.
-</description>
-</context>
-
-
-<context id="spge0020">
-<description>Specifies that the server tools will prompt you before you make a change in a editor that cannot be undone.
-</description>
-</context>
-
 <context id="spge0022">
 <description>The Servers view is displayed on the workbench when there are any activities in the Servers view.
 </description>
@@ -130,8 +118,8 @@ The default setting is <b>Normal</b>.
 </context>
 
 <context id="svcp0000">
-<description>The Server view allows you to manage servers. This view displays a list of all your servers and the server configurations that are associated with each server. You can use this view to start, start in debug mode, restart, and stop servers.
-
+<description>The Servers view allows you to manage servers. This view displays a list of all your servers and the server configurations that are associated with each server. You can use this view to start, start in debug mode, restart, and stop servers.
+To edit a server open its server editor by going into the Servers view and double-click the server; or right-click the server and select <b>Open</b> in the pop-up menu.
 </description>
 </context>
 <context id="svcp0002">
@@ -145,37 +133,13 @@ This dialog box prompts different options depending on the status of the server 
 Select the <b>OK</b> button to apply your delete options.
 </description>
 </context>
-<context id="swic0000">
-<description>Use to import a server configuration that is located outside of the workspace but is on the same machine.
 
+<!-- In Servers View, right-click a server and select Properties > General Information
+<context id="svcp0004">
+<description>
 </description>
 </context>
-<context id="swic0002">
-<description>The name assigned to the server configuration that you want to import.
-
-</description>
-</context>
-<context id="swic0004">
-<description>The name of the server project that will contain the server configuration that you want to import. Select the name from the list of available server projects.
-
-</description>
-</context>
-<context id="swic0006">
-<description>The type of server configuration that will be imported. Select a type from the list of available configuration types.
-
-</description>
-</context>
-<context id="swic0008">
-<description>The location from which you want to import a server configuration. You may either type the fully qualified pathin the <b>Location</b> field if you know it, or click <b>Browse</b> to find it.
-
-</description>
-</context>
-<context id="swic0010">
-<description>The location from which you want to import a server configuration. You may either type the fully qualified path in the <b>Location</b> field if you know it, or click <b>Browse</b> to find it.
-
-</description>
-</context>
-
+-->
 <context id="swns0000">
 <description>This wizard creates a new server and a new server configuration. A server contains information required to point to a specific run-time environment for local or remote testing, or for deployment to an application server. A server configuration contains information required to set up and deploy to a server.
 
