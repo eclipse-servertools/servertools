@@ -49,7 +49,6 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 
 	// the thread used to ping the server to check for startup
 	protected transient PingThread ping = null;
-	protected transient IProcess process;
 	protected transient IDebugEventSetListener processListener;
 
 	/**
@@ -155,14 +154,8 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		return buf.toString();
 	}
 
-	public void setProcess(final IProcess newProcess) {
-		if (process != null)
-			return;
-
-		process = newProcess;
-		if (processListener != null)
-			DebugPlugin.getDefault().removeDebugEventListener(processListener);
-		if (newProcess == null)
+	protected void addProcessListener(final IProcess newProcess) {
+		if (processListener != null || newProcess == null)
 			return;
 		
 		processListener = new IDebugEventSetListener() {
@@ -170,8 +163,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 				if (events != null) {
 					int size = events.length;
 					for (int i = 0; i < size; i++) {
-						if (process != null && process.equals(events[i].getSource()) && events[i].getKind() == DebugEvent.TERMINATE) {
-							DebugPlugin.getDefault().removeDebugEventListener(this);
+						if (newProcess != null && newProcess.equals(events[i].getSource()) && events[i].getKind() == DebugEvent.TERMINATE) {
 							stopImpl();
 						}
 					}
@@ -190,8 +182,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			ping.stop();
 			ping = null;
 		}
-		if (process != null) {
-			process = null;
+		if (processListener != null) {
 			DebugPlugin.getDefault().removeDebugEventListener(processListener);
 			processListener = null;
 		}
@@ -515,13 +506,14 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	protected void terminate() {
 		if (getServer().getServerState() == IServer.STATE_STOPPED)
 			return;
-
+		
 		try {
 			setServerState(IServer.STATE_STOPPING);
 			if (Trace.isTraceEnabled())
 				Trace.trace(Trace.FINER, "Killing the Tomcat process");
-			if (process != null && !process.isTerminated()) {
-				process.terminate();
+			ILaunch launch = getServer().getLaunch();
+			if (launch != null) {
+				launch.terminate();
 				stopImpl();
 			}
 		} catch (Exception e) {

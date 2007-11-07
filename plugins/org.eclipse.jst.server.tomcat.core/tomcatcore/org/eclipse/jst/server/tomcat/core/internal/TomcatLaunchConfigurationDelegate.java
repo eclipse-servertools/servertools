@@ -92,7 +92,7 @@ public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 		tomcatServer.setupLaunch(launch, mode, monitor);
 		try {
 			runner.run(runConfig, launch, monitor);
-			tomcatServer.setProcess(launch.getProcesses()[0]);
+			tomcatServer.addProcessListener(launch.getProcesses()[0]);
 		} catch (Exception e) {
 			// ignore - process failed
 		}
