@@ -182,7 +182,7 @@ public class TomcatRuntimeComposite extends Composite {
 				TaskModel taskModel = new TaskModel();
 				taskModel.putObject(LicenseWizardFragment.LICENSE, license);
 				TaskWizard wizard2 = new TaskWizard(Messages.install, new WizardFragment() {
-					protected void createChildFragments(List<WizardFragment> list) {
+					protected void createChildFragments(List list) {
 						list.add(new LicenseWizardFragment());
 					}
 				}, taskModel);
