@@ -245,10 +245,12 @@ public class ResourceManager {
 		return name.substring(index + 1);
 	}
 
-	public synchronized static ResourceManager getInstance() {
-		if (instance == null)
-			new ResourceManager();
-
+	public static ResourceManager getInstance() {
+		synchronized (ServerCore.class) {
+			if (instance == null)
+				new ResourceManager();
+		}
+		
 		return instance;
 	}
 
