@@ -43,11 +43,10 @@ public class ServerTypeDefinitionRuntimeDecorator extends ServerTypeDefinitionDe
 	        fRuntime.getRuntimeWorkingCopy().setLocation(new Path(wDir));
 
 			return false;
-		}else
-		{
-			fWizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
-			fWizard.update();
-			return true;
-		} 
+		}
+		
+		fWizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
+		fWizard.update();
+		return true; 
 	}
 }

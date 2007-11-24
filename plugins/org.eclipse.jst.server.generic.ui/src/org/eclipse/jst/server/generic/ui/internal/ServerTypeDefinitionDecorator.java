@@ -41,7 +41,7 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
 	private ServerRuntime fDefinition;
     private Map fProperties;
 	private String fContext;
-	private String fLastMessage;
+	protected String fLastMessage;
 	protected IWizardHandle fWizard;
 	private List fPropertyControls= new ArrayList();
 
@@ -167,12 +167,12 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
 		}	
 		if(Property.TYPE_SELECT_EDIT.equals(property.getType())){
 			StringTokenizer tokenizer = new StringTokenizer(property.getDefault(),","); //$NON-NLS-1$
-			if( tokenizer.hasMoreTokens())
+			if( tokenizer.hasMoreTokens()){
 				return fDefinition.getResolver().resolveProperties(tokenizer.nextToken());
-			else
-				return "";
-		}else
-			return fDefinition.getResolver().resolveProperties(property.getDefault());
+			}
+			return ""; //$NON-NLS-1$
+		}
+		return fDefinition.getResolver().resolveProperties(property.getDefault());	
 	}	
 
    /**

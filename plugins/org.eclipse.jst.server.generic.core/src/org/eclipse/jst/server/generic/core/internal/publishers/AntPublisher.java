@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
@@ -38,6 +39,7 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.generic.core.internal.CorePlugin;
 import org.eclipse.jst.server.generic.core.internal.GenericPublisher;
+import org.eclipse.jst.server.generic.core.internal.GenericServer;
 import org.eclipse.jst.server.generic.core.internal.GenericServerCoreMessages;
 import org.eclipse.jst.server.generic.internal.core.util.FileUtil;
 import org.eclipse.jst.server.generic.servertype.definition.Module;
@@ -106,7 +108,10 @@ public class AntPublisher extends GenericPublisher {
 			if (monitor.isCanceled())
 				return null;
 			assembleModule(monitor);
-			File file = computeBuildFile();
+			File file = getCustomBuildFile();
+			if ( file == null){// no user selected build file use the adapter default.
+				file = computeBuildFile();
+			}
 			runAnt(file.toString(), getPublishTargetsForModule(), getPublishProperties(), monitor);
 		} catch (CoreException e) {
 			IStatus s = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.errorPublishAntpublisher, e);
@@ -121,6 +126,24 @@ public class AntPublisher extends GenericPublisher {
 		assembler.assemble(monitor);
 	}
 
+	/**
+	 * Returns the custom build file that user selected. Or returns null;
+	 * @return
+	 * @throws CoreException 
+	 */
+	private File getCustomBuildFile() throws CoreException {
+		String filename = (String)getServer().getServerInstanceProperties().get( GenericServer.PROP_CUSTOM_BUILD_SCRIPT );
+		if( filename != null && filename.length()>0 ){
+			filename = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution( filename );
+			File file = new File(filename);
+			if ( !file.exists() ){
+				throw new CoreException(new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,
+						"Selected build file does not exist."));
+			}
+			return file;
+		}
+		return null;
+	}
 	/**
 	 * 
 	 * @return file
@@ -162,9 +185,9 @@ public class AntPublisher extends GenericPublisher {
 					// ignore
 				}
 			}
-		} else {
-			return FileUtil.resolveFile(fileURL);
-		}
+		} 
+		return FileUtil.resolveFile(fileURL);
+	
 	}
 
 	private String getPublishTargetsForModule() {

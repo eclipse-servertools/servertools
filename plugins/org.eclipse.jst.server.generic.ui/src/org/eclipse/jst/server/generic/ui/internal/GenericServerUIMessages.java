@@ -19,6 +19,11 @@ import org.eclipse.osgi.util.NLS;
 public class GenericServerUIMessages extends NLS{
 
 	private static final String RESOURCE_BUNDLE= "org.eclipse.jst.server.generic.ui.internal.GenericServerUIMessages";//$NON-NLS-1$
+	public static String AntBuildDialogDescription;
+	public static String AntBuildDialogTitle;
+	public static String AntPublisherSectionDescription;
+	public static String AntPublisherSectionHeading;
+	public static String ButtonBrowseForBuildFile;
 	public static String ServerEditorSectionDescription;
     public static String ServerEditorSectionTitle;
 	public static String serverRunningCanNotSave;
@@ -35,13 +40,15 @@ public class GenericServerUIMessages extends NLS{
 	public static String invalidPath;
 	public static String installServerButton;
 	public static String installationDirectory;
-	
+	public static String emptyPath;
+	public static String ErrorNoAntBuildFile;
+	public static String LabelBuildFile;
+    public static String UpdateOperationDescription;	
 	static{
 		  NLS.initializeMessages(RESOURCE_BUNDLE, GenericServerUIMessages.class);
 	}
 
-	public static String emptyPath;
-    public static String UpdateOperationDescription;
+
 
 
 }

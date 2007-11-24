@@ -148,11 +148,10 @@ public class JRESelectDecorator implements GenericServerCompositeDecorator {
 	        fWizard.update();
 	        return true;
 	    }
-	    else
-	    {
-	        fWizard.setMessage("", IMessageProvider.NONE); //$NON-NLS-1$
-	        fWizard.update();
-	        return false;
-	    }
+
+	    fWizard.setMessage("", IMessageProvider.NONE); //$NON-NLS-1$
+        fWizard.update();
+        return false;
+
 	}
 }

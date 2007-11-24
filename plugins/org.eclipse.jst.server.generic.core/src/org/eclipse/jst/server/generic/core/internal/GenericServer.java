@@ -44,6 +44,11 @@ import org.eclipse.wst.server.core.model.ServerDelegate;
  */
 public class GenericServer extends ServerDelegate implements IURLProvider {
 
+	/**
+	 * Property key for the custom build file. Selected by user.
+	 */
+	public static final String PROP_CUSTOM_BUILD_SCRIPT = CorePlugin.PLUGIN_ID+".custom_build_file"; //$NON-NLS-1$
+	
     private static final String ATTR_GENERIC_SERVER_MODULES = "Generic_Server_Modules_List"; //$NON-NLS-1$
 
 	public IStatus canModifyModules( IModule[] add, IModule[] remove ) {

@@ -36,7 +36,9 @@ import org.eclipse.wst.server.core.IRuntime;
 public class ServerTypeDefinitionUtil 
 {
 	/**
-	 * Returns the server definition for runtime.
+	 * Returns the server definition for runtime. Returns null
+	 * if the runtime is null or not a Generic server type.
+	 * 
 	 * @param runtime
 	 * @return serverRuntime
 	 */

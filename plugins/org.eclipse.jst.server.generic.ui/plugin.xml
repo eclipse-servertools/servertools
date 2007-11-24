@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
+  
+    <extension
+        point="org.eclipse.core.expressions.propertyTesters">
+     <propertyTester
+           class="org.eclipse.jst.server.generic.ui.internal.AntPublisherPropertyTester"
+           id="org.eclipse.jst.server.generic.ui.antPublisherTester"
+           namespace="org.eclipse.jst.server.generic.ui"
+           properties="isAntPublisher"
+           type="java.lang.Object">
+     </propertyTester>
+  </extension>
+  
   <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
     <launchConfigurationTypeImage
       id="org.eclipse.jst.server.generic.image.ui.launchConfigurationTypeImage"
@@ -49,5 +61,16 @@
          typeIds="org.eclipse.jst.server.generic.*"
          class="org.eclipse.jst.server.generic.ui.internal.editor.ServerPropertiesEditorSection">
       </section>
-   </extension>   
+      <section
+         id="org.eclipse.jst.server.generic.ui.internal.editor.antBuidFileSelection"
+         order="1"
+         insertionId="org.eclipse.wst.server.editor.overview.right"
+         typeIds="org.eclipse.jst.server.generic.*"
+         class="org.eclipse.jst.server.generic.ui.internal.editor.AntBuildFileSelectionEditorSection">
+         <enablement>
+           <test property="org.eclipse.jst.server.generic.ui.isAntPublisher" value="true"/>
+         </enablement>
+      </section>
+   </extension>
+   
 </plugin>

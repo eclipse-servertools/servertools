@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
@@ -126,7 +127,7 @@ public class GenericServerRuntimeWizardFragment extends
     private String createName() {
         RuntimeDelegate dl = getRuntimeDelegate();
         IRuntimeType runtimeType = dl.getRuntime().getRuntimeType();
-        String name = GenericServerUIMessages.bind(
+        String name = NLS.bind(
                 GenericServerUIMessages.runtimeName, runtimeType.getName() );
         IRuntime[] list = ServerCore.getRuntimes();
         int suffix = 1;
@@ -163,7 +164,7 @@ public class GenericServerRuntimeWizardFragment extends
         String rName = getRuntimeName();
         if( rName == null || rName.length() < 1 )
             rName = "Generic"; //$NON-NLS-1$
-        return GenericServerUIMessages.bind(
+        return NLS.bind(
                 GenericServerUIMessages.runtimeWizardDescription, rName );
     }
 
@@ -176,7 +177,7 @@ public class GenericServerRuntimeWizardFragment extends
         String rName = getRuntimeName();
         if( rName == null || rName.length() < 1 )
             rName = "Generic"; //$NON-NLS-1$
-        return GenericServerUIMessages.bind(
+        return NLS.bind(
                 GenericServerUIMessages.runtimeWizardTitle, rName );
     }
 

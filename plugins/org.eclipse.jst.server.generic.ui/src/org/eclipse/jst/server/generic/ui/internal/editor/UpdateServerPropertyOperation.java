@@ -1,6 +1,12 @@
-/**
+/***************************************************************************************************
+ * Copyright (c) 2007 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * accompanying materials are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  * 
- */
+ * Contributors: Gorkem Ercan - initial API and implementation
+ *               
+ **************************************************************************************************/
 package org.eclipse.jst.server.generic.ui.internal.editor;
 
 import java.util.HashMap;
@@ -40,7 +46,7 @@ public class UpdateServerPropertyOperation extends AbstractOperation {
             fGenericServer.setServerInstanceProperties( map );
 			return null;
 		}
-		return new Status(IStatus.ERROR,GenericUiPlugin.PLUGIN_ID,0,"Property does not exist",null);
+		return new Status(IStatus.ERROR,GenericUiPlugin.PLUGIN_ID,0,"Property can not be found",null); //$NON-NLS-1$
 	}
 
 	
@@ -51,12 +57,8 @@ public class UpdateServerPropertyOperation extends AbstractOperation {
 
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		Map map = new HashMap(fGenericServer.getServerInstanceProperties());
-		if(map.containsKey(fPropertyName))
-		{
-			map.put(fPropertyName, fOldValue);
-            fGenericServer.setServerInstanceProperties(map);
-			return null;
+		map.put(fPropertyName, fOldValue);
+        fGenericServer.setServerInstanceProperties(map);
+		return null;
 		}
-		return new Status(IStatus.ERROR,GenericUiPlugin.PLUGIN_ID,0,"Property does not exist",null);
-	}
 }

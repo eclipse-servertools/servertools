@@ -1,3 +1,12 @@
+/***************************************************************************************************
+ * Copyright (c) 2007 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * accompanying materials are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Gorkem Ercan - initial API and implementation
+ *               
+ **************************************************************************************************/
 package org.eclipse.jst.server.generic.ui.internal.editor;
 
 import java.beans.PropertyChangeEvent;
@@ -38,6 +47,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
@@ -45,11 +55,11 @@ import org.eclipse.wst.server.ui.editor.ServerEditorSection;
 
 public class ServerPropertiesEditorSection extends ServerEditorSection{
 	private static final String MESSAGE_ID_SERVER_RUNNING = "server_running"; //$NON-NLS-1$
-	private GenericServer fServer;
+	protected GenericServer fServer;
 	private PropertyChangeListener fPropertyChangeListener;
 	private ILaunchesListener2 fLaunchListener;
 	private Map fControls = new HashMap();
-    private boolean fUpdating;
+    protected boolean fUpdating;
    
     
 	public void init(final IEditorSite site, IEditorInput input) {
@@ -74,6 +84,7 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 		fLaunchListener = new ILaunchesListener2() {
 		
 			public void launchesRemoved(ILaunch[] launches) {
+				//Nothing to do
 			}
 			
 			private ILaunchConfiguration getServerLaunchConfig(ILaunch[] launches){
@@ -88,6 +99,7 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 									return launchConfig;
 							}
 							} catch (CoreException e) {
+								//Ignore
 							}
 
 						}
@@ -95,7 +107,8 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 				return null;
 
 			}
-			public void launchesChanged(ILaunch[] launches) {		
+			public void launchesChanged(ILaunch[] launches) {
+				//Nothing to do
 			}
 		
 			public void launchesAdded(ILaunch[] launches) {
@@ -105,8 +118,9 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 						if ("true".equals(lc.getAttribute(GenericServerBehaviour.ATTR_STOP, "false"))){ //$NON-NLS-1$ //$NON-NLS-2$						
 						site.getWorkbenchWindow().getWorkbench().getDisplay().asyncExec( new Runnable() {						
 								public void run() {
-									getManagedForm().getMessageManager().removeMessage(MESSAGE_ID_SERVER_RUNNING);
-									getManagedForm().getMessageManager().update();
+									IManagedForm managedForm = getManagedForm();
+									managedForm.getMessageManager().removeMessage(MESSAGE_ID_SERVER_RUNNING);
+									managedForm.getMessageManager().update();
 							
 								}
 							
@@ -209,7 +223,7 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 		}
 	}
 	
-	private void executeUpdateOperation(String propertyName, String propertyValue)
+	protected void executeUpdateOperation(String propertyName, String propertyValue)
 	{
         if( !fUpdating )
         {
@@ -353,7 +367,7 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 	
 	private IStatus validate(){
 		if (getExistingLaunch() != null){
-			return new Status(IStatus.WARNING,GenericUiPlugin.PLUGIN_ID, GenericServerUIMessages.serverRunningCanNotSave); //$NON-NLS-1$
+			return new Status(IStatus.WARNING,GenericUiPlugin.PLUGIN_ID, GenericServerUIMessages.serverRunningCanNotSave);
 			}
 		return null;
 

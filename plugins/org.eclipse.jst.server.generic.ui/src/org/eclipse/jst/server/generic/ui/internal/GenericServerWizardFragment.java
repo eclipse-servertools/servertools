@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
 import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServer;
@@ -113,7 +114,7 @@ public class GenericServerWizardFragment extends
     }
 
     private String createName() {
-        String name = GenericServerUIMessages.bind(
+        String name = NLS.bind(
                 GenericServerUIMessages.serverName, getServerTypeDefinitionFor(
                         getServer() ).getName() );
         int suffix = 1;
@@ -159,7 +160,7 @@ public class GenericServerWizardFragment extends
         String sName = getServerName();
         if( sName == null || sName.length() < 1 )
             sName = "Generic"; //$NON-NLS-1$
-        return GenericServerUIMessages.bind(
+        return NLS.bind(
                 GenericServerUIMessages.serverWizardDescription, sName );
     }
 
@@ -178,7 +179,7 @@ public class GenericServerWizardFragment extends
         String sName = getServerName();
         if( sName == null || sName.length() < 1 )
             sName = "Generic"; //$NON-NLS-1$
-        return GenericServerUIMessages.bind(
+        return NLS.bind(
                 GenericServerUIMessages.serverWizardTitle, sName );
     }
 }
