@@ -49,8 +49,9 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 					IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
 		}
 		
-		if (server.shouldPublish() && ServerCore.isAutoPublishing())
-			server.publish(IServer.PUBLISH_INCREMENTAL, monitor);
+//		Commented until bug 210859 is resolved
+//		if (server.shouldPublish() && ServerCore.isAutoPublishing())
+//			server.publish(IServer.PUBLISH_INCREMENTAL, monitor);
 		
 		GenericServerBehaviour genericServer = (GenericServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
 
