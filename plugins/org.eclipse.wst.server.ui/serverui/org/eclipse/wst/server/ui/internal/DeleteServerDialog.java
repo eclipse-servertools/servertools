@@ -167,6 +167,7 @@ public class DeleteServerDialog extends MessageDialog {
 						}
 					} catch (Exception e) {
 						Trace.trace(Trace.SEVERE, "Error while deleting resources", e);
+						return new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, 0, e.getMessage(), e); 
 					}
 							
 					return Status.OK_STATUS;
