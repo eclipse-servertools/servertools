@@ -81,7 +81,7 @@ public class ServerToolTip extends ToolTip {
 					CURRENT_TOOLTIP.dispose();
 					activate();
 				}
-				if (e.keyCode == SWT.F3) {
+				if (e.keyCode == SWT.F6) {
 					deactivate();
 					hide();
 					createFocusedTooltip(control);					
