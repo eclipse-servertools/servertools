@@ -32,12 +32,12 @@ import org.eclipse.wst.server.core.util.ProjectModuleFactoryDelegate;
  */
 public class ResourceManager {
 	private static final String SERVER_DATA_FILE = "servers.xml";
-	
+
 	private static final byte EVENT_ADDED = 0;
 	private static final byte EVENT_CHANGED = 1;
 	private static final byte EVENT_REMOVED = 2;
 
-	private static ResourceManager instance;
+	private static ResourceManager instance = new ResourceManager();
 
 	// currently active runtimes and servers
 	protected List<IRuntime> runtimes;
@@ -60,7 +60,7 @@ public class ResourceManager {
 
 	private static boolean initialized;
 	private static boolean initializing;
-	
+
 	protected static List<String> serverProjects = new ArrayList<String>();
 
 	/**
@@ -175,7 +175,6 @@ public class ResourceManager {
 	 */
 	private ResourceManager() {
 		super();
-		instance = this;
 	}
 
 	/**
@@ -298,9 +297,6 @@ public class ResourceManager {
 	}
 
 	public static ResourceManager getInstance() {
-		if (instance == null)
-			new ResourceManager();
-
 		return instance;
 	}
 
@@ -415,12 +411,9 @@ public class ResourceManager {
 	 *
 	 * @param runtime
 	 */
-	protected void deregisterRuntime(IRuntime runtime) {
+	private void deregisterRuntime(IRuntime runtime) {
 		if (runtime == null)
 			return;
-		
-		if (!initialized)
-			init();
 		
 		Trace.trace(Trace.RESOURCES, "Deregistering runtime: " + runtime.getName());
 		
@@ -434,12 +427,9 @@ public class ResourceManager {
 	 *
 	 * @param server
 	 */
-	protected void deregisterServer(IServer server) {
+	private void deregisterServer(IServer server) {
 		if (server == null)
 			return;
-		
-		if (!initialized)
-			init();
 		
 		Trace.trace(Trace.RESOURCES, "Deregistering server: " + server.getName());
 		
@@ -531,7 +521,7 @@ public class ResourceManager {
 		ignorePreferenceChanges = false;
 	}
 
-	protected void saveServersList() {
+	private void saveServersList() {
 		String filename = ServerPlugin.getInstance().getStateLocation().append(SERVER_DATA_FILE).toOSString();
 		
 		try {
@@ -541,8 +531,10 @@ public class ResourceManager {
 			while (iterator.hasNext()) {
 				Server server = (Server) iterator.next();
 				
-				IMemento child = memento.createChild("server");
-				server.save(child);
+				if (server.getFile() == null) {
+					IMemento child = memento.createChild("server");
+					server.save(child);
+				}
 			}
 			
 			memento.saveToFile(filename);
@@ -818,7 +810,7 @@ public class ResourceManager {
 				IServer server = loadServer(file, ProgressUtil.getSubMonitorFor(monitor, 1000));
 				if (server != null) {
 					if (getServer(server.getId()) == null)
-						registerServer(server);
+						addServer(server);
 					monitor.done();
 					return true;
 				}
@@ -839,7 +831,7 @@ public class ResourceManager {
 	 * @param monitor
 	 * @return boolean
 	 */
-	protected boolean handleMovedFile(IFile file, IResourceDelta delta, IProgressMonitor monitor) {
+	private boolean handleMovedFile(IFile file, IResourceDelta delta, IProgressMonitor monitor) {
 		Trace.trace(Trace.RESOURCES, "handleMovedFile: " + file);
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.beginTask("", 2000);
@@ -903,7 +895,7 @@ public class ResourceManager {
 	 * @param monitor
 	 * @return boolean
 	 */
-	protected boolean handleChangedFile(IFile file, IProgressMonitor monitor) {
+	private boolean handleChangedFile(IFile file, IProgressMonitor monitor) {
 		Trace.trace(Trace.RESOURCES, "handleChangedFile: " + file);
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.beginTask("", 1000);
@@ -918,7 +910,7 @@ public class ResourceManager {
 				fireServerEvent(server, EVENT_CHANGED);
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Error reloading server " + server.getName() + " from " + file, e);
-				deregisterServer(server);
+				removeServer(server);
 			}
 		} else
 			Trace.trace(Trace.RESOURCES, "No server found at: " + file);
@@ -934,12 +926,12 @@ public class ResourceManager {
 	 * @param file a file
 	 * @return boolean
 	 */
-	protected boolean handleRemovedFile(IFile file) {
+	private boolean handleRemovedFile(IFile file) {
 		Trace.trace(Trace.RESOURCES, "handleRemovedFile: " + file);
 		
 		IServer server = findServer(file);
 		if (server != null) {
-			deregisterServer(server);
+			removeServer(server);
 			return true;
 		}
 		
@@ -1027,14 +1019,11 @@ public class ResourceManager {
 	/**
 	 * Registers a new runtime.
 	 *
-	 * @param runtime org.eclipse.wst.server.core.IRuntime
+	 * @param runtime a runtime
 	 */
-	protected void registerRuntime(IRuntime runtime) {
+	private void registerRuntime(IRuntime runtime) {
 		if (runtime == null)
 			return;
-		
-		if (!initialized)
-			init();
 		
 		Trace.trace(Trace.RESOURCES, "Registering runtime: " + runtime.getName());
 		
@@ -1050,14 +1039,11 @@ public class ResourceManager {
 	/**
 	 * Registers a new server.
 	 *
-	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param server a server
 	 */
-	protected void registerServer(IServer server) {
+	private void registerServer(IServer server) {
 		if (server == null)
 			return;
-		
-		if (!initialized)
-			init();
 		
 		Trace.trace(Trace.RESOURCES, "Registering server: " + server.getName());
 		
