@@ -32,7 +32,6 @@ import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
-import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
@@ -50,7 +49,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
-import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.ManagedForm;
@@ -84,9 +82,8 @@ public class OverviewEditorPart extends ServerEditorPart {
 	protected Text hostname;
 	protected Combo runtimeCombo;
 	protected Button browse;
-	protected Button autoPublishDefault;
 	protected Button autoPublishDisable;
-	protected Button autoPublishOverride;
+	protected Button autoPublishEnable;
 	protected Spinner autoPublishTime;
 	protected Spinner startTimeoutSpinner;
 	protected Spinner stopTimeoutSpinner;
@@ -173,10 +170,9 @@ public class OverviewEditorPart extends ServerEditorPart {
 				} else if (event.getPropertyName().equals(Server.PROP_AUTO_PUBLISH_SETTING)) {
 					Integer autoPublishSetting = (Integer)event.getNewValue();
 					int setting = autoPublishSetting.intValue();
-					autoPublishDefault.setSelection(setting == Server.AUTO_PUBLISH_DEFAULT);
-					autoPublishOverride.setSelection(setting == Server.AUTO_PUBLISH_OVERRIDE);
+					autoPublishEnable.setSelection(setting == Server.AUTO_PUBLISH_ENABLE);
 					autoPublishDisable.setSelection(setting == Server.AUTO_PUBLISH_DISABLE);
-					autoPublishTime.setEnabled(setting == Server.AUTO_PUBLISH_OVERRIDE);
+					autoPublishTime.setEnabled(setting == Server.AUTO_PUBLISH_ENABLE);
 					validate();
 				} else if (event.getPropertyName().equals(Server.PROP_START_TIMEOUT)) {
 					Integer time = (Integer)event.getNewValue();
@@ -555,21 +551,8 @@ public class OverviewEditorPart extends ServerEditorPart {
 		if (server != null) {
 			final Server svr = (Server) server;
 			int publishSetting = svr.getAutoPublishSetting();
-			autoPublishDefault = toolkit.createButton(composite, Messages.serverEditorOverviewAutoPublishDefault, SWT.RADIO);
-			GridData data = new GridData(GridData.FILL_HORIZONTAL);
-			autoPublishDefault.setLayoutData(data);
-			autoPublishDefault.setSelection(publishSetting == Server.AUTO_PUBLISH_DEFAULT);
-			whs.setHelp(autoPublishDefault, ContextIds.EDITOR_AUTOPUBLISH_DEFAULT);
 			
-			Hyperlink editDefaults = toolkit.createHyperlink(composite, Messages.serverEditorOverviewAutoPublishDefaultEdit, SWT.NONE);
-			editDefaults.addHyperlinkListener(new HyperlinkAdapter() {
-				public void linkActivated(HyperlinkEvent e) {
-					showPreferencePage();
-				}
-			});
-			editDefaults.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-			whs.setHelp(editDefaults, ContextIds.EDITOR_AUTOPUBLISH_DEFAULT);
-			
+			GridData data = new GridData(GridData.FILL_HORIZONTAL);															
 			autoPublishDisable = toolkit.createButton(composite, Messages.serverEditorOverviewAutoPublishDisable, SWT.RADIO);
 			data = new GridData(GridData.FILL_HORIZONTAL);
 			data.horizontalSpan = 2;
@@ -577,57 +560,44 @@ public class OverviewEditorPart extends ServerEditorPart {
 			autoPublishDisable.setSelection(publishSetting == Server.AUTO_PUBLISH_DISABLE);
 			whs.setHelp(autoPublishDisable, ContextIds.EDITOR_AUTOPUBLISH_DISABLE);
 			
-			autoPublishOverride = toolkit.createButton(composite, Messages.serverEditorOverviewAutoPublishOverride, SWT.RADIO);
-			autoPublishOverride.setSelection(publishSetting == Server.AUTO_PUBLISH_OVERRIDE);
+			autoPublishEnable = toolkit.createButton(composite, Messages.serverEditorOverviewAutoPublishOverride, SWT.RADIO);
+			autoPublishEnable.setSelection(publishSetting == Server.AUTO_PUBLISH_ENABLE);
 			data = new GridData(GridData.FILL_HORIZONTAL);
 			data.horizontalSpan = 2;
-			autoPublishOverride.setLayoutData(data);
-			whs.setHelp(autoPublishOverride, ContextIds.EDITOR_AUTOPUBLISH_OVERRIDE);
+			autoPublishEnable.setLayoutData(data);
+			whs.setHelp(autoPublishEnable, ContextIds.EDITOR_AUTOPUBLISH_ENABLE);
 			
 			final Label autoPublishTimeLabel = createLabel(toolkit,composite, Messages.serverEditorOverviewAutoPublishOverrideInterval);
 			data = new GridData();
 			data.horizontalIndent = 20;
 			autoPublishTimeLabel.setLayoutData(data);
-			autoPublishTimeLabel.setEnabled(autoPublishOverride.getSelection());
+			autoPublishTimeLabel.setEnabled(autoPublishEnable.getSelection());
 			
 			autoPublishTime = new Spinner(composite, SWT.BORDER);
 			autoPublishTime.setMinimum(0);
 			autoPublishTime.setIncrement(5);
 			autoPublishTime.setMaximum(120);
 			autoPublishTime.setSelection(svr.getAutoPublishTime());
-			data = new GridData();
+			data = new GridData(GridData.HORIZONTAL_ALIGN_END);
 			data.widthHint = 30;
 			autoPublishTime.setLayoutData(data);
-			autoPublishTime.setEnabled(autoPublishOverride.getSelection());
+			autoPublishTime.setEnabled(autoPublishEnable.getSelection());
 			SWTUtil.setSpinnerTooltip(autoPublishTime);
-			whs.setHelp(autoPublishTime, ContextIds.EDITOR_AUTOPUBLISH_OVERRIDE);
+			whs.setHelp(autoPublishTime, ContextIds.EDITOR_AUTOPUBLISH_ENABLE);
 			
-			autoPublishOverride.addSelectionListener(new SelectionAdapter() {
+			autoPublishEnable.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
-					if (updating || !autoPublishOverride.getSelection())
+					if (updating || !autoPublishEnable.getSelection())
 						return;
 					updating = true;
-					execute(new SetServerAutoPublishDefaultCommand(getServer(), Server.AUTO_PUBLISH_OVERRIDE));
+					execute(new SetServerAutoPublishDefaultCommand(getServer(), Server.AUTO_PUBLISH_ENABLE));
 					updating = false;
-					autoPublishTimeLabel.setEnabled(autoPublishOverride.getSelection());
-					autoPublishTime.setEnabled(autoPublishOverride.getSelection());
+					autoPublishTimeLabel.setEnabled(autoPublishEnable.getSelection());
+					autoPublishTime.setEnabled(autoPublishEnable.getSelection());
 					validate();
 				}
 			});
-			
-			autoPublishDefault.addSelectionListener(new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent e) {
-					if (updating || !autoPublishDefault.getSelection())
-						return;
-					updating = true;
-					execute(new SetServerAutoPublishDefaultCommand(getServer(), Server.AUTO_PUBLISH_DEFAULT));
-					updating = false;
-					autoPublishTimeLabel.setEnabled(autoPublishOverride.getSelection());
-					autoPublishTime.setEnabled(autoPublishOverride.getSelection());
-					validate();
-				}
-			});
-			
+						
 			autoPublishDisable.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					if (updating || !autoPublishDisable.getSelection())
@@ -635,8 +605,8 @@ public class OverviewEditorPart extends ServerEditorPart {
 					updating = true;
 					execute(new SetServerAutoPublishDefaultCommand(getServer(), Server.AUTO_PUBLISH_DISABLE));
 					updating = false;
-					autoPublishTimeLabel.setEnabled(autoPublishOverride.getSelection());
-					autoPublishTime.setEnabled(autoPublishOverride.getSelection());
+					autoPublishTimeLabel.setEnabled(autoPublishEnable.getSelection());
+					autoPublishTime.setEnabled(autoPublishEnable.getSelection());
 					validate();
 				}
 			});
@@ -747,12 +717,6 @@ public class OverviewEditorPart extends ServerEditorPart {
 				// ignore
 			}
 		}
-	}
-
-	protected boolean showPreferencePage() {
-		String id = "org.eclipse.wst.server.ui.preferencePage";
-		final PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getSite().getShell(), id, new String[] { id }, null);
-		return (dialog.open() == Window.OK);
 	}
 
 	protected int showWizard(final IRuntimeWorkingCopy runtimeWorkingCopy) {
@@ -879,20 +843,17 @@ public class OverviewEditorPart extends ServerEditorPart {
 			
 			Server svr = (Server) server;
 			int publishSetting = svr.getAutoPublishSetting();
-			autoPublishDefault.setSelection(publishSetting == Server.AUTO_PUBLISH_DEFAULT);
 			autoPublishDisable.setSelection(publishSetting == Server.AUTO_PUBLISH_DISABLE);
-			autoPublishOverride.setSelection(publishSetting == Server.AUTO_PUBLISH_OVERRIDE);
+			autoPublishEnable.setSelection(publishSetting == Server.AUTO_PUBLISH_ENABLE);
 			autoPublishTime.setSelection(svr.getAutoPublishTime());
 			
 			if (readOnly) {
-				autoPublishDefault.setEnabled(false);
 				autoPublishDisable.setEnabled(false);
-				autoPublishOverride.setEnabled(false);
+				autoPublishEnable.setEnabled(false);
 				autoPublishTime.setEnabled(false);
 			} else {
-				autoPublishDefault.setEnabled(true);
 				autoPublishDisable.setEnabled(true);
-				autoPublishOverride.setEnabled(true);
+				autoPublishEnable.setEnabled(true);
 				autoPublishTime.setEnabled(true);
 			}
 		}
@@ -922,7 +883,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 		}
 		
 		mForm.getMessageManager().removeMessage("auto-publish", autoPublishTime);
-		if (autoPublishTime != null && autoPublishTime.isEnabled() && autoPublishOverride.getSelection()) {
+		if (autoPublishTime != null && autoPublishTime.isEnabled() && autoPublishEnable.getSelection()) {
 			int i = autoPublishTime.getSelection();
 			if (i < 1)
 				mForm.getMessageManager().addMessage("auto-publish", Messages.serverEditorOverviewAutoPublishInvalid, null, IMessageProvider.WARNING, autoPublishTime);

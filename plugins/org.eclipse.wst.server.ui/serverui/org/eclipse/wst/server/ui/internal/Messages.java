@@ -89,10 +89,6 @@ public class Messages extends NLS {
 	public static String defaultDialogTitle;
 	public static String preferenceRuntimesTitleLong;
 	public static String prefAutoPublish;
-	public static String prefAutoPublishLocal;
-	public static String prefAutoPublishLocalTime;
-	public static String prefAutoPublishRemote;
-	public static String prefAutoPublishRemoteTime;
 	public static String prefLaunchMode;
 	public static String prefLaunchModeRestart;
 	public static String prefLaunchModeContinue;
@@ -283,8 +279,6 @@ public class Messages extends NLS {
 	public static String serverEditorOverviewServerConfigurationBrowseMessage;
 	public static String serverEditorOverviewAutoPublishSection;
 	public static String serverEditorOverviewAutoPublishDescription;
-	public static String serverEditorOverviewAutoPublishDefault;
-	public static String serverEditorOverviewAutoPublishDefaultEdit;
 	public static String serverEditorOverviewAutoPublishDisable;
 	public static String serverEditorOverviewAutoPublishOverride;
 	public static String serverEditorOverviewAutoPublishOverrideInterval;

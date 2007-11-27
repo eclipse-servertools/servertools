@@ -40,8 +40,6 @@ public interface ContextIds {
 	public static final String DELETE_SERVER_DIALOG = ServerUIPlugin.PLUGIN_ID + ".svcp0002";
 
 	public static final String PREF_GENERAL = ServerUIPlugin.PLUGIN_ID + ".spge0000";
-	public static final String PREF_GENERAL_AUTOPUBLISH_LOCAL = ServerUIPlugin.PLUGIN_ID + ".spge0002";
-	public static final String PREF_GENERAL_AUTOPUBLISH_REMOTE = ServerUIPlugin.PLUGIN_ID + ".spge0006";
 	public static final String PREF_GENERAL_PUBLISH_BEFORE_START = ServerUIPlugin.PLUGIN_ID + ".spge0012";
 	public static final String PREF_GENERAL_SHOW_ON_ACTIVITY = ServerUIPlugin.PLUGIN_ID + ".spge0022";
 	public static final String PREF_GENERAL_SAVE_EDITORS = ServerUIPlugin.PLUGIN_ID + ".spge0024";
@@ -64,8 +62,7 @@ public interface ContextIds {
 	public static final String EDITOR_CONFIGURATION = ServerUIPlugin.PLUGIN_ID + ".seop0004";
 	public static final String EDITOR_HOSTNAME = ServerUIPlugin.PLUGIN_ID + ".seop0006";
 	public static final String EDITOR_RUNTIME = ServerUIPlugin.PLUGIN_ID + ".seop0008";
-	public static final String EDITOR_AUTOPUBLISH_DEFAULT = ServerUIPlugin.PLUGIN_ID + ".seop0010";
-	public static final String EDITOR_AUTOPUBLISH_OVERRIDE = ServerUIPlugin.PLUGIN_ID + ".seop0012";
+	public static final String EDITOR_AUTOPUBLISH_ENABLE = ServerUIPlugin.PLUGIN_ID + ".seop0012";
 	public static final String EDITOR_AUTOPUBLISH_DISABLE = ServerUIPlugin.PLUGIN_ID + ".seop0016";
 
 	public static final String AUDIO_PREFERENCES = ServerUIPlugin.PLUGIN_ID + ".aupr0000";

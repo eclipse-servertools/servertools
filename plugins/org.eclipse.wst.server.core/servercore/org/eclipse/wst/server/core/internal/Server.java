@@ -22,7 +22,6 @@ import org.eclipse.debug.core.*;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.*;
-import org.eclipse.wst.server.core.util.SocketUtil;
 /**
  * 
  */
@@ -57,9 +56,8 @@ public class Server extends Base implements IServer {
 	 */
 	public static final String FILE_EXTENSION = "server";
 
-	public static final int AUTO_PUBLISH_DEFAULT = 0;
 	public static final int AUTO_PUBLISH_DISABLE = 1;
-	public static final int AUTO_PUBLISH_OVERRIDE = 2;
+	public static final int AUTO_PUBLISH_ENABLE = 2;
 
 	protected static final String PROP_HOSTNAME = "hostname";
 	protected static final String SERVER_ID = "server-id";
@@ -350,11 +348,11 @@ public class Server extends Base implements IServer {
 	}
 
 	public int getAutoPublishTime() {
-		return getAttribute(PROP_AUTO_PUBLISH_TIME, -1);
+		return getAttribute(PROP_AUTO_PUBLISH_TIME, 15);
 	}
 
 	public int getAutoPublishSetting() {
-		return getAttribute(PROP_AUTO_PUBLISH_SETTING, AUTO_PUBLISH_DEFAULT);
+		return getAttribute(PROP_AUTO_PUBLISH_SETTING, AUTO_PUBLISH_ENABLE);
 	}
 
 	public int getStartTimeout() {
@@ -616,14 +614,7 @@ public class Server extends Base implements IServer {
 			return;
 		
 		int time = 0;
-		if (getAutoPublishSetting() == AUTO_PUBLISH_DEFAULT) {
-			ServerPreferences pref = ServerPreferences.getInstance();
-			boolean local = SocketUtil.isLocalhost(getHost());
-			if (local && pref.getAutoPublishLocal())
-				time = pref.getAutoPublishLocalTime();
-			else if (!local && pref.getAutoPublishRemote())
-				time = pref.getAutoPublishRemoteTime();
-		} else
+		if (getAutoPublishSetting() == AUTO_PUBLISH_ENABLE)
 			time = getAutoPublishTime();
 		
 		if (time > 0) {
