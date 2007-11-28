@@ -351,7 +351,16 @@ public abstract class Base {
 		Base base = (Base) obj;
 		if (getId() == null)
 			return false;
-		return getId().equals(base.getId());
+		if (!getId().equals(base.getId()))
+			return false;
+		
+		if (isWorkingCopy() != base.isWorkingCopy())
+			return false;
+		
+		if (isWorkingCopy() && this != base)
+			return false;
+		
+		return true;
 	}
 
 	/**
