@@ -98,6 +98,7 @@ public class AllTests {
 		suite.addTest(new OrderedTestSuite(HTTPLaunchableTestCase.class));
 		suite.addTest(new OrderedTestSuite(StaticWebTestCase.class));
 		suite.addTest(new OrderedTestSuite(WebResourceTestCase.class));
+		suite.addTest(new OrderedTestSuite(PublishUtilTestCase.class));
 		suite.addTest(new OrderedTestSuite(NullModuleArtifactTestCase.class));
 		suite.addTestSuite(SocketUtilTestCase.class);
 		suite.addTestSuite(RuntimeLifecycleAdapterTestCase.class);
