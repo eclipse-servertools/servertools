@@ -59,6 +59,20 @@ public final class PublishUtil {
 	}
 
 	/**
+	 * Smart copy the given module resources to the given path.
+	 * 
+	 * @param resources an array of module resources
+	 * @param path an external path to copy to
+	 * @param ignore an array of paths relative to path to ignore, i.e. not delete or copy over
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return a possibly-empty array of error and warning status 
+	 */
+	public static IStatus[] publishSmart(IModuleResource[] resources, IPath path, IPath[] ignore, IProgressMonitor monitor) {
+		return publishHelper.publishSmart(resources, path, ignore, monitor);
+	}
+
+	/**
 	 * Handle a delta publish.
 	 * 
 	 * @param delta a module resource delta

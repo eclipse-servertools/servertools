@@ -207,11 +207,11 @@ public class Server extends Base implements IServer {
 			return Status.OK_STATUS;
 		}
 	}
-	
-	private static final Comparator PUBLISH_OPERATION_COMPARTOR = new Comparator() {
-      public int compare(Object leftOp, Object rightOp) {
-          PublishOperation left = (PublishOperation) leftOp;
-          PublishOperation right = (PublishOperation) rightOp;
+
+	private static final Comparator<PublishOperation> PUBLISH_OPERATION_COMPARTOR = new Comparator<PublishOperation>() {
+      public int compare(PublishOperation leftOp, PublishOperation rightOp) {
+          PublishOperation left = leftOp;
+          PublishOperation right = rightOp;
           if (left.getOrder() > right.getOrder())
               return 1;
           if (left.getOrder() < right.getOrder())
@@ -233,8 +233,8 @@ public class Server extends Base implements IServer {
 		this.serverType = serverType;
 		map.put("server-type-id", serverType.getId());
 		map.put(PROP_HOSTNAME, "localhost");
-		map.put(PROP_START_TIMEOUT, ((ServerType)serverType).getStartTimeout());
-		map.put(PROP_STOP_TIMEOUT, ((ServerType)serverType).getStopTimeout());
+		map.put(PROP_START_TIMEOUT, new Integer(((ServerType)serverType).getStartTimeout()));
+		map.put(PROP_STOP_TIMEOUT, new Integer(((ServerType)serverType).getStopTimeout()));
 		if (runtime != null && runtime.getRuntimeType() != null) {
 			String name = runtime.getRuntimeType().getName();
 			map.put(PROP_NAME, name);

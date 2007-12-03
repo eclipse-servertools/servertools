@@ -176,6 +176,20 @@ public final class PublishHelper {
 	 * @return a possibly-empty array of error and warning status 
 	 */
 	public IStatus[] publishSmart(IModuleResource[] resources, IPath path, IProgressMonitor monitor) {
+		return publishSmart(resources, path, null, monitor);
+	}
+
+	/**
+	 * Smart copy the given module resources to the given path.
+	 * 
+	 * @param resources an array of module resources
+	 * @param path an external path to copy to
+	 * @param ignore an array of paths relative to path to ignore, i.e. not delete or copy over
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return a possibly-empty array of error and warning status 
+	 */
+	public IStatus[] publishSmart(IModuleResource[] resources, IPath path, IPath[] ignore, IProgressMonitor monitor) {
 		if (resources == null)
 			return EMPTY_STATUS;
 		
@@ -187,6 +201,14 @@ public final class PublishHelper {
 		String[] fromFileNames = new String[fromSize];
 		for (int i = 0; i < fromSize; i++)
 			fromFileNames[i] = resources[i].getName();
+		List<String> ignoreFileNames = new ArrayList<String>();
+		if (ignore != null) {
+			for (int i = 0; i < ignore.length; i++) {
+				if (ignore[i].segmentCount() == 1) {
+					ignoreFileNames.add(ignore[i].toOSString());
+				}
+			}
+		}
 		
 		//	cache files and file names for performance
 		File[] toFiles = null;
@@ -206,18 +228,30 @@ public final class PublishHelper {
 					boolean isDir = toFiles[i].isDirectory();
 					boolean found = false;
 					for (int j = 0; j < fromSize; j++) {
-						if (toFileNames[i].equals(fromFileNames[j]) && isDir == resources[j] instanceof IModuleFolder)
+						if (toFileNames[i].equals(fromFileNames[j]) && isDir == resources[j] instanceof IModuleFolder) {
 							found = true;
+							break;
+						}
 					}
 					
 					// delete file if it can't be found or isn't the correct type
 					if (!found) {
-						if (isDir) {
-							IStatus[] stat = deleteDirectory(toFiles[i], null);
-							addArrayToList(status, stat);
-						} else {
-							if (!toFiles[i].delete())
-								status.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDeleting, toFiles[i].getAbsolutePath()), null));
+						boolean delete = true;
+						// if should be preserved, don't delete and don't try to copy
+						for (String preserveFileName : ignoreFileNames) {
+							if (toFileNames[i].equals(preserveFileName)) {
+								delete = false;
+								break;
+							}
+						}
+						if (delete) {
+							if (isDir) {
+								IStatus[] stat = deleteDirectory(toFiles[i], null);
+								addArrayToList(status, stat);
+							} else {
+								if (!toFiles[i].delete())
+									status.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDeleting, toFiles[i].getAbsolutePath()), null));
+							}
 						}
 						toFiles[i] = null;
 						toFileNames[i] = null;
@@ -289,8 +323,10 @@ public final class PublishHelper {
 				}
 				
 				for (int j = 0; j < toSize; j++) {
-					if (name.equals(toFileNames[j]) && mod == toFileMod[j])
+					if (name.equals(toFileNames[j]) && mod == toFileMod[j]) {
 						copy = false;
+						break;
+					}
 				}
 				
 				if (copy) {
@@ -304,8 +340,22 @@ public final class PublishHelper {
 			} else { //if (currentIsDir) {
 				IModuleFolder folder = (IModuleFolder) current;
 				IModuleResource[] children = folder.members();
+
+				// build array of ignored Paths that apply to this folder
+				IPath[] ignoreChildren = null;
+				if (ignore != null) {
+					List<IPath> ignoreChildPaths = new ArrayList<IPath>();
+					for (int j = 0; j < ignore.length; j++) {
+						IPath preservePath = ignore[j];
+						if (preservePath.segment(0).equals(name)) {
+							ignoreChildPaths.add(preservePath.removeFirstSegments(1));
+						}
+					}
+					if (ignoreChildPaths.size() > 0)
+						ignoreChildren = ignoreChildPaths.toArray(new Path[ignoreChildPaths.size()]);
+				}
 				monitor.subTask(NLS.bind(Messages.copyingTask, new String[] {name, name}));
-				IStatus[] stat = publishSmart(children, path.append(name), ProgressUtil.getSubMonitorFor(monitor, dw));
+				IStatus[] stat = publishSmart(children, path.append(name), ignoreChildren, ProgressUtil.getSubMonitorFor(monitor, dw));
 				addArrayToList(status, stat);
 			}
 		}

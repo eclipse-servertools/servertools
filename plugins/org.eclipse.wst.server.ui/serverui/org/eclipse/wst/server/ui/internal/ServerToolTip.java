@@ -53,9 +53,9 @@ import org.eclipse.wst.server.ui.IServerToolTip;
  * 
  */
 public class ServerToolTip extends ToolTip {	
-	protected Hashtable<String,ArrayList> toolTipProviders = new Hashtable<String,ArrayList>();	
+	protected Hashtable<String,ArrayList<IServerToolTip>> toolTipProviders = new Hashtable<String,ArrayList<IServerToolTip>>();	
 	protected static Shell CURRENT_TOOLTIP;
-	private Label hintLabel;
+	protected Label hintLabel;
 	protected Server server;
 	protected Tree tree;
 	protected int x;

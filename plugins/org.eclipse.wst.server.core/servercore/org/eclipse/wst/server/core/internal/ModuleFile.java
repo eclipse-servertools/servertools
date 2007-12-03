@@ -30,7 +30,7 @@ public class ModuleFile extends org.eclipse.wst.server.core.util.ModuleFile {
 		super(file, name, path);
 	}
 
-	/**
+	/*
 	 * @deprecated use another constructor
 	 */
 	public ModuleFile(IFile file, String name, IPath path, long stamp) {
