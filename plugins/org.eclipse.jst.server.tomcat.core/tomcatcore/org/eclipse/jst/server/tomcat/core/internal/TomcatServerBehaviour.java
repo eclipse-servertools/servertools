@@ -26,13 +26,13 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.jst.server.core.PublishUtil;
 import org.eclipse.osgi.util.NLS;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.IModulePublishHelper;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.model.*;
+import org.eclipse.wst.server.core.util.PublishUtil;
 import org.eclipse.wst.server.core.util.SocketUtil;
 /**
  * Generic Tomcat server.
@@ -298,7 +298,15 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		} else {
 			IPath path = getModuleDeployDirectory(module[0]);
 			IModuleResource[] mr = getResources(module);
-			IStatus[] stat = PublishUtil.publishSmart(mr, path, monitor);
+			IPath [] jarPaths = null;
+			IModule [] childModules = getServer().getChildModules(module, monitor);
+			if (childModules != null && childModules.length > 0) {
+				jarPaths = new IPath[childModules.length];
+				for (int i = 0; i < childModules.length; i++) {
+					jarPaths[i] = new Path("WEB-INF/lib").append(childModules[i].getName() + ".jar");
+				}
+			}
+			IStatus[] stat = PublishUtil.publishSmart(mr, path, jarPaths, monitor);
 			PublishOperation2.addArrayToList(status, stat);
 			p.put(module[0].getId(), path.toOSString());
 		}
