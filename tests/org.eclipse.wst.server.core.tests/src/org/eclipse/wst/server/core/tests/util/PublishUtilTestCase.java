@@ -163,6 +163,13 @@ public class PublishUtilTestCase extends TestCase {
 			return e.getMessage();
 		}
 	}
+	
+	private String getResultMessage(IStatus[] result) {
+		if (result.length > 0) {
+			return "Result contained " + result.length + " errors. First error: " + result[0].getMessage();
+		}
+		return "No error";
+	}
 
 	public void test00FullCopy() throws Exception {
 		IProject project = getTestProject();
@@ -172,7 +179,7 @@ public class PublishUtilTestCase extends TestCase {
 		IModuleResource[] resources = getModuleResources();
 		IStatus[] result = PublishUtil.publishSmart(resources, dest, null, null);
 		assertNotNull(result);
-		assertTrue(result.length == 0);
+		assertTrue(getResultMessage(result), result.length == 0);
 
 		// Verify file contents following initial copy of all resources
 		String contents = getContents(dest.append(resources[0].getModuleRelativePath()));
@@ -220,7 +227,7 @@ public class PublishUtilTestCase extends TestCase {
 		IModuleResource[] resources = getModuleResources();
 		IStatus[] result = PublishUtil.publishSmart(resources, dest, null, null);
 		assertNotNull(result);
-		assertTrue(result.length == 0);
+		assertTrue(getResultMessage(result), result.length == 0);
 
 		// Verify all files were copied
 		String contents = getContents(dest.append(resources[0].getModuleRelativePath()));
@@ -268,7 +275,7 @@ public class PublishUtilTestCase extends TestCase {
 		IModuleResource[] resources = getModuleResources();
 		IStatus[] result = PublishUtil.publishSmart(resources, dest, null, null);
 		assertNotNull(result);
-		assertTrue(result.length == 0);
+		assertTrue(getResultMessage(result), result.length == 0);
 
 		// Verify the "A" files were copied, but not the "B" files since the time stamps didn't change
 		String contents = getContents(dest.append(resources[0].getModuleRelativePath()));
@@ -297,7 +304,7 @@ public class PublishUtilTestCase extends TestCase {
 		assertNotNull(dest);
 		IStatus[] result = PublishUtil.publishSmart(resources2, dest, getPreservePaths(), null);
 		assertNotNull(result);
-		assertTrue(result.length == 0);
+		assertTrue(getResultMessage(result), result.length == 0);
 
 		// Verify "A" files are unchanged and "B" files have not been deleted
 		String contents = getContents(dest.append(resources[0].getModuleRelativePath()));
@@ -330,7 +337,7 @@ public class PublishUtilTestCase extends TestCase {
 		assertNotNull(dest);
 		IStatus[] result = PublishUtil.publishSmart(resources2, dest, paths, null);
 		assertNotNull(result);
-		assertTrue(result.length == 0);
+		assertTrue(getResultMessage(result), result.length == 0);
 
 		// Verify non-"B" folder files are unchanged and "B" folder files have not been deleted
 		String contents = getContents(dest.append(resources[0].getModuleRelativePath()));
@@ -361,7 +368,7 @@ public class PublishUtilTestCase extends TestCase {
 		assertNotNull(dest);
 		IStatus[] result = PublishUtil.publishSmart(resources3, dest, null, null);
 		assertNotNull(result);
-		assertTrue(result.length == 0);
+		assertTrue(getResultMessage(result), result.length == 0);
 		
 		IPath[] paths = getPreservePaths();
 		
