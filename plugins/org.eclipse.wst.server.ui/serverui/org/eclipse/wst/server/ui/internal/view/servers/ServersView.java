@@ -168,26 +168,11 @@ public class ServersView extends ViewPart {
 
 	protected void deferredInitialize() {
 		tableViewer.initialize();
-		
-		treeTable.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
+		tableViewer.addOpenListener(new IOpenListener() {
+			public void open(OpenEvent event) {
 				try {
-					/*TableItem item = table.getSelection()[0];
-					IServerResource resource = (IServerResource) item.getData();
-					IServerResourceFactory factory = ServerUtil.getServerResourceFactory(resource);
-					String label = ServerLabelProvider.getInstance().getText(factory);
-					label += " (";
-					label += ServerCore.getResourceManager().getServerResourceLocation(resource).getFullPath().toString().substring(1);
-					label += ")";
-					getViewSite().getActionBars().getStatusLineManager().setMessage(ServerLabelProvider.getInstance().getImage(factory), label);*/
-				} catch (Exception e) {
-					getViewSite().getActionBars().getStatusLineManager().setMessage(null, "");
-				}
-			}
-			public void widgetDefaultSelected(SelectionEvent event) {
-				try {
-					TreeItem item = treeTable.getSelection()[0];
-					Object data = item.getData();
+					IStructuredSelection sel = (IStructuredSelection) event.getSelection();
+					Object data = sel.getFirstElement();
 					if (!(data instanceof IServer))
 						return;
 					IServer server = (IServer) data;
