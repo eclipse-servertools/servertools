@@ -52,8 +52,6 @@ public class Messages extends NLS {
 	public static String serverLaunchDescription;
 	public static String serverLaunchServer;
 	public static String serverLaunchHost;
-	public static String serverLaunchArtifact;
-	public static String serverLaunchClient;
 	public static String serverLaunchRuntime;
 	public static String errorNoServerSelected;
 	public static String errorServerAlreadyRunning;

@@ -483,6 +483,7 @@ M4 = Platform-specific fourth key
     delegate="org.eclipse.wst.server.ui.internal.actions.RunOnServerLaunchConfigurationDelegate"
     delegateName="%launchConfigurationDelegateName"
     delegateDescription="%launchConfigurationDelegateDescription"
+    public="false"
     modes="run,debug,profile"
     name="%runOnServerLaunchConfiguration"/>
 </extension>
@@ -493,15 +494,6 @@ M4 = Platform-specific fourth key
     configTypeID="org.eclipse.wst.server.ui.launchConfigurationType"
     icon="icons/etool16/run_on_server.gif">
   </launchConfigurationTypeImage>
-</extension>
-
-<extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
-  <launchConfigurationTabGroup
-        class="org.eclipse.wst.server.ui.internal.RunOnServerLaunchConfigurationTabGroup"
-        description="%launchConfigurationTabGroupDescription"
-        id="org.eclipse.wst.server.ui.launchConfigurationTabGroup"
-        type="org.eclipse.wst.server.ui.launchConfigurationType">
-  </launchConfigurationTabGroup>
 </extension>
 
 <extension point="org.eclipse.wst.server.ui.serverToolTip">
