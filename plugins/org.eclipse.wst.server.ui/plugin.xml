@@ -160,7 +160,7 @@
    <shortcut
          id="org.eclipse.wst.server.launchShortcut"
          label="%actionRunOnServer"
-         description="actionRunOnServerDescription"
+         description="%actionRunOnServerDescription"
          modes="run, debug, profile"
          path="aa"
          icon="icons/etool16/run_on_server.gif"
