@@ -69,12 +69,12 @@ public class RunOnServerLaunchConfigurationTab extends AbstractLaunchConfigurati
 		serverLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		label = new Label(composite, SWT.NONE);
-		label.setText("Artifact:");
+		label.setText(Messages.serverLaunchArtifact);
 		moduleArtifactLabel = new Label(composite, SWT.NONE);
 		moduleArtifactLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		label = new Label(composite, SWT.NONE);
-		label.setText("Client:");
+		label.setText(Messages.serverLaunchClient);
 		clientLabel = new Label(composite, SWT.NONE);
 		clientLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
@@ -102,11 +102,23 @@ public class RunOnServerLaunchConfigurationTab extends AbstractLaunchConfigurati
 			String laId = configuration.getAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_LAUNCHABLE_ADAPTER_ID, (String)null);
 			String clientId = configuration.getAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_CLIENT_ID, (String)null);
 			
-			server = ServerCore.findServer(serverId);
+			try {
+				server = ServerCore.findServer(serverId);
+			} catch (IllegalArgumentException e) {
+				// ignore
+			}
 			module = null;
 			moduleArtifact = null;
-			launchableAdapter = ServerPlugin.findLaunchableAdapter(laId);
-			client = ServerPlugin.findClient(clientId);
+			try {
+				launchableAdapter = ServerPlugin.findLaunchableAdapter(laId);
+			} catch (IllegalArgumentException e) {
+				// ignore
+			}
+			try {
+				client = ServerPlugin.findClient(clientId);
+			} catch (IllegalArgumentException e) {
+				// ignore
+			}
 			
 			try {
 				Class c = Class.forName(moduleArtifactClass);
