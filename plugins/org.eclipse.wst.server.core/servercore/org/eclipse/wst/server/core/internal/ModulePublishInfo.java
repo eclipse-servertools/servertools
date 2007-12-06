@@ -189,7 +189,7 @@ public class ModulePublishInfo {
 	private IModuleResource[] loadResource(DataInput in, IPath path) throws IOException {
 		int size = in.readInt();
 		if (size > 1000000)
-			size = 1000000;
+			throw new IOException("Folder capacity limit reached");
 		IModuleResource[] resources2 = new IModuleResource[size];
 		
 		for (int i = 0; i < size; i++) {
