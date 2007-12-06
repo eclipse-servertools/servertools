@@ -188,8 +188,8 @@ public class ModulePublishInfo {
 
 	private IModuleResource[] loadResource(DataInput in, IPath path) throws IOException {
 		int size = in.readInt();
-		if (size > 1000)
-			size = 1000;
+		if (size > 1000000)
+			size = 1000000;
 		IModuleResource[] resources2 = new IModuleResource[size];
 		
 		for (int i = 0; i < size; i++) {
