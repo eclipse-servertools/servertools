@@ -303,4 +303,9 @@ public class ModuleHelper {
 			}
 		}
 	}
+	
+	public static void createClosedProject(String name) throws Exception {
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
+		project.create(null);
+	}
 }

@@ -13,7 +13,11 @@ package org.eclipse.jst.server.tomcat.core.tests.module;
 import junit.framework.TestCase;
 
 public class DeleteModuleTestCase extends TestCase {
-	public void test0DeleteWebModule() throws Exception {
+	public void test00DeleteWebModule() throws Exception {
 		ModuleHelper.deleteModule(ModuleTestCase.WEB_MODULE_NAME);
+	}
+
+	public void test01DeleteClosedProject() throws Exception {
+		ModuleHelper.deleteModule(ModuleTestCase.CLOSED_PROJECT);
 	}
 }

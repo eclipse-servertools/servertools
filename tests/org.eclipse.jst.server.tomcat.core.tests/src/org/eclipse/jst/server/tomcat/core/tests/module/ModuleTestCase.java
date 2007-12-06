@@ -16,7 +16,12 @@ import junit.framework.TestCase;
 
 public class ModuleTestCase extends TestCase {
 	protected static final String WEB_MODULE_NAME = "MyWeb";
+	protected static final String CLOSED_PROJECT = "ClosedProject";
 	public static IModule webModule;
+
+	public void test00ClosedProject() throws Exception {
+		ModuleHelper.createClosedProject(CLOSED_PROJECT);
+	}
 
 	public void test01CreateWebModule() throws Exception {
 		ModuleHelper.createModule(WEB_MODULE_NAME);
