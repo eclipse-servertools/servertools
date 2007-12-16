@@ -12,10 +12,11 @@ package org.eclipse.wst.server.ui.internal.view.servers;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.ui.IServerModule;
 /**
  * A utility class for referencing a server and a module at the same time.
  */
-public class ModuleServer {
+public class ModuleServer implements IServerModule {
 	/**
 	 * The server
 	 */
@@ -37,6 +38,24 @@ public class ModuleServer {
 		this.module = module;
 		if (module == null)
 			throw new IllegalArgumentException();
+	}
+
+	/**
+	 * Return the server that the module belongs to.
+	 * 
+	 * @return the server
+	 */
+	public IServer getServer() {
+		return server;
+	}
+
+	/**
+	 * Returns the module.
+	 * 
+	 * @return the module
+	 */
+	public IModule[] getModule() {
+		return module;
 	}
 
 	/**
