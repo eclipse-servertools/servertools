@@ -166,6 +166,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 				} else if (event.getPropertyName().equals(Server.PROP_AUTO_PUBLISH_TIME)) {
 					Integer curAutoPublishTime = (Integer)event.getNewValue();
 					autoPublishTime.setSelection(curAutoPublishTime.intValue());
+					SWTUtil.setSpinnerTooltip(autoPublishTime);
 					validate();
 				} else if (event.getPropertyName().equals(Server.PROP_AUTO_PUBLISH_SETTING)) {
 					Integer autoPublishSetting = (Integer)event.getNewValue();
@@ -880,13 +881,6 @@ public class OverviewEditorPart extends ServerEditorPart {
 				if (folder == null || !folder.exists())
 					mForm.getMessageManager().addMessage("config", Messages.errorMissingConfiguration, null, IMessageProvider.WARNING, serverConfiguration);
 			}
-		}
-		
-		mForm.getMessageManager().removeMessage("auto-publish", autoPublishTime);
-		if (autoPublishTime != null && autoPublishTime.isEnabled() && autoPublishEnable.getSelection()) {
-			int i = autoPublishTime.getSelection();
-			if (i < 1)
-				mForm.getMessageManager().addMessage("auto-publish", Messages.serverEditorOverviewAutoPublishInvalid, null, IMessageProvider.WARNING, autoPublishTime);
 		}
 		
 		mForm.getMessageManager().update();

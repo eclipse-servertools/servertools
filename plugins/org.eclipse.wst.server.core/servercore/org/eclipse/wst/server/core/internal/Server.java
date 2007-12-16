@@ -613,11 +613,8 @@ public class Server extends Base implements IServer {
 		if (getAutoPublishSetting() == AUTO_PUBLISH_DISABLE)
 			return;
 		
-		int time = 0;
-		if (getAutoPublishSetting() == AUTO_PUBLISH_ENABLE)
-			time = getAutoPublishTime();
-		
-		if (time > 0) {
+		int time = getAutoPublishTime();
+		if (time >= 0) {
 			autoPublishThread = new AutoPublishThread();
 			autoPublishThread.time = time;
 			autoPublishThread.setPriority(Thread.MIN_PRIORITY + 1);

@@ -284,7 +284,6 @@ public class Messages extends NLS {
 	public static String serverEditorOverviewAutoPublishOverride;
 	public static String serverEditorOverviewAutoPublishOverrideInterval;
 	public static String serverEditorOverviewAutoPublishCommand;
-	public static String serverEditorOverviewAutoPublishInvalid;
 	public static String serverEditorOverviewTimeoutSection;
 	public static String serverEditorOverviewTimeoutDescription;	
 	public static String serverEditorOverviewTimeoutCommand;	
