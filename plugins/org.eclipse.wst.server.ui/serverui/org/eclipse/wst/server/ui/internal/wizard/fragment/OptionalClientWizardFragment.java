@@ -29,6 +29,7 @@ public class OptionalClientWizardFragment extends WizardFragment {
 
 	protected IModuleArtifact moduleArtifact;
 	protected IServer lastServer;
+	protected Object lastLaunchable;
 
 	public OptionalClientWizardFragment(IModuleArtifact moduleArtifact) {
 		super();
@@ -48,13 +49,6 @@ public class OptionalClientWizardFragment extends WizardFragment {
 			IServer server = (IServer) getTaskModel().getObject(TaskModel.TASK_SERVER);
 			if (lastServer == null && server == null)
 				return;
-			if (lastServer != null && lastServer.equals(server))
-				return;
-			
-			lastServer = server;
-			
-			getTaskModel().putObject(WizardTaskUtil.TASK_CLIENTS, null);
-			getTaskModel().putObject(WizardTaskUtil.TASK_HAS_CLIENTS, new Boolean(false));
 			
 			// get the launchable adapter and module object
 			Object launchable = null;
@@ -67,11 +61,25 @@ public class OptionalClientWizardFragment extends WizardFragment {
 				getTaskModel().putObject(WizardTaskUtil.TASK_LAUNCHABLE_ADAPTER, null);
 				getTaskModel().putObject(WizardTaskUtil.TASK_LAUNCHABLE, null);
 				EclipseUtil.openError(null, ce.getStatus());
+				return;
 			}
+			
+			// stop here if the server and launchable haven't changed
+			if (lastServer != null && lastServer.equals(server)) {
+				if (lastLaunchable == null && launchable == null)
+					return;
+				if (lastLaunchable != null && lastLaunchable.equals(launchable)) {
+					return;
+				}
+			}
+			lastServer = server;
+			lastLaunchable = launchable;
 			
 			String launchMode = (String) getTaskModel().getObject(TaskModel.TASK_LAUNCH_MODE);
 			clients = ServerUIPlugin.getClients(server, launchable, launchMode);
 			
+			getTaskModel().putObject(WizardTaskUtil.TASK_CLIENTS, null);
+			getTaskModel().putObject(WizardTaskUtil.TASK_HAS_CLIENTS, new Boolean(false));
 			if (clients != null) {
 				if (clients.length > 1) {
 					getTaskModel().putObject(WizardTaskUtil.TASK_CLIENTS, clients);
