@@ -120,10 +120,11 @@ public class RunOnServerLaunchConfigurationDelegate extends LaunchConfigurationD
 		}
 		
 		Trace.trace(Trace.FINEST, "Ready to launch");
+		launch2.addProcess(new RunOnServerProcess(launch2));
 		
 		// start server if it's not already started
 		// and cue the client to start
-		IModule[] modules = new IModule[] { module }; // TODO: get parent heirarchy correct
+		IModule[] modules = new IModule[] { module }; // TODO: get parent hierarchy correct
 		int state = server.getServerState();
 		if (state == IServer.STATE_STARTING) {
 			LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
@@ -139,8 +140,10 @@ public class RunOnServerLaunchConfigurationDelegate extends LaunchConfigurationD
 				if (result == 0) {
 					launchMode = mode;
 					restart = true;
-				} else if (result == 9) // cancel
+				} else if (result == 9) { // cancel
+					launch2.terminate();
 					return;
+				}
 			}
 			if (!restart) {
 				if (!ILaunchManager.RUN_MODE.equals(mode) && ILaunchManager.RUN_MODE.equals(launchMode)) {
@@ -156,16 +159,20 @@ public class RunOnServerLaunchConfigurationDelegate extends LaunchConfigurationD
 						launchMode = mode;
 					} else if (result == 2)
 						launchMode = mode;
-					else // result == 9 // cancel
+					else { // result == 9 // cancel
+						launch2.terminate();
 						return;
+					}
 				} else if (!ILaunchManager.DEBUG_MODE.equals(mode) && ILaunchManager.DEBUG_MODE.equals(launchMode)) {
 					int result = RunOnServerActionDelegate.openOptionsDialog(shell, Messages.wizDebugOnServerTitle, Messages.dialogModeWarningDebug, false);
 					if (result == 0)
 						restart = true;
 					else if (result == 1)
 						launchMode = mode;
-					else // result == 9 // cancel
+					else { // result == 9 // cancel
+						launch2.terminate();
 						return;
+					}
 				} else if (!ILaunchManager.PROFILE_MODE.equals(mode) && ILaunchManager.PROFILE_MODE.equals(launchMode)) {
 					boolean breakpointsOption = false;
 					if (breakpointManager.isEnabled() && ILaunchManager.DEBUG_MODE.equals(mode))
@@ -179,8 +186,10 @@ public class RunOnServerLaunchConfigurationDelegate extends LaunchConfigurationD
 						launchMode = mode;
 					} else if (result == 2)
 						launchMode = mode;
-					else // result == 9 // cancel
+					else {// result == 9 // cancel
+						launch2.terminate();
 						return;
+					}
 				}
 				
 				if (ILaunchManager.DEBUG_MODE.equals(launchMode)) {
@@ -190,8 +199,10 @@ public class RunOnServerLaunchConfigurationDelegate extends LaunchConfigurationD
 							breakpointManager.setEnabled(true);
 						else if (result == 1) {
 							// ignore
-						} else // result == 2
+						} else { // result == 2
+							launch2.terminate();
 							return;
+						}
 					}
 				}
 			}
@@ -235,5 +246,6 @@ public class RunOnServerLaunchConfigurationDelegate extends LaunchConfigurationD
 				publishJob.schedule();
 			}
 		}
+		launch2.terminate();
 	}
 }
