@@ -14,7 +14,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
@@ -27,6 +29,7 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.Messages;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
+import org.eclipse.wst.server.core.internal.Trace;
 /**
  * Utility class for converting between facet runtimes and server runtimes.
  * <p>
@@ -134,5 +137,66 @@ public final class FacetUtil {
 			return ce.getStatus();
 		}
 		return Status.OK_STATUS;
+	}
+	
+	/**
+	 * Returns true if the given runtime is being targeted by the facet
+	 * framework, and false otherwise.
+	 * 
+	 * @param runtime a runtime
+	 * @return <code>true</code> if the runtime is in use, and <code>false</code>
+	 *    otherwise
+	 */
+	public static boolean isRuntimeTargeted(IRuntime runtime) {
+		try {
+			org.eclipse.wst.common.project.facet.core.runtime.IRuntime runtime2 = getRuntime(runtime);
+			
+			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+			if (projects != null) {
+				int size = projects.length;
+				for (int i = 0; i < size; i++) {
+					IFacetedProject facetedProject = ProjectFacetsManager.create(projects[i]);
+					if (facetedProject != null) {
+						Set<org.eclipse.wst.common.project.facet.core.runtime.IRuntime> set = facetedProject.getTargetedRuntimes();
+						if (set != null && set.contains(runtime2))
+							return true;
+					}
+				}
+			}
+		} catch (Throwable t) {
+			Trace.trace(Trace.WARNING, "Could not determine if runtime is in use", t);
+		}
+		return false;
+	}
+
+	/**
+	 * Removes the given runtime from the target of all projects.
+	 * 
+	 * @param runtime a runtime
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *   reporting and cancellation are not desired
+	 * @throws CoreException if failed for any reason
+	 */
+	public static void removeTargets(IRuntime runtime, IProgressMonitor monitor) throws CoreException {
+		try {
+			org.eclipse.wst.common.project.facet.core.runtime.IRuntime runtime2 = getRuntime(runtime);
+			
+			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+			if (projects != null) {
+				int size = projects.length;
+				for (int i = 0; i < size; i++) {
+					IFacetedProject facetedProject = ProjectFacetsManager.create(projects[i]);
+					if (facetedProject != null) {
+						Set<org.eclipse.wst.common.project.facet.core.runtime.IRuntime> set = facetedProject.getTargetedRuntimes();
+						if (set != null && set.contains(runtime2))
+							facetedProject.removeTargetedRuntime(runtime2, monitor);
+					}
+				}
+			}
+		} catch (CoreException ce) {
+			throw ce;
+		} catch (Throwable t) {
+			Trace.trace(Trace.WARNING, "Could not remove runtime target", t);
+		}
 	}
 }

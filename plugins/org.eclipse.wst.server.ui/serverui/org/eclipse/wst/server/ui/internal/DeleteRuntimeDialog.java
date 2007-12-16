@@ -15,38 +15,71 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 public class DeleteRuntimeDialog extends MessageDialog {
-	protected boolean promptDeleteServers = false;
-	protected boolean deleteServers = true;
+	protected boolean promptDeleteServers;
+	protected boolean promptRemoveTargets;
+	protected boolean deleteServers;
+	protected boolean removeTargets;
 
-	public DeleteRuntimeDialog(Shell parentShell, boolean promptDeleteServers) {
+	public DeleteRuntimeDialog(Shell parentShell, boolean promptDeleteServers, boolean promptRemoveTargets) {
 		super(parentShell, Messages.defaultDialogTitle, null, Messages.dialogRuntimeInUse, QUESTION,
 			new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
 		this.promptDeleteServers = promptDeleteServers;
+		this.promptRemoveTargets = promptRemoveTargets;
 	}
 
 	protected Control createCustomArea(Composite parent) {
-		if (!promptDeleteServers)
+		if (!promptDeleteServers && !promptRemoveTargets)
 			return null;
 		
-		Button deleteServersButton = new Button(parent, SWT.CHECK);
-		deleteServersButton.setText(Messages.dialogRuntimeDeleteServers);
-		deleteServersButton.setSelection(true);
-		deleteServersButton.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				deleteServers = true;
-			}
-		});
+		Composite comp = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout(1, true);
+		layout.horizontalSpacing = convertHorizontalDLUsToPixels(4);
+		layout.verticalSpacing = convertVerticalDLUsToPixels(3);
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
+		comp.setLayout(layout);
+		comp.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL));
 		
-		return deleteServersButton;
+		if (promptDeleteServers) {
+			deleteServers = true;
+			final Button deleteServersButton = new Button(comp, SWT.CHECK);
+			deleteServersButton.setText(Messages.dialogRuntimeDeleteServers);
+			deleteServersButton.setSelection(true);
+			deleteServersButton.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent e) {
+					deleteServers = deleteServersButton.getSelection();
+				}
+			});
+		}
+		
+		if (promptRemoveTargets) {
+			removeTargets = true;
+			final Button removeTargetsButton = new Button(comp, SWT.CHECK);
+			removeTargetsButton.setText(Messages.dialogRuntimeRemoveTargets);
+			removeTargetsButton.setSelection(true);
+			removeTargetsButton.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent e) {
+					removeTargets = removeTargetsButton.getSelection();
+				}
+			});
+		}
+		
+		return comp;
 	}
 
 	public boolean isDeleteServers() {
 		return deleteServers;
+	}
+
+	public boolean isRemoveTargets() {
+		return removeTargets;
 	}
 }

@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -41,6 +42,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.IRuntimeLocator;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
+import org.eclipse.wst.server.core.internal.facets.FacetUtil;
 import org.eclipse.wst.server.ui.internal.viewers.RuntimeComposite;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
@@ -286,18 +288,15 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 			}
 		}
 		
-		/*IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		if (projects != null) {
-			int size = projects.length;
-			for (int i = 0; i < size; i++) {
-				IProjectProperties props = ServerCore.getProjectProperties(projects[i]);
-				if (runtime.equals(props.getRuntimeTarget()))
-					inUse = true;
-			}
-		}*/
+		boolean inUse = false;
+		try {
+			inUse = FacetUtil.isRuntimeTargeted(runtime);
+		} catch (Throwable t) {
+			// ignore - facet framework not found
+		}
 		
-		if (!list.isEmpty()) {
-			DeleteRuntimeDialog dialog = new DeleteRuntimeDialog(getShell(), !list.isEmpty());
+		if (!list.isEmpty() || inUse) {
+			DeleteRuntimeDialog dialog = new DeleteRuntimeDialog(getShell(), !list.isEmpty(), inUse);
 			if (dialog.open() != 0)
 				return false;
 			
@@ -310,6 +309,13 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 					} catch (Exception e) {
 						Trace.trace(Trace.SEVERE, "Error deleting server", e);
 					}
+				}
+			}
+			if (dialog.isRemoveTargets()) {
+				try {
+					FacetUtil.removeTargets(runtime, new NullProgressMonitor());
+				} catch (Throwable t) {
+					// ignore - facet framework not found
 				}
 			}
 		}
