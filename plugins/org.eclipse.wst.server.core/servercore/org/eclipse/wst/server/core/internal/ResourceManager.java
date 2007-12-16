@@ -250,8 +250,12 @@ public class ResourceManager {
 		if (projects != null) {
 			int size = projects.length;
 			for (int i = 0; i < size; i++) {
-				if (ServerPlugin.getProjectProperties(projects[i]).isServerProject())
+				if (ServerPlugin.getProjectProperties(projects[i]).isServerProject()) {
+					String projectName = projects[i].getName();
+					if (!serverProjects.contains(projectName))
+						serverProjects.add(projectName);
 					loadFromProject(projects[i]);
+				}
 			}
 		}
 		
@@ -541,8 +545,10 @@ public class ResourceManager {
 			while (iterator.hasNext()) {
 				Server server = (Server) iterator.next();
 				
-				IMemento child = memento.createChild("server");
-				server.save(child);
+				if (server.getFile() == null) {
+					IMemento child = memento.createChild("server");
+					server.save(child);
+				}
 			}
 			
 			memento.saveToFile(filename);
@@ -829,7 +835,7 @@ public class ResourceManager {
 				IServer server = loadServer(file, ProgressUtil.getSubMonitorFor(monitor, 1000));
 				if (server != null) {
 					if (getServer(server.getId()) == null)
-						registerServer(server);
+						addServer(server);
 					monitor.done();
 					return true;
 				}
@@ -950,7 +956,7 @@ public class ResourceManager {
 		
 		IServer server = findServer(file);
 		if (server != null) {
-			deregisterServer(server);
+			removeServer(server);
 			return true;
 		}
 		
