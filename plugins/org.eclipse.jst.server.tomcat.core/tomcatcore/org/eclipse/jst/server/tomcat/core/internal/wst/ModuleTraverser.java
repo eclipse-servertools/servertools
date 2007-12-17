@@ -13,6 +13,7 @@ package org.eclipse.jst.server.tomcat.core.internal.wst;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -225,17 +226,27 @@ public class ModuleTraverser {
         for (Iterator iterator = classpathDeps.keySet().iterator(); iterator.hasNext();) {
 			IClasspathEntry entry = (IClasspathEntry)iterator.next();
 			IClasspathAttribute attrib = (IClasspathAttribute)classpathDeps.get(entry);
+			boolean isClassFolder = isClassFolderEntry(entry);
 			String rtFolder = attrib.getValue();
 			if (rtFolder == null) {
-				rtFolder = "/WEB-INF/lib";
-			}
+				if (isClassFolder) {
+					rtFolder = "/WEB-INF/classes";
+				} else {
+					rtFolder = "/WEB-INF/lib";
+				}
+			} 
 			IPath entryPath = entry.getPath();
 			IResource entryRes = ResourcesPlugin.getWorkspace().getRoot().findMember(entryPath);
 			if (entryRes != null) {
 				entryPath = entryRes.getLocation();
 			}
 			// TODO Determine if different handling is needed for some use cases
-			visitor.visitArchiveComponent(new Path(rtFolder), entryPath);
+			if (isClassFolder) {
+				 visitor.visitWebResource(new Path(rtFolder), 
+		                    getOSPath(warProject, project, entry.getPath()));
+			} else {
+				visitor.visitArchiveComponent(new Path(rtFolder), entryPath);				
+			}
 		}
     }
 
@@ -267,8 +278,11 @@ public class ModuleTraverser {
         for (Iterator iterator = classpathDeps.keySet().iterator(); iterator.hasNext();) {
 			IClasspathEntry entry = (IClasspathEntry)iterator.next();
 			IClasspathAttribute attrib = (IClasspathAttribute)classpathDeps.get(entry);
-			String rtFolder = attrib.getValue();
-			if (rtFolder == null) {
+			boolean isClassFolder = isClassFolderEntry(entry);
+			String rtFolder = null;
+			if (isClassFolder) {
+				rtFolder = "/";
+			} else {
 				rtFolder = "/WEB-INF/lib";
 			}
 			IPath entryPath = entry.getPath();
@@ -277,7 +291,13 @@ public class ModuleTraverser {
 				entryPath = entryRes.getLocation();
 			}
 			// TODO Determine if different handling is needed for some use cases
-			visitor.visitArchiveComponent(new Path(rtFolder), entryPath);
+			if (isClassFolder) {
+				 visitor.visitDependentComponent(runtimeFolder.append(rtFolder)
+		                    .append(name + ".jar"), getOSPath(dependentProject,
+		                    project, entry.getPath()));
+			} else {
+				visitor.visitArchiveComponent(new Path(rtFolder), entryPath);
+			}
 		}
     }
 
@@ -377,7 +397,7 @@ public class ModuleTraverser {
 			pathToResolvedEntry.put(entries[j].getPath(), entries[j]);
 		}
 
-		final Map referencedEntries = new HashMap();
+		final Map referencedEntries = new LinkedHashMap();
 		
 		// grab all IPackageFragmentRoots
 		final IPackageFragmentRoot[] roots = javaProject.getPackageFragmentRoots();
@@ -441,8 +461,7 @@ public class ModuleTraverser {
 	    for (int i = 0; i < attributes.length; i++) {
 	    	final IClasspathAttribute attribute = attributes[i];
 	    	final String name = attribute.getName();
-	    	if (name.equals(CLASSPATH_COMPONENT_DEPENDENCY) 
-	    			|| name.equals(CLASSPATH_COMPONENT_NON_DEPENDENCY)) {
+	    	if (name.equals(CLASSPATH_COMPONENT_DEPENDENCY)) {
 	    		return attribute;
 	    	}
 	    }
@@ -454,25 +473,18 @@ public class ModuleTraverser {
 	 */
 	private static boolean isValid(final IClasspathEntry entry, final IClasspathAttribute attrib, boolean isWebApp, final IProject project) {
 		int kind = entry.getEntryKind();
-		if (kind == IClasspathEntry.CPE_LIBRARY) {
-			// does the path refer to a file or a folder?
-			final IPath entryPath = entry.getPath();
-			IPath entryLocation = entryPath;
-			final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(entryPath);
-			if (resource != null) {
-				entryLocation = resource.getLocation();
-			}
-			if (entryLocation.toFile().isDirectory()) {
-				return false;
-			}
-		}
-		else if (kind == IClasspathEntry.CPE_PROJECT || kind == IClasspathEntry.CPE_SOURCE) {
+		boolean isClassFolder = isClassFolderEntry(entry);
+		
+		if (kind == IClasspathEntry.CPE_PROJECT || kind == IClasspathEntry.CPE_SOURCE) {
 			return false;
 		}
 
-		String runtimePath = getRuntimePath(attrib, isWebApp);
+		String runtimePath = getRuntimePath(attrib, isWebApp, isClassFolder);
 		if (!isWebApp) {
-			if (!entry.isExported() || !runtimePath.equals("../")) {
+			if (!runtimePath.equals("../") && !runtimePath.equals("/")) {
+				return false;
+			}
+			if (isClassFolder && !runtimePath.equals("/")) {
 				return false;
 			}
 		}
@@ -482,19 +494,47 @@ public class ModuleTraverser {
 					&& !runtimePath.equals("../")) {
 				return false;
 			}
+			if (isClassFolder && !runtimePath.equals("/WEB-INF/classes")) {
+				return false;
+			}
 		}
 		return true;
 	}
 	
 	/*
+	 * Derived from ClasspathDependencyUtil.isClassFolderEntry()
+	 */
+	private static boolean isClassFolderEntry(final IClasspathEntry entry) {
+		if (entry == null || entry.getEntryKind() != IClasspathEntry.CPE_LIBRARY) {
+			return false;
+		}
+		// does the path refer to a file or a folder?
+		final IPath entryPath = entry.getPath();
+		IPath entryLocation = entryPath;
+		final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(entryPath);
+		if (resource != null) {
+			entryLocation = resource.getLocation();
+		}
+		boolean isFile = true; // by default, assume a jar file
+		if (entryLocation.toFile().isDirectory()) {
+			isFile = false;
+		}
+		return !isFile;
+	}
+	
+	/*
 	 * Derived from ClasspathDependencyUtil.getRuntimePath()
 	 */
-	private static String getRuntimePath(final IClasspathAttribute attrib, boolean isWebApp) {
+	private static String getRuntimePath(final IClasspathAttribute attrib, final boolean isWebApp, final boolean isClassFolder) {
     	if (attrib != null && !attrib.getName().equals(CLASSPATH_COMPONENT_DEPENDENCY)) {
     		return null;
     	}
     	if (attrib == null || attrib.getValue()== null || attrib.getValue().length() == 0) {
-    		return isWebApp ? "/WEB-INF/lib" : "../";
+    		if (isWebApp) {
+    			return isClassFolder ? "/WEB_INF/classes" : "WEB-INF/lib";
+    		} else {
+    			return isClassFolder ? "/" : "../";
+    		}
     	}
     	return attrib.getValue();
 	}
