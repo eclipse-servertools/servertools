@@ -249,8 +249,12 @@ public class ResourceManager {
 		if (projects != null) {
 			int size = projects.length;
 			for (int i = 0; i < size; i++) {
-				if (ServerPlugin.getProjectProperties(projects[i]).isServerProject())
+				if (ServerPlugin.getProjectProperties(projects[i]).isServerProject()) {
+					String projectName = projects[i].getName();
+					if (!serverProjects.contains(projectName))
+						serverProjects.add(projectName);
 					loadFromProject(projects[i]);
+				}
 			}
 		}
 		

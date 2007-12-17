@@ -20,7 +20,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.forms.IManagedForm;
-import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
@@ -117,7 +116,7 @@ public abstract class ServerEditorPart extends EditorPart {
 	 * Set an error message for this page.
 	 * 
 	 * @param error the error message
-	 * @see #getManagedForm() Use forms UI based for errors via {@link IMessageManager}
+	 * @see #getManagedForm() Use forms UI based for errors via {@link org.eclipse.ui.forms.IMessageManager}
 	 *    on the message form instead of this method
 	 */
 	public void setErrorMessage(String error) {
@@ -134,7 +133,7 @@ public abstract class ServerEditorPart extends EditorPart {
 	/**
 	 * Updates the error message shown in the editor.
 	 * 
-	 * @see #getManagedForm() Use forms UI based for errors via {@link IMessageManager}
+	 * @see #getManagedForm() Use forms UI based for errors via {@link org.eclipse.ui.forms.IMessageManager}
 	 *    on the message form instead of this method
 	 */
 	public void updateErrorMessage() {
@@ -145,7 +144,7 @@ public abstract class ServerEditorPart extends EditorPart {
 	 * Return the error message for this page.
 	 * 
 	 * @return the error message
-	 * @see #getManagedForm() Use forms UI based for errors via {@link IMessageManager}
+	 * @see #getManagedForm() Use forms UI based for errors via {@link org.eclipse.ui.forms.IMessageManager}
 	 *    on the message form instead of this method
 	 */
 	public String getErrorMessage() {
@@ -167,7 +166,7 @@ public abstract class ServerEditorPart extends EditorPart {
 	 * user will be unable to save the editor.
 	 * 
 	 * @return a set of status
-	 * @see #getManagedForm() Use forms UI based for errors via {@link IMessageManager}
+	 * @see #getManagedForm() Use forms UI based for errors via {@link org.eclipse.ui.forms.IMessageManager}
 	 *    on the message form instead of this method
 	 */
 	public IStatus[] getSaveStatus() {

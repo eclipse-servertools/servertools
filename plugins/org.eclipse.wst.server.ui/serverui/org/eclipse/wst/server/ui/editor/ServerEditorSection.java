@@ -18,7 +18,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.forms.IManagedForm;
-import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorPartInput;
@@ -94,7 +93,7 @@ public abstract class ServerEditorSection {
 	 * Return the error message for this section.
 	 * 
 	 * @return the error message
-	 * @see #getManagedForm() Use forms UI based for errors via {@link IMessageManager}
+	 * @see #getManagedForm() Use forms UI based for errors via {@link org.eclipse.ui.forms.IMessageManager}
 	 *    on the message form instead of this method
 	 */
 	public String getErrorMessage() {
@@ -109,7 +108,7 @@ public abstract class ServerEditorSection {
 	 * @return a status object with code <code>IStatus.OK</code> if this
 	 *   server can be saved, otherwise a status object indicating why
 	 *   it can't be
-	 * @see #getManagedForm() Use forms UI based for errors via {@link IMessageManager}
+	 * @see #getManagedForm() Use forms UI based for errors via {@link org.eclipse.ui.forms.IMessageManager}
 	 *    on the message form instead of this method
 	 */
 	public IStatus[] getSaveStatus() {
@@ -129,7 +128,7 @@ public abstract class ServerEditorSection {
 	 * Set an error message for this section.
 	 * 
 	 * @param error an error message
-	 * @see #getManagedForm() Use forms UI based for errors via {@link IMessageManager}
+	 * @see #getManagedForm() Use forms UI based for errors via {@link org.eclipse.ui.forms.IMessageManager}
 	 *    on the message form instead of this method
 	 */
 	public void setErrorMessage(String error) {

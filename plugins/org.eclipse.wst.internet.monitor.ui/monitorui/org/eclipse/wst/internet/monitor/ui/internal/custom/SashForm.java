@@ -10,11 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.internet.monitor.ui.internal.custom;
 
-
 import org.eclipse.swt.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.graphics.*;
-
 /**
  * The SashForm is a composite control that lays out its children in a
  * row or column arrangement (as specified by the orientation) and places
@@ -75,7 +73,7 @@ public class SashForm extends Composite {
  * @see #getStyle()
  */
 public SashForm(Composite parent, int style) {
-	super(parent, checkStyle(style));
+	super(parent, checkStyle2(style));
 	super.setLayout(new SashFormLayout());
 	sashStyle = ((style & SWT.VERTICAL) != 0) ? SWT.HORIZONTAL : SWT.VERTICAL;
 	if ((style & SWT.BORDER) != 0) sashStyle |= SWT.BORDER;
@@ -86,7 +84,7 @@ public SashForm(Composite parent, int style) {
 		}
 	};
 }
-static int checkStyle (int style) {
+static int checkStyle2(int style) {
 	int mask = SWT.BORDER | SWT.LEFT_TO_RIGHT | SWT.RIGHT_TO_LEFT;
 	return style & mask;
 }
