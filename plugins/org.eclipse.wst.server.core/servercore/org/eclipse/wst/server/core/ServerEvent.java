@@ -131,7 +131,7 @@ public class ServerEvent {
 		
 		checkKind();
 	}
-	
+
 	private void checkKind() {
 		int i = 0;
 		if ((kind & STATE_CHANGE) != 0)
@@ -141,7 +141,7 @@ public class ServerEvent {
 		if ((kind & PUBLISH_STATE_CHANGE) != 0)
 			i++;
 		
-		if (i != 1)
+		if (i != 0 && i != 1)
 			throw new IllegalArgumentException("Kind parameter invalid");
 	}
 
@@ -150,9 +150,9 @@ public class ServerEvent {
 	 * <p>
 	 * This kind can be used to test whether this event is a server event or module event by using
 	 * the following code (the example is checking for the server event):
-	 * ((getKind() | SERVER_CHANGE) != 0) 
+	 *    ((getKind() | SERVER_CHANGE) != 0) 
 	 * the following code (the example is checking for the module event):
-	 * ((getKind() | MODULE_CHANGE) != 0) 
+	 *    ((getKind() | MODULE_CHANGE) != 0) 
 	 * 
 	 * @return the kind of the change (<code>XXX_CHANGE</code>
 	 *    constants declared on {@link ServerEvent}

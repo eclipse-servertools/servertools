@@ -263,6 +263,11 @@ public class Server extends Base implements IServer {
 		ResourceManager.getInstance().removeServer(this);
 	}
 
+	protected void doSave(IProgressMonitor monitor) throws CoreException {
+		super.doSave(monitor);
+		fireServerChangeEvent();
+	}
+
 	protected void saveToFile(IProgressMonitor monitor) throws CoreException {
 		super.saveToFile(monitor);
 		ResourceManager.getInstance().addServer(this);
@@ -440,7 +445,7 @@ public class Server extends Base implements IServer {
 		Trace.trace(Trace.LISTENERS, "Removing server listener " + listener + " from " + this);
 		getServerNotificationManager().removeListener(listener);
 	}
-	
+
 	/**
 	 * Fire a server listener restart state change event.
 	 */
@@ -460,12 +465,26 @@ public class Server extends Base implements IServer {
 	 */
 	protected void fireServerStateChangeEvent() {
 		Trace.trace(Trace.LISTENERS, "->- Firing server state change event: " + getName() + ", " + getServerState() + " ->-");
-	
+		
 		if (notificationManager == null || notificationManager.hasListenerEntries())
 			return;
-	
+		
 		notificationManager.broadcastChange(
 			new ServerEvent(ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE, this, getServerState(), 
+				getServerPublishState(), getServerRestartState()));
+	}
+
+	/**
+	 * Fire a server listener change event.
+	 */
+	protected void fireServerChangeEvent() {
+		Trace.trace(Trace.LISTENERS, "->- Firing server change event: " + getName() + ", " + getServerState() + " ->-");
+		
+		if (notificationManager == null || notificationManager.hasListenerEntries())
+			return;
+		
+		notificationManager.broadcastChange(
+			new ServerEvent(ServerEvent.SERVER_CHANGE, this, getServerState(), 
 				getServerPublishState(), getServerRestartState()));
 	}
 
