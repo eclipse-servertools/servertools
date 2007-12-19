@@ -44,10 +44,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.internal.Trace;
+import org.eclipse.wst.server.ui.IServerModule;
 import org.eclipse.wst.server.ui.IServerToolTip;
 /**
  * 
@@ -56,7 +58,6 @@ public class ServerToolTip extends ToolTip {
 	protected Hashtable<String,ArrayList<IServerToolTip>> toolTipProviders = new Hashtable<String,ArrayList<IServerToolTip>>();	
 	protected static Shell CURRENT_TOOLTIP;
 	protected Label hintLabel;
-	protected Server server;
 	protected Tree tree;
 	protected int x;
 	protected int y;
@@ -104,9 +105,9 @@ public class ServerToolTip extends ToolTip {
 		control.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				Event event = new Event();
-				event.x =x;
-				event.y =y;
-				event.widget= tree;
+				event.x = x;
+				event.y = y;
+				event.widget = tree;
 				
 				createToolTipContentArea(event,stickyTooltip);
 				stickyTooltip.pack();
@@ -144,41 +145,65 @@ public class ServerToolTip extends ToolTip {
 	}
 
 	protected Composite createToolTipContentArea(Event event, Composite parent) {
-		Object o = tree.getItem(new Point(event.x,event.y));
+		Object o = tree.getItem(new Point(event.x, event.y));
 		if (o == null) {
 			hide();
 			return null;
 		}
+		
+		IServer server = null;
+		IServerModule module = null;
 		if (o instanceof TreeItem) {
-			server = (Server)((TreeItem)o).getData();
-		}		
+			Object obj = ((TreeItem)o).getData();
+			if (obj instanceof IServer)
+				server = (IServer) obj;
+			if (obj instanceof IServerModule)
+				module = (IServerModule) obj;
+		}
 		
 		FillLayout layout = (FillLayout)parent.getLayout();
-		layout.type = SWT.VERTICAL;		
+		layout.type = SWT.VERTICAL;
 		parent.setLayout(layout);
 		
-		// Set the default text for the tooltip
-		StyledText sText = new StyledText(parent,SWT.NONE);
+		// set the default text for the tooltip
+		StyledText sText = new StyledText(parent, SWT.NONE);
 		sText.setEditable(false);
 		sText.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-		sText.setText("<b>"+server.getName()+"</b>");
 		
-		// Add adopters content		
-		ArrayList<IServerToolTip> listOfProviders = toolTipProviders.get(server.getServerType().getId());
+		if (module != null) {
+			IModule[] modules = module.getModule();
+			IModule m = modules[modules.length - 1];
+			sText.setText("<b>" + m.getName() + "</b>");
+			//sText.setText("<b>" + m.getName() + "</b></p>" + m.getModuleType().getName());
+			
+			StyledText sText2 = new StyledText(parent, SWT.NONE);
+			sText2.setEditable(false);
+			sText2.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+			sText2.setText(m.getModuleType().getName());
+		}
 		
-		final Composite adoptersComposite = new Composite(parent,SWT.NONE);
-		adoptersComposite.setLayout(new FillLayout());
-		adoptersComposite.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-		
-		if (listOfProviders != null){
-			for (IServerToolTip tipProvider : listOfProviders){
-				tipProvider.createContent(adoptersComposite,server);
-			}
-		}		
+		if (server != null) {
+			sText.setText("<b>" + server.getName() + "</b>");
+			
+			// add adopters content
+			if (server.getServerType() != null) {
+				ArrayList<IServerToolTip> listOfProviders = toolTipProviders.get(server.getServerType().getId());
 				
-		// Add the F3 text
+				final Composite adoptersComposite = new Composite(parent,SWT.NONE);
+				adoptersComposite.setLayout(new FillLayout());
+				adoptersComposite.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+				
+				if (listOfProviders != null) {
+					for (IServerToolTip tipProvider : listOfProviders) {
+						tipProvider.createContent(adoptersComposite,server);
+					}
+				}
+			}
+		}
+		
+		// add the F3 text
 		hintLabel = new Label(parent,SWT.BORDER);
-		hintLabel.setAlignment(SWT.RIGHT);	
+		hintLabel.setAlignment(SWT.RIGHT);
 		hintLabel.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 		hintLabel.setText(Messages.toolTipEnableFocus);
 		hintLabel.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_DARK_GRAY));
@@ -194,15 +219,15 @@ public class ServerToolTip extends ToolTip {
 			public void widgetDisposed(DisposeEvent e) {
 				font.dispose();
 			}
-		});		
+		});
 		hintLabel.setFont(font);
-
+		
 		parseText(sText.getText(),sText);
-			
+		
 		return parent;
 	}
 
-	protected void parseText(String htmlText,StyledText sText){	
+	protected void parseText(String htmlText,StyledText sText) {	
 		TextPresentation presentation = new TextPresentation();
 		HTML2TextReader reader = new HTML2TextReader(new StringReader(htmlText), presentation);
 		String text;
@@ -244,10 +269,10 @@ public class ServerToolTip extends ToolTip {
 						ArrayList<IServerToolTip> listOfProviders = new ArrayList<IServerToolTip>(); 
 						if (toolTipProviders.containsKey(serverType)) {
 							listOfProviders = toolTipProviders.get(serverType);
-						}						
+						}
 						listOfProviders.add(exTooltip);
 						toolTipProviders.put(serverType.getId(), listOfProviders);
-					} catch (CoreException e){
+					} catch (CoreException e) {
 						Trace.trace(Trace.SEVERE, "Tooltip failed to load" + extensions[i].toString(), e);
 					}
 					Trace.trace(Trace.EXTENSION_POINT, "  Loaded serverToolTip: " + extensions[i].getAttribute("id"));
