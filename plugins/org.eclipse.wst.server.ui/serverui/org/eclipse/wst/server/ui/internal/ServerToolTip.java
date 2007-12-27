@@ -62,20 +62,19 @@ public class ServerToolTip extends ToolTip {
 	protected int x;
 	protected int y;
 
-	public ServerToolTip(final Control control) {
-		super(control);
-		if (control instanceof Tree) {
-			tree =(Tree)control;
-		}
+	public ServerToolTip(final Tree tree) {
+		super(tree);
 		
-		control.addMouseMoveListener(new MouseMoveListener() {
+		this.tree = tree;
+		
+		tree.addMouseMoveListener(new MouseMoveListener() {
 			public void mouseMove(MouseEvent e) {
-				x=e.x;
-				y=e.y;
+				x = e.x;
+				y = e.y;
 			}
 		});
 		
-		control.addKeyListener(new KeyListener() {
+		tree.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent  e) {
 				if (e.keyCode == SWT.ESC) {
 					CURRENT_TOOLTIP.setVisible(false);
@@ -85,7 +84,7 @@ public class ServerToolTip extends ToolTip {
 				if (e.keyCode == SWT.F6) {
 					deactivate();
 					hide();
-					createFocusedTooltip(control);					
+					createFocusedTooltip(tree);					
 				}
 			}
 			public void keyReleased(KeyEvent e){
@@ -109,14 +108,14 @@ public class ServerToolTip extends ToolTip {
 				event.y = y;
 				event.widget = tree;
 				
-				createToolTipContentArea(event,stickyTooltip);
+				createToolTipContentArea(event, stickyTooltip);
 				stickyTooltip.pack();
 				
 				stickyTooltip.setLocation(stickyTooltip.getDisplay().getCursorLocation());				
 				hintLabel.setText(Messages.toolTipDisableFocus);
 				stickyTooltip.setVisible(true);
 //				Eventually we want to add a listener that checks if
-//              the mouseDown event is ocurring outside of the bounds of the tooltip
+//              the mouseDown event is occurring outside of the bounds of the tooltip
 //              if it is, then hide the tooltip
 //				addListener(stickyTooltip);
 			}
@@ -144,12 +143,16 @@ public class ServerToolTip extends ToolTip {
 		return o;
 	}
 
+	protected final boolean shouldCreateToolTip(Event event) {
+		if (tree.getItem(new Point(event.x, event.y)) == null)
+			return false;
+		return super.shouldCreateToolTip(event);
+	}
+
 	protected Composite createToolTipContentArea(Event event, Composite parent) {
 		Object o = tree.getItem(new Point(event.x, event.y));
-		if (o == null) {
-			hide();
+		if (o == null)
 			return null;
-		}
 		
 		IServer server = null;
 		IServerModule module = null;

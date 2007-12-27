@@ -26,7 +26,6 @@ public class ModuleLabelDecorator2 extends BaseLabelProvider implements ILightwe
 	public void decorate(Object element, IDecoration decoration) {
 		try {
 			IModule module = null;
-			System.out.println("decorate2");
 			
 			if (element instanceof IServer) {
 				decoration.addSuffix(" *");
