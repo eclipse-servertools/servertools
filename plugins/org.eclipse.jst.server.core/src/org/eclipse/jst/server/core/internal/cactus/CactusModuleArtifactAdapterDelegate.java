@@ -52,9 +52,9 @@ public class CactusModuleArtifactAdapterDelegate extends ModuleArtifactAdapterDe
 		}
 		if (obj instanceof IAdaptable) {
 			IResource resource = (IResource) ((IAdaptable) obj).getAdapter(IResource.class);
-			String testClassName = getClassNameForType(resource, SERVLET_TEST_CASE_TYPE);
-			String projectName = resource.getProject().getName();
+			String testClassName = getClassNameForType(resource);
 			if (testClassName != null) {
+				String projectName = resource.getProject().getName();
 				return new WebTestableResource(getModule(resource.getProject()), false,
 						projectName, testClassName, methodName);
 			}
@@ -62,19 +62,23 @@ public class CactusModuleArtifactAdapterDelegate extends ModuleArtifactAdapterDe
 		return null;
 	}
 
-	public static String getClassNameForType(IResource resource, String superType) {
+	private static String getClassNameForType(IResource resource) {
 		if (resource == null)
 			return null;
+		
+		if (!"java".equals(resource.getFileExtension()) && !"class".equals(resource.getFileExtension()))
+			return null;
+		
 		try {
 			IProject project = resource.getProject();
 			IPath path = resource.getFullPath();
-			if (!project.hasNature(JavaCore.NATURE_ID) || path == null)
+			if (path == null || !project.hasNature(JavaCore.NATURE_ID))
 				return null;
-
+			
 			IJavaProject javaProject = (IJavaProject) project.getNature(JavaCore.NATURE_ID);
 			if (!javaProject.isOpen())
 				javaProject.open(new NullProgressMonitor());
-
+			
 			// output location may not be on classpath
 			IPath outputPath = javaProject.getOutputLocation();
 			if (outputPath != null
@@ -103,7 +107,7 @@ public class CactusModuleArtifactAdapterDelegate extends ModuleArtifactAdapterDe
 			if (types != null) {
 				int size2 = types.length;
 				for (int i = 0; i < size2; i++) {
-					if (hasSuperclass(types[i], superType) || hasSuiteMethod(types[i]))
+					if (hasSuperclass(types[i]) || hasSuiteMethod(types[i]))
 						return types[i].getFullyQualifiedName();
 				}
 			}
@@ -121,9 +125,8 @@ public class CactusModuleArtifactAdapterDelegate extends ModuleArtifactAdapterDe
 			IMethod method = methods[i];
 			if (method.getParameterNames().length == 0 && method.getElementName().equals(SUITE_METHOD)) {
 				String returnType = getFullyQualifiedTypeForMangledType(method.getReturnType(), type);
-				if (TEST_CLASS_NAME.equals(returnType)) {
+				if (TEST_CLASS_NAME.equals(returnType))
 					return true;
-				}
 			}
 		}
 		return false;
@@ -139,13 +142,13 @@ public class CactusModuleArtifactAdapterDelegate extends ModuleArtifactAdapterDe
 		}
 	}
 
-	public static boolean hasSuperclass(IType type, String superClassName) {
+	private static boolean hasSuperclass(IType type) {
 		try {
 			ITypeHierarchy hierarchy = type.newSupertypeHierarchy(null);
 			IType[] superClasses = hierarchy.getAllSuperclasses(type);
 			int size = superClasses.length;
 			for (int i = 0; i < size; i++) {
-				if (superClassName.equals(superClasses[i].getFullyQualifiedName())) //$NON-NLS-1$
+				if (SERVLET_TEST_CASE_TYPE.equals(superClasses[i].getFullyQualifiedName())) //$NON-NLS-1$
 					return true;
 			}
 			return false;
