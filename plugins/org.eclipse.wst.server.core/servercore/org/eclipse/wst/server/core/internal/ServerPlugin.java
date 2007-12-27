@@ -22,7 +22,9 @@ import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
+import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.IServerAttributes;
+import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
@@ -349,11 +351,19 @@ public class ServerPlugin extends Plugin {
 		
 		List<Object> list = new ArrayList<Object>();
 		
-		addAll(list, ServerCore.getRuntimes());
+		if (element instanceof IRuntime)
+			addAll(list, ServerCore.getRuntimes());
+		if (element instanceof IServerAttributes)
 		addAll(list, ServerCore.getServers());
 		
-		if (element != null && list.contains(element))
-			list.remove(element);
+		if (element != null) {
+			if (element instanceof IRuntimeWorkingCopy)
+				element = ((IRuntimeWorkingCopy) element).getOriginal();
+			if (element instanceof IServerWorkingCopy)
+				element = ((IServerWorkingCopy) element).getOriginal();
+			if (list.contains(element))
+				list.remove(element);
+		}
 		
 		Iterator iterator = list.iterator();
 		while (iterator.hasNext()) {
