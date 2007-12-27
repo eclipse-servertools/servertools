@@ -67,7 +67,7 @@ public class InitialSelectionProvider extends ViewerSorter {
 			if (hasRuntime(serverTypes[i]))
 				return serverTypes[i];
 		}
-		return serverTypes[0];
+		return getDefaultServerType(serverTypes);
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class InitialSelectionProvider extends ViewerSorter {
 			if (hasRuntime(runtimeTypes[i]))
 				return runtimeTypes[i];
 		}
-		return runtimeTypes[0];
+		return getDefaultRuntimeType(runtimeTypes);
 	}
 
 	protected boolean hasRuntime(IServerType serverType) {
@@ -108,5 +108,51 @@ public class InitialSelectionProvider extends ViewerSorter {
 			return false;
 		IRuntime[] runtimes = ServerUIPlugin.getRuntimes(runtimeType);
 		return runtimes != null && runtimes.length > 0;
+	}
+
+	/**
+	 * Returns a default server type, typically the 'first' one sorted
+	 * alphabetically by name.
+	 * 
+	 * @param serverTypes
+	 * @return the default server type
+	 */
+	protected IServerType getDefaultServerType(IServerType[] serverTypes) {
+		if (serverTypes == null)
+			return null;
+		
+		int size = serverTypes.length;
+		if (size == 1)
+			return serverTypes[0];
+		
+		IServerType first = serverTypes[0];
+		for (int i = 1; i < size; i++) {
+			if (DefaultViewerSorter.compareServerTypes(first, serverTypes[i]) > 0)
+				first = serverTypes[i];
+		}
+		return first;
+	}
+
+	/**
+	 * Returns a default runtime type, typically the 'first' one sorted
+	 * alphabetically by name.
+	 * 
+	 * @param runtimeTypes
+	 * @return the default runtime type
+	 */
+	protected IRuntimeType getDefaultRuntimeType(IRuntimeType[] runtimeTypes) {
+		if (runtimeTypes == null)
+			return null;
+		
+		int size = runtimeTypes.length;
+		if (size == 1)
+			return runtimeTypes[0];
+		
+		IRuntimeType first = runtimeTypes[0];
+		for (int i = 1; i < size; i++) {
+			if (DefaultViewerSorter.compareRuntimeTypes(first, runtimeTypes[i]) > 0)
+				first = runtimeTypes[i];
+		}
+		return first;
 	}
 }

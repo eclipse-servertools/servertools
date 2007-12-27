@@ -286,6 +286,8 @@ public class ModifyModulesComposite extends Composite {
 		if (server == null)
 			return;
 		
+		System.setProperty("J2EEcache", "" + Math.random());
+		
 		// get currently deployed modules
 		IModule[] currentModules = server.getModules();
 		if (currentModules != null) {
@@ -400,6 +402,8 @@ public class ModifyModulesComposite extends Composite {
 				}
 			}
 		}
+		
+		System.setProperty("J2EEcache", "");
 		
 		updateTaskModel();
 	}

@@ -169,11 +169,13 @@ public class NewManualServerComposite extends Composite {
 					return;
 				
 				String name = serverName.getText();
-				server.setName(name);
-				IRuntime runtime2 = server.getRuntime();
-				if (runtime2 != null && runtime2 instanceof IRuntimeWorkingCopy) {
-					IRuntimeWorkingCopy rwc = (IRuntimeWorkingCopy) runtime2;
-					rwc.setName(name);
+				if (server != null) {
+					server.setName(name);
+					IRuntime runtime2 = server.getRuntime();
+					if (runtime2 != null && runtime2 instanceof IRuntimeWorkingCopy) {
+						IRuntimeWorkingCopy rwc = (IRuntimeWorkingCopy) runtime2;
+						rwc.setName(name);
+					}
 				}
 				
 				if (serverNameModified)
@@ -528,6 +530,15 @@ public class NewManualServerComposite extends Composite {
 		}
 		
 		updateRuntimeCombo(serverType);
+		if (serverName != null) {
+			if (server == null) {
+				serverName.setEditable(false);
+				serverNameToolBar.getControl().setVisible(false);
+			} else {
+				serverName.setEditable(true);
+				serverNameToolBar.getControl().setVisible(serverNameModified);
+			}
+		}
 		listener.serverSelected(server);
 		wizard.update();
 	}

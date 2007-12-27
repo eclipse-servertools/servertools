@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -18,6 +22,7 @@ import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import org.eclipse.wst.server.core.IModuleType;
@@ -92,9 +97,30 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 		super.setVisible(visible);
 		if (visible && initialSelection) {
 			initialSelection = false;
-			if (contentProvider.getInitialSelection() != null)
-				treeViewer.setSelection(new StructuredSelection(contentProvider.getInitialSelection()), true);
+			deferInitialization();
 		}
+	}
+
+	protected void deferInitialization() {
+		Job job = new Job(Messages.jobInitializingServersView) {
+			public IStatus run(IProgressMonitor monitor) {
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						try {
+							if (contentProvider.getInitialSelection() != null)
+								treeViewer.setSelection(new StructuredSelection(contentProvider.getInitialSelection()), true);
+						} catch (Exception e) {
+							// ignore - wizard has already been closed
+						}
+					}
+				});
+				return Status.OK_STATUS;
+			}
+		};
+		
+		job.setSystem(true);
+		job.setPriority(Job.SHORT);
+		job.schedule();
 	}
 
 	public boolean setHost(boolean newHost) {

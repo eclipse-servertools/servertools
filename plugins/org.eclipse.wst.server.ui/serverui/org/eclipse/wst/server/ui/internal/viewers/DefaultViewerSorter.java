@@ -119,7 +119,7 @@ public class DefaultViewerSorter extends ViewerSorter {
 	 *    equal to the second element; and a positive number if the first
 	 *    element is greater than the second element
 	 */
-	protected int compareCategories(String s1, String s2) {
+	protected static int compareCategories(String s1, String s2) {
 		try {
 			Version v1 = Version.parseVersion(s1);
 			Version v2 = Version.parseVersion(s2);
@@ -143,7 +143,7 @@ public class DefaultViewerSorter extends ViewerSorter {
 	 * @return <code>true</code> if the two items are in the same 'family', and
 	 *    <code>false</code> otherwise
 	 */
-	protected boolean isSameFamily(String s1, String v1, String s2, String v2) {
+	protected static boolean isSameFamily(String s1, String v1, String s2, String v2) {
 		if (s1 == null || s2 == null)
 			return false;
 		
@@ -161,7 +161,7 @@ public class DefaultViewerSorter extends ViewerSorter {
 		return (s1.equals(s2));
 	}
 
-	protected int compareVersions(String s1, String s2) {
+	protected static int compareVersions(String s1, String s2) {
 		Version v1 = Version.parseVersion(s1);
 		Version v2 = Version.parseVersion(s2);
 		
@@ -178,7 +178,7 @@ public class DefaultViewerSorter extends ViewerSorter {
 	 *    equal to the second element; and a positive number if the first
 	 *    element is greater than the second element
 	 */
-	protected int compareRuntimeTypes(IRuntimeType r1, IRuntimeType r2) {
+	protected static int compareRuntimeTypes(IRuntimeType r1, IRuntimeType r2) {
 		if (isSameFamily(r1.getName(), r1.getVersion(), r2.getName(), r2.getVersion()))
 			return compareVersions(r1.getVersion(), r2.getVersion());
 		
@@ -195,7 +195,7 @@ public class DefaultViewerSorter extends ViewerSorter {
 	 *    equal to the second element; and a positive number if the first
 	 *    element is greater than the second element
 	 */
-	protected int compareServerTypes(IServerType s1, IServerType s2) {
+	protected static int compareServerTypes(IServerType s1, IServerType s2) {
 		IRuntimeType r1 = s1.getRuntimeType();
 		IRuntimeType r2 = s2.getRuntimeType();
 		if (r1 != null && r2 != null) {
