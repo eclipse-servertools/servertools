@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -189,7 +189,7 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 	}
 	
 	/**
-	 * Checks for the existance of the Java compiler in the given java
+	 * Checks for the existence of the Java compiler in the given java
 	 * executable. A main program is run (<code>org.eclipse.jst.tomcat.core.
 	 * internal.ClassDetector</code>), that dumps a true or false value
 	 * depending on whether the compiler is found. This output is then
@@ -216,8 +216,8 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 			ILaunch launch = new Launch(null, ILaunchManager.RUN_MODE, null);
 			try {
 				vmRunner.run(config, launch, null);
-				for (int i = 0; i < 200; i++) {
-					// wait no more than 10 seconds (200 * 50 mils)
+				for (int i = 0; i < 600; i++) {
+					// wait no more than 30 seconds (600 * 50 mils)
 					if (launch.isTerminated()) {
 						break;
 					}
