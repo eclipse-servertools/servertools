@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,9 +19,8 @@ public class ContentFiltersTestCase extends TestCase {
 	public void test1ContentFiltersExtension() throws Exception {
 		IContentFilter[] cf = MonitorPlugin.getInstance().getContentFilters();
 		if (cf != null) {
-			int size = cf.length;
-			for (int i = 0; i < size; i++)
-				System.out.println(cf[i].getId() + " - " + cf[i].getName());
+			for (IContentFilter c : cf)
+				System.out.println(c.getId() + " - " + c.getName());
 		}
 	}
 	

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -107,20 +107,18 @@ public class NoSourceTestCase extends TestCase {
 
 	public void test029EAR() throws Exception {
 		IModule[] modules = ent.getModules();
-		int size = modules.length;
-		List<String> list = new ArrayList<String>(size);
-		for (int i = 0; i < size; i++)
-			list.add(modules[i].getName());
+		List<String> list = new ArrayList<String>(modules.length);
+		for (IModule m : modules)
+			list.add(m.getName());
 		
 		String[] s = new String[] {
 			"PublishTestEJB", "test2", "PublishTestWeb",
 			"PublishTestWeb2", "PublishTestConnector", "PublishTestClient"
 		};
 		
-		size = s.length;
-		for (int i = 0; i < size; i++) {
-			if (!list.contains(s[i]))
-				fail("EAR does not contain " + s[i]);
+		for (String ss : s) {
+			if (!list.contains(ss))
+				fail("EAR does not contain " + ss);
 		}
 	}
 
@@ -540,11 +538,10 @@ public class NoSourceTestCase extends TestCase {
 		assertFalse(webModule.isBinary());
 	}
 
-
 	public void test199Cleanup() throws Exception {
-		int size = PROJECT_NAMES.length;
-		for (int i = 0; i < size; i++) { // don't delete the ear - leave for binary tests
-			ModuleHelper.deleteProject(PROJECT_NAMES[i]);
+		for (String projectName : PROJECT_NAMES) {
+			// don't delete the ear - leave for binary tests
+			ModuleHelper.deleteProject(projectName);
 		}
 	}
 }

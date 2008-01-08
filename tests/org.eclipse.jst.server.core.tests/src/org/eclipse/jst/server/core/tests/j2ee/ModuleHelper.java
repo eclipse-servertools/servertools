@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -119,11 +119,10 @@ public class ModuleHelper {
 	}
 
 	public static IModule getModule(String type, String name) throws Exception {
-		IModule[] module = ServerUtil.getModules(type);
-		int size = module.length;
-		for (int i = 0; i < size; i++) {
-			if (module[i].getName().equals(name))
-				return module[i];
+		IModule[] modules = ServerUtil.getModules(type);
+		for (IModule module : modules) {
+			if (module.getName().equals(name))
+				return module;
 		}
 		
 		return null;
@@ -134,10 +133,9 @@ public class ModuleHelper {
 		IModuleResource[] mr = pm.members();
 		
 		int count = 0;
-		int size = mr.length;
-		for (int i = 0; i < size; i++) {
-			if (mr[i] instanceof IModuleFolder)
-				count += countFiles((IModuleFolder) mr[i]);
+		for (IModuleResource m : mr) {
+			if (m instanceof IModuleFolder)
+				count += countFiles((IModuleFolder) m);
 			else
 				count++;
 		}
@@ -151,10 +149,9 @@ public class ModuleHelper {
 		if (mr == null)
 			return 0;
 		
-		int size = mr.length;
-		for (int i = 0; i < size; i++) {
-			if (mr[i] instanceof IModuleFolder)
-				count += countFiles((IModuleFolder) mr[i]);
+		for (IModuleResource m : mr) {
+			if (m instanceof IModuleFolder)
+				count += countFiles((IModuleFolder) m);
 			else
 				count++;
 		}
@@ -167,11 +164,10 @@ public class ModuleHelper {
 		IModuleResource[] mr = pm.members();
 		
 		int count = 0;
-		int size = mr.length;
-		for (int i = 0; i < size; i++) {
-			if (mr[i] instanceof IModuleFolder) {
+		for (IModuleResource m : mr) {
+			if (m instanceof IModuleFolder) {
 				count++;
-				count += countFolders((IModuleFolder) mr[i]);
+				count += countFolders((IModuleFolder) m);
 			}
 		}
 		
@@ -184,11 +180,10 @@ public class ModuleHelper {
 		if (mr == null)
 			return 0;
 		
-		int size = mr.length;
-		for (int i = 0; i < size; i++) {
-			if (mr[i] instanceof IModuleFolder) {
+		for (IModuleResource m : mr) {
+			if (m instanceof IModuleFolder) {
 				count ++;
-				count += countFolders((IModuleFolder) mr[i]);
+				count += countFolders((IModuleFolder) m);
 			}
 		}
 		
@@ -201,10 +196,8 @@ public class ModuleHelper {
 			count++;
 		
 		IModuleResourceDelta[] children = delta.getAffectedChildren();
-		int size = children.length;
-		for (int i = 0; i < size; i++) {
-			count += countFilesInDelta(children[i]);
-		}
+		for (IModuleResourceDelta child : children)
+			count += countFilesInDelta(child);
 		
 		return count;
 	}
@@ -213,14 +206,13 @@ public class ModuleHelper {
 		ProjectModule pm = (ProjectModule) module.loadAdapter(ProjectModule.class, null);
 		IModuleResource[] mr = pm.members();
 		
-		int size = mr.length;
-		for (int i = 0; i < size; i++) {
-			if (mr[i].getModuleRelativePath().append(mr[i].getName()).equals(path)) {
-				if (mr[i] instanceof IModuleFile)
-					return (IModuleFile) mr[i];
+		for (IModuleResource m : mr) {
+			if (m.getModuleRelativePath().append(m.getName()).equals(path)) {
+				if (m instanceof IModuleFile)
+					return (IModuleFile) m;
 				return null;
-			} else if (mr[i].getModuleRelativePath().isPrefixOf(path) && mr[i] instanceof IModuleFolder) {
-				IModuleFile mf2 = getModuleFile((IModuleFolder) mr[i], path);
+			} else if (m.getModuleRelativePath().isPrefixOf(path) && m instanceof IModuleFolder) {
+				IModuleFile mf2 = getModuleFile((IModuleFolder) m, path);
 				if (mf2 != null)
 					return mf2;
 			}
@@ -234,14 +226,13 @@ public class ModuleHelper {
 		if (mr == null)
 			return null;
 		
-		int size = mr.length;
-		for (int i = 0; i < size; i++) {
-			if (mr[i].getModuleRelativePath().append(mr[i].getName()).equals(path)) {
-				if (mr[i] instanceof IModuleFile)
-					return (IModuleFile) mr[i];
+		for (IModuleResource m : mr) {
+			if (m.getModuleRelativePath().append(m.getName()).equals(path)) {
+				if (m instanceof IModuleFile)
+					return (IModuleFile) m;
 				return null;
-			} else if (mr[i].getModuleRelativePath().isPrefixOf(path) && mr[i] instanceof IModuleFolder) {
-				IModuleFile mf2 = getModuleFile((IModuleFolder) mr[i], path);
+			} else if (m.getModuleRelativePath().isPrefixOf(path) && m instanceof IModuleFolder) {
+				IModuleFile mf2 = getModuleFile((IModuleFolder) m, path);
 				if (mf2 != null)
 					return mf2;
 			}
@@ -262,14 +253,13 @@ public class ModuleHelper {
 		ProjectModule pm = (ProjectModule) module.loadAdapter(ProjectModule.class, null);
 		IModuleResource[] mr = pm.members();
 		
-		int size = mr.length;
-		for (int i = 0; i < size; i++) {
-			if (mr[i].getModuleRelativePath().append(mr[i].getName()).equals(path)) {
-				if (mr[i] instanceof IModuleFolder)
-					return (IModuleFolder) mr[i];
+		for (IModuleResource m : mr) {
+			if (m.getModuleRelativePath().append(m.getName()).equals(path)) {
+				if (m instanceof IModuleFolder)
+					return (IModuleFolder) m;
 				return null;
-			} else if (mr[i].getModuleRelativePath().isPrefixOf(path) && mr[i] instanceof IModuleFolder) {
-				IModuleFolder mf2 = getModuleFolder((IModuleFolder) mr[i], path);
+			} else if (m.getModuleRelativePath().isPrefixOf(path) && m instanceof IModuleFolder) {
+				IModuleFolder mf2 = getModuleFolder((IModuleFolder) m, path);
 				if (mf2 != null)
 					return mf2;
 			}
@@ -283,14 +273,13 @@ public class ModuleHelper {
 		if (mr == null)
 			return null;
 		
-		int size = mr.length;
-		for (int i = 0; i < size; i++) {
-			if (mr[i].getModuleRelativePath().append(mr[i].getName()).equals(path)) {
-				if (mr[i] instanceof IModuleFolder)
-					return (IModuleFolder) mr[i];
+		for (IModuleResource m : mr) {
+			if (m.getModuleRelativePath().append(m.getName()).equals(path)) {
+				if (m instanceof IModuleFolder)
+					return (IModuleFolder) m;
 				return null;
-			} else if (mr[i].getModuleRelativePath().isPrefixOf(path) && mr[i] instanceof IModuleFolder) {
-				IModuleFolder mf2 = getModuleFolder((IModuleFolder) mr[i], path);
+			} else if (m.getModuleRelativePath().isPrefixOf(path) && m instanceof IModuleFolder) {
+				IModuleFolder mf2 = getModuleFolder((IModuleFolder) m, path);
 				if (mf2 != null)
 					return mf2;
 			}
@@ -312,13 +301,12 @@ public class ModuleHelper {
 		ProjectModule pm = (ProjectModule) module.loadAdapter(ProjectModule.class, null);
 		IModuleResource[] mr = pm.members();
 		
-		int size = mr.length;
-		for (int i = 0; i < size; i++) {
-			if (mr[i] instanceof IModuleFile) {
-				System.out.println(mr[i].getName());
+		for (IModuleResource m : mr) {
+			if (m instanceof IModuleFile) {
+				System.out.println(m.getName());
 			} else {
-				System.out.println(mr[i].getName() + "/");
-				listFolder((IModuleFolder) mr[i], "  ");
+				System.out.println(m.getName() + "/");
+				listFolder((IModuleFolder) m, "  ");
 			}
 		}
 		System.out.println("------");
@@ -329,13 +317,12 @@ public class ModuleHelper {
 		if (mr == null)
 			return;
 		
-		int size = mr.length;
-		for (int i = 0; i < size; i++) {
-			if (mr[i] instanceof IModuleFile) {
-				System.out.println(pad + mr[i].getName());
+		for (IModuleResource m : mr) {
+			if (m instanceof IModuleFile) {
+				System.out.println(pad + m.getName());
 			} else {
-				System.out.println(pad + mr[i].getName() + "/");
-				listFolder((IModuleFolder) mr[i], pad + "  ");
+				System.out.println(pad + m.getName() + "/");
+				listFolder((IModuleFolder) m, pad + "  ");
 			}
 		}
 	}

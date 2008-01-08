@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -105,11 +105,11 @@ public class ProjectUnzipUtil {
 	}
 
 	private void buildProjects() throws IOException, CoreException {
-		for (int i = 0; i < projectNames.length; i++) {
+		for (String projectName : projectNames) {
 			ProjectDescriptionReader pd = new ProjectDescriptionReader();
-			IPath projectPath = new Path("/" + projectNames[i] + "/" + META_PROJECT_NAME);
+			IPath projectPath = new Path("/" + projectName + "/" + META_PROJECT_NAME);
 			IPath path = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(projectPath);
-			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectNames[i]);
+			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 			ProjectDescription description;
 			try {
 				description = pd.read(path);

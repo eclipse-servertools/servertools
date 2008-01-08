@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -112,19 +112,17 @@ public class BinaryTestCase extends TestCase {
 		IModule[] modules = ent.getModules();
 		int size = modules.length;
 		List<String> list = new ArrayList<String>(size);
-		for (int i = 0; i < size; i++) {
-			list.add(modules[i].getName());
-		}
+		for (IModule m : modules)
+			list.add(m.getName());
 		
 		String[] s = new String[] {
 			"PublishTestEJB.jar", "PublishTestWeb.war",
 			"PublishTestWeb2.war", "PublishTestConnector.rar", "PublishTestClient.jar"
 		};
 		
-		size = s.length;
-		for (int i = 0; i < size; i++) {
-			if (!list.contains("lib/PublishTestEAR/EarContent/" + s[i]))
-				fail("EAR does not contain " + s[i]);
+		for (String ss : s) {
+			if (!list.contains("lib/PublishTestEAR/EarContent/" + ss))
+				fail("EAR does not contain " + ss);
 		}
 	}
 

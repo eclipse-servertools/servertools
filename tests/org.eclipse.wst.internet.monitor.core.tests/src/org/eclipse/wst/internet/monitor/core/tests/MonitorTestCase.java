@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,9 +42,8 @@ public class MonitorTestCase extends TestCase {
 	public void test02GetMonitor() throws Exception {
 		int count = 0;
 		IMonitor[] monitors = MonitorCore.getMonitors();
-		int size = monitors.length;
-		for (int i = 0; i < size; i++) {
-			if (monitor.equals(monitors[i]))
+		for (IMonitor m : monitors) {
+			if (monitor.equals(m))
 				count++;
 		}
 		assertTrue(count == 1);
@@ -160,9 +159,8 @@ public class MonitorTestCase extends TestCase {
 	public void test17GetMonitor() throws Exception {
 		int count = 0;
 		IMonitor[] monitors = MonitorCore.getMonitors();
-		int size = monitors.length;
-		for (int i = 0; i < size; i++) {
-			if (monitor.equals(monitors[i]))
+		for (IMonitor m : monitors) {
+			if (monitor.equals(m))
 				count++;
 		}
 		assertTrue(count == 0);
