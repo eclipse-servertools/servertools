@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -87,6 +87,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 	protected Spinner autoPublishTime;
 	protected Spinner startTimeoutSpinner;
 	protected Spinner stopTimeoutSpinner;
+	protected ManagedForm managedForm;
 
 	protected boolean updating;
 
@@ -202,10 +203,10 @@ public class OverviewEditorPart extends ServerEditorPart {
 	 * @param parent the parent control
 	 */
 	public final void createPartControl(final Composite parent) {
-		IManagedForm mForm = new ManagedForm(parent);
-		setManagedForm(mForm);
-		ScrolledForm form = mForm.getForm();
-		FormToolkit toolkit = mForm.getToolkit();
+		managedForm = new ManagedForm(parent);
+		setManagedForm(managedForm);
+		ScrolledForm form = managedForm.getForm();
+		FormToolkit toolkit = managedForm.getToolkit();
 		toolkit.decorateFormHeading(form.getForm());
 		form.setText(Messages.serverEditorOverviewPageTitle);
 		form.setImage(ImageResource.getImage(ImageResource.IMG_SERVER));
@@ -780,6 +781,11 @@ public class OverviewEditorPart extends ServerEditorPart {
 		
 		if (runtimeListener != null)
 			ServerCore.removeRuntimeLifecycleListener(runtimeListener);
+		
+		if (managedForm != null) {
+			managedForm.dispose();
+			managedForm = null;
+		}
 	}
 
 	/* (non-Javadoc)
