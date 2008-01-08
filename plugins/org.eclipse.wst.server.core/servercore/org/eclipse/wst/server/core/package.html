@@ -1,0 +1,58 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="../../../../../..//apistyles.css" type="text/css">
+<title>WTP API overview</title>
+</head>
+<body>
+<p>The main server tools framework client API.</p>
+<table width="500">
+<tr>
+<td>
+<p>ServerCore is the main entry-point and provides access to most of the
+remaining API. From here, you can get the existing server runtimes and
+servers, get the available server types, and access interfaces for all
+extension points.</p>
+</td>
+</tr>
+</table>
+<table width="500">
+<tr>
+<td>
+<p>ServerUtil provides utility and convenience methods for dealing with
+server tools. It provides easy access to modules, server runtimes, and
+what combinations are supported (e.g. which runtimes can be used to
+target a particular project).</p>
+</td>
+</tr>
+</table>
+<table width="500">
+<tr>
+<td>
+<p>IRuntime and IServer are the two main API objects. IRuntime is used
+to target projects to a particular server installation and compile/build
+against them. When a runtime is targetted to a particular runtime,
+all of the applicable IRuntimeTargetHandler extensions are called to
+set the classpath or modify other project settings for the runtime.</p>
+</td>
+</tr>
+</table>
+<table width="500">
+<tr>
+<td>
+<p>IServer is the main server class that clients can use to start/stop
+and publish to servers.</p>
+</td>
+</tr>
+</table>
+<table width="500">
+<tr>
+<td>
+<p>IModules provide the "content" that can be published to servers.
+See the server tools API overview for more information.</p>
+</td>
+</tr>
+</table>
+</body>
+</html>
