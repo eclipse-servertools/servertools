@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jst.server.tomcat.ui.tests;
 
+import org.eclipse.jst.server.tomcat.ui.internal.CleanWorkDirDialog;
 import org.eclipse.jst.server.tomcat.ui.internal.editor.MimeMappingDialog;
+import org.eclipse.jst.server.tomcat.ui.internal.editor.WebModuleDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import junit.framework.TestCase;
@@ -25,8 +27,13 @@ public class DialogsTestCase extends TestCase {
 		UITestHelper.assertDialog(mmd);
 	}
 
-	/*public void testWebModuleDialog() {
+	public void testWebModuleDialog() {
 		WebModuleDialog wmd = new WebModuleDialog(getShell(), null, null, null, true);
 		UITestHelper.assertDialog(wmd);
-	}*/
+	}
+
+	public void testCleanWorkDirDialog() {
+		CleanWorkDirDialog cwdd = new CleanWorkDirDialog(getShell(), null, null);
+		UITestHelper.assertDialog(cwdd);
+	}
 }
