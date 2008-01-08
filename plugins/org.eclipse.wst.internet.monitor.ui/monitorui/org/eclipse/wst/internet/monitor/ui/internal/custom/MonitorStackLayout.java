@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,9 +31,9 @@ public class MonitorStackLayout extends Layout {
 		Control children[] = composite.getChildren();
 		int maxWidth = 0;
 		int maxHeight = 0;
-		for (int i = 0; i < children.length; i++) {
-			if (children[i] == topControl) {
-				Point size = children[i].computeSize(wHint, hHint, flushCache);
+		for (Control child : children) {
+			if (child == topControl) {
+				Point size = child.computeSize(wHint, hHint, flushCache);
 				maxWidth = Math.max(size.x, maxWidth);
 				maxHeight = Math.max(size.y, maxHeight);
 			}
@@ -54,13 +54,13 @@ public class MonitorStackLayout extends Layout {
 	protected void layout(Composite composite, boolean flushCache) {
 		Control children[] = composite.getChildren();
 		Rectangle rect = composite.getClientArea();
-		for (int i = 0; i < children.length; i++) {
-			if (children[i] instanceof Label) {
+		for (Control child : children) {
+			if (child instanceof Label) {
 				Rectangle r = new Rectangle(rect.x+2, rect.y, rect.width-2, rect.height);
-				children[i].setBounds(r);
+				child.setBounds(r);
 			} else
-				children[i].setBounds(rect);
-			children[i].setVisible(children[i] == topControl);
+				child.setBounds(rect);
+			child.setVisible(child == topControl);
 		}
 	}
 

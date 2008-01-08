@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -110,12 +110,11 @@ public class RuntimeClasspathProviderWrapper {
 		if (s == null)
 			return false;
 		
-		int size = s.length;
-		for (int i = 0; i < size; i++) {
-			if (s[i].endsWith("*")) {
-				if (id.length() >= s[i].length() && id.startsWith(s[i].substring(0, s[i].length() - 1)))
+		for (String ss : s) {
+			if (ss.endsWith("*")) {
+				if (id.length() >= ss.length() && id.startsWith(ss.substring(0, ss.length() - 1)))
 					return true;
-			} else if (id.equals(s[i]))
+			} else if (id.equals(ss))
 				return true;
 		}
 		return false;

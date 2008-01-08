@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -201,10 +201,8 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 		
 		IMonitor[] monitors = MonitorCore.getMonitors();
 		if (monitors != null) {
-			int size = monitors.length;
-			for (int i = 0; i < size; i++) {
-				monitors[i].addRequestListener(requestListener);
-			}
+			for (IMonitor monitor : monitors)
+				monitor.addRequestListener(requestListener);
 		}
 	}
 
@@ -216,10 +214,8 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 		
 		IMonitor[] monitors = MonitorCore.getMonitors();
 		if (monitors != null) {
-			int size = monitors.length;
-			for (int i = 0; i < size; i++) {
-				monitors[i].removeRequestListener(requestListener);
-			}
+			for (IMonitor monitor : monitors)
+				monitor.removeRequestListener(requestListener);
 		}
 		
 		MonitorCore.removeMonitorListener(monitorListener);

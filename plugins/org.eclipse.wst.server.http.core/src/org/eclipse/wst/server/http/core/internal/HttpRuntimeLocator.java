@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -53,11 +53,11 @@ public class HttpRuntimeLocator extends RuntimeLocatorDelegate {
 			int size = files.length;
 			int work = 100 / size;
 			int workLeft = 100 - (work * size);
-			for (int i = 0; i < size; i++) {
+			for (File file : files) {
 				if (monitor.isCanceled())
 					return;
-				if (files[i] != null && files[i].isDirectory())
-					searchDir(listener, files[i], 4, monitor);
+				if (file != null && file.isDirectory())
+					searchDir(listener, file, 4, monitor);
 				monitor.worked(work);
 			}
 			monitor.worked(workLeft);
@@ -83,19 +83,18 @@ public class HttpRuntimeLocator extends RuntimeLocatorDelegate {
 			}
 		});
 		if (files != null) {
-			int size = files.length;
-			for (int i = 0; i < size; i++) {
+			for (File file : files) {
 				if (monitor.isCanceled())
 					return;
-				searchDir(listener, files[i], depth - 1, monitor);
+				searchDir(listener, file, depth - 1, monitor);
 			}
 		}
 	}
 
 	protected static IRuntimeWorkingCopy getRuntimeFromDir(File dir, IProgressMonitor monitor) {
-		for (int i = 0; i < runtimeTypes.length; i++) {
+		for (String rt : runtimeTypes) {
 			try {
-				IRuntimeType runtimeType = ServerCore.findRuntimeType(runtimeTypes[i]);
+				IRuntimeType runtimeType = ServerCore.findRuntimeType(rt);
 				String absolutePath = dir.getAbsolutePath();
 				String id = absolutePath.replace(File.separatorChar, '_').replace(':', '-');
 				IRuntimeWorkingCopy runtime = runtimeType.createRuntime(id, monitor);
@@ -104,7 +103,7 @@ public class HttpRuntimeLocator extends RuntimeLocatorDelegate {
 				IStatus status = runtime.validate(monitor);
 				if (status == null || status.getSeverity() != IStatus.ERROR)
 					return runtime;
-
+				
 				Trace.trace(Trace.FINER, "False runtime found at " + dir.getAbsolutePath()
 						+ ": " + status.getMessage());
 			} catch (Exception e) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -123,9 +123,8 @@ public class ViewerManager {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(MonitorUIPlugin.PLUGIN_ID, "viewers");
 		int size = cf.length;
 		viewers = new ArrayList<Viewer>(size);
-		for (int i = 0; i < size; i++) {
-			viewers.add(new Viewer(cf[i]));
-		}
+		for (IConfigurationElement ce : cf)
+			viewers.add(new Viewer(ce));
 	}
 
 	/* (non-Javadoc)

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -72,9 +72,7 @@ public class MonitorTreeContentProvider implements ITreeContentProvider {
 			List<Request> list = new ArrayList<Request>();
 			Request[] requests = MonitorUIPlugin.getInstance().getRequests();
 			if (requests != null) {
-				int size = requests.length;
-				for (int i = 0; i < size; i++) {
-					Request req = requests[i];
+				for (Request req : requests) {
 					if ((req.getLocalPort() == in.intValue())
 							&& !(req instanceof ResendHTTPRequest))
 						list.add(req);
@@ -86,10 +84,8 @@ public class MonitorTreeContentProvider implements ITreeContentProvider {
 			ResendHTTPRequest[] rr = MonitorManager.getInstance().getResendRequests(req);
 			List<Request> list = new ArrayList<Request>();
 			if (rr != null) {
-				int size = rr.length;
-				for (int i = 0; i < size; i++) {
-					list.add(rr[i]);
-				}
+				for (ResendHTTPRequest r : rr)
+					list.add(r);
 			}
 			return list.toArray();
 		}
@@ -106,9 +102,7 @@ public class MonitorTreeContentProvider implements ITreeContentProvider {
 			List<Integer> list = new ArrayList<Integer>();
 			Request[] requests = MonitorUIPlugin.getInstance().getRequests();
 			if (requests != null) {
-				int size = requests.length;
-				for (int i = 0; i < size; i++) {
-					Request req = requests[i];
+				for (Request req :  requests) {
 					Integer in = new Integer(req.getLocalPort());
 					if (!list.contains(in))
 						list.add(in);

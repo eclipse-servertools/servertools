@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,14 +51,13 @@ public class ServerClasspathContainerPage extends WizardPage implements IClasspa
 		setPageComplete(false);
 		
 		IRuntime[] runtimes = ServerCore.getRuntimes();
-		int size = runtimes.length;
-		for (int i = 0; i < size; i++) {
-			if (runtimes[i].getRuntimeType() != null) {
-				RuntimeClasspathProviderWrapper rcpw = JavaServerPlugin.findRuntimeClasspathProvider(runtimes[i].getRuntimeType());
+		for (IRuntime runtime : runtimes) {
+			if (runtime.getRuntimeType() != null) {
+				RuntimeClasspathProviderWrapper rcpw = JavaServerPlugin.findRuntimeClasspathProvider(runtime.getRuntimeType());
 				if (rcpw != null) {
 					IPath serverContainerPath = new Path(RuntimeClasspathContainer.SERVER_CONTAINER)
-							.append(rcpw.getId()).append(runtimes[i].getId());
-					runtimeMap.put(runtimes[i], JavaCore.newContainerEntry(serverContainerPath));
+							.append(rcpw.getId()).append(runtime.getId());
+					runtimeMap.put(runtime, JavaCore.newContainerEntry(serverContainerPath));
 				}
 			}
 		}

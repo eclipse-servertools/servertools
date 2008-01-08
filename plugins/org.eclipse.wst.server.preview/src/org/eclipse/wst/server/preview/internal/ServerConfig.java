@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,11 +38,11 @@ public class ServerConfig {
 				IMemento[] modules2 = memento.getChildren("module");
 				int size = modules2.length;
 				List<Module> list = new ArrayList<Module>(size);
-				for (int i = 0; i < size; i++) {
-					String name = modules2[i].getString("name");
-					boolean isStatic = "static".equals(modules2[i].getString("type"));
-					String path = modules2[i].getString("path");
-					String context = modules2[i].getString("context");
+				for (IMemento mod : modules2) {
+					String name = mod.getString("name");
+					boolean isStatic = "static".equals(mod.getString("type"));
+					String path = mod.getString("path");
+					String context = mod.getString("context");
 					Module module = new Module(name, isStatic, context, path);
 					list.add(module);
 				}

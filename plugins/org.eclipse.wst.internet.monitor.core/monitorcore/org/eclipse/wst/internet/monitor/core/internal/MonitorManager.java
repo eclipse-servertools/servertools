@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -188,11 +188,9 @@ public class MonitorManager {
 	 * @param type the type of event
 	 */
 	protected void fireMonitorEvent(IMonitor monitor, int type) {
-		Object[] obj = monitorListeners.toArray();
+		IMonitorListener[] obj = monitorListeners.toArray(new IMonitorListener[monitorListeners.size()]);
 		
-		int size = obj.length;
-		for (int i = 0; i < size; i++) {
-			IMonitorListener listener = (IMonitorListener) obj[i];
+		for (IMonitorListener listener : obj) {
 			if (type == ADD)
 				listener.monitorAdded(monitor);
 			else if (type == CHANGE)

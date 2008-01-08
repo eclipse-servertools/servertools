@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,11 +29,10 @@ public class PreviewStartup implements IStartup {
 		IRuntime[] runtimes = ServerCore.getRuntimes();
 		IRuntime runtime = null;
 		
-		int size = runtimes.length;
-		for (int i = 0; i < size; i++) {
-			if (runtimes[i].getRuntimeType() != null && PreviewRuntime.ID.equals(runtimes[i].getRuntimeType().getId())) {
-				if (ID.equals(runtimes[i].getId()))
-					runtime = runtimes[i];
+		for (IRuntime r : runtimes) {
+			if (r.getRuntimeType() != null && PreviewRuntime.ID.equals(r.getRuntimeType().getId())) {
+				if (ID.equals(r.getId()))
+					runtime = r;
 			}
 		}
 		
@@ -53,10 +52,9 @@ public class PreviewStartup implements IStartup {
 		IServer[] servers = ServerCore.getServers();
 		
 		boolean found = false;
-		size = servers.length;
-		for (int i = 0; i < size; i++) {
-			if (servers[i].getServerType() != null && PreviewServer.ID.equals(servers[i].getServerType().getId())) {
-				if (ID.equals(servers[i].getId()))
+		for (IServer s : servers) {
+			if (s.getServerType() != null && PreviewServer.ID.equals(s.getServerType().getId())) {
+				if (ID.equals(s.getId()))
 					found = true;
 			}
 		}

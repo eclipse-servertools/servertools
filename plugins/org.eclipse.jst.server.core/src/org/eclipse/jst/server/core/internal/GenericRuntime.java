@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -57,11 +57,10 @@ public class GenericRuntime extends RuntimeDelegate implements IGenericRuntime, 
 		try {
 			IVMInstallType vmInstallType = JavaRuntime.getVMInstallType(getVMInstallTypeId());
 			IVMInstall[] vmInstalls = vmInstallType.getVMInstalls();
-			int size = vmInstalls.length;
 			String id = getVMInstallId();
-			for (int i = 0; i < size; i++) {
-				if (id.equals(vmInstalls[i].getId()))
-					return vmInstalls[i];
+			for (IVMInstall vmInst : vmInstalls) {
+				if (id.equals(vmInst.getId()))
+					return vmInst;
 			}
 		} catch (Exception e) {
 			// ignore

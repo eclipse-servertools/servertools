@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -101,23 +101,22 @@ public class PreviewServerBehaviour extends ServerBehaviourDelegate {
 		memento.putInteger("port", port);
 		
 		IModule[] modules = getServer().getModules();
-		int size = modules.length;
-		for (int i = 0; i < size; i++) {
+		for (IModule module : modules) {
 			IMemento mod = memento.createChild("module");
-			mod.putString("name", modules[i].getName());
-			String type = modules[i].getModuleType().getId();
+			mod.putString("name", module.getName());
+			String type = module.getModuleType().getId();
 			if ("wst.web".equals(type)) {
-				IStaticWeb staticWeb = (IStaticWeb) modules[i].loadAdapter(IStaticWeb.class, null);
+				IStaticWeb staticWeb = (IStaticWeb) module.loadAdapter(IStaticWeb.class, null);
 				if (staticWeb != null)
 					mod.putString("context", staticWeb.getContextRoot());
 				mod.putString("type", "static");
 			} else if ("jst.web".equals(type)) {
-				IWebModule webModule = (IWebModule) modules[i].loadAdapter(IWebModule.class, null);
+				IWebModule webModule = (IWebModule) module.loadAdapter(IWebModule.class, null);
 				if (webModule != null)
 					mod.putString("context", webModule.getContextRoot());
 				mod.putString("type", "j2ee");
 			}
-			mod.putString("path", getModulePublishDirectory(modules[i]).toPortableString());
+			mod.putString("path", getModulePublishDirectory(module).toPortableString());
 		}
 		try {
 			memento.saveToFile(getTempDirectory().append("preview.xml").toOSString());
@@ -148,9 +147,8 @@ public class PreviewServerBehaviour extends ServerBehaviourDelegate {
 		processListener = new IDebugEventSetListener() {
 			public void handleDebugEvents(DebugEvent[] events) {
 				if (events != null) {
-					int size = events.length;
-					for (int i = 0; i < size; i++) {
-						if (newProcess != null && newProcess.equals(events[i].getSource()) && events[i].getKind() == DebugEvent.TERMINATE) {
+					for (DebugEvent event : events) {
+						if (newProcess != null && newProcess.equals(event.getSource()) && event.getKind() == DebugEvent.TERMINATE) {
 							stop(true);
 						}
 					}
@@ -265,7 +263,7 @@ public class PreviewServerBehaviour extends ServerBehaviourDelegate {
 	/**
 	 * Return a string representation of this object.
 	 * 
-	 * @return java.lang.String
+	 * @return a string
 	 */
 	public String toString() {
 		return "PreviewServer";

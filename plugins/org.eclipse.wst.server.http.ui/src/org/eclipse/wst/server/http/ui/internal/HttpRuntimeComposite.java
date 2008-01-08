@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -189,12 +189,10 @@ public class HttpRuntimeComposite extends Composite {
 		if (name2.equals(runtimeWC.getName())) {
 			return true;
 		}
-		IRuntime[] allRuntimes = ServerCore.getRuntimes();
 		
-		if (allRuntimes != null) {
-			int size = allRuntimes.length;
-			for (int i = 0; i < size; i++) {
-				IRuntime runtime2 = allRuntimes[i];
+		IRuntime[] runtimes = ServerCore.getRuntimes();
+		if (runtimes != null) {
+			for (IRuntime runtime2 : runtimes) {
 				if (name2.equals(runtime2.getName()))
 					return false;
 			}

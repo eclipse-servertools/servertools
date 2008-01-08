@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -214,12 +214,11 @@ public abstract class RuntimeClasspathProviderDelegate {
 		
 		File[] files = dir.listFiles();
 		if (files != null) {
-			int size = files.length;
-			for (int i = 0; i < size; i++) {
-				if (files[i].isDirectory() && depth > 0) {
-					addJarFiles(files[i], list, depth - 1);
-				} else if (files[i].getAbsolutePath().endsWith(".jar") || files[i].getAbsolutePath().endsWith(".zip")) {
-					IPath path = new Path(files[i].getAbsolutePath());
+			for (File file : files) {
+				if (file.isDirectory() && depth > 0) {
+					addJarFiles(file, list, depth - 1);
+				} else if (file.getAbsolutePath().endsWith(".jar") || file.getAbsolutePath().endsWith(".zip")) {
+					IPath path = new Path(file.getAbsolutePath());
 					list.add(JavaCore.newLibraryEntry(path, null, null));
 				}
 			}
@@ -256,15 +255,14 @@ public abstract class RuntimeClasspathProviderDelegate {
 		// find the source attachments
 		sourceAttachments = new ArrayList<SourceAttachmentUpdate>();
 		
-		int size = entries.length;
-		for (int i = 0; i < size; i++) {
-			if (entries[i].getSourceAttachmentPath() != null || entries[i].getExtraAttributes() != null) {
+		for (IClasspathEntry entry : entries) {
+			if (entry.getSourceAttachmentPath() != null || entry.getExtraAttributes() != null) {
 				SourceAttachmentUpdate sau = new SourceAttachmentUpdate();
 				sau.runtimeId = runtime.getId();
-				sau.entry = entries[i].getPath();
-				sau.sourceAttachmentPath = entries[i].getSourceAttachmentPath();
-				sau.sourceAttachmentRootPath = entries[i].getSourceAttachmentRootPath();
-				sau.attributes = entries[i].getExtraAttributes();
+				sau.entry = entry.getPath();
+				sau.sourceAttachmentPath = entry.getSourceAttachmentPath();
+				sau.sourceAttachmentRootPath = entry.getSourceAttachmentRootPath();
+				sau.attributes = entry.getExtraAttributes();
 				sourceAttachments.add(sau);
 			}
 		}
@@ -286,22 +284,20 @@ public abstract class RuntimeClasspathProviderDelegate {
 			IMemento memento = XMLMemento.loadMemento(filename);
 			
 			IMemento[] children = memento.getChildren("source-attachment");
-			int size = children.length;
-			
-			for (int i = 0; i < size; i++) {
+			for (IMemento child : children) {
 				try {
 					SourceAttachmentUpdate sau = new SourceAttachmentUpdate();
-					sau.runtimeId = children[i].getString("runtime-id");
-					String temp = children[i].getString("entry");
+					sau.runtimeId = child.getString("runtime-id");
+					String temp = child.getString("entry");
 					if (temp != null)
 						sau.entry = new Path(temp);
-					temp = children[i].getString("source-attachment-path");
+					temp = child.getString("source-attachment-path");
 					if (temp != null)
 						sau.sourceAttachmentPath = new Path(temp);
-					temp = children[i].getString("source-attachment-root-path");
+					temp = child.getString("source-attachment-root-path");
 					if (temp != null)
 						sau.sourceAttachmentRootPath = new Path(temp);
-					IMemento[] attrChildren = children[i].getChildren("attribute");
+					IMemento[] attrChildren = child.getChildren("attribute");
 					if (attrChildren != null) {
 						int size2 = attrChildren.length;
 						sau.attributes = new IClasspathAttribute[size2];
@@ -344,9 +340,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 				if (sau.sourceAttachmentRootPath != null)
 					child.putString("source-attachment-root-path", sau.sourceAttachmentRootPath.toPortableString());
 				if (sau.attributes != null) {
-					int size = sau.attributes.length;
-					for (int i = 0; i < size; i++) {
-						IClasspathAttribute attr = sau.attributes[i];
+					for (IClasspathAttribute attr : sau.attributes) {
 						IMemento attrChild = child.createChild("attribute");
 						attrChild.putString("name", attr.getName());
 						attrChild.putString("value", attr.getValue());

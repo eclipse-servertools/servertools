@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,10 +45,10 @@ public class PreviewSourcePathComputerDelegate implements ISourcePathComputerDel
 		if (server != null) {
 			List<IJavaProject> list = new ArrayList<IJavaProject>();
 			IModule[] modules = server.getModules();
-			for (int i = 0; i < modules.length; i++) {
-				IProject project = modules[i].getProject();
+			for (IModule module : modules) {
+				IProject project = module.getProject();
 				if (project != null) {
-					IFolder moduleFolder = project.getFolder(modules[i].getName());
+					IFolder moduleFolder = project.getFolder(module.getName());
 					if (moduleFolder.exists()) {
 						sourcefolderList.add(new FolderSourceContainer(moduleFolder, true));
 					}
@@ -68,8 +68,8 @@ public class PreviewSourcePathComputerDelegate implements ISourcePathComputerDel
 			IJavaProject[] projects = new IJavaProject[size];
 			list.toArray(projects);
 			
-			for (int i = 0; i < size; i++)
-				classpaths.addAll(Arrays.asList(JavaRuntime.computeUnresolvedRuntimeClasspath(projects[i])));
+			for (IJavaProject project : projects)
+				classpaths.addAll(Arrays.asList(JavaRuntime.computeUnresolvedRuntimeClasspath(project)));
 		}
 
 		IRuntimeClasspathEntry[] entries = new IRuntimeClasspathEntry[classpaths.size()];

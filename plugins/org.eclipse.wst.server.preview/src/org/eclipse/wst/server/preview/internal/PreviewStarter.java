@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,7 +21,7 @@ import org.mortbay.jetty.*;
 import org.mortbay.jetty.servlet.WebApplicationContext;
 
 public class PreviewStarter {
-	private static final String[] avertedLogs = new String[] {
+	private static final String[] AVERTED_LOGS = new String[] {
 		"org.mortbay.util.Container", "org.mortbay.http.HttpServer",
 		"org.mortbay.util.Credential", "org.mortbay.http.SocketListener",
 		"org.mortbay.http.HttpServer", "org.mortbay.jetty.Server"
@@ -49,14 +49,13 @@ public class PreviewStarter {
 			int size = m.length;
 			if (size > 0) {
 				System.out.println("Modules:");
-				for (int i = 0; i < size; i++) {
-					System.out.println("  " + m[i].getName());
-				}
+				for (Module mm : m)
+					System.out.println("  " + mm.getName());
 				System.out.println();
 			}
 			
-			for (int i = 0; i < avertedLogs.length; i++) {
-				Logger logger = Logger.getLogger(avertedLogs[i]);
+			for (String log : AVERTED_LOGS) {
+				Logger logger = Logger.getLogger(log);
 				logger.setFilter(new Filter() {
 					public boolean isLoggable(LogRecord record) {
 						//Trace.trace(Trace.FINEST, "Averted Jetty log: " + record.getMessage());
@@ -94,8 +93,7 @@ public class PreviewStarter {
 			server.addContext(context2);
 			server.setRootWebApp("/");
 			
-			for (int i = 0; i < size; i++) {
-				Module module = m[i];
+			for (Module module : m) {
 				if (module.isStaticWeb()) {
 					HttpContext context = new HttpContext();
 					context.setContextPath(module.getContext());
@@ -141,11 +139,11 @@ public class PreviewStarter {
 	protected static boolean deleteDirectory(File directory) {
 		if (directory.exists() && directory.isDirectory()) {
 			File[] files = directory.listFiles();
-			for (int i = 0; i < files.length; i++) {
-				if (files[i].isDirectory()) {
-					deleteDirectory(files[i]);
+			for (File file : files) {
+				if (file.isDirectory()) {
+					deleteDirectory(file);
 				} else {
-					files[i].delete();
+					file.delete();
 				}
 			}
 		}

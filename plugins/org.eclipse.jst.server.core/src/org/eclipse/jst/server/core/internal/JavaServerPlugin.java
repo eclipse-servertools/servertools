@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -132,31 +132,30 @@ public class JavaServerPlugin extends Plugin {
 				public IStatus run(IProgressMonitor monitor) {
 					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 					if (projects != null) {
-						int size = projects.length;
-						for (int i = 0; i < size; i++) {
-							if (projects[i].isAccessible()) {
+						for (IProject project : projects) {
+							if (project.isAccessible()) {
 								try {
-									if (!projects[i].isNatureEnabled(JavaCore.NATURE_ID))
+									if (!project.isNatureEnabled(JavaCore.NATURE_ID))
 										continue;
 									
-									IJavaProject javaProject = JavaCore.create(projects[i]);
+									IJavaProject javaProject = JavaCore.create(project);
 									
 									boolean found = false;
 									IClasspathEntry[] ce = javaProject.getRawClasspath();
-									for (int j = 0; j < ce.length; j++) {
-										if (ce[j].getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
-											if (serverContainerPath.isPrefixOf(ce[j].getPath()))
+									for (IClasspathEntry cp : ce) {
+										if (cp.getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
+											if (serverContainerPath.isPrefixOf(cp.getPath()))
 												found = true;
 										}
 									}
 									
-									Trace.trace(Trace.FINEST, "Classpath change on: " + projects[i] + " " + found);
+									Trace.trace(Trace.FINEST, "Classpath change on: " + project + " " + found);
 									
 									if (found) {
 										IRuntime runtime2 = runtime;
 										if (act == 2)
 											runtime2 = null;
-										RuntimeClasspathContainer container = new RuntimeClasspathContainer(projects[i],
+										RuntimeClasspathContainer container = new RuntimeClasspathContainer(project,
 												serverContainerPath, rcpw, runtime2, runtime.getId());
 										JavaCore.setClasspathContainer(serverContainerPath, new IJavaProject[] { javaProject },
 												new IClasspathContainer[] {container}, null);
@@ -298,14 +297,13 @@ public class JavaServerPlugin extends Plugin {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(JavaServerPlugin.PLUGIN_ID, "runtimeClasspathProviders");
 		
-		int size = cf.length;
-		List<RuntimeClasspathProviderWrapper> list = new ArrayList<RuntimeClasspathProviderWrapper>(size);
-		for (int i = 0; i < size; i++) {
+		List<RuntimeClasspathProviderWrapper> list = new ArrayList<RuntimeClasspathProviderWrapper>(cf.length);
+		for (IConfigurationElement ce : cf) {
 			try {
-				list.add(new RuntimeClasspathProviderWrapper(cf[i]));
-				Trace.trace(Trace.CONFIG, "  Loaded runtimeClasspathProviders: " + cf[i].getAttribute("id"));
+				list.add(new RuntimeClasspathProviderWrapper(ce));
+				Trace.trace(Trace.CONFIG, "  Loaded runtimeClasspathProviders: " + ce.getAttribute("id"));
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load runtimeClasspathProviders: " + cf[i].getAttribute("id"), t);
+				Trace.trace(Trace.SEVERE, "  Could not load runtimeClasspathProviders: " + ce.getAttribute("id"), t);
 			}
 		}
 		runtimeClasspathProviders = list;
@@ -341,14 +339,13 @@ public class JavaServerPlugin extends Plugin {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(JavaServerPlugin.PLUGIN_ID, "serverProfilers");
 		
-		int size = cf.length;
-		List<ServerProfiler> list = new ArrayList<ServerProfiler>(size);
-		for (int i = 0; i < size; i++) {
+		List<ServerProfiler> list = new ArrayList<ServerProfiler>(cf.length);
+		for (IConfigurationElement ce : cf) {
 			try {
-				list.add(new ServerProfiler(cf[i]));
-				Trace.trace(Trace.CONFIG, "  Loaded serverProfiler: " + cf[i].getAttribute("id"));
+				list.add(new ServerProfiler(ce));
+				Trace.trace(Trace.CONFIG, "  Loaded serverProfiler: " + ce.getAttribute("id"));
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load serverProfiler: " + cf[i].getAttribute("id"), t);
+				Trace.trace(Trace.SEVERE, "  Could not load serverProfiler: " + ce.getAttribute("id"), t);
 			}
 		}
 		serverProfilers = list;

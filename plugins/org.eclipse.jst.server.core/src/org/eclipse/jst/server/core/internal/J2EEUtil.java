@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -53,16 +53,13 @@ public class J2EEUtil {
 		List<IModule> list = new ArrayList<IModule>();
 		IModule[] modules = ServerUtil.getModules(EAR_MODULE);
 		if (modules != null) {
-			int size = modules.length;
-			for (int i = 0; i < size; i++) {
-				IModule module2 = modules[i];
+			for (IModule module2 : modules) {
 				IEnterpriseApplication ear = (IEnterpriseApplication) module2.loadAdapter(IEnterpriseApplication.class, monitor);
 				if (ear != null) {
 					IModule[] modules2 = ear.getModules();
 					if (modules2 != null) {
-						int size2 = modules2.length;
-						for (int j = 0; j < size2; j++) {
-							if (module.equals(modules2[j].loadAdapter(IJ2EEModule.class, monitor)))
+						for (IModule m : modules2) {
+							if (module.equals(m.loadAdapter(IJ2EEModule.class, monitor)))
 								list.add(module2);
 						}
 					}
@@ -92,16 +89,13 @@ public class J2EEUtil {
 		List<IModule> list = new ArrayList<IModule>();
 		IModule[] modules = ServerUtil.getModules(EAR_MODULE);
 		if (modules != null) {
-			int size = modules.length;
-			for (int i = 0; i < size; i++) {
-				IModule module2 = modules[i];
+			for (IModule module2 : modules) {
 				IEnterpriseApplication ear = (IEnterpriseApplication) module2.loadAdapter(IEnterpriseApplication.class, monitor);
 				if (ear != null) {
 					IModule[] modules2 = ear.getModules();
 					if (modules2 != null) {
-						int size2 = modules2.length;
-						for (int j = 0; j < size2; j++) {
-							if (module.equals(modules2[j]))
+						for (IModule m : modules2) {
+							if (module.equals(m))
 								list.add(module2);
 						}
 					}
@@ -131,16 +125,13 @@ public class J2EEUtil {
 		List<IModule> list = new ArrayList<IModule>();
 		IModule[] modules = ServerUtil.getModules(WEB_MODULE);
 		if (modules != null) {
-			int size = modules.length;
-			for (int i = 0; i < size; i++) {
-				IModule module2 = modules[i];
+			for (IModule module2 : modules) {
 				IWebModule web = (IWebModule) module2.loadAdapter(IWebModule.class, monitor);
 				if (web != null) {
 					IModule[] modules2 = web.getModules();
 					if (modules2 != null) {
-						int size2 = modules2.length;
-						for (int j = 0; j < size2; j++) {
-							if (module.equals(modules2[j]))
+						for (IModule m : modules2) {
+							if (module.equals(m))
 								list.add(module2);
 						}
 					}
@@ -158,23 +149,20 @@ public class J2EEUtil {
 		
 		IModule[] modules = ServerUtil.getModules(EAR_MODULE);
 		if (modules != null) {
-			int size = modules.length;
-			for (int i = 0; i < size; i++) {
-				IModule module2 = modules[i];
+			for (IModule module2 : modules) {
 				IEnterpriseApplication ear = (IEnterpriseApplication) module2.loadAdapter(IEnterpriseApplication.class, monitor);
 				if (ear != null) {
 					IModule[] modules2 = ear.getModules();
 					if (modules2 != null) {
-						int size2 = modules2.length;
-						for (int j = 0; j < size2; j++) {
-							List<IModule> m = earCache.get(modules2[j]);
+						for (IModule mm : modules2) {
+							List<IModule> m = earCache.get(mm);
 							if (m == null) {
 								m = new ArrayList<IModule>(2);
-								earCache.put(modules2[j], m);
+								earCache.put(mm, m);
 							}
 							m.add(module2);
 							
-							IJ2EEModule mod = (IJ2EEModule) modules2[j].loadAdapter(IJ2EEModule.class, monitor);
+							IJ2EEModule mod = (IJ2EEModule) mm.loadAdapter(IJ2EEModule.class, monitor);
 							if (mod != null) {
 								m = earCache2.get(mod);
 								if (m == null) {
@@ -191,19 +179,16 @@ public class J2EEUtil {
 		
 		modules = ServerUtil.getModules(WEB_MODULE);
 		if (modules != null) {
-			int size = modules.length;
-			for (int i = 0; i < size; i++) {
-				IModule module2 = modules[i];
+			for (IModule module2 : modules) {
 				IWebModule web = (IWebModule) module2.loadAdapter(IWebModule.class, monitor);
 				if (web != null) {
 					IModule[] modules2 = web.getModules();
 					if (modules2 != null) {
-						int size2 = modules2.length;
-						for (int j = 0; j < size2; j++) {
-							List<IModule> m = webCache.get(modules2[j]);
+						for (IModule mm : modules2) {
+							List<IModule> m = webCache.get(mm);
 							if (m == null) {
 								m = new ArrayList<IModule>(2);
-								webCache.put(modules2[j], m);
+								webCache.put(mm, m);
 							}
 							m.add(module2);
 						}

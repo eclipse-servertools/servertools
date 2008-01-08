@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -186,17 +186,14 @@ public class GenericRuntimeComposite extends Composite {
 		// get all installed JVMs
 		installedJREs = new ArrayList<IVMInstall>();
 		IVMInstallType[] vmInstallTypes = JavaRuntime.getVMInstallTypes();
-		int size = vmInstallTypes.length;
-		for (int i = 0; i < size; i++) {
-			IVMInstall[] vmInstalls = vmInstallTypes[i].getVMInstalls();
-			int size2 = vmInstalls.length;
-			for (int j = 0; j < size2; j++) {
-				installedJREs.add(vmInstalls[j]);
-			}
+		for (IVMInstallType vit : vmInstallTypes) {
+			IVMInstall[] vmInstalls = vit.getVMInstalls();
+			for (IVMInstall vmInstall : vmInstalls)
+				installedJREs.add(vmInstall);
 		}
 		
 		// get names
-		size = installedJREs.size();
+		int size = installedJREs.size();
 		jreNames = new String[size+1];
 		jreNames[0] = Messages.runtimeTypeDefaultJRE;
 		for (int i = 0; i < size; i++) {

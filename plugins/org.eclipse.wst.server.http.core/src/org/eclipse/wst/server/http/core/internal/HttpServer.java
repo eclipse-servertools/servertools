@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -218,10 +218,9 @@ public class HttpServer extends ServerDelegate implements IURLProvider {
 
 	public static IServer findHttpServer(String id) {
 		IServer[] servers = ServerCore.getServers();
-		for (int i = 0; i < servers.length; i++) {
-			if (servers[i].getId().equals(id)) {
-				return servers[i];
-			}
+		for (IServer server : servers) {
+			if (server.getId().equals(id))
+				return server;
 		}
 		return null;
 	}

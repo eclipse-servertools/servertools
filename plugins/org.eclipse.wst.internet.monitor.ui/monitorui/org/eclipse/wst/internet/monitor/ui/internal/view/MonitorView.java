@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -479,9 +479,8 @@ public class MonitorView extends ViewPart {
 		IContentFilter[] filters = MonitorPlugin.getInstance().getContentFilters();
 		IMenuManager menuManager = getViewSite().getActionBars().getMenuManager();
 		menuManager.add(httpHeaderAction);
-		int size = filters.length;
-		for (int i = 0; i < size; i++) {
-			FilterAction action = new FilterAction(vm, filters[i]);
+		for (IContentFilter cf : filters) {
+			FilterAction action = new FilterAction(vm, cf);
 			menuManager.add(action);
 		}
 		menuManager.add(new Separator());
