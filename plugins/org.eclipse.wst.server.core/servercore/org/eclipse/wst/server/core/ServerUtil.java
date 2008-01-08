@@ -92,14 +92,12 @@ public class ServerUtil {
 		
 		ModuleFactory[] factories = ServerPlugin.getModuleFactories();
 		if (factories != null) {
-			int size = factories.length;
-			for (int i = 0; i < size; i++) {
-				IModule[] modules = factories[i].getModules(project, null);
+			for (ModuleFactory factory : factories) {
+				IModule[] modules = factory.getModules(project, null);
 				if (modules != null) {
-					int size2 = modules.length;
-					for (int j = 0; j < size2; j++) {
-						if (!set.contains(modules[j]))
-							set.add(modules[j]);
+					for (IModule module : modules) {
+						if (!set.contains(module))
+							set.add(module);
 					}
 				}
 			}
@@ -155,14 +153,12 @@ public class ServerUtil {
 		
 		ModuleFactory[] factories = ServerPlugin.getModuleFactories();
 		if (factories != null) {
-			int size = factories.length;
-			for (int i = 0; i < size; i++) {
-				if (isSupportedModule(factories[i].getModuleTypes(), moduleTypes)) {
-					IModule[] modules = factories[i].getModules(null);
+			for (ModuleFactory factory : factories) {
+				if (isSupportedModule(factory.getModuleTypes(), moduleTypes)) {
+					IModule[] modules = factory.getModules(null);
 					if (modules != null) {
-						int size2 = modules.length;
-						for (int j = 0; j < size2; j++)
-							list.add(modules[j]);
+						for (IModule module : modules)
+							list.add(module);
 					}
 				}
 			}
@@ -190,15 +186,13 @@ public class ServerUtil {
 		
 		ModuleFactory[] factories = ServerPlugin.getModuleFactories();
 		if (factories != null) {
-			int size = factories.length;
-			for (int i = 0; i < size; i++) {
-				if (isSupportedModule(factories[i].getModuleTypes(), type, null)) {
-					IModule[] modules = factories[i].getModules(null);
+			for (ModuleFactory factory : factories) {
+				if (isSupportedModule(factory.getModuleTypes(), type, null)) {
+					IModule[] modules = factory.getModules(null);
 					if (modules != null) {
-						int size2 = modules.length;
-						for (int j = 0; j < size2; j++)
-							if (type.equals(modules[j].getModuleType().getId()))
-								list.add(modules[j]);
+						for (IModule module : modules)
+							if (type.equals(module.getModuleType().getId()))
+								list.add(module);
 					}
 				}
 			}
@@ -230,9 +224,8 @@ public class ServerUtil {
 		if (typeId == null && versionId == null)
 			return true;
 		
-		int size = moduleTypes.length;
-		for (int i = 0; i < size; i++) {
-			if (isSupportedModule(moduleTypes[i], typeId, versionId))
+		for (IModuleType moduleType : moduleTypes) {
+			if (isSupportedModule(moduleType, typeId, versionId))
 				return true;
 		}
 		
@@ -241,9 +234,8 @@ public class ServerUtil {
 
 	private static boolean isSupportedModule(IModuleType[] moduleTypes, IModuleType[] mt) {
 		if (mt != null) {
-			int size = mt.length;
-			for (int i = 0; i < size; i++) {
-				if (isSupportedModule(moduleTypes, mt[i]))
+			for (IModuleType moduleType : mt) {
+				if (isSupportedModule(moduleTypes, moduleType))
 					return true;
 			}
 		}
@@ -263,9 +255,8 @@ public class ServerUtil {
 		if (moduleTypes == null || mt == null)
 			throw new IllegalArgumentException();
 		
-		int size = moduleTypes.length;
-		for (int i = 0; i < size; i++) {
-			if (isSupportedModule(moduleTypes[i], mt))
+		for (IModuleType moduleType : moduleTypes) {
+			if (isSupportedModule(moduleType, mt))
 				return true;
 		}
 		return false;
@@ -331,17 +322,16 @@ public class ServerUtil {
 		if (remove == null)
 			remove = new IModule[0];
 		
-		int size = add.length;
-		for (int i = 0; i < size; i++) {
-			if (add[i] == null)
+		for (IModule module : add) {
+			if (module == null)
 				throw new IllegalArgumentException("Cannot add null entries");
 		}
 		
 		List<IModule> addParentModules = new ArrayList<IModule>();
-		for (int i = 0; i < size; i++) {
+		for (IModule module : add) {
 			boolean found = false;
 			try {
-				IModule[] parents = server.getRootModules(add[i], monitor);
+				IModule[] parents = server.getRootModules(module, monitor);
 				if (parents != null && parents.length > 0) {				
 					IModule parent = parents[0];
 					found = true;
@@ -353,20 +343,19 @@ public class ServerUtil {
 			}
 			
 			if (!found)
-				addParentModules.add(add[i]);
+				addParentModules.add(module);
 		}
 		
-		size = remove.length;
-		for (int i = 0; i < size; i++) {
-			if (remove[i] == null)
+		for (IModule module : remove) {
+			if (module == null)
 				throw new IllegalArgumentException("Cannot remove null entries");
 		}
 		
 		List<IModule> removeParentModules = new ArrayList<IModule>();
-		for (int i = 0; i < size; i++) {
+		for (IModule module : remove) {
 			boolean found = false;
 			try {
-				IModule[] parents = server.getRootModules(remove[i], monitor);
+				IModule[] parents = server.getRootModules(module, monitor);
 				if (parents != null && parents.length > 0) {				
 					IModule parent = parents[0];
 					found = true;
@@ -378,7 +367,7 @@ public class ServerUtil {
 			}
 			
 			if (!found)
-				removeParentModules.add(remove[i]);
+				removeParentModules.add(module);
 		}
 		
 		IModule[] add2 = new IModule[addParentModules.size()];
@@ -540,11 +529,10 @@ public class ServerUtil {
 		List<IRuntime> list = new ArrayList<IRuntime>();
 		IRuntime[] runtimes = ServerCore.getRuntimes();
 		if (runtimes != null) {
-			int size = runtimes.length;
-			for (int i = 0; i < size; i++) {
-				IRuntimeType runtimeType = runtimes[i].getRuntimeType();
+			for (IRuntime runtime : runtimes) {
+				IRuntimeType runtimeType = runtime.getRuntimeType();
 				if (runtimeType != null && isSupportedModule(runtimeType.getModuleTypes(), type, version)) {
-					list.add(runtimes[i]);
+					list.add(runtime);
 				}
 			}
 		}
@@ -566,10 +554,9 @@ public class ServerUtil {
 		List<IRuntimeType> list = new ArrayList<IRuntimeType>();
 		IRuntimeType[] runtimeTypes = ServerCore.getRuntimeTypes();
 		if (runtimeTypes != null) {
-			int size = runtimeTypes.length;
-			for (int i = 0; i < size; i++) {
-				if (isSupportedModule(runtimeTypes[i].getModuleTypes(), type, version)) {
-					list.add(runtimeTypes[i]);
+			for (IRuntimeType runtimeType : runtimeTypes) {
+				if (isSupportedModule(runtimeType.getModuleTypes(), type, version)) {
+					list.add(runtimeType);
 				}
 			}
 		}
@@ -593,11 +580,10 @@ public class ServerUtil {
 		List<IRuntimeType> list = new ArrayList<IRuntimeType>();
 		IRuntimeType[] runtimeTypes = ServerCore.getRuntimeTypes();
 		if (runtimeTypes != null) {
-			int size = runtimeTypes.length;
-			for (int i = 0; i < size; i++) {
-				if (isSupportedModule(runtimeTypes[i].getModuleTypes(), type, version)) {
-					if (runtimeTypeId == null || runtimeTypes[i].getId().startsWith(runtimeTypeId))
-						list.add(runtimeTypes[i]);
+			for (IRuntimeType runtimeType : runtimeTypes) {
+				if (isSupportedModule(runtimeType.getModuleTypes(), type, version)) {
+					if (runtimeTypeId == null || runtimeType.getId().startsWith(runtimeTypeId))
+						list.add(runtimeType);
 				}
 			}
 		}
@@ -608,10 +594,10 @@ public class ServerUtil {
 	}
 
 	/**
-	 * Returns a list of all servers that this deployable is not currently
+	 * Returns a list of all servers that this module is not currently
 	 * configured on, but could be added to. If includeErrors is true, this
-	 * method return servers where the parent deployable may throw errors. For
-	 * instance, this deployable may be the wrong spec level.
+	 * method return servers where the parent module may throw errors. For
+	 * instance, this module may be the wrong spec level.
 	 *
 	 * @param module a module
 	 * @param includeErrors <code>true</code> to include servers that returned
@@ -630,26 +616,25 @@ public class ServerUtil {
 		List<IServer> list = new ArrayList<IServer>();
 		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
-			int size = servers.length;
-			for (int i = 0; i < size; i++) {
-				if (!containsModule(servers[i], module, monitor)) {
+			for (IServer server : servers) { 
+				if (!containsModule(server, module, monitor)) {
 					try {
-						IModule[] parents = servers[i].getRootModules(module, monitor);
+						IModule[] parents = server.getRootModules(module, monitor);
 						if (parents != null && parents.length > 0) {
 							boolean found = false;
 							int size2 = parents.length;
 							for (int j = 0; !found && j < size2; j++) {
 								IModule parent = parents[j];
-								IStatus status = servers[i].canModifyModules(new IModule[] { parent }, new IModule[0], monitor);
+								IStatus status = server.canModifyModules(new IModule[] { parent }, new IModule[0], monitor);
 								if (status == null || status.isOK()){
-									list.add(servers[i]);
+									list.add(server);
 									found = true;
 								}
 							}
 						}
 					} catch (Exception se) {
 						if (includeErrors)
-							list.add(servers[i]);
+							list.add(server);
 					}
 				}
 			}
@@ -684,10 +669,9 @@ public class ServerUtil {
 		List<IServer> list = new ArrayList<IServer>();
 		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
-			int size = servers.length;
-			for (int i = 0; i < size; i++) {
-				if (containsModule(servers[i], module, monitor))
-					list.add(servers[i]);
+			for (IServer server : servers) {
+				if (containsModule(server, module, monitor))
+					list.add(server);
 			}
 		}
 		

@@ -281,16 +281,13 @@ public abstract class Base {
 		}
 		IMemento[] children = memento.getChildren("list");
 		if (children != null) {
-			int size = children.length;
-			for (int i = 0; i < size; i++) {
-				loadList(children[i]);
-			}
+			for (IMemento child : children)
+				loadList(child);
 		}
 		IMemento[] maps = memento.getChildren("map");
 		if (maps != null) {
-			for (int i = 0; i <maps.length ; i++) {
-				loadMap(maps[i]);
-			}
+			for (IMemento m : maps)
+				loadMap(m);
 		}
 		
 		loadState(memento);

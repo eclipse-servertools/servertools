@@ -45,16 +45,14 @@ public final class ServerCore {
 		public void registryChanged(IRegistryChangeEvent event) {
 			IExtensionDelta[] deltas = event.getExtensionDeltas(ServerPlugin.PLUGIN_ID, EXTENSION_RUNTIME_TYPE);
 			if (deltas != null) {
-				for (int i = 0; i < deltas.length; i++) {
-					handleRuntimeTypeDelta(deltas[i]);
-				}
+				for (IExtensionDelta delta : deltas)
+					handleRuntimeTypeDelta(delta);
 			}
 			
 			deltas = event.getExtensionDeltas(ServerPlugin.PLUGIN_ID, EXTENSION_SERVER_TYPE);
 			if (deltas != null) {
-				for (int i = 0; i < deltas.length; i++) {
-					handleServerTypeDelta(deltas[i]);
-				}
+				for (IExtensionDelta delta : deltas)
+					handleServerTypeDelta(delta);
 			}
 		}
 	}
@@ -202,12 +200,12 @@ public final class ServerCore {
 	 * Load the runtime types.
 	 */
 	private static synchronized void addRuntimeTypes(IConfigurationElement[] cf, List<IRuntimeType> list) {
-		for (int i = 0; i < cf.length; i++) {
+		for (IConfigurationElement ce : cf) {
 			try {
-				list.add(new RuntimeType(cf[i]));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded runtimeType: " + cf[i].getAttribute("id"));
+				list.add(new RuntimeType(ce));
+				Trace.trace(Trace.EXTENSION_POINT, "  Loaded runtimeType: " + ce.getAttribute("id"));
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load runtimeType: " + cf[i].getAttribute("id"), t);
+				Trace.trace(Trace.SEVERE, "  Could not load runtimeType: " + ce.getAttribute("id"), t);
 			}
 		}
 	}
@@ -235,12 +233,12 @@ public final class ServerCore {
 	 * Load the server types.
 	 */
 	private static synchronized void addServerTypes(IConfigurationElement[] cf, List<IServerType> list) {
-		for (int i = 0; i < cf.length; i++) {
+		for (IConfigurationElement ce : cf) {
 			try {
-				list.add(new ServerType(cf[i]));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded serverType: " + cf[i].getAttribute("id"));
+				list.add(new ServerType(ce));
+				Trace.trace(Trace.EXTENSION_POINT, "  Loaded serverType: " + ce.getAttribute("id"));
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load serverType: " + cf[i].getAttribute("id"), t);
+				Trace.trace(Trace.SEVERE, "  Could not load serverType: " + ce.getAttribute("id"), t);
 			}
 		}
 	}

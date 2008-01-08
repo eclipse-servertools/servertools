@@ -68,10 +68,9 @@ public final class FacetUtil {
 			return null;
 		
 		IRuntime[] runtimes = ServerCore.getRuntimes();
-		int size = runtimes.length;
-		for (int i = 0; i < size; i++) {
-			if (id.equals(runtimes[i].getId()))
-				return runtimes[i];
+		for (IRuntime r : runtimes) {
+			if (id.equals(r.getId()))
+				return r;
 		}
 		
 		return null;
@@ -153,9 +152,8 @@ public final class FacetUtil {
 			
 			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 			if (projects != null) {
-				int size = projects.length;
-				for (int i = 0; i < size; i++) {
-					IFacetedProject facetedProject = ProjectFacetsManager.create(projects[i]);
+				for (IProject project : projects) {
+					IFacetedProject facetedProject = ProjectFacetsManager.create(project);
 					if (facetedProject != null) {
 						Set<org.eclipse.wst.common.project.facet.core.runtime.IRuntime> set = facetedProject.getTargetedRuntimes();
 						if (set != null && set.contains(runtime2))
@@ -183,9 +181,8 @@ public final class FacetUtil {
 			
 			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 			if (projects != null) {
-				int size = projects.length;
-				for (int i = 0; i < size; i++) {
-					IFacetedProject facetedProject = ProjectFacetsManager.create(projects[i]);
+				for (IProject project : projects) {
+					IFacetedProject facetedProject = ProjectFacetsManager.create(project);
 					if (facetedProject != null) {
 						Set<org.eclipse.wst.common.project.facet.core.runtime.IRuntime> set = facetedProject.getTargetedRuntimes();
 						if (set != null && set.contains(runtime2))

@@ -84,27 +84,25 @@ public class FacetMappingUtil extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "runtimeFacetComponentProviders");
 		
 		// load new wst extension point
-		int size = cf.length;
-		List<RuntimeComponentProviderWrapper> list = new ArrayList<RuntimeComponentProviderWrapper>(size);
-		for (int i = 0; i < size; i++) {
+		List<RuntimeComponentProviderWrapper> list = new ArrayList<RuntimeComponentProviderWrapper>(cf.length);
+		for (IConfigurationElement ce : cf) {
 			try {
-				list.add(new RuntimeComponentProviderWrapper(cf[i]));
-				Trace.trace(Trace.CONFIG, "  Loaded runtimeFacetComponentProvider: " + cf[i].getAttribute("id"));
+				list.add(new RuntimeComponentProviderWrapper(ce));
+				Trace.trace(Trace.CONFIG, "  Loaded runtimeFacetComponentProvider: " + ce.getAttribute("id"));
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load runtimeFacetComponentProvider: " + cf[i].getAttribute("id"), t);
+				Trace.trace(Trace.SEVERE, "  Could not load runtimeFacetComponentProvider: " + ce.getAttribute("id"), t);
 			}
 		}
 		
 		// load old jst extension point
 		cf = registry.getConfigurationElementsFor("org.eclipse.jst.server.core.internalRuntimeComponentProviders");
 		
-		size = cf.length;
-		for (int i = 0; i < size; i++) {
+		for (IConfigurationElement ce : cf) {
 			try {
-				list.add(new RuntimeComponentProviderWrapper(cf[i]));
-				Trace.trace(Trace.CONFIG, "  Loaded runtimeFacetComponentProvider: " + cf[i].getAttribute("id"));
+				list.add(new RuntimeComponentProviderWrapper(ce));
+				Trace.trace(Trace.CONFIG, "  Loaded runtimeFacetComponentProvider: " + ce.getAttribute("id"));
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load runtimeFacetComponentProvider: " + cf[i].getAttribute("id"), t);
+				Trace.trace(Trace.SEVERE, "  Could not load runtimeFacetComponentProvider: " + ce.getAttribute("id"), t);
 			}
 		}
 		runtimeComponentProviders = list;
@@ -122,14 +120,13 @@ public class FacetMappingUtil extends Plugin {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor("org.eclipse.jst.server.core.runtimeFacetMappings");
 		
-		int size = cf.length;
-		List<RuntimeFacetMapping> list = new ArrayList<RuntimeFacetMapping>(size);
-		for (int i = 0; i < size; i++) {
+		List<RuntimeFacetMapping> list = new ArrayList<RuntimeFacetMapping>(cf.length);
+		for (IConfigurationElement ce : cf) {
 			try {
-				list.add(new RuntimeFacetMapping(cf[i]));
-				Trace.trace(Trace.CONFIG, "  Loaded runtimeFacetMapping: " + cf[i].getAttribute("runtimeTypeId"));
+				list.add(new RuntimeFacetMapping(ce));
+				Trace.trace(Trace.CONFIG, "  Loaded runtimeFacetMapping: " + ce.getAttribute("runtimeTypeId"));
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load runtimeFacetMapping: " + cf[i].getAttribute("id"), t);
+				Trace.trace(Trace.SEVERE, "  Could not load runtimeFacetMapping: " + ce.getAttribute("id"), t);
 			}
 		}
 		runtimeFacetMappings = list;
