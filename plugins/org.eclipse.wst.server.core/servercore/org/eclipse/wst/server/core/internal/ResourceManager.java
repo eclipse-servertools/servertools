@@ -44,8 +44,8 @@ public class ResourceManager {
 	protected List<IServer> servers;
 
 	// lifecycle listeners
-	protected transient List<IRuntimeLifecycleListener> runtimeListeners;
-	protected transient List<IServerLifecycleListener> serverListeners;
+	protected List<IRuntimeLifecycleListener> runtimeListeners = new ArrayList<IRuntimeLifecycleListener>(3);
+	protected List<IServerLifecycleListener> serverListeners = new ArrayList<IServerLifecycleListener>(3);
 
 	// cache for disposing servers & runtimes
 	protected List<String> activeBundles;
@@ -372,44 +372,46 @@ public class ResourceManager {
 	 * 
 	 */
 	public void addRuntimeLifecycleListener(IRuntimeLifecycleListener listener) {
-		Trace.trace(Trace.LISTENERS, "Adding server resource listener " + listener + " to " + this);
-	
-		if (runtimeListeners == null)
-			runtimeListeners = new ArrayList<IRuntimeLifecycleListener>(3);
-		runtimeListeners.add(listener);
+		Trace.trace(Trace.LISTENERS, "Adding runtime lifecycle listener " + listener + " to " + this);
+		
+		synchronized (runtimeListeners) {
+			runtimeListeners.add(listener);
+		}
 	}
-	
+
 	/*
 	 *
 	 */
 	public void removeRuntimeLifecycleListener(IRuntimeLifecycleListener listener) {
-		Trace.trace(Trace.LISTENERS, "Removing server resource listener " + listener + " from " + this);
-	
-		if (runtimeListeners != null)
+		Trace.trace(Trace.LISTENERS, "Removing runtime lifecycle listener " + listener + " from " + this);
+		
+		synchronized (runtimeListeners) {
 			runtimeListeners.remove(listener);
+		}
 	}
-	
+
 	/*
 	 * 
 	 */
 	public void addServerLifecycleListener(IServerLifecycleListener listener) {
-		Trace.trace(Trace.LISTENERS, "Adding server resource listener " + listener + " to " + this);
-	
-		if (serverListeners == null)
-			serverListeners = new ArrayList<IServerLifecycleListener>(3);
-		serverListeners.add(listener);
+		Trace.trace(Trace.LISTENERS, "Adding server lifecycle listener " + listener + " to " + this);
+		
+		synchronized (serverListeners) {
+			serverListeners.add(listener);
+		}
 	}
-	
+
 	/*
 	 *
 	 */
 	public void removeServerLifecycleListener(IServerLifecycleListener listener) {
-		Trace.trace(Trace.LISTENERS, "Removing server resource listener " + listener + " from " + this);
-	
-		if (serverListeners != null)
+		Trace.trace(Trace.LISTENERS, "Removing server lifecycle listener " + listener + " from " + this);
+		
+		synchronized (serverListeners) {
 			serverListeners.remove(listener);
+		}
 	}
-	
+
 	/**
 	 * Deregister an existing runtime.
 	 *
@@ -450,24 +452,22 @@ public class ResourceManager {
 	private void fireRuntimeEvent(final IRuntime runtime, byte b) {
 		Trace.trace(Trace.LISTENERS, "->- Firing runtime event: " + runtime.getName() + " ->-");
 		
-		if (runtimeListeners == null || runtimeListeners.isEmpty())
+		if (runtimeListeners.isEmpty())
 			return;
-	
-		int size = runtimeListeners.size();
-		IRuntimeLifecycleListener[] srl = new IRuntimeLifecycleListener[size];
-		runtimeListeners.toArray(srl);
-	
-		for (int i = 0; i < size; i++) {
-			Trace.trace(Trace.LISTENERS, "  Firing runtime event to " + srl[i]);
-			try {
-				if (b == EVENT_ADDED)
-					srl[i].runtimeAdded(runtime);
-				else if (b == EVENT_CHANGED)
-					srl[i].runtimeChanged(runtime);
-				else
-					srl[i].runtimeRemoved(runtime);
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "  Error firing runtime event to " + srl[i], e);
+		
+		synchronized (runtimeListeners) {
+			for (IRuntimeLifecycleListener srl : runtimeListeners) {
+				Trace.trace(Trace.LISTENERS, "  Firing runtime event to " + srl);
+				try {
+					if (b == EVENT_ADDED)
+						srl.runtimeAdded(runtime);
+					else if (b == EVENT_CHANGED)
+						srl.runtimeChanged(runtime);
+					else
+						srl.runtimeRemoved(runtime);
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "  Error firing runtime event to " + srl, e);
+				}
 			}
 		}
 		Trace.trace(Trace.LISTENERS, "-<- Done firing runtime event -<-");
@@ -479,28 +479,26 @@ public class ResourceManager {
 	private void fireServerEvent(final IServer server, byte b) {
 		Trace.trace(Trace.LISTENERS, "->- Firing server event: " + server.getName() + " ->-");
 		
-		if (serverListeners == null || serverListeners.isEmpty())
+		if (serverListeners.isEmpty())
 			return;
-	
-		int size = serverListeners.size();
-		IServerLifecycleListener[] srl = new IServerLifecycleListener[size];
-		serverListeners.toArray(srl);
-	
-		for (int i = 0; i < size; i++) {
-			Trace.trace(Trace.LISTENERS, "  Firing server event to " + srl[i]);
-			try {
-				if (b == EVENT_ADDED)
-					srl[i].serverAdded(server);
-				else if (b == EVENT_CHANGED)
-					srl[i].serverChanged(server);
-				else
-					srl[i].serverRemoved(server);
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "  Error firing server event to " + srl[i], e);
+		
+		synchronized (serverListeners) {
+			for (IServerLifecycleListener srl : serverListeners) {
+				Trace.trace(Trace.LISTENERS, "  Firing server event to " + srl);
+				try {
+					if (b == EVENT_ADDED)
+						srl.serverAdded(server);
+					else if (b == EVENT_CHANGED)
+						srl.serverChanged(server);
+					else
+						srl.serverRemoved(server);
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "  Error firing server event to " + srl, e);
+				}
 			}
 		}
 		Trace.trace(Trace.LISTENERS, "-<- Done firing server event -<-");
-	}	
+	}
 
 	protected void saveRuntimesList() {
 		try {
