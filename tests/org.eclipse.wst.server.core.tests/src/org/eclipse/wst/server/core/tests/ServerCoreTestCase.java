@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,18 +20,16 @@ public class ServerCoreTestCase extends TestCase {
 	public void testGetRuntimesExtension() throws Exception {
 		IRuntime[] runtimes = ServerCore.getRuntimes();
 		if (runtimes != null) {
-			int size = runtimes.length;
-			for (int i = 0; i < size; i++)
-				System.out.println(runtimes[i].getId() + " - " + runtimes[i].getName());
+			for (IRuntime runtime : runtimes)
+				System.out.println(runtime.getId() + " - " + runtime.getName());
 		}
 	}
 	
 	public void testGetServersExtension() throws Exception {
 		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
-			int size = servers.length;
-			for (int i = 0; i < size; i++)
-				System.out.println(servers[i].getId() + " - " + servers[i].getName());
+			for (IServer server : servers)
+				System.out.println(server.getId() + " - " + server.getName());
 		}
 	}
 	

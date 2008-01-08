@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,15 +19,14 @@ public class RuntimeTypesTestCase extends TestCase {
 	public void testRuntimeTypesExtension() throws Exception {
 		IRuntimeType[] runtimeTypes = ServerCore.getRuntimeTypes();
 		if (runtimeTypes != null) {
-			int size = runtimeTypes.length;
-			for (int i = 0; i < size; i++) {
-				runtimeTypes[i].getId();
-				runtimeTypes[i].getName();
-				runtimeTypes[i].canCreate();
-				runtimeTypes[i].getDescription();
-				runtimeTypes[i].getVendor();
-				runtimeTypes[i].getVersion();
-				runtimeTypes[i].getModuleTypes();
+			for (IRuntimeType runtimeType : runtimeTypes) {
+				runtimeType.getId();
+				runtimeType.getName();
+				runtimeType.canCreate();
+				runtimeType.getDescription();
+				runtimeType.getVendor();
+				runtimeType.getVersion();
+				runtimeType.getModuleTypes();
 			}
 		}
 	}

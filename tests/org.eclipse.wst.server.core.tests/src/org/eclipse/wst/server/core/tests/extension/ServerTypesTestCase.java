@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,19 +19,18 @@ public class ServerTypesTestCase extends TestCase {
 	public void testServerTypesExtension() throws Exception {
 		IServerType[] serverTypes = ServerCore.getServerTypes();
 		if (serverTypes != null) {
-			int size = serverTypes.length;
-			for (int i = 0; i < size; i++) {
-				serverTypes[i].getId();
-				serverTypes[i].getName();
-				serverTypes[i].getDescription();
-				serverTypes[i].getRuntimeType();
-				serverTypes[i].hasRuntime();
-				serverTypes[i].hasServerConfiguration();
-				serverTypes[i].supportsLaunchMode("run");
-				serverTypes[i].supportsRemoteHosts();
+			for (IServerType serverType : serverTypes) {
+				serverType.getId();
+				serverType.getName();
+				serverType.getDescription();
+				serverType.getRuntimeType();
+				serverType.hasRuntime();
+				serverType.hasServerConfiguration();
+				serverType.supportsLaunchMode("run");
+				serverType.supportsRemoteHosts();
 				try {
-					serverTypes[i].createServer(null, null, null);
-					serverTypes[i].createServer(null, null, null, null);
+					serverType.createServer(null, null, null);
+					serverType.createServer(null, null, null, null);
 				} catch (Exception e) {
 					// ignore
 				}

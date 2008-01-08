@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,10 +22,8 @@ public class ModuleFactoriesExtensionTestCase extends PerformanceTestCase {
 		startMeasuring();
 		ModuleFactory[] factories = ServerPlugin.getModuleFactories();
 		if (factories != null) {
-			int size = factories.length;
-			for (int i = 0; i < size; i++) {
-				factories[i].getModules(null);
-			}
+			for (ModuleFactory factory : factories)
+				factory.getModules(null);
 		}
 		stopMeasuring();
 		commitMeasurements();

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,10 +37,8 @@ public class ScanAction extends TestCase {
 	public void testIt() {
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		if (projects != null) {
-			int size = projects.length;
-			for (int i = 0; i < size; i++) {
-				scanProject(projects[i]);
-			}
+			for (IProject project : projects)
+				scanProject(project);
 		}
 	}
 
@@ -108,22 +106,20 @@ public class ScanAction extends TestCase {
 		try {
 			IResource[] resources = container.members();
 			if (resources != null) {
-				int size = resources.length;
-				for (int i = 0; i < size; i++) {
-					if (resources[i] instanceof IFile) {
-						String[] found = scanFile((IFile) resources[i]);
+				for (IResource resource: resources) {
+					if (resource instanceof IFile) {
+						String[] found = scanFile((IFile) resource);
 						if (found != null) {
-							int size2 = found.length;
-							for (int j = 0; j < size2; j++) {
-								if (props.containsKey(found[j])) {
-									if (!propsFound.contains(found[j]))
-										propsFound.add(found[j]);
+							for (String f : found) {
+								if (props.containsKey(f)) {
+									if (!propsFound.contains(f))
+										propsFound.add(f);
 								} else
-									newProps.add(found[j]);
+									newProps.add(f);
 							}
 						}
-					} else if (resources[i] instanceof IContainer) {
-						scanContainer((IContainer) resources[i], props, propsFound, newProps);
+					} else if (resource instanceof IContainer) {
+						scanContainer((IContainer) resource, props, propsFound, newProps);
 					}
 				}
 			}

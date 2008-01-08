@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,10 +19,8 @@ public class RuntimeLocatorsTestCase extends TestCase {
 	public void testRuntimeLocatorsExtension() throws Exception {
 		IRuntimeLocator[] runtimeLocators = ServerPlugin.getRuntimeLocators();
 		if (runtimeLocators != null) {
-			int size = runtimeLocators.length;
-			for (int i = 0; i < size; i++) {
-				System.out.println(runtimeLocators[i]);
-			}
+			for (IRuntimeLocator rl : runtimeLocators)
+				System.out.println(rl);
 		}
 	}
 }

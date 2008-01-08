@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -141,17 +141,16 @@ public abstract class AbstractServerTestCase extends TestCase {
 	public void test0016GetServerPorts() {
 		ServerPort[] ports = server.getServerPorts(null);
 		if (ports != null) {
-			int size = ports.length;
-			for (int i = 0; i < size; i++) {
-				ports[i].getId();
-				ports[i].getContentTypes();
-				ports[i].getName();
-				ports[i].getPort();
-				ports[i].getProtocol();
-				ports[i].isAdvanced();
-				ports[i].toString();
-				ports[i].equals(null);
-				ports[i].hashCode();
+			for (ServerPort port : ports) {
+				port.getId();
+				port.getContentTypes();
+				port.getName();
+				port.getPort();
+				port.getProtocol();
+				port.isAdvanced();
+				port.toString();
+				port.equals(null);
+				port.hashCode();
 			}
 		}
 	}

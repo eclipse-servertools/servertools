@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -97,26 +97,23 @@ public class MementoTestCase extends PerformanceTestCase {
 		
 		IMemento[] children = a.getChildren("module");
 		if (children != null) {
-			int size = children.length;
-			for (int i = 0; i < size; i++) {
+			for (IMemento ch : children) {
 				IMemento child = b.createChild("module");
-				copy(children[i], child);
+				copy(ch, child);
 			}
 		}
 		children = a.getChildren("folder");
 		if (children != null) {
-			int size = children.length;
-			for (int i = 0; i < size; i++) {
+			for (IMemento ch : children) {
 				IMemento child = b.createChild("folder");
-				copy(children[i], child);
+				copy(ch, child);
 			}
 		}
 		children = a.getChildren("file");
 		if (children != null) {
-			int size = children.length;
-			for (int i = 0; i < size; i++) {
+			for (IMemento ch : children) {
 				IMemento child = b.createChild("file");
-				copy(children[i], child);
+				copy(ch, child);
 			}
 		}
 	}

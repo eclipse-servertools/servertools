@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,9 +19,8 @@ public class ClientsTestCase extends TestCase {
 	public void testClientsExtension() throws Exception {
 		IClient[] clients = ServerPlugin.getClients();
 		if (clients != null) {
-			int size = clients.length;
-			for (int i = 0; i < size; i++)
-				System.out.println(clients[i].getId() + " - " + clients[i].getName());
+			for (IClient cl : clients)
+				System.out.println(cl.getId() + " - " + cl.getName());
 		}
 	}
 }
