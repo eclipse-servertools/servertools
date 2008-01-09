@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <task id="twtomprf_jst" xml:lang="en-us">
@@ -8,10 +8,11 @@
 server runtime definitions for the Apache Tomcat server. To define these definitions,
 complete the following: </shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>Apache Tomcat<indexterm>runtime environments</indexterm></indexterm>
-<indexterm>runtime environments<indexterm>defining Apache Tomcat</indexterm></indexterm>
-<indexterm>servers<indexterm>runtime environments</indexterm></indexterm>
-<indexterm>workbench<indexterm>server runtime environments</indexterm></indexterm>
+<keywords id="index"><indexterm>servers<indexterm>runtime environments<indexterm>Apache
+Tomcat</indexterm></indexterm></indexterm><indexterm>Apache Tomcat<indexterm>defining
+runtime environment</indexterm></indexterm><indexterm>runtime environment<indexterm>defining<indexterm>Apache
+Tomcat</indexterm></indexterm></indexterm><indexterm>workbench<indexterm>defining
+server runtime environment <indexterm>Apache Tomcat</indexterm></indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>
@@ -26,20 +27,30 @@ then select  <uicontrol>Installed Runtimes</uicontrol>.</cmd></step>
 </step>
 <step><cmd>Select one of the following supported Apache Tomcat servers:</cmd>
 <choices>
-<choice>Tomcat v3.2 Server</choice>
-<choice>Tomcat v4.0 Server</choice>
-<choice>Tomcat v4.1 Server</choice>
-<choice>Tomcat v5.0 Server</choice>
-<choice>Tomcat v5.5 Server</choice>
+<choice>Apache Tomcat v3.2</choice>
+<choice>Apache Tomcat v4.0</choice>
+<choice>Apache Tomcat v4.1</choice>
+<choice>Apache Tomcat v5.0</choice>
+<choice>Apache Tomcat v5.5</choice>
+<choice><draft-comment>Added v6.0 support:</draft-comment>Apache Tomcat v6.0</choice>
 </choices>
 </step>
+<step><cmd><draft-comment>Added the following step:</draft-comment>When you
+add an installed server runtime environment, by default a server is created
+and added as an entry in the Servers view. If you want to only add the installed
+server runtime environment and not create the server in the Servers view,
+clear the <uicontrol>Create a <?Pub Caret?>new local server</uicontrol> check
+box.</cmd></step>
 <step><cmd>The Tomcat Server page opens when you click  <uicontrol>Next</uicontrol>.</cmd>
 </step>
 <step><cmd>In the <uicontrol>Tomcat installation directory</uicontrol> field,
 type or browse to the directory where you extracted the installation files
-of Apache Tomcat.</cmd></step>
+of Apache Tomcat.</cmd><info> <draft-comment>Please verify if this addition
+is good:</draft-comment>For example, <varname>x</varname>:\apache-tomcat-6.0.13,
+where <varname>x</varname> is the installation directory of the Apache Tomcat
+server.</info></step>
 <step><cmd>Click <uicontrol>Finish</uicontrol>.</cmd></step>
 </steps>
 </taskbody>
 </task>
-<?Pub *0000002177?>
+<?Pub *0000002872?>
