@@ -56,16 +56,6 @@
 
 </description>
 </context>
-<context id="tecg0000">
-<description>This editor allows you to edit Tomcat server configuration files. To move between the pages, click on the tabs that are located at the bottom of the Tomcat Configuration Editor.
-
-</description>
-</context>
-<context id="tecg0002">
-<description>The name of the Tomcat server configuration.
-
-</description>
-</context>
 <context id="tecm0000">
 <description>This editor allows you to edit Tomcat server configuration files. To move between the pages, click on the tabs that are located at the bottom of the Tomcat Configuration Editor.
 
@@ -151,107 +141,6 @@
 
 </description>
 </context>
-<context id="teig0007">
-<description>The directory where your JDK is installed. You can either type the path of the directory or click <b>Browse</b> to select it.
-
-</description>
-</context>
-<context id="teig0008">
-<description>The directory where your JDK is installed. You can either type the path of the directory or click <b>Browse</b> to select it.
-
-</description>
-</context>
-<context id="teig0010">
-<description>Allows you to use and change the Tomcat server configuration for the Tomcat security feature. When security is not enabled, all other security settings are ignored. For more information about the Tomcat security feature, see the Tomcat documentation.
-
-</description>
-</context>
-<context id="teig0012">
-<description>Specifies that the console output for Tomcat version 4 includes debug information.
-
-</description>
-</context>
-<context id="teip0000">
-<description>This editor allows you to edit Tomcat server files. To move between the pages, click on the tabs that are located at the bottom of the Tomcat Server Editor.
-
-</description>
-</context>
-<context id="teis0000">
-<description>This editor allows you to edit Tomcat server files. To move between the pages, click on the tabs that are located at the bottom of the Tomcat Server Editor.
-
-</description>
-</context>
-<context id="tpge0000">
-<description>Set the preference options for the Apache Tomcat server.
-
-</description>
-</context>
-<context id="tpge0002">
-<description>The directory where Apache Tomcat v3.2 is installed. For example, d:\tomcat\jakarta-tomcat-3.2.3. You can either type the path of the directory or click <b>Browse</b> to select it.
-
-</description>
-</context>
-<context id="tpge0004">
-<description>The directory where Apache Tomcat v3.2 is installed. For example, d:\tomcat\jakarta-tomcat-3.2.3. You can either type the path of the directory or click <b>Browse</b> to select it.
-
-</description>
-</context>
-<context id="tpge0006">
-<description>The directory where Apache Tomcat v4.0 is installed. For example, d:\tomcat\jakarta-tomcat-4.0. You can either type the path of the directory or click <b>Browse</b> to select it.
-
-</description>
-</context>
-<context id="tpge0007">
-<description>The directory where Apache Tomcat v4.1 is installed. For example, d:\tomcat\jakarta-tomcat-4.1. You can either type the path of the directory or click <b>Browse</b> to select it.
-
-</description>
-</context>
-<context id="tpge0008">
-<description>The directory where Apache Tomcat v4.0 is installed. For example, d:\tomcat\jakarta-tomcat-4.0. You can either type the path of the directory or click <b>Browse</b> to select it.
-
-</description>
-</context>
-<context id="tpge0009">
-<description>The directory where Apache Tomcat v4.1 is installed. For example, d:\tomcat\jakarta-tomcat-4.1. You can either type the path of the directory or click <b>Browse</b> to select it.
-
-</description>
-</context>
-<context id="tpge0010">
-<description>The directory where your JDK is installed. For example, d:\jdk1.3. You can either type the path of the directory or click <b>Browse</b> to select it.
-
-</description>
-</context>
-<context id="tpge0012">
-<description>The directory where your JDK is installed. For example, d:\jdk1.3. You can either type the path of the directory or click <b>Browse</b> to select it.
-
-</description>
-</context>
-<context id="twni0000">
-<description>This wizard allows you to provide additional installation directory information required for using Apache Tomcat.
-
-</description>
-</context>
-<context id="twni0002">
-<description>The directory where Apache Tomcat is installed. For example, d:\tomcat\jakarta-tomcat-3.2.3. You can either type the path of the directory or click <b>Browse</b> to select it.
-
-</description>
-</context>
-<context id="twni0004">
-<description>The directory where Apache Tomcat is installed. For example, d:\tomcat\jakarta-tomcat-3.2.3. You can either type the path of the directory or click <b>Browse</b> to select it.
-
-</description>
-</context>
-<context id="twni0006">
-<description>The directory where your JDK is installed. For example, d:\jdk1.3. You can either type the path of the directory or click <b>Browse</b> to select it.
-
-</description>
-</context>
-<context id="twni0008">
-<description>The directory where your JDK is installed. For example, d:\jdk1.3. You can either type the path of the directory or click <b>Browse</b> to select it.
-
-</description>
-</context>
-
 <context id="twnr0000">
 <description>This wizard allows you to provide additional installation directory information required for using Apache Tomcat.
 
