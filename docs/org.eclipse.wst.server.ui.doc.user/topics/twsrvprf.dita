@@ -1,68 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
+<?Pub Sty _display FontColor="red"?>
+<?Pub Inc?>
 <task id="twsrvprf_wst" xml:lang="en-us">
-<title id="title">Defining the server preferences</title>
-<shortdesc id="shortdesc">Using the Preferences page, you can define attributes
-used for testing projects by the servers. To define these preferences, complete
-the following:</shortdesc>
+<title id="title">Defining the server preference<!--Defining the server preferences--></title>
+<shortdesc id="shortdesc">Using the Preferences page, you can define attribute
+used for testing projects by the servers.</shortdesc>
 <prolog><metadata>
 <keywords id="index"><indexterm>preferences<indexterm>servers<indexterm>testing</indexterm></indexterm></indexterm>
-<indexterm>servers<indexterm>preferences</indexterm></indexterm>
-<indexterm>views<indexterm>server preferences</indexterm></indexterm>
-</keywords>
+<indexterm>servers<indexterm>preferences</indexterm></indexterm><indexterm>views<indexterm>server
+preferences</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
+<context>To define this preference<?Pub Caret?>, complete the following steps:<!--To define these preferences, complete the following steps:--></context>
 <steps id="steps">
 <step><cmd>In the toolbar, select <menucascade><uicontrol>Window</uicontrol>
 <uicontrol>Preferences</uicontrol></menucascade>.</cmd></step>
 <step><cmd>In the Preferences page, select  <uicontrol>Server</uicontrol>.</cmd>
 </step>
-<step><cmd>Specify one or more of the following settings by selecting the
-appropriate check box:</cmd>
-<choicetable>
-<chrow><choption>Show Servers view when server state changes</choption><chdesc>The
-Servers view is displayed on the workbench when there are any activities in
-the Servers view. For more details about the server states refer to the <xref
-href="rwrcview.dita">Servers View</xref> topic.</chdesc></chrow>
-<chrow><choption>Synchronize servers on workbench startup<draft-comment>context
-id = spge0028</draft-comment></choption><chdesc><draft-comment>Review description</draft-comment>This
-option specifies that each time you start the workbench, it will try to update
-the status of the server defined in the Servers view with the actual state
-of the server, such as Started or Stopped.</chdesc></chrow>
-<chrow><choption>Automatically publish to local server</choption><chdesc>Specifies
-that all the files should automatically be published to the local server at
-every <i>seconds</i> intervals, where <i>seconds</i> is the number of seconds
-you have specified in the <uicontrol>Publishing interval (in seconds)</uicontrol> control.
-The minimum value for the publishing interval is ten seconds.</chdesc></chrow>
-<chrow><choption>Automatically publish to remote server</choption><chdesc>Specifies
-that all the files should automatically be published to the remote server
-at every <i>seconds</i> intervals, where <i>seconds</i> is the number of seconds
-you have specified in the <uicontrol>Publishing interval (in seconds)</uicontrol> control.
-The minimum value for the publishing interval is ten seconds.</chdesc></chrow>
-<chrow><choption>Prompt before making irreversible changes within an editor</choption>
-<chdesc>Specifies that the server tools will prompt you before you make a
-change in a editor that cannot be undone.</chdesc></chrow>
-</choicetable>
-</step>
-<step><cmd>Under the <uicontrol>Server timeout delay</uicontrol> drop-down
-list, select one of the following relative length of time you can wait before
-ending a server operation:</cmd>
-<choices>
-<choice>Longer</choice>
-<choice>Long</choice>
-<choice>Normal</choice>
-<choice>Short</choice>
-<choice>Shorter</choice>
-</choices>
-<info>The default setting is <uicontrol>Normal</uicontrol>.</info><info><note
-type="tip">If you have a fast processing machine, you can try using the <uicontrol>Shorter</uicontrol> timeout
-delay option.  If you have a slow processing machine, you can try using the <uicontrol>Longer</uicontrol> timeout
-delay option.</note></info></step>
+<step><cmd>Specify the following setting by selecting the check box:<!--Specify one or more of the following settings by selecting the appropriate check box:--></cmd>
+<info><dl><dlentry>
+<dt>Show Servers view when server state changes</dt>
+<dd>The Servers view is displayed on the workbench when there are any activities
+in the Servers view. For more details about the server states refer to the <xref
+href="rwrcview.dita">Servers View</xref> topic.</dd>
+</dlentry></dl></info></step>
 <step><cmd>Click  <uicontrol>Apply</uicontrol> and then  <uicontrol>OK</uicontrol> to
 save your changes.</cmd></step>
 </steps>
 </taskbody>
 </task>
-<?Pub *0000003817?>
+<?Pub *0000001831?>

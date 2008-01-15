@@ -2,17 +2,17 @@
 <html lang="en-us" xml:lang="en-us">
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<meta name="copyright" content="Copyright (c) 2000, 2006 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
-<meta name="DC.rights.owner" content="(C) Copyright 2000, 2006" />
+<meta name="copyright" content="Copyright (c) 2000, 2008 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
+<meta name="DC.rights.owner" content="(C) Copyright 2000, 2008" />
 <meta content="public" name="security" />
 <meta content="index,follow" name="Robots" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta content="reference" name="DC.Type" />
 <meta name="DC.Title" content="Servers view" />
-<meta name="abstract" content="The Servers view (similar to the one shown below) allows you to manage the servers. This view displays a list of all your servers and configurations that are associated with that server. You can use this view to start, start in debug mode, restart, or stop the servers." />
-<meta name="description" content="The Servers view (similar to the one shown below) allows you to manage the servers. This view displays a list of all your servers and configurations that are associated with that server. You can use this view to start, start in debug mode, restart, or stop the servers." />
-<meta content="views, Servers, servers, displaying status, displaying state, displaying configurations, managing using the Servers view, Servers view" name="DC.subject" />
-<meta content="views, Servers, servers, displaying status, displaying state, displaying configurations, managing using the Servers view, Servers view" name="keywords" />
+<meta name="abstract" content="The Servers view (similar to the one shown below) allows you to manage the servers. This view displays a list of all your servers and projects that are associated with that server. A project displays under a server when a project from the workbench is added to the server. You can use this view to start, start in debug mode, restart, or stop the servers. In addition, you can use the Servers view to determine the current status and state of the server; and the projects added to the server from the workbench." />
+<meta name="description" content="The Servers view (similar to the one shown below) allows you to manage the servers. This view displays a list of all your servers and projects that are associated with that server. A project displays under a server when a project from the workbench is added to the server. You can use this view to start, start in debug mode, restart, or stop the servers. In addition, you can use the Servers view to determine the current status and state of the server; and the projects added to the server from the workbench." />
+<meta content="servers, managing using the Servers view, views, Servers" name="DC.subject" />
+<meta content="servers, managing using the Servers view, views, Servers" name="keywords" />
 <meta content="XHTML" name="DC.Format" />
 <meta content="rwrcview_wst" name="DC.Identifier" />
 <meta content="en-us" name="DC.Language" />
@@ -28,9 +28,12 @@
 
 <div><p><span id="rwrcview_ph1"><a name="rwrcview_ph1"><!-- --></a>The Servers view (similar to the one shown
 below) allows you to manage the servers. This view displays a list of all
-your servers and configurations that are associated with that server. You
-can use this view to start, start in debug mode,</span><span id="rwrcview_ph2"><a name="rwrcview_ph2"><!-- --></a> restart,
-or stop the servers.</span></p>
+your servers and projects that are associated with that server. A project
+displays under a server when a project from the workbench is added to the
+server. You can use this view to start, start in debug mode,</span><span id="rwrcview_ph2"><a name="rwrcview_ph2"><!-- --></a> restart,
+or stop the servers. In addition, you can use the Servers view to determine
+the current status and state of the server; and the projects added to the
+server from the workbench.</span></p>
 
 <div class="section"><p> <img src="../images/scpview.gif" alt="This is a screen capture of the Server view." /> </p>
 <p id="rwrcview_wst__rwrcview_p2"><a name="rwrcview_wst__rwrcview_p2"><!-- --></a>Use
@@ -62,42 +65,99 @@ the workbench</li>
 <li id="rwrcview_wst__rwrcview_li12"><a name="rwrcview_wst__rwrcview_li12"><!-- --></a>Add and remove projects from a server</li>
 
 </ul>
-<p id="rwrcview_wst__rwrcview_p3"><a name="rwrcview_wst__rwrcview_p3"><!-- --></a>The Servers view displays the current status of all
-the servers. The <strong>Status</strong> column indicates whether or not a server has
-been started. The following lists the possible server status:</p>
-<ul>
-<li id="rwrcview_wst__rwrcview_ul2li1"><a name="rwrcview_wst__rwrcview_ul2li1"><!-- --></a>Starting</li>
+</div>
 
-<li id="rwrcview_wst__rwrcview_ul2li2"><a name="rwrcview_wst__rwrcview_ul2li2"><!-- --></a>Started</li>
+<div class="section"><h4 class="sectiontitle">Server State</h4><p id="rwrcview_wst__rwrcview_rwrcview_section_server_state_p1"><a name="rwrcview_wst__rwrcview_rwrcview_section_server_state_p1"><!-- --></a>The Servers view displays the
+current state of all the servers. The <strong>State</strong> column indicates whether
+or not a server has been started. </p>
+<p id="rwrcview_wst__rwrcview_rwrcview_section_server_state_p2"><a name="rwrcview_wst__rwrcview_rwrcview_section_server_state_p2"><!-- --></a>The
+following table lists the possible states of the server:</p>
 
-<li id="rwrcview_wst__rwrcview_ul2li3"><a name="rwrcview_wst__rwrcview_ul2li3"><!-- --></a>Debugging</li>
-
-<li id="rwrcview_wst__rwrcview_ul2li4"><a name="rwrcview_wst__rwrcview_ul2li4"><!-- --></a>Stopping</li>
-
-<li id="rwrcview_wst__rwrcview_ul2li5"><a name="rwrcview_wst__rwrcview_ul2li5"><!-- --></a>Stopped</li>
-
-</ul>
-<p id="rwrcview_wst__rwrcview_p4"><a name="rwrcview_wst__rwrcview_p4"><!-- --></a>The Servers view also displays the current state
-of all the servers. Depending on the status of the server and the preference
-options that are selected for that particular server, the workbench determines
-the server actions that may be taken. Use the <strong>State</strong> column as an indicator
-for possible actions that you may want to take. For example, if the workbench
-detects that a file defined to run on a particular server has changed, and
-the  <span class="uicontrol">Automatically restart servers when necessary</span> check
-box has been selected on the Server preferences page ( <span class="uicontrol">Window &gt;
-Preferences &gt; Server &gt; Launching</span>), the server tools
-automatically restart that server. The  <span class="uicontrol">Status</span> column
-in the Servers view changes from  <var class="varname">Started</var> to  <var class="varname">Stopped</var> to
- <var class="varname">Started</var>. However, if this check box is not selected, the
- <span class="uicontrol">State</span> column in the Servers view changes to  <var class="varname">Republish</var>.</p>
-<p id="rwrcview_wst__rwrcview_p5"><a name="rwrcview_wst__rwrcview_p5"><!-- --></a>The following table lists the possible server states:</p>
-
-<div class="tablenoborder"><a name="rwrcview_wst__rwrcview_table"><!-- --></a><table summary="" cellspacing="0" cellpadding="4" id="rwrcview_wst__rwrcview_table" frame="border" border="1" rules="all"><caption>Table 1. Description of server states</caption>
+<div class="tablenoborder"><table summary="" cellspacing="0" cellpadding="4" frame="border" border="1" rules="all"><caption>Table 1. Description of the server states</caption>
 <thead align="left">
 <tr>
-<th valign="top" id="N10176"> Server states </th>
+<th valign="top" id="N10109"> Server state</th>
 
-<th valign="top" id="N1017D"> Description of states </th>
+<th valign="top" id="N10110"> Description of state </th>
+
+</tr>
+
+</thead>
+
+<tbody>
+<tr id="rwrcview_wst__rwrcview_section_server_state_starting">
+<td valign="top" headers="N10109 "><span>Starting</span></td>
+
+<td valign="top" headers="N10110 ">The workbench is in the process of connecting and begin the server
+process.<div class="tip"><span class="tiptitle">Tip:</span> Verify the actual server is started.</div>
+</td>
+
+</tr>
+
+<tr id="rwrcview_wst__rwrcview_section_server_state_started">
+<td valign="top" headers="N10109 ">Started</td>
+
+<td valign="top" headers="N10110 ">The workbench is successfully connected to the server.
+Both the workbench and server are ready to run applications on the server.</td>
+
+</tr>
+
+<tr id="rwrcview_wst__rwrcview_section_server_state_debugging">
+<td valign="top" headers="N10109 ">Debugging</td>
+
+<td valign="top" headers="N10110 ">The workbench is successfully connected to the server. Both the workbench
+and server are ready to diagnose applications on the server.</td>
+
+</tr>
+
+<tr id="rwrcview_wst__rwrcview_section_server_state_stopping">
+<td valign="top" headers="N10109 ">Stopping</td>
+
+<td valign="top" headers="N10110 ">The workbench is in the process of connecting and ending the process
+on the server.</td>
+
+</tr>
+
+<tr id="rwrcview_wst__rwrcview_section_server_state_stopped">
+<td valign="top" headers="N10109 ">Stopped</td>
+
+<td valign="top" headers="N10110 ">The server process has ended. Or the workbench is unable to connect
+to the server.<div class="tip"><span class="tiptitle">Tip:</span> When attempting to connect to the server and
+the state of the server remains in stopped, verify the actual server is started
+and the port information is correctly provided in the workbench.</div>
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+</div>
+
+<div class="section" id="rwrcview_wst__rwrcview_section_server_status"><a name="rwrcview_wst__rwrcview_section_server_status"><!-- --></a><h4 class="sectiontitle">Server Status</h4><p>The
+Servers view also displays the current status of all the servers. Depending
+on the state of the server and the preference options that are selected for
+that particular server, the workbench determines the server actions that may
+be taken. Use the <strong>Status</strong> column as an indicator for possible actions
+that you may want to take. For example, if the workbench detects that a file
+defined to run on a particular server has changed, and the  <span class="uicontrol">Automatically
+restart servers when necessary</span> check box has been selected on
+the Server preferences page ( <span class="uicontrol">Window &gt; Preferences &gt; Server &gt; Launching</span>),
+the workbench automatically restart that server. The  <span class="uicontrol">State</span> column
+in the Servers view changes from  <var class="varname">Started</var> to  <var class="varname">Stopped</var> to
+ <var class="varname">Started</var>. However, if this check box is not selected, the
+ <span class="uicontrol">Status</span> column in the Servers view changes to  <var class="varname">Republish</var>.</p>
+<p>The
+following table lists the possible server status:</p>
+
+<div class="tablenoborder"><table summary="" cellspacing="0" cellpadding="4" frame="border" border="1" rules="all"><caption>Table 2. Description
+of the server status</caption>
+<thead align="left">
+<tr>
+<th valign="top" id="N10208"> Server status </th>
+
+<th valign="top" id="N1020F"> Description of status </th>
 
 </tr>
 
@@ -105,40 +165,130 @@ in the Servers view changes from  <var class="varname">Started</var> to  <var cl
 
 <tbody>
 <tr>
-<td valign="top" headers="N10176 ">Synchronized</td>
+<td valign="top" headers="N10208 ">Synchronized</td>
 
-<td valign="top" headers="N1017D ">Both the server and the applications are in synch.</td>
-
-</tr>
-
-<tr>
-<td valign="top" headers="N10176 ">Publishing</td>
-
-<td valign="top" headers="N1017D ">Files (projects, resource files, and server configurations)
-are copied to the correct location for the server to find and use them.</td>
+<td valign="top" headers="N1020F ">Both the server and the applications are in synch.</td>
 
 </tr>
 
 <tr>
-<td valign="top" headers="N10176 ">Restart</td>
+<td valign="top" headers="N10208 ">Publishing</td>
 
-<td valign="top" headers="N1017D ">The server needs to be restarted in order for the changes to take place.</td>
-
-</tr>
-
-<tr>
-<td valign="top" headers="N10176 ">Republish</td>
-
-<td valign="top" headers="N1017D "> Either the server or the applications or both have changed. The changed
-files need to be republished.</td>
+<td valign="top" headers="N1020F ">Files (projects and resource files) are copied to
+the correct location for the server to find and use them.</td>
 
 </tr>
 
 <tr>
-<td valign="top" headers="N10176 ">Restart and republish</td>
+<td valign="top" headers="N10208 ">Restart</td>
 
-<td valign="top" headers="N1017D "> Either the server or the applications or both have changed. When the
+<td valign="top" headers="N1020F ">The server needs to be restarted in order for the changes to take place.</td>
+
+</tr>
+
+<tr>
+<td valign="top" headers="N10208 ">Republish</td>
+
+<td valign="top" headers="N1020F ">Either the server or the applications or both have changed. The changed
+files need to be updated on the server.</td>
+
+</tr>
+
+<tr>
+<td valign="top" headers="N10208 ">Restart and republish</td>
+
+<td valign="top" headers="N1020F "> Either the server or the applications or both have changed. When the
 server is restarted, the changed files are also republished.</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+</div>
+
+<div class="section" id="rwrcview_wst__rwrcview_section_project_state"><a name="rwrcview_wst__rwrcview_section_project_state"><!-- --></a><h4 class="sectiontitle">Project State</h4><p>The
+Servers view might display the current state of the application is either
+started or stopped. When the Servers view does not display a current state
+for the project, the workbench cannot retrieve the state of the project from
+the server or the server does not support this function.</p>
+<p>If a project
+name appears in italic font style, this means the project has not yet been
+uploaded to the server. After the project is published into the server, the
+project name switches to the typical font style used in the Servers view.</p>
+<div class="p">The
+following table lists the possible states of the project:
+<div class="tablenoborder"><table summary="" cellspacing="0" cellpadding="4" frame="border" border="1" rules="all"><caption>Table 3. Description
+of project states</caption>
+<thead align="left">
+<tr>
+<th valign="top" id="N102C1"> Project states </th>
+
+<th valign="top" id="N102C8"> Description of states </th>
+
+</tr>
+
+</thead>
+
+<tbody>
+<tr>
+<td valign="top" headers="N102C1 ">Started</td>
+
+<td valign="top" headers="N102C8 ">The application on the server is ready to run on the server.</td>
+
+</tr>
+
+<tr>
+<td valign="top" headers="N102C1 ">Stopped</td>
+
+<td valign="top" headers="N102C8 ">The application on the server is ended and is not
+taking server requests to run.</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+</div>
+</div>
+
+<div class="section" id="rwrcview_wst__rwrcview_section_project_status"><a name="rwrcview_wst__rwrcview_section_project_status"><!-- --></a><h4 class="sectiontitle">Project Status</h4><p>The
+Servers view might display the current status of the application is either
+synchronized or republished. When the Servers view does not display a current
+status for the project, the workbench cannot retrieve the status of the project
+from the server, the server is stopped or the server does not support this
+function.</p>
+<p id="rwrcview_wst__rwrcview_p3a"><a name="rwrcview_wst__rwrcview_p3a"><!-- --></a>The following table lists the possible project
+status:</p>
+
+<div class="tablenoborder"><table summary="" cellspacing="0" cellpadding="4" frame="border" border="1" rules="all"><caption>Table 4. Description of project status</caption>
+<thead align="left">
+<tr>
+<th valign="top" id="N1033A"> Project status </th>
+
+<th valign="top" id="N10341"> Description of status </th>
+
+</tr>
+
+</thead>
+
+<tbody>
+<tr>
+<td valign="top" headers="N1033A ">Synchronized</td>
+
+<td valign="top" headers="N10341 ">Both copies of the application files on the server and in the workbench
+are matching.</td>
+
+</tr>
+
+<tr>
+<td valign="top" headers="N1033A ">Republished</td>
+
+<td valign="top" headers="N10341 ">The copy of the application files on the workbench
+has changed and does not match the copy on the server. The server needs to
+be updated.</td>
 
 </tr>
 
@@ -150,6 +300,7 @@ server is restarted, the changed files are also republished.</td>
 
 </div>
 
+<div />
 
 </body>
 </html>

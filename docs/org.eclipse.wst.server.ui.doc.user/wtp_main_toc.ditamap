@@ -3,20 +3,18 @@
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
  "map.dtd">
 <map title="Testing and publishing applications">
-<topicref href="../org.eclipse.wst.server.ui.doc.user/topics/cwover.dita"
-linking="normal" locktitle="yes" navtitle="Application testing and publishing"
+<topicref href="topics/cwover.dita" linking="normal" locktitle="yes" navtitle="Application testing and publishing"
 scope="peer">
-<topicref href="../org.eclipse.wst.server.ui.doc.user/topics/rwrcview.dita"
-locktitle="yes" navtitle="Servers view" scope="peer"></topicref>
-<topicref href="../org.eclipse.wst.server.ui.doc.user/topics/cwres.dita" locktitle="yes"
-navtitle="Resources used by the Server Tools" scope="peer"></topicref>
-<topicref href="../org.eclipse.wst.server.ui.doc.user/topics/cwflow.dita"
-locktitle="yes" navtitle="Which server will start" scope="peer"></topicref>
+<topicref href="topics/rwrcview.dita" locktitle="yes" navtitle="Servers view">
+</topicref>
+<topicref href="topics/cwres.dita" locktitle="yes" navtitle="Resources used by the Server Tools">
+</topicref>
+<topicref href="topics/cwflow.dita" locktitle="yes" navtitle="Which server will start">
+</topicref>
 <navref mapref="wtp_test.ditamap"/>
 <navref mapref="wtp_debug.ditamap"/>
 <navref mapref="wtp_publish.ditamap"/>
 <navref mapref="wtp_create.ditamap"/>
 <navref mapref="wtp_manage.ditamap"/>
-<navref mapref="wtp_pref.ditamap"/></topicref><?Pub Caret1?>
+<navref mapref="wtp_pref.ditamap"/></topicref>
 </map>
-<?Pub *0000001087?>

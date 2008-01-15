@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <task id="twaddprj_wst" xml:lang="en-us">
@@ -9,21 +9,22 @@ a relationship between the projects that contain the files you want to test
 and your server.</shortdesc>
 <prolog><metadata>
 <keywords id="index"><indexterm>servers<indexterm>adding projects</indexterm></indexterm>
-<indexterm>projects<indexterm>adding to a server</indexterm></indexterm>
-</keywords>
+<indexterm>projects<indexterm>adding to a server</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <context id="context"><p>This is done by adding your project to a server:</p></context>
 <steps id="steps">
 <step><cmd>In the Servers view, right-click on the server and select  <uicontrol>Add
-and remove projects</uicontrol>.</cmd></step>
+and Remove Projects</uicontrol>.</cmd></step>
 <step><cmd>In the Available projects list, select the project that you want
 to test and click  <uicontrol>Add</uicontrol>.</cmd></step>
-<step><cmd>The project appears in the Configured projects list.</cmd><info>Click <uicontrol>Finish</uicontrol>.</info>
+<step><cmd>The project appears in the Configured projects list.</cmd><info>If
+a project name appears in italic font style, this means the project has not
+yet been uploaded to the server.<?Pub Caret?> Click <uicontrol>Finish</uicontrol>.</info>
 </step>
 </steps>
 <result id="result"><note>When you select a project to add to the server,
 only the projects that are applicable to the type of server will appear.</note></result>
 </taskbody>
 </task>
-<?Pub *0000001382?>
+<?Pub *0000001487?>

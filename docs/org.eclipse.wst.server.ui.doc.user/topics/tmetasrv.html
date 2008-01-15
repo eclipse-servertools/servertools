@@ -2,8 +2,8 @@
 <html lang="en-us" xml:lang="en-us">
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<meta name="copyright" content="Copyright (c) 2000, 2006 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
-<meta name="DC.rights.owner" content="(C) Copyright 2000, 2006" />
+<meta name="copyright" content="Copyright (c) 2000, 2008 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
+<meta name="DC.rights.owner" content="(C) Copyright 2000, 2008" />
 <meta content="public" name="security" />
 <meta content="index,follow" name="Robots" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
@@ -43,51 +43,46 @@ runtime environment of an application server for compiling your application.</li
 
 </ul>
 </div>
-<p id="tmetasrv_wst__tmetasrv_wst_p2"><a name="tmetasrv_wst__tmetasrv_wst_p2"><!-- --></a>By default, the tool hides the metadata of
-the server to keep the development workspace clean. Displaying the metadata
+<p id="tmetasrv_wst__tmetasrv_wst_p2"><a name="tmetasrv_wst__tmetasrv_wst_p2"><!-- --></a>By default, the workbench hides the metadata
+of the server to keep the development workspace clean. Displaying the metadata
 of the server on the workbench, allows you to persists the data of the server
 in a <em>serverName</em>.server file, where <em>serverName</em> is the name assigned
 to the server. The <em>serverName</em>.server file is useful when you are working
 in a team development environment and you are required to maintain the metadata
 of the server in a source control repository.</p>
-To display the metadata of
-the server:</div>
+To display or hide the metadata
+of the server:</div>
 
 <a name="tmetasrv_wst__tmetasrv_wst_steps"><!-- --></a><ol id="tmetasrv_wst__tmetasrv_wst_steps">
 <li class="stepexpand" id="tmetasrv_wst__tmetasrv_step1"><a name="tmetasrv_wst__tmetasrv_step1"><!-- --></a><span>In the Servers view, right-click the server
-you want to display the metadata.</span></li>
-
-<li class="stepexpand" id="tmetasrv_wst__tmetasrv_step2"><a name="tmetasrv_wst__tmetasrv_step2"><!-- --></a><span>Select the <span class="uicontrol">Move to Workspace</span> option.</span>
- <div class="tip"><span class="tiptitle">Tip:</span> If the <span class="uicontrol">Move to Workspace</span> option
-is not available and you only see the <span class="uicontrol">Move to Metadata</span> option,
-this means the metadata of your server is already on the workbench. The next
-step describes where you can find it on the workbench.</div>
+you want to display or hide the metadata and select <strong>Properties</strong>.</span>
 </li>
 
-<li class="stepexpand" id="tmetasrv_wst__tmetasrv_step3"><a name="tmetasrv_wst__tmetasrv_step3"><!-- --></a><span>In the Project Explorer view, expand the <strong>Others
-Project</strong> folder and then expand your server project to locate the <em>serverName</em>.server
+<li class="stepexpand" id="tmetasrv_wst__tmetasrv_step2"><a name="tmetasrv_wst__tmetasrv_step2"><!-- --></a><span>In the <span class="uicontrol">Info</span> page
+there is a <span class="uicontrol">Location</span> field, select the <span class="uicontrol">Switch
+location</span> button to toggle between displaying and hiding the metadata
+on the workbench.</span> <div class="tip"><span class="tiptitle">Tip:</span> If the value of the <span class="uicontrol">Location</span> field
+contains <kbd class="userinput">[workspace metadata]</kbd>, this means the workbench
+is hiding the metadata. To display the metadata on the workbench, select the <span class="uicontrol">Switch
+location</span> button again until the <kbd class="userinput">[workspace metadata]</kbd> changes
+to a file path directory. The file path directory specifies the location where
+the server metadata file is stored on the workbench. The next step describes
+where you can find the server metadata file in the workbench.</div>
+
+</li>
+
+<li class="stepexpand" id="tmetasrv_wst__tmetasrv_step3"><a name="tmetasrv_wst__tmetasrv_step3"><!-- --></a><span>In the Project Explorer view, expand the <strong>Servers</strong> folder
+and then expand your server project to locate the <em>serverName</em>.server
 file, where <em>serverName</em> is the name assigned to your server.</span></li>
 
-<li class="stepexpand" id="tmetasrv_wst__tmetasrv_step4"><a name="tmetasrv_wst__tmetasrv_step4"><!-- --></a><span>(<strong>Optional</strong>) You can double click <em>serverName</em>.server
-file to edit the server's data in the server editor.</span></li>
+<li class="stepexpand" id="tmetasrv_wst__tmetasrv_step4"><a name="tmetasrv_wst__tmetasrv_step4"><!-- --></a><span>(<strong>Optional</strong>) You can double-click <em>serverName</em>.server
+file to edit the data in the server editor.</span></li>
 
 </ol>
 
-<div class="section" id="tmetasrv_wst__tmetasrv_wst_result"><a name="tmetasrv_wst__tmetasrv_wst_result"><!-- --></a>To hide the metadata of the server:<div class="p"><ol>
-<li>In the Servers view, right-click the server you want to hide the metadata.</li>
-
-<li>Select the <span class="uicontrol">Move to Metadata</span> option.<div class="tip"><span class="tiptitle">Tip:</span> If
-the <span class="uicontrol">Move to Metadata</span> option is not available and you
-only see the <span class="uicontrol">Move to Workspace</span> option, this means the
-metadata of your server is already hidden from the workbench.</div>
-</li>
-
-</ol>
-</div>
 </div>
 
-</div>
-
+<div />
 
 </body>
 </html>

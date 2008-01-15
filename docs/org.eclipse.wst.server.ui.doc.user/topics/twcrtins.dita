@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
+<?Pub Inc?>
 <task id="twcrtins_wst" xml:lang="en-us">
 <title id="title">Creating a server</title>
 <shortdesc><ph id="shortdesc">You can create a server to identify the runtime
@@ -9,9 +10,9 @@ environment that you want to use for testing your project resources. The term <i
 a server</i> defines creating a pointer from the workbench to an existing
 installation of an application server</ph>.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>servers<indexterm>creating</indexterm></indexterm>
-<indexterm>runtime environments<indexterm>creating servers</indexterm></indexterm>
-</keywords>
+<keywords id="index"><indexterm>servers<indexterm>creating</indexterm><indexterm>creating
+a pointer</indexterm></indexterm><indexterm>wizards<indexterm>New Server</indexterm></indexterm>
+<indexterm>New Server wizard</indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <context id="context">To create a server:</context>
@@ -34,21 +35,32 @@ resources.</cmd>
 <substeps>
 <substep><cmd>(Optional) Refer to the <uicontrol>Description</uicontrol> section
 for brief details about the server you have selected.</cmd></substep>
-<substep><cmd>(Optional) In the <uicontrol>View By</uicontrol> drop-down list,
-select how you would like to display the list of available servers in the <uicontrol>Select
-the server type</uicontrol> list:</cmd><info></info></substep>
+<substep><cmd><draft-comment>Made documentation update here.</draft-comment>(Optional)
+In the text field under the <uicontrol>Select the server type</uicontrol> label,
+you can replace the text <userinput>type filter text</userinput> with keywords
+to filter the list of available application servers.</cmd><info>The following
+are examples of filter keywords:<dl><dlentry><?Pub Caret1?>
+<dt><userinput>Apache</userinput></dt>
+<dd>Filters the list of available servers where the vendor is Apache</dd>
+</dlentry><dlentry>
+<dt><userinput>WebSphere</userinput></dt>
+<dd>Filters the list of available servers where the name is WebSphere</dd>
+</dlentry><dlentry>
+<dt><userinput>ejb</userinput></dt>
+<dd>Filters the list of available servers that support ejb modules.</dd>
+</dlentry><dlentry>
+<dt><userinput>web</userinput></dt>
+<dd>Filters the list of available servers that support Web modules</dd>
+</dlentry><dlentry>
+<dt><userinput>5.0</userinput></dt>
+<dd>Filters the list of available servers that are at version, 5.0 or supports
+JEE 5 specification level.</dd>
+</dlentry><dlentry>
+<dt><userinput>1.2</userinput></dt>
+<dd>Filters the list of available servers that supports J2EE 1.2 specification
+level or any servers that may have a version-level of 1.2.</dd>
+</dlentry></dl></info></substep>
 </substeps>
-<choicetable>
-<chrow><choption>Name</choption><chdesc>Alphabetically sorts the list of available
-servers.</chdesc></chrow>
-<chrow><choption>Vendor</choption><chdesc>Categorize the list of available
-servers in vendor-specific folders.</chdesc></chrow>
-<chrow><choption>Version</choption><chdesc>Categorize the list of available
-servers in folders based on the version of the servers.</chdesc></chrow>
-<chrow><choption>Module Support</choption><chdesc>Categorize the list of available
-servers based on the supported J2EE module specification level by the server.</chdesc>
-</chrow>
-</choicetable>
 </step>
 <step><cmd>Click <uicontrol>Next</uicontrol> and follow the instructions in
 the wizard to specify the details of the server that you want to create. For
@@ -60,4 +72,4 @@ appears in the Servers view under the  <uicontrol>Server</uicontrol> column.</in
 </steps>
 </taskbody>
 </task>
-<?Pub *0000003376?>
+<?Pub *0000003833?>

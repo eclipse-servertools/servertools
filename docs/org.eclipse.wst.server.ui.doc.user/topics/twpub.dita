@@ -30,29 +30,23 @@ You can set these <i>Automatic Publishing</i> settings by going into the Servers
 view, right-click the server and select <uicontrol>Open</uicontrol>. The Server
 editor opens. In the <i>Overview</i> page of the server editor, under the <uicontrol>Automatic
 Publishing</uicontrol> settings, you are going to find the following settings:<ul>
-<li><b>Use default publishing settings</b>: Specifies to use the publishing
-settings as defined in the Preferences page (<menucascade><uicontrol>Window</uicontrol>
-<uicontrol>Preferences</uicontrol><uicontrol>Server</uicontrol></menucascade>).
-Refer to the <i>Defining the server preferences</i> topic for details on the
-publishing options in this preference page.</li>
 <li><uicontrol>Never publish automatically</uicontrol>: Specifies the workbench
 should never publish files to the server.</li>
-<li><uicontrol>Override default settings</uicontrol>: Specifies that a change
-to the files running on the server should automatically be published to the
-server in the next <i>seconds</i> interval, where <i>seconds</i> is the number
-of seconds you have specified in the <uicontrol>Publishing interval</uicontrol> control.
-The default value for the publishing interval on a local server is 5 seconds
-and for a remote server is 60 seconds. If you set the publishing interval
-to 0 seconds, a change to the files running on the server should automatically
-request a publish command to occur.</li>
-</ul></p><p id="twpub_auto3">In the workbench, the default setting is the <b>Override
-default settings</b> option is enabled with a value set to the publishing
-interval.</p><b id="twpub_manualtitle">Manually publishing to a server</b><p
-id="twpub_manual1">If you do not want to wait for the automatic publishing
-interval to pass, at anytime you can manually request the workbench to issue
-a publish command to the server. Each manual publish command causes a single
-publishing request to the server. To publish your application manually you
-can complete one of the following in the Servers view:</p><p><ul>
+<li><uicontrol>Use automatic publishing settings</uicontrol>: Specifies that
+a change to the files running on the server should automatically be published
+to the server in the next <i>seconds</i> interval, where <i>seconds</i> is
+the number of seconds you have specified in the <uicontrol>Publishing interval</uicontrol> control.
+<?Pub Caret?>If you set the publishing interval to 0 seconds, a change to
+the files running on the server should automatically request a publish command
+to occur.</li>
+</ul></p><p id="twpub_auto3">In the workbench, the default setting is the <b>Use
+automatic publishing settings</b> option is enabled with a value set to the
+publishing interval.</p><b id="twpub_manualtitle">Manually publishing to a
+server</b><p id="twpub_manual1">If you do not want to wait for the automatic
+publishing interval to pass, at anytime you can manually request the workbench
+to issue a publish command to the server. Each manual publish command causes
+a single publishing request to the server. To publish your application manually
+you can complete one of the following in the Servers view:</p><p><ul>
 <li><ph id="twpub_steps_ph1">Select the server and then click the  <uicontrol>Publish
 to the server</uicontrol></ph> <image alt="This is an image of the Publish toolbar icon."
 href="../images/launch_publish.gif"><alt>This is an image of the Publish toolbar
@@ -64,4 +58,4 @@ that are associated with the selected server are published. The resources
 in these projects are transferred to the location that is defined by the server.</p></result>
 </taskbody>
 </task>
-<?Pub *0000004582?>
+<?Pub *0000004067?>

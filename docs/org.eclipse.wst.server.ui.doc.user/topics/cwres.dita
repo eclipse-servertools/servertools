@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
  "concept.dtd">
 <concept id="cwres_wst" xml:lang="en-us">
@@ -7,8 +7,8 @@
 <shortdesc id="cwres_shortdesc">To test and publish on your server, you need
 to define one or more of the following resources:</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>preferences<indexterm>installed server runtime environments</indexterm></indexterm>
-<indexterm>runtime environments<indexterm>description</indexterm></indexterm>
+<keywords id="index"><indexterm>preferences<indexterm>installed server runtime
+environments</indexterm></indexterm><indexterm>runtime environments<indexterm>description</indexterm></indexterm>
 <indexterm>servers<indexterm>testing applications</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
@@ -24,7 +24,7 @@ in a server project.</p>
 project</i> contains servers and server configuration files. When a server
 project is created automatically by the workbench, the name given to the project
 is <uicontrol>Servers</uicontrol> and is available in the Project Explorer
-view under the Other Projects folder.</p></section>
+view.</p></section>
 <section id="cwres_servers"><title id="cwres_servers_title">Server</title><p
 id="cwres_servers_p1">A <i>server</i> identifies where you want to test or
 publish your application. A server points to a specific runtime environment
@@ -37,9 +37,9 @@ name assigned to the server. For details on the metadata of the server, refer
 to the <i>Displaying or hiding the metadata of the server</i> link at the
 bottom of this topic.</p></section>
 <section><title id="cwres_serverconfig_title">Server configurations</title><p
-id="cwres_serverconfig_p1"><ph>Server configurations are files that contains
-information that is required to set up and publish to a server. For example,
-these files may include information about what port to run the server, security
+id="cwres_serverconfig_p1"><ph>Server configurations are files that contain
+information <?Pub Caret?>to set up and publish to a server. For example, these
+files may include information about what port to run the server, security
 preferences and other vendor-specific server settings.</ph></p><p id="cwres_serverconfig_p2">On
 the workbench, the metadata of the server configurations is automatically
 created and stored in a <i>configuration data folder</i> under a server project.
@@ -64,4 +64,4 @@ when a project is added to the server configuration. A server can point to
 one or more projects. A project can be pointed from one or more server configurations.</p></section>
 </conbody>
 </concept>
-<?Pub *0000004654?>
+<?Pub *0000004248?>

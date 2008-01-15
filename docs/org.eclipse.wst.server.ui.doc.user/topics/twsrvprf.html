@@ -2,33 +2,34 @@
 <html lang="en-us" xml:lang="en-us">
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<meta name="copyright" content="Copyright (c) 2000, 2006 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
-<meta name="DC.rights.owner" content="(C) Copyright 2000, 2006" />
+<meta name="copyright" content="Copyright (c) 2000, 2008 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
+<meta name="DC.rights.owner" content="(C) Copyright 2000, 2008" />
 <meta content="public" name="security" />
 <meta content="index,follow" name="Robots" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta content="task" name="DC.Type" />
-<meta name="DC.Title" content="Defining the server preferences" />
-<meta name="abstract" content="Using the Preferences page, you can define attributes used for testing projects by the servers. To define these preferences, complete the following:" />
-<meta name="description" content="Using the Preferences page, you can define attributes used for testing projects by the servers. To define these preferences, complete the following:" />
-<meta content="servers, defining preferences, setting publishing preferences, setting timeout delays, preferences, views, Servers" name="DC.subject" />
-<meta content="servers, defining preferences, setting publishing preferences, setting timeout delays, preferences, views, Servers" name="keywords" />
+<meta name="DC.Title" content="Defining the server preference" />
+<meta name="abstract" content="Using the Preferences page, you can define attribute used for testing projects by the servers." />
+<meta name="description" content="Using the Preferences page, you can define attribute used for testing projects by the servers." />
+<meta content="preferences, servers, testing, views, server preferences" name="DC.subject" />
+<meta content="preferences, servers, testing, views, server preferences" name="keywords" />
 <meta content="XHTML" name="DC.Format" />
 <meta content="twsrvprf_wst" name="DC.Identifier" />
 <meta content="en-us" name="DC.Language" />
 <link href="../../org.eclipse.wst.doc.user/common.css" type="text/css" rel="stylesheet" />
-<title>Defining the server preferences</title>
+<title>Defining the server preference</title>
 </head>
 <body id="twsrvprf_wst"><a name="twsrvprf_wst"><!-- --></a>
 
 
-<h1 class="topictitle1">Defining the server preferences</h1>
+<h1 class="topictitle1">Defining the server preference</h1>
 
 
 
-<div><p>Using the Preferences page, you can define attributes
-used for testing projects by the servers. To define these preferences, complete
-the following:</p>
+<div><p>Using the Preferences page, you can define attribute
+used for testing projects by the servers.</p>
+
+<div class="section">To define this preference, complete the following steps:</div>
 
 <a name="twsrvprf_wst__steps"><!-- --></a><ol id="twsrvprf_wst__steps">
 <li class="stepexpand"><span>In the toolbar, select <span class="menucascade"><span class="uicontrol">Window</span>
@@ -37,71 +38,14 @@ the following:</p>
 <li class="stepexpand"><span>In the Preferences page, select  <span class="uicontrol">Server</span>.</span>
 </li>
 
-<li class="stepexpand"><span>Specify one or more of the following settings by selecting the
-appropriate check box:</span>
+<li class="stepexpand"><span>Specify the following setting by selecting the check box:</span>
+ <dl>
+<dt class="dlterm">Show Servers view when server state changes</dt>
 
-<table class="choicetableborder" summary="" cellspacing="0" cellpadding="4" rules="rows" frame="hsides" border="1">
-<thead><tr><th valign="bottom" id="N1009B-option" align="left">Option</th>
-<th valign="bottom" id="N1009B-desc" align="left">Description</th></tr></thead>
-<tbody>
-<tr><td valign="top" headers="N1009B-option" id="N100A5"><strong>Show Servers view when server state changes</strong></td>
-<td valign="top" headers="N1009B-desc N100A5">The
-Servers view is displayed on the workbench when there are any activities in
-the Servers view. For more details about the server states refer to the <a href="rwrcview.html">Servers View</a> topic.</td>
-</tr>
+<dd>The Servers view is displayed on the workbench when there are any activities
+in the Servers view. For more details about the server states refer to the <a href="rwrcview.html">Servers View</a> topic.</dd>
 
-<tr><td valign="top" headers="N1009B-option" id="N100BB"><strong>Synchronize servers on workbench startup</strong></td>
-<td valign="top" headers="N1009B-desc N100BB">This
-option specifies that each time you start the workbench, it will try to update
-the status of the server defined in the Servers view with the actual state
-of the server, such as Started or Stopped.</td>
-</tr>
-
-<tr><td valign="top" headers="N1009B-option" id="N100D4"><strong>Automatically publish to local server</strong></td>
-<td valign="top" headers="N1009B-desc N100D4">Specifies
-that all the files should automatically be published to the local server at
-every <em>seconds</em> intervals, where <em>seconds</em> is the number of seconds
-you have specified in the <span class="uicontrol">Publishing interval (in seconds)</span> control.
-The minimum value for the publishing interval is ten seconds.</td>
-</tr>
-
-<tr><td valign="top" headers="N1009B-option" id="N100F5"><strong>Automatically publish to remote server</strong></td>
-<td valign="top" headers="N1009B-desc N100F5">Specifies
-that all the files should automatically be published to the remote server
-at every <em>seconds</em> intervals, where <em>seconds</em> is the number of seconds
-you have specified in the <span class="uicontrol">Publishing interval (in seconds)</span> control.
-The minimum value for the publishing interval is ten seconds.</td>
-</tr>
-
-<tr><td valign="top" headers="N1009B-option" id="N10116"><strong>Prompt before making irreversible changes within an editor</strong></td>
-
-<td valign="top" headers="N1009B-desc N10116">Specifies that the server tools will prompt you before you make a
-change in a editor that cannot be undone.</td>
-</tr>
-
-</tbody></table>
-
-</li>
-
-<li class="stepexpand"><span>Under the <span class="uicontrol">Server timeout delay</span> drop-down
-list, select one of the following relative length of time you can wait before
-ending a server operation:</span>
-<ul>
-<li>Longer</li>
-
-<li>Long</li>
-
-<li>Normal</li>
-
-<li>Short</li>
-
-<li>Shorter</li>
-
-</ul>
-
- The default setting is <span class="uicontrol">Normal</span>. <div class="tip"><span class="tiptitle">Tip:</span> If you have a fast processing machine, you can try using the <span class="uicontrol">Shorter</span> timeout
-delay option.  If you have a slow processing machine, you can try using the <span class="uicontrol">Longer</span> timeout
-delay option.</div>
+</dl>
 </li>
 
 <li class="stepexpand"><span>Click  <span class="uicontrol">Apply</span> and then  <span class="uicontrol">OK</span> to
@@ -111,6 +55,7 @@ save your changes.</span></li>
 
 </div>
 
+<div />
 
 </body>
 </html>

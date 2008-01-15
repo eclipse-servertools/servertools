@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <?Pub Inc?>
@@ -10,11 +10,15 @@ to use a specific runtime environment of an application server for compiling
 your application. You can complete this by defining the installation directory
 of the server:</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>applications<indexterm>server runtime environments</indexterm></indexterm>
-<indexterm>runtime environments<indexterm>preferences</indexterm></indexterm>
-<indexterm>servers<indexterm>runtime environments</indexterm></indexterm>
-<indexterm>workbench<indexterm>server runtime environments</indexterm></indexterm>
-</keywords>
+<keywords id="index"><indexterm>preferences<indexterm>installed server runtime
+environments<indexterm>defining</indexterm></indexterm></indexterm><indexterm>servers<indexterm>runtime
+environment<indexterm>defining</indexterm></indexterm></indexterm><indexterm>runtime
+environment<indexterm>defining</indexterm></indexterm><indexterm>workbench<indexterm>defining
+server runtime environment</indexterm></indexterm><indexterm>wizards<indexterm>New
+Server Runtime</indexterm></indexterm><indexterm>applications<indexterm>defining
+server runtime environment</indexterm></indexterm><indexterm>New Server Runtime
+wizard</indexterm><indexterm>installed server runtime environments<indexterm>setting
+preferences</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <steps id="steps">
@@ -42,8 +46,40 @@ task.</cmd></substep>
 <step><cmd>Click <uicontrol>Add</uicontrol>.</cmd><info>The New Server Runtime
 wizard opens.</info>
 <substeps>
-<substep><cmd>Select the target server runtime and click <uicontrol>Next</uicontrol>.
-The <i>product_name</i> Runtime panel is displayed.</cmd></substep>
+<substep><cmd><draft-comment>Modified this step</draft-comment>Under the <uicontrol>Select
+the runtime type</uicontrol> list, select a server and version level as the
+target installed server runtime environment.</cmd><info><note type="tip">In
+the text field under the <uicontrol>Select the runtime type</uicontrol> label,
+you can replace the text <userinput>type filter text</userinput> with keywords
+to filter the list of available application servers. The following are examples
+of filter keywords:<dl><dlentry>
+<dt><userinput>Apache</userinput></dt>
+<dd>Filters the list of available servers where the vendor is Apache</dd>
+</dlentry><dlentry>
+<dt><userinput>WebSphere</userinput></dt>
+<dd>Filters the list of available servers where the name is WebSphere</dd>
+</dlentry><dlentry>
+<dt><userinput>ejb</userinput></dt>
+<dd>Filters the list of available servers that support ejb modules.</dd>
+</dlentry><dlentry>
+<dt><userinput>web</userinput></dt>
+<dd>Filters the list of available servers that support Web modules</dd>
+</dlentry><dlentry>
+<dt><userinput>5.0</userinput></dt>
+<dd>Filters the list of available servers that are at version, 5.0 or supports
+JEE 5 specification level.</dd>
+</dlentry><dlentry>
+<dt><userinput>1.2</userinput></dt>
+<dd>Filters the list of available servers that supports J2EE 1.2 specification
+level or any servers that may have a version-level of 1.2.</dd>
+</dlentry></dl></note></info></substep>
+<substep><cmd><draft-comment>Added this step</draft-comment>When you add an
+installed server runtime environment, by default a server is created and added
+as an entry in the Servers view. If you want to only add the installed server
+runtime environment and not create the server in the Servers view, clear the <uicontrol>Create
+a <?Pub Caret?>new local server</uicontrol> check box.</cmd></substep>
+<substep><cmd>Click <uicontrol>Next</uicontrol>. The Runtime panel for the
+server is displayed.</cmd></substep>
 <substep><cmd>For <uicontrol>Installation directory</uicontrol> or <uicontrol>Location</uicontrol> field,
 type or browse to the location of the target server.</cmd><info><note type="tip">If
 you specify a false location for the target server, use the workbench to assemble
@@ -69,11 +105,12 @@ to change the list of target servers as needed.</p><p id="postreq_p2">To change
 the target server for a module:<ol>
 <li>Right-click on the module in the Project Explorer view and click <b>Properties
 > Project Facets</b>. The Project Facets page opens.</li>
-<li>Select the <uicontrol>Add/Remove Project Facets</uicontrol> button. The
-Add/Remove Project Facets dialog box opens.</li>
+<li><draft-comment>Gui changed from "Add/Remove Project Facets" to "Modify
+Faceted Project "</draft-comment>Select the <uicontrol>Modify Project</uicontrol> button.
+The Modify Faceted Project dialog box opens.</li>
 <li>Select the <uicontrol>Show Runtimes</uicontrol> button.</li>
 <li>Under the <b>Runtimes</b> table, select the target servers for the module.</li>
 </ol> </p></postreq>
 </taskbody>
 </task>
-<?Pub *0000004764?>
+<?Pub *0000006619?>

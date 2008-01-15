@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <task id="twtcpprf_wst" xml:lang="en-us">
@@ -8,9 +8,8 @@
 Monitor attributes. To define these preferences, complete the following:</shortdesc>
 <prolog><metadata>
 <keywords id="index"><indexterm>preferences<indexterm>TCP/IP Monitor</indexterm></indexterm>
-<indexterm>TCP/IP<indexterm>preferences</indexterm></indexterm>
-<indexterm>views<indexterm>TCP/IP Monitor preferences</indexterm></indexterm>
-</keywords>
+<indexterm>TCP/IP<indexterm>preferences</indexterm></indexterm><indexterm>views<indexterm>TCP/IP
+Monitor<indexterm>preferences</indexterm></indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <context></context>
@@ -43,9 +42,9 @@ to the remote machine and separated if multiple HTTP requests are received
 in the same connection. If the TCP/IP option is selected, all the requests
 are sent byte for byte and the TCP/IP Monitor will not translate or modify
 any requests that it forwards. </chdesc></chrow>
-<chrow><choption>Connection Timeout</choption><chdesc>Specify the length of
-time, in milliseconds, that you can wait before ending the TCP/IP connection
-to a server.</chdesc></chrow>
+<chrow><choption>Timeout (in milliseconds)<?Pub Caret?></choption><chdesc>Specify
+the length of time, in milliseconds, that you can wait before ending the TCP/IP
+connection to a server.</chdesc></chrow>
 </choicetable>
 </step>
 <step><cmd>Use the <uicontrol>Start</uicontrol> and <uicontrol>Stop</uicontrol> buttons
@@ -61,4 +60,4 @@ save your changes.</cmd></step>
 </steps>
 </taskbody>
 </task>
-<?Pub *0000003580?>
+<?Pub *0000003581?>
