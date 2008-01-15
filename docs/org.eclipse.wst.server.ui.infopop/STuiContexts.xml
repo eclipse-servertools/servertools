@@ -231,7 +231,7 @@ To change the installed server runtime enviornment, select the Edit runtime link
 </context>
 
 <context id="seop0012">
-<description>Specifies that all the files should automatically be published to the server at every <b>seconds</b> interval, where <b>seconds</b> is the number of seconds you have specified in the <b>Publishing interval</b> control.  The minimum value for the publishing interval is ten seconds.
+<description>Specifies that all the files should automatically be published to the server at every <b>seconds</b> interval, where <b>seconds</b> is the number of seconds you have specified in the <b>Publishing interval</b> control.
 </description>
 </context>
 
