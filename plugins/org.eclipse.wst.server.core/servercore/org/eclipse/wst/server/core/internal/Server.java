@@ -247,7 +247,7 @@ public class Server extends Base implements IServer {
 	
     protected void deleteFromFile() throws CoreException {
         super.deleteFromFile();
-        ResourceManager.getInstance().deregisterServer(this);
+        ResourceManager.getInstance().removeServer(this);
     }
 
     protected void deleteFromMetadata() {
@@ -256,7 +256,7 @@ public class Server extends Base implements IServer {
 
 	protected void saveToFile(IProgressMonitor monitor) throws CoreException {
 		super.saveToFile(monitor);
-		ResourceManager.getInstance().registerServer(this);
+		ResourceManager.getInstance().addServer(this);
 	}
 
 	protected void saveToMetadata(IProgressMonitor monitor) {

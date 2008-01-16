@@ -100,6 +100,8 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * Temporary method to patch 204165. Do not use, see equivalent API in 2.0.
 	 */
 	public IModule[] getModules204165(IProject project) {
+		if (!project.isAccessible())
+         return new IModule[0];
 		return createModules(project);
 	}
 
