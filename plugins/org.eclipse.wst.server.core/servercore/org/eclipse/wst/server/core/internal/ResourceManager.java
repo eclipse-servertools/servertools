@@ -55,6 +55,8 @@ public class ResourceManager {
 	private Preferences.IPropertyChangeListener pcl;
 	protected boolean ignorePreferenceChanges = false;
 
+	protected static List serverProjects = new ArrayList();
+
 	/**
 	 * Server resource change listener.
 	 * 
@@ -130,10 +132,15 @@ public class ResourceManager {
 		 * @param delta org.eclipse.core.resources.IResourceDelta
 		 */
 		protected void projectChanged(IProject project, IResourceDelta delta) {
+			String projectName = project.getName();
 			if (!ServerPlugin.getProjectProperties(project).isServerProject()) {
-				Trace.trace(Trace.RESOURCES, "Not a server project: " + project.getName());
-				return;
-			}
+				if (!serverProjects.contains(projectName)) {
+					Trace.trace(Trace.RESOURCES, "Not a server project: " + project.getName());
+					return;
+				}
+				serverProjects.remove(projectName);
+			} else if (!serverProjects.contains(projectName))
+				serverProjects.add(projectName);
 			
 			IResourceDelta[] children = delta.getAffectedChildren();
 	
@@ -200,8 +207,12 @@ public class ResourceManager {
 		if (projects != null) {
 			int size = projects.length;
 			for (int i = 0; i < size; i++) {
-				if (ServerPlugin.getProjectProperties(projects[i]).isServerProject())
+				if (ServerPlugin.getProjectProperties(projects[i]).isServerProject()) {
+					String projectName = projects[i].getName();
+					if (!serverProjects.contains(projectName))
+						serverProjects.add(projectName);
 					loadFromProject(projects[i]);
+				}
 			}
 		}
 		
