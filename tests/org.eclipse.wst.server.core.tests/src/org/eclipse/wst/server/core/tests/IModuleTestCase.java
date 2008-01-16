@@ -14,13 +14,14 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
+import org.eclipse.wst.server.core.internal.ExternalModule;
 
 import junit.framework.TestCase;
 
 public class IModuleTestCase extends TestCase {
 	protected static IModule module;
 
-	public void testCreate() {
+	public void testCreateModule() {
 		module = new IModule() {
 			public String getId() {
 				return null;
@@ -57,5 +58,15 @@ public class IModuleTestCase extends TestCase {
 		module.getProject();
 		module.getAdapter(null);
 		module.loadAdapter(null, null);
+		assertFalse(module.isExternal());
+	}
+	
+	public void testCreateExternalModule(){
+		module = new ExternalModule("id", "External module", null, null, null);
+		
+		module.getId();
+		module.getName();
+		module.getModuleType();
+		assertTrue(module.isExternal());
 	}
 }
