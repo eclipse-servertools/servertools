@@ -43,6 +43,8 @@ public class AllTests {
 		suite.addTestSuite(IWizardHandleTestCase.class);
 		suite.addTest(new OrderedTestSuite(TaskWizardTestCase.class));
 		suite.addTest(new OrderedTestSuite(WizardFragmentTestCase.class));
+			
+		suite.addTest(new OrderedTestSuite(ServerTooltipTestCase.class));
 		//$JUnit-END$
 		return suite;
 	}
