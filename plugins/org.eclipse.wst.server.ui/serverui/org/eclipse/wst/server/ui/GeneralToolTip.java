@@ -20,7 +20,7 @@ public class GeneralToolTip implements IServerToolTip {
 		// do nothing
 	}
 
-	public Composite createContent(Composite parent, IServer server) {
+	public void createContent(Composite parent, IServer server) {
 		Text text = new Text(parent,SWT.NONE);
 		text.setBackground(parent.getBackground());
 		String s = "";
@@ -28,7 +28,5 @@ public class GeneralToolTip implements IServerToolTip {
 			s += server.getRuntime().getName() + " - ";
 		s += server.getModules().length + " modules";
 		text.setText(s);
-		
-		return parent;
 	}
 }

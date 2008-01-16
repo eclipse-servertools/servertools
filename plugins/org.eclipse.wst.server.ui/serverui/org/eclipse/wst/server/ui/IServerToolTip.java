@@ -18,11 +18,10 @@ import org.eclipse.wst.server.core.IServer;
  */
 public interface IServerToolTip {
 	/**
-	 * Allows adopters to add widgets to the tooltip. The parent is a StyledText object.
+	 * Allows adopters to add widgets to the tooltip.
 	 * 
-	 * @param parent the parent, a StyledText
+	 * @param parent the parent
 	 * @param server the server
-	 * @return the composite to display
 	 */
-	public Composite createContent(Composite parent, IServer server);
+	public void createContent(Composite parent, IServer server);
 }

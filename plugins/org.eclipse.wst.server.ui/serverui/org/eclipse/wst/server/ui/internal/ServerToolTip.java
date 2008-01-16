@@ -95,7 +95,7 @@ public class ServerToolTip extends ToolTip {
 		loadExtensions();
 	}
 	
-	protected void createFocusedTooltip(final Control control) {
+	public void createFocusedTooltip(final Control control) {
 		final Shell stickyTooltip = new Shell(control.getShell(), SWT.ON_TOP | SWT.TOOL
 				| SWT.NO_FOCUS);
 		stickyTooltip.setLayout(new FillLayout());
