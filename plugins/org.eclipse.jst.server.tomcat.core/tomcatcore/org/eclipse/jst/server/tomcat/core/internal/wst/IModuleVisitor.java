@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,6 @@ package org.eclipse.jst.server.tomcat.core.internal.wst;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 
 /**
@@ -29,7 +28,7 @@ public interface IModuleVisitor {
 
 	/**
 	 * Post process web component
-	 * @param component web componet to process
+	 * @param component web component to process
 	 * @throws CoreException
 	 */
 	void endVisitWebComponent(IVirtualComponent component) throws CoreException;
@@ -64,15 +63,8 @@ public interface IModuleVisitor {
 
 	/**
 	 * Post process EAR resource.
-	 * @param component EAR componet to process
+	 * @param component EAR component to process
 	 * @throws CoreException 
 	 */
 	void endVisitEarComponent(IVirtualComponent component) throws CoreException;
-
-	/**
-	 * Process a classpath entry.
-	 * @param rtFolder path for class folder at runtime
-	 * @param entry classpath entry
-	 */
-	void visitClasspathEntry(IPath rtFolder, IClasspathEntry entry);
 }

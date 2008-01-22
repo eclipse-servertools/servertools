@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jst.server.tomcat.core.internal.wst.IModuleVisitor;
 import org.eclipse.jst.server.tomcat.core.internal.xml.Factory;
 import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Context;
@@ -66,7 +65,8 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
      * List of classpath elements that will be used by the custom tomcat loader.
      * This set should include any class dir from referenced project.
      */
-    protected Set virtualClasspathElements = new LinkedHashSet();
+    protected Set virtualClassClasspathElements = new LinkedHashSet();
+    protected Set virtualJarClasspathElements = new LinkedHashSet();
 
     /**
      * Instantiate a new TomcatPublishModuleVisitor
@@ -91,21 +91,21 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
      * @see IModuleVisitor#visitArchiveComponent(IPath, IPath)
      */
     public void visitArchiveComponent(IPath runtimePath, IPath workspacePath) {
-        addVirtualResource(runtimePath, workspacePath);
+        addVirtualJarResource(runtimePath, workspacePath);
     }
 
     /**
      * @see IModuleVisitor#visitDependentComponent(IPath, IPath)
      */
     public void visitDependentComponent(IPath runtimePath, IPath workspacePath) {
-        addVirtualResource(runtimePath, workspacePath);
+        addVirtualJarResource(runtimePath, workspacePath);
     }
 
     /**
      * @see IModuleVisitor#visitWebResource(IPath, IPath)
      */
     public void visitWebResource(IPath runtimePath, IPath workspacePath) {
-        addVirtualResource(runtimePath, workspacePath);
+        addVirtualClassResource(runtimePath, workspacePath);
     }
 
     /**
@@ -130,15 +130,6 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
             } finally {
                 earCommonResources.clear();
             }
-        }
-    }
-
-    /**
-     * @see IModuleVisitor#visitClasspathEntry(IPath, IClasspathEntry)
-     */
-    public void visitClasspathEntry(IPath rtFolder, IClasspathEntry entry) {
-        if (entry != null) {
-            addVirtualResource(rtFolder, entry.getPath());
         }
     }
 
@@ -238,14 +229,25 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
 
         // write down the virtual classPath
         StringBuffer buffer = new StringBuffer();
-        for (Iterator iterator = virtualClasspathElements.iterator(); iterator
-                .hasNext();) {
+        for (Iterator iterator = virtualClassClasspathElements.iterator();
+        		iterator.hasNext();) {
             buffer.append(iterator.next());
             if (iterator.hasNext()) {
                 buffer.append(";");
             }
         }
-        virtualClasspathElements.clear();
+        if (buffer.length() > 0 && virtualJarClasspathElements.size() > 0) {
+        	buffer.append(";");
+        }
+        for (Iterator iterator = virtualJarClasspathElements.iterator();
+        		iterator.hasNext();) {
+        	buffer.append(iterator.next());
+        	if (iterator.hasNext()) {
+        		buffer.append(";");
+        	}
+        }
+        virtualClassClasspathElements.clear();
+        virtualJarClasspathElements.clear();
 
         String vcp = buffer.toString();
 
@@ -263,10 +265,14 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
         }
     }
 
-    private void addVirtualResource(IPath runtimePath, IPath workspacePath) {
-        virtualClasspathElements.add(workspacePath.toOSString());
+    private void addVirtualClassResource(IPath runtimePath, IPath workspacePath) {
+        virtualClassClasspathElements.add(workspacePath.toOSString());
     }
 
+    private void addVirtualJarResource(IPath runtimePath, IPath workspacePath) {
+        virtualJarClasspathElements.add(workspacePath.toOSString());
+    }
+    
     /**
      * Load a META-INF/context.xml file from project, if available
      * 
