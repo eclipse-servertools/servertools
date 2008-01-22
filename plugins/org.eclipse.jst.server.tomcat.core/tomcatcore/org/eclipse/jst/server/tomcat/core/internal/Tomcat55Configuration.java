@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -52,6 +52,8 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 	protected boolean isServerDirty;
 
 	protected WebAppDocument webAppDocument;
+
+	protected Document contextDocument;
 
 	protected Document tomcatUsersDocument;
 
@@ -234,7 +236,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 	public void load(IPath path, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(Messages.loadingTask, 6);
+			monitor.beginTask(Messages.loadingTask, 7);
 			
 			// check for catalina.policy to verify that this is a v5.5 config
 			InputStream in = new FileInputStream(path.append("catalina.policy").toFile());
@@ -250,6 +252,14 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 
 			webAppDocument = new WebAppDocument(path.append("web.xml"));
 			monitor.worked(1);
+
+			// load context.xml file
+			File file = path.append("context.xml").toFile();
+			if (file.exists())
+				contextDocument = XMLUtil.getDocumentBuilder().parse(new InputSource(new FileInputStream(file)));
+			else
+				contextDocument = null;
+			monitor.worked(1);
 			
 			tomcatUsersDocument = XMLUtil.getDocumentBuilder().parse(new InputSource(new FileInputStream(path.append("tomcat-users.xml").toFile())));
 			monitor.worked(1);
@@ -259,7 +269,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 			monitor.worked(1);
 
 			// load properties file
-			File file = path.append("catalina.properties").toFile();
+			file = path.append("catalina.properties").toFile();
 			if (file.exists())
 				propertiesFile = TomcatVersionHelper.getFileContents(new FileInputStream(file));
 			else
@@ -296,7 +306,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 	public void load(IFolder folder, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(Messages.loadingTask, 1000);
+			monitor.beginTask(Messages.loadingTask, 1200);
 	
 			// check for catalina.policy to verify that this is a v4.0 config
 			IFile file = folder.getFile("catalina.policy");
@@ -317,6 +327,16 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 			webAppDocument = new WebAppDocument(file);
 			monitor.worked(200);
 	
+			// load context.xml
+			file = folder.getFile("context.xml");
+			if (file.exists()) {
+				in = file.getContents();
+				contextDocument = XMLUtil.getDocumentBuilder().parse(new InputSource(in));
+			}
+			else
+				contextDocument = null;
+			monitor.worked(200);
+		
 			// load tomcat-users.xml
 			file = folder.getFile("tomcat-users.xml");
 			in = file.getContents();
@@ -359,7 +379,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 	protected void save(IPath path, boolean forceDirty, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(Messages.savingTask, 4);
+			monitor.beginTask(Messages.savingTask, 5);
 			
 			// make sure directory exists
 			if (!path.toFile().exists()) {
@@ -376,6 +396,10 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 			monitor.worked(1);
 			
 			webAppDocument.save(path.append("web.xml").toOSString(), forceDirty);
+			monitor.worked(1);
+			
+			if (forceDirty && contextDocument != null)
+				XMLUtil.save(path.append("context.xml").toOSString(), contextDocument);
 			monitor.worked(1);
 			
 			if (forceDirty)
@@ -425,7 +449,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 	public void save(IFolder folder, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(Messages.savingTask, 1100);
+			monitor.beginTask(Messages.savingTask, 1200);
 			
 			// save server.xml
 			byte[] data = serverFactory.getContents();
@@ -442,6 +466,18 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 			
 			// save web.xml
 			webAppDocument.save(folder.getFile("web.xml"), ProgressUtil.getSubMonitorFor(monitor, 200));
+			
+			// save context.xml
+			if (contextDocument != null) {
+				data = XMLUtil.getContents(contextDocument);
+				in = new ByteArrayInputStream(data);
+				file = folder.getFile("context.xml");
+				if (file.exists())
+					monitor.worked(200);
+					//file.setContents(in, true, true, ProgressUtil.getSubMonitorFor(monitor, 200));
+				else
+					file.create(in, true, ProgressUtil.getSubMonitorFor(monitor, 200));
+			}
 			
 			// save tomcat-users.xml
 			data = XMLUtil.getContents(tomcatUsersDocument);
