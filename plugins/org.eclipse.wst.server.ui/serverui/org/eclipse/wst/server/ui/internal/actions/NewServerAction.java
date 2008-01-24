@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,8 +11,8 @@
 package org.eclipse.wst.server.ui.internal.actions;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.wizard.WizardDialog;
 
-import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.wst.server.ui.internal.wizard.NewServerWizard;
 /**
  * Action to create a new server.
@@ -58,7 +58,7 @@ public class NewServerAction extends NewWizardAction {
 		else
 			wizard = new NewServerWizard(ids, values);
 		wizard.init(workbench, selection);
-		ClosableWizardDialog dialog = new ClosableWizardDialog(workbench.getActiveWorkbenchWindow().getShell(), wizard);
+		WizardDialog dialog = new WizardDialog(workbench.getActiveWorkbenchWindow().getShell(), wizard);
 		dialog.open();
 	}
 }

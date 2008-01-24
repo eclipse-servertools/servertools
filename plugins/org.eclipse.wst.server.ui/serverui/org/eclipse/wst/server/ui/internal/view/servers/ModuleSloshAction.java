@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 
 import org.eclipse.wst.server.core.IModule;
@@ -23,7 +24,6 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
-import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.wst.server.ui.internal.wizard.ModifyModulesWizard;
 /**
  * 
@@ -86,7 +86,7 @@ public class ModuleSloshAction extends AbstractServerAction {
 		}
 		
 		ModifyModulesWizard wizard = new ModifyModulesWizard(server);
-		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
+		WizardDialog dialog = new WizardDialog(shell, wizard);
 		dialog.open();
 	}
 }

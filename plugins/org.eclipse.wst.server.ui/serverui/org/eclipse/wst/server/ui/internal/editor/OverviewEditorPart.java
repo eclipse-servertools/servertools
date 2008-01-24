@@ -33,6 +33,7 @@ import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Image;
@@ -69,7 +70,6 @@ import org.eclipse.wst.server.ui.internal.SWTUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.command.*;
-import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
@@ -739,7 +739,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 		
 		TaskWizard wizard = new TaskWizard(title, fragment, taskModel);
 		wizard.setForcePreviousAndNextButtons(true);
-		ClosableWizardDialog dialog = new ClosableWizardDialog(getEditorSite().getShell(), wizard);
+		WizardDialog dialog = new WizardDialog(getEditorSite().getShell(), wizard);
 		return dialog.open();
 	}
 

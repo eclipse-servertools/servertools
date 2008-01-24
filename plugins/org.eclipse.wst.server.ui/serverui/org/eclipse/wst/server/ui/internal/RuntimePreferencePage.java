@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,7 @@ import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -44,7 +45,6 @@ import org.eclipse.wst.server.core.internal.IRuntimeLocator;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.internal.facets.FacetUtil;
 import org.eclipse.wst.server.ui.internal.viewers.RuntimeComposite;
-import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewRuntimeWizardFragment;
@@ -357,7 +357,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		}
 		TaskWizard wizard = new TaskWizard(title, fragment, taskModel);
 		wizard.setForcePreviousAndNextButtons(true);
-		ClosableWizardDialog dialog = new ClosableWizardDialog(getShell(), wizard);
+		WizardDialog dialog = new WizardDialog(getShell(), wizard);
 		return dialog.open();
 	}
 

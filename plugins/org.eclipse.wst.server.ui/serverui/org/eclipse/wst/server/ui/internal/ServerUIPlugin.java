@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.wizard.WizardDialog;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.*;
@@ -35,7 +36,6 @@ import org.eclipse.wst.server.ui.internal.editor.ServerEditorCore;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorInput;
 import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
 import org.eclipse.wst.server.ui.internal.viewers.InitialSelectionProvider;
-import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFragment;
@@ -540,7 +540,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		};
 		TaskWizard wizard = new TaskWizard(Messages.wizNewRuntimeWizardTitle, fragment);
 		wizard.setForcePreviousAndNextButtons(true);
-		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
+		WizardDialog dialog = new WizardDialog(shell, wizard);
 		return (dialog.open() == IDialogConstants.OK_ID);
 	}
 
@@ -569,7 +569,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 				};
 				TaskWizard wizard = new TaskWizard(Messages.wizNewRuntimeWizardTitle, fragment, taskModel);
 				wizard.setForcePreviousAndNextButtons(true);
-				ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
+				WizardDialog dialog = new WizardDialog(shell, wizard);
 				return (dialog.open() == IDialogConstants.OK_ID);
 			} catch (Exception e) {
 				return false;
@@ -607,7 +607,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		
 		TaskWizard wizard = new TaskWizard(Messages.wizNewServerWizardTitle, fragment);
 		wizard.setForcePreviousAndNextButtons(true);
-		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
+		WizardDialog dialog = new WizardDialog(shell, wizard);
 		return (dialog.open() == IDialogConstants.OK_ID);
 	}
 
