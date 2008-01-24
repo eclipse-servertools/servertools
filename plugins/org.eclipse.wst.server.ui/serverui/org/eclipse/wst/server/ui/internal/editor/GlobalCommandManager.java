@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,8 @@ import java.util.Map;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.wst.server.core.*;
@@ -273,6 +275,24 @@ public class GlobalCommandManager {
 	}
 
 	/**
+	 * Return the currently active shell.
+	 * 
+	 * @return a shell
+	 */
+	private Shell getShell() {
+		try {
+			Display d = Display.getCurrent();
+			if (d == null)
+				d = Display.getDefault();
+			
+			return d.getActiveShell();
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Could not get shell", e);
+			return null;
+		}
+	}
+
+	/**
 	 * Execute the given command and place it in the undo stack.
 	 * If the command cannot be undone, the user will be notified
 	 * before it is executed.
@@ -281,13 +301,10 @@ public class GlobalCommandManager {
 	 * @param command a task
 	 */
 	public void executeCommand(String id, IUndoableOperation command) {
+		final Shell shell = getShell();
+		
 		if (!command.canUndo() && !undoList.isEmpty()) {
 			try {
-				Display d = Display.getCurrent();
-				if (d == null)
-					d = Display.getDefault();
-				
-				Shell shell = d.getActiveShell();
 				if (!MessageDialog.openConfirm(shell, Messages.editorServerEditor, Messages.editorPromptIrreversible))
 					return;
 			} catch (Exception e) {
@@ -300,25 +317,35 @@ public class GlobalCommandManager {
 		src.command = command;
 		
 		try {
-			command.execute(new NullProgressMonitor(), null);
+			IAdaptable adaptable = new IAdaptable() {
+				public Object getAdapter(Class adapter) {
+					if (Shell.class.equals(adapter))
+						return shell;
+					return null;
+				}
+			};
+			IStatus status = command.execute(new NullProgressMonitor(), adaptable);
+			if (status != null && !status.isOK())
+				MessageDialog.openError(shell, Messages.editorServerEditor, status.getMessage());
 		} catch (ExecutionException ce) {
+			Trace.trace(Trace.SEVERE, "Error executing command", ce);
 			return;
 		}
 		
 		CommandManagerInfo info = getExistingCommandManagerInfo(id);
 		if (info == null)
 			return;
-
+		
 		if (command.canUndo())
 			addToUndoList(src);
 		else {
 			undoSaveIndex = -1;
 			clearUndoList(id);
 		}
-
+		
 		// clear redo list since a new command has been executed.
 		clearRedoList(id);
-
+		
 		setDirtyState(id, true);
 	}
 
@@ -547,8 +574,19 @@ public class GlobalCommandManager {
 			return;
 
 		try {
-			src.command.execute(new NullProgressMonitor(), null);
+			final Shell shell = getShell();
+			IAdaptable adaptable = new IAdaptable() {
+				public Object getAdapter(Class adapter) {
+					if (Shell.class.equals(adapter))
+						return shell;
+					return null;
+				}
+			};
+			IStatus status = src.command.execute(new NullProgressMonitor(), adaptable);
+			if (status != null && !status.isOK())
+				MessageDialog.openError(shell, Messages.editorServerEditor, status.getMessage());
 		} catch (ExecutionException ce) {
+			Trace.trace(Trace.SEVERE, "Error executing command", ce);
 			return;
 		}
 		redoList.remove(src);
