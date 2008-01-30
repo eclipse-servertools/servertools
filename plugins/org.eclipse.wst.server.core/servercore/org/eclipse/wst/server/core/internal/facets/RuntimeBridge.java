@@ -26,6 +26,7 @@ import org.eclipse.wst.common.project.facet.core.runtime.RuntimeManager;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.Runtime;
 import org.eclipse.wst.server.core.internal.RuntimeType;
 /**
  * 
@@ -159,6 +160,9 @@ public class RuntimeBridge implements IRuntimeBridge {
 			if (runtime != null) {
 				props.put("id", runtime.getId());
 				props.put("localized-name", runtime.getName());
+				String s = ((Runtime)runtime).getAttribute("alternate-names", (String)null);
+				if (s != null)
+				    props.put("alternate-names", s);
 			}
 			return props;
 		}
