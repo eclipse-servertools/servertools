@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 SAS Institute, Inc. and others.
+ * Copyright (c) 2007, 2008 SAS Institute, Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,11 +18,10 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
+import org.eclipse.wst.server.ui.IServerModule;
 
 /**
- * @author larry
- *
+ * Action to delete Tomcat server work directories
  */
 public class CleanWorkDirAction implements IObjectActionDelegate {
 	private IWorkbenchPart targetPart;
@@ -63,11 +62,12 @@ public class CleanWorkDirAction implements IObjectActionDelegate {
 				if (obj instanceof IServer) {
 					selectedServer = (IServer)obj;
 				}
-				else if (obj instanceof ModuleServer) {
-					ModuleServer ms = (ModuleServer)obj;
-					selectedModule = ms.module[ms.module.length - 1];
+				else if (obj instanceof IServerModule) {
+					IServerModule sm = (IServerModule)obj;
+					IModule [] module = sm.getModule();
+					selectedModule = module[module.length - 1];
 					if (selectedModule != null)
-						selectedServer = ms.server;
+						selectedServer = sm.getServer();
 				}
 			}
 		}
