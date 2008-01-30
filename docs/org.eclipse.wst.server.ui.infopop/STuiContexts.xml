@@ -43,8 +43,15 @@
 </description>
 </context>
 <context id="spge0000">
-<description>Use to set the preferences that servers will use for testing projects.
+<description>Use this page to define a list of server runtimes available for selection in the current workspace.
 
+An installed server runtime environment is composed of the following definitions:
+-a name to identify the installed server runtime environment
+-the type of server that specifies the vendor and version-level of the server
+-the directory path to a local installation of the server
+-In some cases, also includes a reference to a Java runtime environment
+
+If an installed server runtime environment is referencing a stub directory of the server, you can only compile your application against the stub server.  However, if referencing a full installation of the server, you can compile, test, and run your application against the installation of the server.
 </description>
 </context>
 
@@ -71,9 +78,14 @@
 </context>
 
 <context id="spge0026">
-<description>Select the relative length of time you can wait before ending a server operation.
-The default setting is <b>Normal</b>.
-<b>Tip</b>:  If you have a fast processing machine, you can try using the <b>Shorter</b> timeout delay option.  If you have a slow processing machine, you can try using the <b>Longer</b> timeout delay option.
+<description>This is the length of time the workbench is going to wait for the server to start.
+<b>Tip</b>:  If you have a fast processing machine, you can try specifying a shorter timeout interval.  If you have a slow processing machine, you can try specifying a longer timeout interval.
+</description>
+</context>
+
+<context id="spge0027">
+<description>This is the length of time the workbench is going to wait for the stop signal from the server.
+<b>Tip</b>:  If you have a fast processing machine, you can try specifying a shorter timeout interval.  If you have a slow processing machine, you can try specifying a longer timeout interval.
 </description>
 </context>
 
@@ -209,7 +221,7 @@ Select the <b>OK</b> button to apply your delete options.
 
 <context id="seop0004">
 <description>Specifies the location where the server configuration files are stored on the workbench.  
-For example, if you specified the Configuration path to be <b>/Servers/Tomcat v4.1 Server @ localhost-config</b>, the files are available in the Navigator view, expand the folders: Servers > Tomcat v4.1 Server @ localhost-config.
+For example, if you specified the Configuration path to be <b>/Servers/Tomcat v4.1 Server at localhost-config</b>, the files are available in the Navigator view, expand the folders: Servers > Tomcat v4.1 Server at localhost-config.
 </description>
 </context>
 
@@ -221,7 +233,7 @@ For example, if you specified the Configuration path to be <b>/Servers/Tomcat v4
 <context id="seop0008">
 <description>Specifies the name of the installed server runtime environment as defined in the Preferences page (Window > Preferences > Server > Installed Runtimes).
 The installed server runtime environment defines the runtime environment of an application server for compiling your application.
-To change the installed server runtime enviornment, select the Edit runtime link.
+To change the installed server runtime environment, select the <b>Runtime</b> link.
 </description>
 
 </context>
