@@ -131,7 +131,6 @@ public class GenericServerWizardFragment extends
         if(fDecorators == null ){
             return;
         }
-        getServer().setName( createName() );
         for( int i = 0; i < fDecorators.length; i++ )
         {
             if( fDecorators[i].validate() )//failed do not continue
