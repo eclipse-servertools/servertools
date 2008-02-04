@@ -122,12 +122,13 @@ public abstract class PublishOperation {
 	 * Return the task model.
 	 * <p>
 	 * A task model contains information about the overall task flow and allows
-	 * tasks to store and retreive data. Its usage allows mutliple tasks to be
+	 * tasks to store and retrieve data. Its usage allows multiple tasks to be
 	 * chained together and share data from the output of one task to the input
 	 * of another.
 	 * </p>
 	 * 
 	 * @return the task model
+	 * @see #setTaskModel(TaskModel)
 	 */
 	public TaskModel getTaskModel() {
 		return model;
@@ -137,12 +138,13 @@ public abstract class PublishOperation {
 	 * Set the task model.
 	 * <p>
 	 * A task model contains information about the overall task flow and allows
-	 * tasks to store and retreive data. Its usage allows mutliple tasks to be
+	 * tasks to store and retrieve data. Its usage allows multiple tasks to be
 	 * chained together and share data from the output of one task to the input
 	 * of another.
 	 * </p>
 	 * 
 	 * @param taskModel the task model
+	 * @see #getTaskModel()
 	 */
 	public void setTaskModel(TaskModel taskModel) {
 		this.model = taskModel;
