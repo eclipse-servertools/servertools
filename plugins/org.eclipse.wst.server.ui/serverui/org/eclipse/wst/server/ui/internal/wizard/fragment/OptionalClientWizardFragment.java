@@ -47,8 +47,17 @@ public class OptionalClientWizardFragment extends WizardFragment {
 		
 		try {
 			IServer server = (IServer) getTaskModel().getObject(TaskModel.TASK_SERVER);
-			if (lastServer == null && server == null)
+			
+			if (server == null) {
+				getTaskModel().putObject(WizardTaskUtil.TASK_LAUNCHABLE_ADAPTER, null);
+				getTaskModel().putObject(WizardTaskUtil.TASK_LAUNCHABLE, null);
+				getTaskModel().putObject(WizardTaskUtil.TASK_CLIENTS, null);
+				getTaskModel().putObject(WizardTaskUtil.TASK_HAS_CLIENTS, new Boolean(false));
 				return;
+			}
+			
+			//if (lastServer == null)
+			//	return;
 			
 			// get the launchable adapter and module object
 			Object launchable = null;
@@ -60,6 +69,8 @@ public class OptionalClientWizardFragment extends WizardFragment {
 			} catch (CoreException ce) {
 				getTaskModel().putObject(WizardTaskUtil.TASK_LAUNCHABLE_ADAPTER, null);
 				getTaskModel().putObject(WizardTaskUtil.TASK_LAUNCHABLE, null);
+				getTaskModel().putObject(WizardTaskUtil.TASK_CLIENTS, null);
+				getTaskModel().putObject(WizardTaskUtil.TASK_HAS_CLIENTS, new Boolean(false));
 				EclipseUtil.openError(null, ce.getStatus());
 				return;
 			}
