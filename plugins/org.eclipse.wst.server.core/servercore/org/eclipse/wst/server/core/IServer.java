@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -318,7 +318,7 @@ public interface IServer extends IServerAttributes {
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @return status indicating what (if anything) went wrong
-	 * @see #publish(int, IModule[], org.eclipse.wst.server.core.IServer.IOperationListener)
+	 * @see #publish(int, IModule[], IServer.IOperationListener)
 	 */
 	public IStatus publish(int kind, IProgressMonitor monitor);
 
@@ -384,7 +384,7 @@ public interface IServer extends IServerAttributes {
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @exception CoreException if an error occurs while trying to start the server
-	 * @see #start(String, org.eclipse.wst.server.core.IServer.IOperationListener)
+	 * @see #start(String, IServer.IOperationListener)
 	 */
 	public void start(String launchMode, IProgressMonitor monitor) throws CoreException;
 
@@ -467,7 +467,7 @@ public interface IServer extends IServerAttributes {
 	 *    {@link org.eclipse.debug.core.ILaunchManager}
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
-	 * @see #restart(String, org.eclipse.wst.server.core.IServer.IOperationListener)
+	 * @see #restart(String, IServer.IOperationListener)
 	 */
 	public void restart(String launchMode, IProgressMonitor monitor);
 
@@ -522,7 +522,7 @@ public interface IServer extends IServerAttributes {
 	 * 
 	 * @param force <code>true</code> to kill the server, or <code>false</code>
 	 *    to stop normally
-	 * @see #start(String, org.eclipse.wst.server.core.IServer.IOperationListener)
+	 * @see #start(String, IServer.IOperationListener)
 	 */
 	public void stop(boolean force);
 
@@ -711,7 +711,7 @@ public interface IServer extends IServerAttributes {
 	 *    {@link org.eclipse.debug.core.ILaunchManager}
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
-	 * @deprecated use {@link #start(String, org.eclipse.wst.server.core.IServer.IOperationListener)}
+	 * @deprecated use {@link #start(String, IServer.IOperationListener)}
 	 *    instead
 	 * @exception CoreException if an error occurs while trying to start the server
 	 */
@@ -727,7 +727,7 @@ public interface IServer extends IServerAttributes {
 	 * 
 	 * @param force <code>true</code> to kill the server, or <code>false</code>
 	 *    to stop normally
-	 * @deprecated use {@link #stop(boolean, org.eclipse.wst.server.core.IServer.IOperationListener)}
+	 * @deprecated use {@link #stop(boolean, IOperationListener)}
 	 *    instead
 	 */
 	public void synchronousStop(boolean force);
@@ -744,7 +744,7 @@ public interface IServer extends IServerAttributes {
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @throws CoreException if there was an error
-	 * @deprecated use {@link #restart(String, org.eclipse.wst.server.core.IServer.IOperationListener)} 
+	 * @deprecated use {@link #restart(String, IServer.IOperationListener)} 
 	 *    instead
 	 */
 	public void synchronousRestart(String launchMode, IProgressMonitor monitor) throws CoreException;

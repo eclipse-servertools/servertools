@@ -67,10 +67,17 @@ public abstract class WizardFragment {
 	}
 
 	/**
-	 * Sets the wizard task model. The task model is shared by all fragments
-	 * in the wizard and is used to share data.
+	 * Sets the wizard task model.
+	 * <p>
+	 * A task model is shared by all fragments in the wizard and is used to share
+	 * data. It contains information about the overall task flow and allows
+	 * fragments to store and retrieve data. Its usage allows multiple fragments
+	 * to be chained together and share data from the output of one fragment to
+	 * the input of another.
+	 * </p>
 	 * 
 	 * @param taskModel the task model
+	 * @see #getTaskModel()
 	 */
 	public void setTaskModel(TaskModel taskModel) {
 		this.taskModel = taskModel;
@@ -80,6 +87,7 @@ public abstract class WizardFragment {
 	 * Returns the wizard task model.
 	 * 
 	 * @return the task model
+	 * @see #setTaskModel(TaskModel)
 	 */
 	public TaskModel getTaskModel() {
 		return taskModel;

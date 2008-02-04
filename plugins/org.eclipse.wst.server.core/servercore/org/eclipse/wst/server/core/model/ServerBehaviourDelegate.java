@@ -502,7 +502,7 @@ public abstract class ServerBehaviourDelegate {
 	 * <p>
 	 * [issue: There is no way to communicate failure to the
 	 * client. Given that this operation can go awry, there probably
-	 * should be a mechanism that allows failing asynch operations
+	 * should be a mechanism that allows failing async operations
 	 * to be diagnosed.]
 	 * </p>
 	 * @param force <code>true</code> to kill the server, or <code>false</code>
@@ -548,7 +548,7 @@ public abstract class ServerBehaviourDelegate {
 	}
 
 	/**
-	 * Returns a temporary directory that the requestor can use
+	 * Returns a temporary directory that the requester can use
 	 * throughout it's lifecycle. This is primary to be used by
 	 * servers for working directories, server specific
 	 * files, etc.
@@ -804,7 +804,7 @@ public abstract class ServerBehaviourDelegate {
 
 	/**
 	 * Publishes the given modules. Returns true if the publishing
-	 * should continue, or false if publishing has failed or is cancelled.
+	 * should continue, or false if publishing has failed or is canceled.
 	 * 
 	 * Uses 500 ticks plus 3500 ticks per module
 	 * 
@@ -841,7 +841,7 @@ public abstract class ServerBehaviourDelegate {
 	}
 
 	/**
-	 * Returns the publish tasks that have been targetted to this server.
+	 * Returns the publish tasks that have been targeted to this server.
 	 * These tasks should be run during publishing.
 	 * 
 	 * @param kind one of the IServer.PUBLISH_XX constants
@@ -890,7 +890,7 @@ public abstract class ServerBehaviourDelegate {
 				multi.add(ce.getStatus());
 			}
 			
-			// return early if the monitor has been cancelled
+			// return early if the monitor has been canceled
 			if (monitor.isCanceled())
 				return multi;
 		}

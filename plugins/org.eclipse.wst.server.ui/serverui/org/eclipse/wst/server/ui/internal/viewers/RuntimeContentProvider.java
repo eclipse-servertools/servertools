@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.Viewer;
 
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.ServerCore;
@@ -22,19 +21,12 @@ import org.eclipse.wst.server.core.internal.Runtime;
 /**
  * Runtime content provider.
  */
-public class RuntimeContentProvider implements IStructuredContentProvider {
+public class RuntimeContentProvider extends BaseContentProvider {
 	/**
 	 * RuntimeContentProvider constructor comment.
 	 */
 	public RuntimeContentProvider() {
 		super();
-	}
-
-	/**
-	 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-	 */
-	public void dispose() {
-		// do nothing
 	}
 
 	/**
@@ -51,12 +43,5 @@ public class RuntimeContentProvider implements IStructuredContentProvider {
 			}
 		}
 		return list.toArray();
-	}
-
-	/**
-	 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, Object, Object)
-	 */
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		// do nothing
 	}
 }

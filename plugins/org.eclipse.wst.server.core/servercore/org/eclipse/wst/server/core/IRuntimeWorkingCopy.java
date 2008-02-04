@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * A working copy runtime object used for formulating changes
  * to a runtime instance ({@link IRuntime}). Changes made on a
  * working copy do not occur (and are not persisted) until a
- * save() is performed. 
+ * save() is performed.
+ * <p>
+ * If the client of this working copy calls loadAdapter(), a new instance of
+ * the delegate (RuntimeDelegate) will be created to help this working copy.
+ * This delegate instance will be used as long as this working copy exists.
+ * </p>
  * <p>
  * This interface is not intended to be implemented by clients.
  * </p>
@@ -155,10 +160,6 @@ public interface IRuntimeWorkingCopy extends IRuntime {
 	 * Runtimes can be saved even when they have invalid properties. It
 	 * is the clients responsibility to call validate() or check the
 	 * properties before saving.
-	 * <p>
-	 * [issue: What is lifecycle for RuntimeWorkingCopyDelegate
-	 * associated with this working copy?]
-	 * </p>
 	 * 
 	 * @param force <code>true</code> to force the save, or <code>false</code>
 	 *    otherwise

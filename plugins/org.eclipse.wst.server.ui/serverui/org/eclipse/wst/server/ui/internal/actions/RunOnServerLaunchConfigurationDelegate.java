@@ -62,7 +62,9 @@ public class RunOnServerLaunchConfigurationDelegate extends LaunchConfigurationD
 		IServer server = ServerCore.findServer(serverId);
 		IModule module = null;
 		ModuleArtifactDelegate moduleArtifact = null;
-		ILaunchableAdapter launchableAdapter = ServerPlugin.findLaunchableAdapter(laId);
+		ILaunchableAdapter launchableAdapter = null;
+		if (laId != null)
+			launchableAdapter = ServerPlugin.findLaunchableAdapter(laId);
 		IClient client = ServerPlugin.findClient(clientId);
 		
 		try {

@@ -37,7 +37,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * with.
  * </p>
  * <p>
- * [issue: Equality/identify for modules?]
+ * A module is equal to another module whenever the two ids are equal and the
+ * (optional) project attribute is equal.
  * </p>
  * <p>This interface is not intended to be implemented by clients.</p>
  * <p>

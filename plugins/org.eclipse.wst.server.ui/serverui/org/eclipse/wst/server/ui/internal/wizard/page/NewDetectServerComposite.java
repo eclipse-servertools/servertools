@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerAttributes;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.ui.internal.SWTUtil;
+import org.eclipse.wst.server.ui.internal.viewers.BaseContentProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -51,17 +52,9 @@ public class NewDetectServerComposite extends Composite {
 		public void serverSelected(IServerAttributes server);
 	}
 	
-	public class ServerContentProvider implements IStructuredContentProvider {
-		public void dispose() {
-			// do nothing
-		}
-
+	public class ServerContentProvider extends BaseContentProvider {
 		public Object[] getElements(Object inputElement) {
 			return servers.toArray();
-		}
-
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			// do nothing
 		}
 	}
 	

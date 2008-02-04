@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,14 +10,11 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.Viewer;
-
 import org.eclipse.wst.server.core.IServer;
 /**
  * Monitor port content provider.
  */
-public class PortContentProvider implements IStructuredContentProvider {
+public class PortContentProvider extends BaseContentProvider {
 	protected IServer server;
 
 	public PortContentProvider(IServer server) {
@@ -25,15 +22,7 @@ public class PortContentProvider implements IStructuredContentProvider {
 		this.server = server;
 	}
 
-	public void dispose() {
-		// do nothing
-	}
-
 	public Object[] getElements(Object inputElement) {
 		return server.getServerPorts(null);
-	}
-
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		// do nothing
 	}
 }

@@ -24,6 +24,7 @@ import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.util.PublishAdapter;
 import org.eclipse.wst.server.ui.internal.Trace;
+import org.eclipse.wst.server.ui.internal.viewers.BaseContentProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.events.DisposeEvent;
@@ -64,7 +65,7 @@ public class ServerTableViewer extends TreeViewer {
 	protected boolean animationActive = false;
 	protected boolean stopAnimation = false;
 
-	public class ServerContentProvider implements IStructuredContentProvider, ITreeContentProvider {
+	public class ServerContentProvider extends BaseContentProvider implements ITreeContentProvider {
 		public Object[] getElements(Object element) {
 			List<IServer> list = new ArrayList<IServer>();
 			IServer[] servers = ServerCore.getServers();
@@ -76,14 +77,6 @@ public class ServerTableViewer extends TreeViewer {
 				}
 			}
 			return list.toArray();
-		}
-
-		public void inputChanged(Viewer theViewer, Object oldInput, Object newInput) {
-			// do nothing
-		}
-		
-		public void dispose() {
-			// do nothing
 		}
 
 		public Object[] getChildren(Object element) {

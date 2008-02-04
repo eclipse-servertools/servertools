@@ -16,11 +16,9 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -155,17 +153,9 @@ public class ModuleArtifactComposite extends Dialog {
 			}
 		});
 		
-		tableViewer.setContentProvider(new IStructuredContentProvider() {
+		tableViewer.setContentProvider(new BaseContentProvider() {
 			public Object[] getElements(Object inputElement) {				
 				return moduleArtifacts;
-			}
-
-			public void dispose() {
-				// nothing to do
-			}
-
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-				// nothing to do				
 			}
 		});
 		

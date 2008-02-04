@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.wst.server.core">
+<schema targetNamespace="org.eclipse.wst.server.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appInfo>
+      <appinfo>
          <meta.schema plugin="org.eclipse.wst.server.core" id="clients" name="Clients"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          This extension point provides a way to launch a client for a specific type of resource that is being run on a server.
       </documentation>
@@ -43,9 +43,9 @@
 
    <element name="client">
       <annotation>
-         <appInfo>
+         <appinfo>
             <meta.element labelAttribute="name"/>
-         </appInfo>
+         </appinfo>
       </annotation>
       <complexType>
          <sequence>
@@ -64,9 +64,9 @@
                   specifies the fully qualified name of the Java class that extend &lt;samp&gt;ClientDelegate&lt;/samp&gt;.
 Clieint instances of this type will delegate to instances of this class to launch.
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.ClientDelegate"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="name" type="string">
@@ -74,6 +74,9 @@ Clieint instances of this type will delegate to instances of this class to launc
                <documentation>
                   a translatable name used to identify the client
                </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="description" type="string">
@@ -81,6 +84,9 @@ Clieint instances of this type will delegate to instances of this class to launc
                <documentation>
                   a translatable description of this client
                </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="launchable" type="string">
@@ -88,6 +94,9 @@ Clieint instances of this type will delegate to instances of this class to launc
                <documentation>
                   the fully qualified classname of the launchable object that this client supports
                </documentation>
+               <appinfo>
+                  <meta.attribute kind="java"/>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="priority" type="string">
@@ -101,18 +110,27 @@ Clieint instances of this type will delegate to instances of this class to launc
    </element>
 
    <annotation>
-      <appInfo>
+      <appinfo>
+         <meta.section type="apiInfo"/>
+      </appinfo>
+      <documentation>
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;code&gt;org.eclipse.wst.server.core.model.ClientDelegate&lt;/code&gt; and contains a public 0-arg constructor.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
          <meta.section type="since"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          1.0
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="examples"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          The following is an example of a client extension point:
 
@@ -129,28 +147,12 @@ Clieint instances of this type will delegate to instances of this class to launc
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="apiInfo"/>
-      </appInfo>
-      <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;code&gt;org.eclipse.wst.server.core.model.ClientDelegate&lt;/code&gt; and contains a public 0-arg constructor.
-      </documentation>
-   </annotation>
+
 
    <annotation>
-      <appInfo>
-         <meta.section type="implementation"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
-
-   <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="copyright"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          Copyright (c) 2000, 2005 IBM Corporation and others.&lt;br&gt;
 All rights reserved. This program and the accompanying materials are made 

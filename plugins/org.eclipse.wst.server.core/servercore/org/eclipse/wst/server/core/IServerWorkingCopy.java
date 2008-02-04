@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,9 +16,17 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * A working copy server object used for formulating changes
- * to a server instance ({@link IServer}).
- *
- * <p>This interface is not intended to be implemented by clients.</p>
+ * to a server instance ({@link IServer}). Changes made on a
+ * working copy do not occur (and are not persisted) until a
+ * save() is performed.
+ * <p>
+ * If the client of this working copy calls loadAdapter(), a new instance of
+ * the delegate (ServerDelegate) will be created to help this working copy.
+ * This delegate instance will be used as long as this working copy exists.
+ * </p>
+ * <p>
+ * This interface is not intended to be implemented by clients.
+ * </p>
  * 
  * @since 1.0
  */
@@ -142,10 +150,6 @@ public interface IServerWorkingCopy extends IServerAttributes {
 	 * This method does not apply changes to the server. A publish()
 	 * must be completed to push out after the save to push out any
 	 * changes to the server.
-	 * </p>
-	 * <p>
-	 * [issue: What is lifecycle for ServerWorkingCopyDelegate
-	 * associated with this working copy?]
 	 * </p>
 	 * <p>
 	 * [issue: Since it does not make sense to commit a server

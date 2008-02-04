@@ -129,10 +129,10 @@ public abstract class RuntimeDelegate {
 	public IStatus validate() {
 		if (runtime.getName() == null || runtime.getName().length() == 0)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorRuntimeName, null);
-
+		
 		if (isNameInUse())
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorDuplicateRuntimeName, null);
-	
+		
 		IPath path = runtime.getLocation();
 		if (path == null || path.isEmpty())
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, "", null);

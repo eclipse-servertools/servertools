@@ -457,7 +457,10 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		config.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_SERVER_ID, server.getId());
 		config.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_MODULE_ARTIFACT, moduleArtifact.serialize());
 		config.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_MODULE_ARTIFACT_CLASS, moduleArtifact.getClass().getName());
-		config.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_LAUNCHABLE_ADAPTER_ID, launchableAdapter.getId());
+		if (launchableAdapter != null)
+			config.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_LAUNCHABLE_ADAPTER_ID, launchableAdapter.getId());
+		else
+			config.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_LAUNCHABLE_ADAPTER_ID, (String)null);
 		config.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_CLIENT_ID, client.getId());
 		
 		try {
