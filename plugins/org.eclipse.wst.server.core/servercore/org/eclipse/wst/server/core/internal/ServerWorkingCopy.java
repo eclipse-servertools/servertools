@@ -300,6 +300,30 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		setAttribute(PROP_ENABLED_OPTIONAL_TASKS, (List<String>)null);
 	}
 
+	public void setPublisherEnabled(Publisher pub, boolean enabled) {
+		if (pub == null)
+			return;
+		
+		// copy over all elements except the updated publisher
+		List<String> list = getAttribute(PROP_PUBLISHERS, EMPTY_LIST);
+		List<String> newList = new ArrayList<String>();
+		Iterator<String> iter = list.iterator();
+		while (iter.hasNext()) {
+			String id = iter.next();
+			int ind = id.indexOf(":");
+			if (!pub.getId().equals(id.substring(0, ind)))
+				newList.add(id);
+		}
+		
+		String s = pub.getId() + ":";
+		if (enabled)
+			s += "true";
+		else
+			s += "false";
+		newList.add(s);
+		setAttribute(PROP_PUBLISHERS, newList);
+	}
+
 	/**
 	 * Sets the file where this server instance is serialized.
 	 * 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,6 +55,9 @@ public class ServerPlugin extends Plugin {
 
 	// cached copy of all publish tasks
 	private static List<IPublishTask> publishTasks;
+
+	// cached copy of all publishers
+	private static List<Publisher> publishers;
 
 	//	cached copy of all server monitors
 	private static List<IServerMonitor> monitors;
@@ -351,10 +354,10 @@ public class ServerPlugin extends Plugin {
 		
 		List<Object> list = new ArrayList<Object>();
 		
-		if (element instanceof IRuntime)
+		if (element == null || element instanceof IRuntime)
 			addAll(list, ServerCore.getRuntimes());
-		if (element instanceof IServerAttributes)
-		addAll(list, ServerCore.getServers());
+		if (element == null || element instanceof IServerAttributes)
+			addAll(list, ServerCore.getServers());
 		
 		if (element != null) {
 			if (element instanceof IRuntimeWorkingCopy)
@@ -373,7 +376,7 @@ public class ServerPlugin extends Plugin {
 			if (obj instanceof IRuntime && name.equalsIgnoreCase(((IRuntime)obj).getName()))
 				return true;
 		}
-	
+		
 		return false;
 	}
 
@@ -614,6 +617,73 @@ public class ServerPlugin extends Plugin {
 		publishTasks = list;
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .publishTasks extension point -<-");
+	}
+
+	/**
+	 * Returns an array of all known publishers.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @return a possibly-empty array of publisher instances {@link Publisher}
+	 */
+	public static Publisher[] getPublishers() {
+		if (publishers == null)
+			loadPublishers();
+		Publisher[] pub = new Publisher[publishers.size()];
+		publishers.toArray(pub);
+		return pub;
+	}
+
+	/**
+	 * Returns the publisher with the given id, or <code>null</code>
+	 * if none. This convenience method searches the list of known
+	 * publisher ({@link #getPublishers()}) for the one a matching
+	 * publisher id ({@link Publisher#getId()}). The id may not be null.
+	 *
+	 * @param id the publisher id
+	 * @return the publisher, or <code>null</code> if there is no publishers
+	 *    with the given id
+	 */
+	public static Publisher findPublisher(String id) {
+		if (id == null)
+			throw new IllegalArgumentException();
+		
+		if (publishers == null)
+			loadPublishers();
+		
+		Iterator iterator = publishers.iterator();
+		while (iterator.hasNext()) {
+			Publisher pub = (Publisher) iterator.next();
+			if (id.equals(pub.getId()))
+				return pub;
+		}
+		return null;
+	}
+
+	/**
+	 * Load the publisher extension point.
+	 */
+	private static synchronized void loadPublishers() {
+		if (publishers != null)
+			return;
+		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .publishers extension point ->-");
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "publishers");
+		
+		int size = cf.length;
+		List<Publisher> list = new ArrayList<Publisher>(size);
+		for (int i = 0; i < size; i++) {
+			try {
+				list.add(new Publisher(cf[i]));
+				Trace.trace(Trace.EXTENSION_POINT, "  Loaded publisher: " + cf[i].getAttribute("id"));
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "  Could not load publisher: " + cf[i].getAttribute("id"), t);
+			}
+		}
+		publishers = list;
+		
+		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .publishers extension point -<-");
 	}
 
 	/**
@@ -1101,5 +1171,27 @@ public class ServerPlugin extends Plugin {
 		if (project == null)
 			throw new IllegalArgumentException();
 		return new ProjectProperties(project);
+	}
+
+	/**
+	 * Returns <code>true</code> if a and b match, and <code>false</code> otherwise.
+	 * Strings match if they are equal, if either is null, if either is "*", or if
+	 * one ends with ".*" and the beginning matches the other string.
+	 * 
+	 * @param a a string to match
+	 * @param b another string to match
+	 * @return <code>true</code> if a and b match, and <code>false</code> otherwise
+	 */
+	public static boolean matches(String a, String b) {
+		if (a == null || b == null || a.equals(b) || "*".equals(a) || "*".equals(b)
+			|| (a.endsWith(".*") && b.startsWith(a.substring(0, a.length() - 1)))
+			|| (b.endsWith(".*") && a.startsWith(b.substring(0, b.length() - 1))))
+			return true;
+		if (a.startsWith(b) || b.startsWith(a)) {
+			ServerPlugin.log(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, "Invalid matching rules used: " + a + "/" + b));
+			Trace.trace(Trace.WARNING, "Invalid matching rules used: " + a + "/" + b);
+			return true;
+		}
+		return false;
 	}
 }

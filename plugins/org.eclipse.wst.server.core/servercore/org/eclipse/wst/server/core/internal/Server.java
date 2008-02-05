@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -66,6 +66,7 @@ public class Server extends Base implements IServer {
 	protected static final String MODULE_LIST = "modules";
 	protected static final String PROP_DISABLED_PERFERRED_TASKS = "disabled-preferred-publish-tasks";
 	protected static final String PROP_ENABLED_OPTIONAL_TASKS = "enabled-optional-publish-tasks";
+	public static final String PROP_PUBLISHERS = "publishers";
 	public static final String PROP_AUTO_PUBLISH_TIME = "auto-publish-time";
 	public static final String PROP_AUTO_PUBLISH_SETTING = "auto-publish-setting";
 	public static final String PROP_START_TIMEOUT = "start-timeout";
@@ -386,6 +387,37 @@ public class Server extends Base implements IServer {
     */
 	public List<String> getEnabledOptionalPublishOperationIds() {
 		return getAttribute(PROP_ENABLED_OPTIONAL_TASKS, EMPTY_LIST);
+	}
+
+	/**
+    * Returns a list of id (String) of publishers and state (true or false).
+    * 
+    * @return a list of publishers
+    */
+	public List<String> getPublisherIds() {
+		return getAttribute(PROP_PUBLISHERS, EMPTY_LIST);		
+	}
+
+	public boolean isPublisherEnabled(Publisher pub) {
+		if (pub == null)
+			return false;
+		
+		// check for existing enablement
+		List<String> list = getAttribute(PROP_PUBLISHERS, EMPTY_LIST);
+		Iterator<String> iter = list.iterator();
+		while (iter.hasNext()) {
+			String id = iter.next();
+			int ind = id.indexOf(":");
+			boolean enabled = false;
+			if ("true".equals(id.substring(ind+1)))
+				enabled = true;
+			id = id.substring(0, ind);
+			if (pub.getId().equals(id))
+				return enabled;
+		}
+		
+		// otherwise use the default enablement
+		return true;
 	}
 
 	/**
@@ -1033,6 +1065,56 @@ public class Server extends Base implements IServer {
 	}
 
 	/**
+	 * Returns all the publishers that are available with this server,
+	 * whether or not they are currently enabled.
+	 * 
+	 * @return a possibly empty array of Publishers
+	 */
+	public Publisher[] getAllPublishers() {
+		List<Publisher> pubs = new ArrayList<Publisher>();
+		
+		String serverTypeId = getServerType().getId();
+		
+		Publisher[] publishers = ServerPlugin.getPublishers();
+		if (publishers != null) {
+			int size = publishers.length;
+			for (int i = 0; i < size; i++) {
+				Publisher pub = publishers[i];
+				if (pub.supportsType(serverTypeId)) {
+					pubs.add(pub);
+				}
+			}
+		}
+		
+		return pubs.toArray(new Publisher[pubs.size()]);
+	}
+
+	/**
+	 * Returns the publishers that have been targeted to this server and
+	 * are enabled.
+	 * 
+	 * @return a possibly empty array of Publishers
+	 */
+	public Publisher[] getEnabledPublishers() {
+		List<Publisher> pubs = new ArrayList<Publisher>();
+		
+		String serverTypeId = getServerType().getId();
+		
+		Publisher[] publishers = ServerPlugin.getPublishers();
+		if (publishers != null) {
+			int size = publishers.length;
+			for (int i = 0; i < size; i++) {
+				Publisher pub = publishers[i];
+				if (pub.supportsType(serverTypeId) && isPublisherEnabled(pub)) {
+					pubs.add(pub);
+				}
+			}
+		}
+		
+		return pubs.toArray(new Publisher[pubs.size()]);
+	}
+
+	/**
 	 * Returns all publish tasks that have been targeted to this server type.
 	 * The tasks will not be initialized with a task model. 
 	 * 
@@ -1303,7 +1385,7 @@ public class Server extends Base implements IServer {
 	 */
 	public void start(String mode2, IProgressMonitor monitor) throws CoreException {
 		Trace.trace(Trace.FINEST, "Starting server: " + toString() + ", launchMode: " + mode2);
-	
+		
 		// make sure that the delegate is loaded and the server state is correct
 		loadAdapter(ServerBehaviourDelegate.class, monitor);
 		
@@ -1404,17 +1486,18 @@ public class Server extends Base implements IServer {
 	public void restart(final String mode2, final IProgressMonitor monitor) {
 		if (getServerType() == null || getServerState() == STATE_STOPPED)
 			return;
-	
+		
 		Trace.trace(Trace.FINEST, "Restarting server: " + getName());
-	
+		
 		try {
 			try {
-				getBehaviourDelegate(null).restart(mode2);
+				getBehaviourDelegate(monitor).restart(mode2);
 				return;
 			} catch (CoreException ce) {
-				Trace.trace(Trace.SEVERE, "Error calling delegate restart() " + toString());
+				if (ce.getStatus().getCode() != 10)
+					Trace.trace(Trace.SEVERE, "Error calling delegate restart() " + toString());
 			}
-		
+			
 			// add listener to start it as soon as it is stopped
 			addServerListener(new IServerListener() {
 				public void serverChanged(ServerEvent event) {
@@ -1423,7 +1506,7 @@ public class Server extends Base implements IServer {
 					if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
 						if (server.getServerState() == STATE_STOPPED) {
 							server.removeServerListener(this);
-
+							
 							// restart in a quarter second (give other listeners a chance
 							// to hear the stopped message)
 							Thread t = new Thread() {
@@ -1521,6 +1604,19 @@ public class Server extends Base implements IServer {
 		// make sure that the delegate is loaded and the server state is correct
 		loadAdapter(ServerBehaviourDelegate.class, null);
 		
+		/*if (((ServerType)getServerType()).startBeforePublish() &&
+				(ServerCore.isAutoPublishing() || this.getAutoPublishSetting() == AUTO_PUBLISH_ENABLE)) {
+			// TODO
+			publish(IServer.PUBLISH_INCREMENTAL, null);
+			PublishServerJob publishJob = new PublishServerJob(this, IServer.PUBLISH_INCREMENTAL, false);
+			publishJob.schedule();
+			try {
+				publishJob.join();
+			} catch (InterruptedException e) {
+				// ignore
+			}
+		}*/
+		
 		class Operation {
 			public boolean isDone;
 			public IServerListener listener;
@@ -1530,8 +1626,23 @@ public class Server extends Base implements IServer {
 					return;
 				
 				isDone = true;
-				opListener.done(status);
 				removeServerListener(listener);
+				
+				/*if (!((ServerType)getServerType()).startBeforePublish() &&
+						(ServerCore.isAutoPublishing() || Server.this.getAutoPublishSetting() == AUTO_PUBLISH_ENABLE)) {
+					// TODO
+					publish(IServer.PUBLISH_INCREMENTAL, null);
+					PublishServerJob publishJob = new PublishServerJob(Server.this, IServer.PUBLISH_INCREMENTAL, false);
+					publishJob.schedule();
+					try {
+						publishJob.join();
+					} catch (InterruptedException e) {
+						// ignore
+					}
+				}*/
+				
+				opListener.done(status);
+				
 			}
 		}
 		final Operation operation = new Operation();
@@ -1762,10 +1873,11 @@ public class Server extends Base implements IServer {
 				getBehaviourDelegate(null).restart(mode2);
 				return;
 			} catch (CoreException ce) {
-				Trace.trace(Trace.SEVERE, "Error calling delegate restart() " + toString());
+				if (ce.getStatus().getCode() != 10)
+					Trace.trace(Trace.SEVERE, "Error calling delegate restart() " + toString());
 				removeServerListener(curListener);
 			}
-		
+			
 			final String mode3 = mode2;
 			// add listener to start it as soon as it is stopped
 			addServerListener(new IServerListener() {

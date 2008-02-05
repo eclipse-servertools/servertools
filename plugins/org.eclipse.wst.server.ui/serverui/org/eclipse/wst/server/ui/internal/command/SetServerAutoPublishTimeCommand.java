@@ -27,7 +27,7 @@ public class SetServerAutoPublishTimeCommand extends ServerCommand {
 	 * @param time a publish time
 	 */
 	public SetServerAutoPublishTimeCommand(IServerWorkingCopy server, int time) {
-		super(server, Messages.serverEditorOverviewAutoPublishCommand);
+		super(server, Messages.serverEditorOverviewPublishCommand);
 		this.time = time;
 	}
 

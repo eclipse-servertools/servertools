@@ -39,7 +39,6 @@ public class Messages extends NLS {
 	public static String errorPublishNoRuntime;
 	public static String errorPublishNoConfiguration;
 	public static String errorNoConfiguration;
-	public static String publishingStatusOk;
 	public static String publishingStatusInfo;
 	public static String publishingStatusWarning;
 	public static String publishingStatusError;

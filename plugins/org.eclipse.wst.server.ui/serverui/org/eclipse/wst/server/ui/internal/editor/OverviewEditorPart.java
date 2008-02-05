@@ -13,6 +13,7 @@ package org.eclipse.wst.server.ui.internal.editor;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
@@ -32,6 +33,9 @@ import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
+import org.eclipse.jface.viewers.CheckboxTableViewer;
+import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -45,6 +49,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -58,6 +63,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.*;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.Publisher;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.internal.ServerType;
@@ -70,6 +76,8 @@ import org.eclipse.wst.server.ui.internal.SWTUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.command.*;
+import org.eclipse.wst.server.ui.internal.viewers.BaseContentProvider;
+import org.eclipse.wst.server.ui.internal.viewers.BaseLabelProvider;
 import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
@@ -85,6 +93,8 @@ public class OverviewEditorPart extends ServerEditorPart {
 	protected Button autoPublishDisable;
 	protected Button autoPublishEnable;
 	protected Spinner autoPublishTime;
+	protected Table publishersTable;
+	protected CheckboxTableViewer publishersViewer;
 	protected Spinner startTimeoutSpinner;
 	protected Spinner stopTimeoutSpinner;
 	protected ManagedForm managedForm;
@@ -96,6 +106,27 @@ public class OverviewEditorPart extends ServerEditorPart {
 	protected PropertyChangeListener listener;
 
 	protected IRuntimeLifecycleListener runtimeListener;
+
+	class PublisherContentProvider extends BaseContentProvider {
+		protected Publisher[] pubs;
+		public PublisherContentProvider(Publisher[] pubs) {
+			this.pubs = pubs;
+		}
+
+		public Object[] getElements(Object inputElement) {
+			return pubs;
+		}
+	}
+
+	class PublishLabelProvider extends BaseLabelProvider {
+		public String getText(Object element) {
+			if (element instanceof Publisher) {
+				Publisher pub = (Publisher) element;
+				return pub.getName();
+			}
+			return "";
+		}
+	}
 
 	/**
 	 * OverviewEditorPart constructor comment.
@@ -184,6 +215,23 @@ public class OverviewEditorPart extends ServerEditorPart {
 					Integer time = (Integer)event.getNewValue();
 					stopTimeoutSpinner.setSelection(time.intValue());
 					SWTUtil.setSpinnerTooltip(stopTimeoutSpinner);
+				} else if (Server.PROP_PUBLISHERS.equals(event.getPropertyName())) {
+					if (publishersViewer == null)
+						return;
+					
+					List<String> list = (List<String>) event.getNewValue();
+					Iterator<String> iter = list.iterator();
+					while (iter.hasNext()) {
+						String id = iter.next();
+						int ind = id.indexOf(":");
+						boolean enabled = false;
+						if ("true".equals(id.substring(ind+1)))
+							enabled = true;
+						id = id.substring(0, ind);
+						Publisher pub = ServerPlugin.findPublisher(id);
+						if (pub != null)
+							publishersViewer.setChecked(pub, enabled);
+					}
 				}
 				updating = false;
 			}
@@ -246,7 +294,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 		rightColumnComp.setLayout(layout);
 		rightColumnComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 		
-		createAutoPublishSection(rightColumnComp, toolkit);
+		createPublishSection(rightColumnComp, toolkit);
 		createTimeoutSection(rightColumnComp, toolkit);
 		
 		insertSections(rightColumnComp, "org.eclipse.wst.server.editor.overview.right");
@@ -529,10 +577,10 @@ public class OverviewEditorPart extends ServerEditorPart {
 		}
 	}
 
-	protected void createAutoPublishSection(Composite rightColumnComp, FormToolkit toolkit) {
+	protected void createPublishSection(Composite rightColumnComp, FormToolkit toolkit) {
 		Section section = toolkit.createSection(rightColumnComp, ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
-		section.setText(Messages.serverEditorOverviewAutoPublishSection);
-		section.setDescription(Messages.serverEditorOverviewAutoPublishDescription);
+		section.setText(Messages.serverEditorOverviewPublishSection);
+		section.setDescription(Messages.serverEditorOverviewPublishDescription);
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 
 		Composite composite = toolkit.createComposite(section);
@@ -562,14 +610,14 @@ public class OverviewEditorPart extends ServerEditorPart {
 			autoPublishDisable.setSelection(publishSetting == Server.AUTO_PUBLISH_DISABLE);
 			whs.setHelp(autoPublishDisable, ContextIds.EDITOR_AUTOPUBLISH_DISABLE);
 			
-			autoPublishEnable = toolkit.createButton(composite, Messages.serverEditorOverviewAutoPublishOverride, SWT.RADIO);
+			autoPublishEnable = toolkit.createButton(composite, Messages.serverEditorOverviewAutoPublishEnabled, SWT.RADIO);
 			autoPublishEnable.setSelection(publishSetting == Server.AUTO_PUBLISH_ENABLE);
 			data = new GridData(GridData.FILL_HORIZONTAL);
 			data.horizontalSpan = 2;
 			autoPublishEnable.setLayoutData(data);
 			whs.setHelp(autoPublishEnable, ContextIds.EDITOR_AUTOPUBLISH_ENABLE);
 			
-			final Label autoPublishTimeLabel = createLabel(toolkit,composite, Messages.serverEditorOverviewAutoPublishOverrideInterval);
+			final Label autoPublishTimeLabel = createLabel(toolkit,composite, Messages.serverEditorOverviewAutoPublishEnabledInterval);
 			data = new GridData();
 			data.horizontalIndent = 20;
 			autoPublishTimeLabel.setLayoutData(data);
@@ -624,9 +672,47 @@ public class OverviewEditorPart extends ServerEditorPart {
 					validate();
 				}
 			});
+			
+			// publishers
+			Publisher[] pubs = ((Server)server).getAllPublishers();
+			if (pubs != null) {
+				Label label = toolkit.createLabel(composite, Messages.serverEditorOverviewPublishers);
+				data = new GridData(GridData.FILL_HORIZONTAL);
+				data.horizontalSpan = 2;
+				label.setLayoutData(data);
+				
+				publishersTable = toolkit.createTable(composite, SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.CHECK);
+				publishersTable.setHeaderVisible(false);
+				publishersTable.setLinesVisible(false);
+				//whs.setHelp(publishers, ContextIds.CONFIGURATION_EDITOR_PORTS_LIST); TODO
+				
+				data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
+				data.horizontalSpan = 2;
+				data.heightHint = 80;
+				publishersTable.setLayoutData(data);
+				
+				publishersViewer = new CheckboxTableViewer(publishersTable);
+				publishersViewer.setColumnProperties(new String[] {"name"});
+				publishersViewer.setContentProvider(new PublisherContentProvider(pubs));
+				publishersViewer.setLabelProvider(new PublishLabelProvider());
+				publishersViewer.setInput("root");
+				
+				publishersViewer.addCheckStateListener(new ICheckStateListener() {
+					public void checkStateChanged(CheckStateChangedEvent event) {
+						Object element = event.getElement();
+						if (element == null || !(element instanceof Publisher))
+							return;
+						if (updating)
+							return;
+						updating = true;
+						execute(new SetPublisherEnablementCommand(getServer(), (Publisher) element, event.getChecked()));
+						updating = false;
+					}
+				});
+			}
 		}
 	}
-	
+
 	protected void createTimeoutSection(Composite rightColumnComp, FormToolkit toolkit) {
 		Section section = toolkit.createSection(rightColumnComp, ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
 		section.setText(Messages.serverEditorOverviewTimeoutSection);
@@ -877,7 +963,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 		mForm.getMessageManager().removeMessage("name", serverName);
 		if (server != null && serverName != null) {
 			if (ServerPlugin.isNameInUse(server, serverName.getText().trim()))
-				mForm.getMessageManager().addMessage("name", Messages.errorDuplicateName, null, IMessageProvider.WARNING, serverName);
+				mForm.getMessageManager().addMessage("name", Messages.errorDuplicateName, null, IMessageProvider.ERROR, serverName);
 		}
 		
 		if (serverConfiguration != null) {
@@ -885,7 +971,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			if (server != null && server.getServerType() != null && server.getServerType().hasServerConfiguration()) {
 				IFolder folder = getServer().getServerConfiguration();
 				if (folder == null || !folder.exists())
-					mForm.getMessageManager().addMessage("config", Messages.errorMissingConfiguration, null, IMessageProvider.WARNING, serverConfiguration);
+					mForm.getMessageManager().addMessage("config", Messages.errorMissingConfiguration, null, IMessageProvider.ERROR, serverConfiguration);
 			}
 		}
 		
