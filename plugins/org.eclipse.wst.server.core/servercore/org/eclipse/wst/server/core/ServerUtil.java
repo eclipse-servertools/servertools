@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,7 @@ import org.eclipse.wst.server.core.internal.*;
  * common operations on server artifacts.
  * <p>
  * This class provides all its functionality through static members.
- * It is not intended to be subclassed or instantiated.
+ * It is not intended to be sub-classed or instantiated.
  * </p>
  * @since 1.0
  */
@@ -264,9 +264,9 @@ public class ServerUtil {
 
 	private static boolean isSupportedModule(IModuleType moduleType, String type, String version) {
 		String type2 = moduleType.getId();
-		if (matches(type, type2)) {
+		if (ServerPlugin.matches(type, type2)) {
 			String version2 = moduleType.getVersion();
-			if (matches(version, version2))
+			if (ServerPlugin.matches(version, version2))
 				return true;
 		}
 		return false;
@@ -284,18 +284,10 @@ public class ServerUtil {
 		if (moduleType == null || mt == null)
 			throw new IllegalArgumentException();
 		
-		if (matches(mt.getId(), moduleType.getId()) &&
-				matches(mt.getVersion(), moduleType.getVersion()))
+		if (ServerPlugin.matches(mt.getId(), moduleType.getId()) &&
+				ServerPlugin.matches(mt.getVersion(), moduleType.getVersion()))
 			return true;
 		
-		return false;
-	}
-
-	private static boolean matches(String a, String b) {
-		if (a == null || b == null || "*".equals(a) || "*".equals(b) || a.startsWith(b) || b.startsWith(a)
-			|| (a.endsWith(".*") && b.startsWith(a.substring(0, a.length() - 1)))
-			|| (b.endsWith(".*") && a.startsWith(b.substring(0, b.length() - 1))))
-			return true;
 		return false;
 	}
 
@@ -454,27 +446,6 @@ public class ServerUtil {
 		}
 		return name;
 	}
-
-	/**
-	 * Returns an unused file in the given project.
-	 * 
-	 * @param project a project
-	 * @param type a server type
-	 * @return an unused file within the given project
-	 */
-	/*public static IFile getUnusedServerFile(IProject project, IServerType type) {
-		if (project == null || type == null)
-			throw new IllegalArgumentException();
-		
-		String typeName = getValidFileName(type.getName());
-		String name = NLS.bind(Messages.defaultServerName3, typeName)+ "."  + Server.FILE_EXTENSION;
-		int i = 2;
-		while (isFileNameInUse(project, name)) {
-			name = NLS.bind(Messages.defaultServerName4, new String[] {typeName, i + ""}) + "."  + Server.FILE_EXTENSION;
-			i++;
-		}
-		return project.getFile(name);
-	}*/
 
 	/**
 	 * Returns an unused file in the given project.
