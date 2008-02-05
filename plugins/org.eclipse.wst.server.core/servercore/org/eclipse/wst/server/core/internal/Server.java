@@ -1075,12 +1075,16 @@ public class Server extends Base implements IServer {
 		
 		String serverTypeId = getServerType().getId();
 		
+		TaskModel taskModel = new TaskModel();
+		taskModel.putObject(TaskModel.TASK_SERVER, this);
+		
 		Publisher[] publishers = ServerPlugin.getPublishers();
 		if (publishers != null) {
 			int size = publishers.length;
 			for (int i = 0; i < size; i++) {
 				Publisher pub = publishers[i];
 				if (pub.supportsType(serverTypeId)) {
+					pub.setTaskModel(taskModel);
 					pubs.add(pub);
 				}
 			}
@@ -1100,12 +1104,16 @@ public class Server extends Base implements IServer {
 		
 		String serverTypeId = getServerType().getId();
 		
+		TaskModel taskModel = new TaskModel();
+		taskModel.putObject(TaskModel.TASK_SERVER, this);
+		
 		Publisher[] publishers = ServerPlugin.getPublishers();
 		if (publishers != null) {
 			int size = publishers.length;
 			for (int i = 0; i < size; i++) {
 				Publisher pub = publishers[i];
 				if (pub.supportsType(serverTypeId) && isPublisherEnabled(pub)) {
+					pub.setTaskModel(taskModel);
 					pubs.add(pub);
 				}
 			}

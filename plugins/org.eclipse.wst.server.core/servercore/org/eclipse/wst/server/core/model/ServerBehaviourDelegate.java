@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,15 +15,12 @@ import java.util.Iterator;
 import java.util.List;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.internal.ExternalModule;
-import org.eclipse.wst.server.core.internal.Messages;
-import org.eclipse.wst.server.core.internal.ProgressUtil;
-import org.eclipse.wst.server.core.internal.Server;
-import org.eclipse.wst.server.core.internal.ServerPlugin;
-import org.eclipse.wst.server.core.internal.Trace;
+import org.eclipse.wst.server.core.IServerWorkingCopy;
+import org.eclipse.wst.server.core.internal.*;
 /**
  * A server delegate provides the implementation for various 
  * generic and server-type-specific operations for a specific type of server.
@@ -46,8 +43,8 @@ import org.eclipse.wst.server.core.internal.Trace;
  * to extend the <code>serverTypes</code> extension point.
  * </p>
  * 
- * @see org.eclipse.wst.server.core.IServer
- * @see org.eclipse.wst.server.core.IServerWorkingCopy
+ * @see IServer
+ * @see IServerWorkingCopy
  * @since 1.0
  */
 public abstract class ServerBehaviourDelegate {
@@ -153,7 +150,7 @@ public abstract class ServerBehaviourDelegate {
 	 * it changes.
 	 * 
 	 * @param mode the mode in which a server is running, one of the mode constants
-	 *    defined by {@link org.eclipse.debug.core.ILaunchManager}
+	 *    defined by {@link ILaunchManager}
 	 */
 	protected final void setMode(String mode) {
 		server.setMode(mode);
@@ -388,11 +385,11 @@ public abstract class ServerBehaviourDelegate {
 	 * actions will be used.
 	 * 
 	 * @param launchMode the mode to restart in, one of the mode constants
-	 *    defined by {@link org.eclipse.debug.core.ILaunchManager}
+	 *    defined by {@link ILaunchManager}
 	 * @throws CoreException if there was a problem restarting
 	 */
 	public void restart(String launchMode) throws CoreException {
-		 throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, "Could not restart", null));
+		throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 10, "Could not restart", null));
 	}
 
 	/**
@@ -635,60 +632,54 @@ public abstract class ServerBehaviourDelegate {
 		if (monitor.isCanceled())
 			return Status.CANCEL_STATUS;
 		
-		// start publishing
-		Trace.trace(Trace.FINEST, "Calling publishStart()");
 		try {
+			Trace.trace(Trace.FINEST, "Starting publish");
 			publishStart(ProgressUtil.getSubMonitorFor(monitor, 1000));
-		} catch (CoreException ce) {
-			Trace.trace(Trace.INFO, "CoreException publishing to " + toString(), ce);
-			return ce.getStatus();
-		}
-		
-		// perform tasks
-		if (!monitor.isCanceled()) {
+			
+			if (monitor.isCanceled())
+				return Status.CANCEL_STATUS;
+			
+			// execute tasks
 			MultiStatus taskStatus = performTasks(tasks, monitor);
 			if (taskStatus != null && !taskStatus.isOK())
 				tempMulti.addAll(taskStatus);
-		}
-		
-		// publish the server
-		try {
-			if (!monitor.isCanceled())
-				publishServer(kind, ProgressUtil.getSubMonitorFor(monitor, 1000));
+			
+			executePublishers(kind, monitor, null);
+			
+			if (monitor.isCanceled())
+				return Status.CANCEL_STATUS;
+			
+			// publish the server
+			publishServer(kind, ProgressUtil.getSubMonitorFor(monitor, 1000));
+			
+			if (monitor.isCanceled())
+				return Status.CANCEL_STATUS;
+			
+			// publish modules
+			publishModules(kind, moduleList, deltaKindList, tempMulti, monitor);
+			
+			if (monitor.isCanceled())
+				return Status.CANCEL_STATUS;
+			
+			monitor.done();
 		} catch (CoreException ce) {
 			Trace.trace(Trace.INFO, "CoreException publishing to " + toString(), ce);
-			tempMulti.add(ce.getStatus());
+			return ce.getStatus();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error publishing configuration to " + toString(), e);
+			Trace.trace(Trace.SEVERE, "Error publishing  to " + toString(), e);
 			tempMulti.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e));
-		}
-		
-		// publish modules
-		if (!monitor.isCanceled()) {
+		} finally {
+			// end the publishing
 			try {
-				publishModules(kind, moduleList, deltaKindList, tempMulti, monitor);
+				publishFinish(ProgressUtil.getSubMonitorFor(monitor, 500));
+			} catch (CoreException ce) {
+				Trace.trace(Trace.INFO, "CoreException publishing to " + toString(), ce);
+				tempMulti.add(ce.getStatus());
 			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Error while publishing modules", e);
+				Trace.trace(Trace.SEVERE, "Error stopping publish to " + toString(), e);
 				tempMulti.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e));
 			}
 		}
-		
-		// end the publishing
-		Trace.trace(Trace.FINEST, "Calling publishFinish()");
-		try {
-			publishFinish(ProgressUtil.getSubMonitorFor(monitor, 500));
-		} catch (CoreException ce) {
-			Trace.trace(Trace.INFO, "CoreException publishing to " + toString(), ce);
-			tempMulti.add(ce.getStatus());
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error stopping publish to " + toString(), e);
-			tempMulti.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e));
-		}
-		
-		if (monitor.isCanceled())
-			return Status.CANCEL_STATUS;
-		
-		monitor.done();
 		
 		Trace.trace(Trace.FINEST, "--<-- Done publishing --<--");
 		
@@ -697,7 +688,7 @@ public abstract class ServerBehaviourDelegate {
 		
 		MultiStatus multi = null;
 		if (tempMulti.getSeverity() == IStatus.OK)
-			multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.publishingStatusOk, null);
+			return Status.OK_STATUS;
 		else if (tempMulti.getSeverity() == IStatus.INFO)
 			multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.publishingStatusInfo, null);
 		else if (tempMulti.getSeverity() == IStatus.WARNING)
@@ -851,6 +842,43 @@ public abstract class ServerBehaviourDelegate {
 	 */
 	protected final PublishOperation[] getTasks(int kind, List moduleList, List kindList) {
 		return server.getTasks(kind, moduleList, kindList);
+	}
+
+	/**
+	 * Execute publishers.
+	 * 
+	 * @param kind the publish kind
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @param info the IAdaptable (or <code>null</code>) provided by the
+	 *    caller in order to supply UI information for prompting the
+	 *    user if necessary. When this parameter is not <code>null</code>,
+	 *    it should minimally contain an adapter for the
+	 *    org.eclipse.swt.widgets.Shell.class
+	 * @throws CoreException
+	 */
+	protected void executePublishers(int kind, IProgressMonitor monitor, IAdaptable info) throws CoreException {
+		Publisher[] publishers = ((Server)getServer()).getEnabledPublishers();
+		int size = publishers.length;
+		Trace.trace(Trace.FINEST, "Executing publishers: " + size);
+		
+		if (size == 0)
+			return;
+		
+		for (int i = 0; i < size; i++) {
+			Publisher pub = publishers[i];
+			monitor.subTask(NLS.bind(Messages.taskPerforming, pub.getName()));
+			try {
+				pub.execute(kind, ProgressUtil.getSubMonitorFor(monitor, 500), info);
+			} catch (CoreException ce) {
+				Trace.trace(Trace.SEVERE, "Publisher failed", ce);
+				throw ce;
+			}
+			
+			// return early if the monitor has been canceled
+			if (monitor.isCanceled())
+				return;
+		}
 	}
 
 	/**

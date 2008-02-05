@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.core.model.PublisherDelegate;
 /**
  * 
@@ -90,6 +91,14 @@ public class Publisher {
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, "Error in delegate", e); // TODO
+		}
+	}
+
+	public void setTaskModel(TaskModel taskModel) {
+		try {
+			getDelegate().setTaskModel(taskModel);
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
 		}
 	}
 
