@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,9 +13,9 @@ package org.eclipse.wst.server.ui.tests.dialog;
 import junit.framework.TestCase;
 
 import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.wst.server.ui.internal.wizard.ModifyModulesWizard;
 import org.eclipse.wst.server.ui.internal.wizard.NewRuntimeWizard;
 import org.eclipse.wst.server.ui.internal.wizard.NewServerWizard;
@@ -25,7 +25,7 @@ public class WizardTestCase extends TestCase {
 	public static void testRoS(IModule module) {
 		Shell shell = UITestHelper.getShell();
 		RunOnServerWizard ros = new RunOnServerWizard(module, ILaunchManager.RUN_MODE, null);
-		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, ros);
+		WizardDialog dialog = new WizardDialog(shell, ros);
 		UITestHelper.assertDialog(dialog);
 	}
 
@@ -36,21 +36,21 @@ public class WizardTestCase extends TestCase {
 	public void testModifyModulesWizard() throws Exception {
 		Shell shell = UITestHelper.getShell();
 		ModifyModulesWizard wiz = new ModifyModulesWizard(null);
-		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wiz);
+		WizardDialog dialog = new WizardDialog(shell, wiz);
 		UITestHelper.assertDialog(dialog);
 	}
 
 	public void testNewRuntimeWizard() throws Exception {
 		Shell shell = UITestHelper.getShell();
 		NewRuntimeWizard wiz = new NewRuntimeWizard();
-		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wiz);
+		WizardDialog dialog = new WizardDialog(shell, wiz);
 		UITestHelper.assertDialog(dialog);
 	}
 
 	public void testNewServerWizard() throws Exception {
 		Shell shell = UITestHelper.getShell();
 		NewServerWizard wiz = new NewServerWizard();
-		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wiz);
+		WizardDialog dialog = new WizardDialog(shell, wiz);
 		UITestHelper.assertDialog(dialog);
 	}
 }

@@ -87,7 +87,6 @@ public class AllTests {
 		suite.addTest(new OrderedTestSuite(ModuleFolderTestCase.class));
 		suite.addTest(new OrderedTestSuite(ModuleResourceTestCase.class));
 		suite.addTest(new OrderedTestSuite(ModuleResourceDeltaTestCase.class));
-		suite.addTest(new OrderedTestSuite(ModuleResourceDeltaVisitorTestCase.class));
 		suite.addTest(new OrderedTestSuite(ModuleArtifactAdapterDelegateTestCase.class));
 		suite.addTest(new OrderedTestSuite(LaunchableAdapterDelegateTestCase.class));
 		suite.addTest(new OrderedTestSuite(ModuleFactoryDelegateTestCase.class));
