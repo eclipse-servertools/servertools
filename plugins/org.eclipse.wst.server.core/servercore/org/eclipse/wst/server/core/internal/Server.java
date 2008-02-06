@@ -2228,6 +2228,11 @@ public class Server extends Base implements IServer {
 		configuration = null;
 		if (configPath != null)
 			configuration = ResourcesPlugin.getWorkspace().getRoot().getFolder(new Path(configPath));
+
+		// for migration from WTP 2.0 -> WTP 3.0
+		int autoPubSetting = getAttribute(PROP_AUTO_PUBLISH_SETTING, AUTO_PUBLISH_ENABLE);
+		if (autoPubSetting == 0)
+			map.put(PROP_AUTO_PUBLISH_SETTING, AUTO_PUBLISH_ENABLE);
 	}
 
 	protected void setInternal(ServerWorkingCopy wc) {
