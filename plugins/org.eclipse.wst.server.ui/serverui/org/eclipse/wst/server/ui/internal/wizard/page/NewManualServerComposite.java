@@ -332,14 +332,21 @@ public class NewManualServerComposite extends Composite {
 		}
 		
 		try {
-			server = cache.getServer(serverType, isLocalhost, null);
+			// try to create runtime first
+			IRuntime run = null;
+			if (serverType.hasRuntime()) {
+				runtime = null;
+				updateRuntimes(serverType, isLocalhost);
+				run = getDefaultRuntime();
+			}
+			server = cache.createServer(serverType, run, isLocalhost, null);
 			if (server != null) {
 				server.setHost(host);
 				ServerUtil.setServerDefaultName(server);
 				
 				if (serverType.hasRuntime() && server.getRuntime() == null) {
 					runtime = null;
-					updateRuntimes(serverType);
+					updateRuntimes(serverType, isLocalhost);
 					setRuntime(getDefaultRuntime());
 					
 					if (server.getServerType() != null && server.getServerType().hasServerConfiguration() && !runtime.getLocation().isEmpty())
@@ -377,7 +384,7 @@ public class NewManualServerComposite extends Composite {
 		return runtimes[0];
 	}
 
-	protected void updateRuntimes(IServerType serverType) {
+	protected void updateRuntimes(IServerType serverType, boolean isLocalhost) {
 		if (serverType == null)
 			return;
 		
@@ -385,12 +392,12 @@ public class NewManualServerComposite extends Composite {
 		runtimes = ServerUIPlugin.getRuntimes(runtimeType);
 		newRuntime = null;
 		
-		if (server != null && runtimes != null) {
+		if (runtimes != null) {
 			List<IRuntime> runtimes2 = new ArrayList<IRuntime>();
 			int size = runtimes.length;
 			for (int i = 0; i < size; i++) {
 				IRuntime runtime2 = runtimes[i];
-				if (!SocketUtil.isLocalhost(server.getHost()) || !runtime2.isStub())
+				if (isLocalhost || !runtime2.isStub())
 					runtimes2.add(runtime2);
 			}
 			runtimes = new IRuntime[runtimes2.size()];
@@ -429,7 +436,7 @@ public class NewManualServerComposite extends Composite {
 			return;
 		}
 		
-		updateRuntimes(serverType);
+		updateRuntimes(serverType, !SocketUtil.isLocalhost(server.getHost()));
 		
 		int size = runtimes.length;
 		String[] items = new String[size];

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,20 +45,17 @@ public class ServerCreationCache {
 	}
 
 	/**
-	 * Returns a server, from the cache if possible and otherwise by creating
+	 * Create a new server and put it in the cache.
 	 *
 	 * @param type the server type
+	 * @param runtime a runtime, or null
 	 * @param isLocalhost true if the server is local
 	 * @param monitor a progress monitor
 	 * @return a server working copy
 	 * @throws CoreException if anything goes wrong
 	 */
-	public IServerWorkingCopy getServer(IServerType type, boolean isLocalhost, IProgressMonitor monitor) throws CoreException {
-		IServerWorkingCopy server = getCachedServer(type, isLocalhost);
-		if (server != null)
-			return server;
-		
-		server = type.createServer(null, null, (IRuntime)null, monitor);
+	public IServerWorkingCopy createServer(IServerType type, IRuntime runtime, boolean isLocalhost, IProgressMonitor monitor) throws CoreException {
+		IServerWorkingCopy server = type.createServer(null, null, runtime, monitor);
 		cache.put(getKey(type, isLocalhost), server);
 		return server;
 	}
