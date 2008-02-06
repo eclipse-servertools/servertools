@@ -1502,8 +1502,10 @@ public class Server extends Base implements IServer {
 				getBehaviourDelegate(monitor).restart(mode2);
 				return;
 			} catch (CoreException ce) {
-				if (ce.getStatus().getCode() != 10)
+				if (ce.getStatus().getSeverity() == IStatus.ERROR)
 					Trace.trace(Trace.SEVERE, "Error calling delegate restart() " + toString());
+				else
+					Trace.trace(Trace.FINER, "Error calling delegate restart() " + toString());
 			}
 			
 			// add listener to start it as soon as it is stopped
@@ -1881,8 +1883,10 @@ public class Server extends Base implements IServer {
 				getBehaviourDelegate(null).restart(mode2);
 				return;
 			} catch (CoreException ce) {
-				if (ce.getStatus().getCode() != 10)
+				if (ce.getStatus().getSeverity() == IStatus.ERROR)
 					Trace.trace(Trace.SEVERE, "Error calling delegate restart() " + toString());
+				else
+					Trace.trace(Trace.FINER, "Error calling delegate restart() " + toString());
 				removeServerListener(curListener);
 			}
 			

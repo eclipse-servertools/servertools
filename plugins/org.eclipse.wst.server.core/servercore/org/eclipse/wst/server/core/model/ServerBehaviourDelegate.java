@@ -389,7 +389,7 @@ public abstract class ServerBehaviourDelegate {
 	 * @throws CoreException if there was a problem restarting
 	 */
 	public void restart(String launchMode) throws CoreException {
-		throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 10, "Could not restart", null));
+		throw new CoreException(new Status(IStatus.WARNING, ServerPlugin.PLUGIN_ID, 0, "Restart not supported", null));
 	}
 
 	/**
