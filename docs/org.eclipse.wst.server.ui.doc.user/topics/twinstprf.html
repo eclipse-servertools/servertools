@@ -9,8 +9,8 @@
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta content="task" name="DC.Type" />
 <meta name="DC.Title" content="Defining the installed server runtime environments preferences" />
-<meta name="abstract" content="Using the Preferences page, you can direct the workbench to use a specific runtime environment of an application server for compiling your application. You can complete this by defining the installation directory of the server:" />
-<meta name="description" content="Using the Preferences page, you can direct the workbench to use a specific runtime environment of an application server for compiling your application. You can complete this by defining the installation directory of the server:" />
+<meta name="abstract" content="Using the Preferences page, you can direct the workbench to use a specific runtime environment of an application server for compiling, testing, or running your application." />
+<meta name="description" content="Using the Preferences page, you can direct the workbench to use a specific runtime environment of an application server for compiling, testing, or running your application." />
 <meta content="preferences, installed server runtime environments, defining, servers, runtime environment, workbench, defining server runtime environment, wizards, New Server Runtime, applications, New Server Runtime wizard, installed server runtime environments, setting preferences" name="DC.subject" />
 <meta content="preferences, installed server runtime environments, defining, servers, runtime environment, workbench, defining server runtime environment, wizards, New Server Runtime, applications, New Server Runtime wizard, installed server runtime environments, setting preferences" name="keywords" />
 <meta content="XHTML" name="DC.Format" />
@@ -27,9 +27,27 @@
 
 
 <div><p>Using the Preferences page, you can direct the workbench
-to use a specific runtime environment of an application server for compiling
-your application. You can complete this by defining the installation directory
-of the server:</p>
+to use a specific runtime environment of an application server for compiling,
+testing, or running your application.</p>
+
+<div class="section" id="twinstprf_wst__context"><a name="twinstprf_wst__context"><!-- --></a><div class="p">An <em>installed server runtime environment</em> is
+composed of the following definitions:  <ul>
+<li>a name to identify the installed server runtime environment</li>
+
+<li>the type of server that specifies the vendor and version-level of the
+server</li>
+
+<li>the directory path to a local installation of the server</li>
+
+<li>in some cases, also includes a reference to a Java runtime environment</li>
+
+</ul>
+If an installed server runtime environment is referencing a stub directory
+of the server, you can only compile your application against the stub server.
+ However, if referencing a full installation of the server, you can compile,
+test, and run your application against the installation of the server.</div>
+To
+define an installed server runtime environment, complete the following steps:</div>
 
 <a name="twinstprf_wst__steps"><!-- --></a><ol id="twinstprf_wst__steps">
 <li class="stepexpand"><span>From the Window menu, select  <span class="uicontrol">Preferences</span>.</span>
@@ -104,11 +122,11 @@ level or any servers that may have a version-level of 1.2.</dd>
 </div>
 </li>
 
-<li class="substepexpand"><span>When you add an
-installed server runtime environment, by default a server is created and added
-as an entry in the Servers view. If you want to only add the installed server
-runtime environment and not create the server in the Servers view, clear the <span class="uicontrol">Create
-a new local server</span> check box.</span></li>
+<li class="substepexpand"><span>When you add an installed server runtime environment,
+by default a server is created and added as an entry in the Servers view.
+If you want to only add the installed server runtime environment and not create
+the server in the Servers view, clear the <span class="uicontrol">Create a new local server</span> check
+box.</span></li>
 
 <li class="substepexpand"><span>Click <span class="uicontrol">Next</span>. The Runtime panel for the
 server is displayed.</span></li>

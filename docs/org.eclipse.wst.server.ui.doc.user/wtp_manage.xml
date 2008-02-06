@@ -12,5 +12,6 @@
 <topic label="Stopping a server" href="topics/twstpins.html"/>
 <topic label="Setting a default server" href="topics/twprefin.html"/>
 <topic label="Displaying or hiding the metadata of the server" href="topics/tmetasrv.html"/>
+<topic label="Cleaning projects published on the server" href="topics/tclean.html"/>
 </topic>
 </toc>

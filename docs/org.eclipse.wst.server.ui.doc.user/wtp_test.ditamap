@@ -2,11 +2,16 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
  "map.dtd">
+<?Pub Sty _display FontColor="red"?>
 <map title="Testing J2EE projects">
 <topicref href="topics/tj2ee.dita" id="testing" linking="normal" locktitle="yes"
 navtitle="Testing applications on a server">
-<topicref href="topics/testing.dita" locktitle="yes" navtitle="Testing artifacts on a server"><?Pub Caret?>
+<topicref href="topics/testing.dita" locktitle="yes" navtitle="Testing artifacts on a server">
+</topicref>
+<topicref href="topics/thttppreview.dita" locktitle="yes" navtitle="Testing on a HTTP Preview server"><?Pub Caret?>
+</topicref>
+<topicref href="topics/tj2eepreview.dita" locktitle="yes" navtitle="Testing on a J2EE Preview server">
 </topicref>
 </topicref>
 </map>
-<?Pub *0000000464?>
+<?Pub *0000000731?>

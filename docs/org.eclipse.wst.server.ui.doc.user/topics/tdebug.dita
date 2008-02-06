@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <task id="tdebug_wst" xml:lang="en-us">
 <title id="title">Debugging applications on a server</title>
-<shortdesc id="shortdesc">The debugger enables you to detect and diagnose
-errors in your application. It allows you to control the execution of your
-program by setting breakpoints, suspending threads, stepping through the code,
-and examining the contents of the variables. You can debug the following artifacts
-on a server without losing the state of your application:</shortdesc>
+<shortdesc id="shortdesc">You can debug applications on a server to detect
+and diagnose errors in your application.  Use the TCP/IP monitor view to view
+data sent and received over the ports of the server.  In addition, use the
+debugging tools in the workbench to control running your application on the
+server by setting breakpoints, suspending threads, stepping through the code,
+and examining the contents of the variables.  You can debug the following
+artifacts on a server without losing the state of your application:<?Pub Caret?></shortdesc>
 <prolog><metadata>
 <keywords id="index"><indexterm>servers<indexterm>debugging applications</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody></taskbody>
 </task>
-<?Pub *0000000840?>
+<?Pub *0000000995?>

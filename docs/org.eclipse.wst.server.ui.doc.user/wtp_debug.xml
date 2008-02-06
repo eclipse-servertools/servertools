@@ -4,7 +4,8 @@
 
 <toc label="Debugging applications on a server" topic="topics/tdebug.html">
 <topic label="Debugging applications on a server" href="topics/tdebug.html">
-<topic label="...servlets" href="topics/tservlet.html"/>
-<topic label="...JSP file" href="topics/tdbgjsp.html"/>
+<topic label="Debugging a servlet on a server" href="topics/tservlet.html"/>
+<topic label="Debugging a JSP file on a server" href="topics/tdbgjsp.html"/>
+<topic label="Monitoring server ports" href="topics/tmonitorport.html"/>
 </topic>
 </toc>

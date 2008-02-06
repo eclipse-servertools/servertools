@@ -2,10 +2,15 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
  "map.dtd">
+<?Pub Sty _display FontColor="red"?>
 <map title="Creating servers">
-<topicref href="topics/tcreate.dita" id="create_server" locktitle="yes" navtitle="Creating, editing and deleting servers"><?Pub Caret?>
+<topicref href="topics/tcreate.dita" id="create_server" locktitle="yes" navtitle="Creating, editing and deleting servers">
 <topicref href="topics/twcrtins.dita" locktitle="yes" navtitle="Creating a server ">
 <navref mapref="../org.eclipse.jst.server.ui.doc.user/tomcat_create.ditamap"/>
+<topicref href="topics/thttppreview.dita" locktitle="yes" navtitle="...HTTP Preview server">
+</topicref>
+<topicref href="topics/tj2eepreview.dita" locktitle="yes" navtitle="...J2EE Preview server">
+</topicref><?Pub Caret1?>
 </topicref>
 <topicref href="topics/twedtins.dita" locktitle="yes" navtitle="Editing a server">
 </topicref>
@@ -13,4 +18,4 @@
 </topicref>
 </topicref>
 </map>
-<?Pub *0000000716?>
+<?Pub *0000000964?>

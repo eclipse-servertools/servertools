@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<?Pub Sty _display FontColor="red"?>
+<?Pub Inc?>
+<task id="tj2eepreview_wst" xml:lang="en-us">
+<title id="title">Testing on a J2EE Preview server</title>
+<shortdesc id="shortdesc">Use the J2EE Preview server when you want to quickly
+compile, test and run resources in a J2EE Web project. The J2EE Web projects
+you can test on a J2EE Preview server are static Web projects, dynamic Web
+projects<?Pub Caret?> and utility projects.  Hereafter, the term J2EE Web
+project refers to any of these previously mentioned projects.</shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm>J2EE Preview<indexterm>testing J2EE Web projects</indexterm></indexterm>
+<indexterm>runtime environments<indexterm>J2EE Preview</indexterm></indexterm>
+<indexterm>servers<indexterm>J2EE Preview server</indexterm></indexterm></keywords>
+</metadata></prolog>
+<taskbody>
+<context id="context">The J2EE Preview server is an embedded application server
+that is integrated with the workbench.  It is intended for preliminary testing
+and saves you the time to download, install, and set up an application server.
+ However, as your J2EE Web project progresses through its development cycle
+you are encourage to test and run on an external application server.  You
+can use the J2EE Preview server as a convenient way to check for errors before
+you do a final test on an external application server.<p>To create and test
+on a J2EE Preview server for previewing your resources in a J2EE Web project,
+complete the following steps:</p></context>
+<steps id="steps">
+<step><cmd>In the Servers view, right-click and select <uicontrol>New</uicontrol> > <uicontrol>Server</uicontrol>.
+The Define a New Server wizard opens.</cmd></step>
+<step><cmd>Under the <uicontrol>Select the server type</uicontrol> list, expand
+the <b>Basic</b> folder and select <b>J2EE Preview</b>. Click <uicontrol>Next</uicontrol>.</cmd>
+</step>
+<step><cmd>The <uicontrol>Add and Remove</uicontrol> page opens. Under the
+Available projects list, select the J2EE Web project and click the <uicontrol>Add</uicontrol> button.
+Click <uicontrol>Finish</uicontrol>. </cmd><info>The J2EE Preview server is
+created in the Servers view.</info></step>
+<step><cmd>In the Project Explorer view, navigate to your J2EE Web project
+and right-click your resource you want to test.</cmd></step>
+<step><cmd>Select <menucascade><uicontrol>Run As</uicontrol><uicontrol>Run
+on Server</uicontrol></menucascade>. The Run on Server wizard opens.</cmd>
+</step>
+<step><cmd>Verify the <uicontrol>Choose an existing server</uicontrol> radio
+button is enabled.</cmd></step>
+<step><cmd>Under the <uicontrol>Select the server that you want to use</uicontrol> list,
+select the recently created J2EE Preview server. Click <uicontrol>Next</uicontrol>.</cmd>
+</step>
+<step><cmd>The <uicontrol>Add and Remove</uicontrol> page opens. Verify the
+J2EE Web project you are testing is listed under the <uicontrol>Configured
+projects</uicontrol>. Click <uicontrol>Finish</uicontrol>.</cmd></step>
+</steps>
+<result id="result">The internal Web browser opens and displays the Web content.</result>
+</taskbody>
+</task>
+<?Pub *0000003281?>

@@ -36,7 +36,7 @@ of the server:</context>
 you want to display or hide the metadata and select <b>Properties</b>.</cmd>
 </step>
 <step id="tmetasrv_step2"><cmd><draft-comment>Modified the steps according
-to the GUI changes.<?Pub Caret?></draft-comment>In the <uicontrol>Info</uicontrol> page
+to the GUI changes.</draft-comment>In the <uicontrol>General</uicontrol> page
 there is a <uicontrol>Location</uicontrol> field, select the <uicontrol>Switch
 location</uicontrol> button to toggle between displaying and hiding the metadata
 on the workbench.</cmd><info><note type="tip">If the value of the <uicontrol>Location</uicontrol> field
@@ -52,7 +52,7 @@ and then expand your server project to locate the <i>serverName</i>.server
 file, where <i>serverName</i> is the name assigned to your server.</cmd></step>
 <step id="tmetasrv_step4"><cmd>(<b>Optional</b>) You can double-click <i>serverName</i>.server
 file to edit the data in the server editor.</cmd></step>
-</steps>
+</steps><?Pub Caret?>
 </taskbody>
 </task>
-<?Pub *0000003569?>
+<?Pub *0000003572?>

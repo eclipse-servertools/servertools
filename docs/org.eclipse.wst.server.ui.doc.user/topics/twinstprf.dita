@@ -6,9 +6,8 @@
 <task id="twinstprf_wst" xml:lang="en-us">
 <title id="title">Defining the installed server runtime environments preferences</title>
 <shortdesc id="shortdesc">Using the Preferences page, you can direct the workbench
-to use a specific runtime environment of an application server for compiling
-your application. You can complete this by defining the installation directory
-of the server:</shortdesc>
+to use a specific runtime environment of an application server for compiling,
+testing, or running your application.</shortdesc>
 <prolog><metadata>
 <keywords id="index"><indexterm>preferences<indexterm>installed server runtime
 environments<indexterm>defining</indexterm></indexterm></indexterm><indexterm>servers<indexterm>runtime
@@ -21,6 +20,18 @@ wizard</indexterm><indexterm>installed server runtime environments<indexterm>set
 preferences</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
+<context id="context"><p>An <i>installed server runtime environment</i> is
+composed of the following definitions:  <ul>
+<li>a name to identify the installed server runtime environment</li>
+<li>the type of server that specifies the vendor and version-level of the
+server</li>
+<li>the directory path to a local installation of the server</li>
+<li>in some cases, also includes a reference to a Java runtime environment</li>
+</ul>If an installed server runtime environment is referencing a stub directory
+of the server, you can only compile your application against the stub server.
+ However, if referencing a full installation of the server, you can compile,
+test, and run your application against the installation of the server.</p>To
+define an installed server runtime environment, complete the following steps:</context>
 <steps id="steps">
 <step><cmd>From the Window menu, select  <uicontrol>Preferences</uicontrol>.</cmd>
 </step>
@@ -73,11 +84,11 @@ JEE 5 specification level.</dd>
 <dd>Filters the list of available servers that supports J2EE 1.2 specification
 level or any servers that may have a version-level of 1.2.</dd>
 </dlentry></dl></note></info></substep>
-<substep><cmd><draft-comment>Added this step</draft-comment>When you add an
-installed server runtime environment, by default a server is created and added
-as an entry in the Servers view. If you want to only add the installed server
-runtime environment and not create the server in the Servers view, clear the <uicontrol>Create
-a <?Pub Caret?>new local server</uicontrol> check box.</cmd></substep>
+<substep><cmd>W<?Pub Caret1?>hen you add an installed server runtime environment,
+by default a server is created and added as an entry in the Servers view.
+If you want to only add the installed server runtime environment and not create
+the server in the Servers view, clear the <uicontrol>Create a new local server</uicontrol> check
+box.</cmd></substep>
 <substep><cmd>Click <uicontrol>Next</uicontrol>. The Runtime panel for the
 server is displayed.</cmd></substep>
 <substep><cmd>For <uicontrol>Installation directory</uicontrol> or <uicontrol>Location</uicontrol> field,
@@ -113,4 +124,4 @@ The Modify Faceted Project dialog box opens.</li>
 </ol> </p></postreq>
 </taskbody>
 </task>
-<?Pub *0000006619?>
+<?Pub *0000007340?>

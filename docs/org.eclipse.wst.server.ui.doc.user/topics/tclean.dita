@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<task id="tclean_wst" xml:lang="en-us">
+<title id="title">Clean projects published on the server</title>
+<shortdesc id="shortdesc">You can use the clean option available in the Servers
+view to remove any invalid resources from the server before doing a full republish.
+This helps remove by-products generated as a result of the publishing process.
+When you find there is old code or an invalid state of code running on the
+server, try using this clean option to see if this helps remove these invalid
+states from the server.</shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm>server<indexterm>cleaning projects</indexterm></indexterm>
+<indexterm>projects<indexterm>cleaning on server</indexterm></indexterm><indexterm>clean<indexterm>projects</indexterm></indexterm>
+</keywords>
+</metadata></prolog>
+<taskbody>
+<context id="context">To clean projects published on the server, complete
+the following steps:</context>
+<steps id="steps">
+<step><cmd>In the Servers view, right-click a server.</cmd></step>
+<step><cmd>In the pop-up menu, select <uicontrol>Clean</uicontrol>.</cmd>
+</step>
+<step><cmd>The following message dialog box displays:</cmd><info><msgblock>Clean will discard all publish state and republish from scratch.  Are you sure you 
+want to clean all published projects?</msgblock></info></step>
+<step><cmd>Select <uicontrol>OK</uicontrol>.</cmd></step>
+</steps>
+</taskbody>
+</task>

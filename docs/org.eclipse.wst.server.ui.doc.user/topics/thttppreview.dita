@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<?Pub Sty _display FontColor="red"?>
+<?Pub Inc?>
+<task id="thttppreview_wst" xml:lang="en-us">
+<title id="title">Testing on an HTTP Preview server</title>
+<shortdesc id="shortdesc">Use the HTTP Preview server when you want to quickly
+test resources in a static Web project.  The HTTP Preview server is a Hypertext
+Transfer Protocol (HTTP) embedded test server that is integrated with the
+workbench.  It is intended for preliminary testing and saves you time to download,
+install, and set up an HTTP server.  However, as your static Web project progresses
+through its development cycle you are encourage to test and run on an external
+HTTP server.  You can use the HTTP Preview server as a convenient way to check
+for errors before you do a final test on an external HTTP server.</shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm>HTTP Preview<indexterm>testing static Web
+projects</indexterm></indexterm><indexterm>runtime environments<indexterm>HTTP
+Preview</indexterm></indexterm><indexterm>servers<indexterm>HTTP Preview server</indexterm></indexterm>
+</keywords>
+</metadata></prolog>
+<taskbody>
+<context id="context"><?Pub Caret1?>To create and test on an HTTP Preview
+server for previewing your resources in a static Web project, complete the
+following steps:</context>
+<steps id="steps">
+<step><cmd>In the Servers view, right-click and select <uicontrol>New</uicontrol> > <uicontrol>Server</uicontrol>.
+The Define a New Server wizard opens.</cmd></step>
+<step><cmd>Under the <uicontrol>Select the server type</uicontrol> list, expand
+the <b>Basic</b> folder and select <b>HTTP Preview</b>. Click <uicontrol>Next</uicontrol>.</cmd>
+</step>
+<step><cmd>The <uicontrol>Add and Remove</uicontrol> page opens. Under the
+Available projects list, select the static Web project and click the <uicontrol>Add</uicontrol> button.
+Click <uicontrol>Finish</uicontrol>. </cmd><info>The HTTP Preview server is
+created in the Servers view.</info></step>
+<step><cmd>In the Project Explorer view, navigate to your static Web project
+and right-click your resource you want to test.</cmd></step>
+<step><cmd>Select <menucascade><uicontrol>Run As</uicontrol><uicontrol>Run
+on Server</uicontrol></menucascade>. The Run on Server wizard opens.</cmd>
+</step>
+<step><cmd>Verify the <uicontrol>Choose an existing server</uicontrol> radio
+button is enabled.</cmd></step>
+<step><cmd>Under the <uicontrol>Select the server that you want to use</uicontrol> list,
+select the recently created HTTP Preview server. Click <uicontrol>Next</uicontrol>.</cmd>
+</step>
+<step><cmd>The <uicontrol>Add and Remove</uicontrol> page opens. Verify the
+static Web project you are testing is listed under the <uicontrol>Configured
+projects</uicontrol>. Click <uicontrol>Finish</uicontrol>.</cmd></step>
+</steps>
+<result id="result">The internal Web browser opens and displays the static
+Web content.</result>
+</taskbody>
+</task>
+<?Pub *0000003064?>

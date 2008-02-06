@@ -34,4 +34,8 @@
 <topic label="Creating, editing, and deleting servers" href="topics/tcreate.html"/>
 <topic label="Displaying or hiding the metadata of the server" href="topics/tmetasrv.html"/>
 <topic label="Defining the launching preferences" href="topics/twlaunchpref.html"/>
+<topic label="Monitoring server ports" href="topics/tmonitorport.html"/>
+<topic label="Clean projects published on the server" href="topics/tclean.html"/>
+<topic label="Testing on an HTTP Preview server" href="topics/thttppreview.html"/>
+<topic label="Testing on a J2EE Preview server" href="topics/tj2eepreview.html"/>
 </toc>

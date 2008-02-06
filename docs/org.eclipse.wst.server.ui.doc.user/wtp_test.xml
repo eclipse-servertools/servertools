@@ -5,5 +5,7 @@
 <toc label="Testing J2EE projects" topic="topics/tj2ee.html">
 <topic label="Testing applications on a server" href="topics/tj2ee.html">
 <topic label="Testing artifacts on a server" href="topics/testing.html"/>
+<topic label="Testing on a HTTP Preview server" href="topics/thttppreview.html"/>
+<topic label="Testing on a J2EE Preview server" href="topics/tj2eepreview.html"/>
 </topic>
 </toc>

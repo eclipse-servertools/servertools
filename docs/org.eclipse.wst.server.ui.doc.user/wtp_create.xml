@@ -6,6 +6,8 @@
 <topic label="Creating, editing and deleting servers" href="topics/tcreate.html">
 <topic label="Creating a server " href="topics/twcrtins.html">
 <link toc="../org.eclipse.jst.server.ui.doc.user/tomcat_create.xml"/>
+<topic label="...HTTP Preview server" href="topics/thttppreview.html"/>
+<topic label="...J2EE Preview server" href="topics/tj2eepreview.html"/>
 </topic>
 <topic label="Editing a server" href="topics/twedtins.html"/>
 <topic label="Deleting a server" href="topics/twdelins.html"/>

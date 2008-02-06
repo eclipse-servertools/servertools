@@ -2,20 +2,24 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
  "map.dtd">
+<?Pub Sty _display FontColor="red"?>
 <map title="Debugging applications on a server">
-<topicref href="topics/tdebug.dita" id="debug_server" locktitle="yes" navtitle="Debugging applications on a server">
-<topicref href="topics/tservlet.dita" locktitle="yes" navtitle="...servlets">
+<topicref href="topics/tdebug.dita" id="debug_server" navtitle="Debugging applications on a server">
+<topicref href="topics/tservlet.dita" navtitle="Debugging a servlet on a server">
 <topicmeta>
-<linktext>servlets</linktext>
 <shortdesc></shortdesc>
 </topicmeta>
 </topicref>
-<topicref href="topics/tdbgjsp.dita" locktitle="yes" navtitle="...JSP file">
+<topicref href="topics/tdbgjsp.dita" navtitle="Debugging a JSP file on a server">
 <topicmeta>
-<linktext>JavaServer Pages (JSP) files</linktext>
 <shortdesc></shortdesc>
 </topicmeta>
+</topicref>
+<topicref href="topics/tmonitorport.dita" navtitle="Monitoring server ports">
+<topicmeta>
+<shortdesc></shortdesc>
+</topicmeta><?Pub Caret?>
 </topicref>
 </topicref>
 </map>
-<?Pub *0000000705?>
+<?Pub *0000000807?>

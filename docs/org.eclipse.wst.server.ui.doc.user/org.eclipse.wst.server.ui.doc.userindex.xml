@@ -28,7 +28,7 @@
     </entry>
     <entry keyword="preferences">
       <topic href="topics/tpref.html#tpref_wst" title="Defining server preferences"/>
-      <topic href="topics/twsrvprf.html#twsrvprf_wst" title="Defining the server preferences"/>
+      <topic href="topics/twsrvprf.html#twsrvprf_wst" title="Defining the server preference"/>
     </entry>
     <entry keyword="publishing applications">
       <topic href="topics/tpublish.html#tpublish_wst" title="Publishing applications to a server"/>
@@ -44,6 +44,9 @@
       <topic href="topics/twcrtins.html#twcrtins_wst" title="Creating a server"/>
       <topic href="topics/tcreate.html#tcreate_wst" title="Creating, editing, and deleting servers"/>
     </entry>
+    <entry keyword="creating a pointer">
+      <topic href="topics/twcrtins.html#twcrtins_wst" title="Creating a server"/>
+    </entry>
     <entry keyword="deleting">
       <topic href="topics/twdelins.html#twdelins_wst" title="Deleting a server"/>
       <topic href="topics/tcreate.html#tcreate_wst" title="Creating, editing, and deleting servers"/>
@@ -55,8 +58,10 @@
     <entry keyword="editor">
       <topic href="topics/twedtins.html#twedtins_wst" title="Editing a server"/>
     </entry>
-    <entry keyword="runtime environments">
-      <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the installed server runtime environments preferences"/>
+    <entry keyword="runtime environment">
+      <entry keyword="defining">
+        <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the installed server runtime environments preferences"/>
+      </entry>
     </entry>
     <entry keyword="managing">
       <topic href="topics/twmanage.html#twmanage_wst" title="Managing servers "/>
@@ -79,8 +84,17 @@
     <entry keyword="displaying metadata">
       <topic href="topics/tmetasrv.html#tmetasrv_wst" title="Displaying or hiding the metadata of the server"/>
     </entry>
+    <entry keyword="hiding metadata">
+      <topic href="topics/tmetasrv.html#tmetasrv_wst" title="Displaying or hiding the metadata of the server"/>
+    </entry>
     <entry keyword="launching preferences">
       <topic href="topics/twlaunchpref.html#twlaunchpref_wst" title="Defining the launching preferences"/>
+    </entry>
+    <entry keyword="HTTP Preview server">
+      <topic href="topics/thttppreview.html#thttppreview_wst" title="Testing on an HTTP Preview server"/>
+    </entry>
+    <entry keyword="J2EE Preview server">
+      <topic href="topics/tj2eepreview.html#tj2eepreview_wst" title="Testing on a J2EE Preview server"/>
     </entry>
   </entry>
   <entry keyword="application client projects">
@@ -91,13 +105,16 @@
   <entry keyword="preferences">
     <entry keyword="installed server runtime environments">
       <topic href="topics/cwres.html#cwres_wst" title="Resources used to test and publish on your server"/>
+      <entry keyword="defining">
+        <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the installed server runtime environments preferences"/>
+      </entry>
     </entry>
     <entry keyword="servers">
       <entry keyword="overview">
         <topic href="topics/tpref.html#tpref_wst" title="Defining server preferences"/>
       </entry>
       <entry keyword="testing">
-        <topic href="topics/twsrvprf.html#twsrvprf_wst" title="Defining the server preferences"/>
+        <topic href="topics/twsrvprf.html#twsrvprf_wst" title="Defining the server preference"/>
       </entry>
     </entry>
     <entry keyword="server audio">
@@ -114,11 +131,11 @@
     <entry keyword="description">
       <topic href="topics/cwres.html#cwres_wst" title="Resources used to test and publish on your server"/>
     </entry>
-    <entry keyword="creating servers">
-      <topic href="topics/twcrtins.html#twcrtins_wst" title="Creating a server"/>
+    <entry keyword="HTTP Preview">
+      <topic href="topics/thttppreview.html#thttppreview_wst" title="Testing on an HTTP Preview server"/>
     </entry>
-    <entry keyword="preferences">
-      <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the installed server runtime environments preferences"/>
+    <entry keyword="J2EE Preview">
+      <topic href="topics/tj2eepreview.html#tj2eepreview_wst" title="Testing on a J2EE Preview server"/>
     </entry>
   </entry>
   <entry keyword="views">
@@ -129,10 +146,17 @@
       <topic href="topics/rwtcpvw.html#rwtcpvw_wst" title="TCP/IP Monitor view"/>
     </entry>
     <entry keyword="server preferences">
-      <topic href="topics/twsrvprf.html#twsrvprf_wst" title="Defining the server preferences"/>
+      <topic href="topics/twsrvprf.html#twsrvprf_wst" title="Defining the server preference"/>
     </entry>
-    <entry keyword="TCP/IP Monitor preferences">
-      <topic href="topics/twtcpprf.html#twtcpprf_wst" title="Defining the TCP/IP Monitor preferences"/>
+    <entry keyword="TCP/IP Monitor">
+      <entry keyword="preferences">
+        <topic href="topics/twtcpprf.html#twtcpprf_wst" title="Defining the TCP/IP Monitor preferences"/>
+      </entry>
+    </entry>
+    <entry keyword="Server">
+      <entry keyword="monitoring server ports">
+        <topic href="topics/tmonitorport.html#tmonitorport_wst" title="Monitoring server ports"/>
+      </entry>
     </entry>
   </entry>
   <entry keyword="TCP/IP monitors">
@@ -154,7 +178,7 @@
     <entry keyword="testing on servers">
       <topic href="topics/tj2ee.html#tj2ee_wst" title="Testing applications on a server"/>
     </entry>
-    <entry keyword="server runtime environments">
+    <entry keyword="defining server runtime environment">
       <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the installed server runtime environments preferences"/>
     </entry>
     <entry keyword="publishing to servers">
@@ -176,10 +200,13 @@
     <entry keyword="server audio preferences">
       <topic href="topics/tprefaud.html#tprefaud_wst" title="Defining the audio preferences"/>
     </entry>
-    <entry keyword="server runtime environments">
+    <entry keyword="defining server runtime environment">
       <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the installed server runtime environments preferences"/>
     </entry>
     <entry keyword="displaying server metadata">
+      <topic href="topics/tmetasrv.html#tmetasrv_wst" title="Displaying or hiding the metadata of the server"/>
+    </entry>
+    <entry keyword="hiding server metadata">
       <topic href="topics/tmetasrv.html#tmetasrv_wst" title="Displaying or hiding the metadata of the server"/>
     </entry>
     <entry keyword="server launching preferences">
@@ -217,10 +244,37 @@
     <entry keyword="starting servers for testing">
       <topic href="topics/twsrtins.html#twsrtins_wst" title="Starting a server"/>
     </entry>
+    <entry keyword="cleaning on server">
+      <topic href="topics/tclean.html#tclean_wst" title="Clean projects published on the server"/>
+    </entry>
+  </entry>
+  <entry keyword="wizards">
+    <entry keyword="New Server">
+      <topic href="topics/twcrtins.html#twcrtins_wst" title="Creating a server"/>
+    </entry>
+    <entry keyword="New Server Runtime">
+      <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the installed server runtime environments preferences"/>
+    </entry>
+  </entry>
+  <entry keyword="New Server wizard">
+    <topic href="topics/twcrtins.html#twcrtins_wst" title="Creating a server"/>
   </entry>
   <entry keyword="editors">
     <entry keyword="server">
       <topic href="topics/twedtins.html#twedtins_wst" title="Editing a server"/>
+    </entry>
+  </entry>
+  <entry keyword="runtime environment">
+    <entry keyword="defining">
+      <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the installed server runtime environments preferences"/>
+    </entry>
+  </entry>
+  <entry keyword="New Server Runtime wizard">
+    <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the installed server runtime environments preferences"/>
+  </entry>
+  <entry keyword="installed server runtime environments">
+    <entry keyword="setting preferences">
+      <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the installed server runtime environments preferences"/>
     </entry>
   </entry>
   <entry keyword="TCP/IP">
@@ -231,6 +285,39 @@
   <entry keyword="serverName.server file">
     <entry keyword="displaying on workbench">
       <topic href="topics/tmetasrv.html#tmetasrv_wst" title="Displaying or hiding the metadata of the server"/>
+    </entry>
+    <entry keyword="hiding from workbench">
+      <topic href="topics/tmetasrv.html#tmetasrv_wst" title="Displaying or hiding the metadata of the server"/>
+    </entry>
+  </entry>
+  <entry keyword="properties">
+    <entry keyword="monitoring server ports">
+      <topic href="topics/tmonitorport.html#tmonitorport_wst" title="Monitoring server ports"/>
+    </entry>
+  </entry>
+  <entry keyword="ports">
+    <entry keyword="servers">
+      <topic href="topics/tmonitorport.html#tmonitorport_wst" title="Monitoring server ports"/>
+    </entry>
+  </entry>
+  <entry keyword="server">
+    <entry keyword="cleaning projects">
+      <topic href="topics/tclean.html#tclean_wst" title="Clean projects published on the server"/>
+    </entry>
+  </entry>
+  <entry keyword="clean">
+    <entry keyword="projects">
+      <topic href="topics/tclean.html#tclean_wst" title="Clean projects published on the server"/>
+    </entry>
+  </entry>
+  <entry keyword="HTTP Preview">
+    <entry keyword="testing static Web projects">
+      <topic href="topics/thttppreview.html#thttppreview_wst" title="Testing on an HTTP Preview server"/>
+    </entry>
+  </entry>
+  <entry keyword="J2EE Preview">
+    <entry keyword="testing J2EE Web projects">
+      <topic href="topics/tj2eepreview.html#tj2eepreview_wst" title="Testing on a J2EE Preview server"/>
     </entry>
   </entry>
 </index>

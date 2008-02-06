@@ -2,6 +2,7 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
  "map.dtd">
+<?Pub Sty _display FontColor="red"?>
 <?Pub Inc?>
 <map title="Managing Servers">
 <topicref href="topics/twmanage.dita" id="manage_server" locktitle="yes" navtitle="Managing servers ">
@@ -17,8 +18,10 @@
 </topicref>
 <topicref href="topics/twprefin.dita" locktitle="yes" navtitle="Setting a default server">
 </topicref>
-<topicref href="topics/tmetasrv.dita" locktitle="yes" navtitle="Displaying or hiding the metadata of the server"><?Pub Caret?>
+<topicref href="topics/tmetasrv.dita" locktitle="yes" navtitle="Displaying or hiding the metadata of the server">
+</topicref>
+<topicref href="topics/tclean.dita" locktitle="yes" navtitle="Cleaning projects published on the server"><?Pub Caret?>
 </topicref>
 </topicref>
 </map>
-<?Pub *0000001090?>
+<?Pub *0000001245?>

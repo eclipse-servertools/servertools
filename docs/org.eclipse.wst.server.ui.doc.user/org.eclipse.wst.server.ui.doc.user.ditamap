@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
-  "map.dtd">
+ "map.dtd">
+<?Pub Sty _display FontColor="red"?>
 <map title="For building purposes">
 <topicref href="topics/cwflow.dita" navtitle="Which test server will start">
 </topicref>
@@ -56,6 +57,14 @@
 <topicref href="topics/tmetasrv.dita" navtitle="Displaying or hiding the metadata of the server">
 </topicref>
 <topicref href="topics/twlaunchpref.dita" navtitle="Defining the launching preferences">
-</topicref><?Pub Caret?>
+</topicref>
+<topicref href="topics/tmonitorport.dita" navtitle="Monitoring server ports">
+</topicref>
+<topicref href="topics/tclean.dita" navtitle="Cleaning projects published on the server">
+</topicref>
+<topicref href="topics/thttppreview.dita" navtitle="Testing on a HTTP Preview server">
+</topicref>
+<topicref href="topics/tj2eepreview.dita" navtitle="Testing on a J2EE Preview server"><?Pub Caret?>
+</topicref>
 </map>
-<?Pub *0000003036?>
+<?Pub *0000003457?>
