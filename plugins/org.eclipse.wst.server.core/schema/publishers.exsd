@@ -13,7 +13,7 @@
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="publishTask" minOccurs="1" maxOccurs="unbounded"/>
+            <element ref="publisher" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -39,12 +39,7 @@
       </complexType>
    </element>
 
-   <element name="publishTask">
-      <annotation>
-         <appinfo>
-            <meta.element labelAttribute="name"/>
-         </appinfo>
-      </annotation>
+   <element name="publisher">
       <complexType>
          <attribute name="id" type="string" use="required">
             <annotation>
@@ -91,7 +86,7 @@ Publish instances of this type will delegate to instances of this class.
                </appinfo>
             </annotation>
          </attribute>
-         <attribute name="timing" type="string" use="required">
+         <attribute name="order" type="string" use="required">
             <annotation>
                <documentation>
                   
@@ -100,15 +95,6 @@ Publish instances of this type will delegate to instances of this class.
          </attribute>
       </complexType>
    </element>
-
-   <annotation>
-      <appinfo>
-         <meta.section type="apiInfo"/>
-      </appinfo>
-      <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;code&gt;org.eclipse.wst.server.core.model.PublishTaskDelegate&lt;/code&gt;.
-      </documentation>
-   </annotation>
 
    <annotation>
       <appinfo>
@@ -144,6 +130,15 @@ All rights reserved. This program and the accompanying materials are made
 available under the terms of the Eclipse Public License v1.0 which accompanies 
 this distribution, and is available at 
 &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="apiInfo"/>
+      </appinfo>
+      <documentation>
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;code&gt;org.eclipse.wst.server.core.model.PublishTaskDelegate&lt;/code&gt;.
       </documentation>
    </annotation>
 
