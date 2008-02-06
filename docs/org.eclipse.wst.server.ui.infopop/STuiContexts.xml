@@ -256,4 +256,22 @@ To change the installed server runtime environment, select the <b>Runtime</b> li
 <description>In the Available projects list, specify the projects that you want to add to the server by clicking the <b>Add</b> button. When you select a project to add to the server, only the projects that are applicable to the type of server will appear. To remove a project from the Configured projects list, click the <b>Remove</b> button.
 </description>
 </context>
+
+<context id="swnr0000">
+<description>Under the <b>Select the runtime type</b> list, select a server and version-level as the target installed server runtime environment. 
+<b>Tip:</b> In the text field under the <b>Select the runtime type</b> label, you can replace the text <b>type filter text</b> with keywords to filter the list of available application servers. The following are examples of filter keywords, see the help topic for details: Apache, WebSphere, ejb, web, 5.0, or 1.2.  
+When you add an installed server runtime environment, by default a server is created and added as an entry in the Servers view. If you want to only add the installed server runtime environment and not create the server in the Servers view, clear the <b>Create a new local server</b> check box. 
+To continue, click <b>Next</b>.
+</description>
+</context>
+
+<context id="svcp0004">
+<description>Select the <b>Switch location</b> button to toggle between displaying and hiding the metadata of the server on the workbench.  For details about the server metadata, see the <b>Displaying or hiding the metadata of the server</b> help topic.
+
+If the value of the <b>Location</b> field contains [workspace metadata], this means the workbench is hiding the metadata. To display the metadata on the workbench, select the <b>Switch location</b> button again until the [workspace metadata] changes to a file path directory. The file path directory specifies the location where the server metadata file is stored on the workbench.  You can find the server metadata file in the Project Explorer view, expand the <b>Servers</b> folder and then expand your server project to locate the serverName.server file, where serverName is the name assigned to your server.
+
+Optionally, you can double-click the serverName.server file to edit the data in the server editor.
+</description>
+</context>
+
 </contexts>
