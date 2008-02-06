@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeBridge;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponent;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponentVersion;
@@ -115,7 +117,7 @@ public class RuntimeBridge implements IRuntimeBridge {
 		return null;
 	}
 
-	private static class Stub implements IStub {
+	private static class Stub extends IRuntimeBridge.Stub {
 		private IRuntime runtime;
 
 		public Stub(IRuntime runtime) {
@@ -165,6 +167,10 @@ public class RuntimeBridge implements IRuntimeBridge {
 				    props.put("alternate-names", s);
 			}
 			return props;
+		}
+		
+		public IStatus validate(final IProgressMonitor monitor) {
+		    return runtime.validate( monitor );
 		}
 	}
 }
