@@ -684,7 +684,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 				publishersTable = toolkit.createTable(composite, SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.CHECK);
 				publishersTable.setHeaderVisible(false);
 				publishersTable.setLinesVisible(false);
-				//whs.setHelp(publishers, ContextIds.CONFIGURATION_EDITOR_PORTS_LIST); TODO
+				whs.setHelp(publishersTable, ContextIds.EDITOR_PUBLISHTASKS_CONFIGURATION);
 				
 				data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
 				data.horizontalSpan = 2;
@@ -753,6 +753,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			data = new GridData(GridData.HORIZONTAL_ALIGN_END);
 			data.widthHint = 30;
 			startTimeoutSpinner.setLayoutData(data);
+			whs.setHelp(startTimeoutSpinner, ContextIds.EDITOR_TIMEOUT_START);
 			
 			// stop timeout label
 			final Label stopTimeoutLabel = createLabel(toolkit, composite, Messages.serverEditorOverviewStopTimeout);
@@ -770,6 +771,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			data = new GridData(GridData.HORIZONTAL_ALIGN_END);
 			data.widthHint = 30;
 			stopTimeoutSpinner.setLayoutData(data);
+			whs.setHelp(stopTimeoutSpinner, ContextIds.EDITOR_TIMEOUT_STOP);
 			
 			startTimeoutSpinner.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {

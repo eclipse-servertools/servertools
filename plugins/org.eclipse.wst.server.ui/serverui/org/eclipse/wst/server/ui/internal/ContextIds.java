@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,6 +64,9 @@ public interface ContextIds {
 	public static final String EDITOR_RUNTIME = ServerUIPlugin.PLUGIN_ID + ".seop0008";
 	public static final String EDITOR_AUTOPUBLISH_ENABLE = ServerUIPlugin.PLUGIN_ID + ".seop0012";
 	public static final String EDITOR_AUTOPUBLISH_DISABLE = ServerUIPlugin.PLUGIN_ID + ".seop0016";
+	public static final String EDITOR_PUBLISHTASKS_CONFIGURATION = ServerUIPlugin.PLUGIN_ID + ".seop0018";
+	public static final String EDITOR_TIMEOUT_START = ServerUIPlugin.PLUGIN_ID + "spge0026";
+	public static final String EDITOR_TIMEOUT_STOP = ServerUIPlugin.PLUGIN_ID + "spge0027";
 
 	public static final String AUDIO_PREFERENCES = ServerUIPlugin.PLUGIN_ID + ".aupr0000";
 	public static final String AUDIO_PREFERENCES_ENABLE = ServerUIPlugin.PLUGIN_ID + ".aupr0002";
