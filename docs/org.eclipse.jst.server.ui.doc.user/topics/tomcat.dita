@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
+<?Pub Sty _display FontColor="red"?>
+<?Pub Inc?>
 <task id="tomcat_jst" xml:lang="en-us">
 <title id="title">Creating a Tomcat server</title>
 <shortdesc id="shortdesc">The server tools feature supports the Apache Tomcat
@@ -11,8 +13,7 @@ Tomcat, complete the following: </shortdesc>
 <prolog><metadata>
 <keywords id="index"><indexterm>Apache Tomcat<indexterm>testing Web projects</indexterm></indexterm>
 <indexterm>runtime environments<indexterm>Apache Tomcat</indexterm></indexterm>
-<indexterm>servers<indexterm>Apache Tomcat</indexterm></indexterm>
-</keywords>
+<indexterm>servers<indexterm>Apache Tomcat</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <prereq id="prereq"><b>Prerequisites</b><p><ul>
@@ -42,5 +43,12 @@ Tomcat server.</cmd></substep>
 </step>
 </steps>
 </taskbody>
+<related-links id="relatedlinks"><?Pub Caret?>
+<link href="http://wiki.eclipse.org/WTP_Tomcat_FAQ" scope="external"><linktext>WTP
+Tomcat FAQ</linktext>
+<desc>See this link for additional information about using the Apache Tomcat
+server with the workbench.</desc>
+</link>
+</related-links>
 </task>
-<?Pub *0000002369?>
+<?Pub *0000002669?>
