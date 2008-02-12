@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.wst.server.ui.internal.wizard;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.PublishServerJob;
@@ -35,7 +36,15 @@ public class ModifyModulesWizard extends TaskWizard {
 					if (svr instanceof IServer) {
 						IServer server = (IServer) svr;
 						if (server.getServerState() != IServer.STATE_STOPPED && ((Server)server).getAutoPublishSetting() != Server.AUTO_PUBLISH_DISABLE) {
-							PublishServerJob publishJob = new PublishServerJob(server);
+							IAdaptable info = null;
+							/*IAdaptable info = new IAdaptable() {
+								public Object getAdapter(Class adapter) {
+									if (Shell.class.equals(adapter))
+										return shell;
+									return null;
+								}
+							};*/
+							PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, info);
 							publishJob.schedule();
 						}
 					}

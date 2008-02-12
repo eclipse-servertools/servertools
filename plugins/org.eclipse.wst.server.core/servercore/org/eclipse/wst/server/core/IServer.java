@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -318,7 +320,7 @@ public interface IServer extends IServerAttributes {
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @return status indicating what (if anything) went wrong
-	 * @see #publish(int, IModule[], IServer.IOperationListener)
+	 * @see #publish(int, List, IAdaptable, IOperationListener)
 	 */
 	public IStatus publish(int kind, IProgressMonitor monitor);
 
@@ -345,13 +347,18 @@ public interface IServer extends IServerAttributes {
 	 *      out all state and cleans up the module on the server before doing a
 	 *      full publish.
 	 *    </ul>
-	 * @param modules an array of modules, or <code>null</code> to publish all
-	 *    modules
-	 *  @param listener an operation listener to receive notification when this
+	 * @param modules a list of modules to publish, or <code>null</code> to
+	 *    publish all modules
+	 * @param info the IAdaptable (or <code>null</code>) provided by the
+	 *    caller in order to supply UI information for prompting the
+	 *    user if necessary. When this parameter is not
+	 *    <code>null</code>, it should minimally contain an adapter
+	 *    for the Shell class.
+	 * @param listener an operation listener to receive notification when this
 	 *    operation is done, or <code>null</code> if notification is not
 	 *    required
 	 */
-	public void publish(int kind, IModule[] modules, IOperationListener listener);
+	public void publish(int kind, List<IModule[]> modules, IAdaptable info, IOperationListener listener);
 
 	/**
 	 * Returns whether this server is in a state that it can

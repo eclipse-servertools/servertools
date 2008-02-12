@@ -111,7 +111,7 @@ public class Server extends Base implements IServer {
 	// publish listeners
 	protected transient List<IPublishListener> publishListeners;
 
-	// Server listeners
+	// server listeners
 	protected transient ServerNotificationManager notificationManager;
 
 	public class AutoPublishThread extends Thread {
@@ -141,7 +141,7 @@ public class Server extends Base implements IServer {
 			if (getServerState() != IServer.STATE_STARTED)
 				return;
 			
-			PublishServerJob publishJob = new PublishServerJob(Server.this, IServer.PUBLISH_AUTO, false);
+			PublishServerJob publishJob = new PublishServerJob(Server.this, IServer.PUBLISH_AUTO, null);
 			publishJob.schedule();
 		}
 	}
@@ -950,19 +950,14 @@ public class Server extends Base implements IServer {
 			}
 		}
 		
-		long time = System.currentTimeMillis();
-		firePublishStarted();
-		IStatus status = doPublish(kind, monitor);
-		firePublishFinished(status);
-		Trace.trace(Trace.PERFORMANCE, "Server.publish(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
-		return status;
+		return doPublish(kind, null, monitor, null);
 	}
 
 	/*
 	 * Publish the given modules to the server.
 	 * TODO: Implementation!
 	 */
-	public void publish(int kind, IModule[] modules2, IOperationListener listener) {
+	public void publish(int kind, List<IModule[]> modules2, IAdaptable info, IOperationListener listener) {
 		if (getServerType() == null) {
 			listener.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorMissingAdapter, null));
 			return;
@@ -987,22 +982,21 @@ public class Server extends Base implements IServer {
 			}
 		}
 		
-		long time = System.currentTimeMillis();
-		firePublishStarted();
-		IStatus status = doPublish(kind, new NullProgressMonitor());
-		firePublishFinished(status);
-		Trace.trace(Trace.PERFORMANCE, "Server.publish(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
-		listener.done(status);
+		doPublish(kind, modules2, new NullProgressMonitor(), info);
 	}
 
-	protected IStatus doPublish(int kind, IProgressMonitor monitor) {
+	protected IStatus doPublish(int kind, List<IModule[]> modules3, IProgressMonitor monitor, IAdaptable info) {
 		Trace.trace(Trace.FINEST, "-->-- Publishing to server: " + toString() + " -->--");
 		
 		stopAutoPublish();
 		
 		try {
+			long time = System.currentTimeMillis();
+			firePublishStarted();
+			
 			getServerPublishInfo().startCaching();
-			IStatus status = getBehaviourDelegate(monitor).publish(kind, monitor);
+			//IStatus status = 
+			getBehaviourDelegate(monitor).publish(kind, modules3, monitor, info);
 			
 			final List<IModule[]> modules2 = new ArrayList<IModule[]>();
 			visit(new IModuleVisitor() {
@@ -1019,7 +1013,9 @@ public class Server extends Base implements IServer {
 			getServerPublishInfo().clearCache();
 			getServerPublishInfo().save();
 			
-			return status;
+			firePublishFinished(Status.OK_STATUS);
+			Trace.trace(Trace.PERFORMANCE, "Server.publish(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
+			return Status.OK_STATUS;
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate publish() " + toString(), e);
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e);

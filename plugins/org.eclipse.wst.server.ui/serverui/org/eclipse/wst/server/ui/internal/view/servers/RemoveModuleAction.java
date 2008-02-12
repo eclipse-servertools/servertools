@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.wst.server.core.IModule;
@@ -54,7 +55,14 @@ public class RemoveModuleAction extends Action {
 				server = wc.save(true, null);
 				
 				if (server.getServerState() != IServer.STATE_STOPPED && ((Server)server).getAutoPublishSetting() != Server.AUTO_PUBLISH_DISABLE) {
-					PublishServerJob publishJob = new PublishServerJob(server);
+					final IAdaptable info = new IAdaptable() {
+						public Object getAdapter(Class adapter) {
+							if (Shell.class.equals(adapter))
+								return shell;
+							return null;
+						}
+					};
+					PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, info);
 					publishJob.schedule();
 				}
 			} catch (Exception e) {

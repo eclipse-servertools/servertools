@@ -11,6 +11,7 @@
 package org.eclipse.wst.server.ui.internal.actions;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -94,7 +95,14 @@ public class RunOnServerLaunchConfigurationDelegate extends LaunchConfigurationD
 				shell2[0] = EclipseUtil.getShell();
 			}
 		});
-		Shell shell = shell2[0];
+		final Shell shell = shell2[0];
+		final IAdaptable info = new IAdaptable() {
+			public Object getAdapter(Class adapter) {
+				if (Shell.class.equals(adapter))
+					return shell;
+				return null;
+			}
+		};
 		
 		if (client == null) {
 			// if there is no client, use a dummy
@@ -209,7 +217,7 @@ public class RunOnServerLaunchConfigurationDelegate extends LaunchConfigurationD
 				}
 			}
 			
-			PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, false);
+			PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, info);
 			LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
 			publishJob.setNextJob(clientJob);
 			
@@ -220,7 +228,7 @@ public class RunOnServerLaunchConfigurationDelegate extends LaunchConfigurationD
 			} else
 				publishJob.schedule();
 		} else if (state != IServer.STATE_STOPPING) {
-			PublishServerJob publishJob = new PublishServerJob(server);
+			PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, info);
 			StartServerJob startServerJob = new StartServerJob(server, launchMode);
 			LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
 			

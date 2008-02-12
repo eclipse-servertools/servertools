@@ -22,6 +22,8 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.InternalInitializer;
@@ -668,6 +670,26 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		if (server != null)
 			return server.publish(kind, monitor);
 		return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, null);
+	}
+
+	public void publish(int kind, List<IModule[]> modules2, IAdaptable info, IOperationListener listener) {
+		if (server != null) {
+			server.publish(kind, modules2, info, listener);
+			return;
+		}
+		listener.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, null));
+	}
+
+	public ILaunch getLaunch() {
+		if (server != null)
+			return server.getLaunch();
+		return null;
+	}
+
+	public ILaunchConfiguration getLaunchConfiguration(boolean create, IProgressMonitor monitor) throws CoreException {
+		if (server != null)
+			return server.getLaunchConfiguration(create, monitor);
+		return null;
 	}
 
 	/**

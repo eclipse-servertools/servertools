@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -35,7 +36,7 @@ public class PublishCleanAction extends AbstractServerAction {
 	/**
 	 * Return true if this server can currently be acted on.
 	 * @return boolean
-	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param server a server
 	 */
 	public boolean accept(IServer server) {
 		return server.canPublish().isOK();
@@ -43,7 +44,7 @@ public class PublishCleanAction extends AbstractServerAction {
 
 	/**
 	 * Perform action on this server.
-	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param server a server
 	 */
 	public void perform(IServer server) {
 		if (!ServerUIPlugin.promptIfDirty(shell, server))
@@ -52,8 +53,16 @@ public class PublishCleanAction extends AbstractServerAction {
 		if (!ServerUIPlugin.saveEditors())
 			return;
 		
+		final IAdaptable info = new IAdaptable() {
+			public Object getAdapter(Class adapter) {
+				if (Shell.class.equals(adapter))
+					return shell;
+				return null;
+			}
+		};
+		
 		if (MessageDialog.openConfirm(shell, Messages.defaultDialogTitle, Messages.dialogPublishClean)) {
-			PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_CLEAN, false);
+			PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_CLEAN, info);
 			publishJob.setUser(true);
 			publishJob.schedule();
 		}

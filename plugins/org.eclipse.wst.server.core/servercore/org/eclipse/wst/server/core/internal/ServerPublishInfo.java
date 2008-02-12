@@ -32,7 +32,6 @@ import org.eclipse.wst.server.core.model.IModuleFile;
 import org.eclipse.wst.server.core.model.IModuleFolder;
 import org.eclipse.wst.server.core.model.IModuleResource;
 import org.eclipse.wst.server.core.model.IModuleResourceDelta;
-import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 /**
  * Helper to obtain and store the publishing information (what files
  * were published and when) for a single server.
@@ -183,7 +182,7 @@ public class ServerPublishInfo {
 		return mpi;
 	}
 
-	public void addRemovedModules(List<IModule[]> moduleList, List<Integer> kindList) {
+	public void addRemovedModules(List<IModule[]> moduleList) {
 		int size = moduleList.size();
 		List<ModulePublishInfo> removed = new ArrayList<ModulePublishInfo>();
 		Iterator iterator = modulePublishInfo.keySet().iterator();
@@ -228,10 +227,8 @@ public class ServerPublishInfo {
 					}
 				}
 			}
-			if (module2 != null && module2.length > 0) {
+			if (module2 != null && module2.length > 0)
 				moduleList.add(module2);
-				kindList.add(new Integer(ServerBehaviourDelegate.REMOVED));
-			}
 		}
 	}
 

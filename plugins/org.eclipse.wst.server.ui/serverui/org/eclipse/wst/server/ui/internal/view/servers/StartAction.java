@@ -12,6 +12,7 @@ package org.eclipse.wst.server.ui.internal.view.servers;
 
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -147,7 +148,7 @@ public class StartAction extends AbstractServerAction {
 		start(server, launchMode, shell);
 	}
 
-	public static void start(IServer server, String launchMode, Shell shell) {
+	public static void start(IServer server, String launchMode, final Shell shell) {
 		if (server.getServerState() != IServer.STATE_STARTED) {
 			if (!ServerUIPlugin.saveEditors())
 				return;
@@ -158,8 +159,16 @@ public class StartAction extends AbstractServerAction {
 				return;
 			}
 			
+			final IAdaptable info = new IAdaptable() {
+				public Object getAdapter(Class adapter) {
+					if (Shell.class.equals(adapter))
+						return shell;
+					return null;
+				}
+			};
+			
 			try {
-				PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, false); 
+				PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, info); 
 				StartServerJob startJob = new StartServerJob(server, launchMode);
 				
 				if (((ServerType)server.getServerType()).startBeforePublish()) {

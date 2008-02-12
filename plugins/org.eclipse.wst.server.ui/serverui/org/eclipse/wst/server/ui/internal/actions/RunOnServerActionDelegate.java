@@ -181,6 +181,13 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				shell2 = Display.getDefault().getActiveShell();
 		}
 		final Shell shell = shell2;
+		final IAdaptable info = new IAdaptable() {
+			public Object getAdapter(Class adapter) {
+				if (Shell.class.equals(adapter))
+					return shell;
+				return null;
+			}
+		};
 		
 		// get a valid ModuleArtifact that we can use for launching
 		// TODO The ModuleArtifactComposite should be part of the RunOnServerWizard
@@ -414,7 +421,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 						}
 					}
 					
-					PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, false);
+					PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, info);
 					LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
 					publishJob.setNextJob(clientJob);
 					
@@ -425,7 +432,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 					} else
 						publishJob.schedule();
 				} else if (state != IServer.STATE_STOPPING) {
-					PublishServerJob publishJob = new PublishServerJob(server);
+					PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, info);
 					StartServerJob startServerJob = new StartServerJob(server, launchMode);
 					LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
 					

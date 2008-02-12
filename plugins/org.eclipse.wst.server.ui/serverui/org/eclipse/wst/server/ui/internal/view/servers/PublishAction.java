@@ -10,6 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
@@ -44,14 +45,22 @@ public class PublishAction extends AbstractServerAction {
 		publish(server, shell);
 	}
 
-	public static void publish(IServer server, Shell shell) {
+	public static void publish(IServer server, final Shell shell) {
 		if (shell != null && !ServerUIPlugin.promptIfDirty(shell, server))
 			return;
 		
 		if (!ServerUIPlugin.saveEditors())
 			return;
 		
-		PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, false);
+		final IAdaptable info = new IAdaptable() {
+			public Object getAdapter(Class adapter) {
+				if (Shell.class.equals(adapter))
+					return shell;
+				return null;
+			}
+		};
+		
+		PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, info);
 		publishJob.setUser(true);
 		publishJob.schedule();
 	}
