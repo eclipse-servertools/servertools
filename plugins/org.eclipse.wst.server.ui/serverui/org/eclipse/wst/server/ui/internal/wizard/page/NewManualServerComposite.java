@@ -307,7 +307,12 @@ public class NewManualServerComposite extends Composite {
 			handleTypeSelection(serverTypeComposite.getSelectedServerType());
 		else if (server != null) {
 			server.setHost(host);
-			ServerUtil.setServerDefaultName(server);
+			if (!serverNameModified) {
+				updatingServerName = true;
+				ServerUtil.setServerDefaultName(server);
+				serverName.setText(server.getName());
+				updatingServerName = false;
+			}
 		}
 	}
 
