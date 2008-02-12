@@ -201,4 +201,14 @@
       </action>
     </objectContribution>
   </extension>
+
+  <extension point="org.eclipse.wst.server.core.publishers">
+     <publisher
+        id="org.eclipse.jst.server.tomcat.ui.context"
+        typeIds="org.eclipse.jst.server.tomcat.*"
+        name="%publisherContextFixLabel"
+        description="%publisherContextFixDescription"
+        order=""
+        class="org.eclipse.jst.server.tomcat.ui.internal.ContextPublisherDelegate"/>
+  </extension>
 </plugin>
