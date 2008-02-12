@@ -193,14 +193,16 @@ public class ServerTableLabelProvider extends BaseCellLabelProvider{
 			if (ServerTableViewer.publishing.contains(serverId))
 				return syncState[4];
 			
-			int i = 0;
-			//if (server.getServerRestartState())
-			if (((Server)server).shouldRestart())
-				i = 1;
-			
 			// republish
-			if (((Server)server).shouldPublish())
+			int i = 0;
+			if (server.shouldPublish()) {
+				if (((Server)server).isPublishUnknown())
+					return "";
 				i += 2;
+			}
+			
+			if (server.shouldRestart())
+				i = 1;
 			
 			//IServerType serverType = server.getServerType();
 			// TODO: state set
@@ -210,7 +212,7 @@ public class ServerTableLabelProvider extends BaseCellLabelProvider{
 		} else
 			return "-";
 	}
-	
+
 	protected String notNull(String s) {
 		if (s == null)
 			return "";

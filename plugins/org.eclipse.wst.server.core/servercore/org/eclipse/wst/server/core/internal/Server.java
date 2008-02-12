@@ -870,6 +870,26 @@ public class Server extends Base implements IServer {
 		return publish[0];
 	}
 
+	public boolean isPublishUnknown() {
+		if (getServerPublishState() != PUBLISH_STATE_UNKNOWN)
+			return false;
+		
+		final boolean[] publish = new boolean[1];
+		publish[0] = true;
+		
+		visit(new IModuleVisitor() {
+			public boolean visit(IModule[] module) {
+				if (getModulePublishState(module) != PUBLISH_STATE_UNKNOWN) {
+					publish[0] = false;
+					return false;
+				}
+				return true;
+			}
+		}, null);
+		
+		return publish[0];
+	}
+
 	/**
 	 * Returns true if the server should be restarted. This is <code>true</code> when the server
 	 * can be restarted and the server's restart state or any module's restart states is not
