@@ -173,10 +173,8 @@ public class TasksWizardFragment extends WizardFragment {
 				tasks = taskList;
 				updateChildFragments();
 				
-				boolean b = tasks == null || !tasks.isEmpty();
-				if (hasOptionalTasks)
-					b = true;
-				getTaskModel().putObject(WizardTaskUtil.TASK_HAS_TASKS, new Boolean(b));
+				boolean b = hasOptionalTasks || hasPreferredTasks;
+				getTaskModel().putObject(WizardTaskUtil.TASK_HAS_TASKS, new Boolean(b));				
 			}
 		}
 	}
