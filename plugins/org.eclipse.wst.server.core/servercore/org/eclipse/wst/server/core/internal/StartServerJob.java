@@ -44,6 +44,10 @@ public class StartServerJob extends ChainedJob {
 				// ignore
 			}
 		}
-		return status[0];
+		if (status[0] != null)
+			return status[0];
+		
+		getServer().stop(true, null);
+		return Status.CANCEL_STATUS;
 	}
 }

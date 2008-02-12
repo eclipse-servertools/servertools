@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,9 +10,13 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
+import org.eclipse.core.runtime.jobs.IJobManager;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.ServerUtil;
+import org.eclipse.wst.server.core.internal.StartServerJob;
 import org.eclipse.wst.server.core.internal.StopServerJob;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
@@ -57,6 +61,18 @@ public class StopAction extends AbstractServerAction {
 
 	public static void stop(IServer server, Shell shell) {
 		ServerUIPlugin.addTerminationWatch(shell, server, ServerUIPlugin.STOP);
+		
+		IJobManager jobManager = Job.getJobManager();
+		Job[] jobs = jobManager.find(ServerUtil.SERVER_JOB_FAMILY);
+		for (Job j: jobs) {
+			if (j instanceof StartServerJob) {
+				StartServerJob startJob = (StartServerJob) j;
+				if (startJob.getServer().equals(server)) {
+					startJob.cancel();
+					return;
+				}
+			}
+		}
 		
 		StopServerJob stopJob = new StopServerJob(server);
 		stopJob.schedule();
