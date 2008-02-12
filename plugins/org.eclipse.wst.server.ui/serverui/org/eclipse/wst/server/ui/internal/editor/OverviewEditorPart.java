@@ -675,7 +675,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			
 			// publishers
 			Publisher[] pubs = ((Server)server).getAllPublishers();
-			if (pubs != null) {
+			if (pubs != null && pubs.length > 0) {
 				Label label = toolkit.createLabel(composite, Messages.serverEditorOverviewPublishers);
 				data = new GridData(GridData.FILL_HORIZONTAL);
 				data.horizontalSpan = 2;
@@ -696,6 +696,10 @@ public class OverviewEditorPart extends ServerEditorPart {
 				publishersViewer.setContentProvider(new PublisherContentProvider(pubs));
 				publishersViewer.setLabelProvider(new PublishLabelProvider());
 				publishersViewer.setInput("root");
+				
+				Publisher[] pubs2 = ((Server)server).getEnabledPublishers();
+				for (Publisher p : pubs2)
+					publishersViewer.setChecked(p, true);
 				
 				publishersViewer.addCheckStateListener(new ICheckStateListener() {
 					public void checkStateChanged(CheckStateChangedEvent event) {
