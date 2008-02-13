@@ -11,7 +11,9 @@
 package org.eclipse.wst.server.core.internal;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -31,6 +33,7 @@ public class ModuleFactory implements IOrdered {
 	private List moduleTypes;
 	
 	private List modules;
+	private Map projectToModulesMap = new HashMap();
 
 	/**
 	 * ModuleFactory constructor comment.
@@ -126,13 +129,19 @@ public class ModuleFactory implements IOrdered {
 	public IModule[] getModules(IProject project) {
 		ModuleFactoryDelegate mfd = getDelegate(null);
 		if (mfd instanceof ProjectModuleFactoryDelegate) {
-			return ((ProjectModuleFactoryDelegate) mfd).getModules204165(project);
+			IModule[] result = (IModule[])projectToModulesMap.get(project);
+			if (result == null) {
+				result = ((ProjectModuleFactoryDelegate) mfd).getModules204165(project);
+				projectToModulesMap.put(project, result);
+			}
+			return result;
 		}
 		return mfd.getModules();
 	}
 
 	public void clearModuleCache() {
 		modules = null;
+		projectToModulesMap.clear();
 	}
 
 	/*
