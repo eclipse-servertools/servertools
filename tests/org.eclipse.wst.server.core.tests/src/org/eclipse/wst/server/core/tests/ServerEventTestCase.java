@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests;
 
+import java.util.List;
+
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.ILaunch;
@@ -186,14 +189,14 @@ public class ServerEventTestCase extends TestCase {
 			public ILaunch getLaunch() {
 				return null;
 			}
-			public void publish(int kind, IModule[] modules, IOperationListener listener) {
-				// do nothing
-			}
 			public int getStartTimeout() {
 				return 0;
 			}
 			public int getStopTimeout() {
 				return 0;
+			}
+			public void publish(int kind, List<IModule[]> modules, IAdaptable info, IOperationListener listener) {
+				// do nothing
 			}
 		};
 	}
