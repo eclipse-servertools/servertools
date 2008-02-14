@@ -995,8 +995,13 @@ public class Server extends Base implements IServer {
 			firePublishStarted();
 			
 			getServerPublishInfo().startCaching();
-			//IStatus status = 
-			getBehaviourDelegate(monitor).publish(kind, modules3, monitor, info);
+			IStatus status = Status.OK_STATUS;
+			try {
+				getBehaviourDelegate(monitor).publish(kind, modules3, monitor, info);
+			} catch (CoreException ce) {
+				Trace.trace(Trace.WARNING, "Error during publishing", ce);
+				status = ce.getStatus();
+			}
 			
 			final List<IModule[]> modules2 = new ArrayList<IModule[]>();
 			visit(new IModuleVisitor() {
@@ -1015,7 +1020,7 @@ public class Server extends Base implements IServer {
 			
 			firePublishFinished(Status.OK_STATUS);
 			Trace.trace(Trace.PERFORMANCE, "Server.publish(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
-			return Status.OK_STATUS;
+			return status;
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate publish() " + toString(), e);
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e);

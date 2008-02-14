@@ -758,7 +758,7 @@ public abstract class ServerBehaviourDelegate {
 				return Status.CANCEL_STATUS;
 			
 			// publish modules
-			publishModules(kind, moduleList, null, tempMulti, monitor);
+			publishModules(kind, moduleList, deltaKindList, tempMulti, monitor);
 			
 			if (monitor.isCanceled())
 				return Status.CANCEL_STATUS;
@@ -916,16 +916,15 @@ public abstract class ServerBehaviourDelegate {
 			if (getServer().getModulePublishState(module) == IServer.PUBLISH_STATE_UNKNOWN)
 				kind2 = IServer.PUBLISH_FULL;
 			
-			int deltaKind = 0;
+			/*int deltaKind = ServerBehaviourDelegate.ADDED;
 			if (hasBeenPublished(module)) {
 				if (getPublishedResourceDelta(module).length == 0)
 					deltaKind = ServerBehaviourDelegate.NO_CHANGE;
 				else
 					deltaKind = ServerBehaviourDelegate.CHANGED;
-			} else
-				deltaKind = ServerBehaviourDelegate.ADDED;
+			} // TODO REMOVED*/
 			
-			IStatus status = publishModule(kind2, module, deltaKind, ProgressUtil.getSubMonitorFor(monitor, 3000));
+			IStatus status = publishModule(kind2, module, ((Integer)deltaKind2.get(i)).intValue(), ProgressUtil.getSubMonitorFor(monitor, 3000));
 			if (status != null && !status.isOK())
 				multi.add(status);
 		}

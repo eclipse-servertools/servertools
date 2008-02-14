@@ -90,8 +90,6 @@ public class ServerPreferences {
 		return preferences.getInt(PREF_MODULE_START_TIMEOUT);
 	}
 
-
-
 	/**
 	 * Set the default values.
 	 */
