@@ -161,7 +161,7 @@
 	           description="%jboss5serverTypeDescription"
 	           launchConfigId="org.eclipse.jst.server.generic.core.launchConfigurationType"
 	           behaviourClass="org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour"
-	           name="%jboss4serverTypeName"
+	           name="%jboss5serverTypeName"
 	           startTimeout="50000"
 		       stopTimeout="15000"
 	           hasConfiguration="false"

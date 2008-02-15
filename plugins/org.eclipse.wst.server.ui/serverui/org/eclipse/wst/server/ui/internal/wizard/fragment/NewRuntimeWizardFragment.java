@@ -92,6 +92,14 @@ public class NewRuntimeWizardFragment extends WizardFragment {
 					}
 				}
 				
+				list.add(new WizardFragment() {
+					public void enter() {
+						IRuntimeWorkingCopy runtime2 = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
+						IServerWorkingCopy server2 = (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
+						server2.setRuntime(runtime2);
+					}
+				});
+				
 				sub = getWizardFragment(server.getServerType().getId());
 				if (sub != null)
 					list.add(sub);

@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -213,7 +214,7 @@ public class NewServerComposite extends Composite {
 		createAutoComposite(stack);
 		createManualComposite(stack);
 	
-		if (existingComp != null) {
+		if (existingComp != null && existing != null) {
 			if (isExistingServer()) {
 				mode = MODE_EXISTING;
 				stackLayout.topControl = existingComp;
@@ -334,62 +335,15 @@ public class NewServerComposite extends Composite {
 				
 				// check for compatibility
 				if (server != null && module != null) {
-					IServerType serverType = server.getServerType();
-					IModuleType mt = module.getModuleType();
-					if (!ServerUtil.isSupportedModule(serverType.getRuntimeType().getModuleTypes(), mt)) {
-						String type = mt.getName();
-						wizard.setMessage(NLS.bind(Messages.errorVersionLevel, new Object[] { type, mt.getVersion() }), IMessageProvider.ERROR);
+					IStatus status = isSupportedModule(server, module);
+					if (status != null) {
+						if (status.getSeverity() == IStatus.ERROR)
+							wizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
+						else if (status.getSeverity() == IStatus.WARNING)
+							wizard.setMessage(status.getMessage(), IMessageProvider.WARNING);
+						else if (status.getSeverity() == IStatus.INFO)
+							wizard.setMessage(status.getMessage(), IMessageProvider.INFORMATION);
 						server = null;
-					}
-					
-					if (wizard.getMessage() == null) {
-						IModule[] rootModules = null;
-						try {
-							rootModules = server.getRootModules(module, null);
-						} catch (CoreException ce) {
-							IStatus status = ce.getStatus();
-							if (status != null) {
-								if (status.getSeverity() == IStatus.ERROR)
-									wizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
-								else if (status.getSeverity() == IStatus.WARNING)
-									wizard.setMessage(status.getMessage(), IMessageProvider.WARNING);
-								else if (status.getSeverity() == IStatus.INFO)
-									wizard.setMessage(status.getMessage(), IMessageProvider.INFORMATION);
-								server = null;
-							}
-						} catch (Exception e) {
-							Trace.trace(Trace.WARNING, "Could not find root module", e);
-						}
-						if (rootModules != null) {
-							if (rootModules.length == 0) {
-								wizard.setMessage(Messages.errorRootModule, IMessageProvider.ERROR);
-								server = null;
-							} else {
-								int size = rootModules.length;
-								IStatus status = null;
-								boolean found = false;
-								for (int i = 0; i < size; i++) {
-									try {
-										status = server.canModifyModules(new IModule[] {rootModules[i]}, null, null);
-										if (status != null && status.isOK())
-											found = true;
-									} catch (Exception e) {
-										Trace.trace(Trace.WARNING, "Could not find root module", e);
-									}
-								}
-								if (!found && status != null) {
-									if (status != null) {
-										if (status.getSeverity() == IStatus.ERROR)
-											wizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
-										else if (status.getSeverity() == IStatus.WARNING)
-											wizard.setMessage(status.getMessage(), IMessageProvider.WARNING);
-										else if (status.getSeverity() == IStatus.INFO)
-											wizard.setMessage(status.getMessage(), IMessageProvider.INFORMATION);
-										server = null;
-									}
-								}
-							}
-						}
 					}
 				}
 				
@@ -409,7 +363,55 @@ public class NewServerComposite extends Composite {
 		data.heightHint = 150;
 		existingComp.setLayoutData(data);
 	}
-	
+
+	/**
+	 * Returns the status of whether the given module could be added to the server.
+	 * 
+	 * @param server a server
+	 * @param module a module
+	 * @return an IStatus representing the error or warning, or null if there are no problems
+	 */
+	protected static IStatus isSupportedModule(IServerAttributes server, IModule module) {
+		if (server != null && module != null) {
+			IServerType serverType = server.getServerType();
+			IModuleType mt = module.getModuleType();
+			if (!ServerUtil.isSupportedModule(serverType.getRuntimeType().getModuleTypes(), mt)) {
+				String type = mt.getName();
+				return new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, NLS.bind(Messages.errorVersionLevel, new Object[] { type, mt.getVersion() }));
+			}
+			
+			IModule[] rootModules = null;
+			try {
+				rootModules = server.getRootModules(module, null);
+			} catch (CoreException ce) {
+				return ce.getStatus();
+			} catch (Exception e) {
+				Trace.trace(Trace.WARNING, "Could not find root module", e);
+			}
+			if (rootModules != null) {
+				if (rootModules.length == 0)
+					return new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, Messages.errorRootModule);
+				
+				int size = rootModules.length;
+				IStatus status = null;
+				boolean found = false;
+				for (int i = 0; i < size; i++) {
+					try {
+						if (server != null)
+							status = server.canModifyModules(new IModule[] {rootModules[i]}, null, null);
+						if (status != null && status.isOK())
+							found = true;
+					} catch (Exception e) {
+						Trace.trace(Trace.WARNING, "Could not find root module", e);
+					}
+				}
+				if (!found && status != null)
+					return status;
+			}
+		}
+		return null;
+	}
+
 	protected boolean isExistingServer() {
 		if (module == null || launchMode == null)
 			return false;
@@ -457,7 +459,7 @@ public class NewServerComposite extends Composite {
 			public void setMessage(String newMessage, int newType) {
 				wizard.setMessage(newMessage, newType);
 			}
-		}, mt, serverTypeId, includeIncompatible, new NewManualServerComposite.ServerSelectionListener() {
+		}, mt, module, serverTypeId, includeIncompatible, new NewManualServerComposite.ServerSelectionListener() {
 			public void serverSelected(IServerAttributes server) {
 				updateTaskModel();
 			}

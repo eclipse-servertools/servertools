@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -71,6 +72,7 @@ public class NewManualServerComposite extends Composite {
 	protected String host;
 
 	protected IModuleType moduleType;
+	protected IModule module;
 	protected String serverTypeId;
 	protected boolean includeIncompatible;
 
@@ -84,21 +86,38 @@ public class NewManualServerComposite extends Composite {
 	 * @param parent a parent composite
 	 * @param wizard a wizard handle
 	 * @param moduleType a module type
+	 * @param module an optional module
 	 * @param serverTypeId a server type id, or null
 	 * @param includeIncompatible true to include incompatible servers that support similar module types
 	 * @param listener a server selection listener
 	 */
-	public NewManualServerComposite(Composite parent, IWizardHandle2 wizard, IModuleType moduleType, String serverTypeId, boolean includeIncompatible, ServerSelectionListener listener) {
+	public NewManualServerComposite(Composite parent, IWizardHandle2 wizard, IModuleType moduleType, IModule module, String serverTypeId, boolean includeIncompatible, ServerSelectionListener listener) {
 		super(parent, SWT.NONE);
 		this.wizard = wizard;
 		this.listener = listener;
 		
 		this.moduleType = moduleType;
+		this.module = module;
 		this.serverTypeId = serverTypeId;
 		this.includeIncompatible = includeIncompatible;
 		
 		createControl();
 		wizard.setMessage("", IMessageProvider.ERROR); //$NON-NLS-1$
+	}
+
+	/**
+	 * @deprecated Old internal constructor left to ensure no chance of incompatibility. You must remove any usage
+	 *    before moving to WTP 3.0.
+	 * 
+	 * @param parent
+	 * @param wizard
+	 * @param moduleType
+	 * @param serverTypeId
+	 * @param includeIncompatible
+	 * @param listener
+	 */
+	public NewManualServerComposite(Composite parent, IWizardHandle2 wizard, IModuleType moduleType, String serverTypeId, boolean includeIncompatible, ServerSelectionListener listener) {
+		this(parent, wizard, moduleType, null, serverTypeId, includeIncompatible, listener);
 	}
 
 	/**
@@ -381,7 +400,20 @@ public class NewManualServerComposite extends Composite {
 		} else {
 			wizard.setMessage(null, IMessageProvider.NONE);
 			loadServerImpl(serverType);
+			if (server != null && module != null) {
+				IStatus status = NewServerComposite.isSupportedModule(server, module);
+				if (status != null) {
+					if (status.getSeverity() == IStatus.ERROR)
+						wizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
+					else if (status.getSeverity() == IStatus.WARNING)
+						wizard.setMessage(status.getMessage(), IMessageProvider.WARNING);
+					else if (status.getSeverity() == IStatus.INFO)
+						wizard.setMessage(status.getMessage(), IMessageProvider.INFORMATION);
+					server = null;
+				}
+			}
 		}
+		
 		updateRuntimeCombo(serverType);
 		listener.serverSelected(server);
 		wizard.update();

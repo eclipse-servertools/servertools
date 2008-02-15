@@ -70,7 +70,7 @@ public class GenericServerRuntimeWizardFragment extends
         if( ir != null )
         {
             fDecorators = new GenericServerCompositeDecorator[3];
-            fDecorators[0] = new JRESelectDecorator( getRuntimeDelegate() );
+            fDecorators[0] = new JRESelectDecorator( getRuntimeDelegate(), getWizard() );
             fDecorators[1] = new ServerTypeDefinitionRuntimeDecorator(
                     definition, properties, getWizard(), getRuntimeDelegate() );
             fDecorators[2] = new InstallableRuntimeDecorator( getWizard(),
@@ -78,7 +78,7 @@ public class GenericServerRuntimeWizardFragment extends
         } else
         {
             fDecorators = new GenericServerCompositeDecorator[2];
-            fDecorators[0] = new JRESelectDecorator( getRuntimeDelegate() );
+            fDecorators[0] = new JRESelectDecorator( getRuntimeDelegate(), getWizard() );
             fDecorators[1] = new ServerTypeDefinitionRuntimeDecorator(
                     definition, properties, getWizard(), getRuntimeDelegate() );
         }
@@ -109,7 +109,7 @@ public class GenericServerRuntimeWizardFragment extends
 
         for( int i = 0; i < fDecorators.length; i++ )
         {
-            if( fDecorators[i].validate() )
+            if( fDecorators[i].validate() )//failed do not continue
                 return;
         }
     }
@@ -118,7 +118,7 @@ public class GenericServerRuntimeWizardFragment extends
         // validate to save latest values
         for( int i = 0; i < fDecorators.length; i++ )
         {
-            if( fDecorators[i].validate() )
+            if( fDecorators[i].validate() )//failed do not continue
                 return;
         }
     }

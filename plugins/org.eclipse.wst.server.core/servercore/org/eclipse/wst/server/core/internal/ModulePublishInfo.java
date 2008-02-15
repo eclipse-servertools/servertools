@@ -210,9 +210,9 @@ public class ModulePublishInfo {
 			out.writeUTF(moduleId);
 			byte b = 0;
 			if (name != null)
-				b &= 1;
+				b |= 1;
 			if (moduleType != null)
-				b &= 2;
+				b |= 2;
 			out.writeByte(b);
 			
 			if (name != null)

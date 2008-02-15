@@ -249,7 +249,7 @@ public class Server extends Base implements IServer {
 
 	protected void deleteFromFile() throws CoreException {
 		super.deleteFromFile();
-		ResourceManager.getInstance().deregisterServer(this);
+		ResourceManager.getInstance().removeServer(this);
 	}
 
 	protected void deleteFromMetadata() {
@@ -258,7 +258,7 @@ public class Server extends Base implements IServer {
 
 	protected void saveToFile(IProgressMonitor monitor) throws CoreException {
 		super.saveToFile(monitor);
-		ResourceManager.getInstance().registerServer(this);
+		ResourceManager.getInstance().addServer(this);
 	}
 
 	protected void saveToMetadata(IProgressMonitor monitor) {
@@ -307,7 +307,7 @@ public class Server extends Base implements IServer {
 		if (behaviourDelegate != null || serverType == null)
 			return behaviourDelegate;
 		
-		synchronized (this) {
+		synchronized (moduleState) {
 			if (behaviourDelegate == null) {
 				try {
 					long time = System.currentTimeMillis();
@@ -1641,7 +1641,7 @@ public class Server extends Base implements IServer {
 						// notify waiter
 						synchronized (notified) {
 							Trace.trace(Trace.FINEST, "synchronousStart notify timeout");
-							if (!timer.alreadyDone && totalTimeout < 0)
+							if (!timer.alreadyDone && totalTimeout <= 0)
 								timer.timeout = true;
 							notified[0] = true;
 							notified.notifyAll();
