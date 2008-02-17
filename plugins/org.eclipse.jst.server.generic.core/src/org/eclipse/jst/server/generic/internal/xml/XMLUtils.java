@@ -175,7 +175,7 @@ public class XMLUtils {
     	Iterator defs = getServerTypeDefinitions().iterator();
         while (id != null && defs.hasNext()) {
             ServerRuntime elem = (ServerRuntime) defs.next();
-            if (id.equals(elem.getId()))
+            if ( elem.getId().equals( id ) )
                 return elem;
         }
         return null;
@@ -197,7 +197,7 @@ public class XMLUtils {
         Iterator defs = getRuntimeTypeDefinitions().iterator();
         while (defs.hasNext()) {
             ServerRuntime elem = (ServerRuntime) defs.next();
-            if (id.equals(elem.getId()))
+            if ( elem.getId().equals(id) )
                 return elem;
         }
         return null;

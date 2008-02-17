@@ -32,6 +32,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.IURLProvider;
@@ -241,7 +242,18 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	 */
     public ServerRuntime getServerDefinition(){
         IServer server = getServer();
-		String rtTypeId = server.getRuntime().getRuntimeType().getId();
+        if (server == null)
+        {
+        	throw new IllegalStateException("No server determeined. Server definition can not be determined without a server"); //$NON-NLS-1$
+        }
+        
+        String rtTypeId=null;
+        if ( server.getRuntime() != null &&
+        		server.getRuntime().getRuntimeType() != null )
+        {
+        	rtTypeId = server.getRuntime().getRuntimeType().getId();
+        }
+		
         String serverTypeId = server.getServerType().getId();
         /**
          * Pass both the serverType id and runtimeType id and ServerTypeDefinitionManager 
@@ -326,6 +338,12 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	}
  
 	public void setDefaults(IProgressMonitor monitor) {
+		ServerRuntime serverRuntime =  this.getServerDefinition(); 
+		// although a server should always have a serverdefinition in some cases 
+		// the runtime is not created yet and serverdef can not be determined.
+		if (serverRuntime == null ){
+			return ;
+		}
  		List props = this.getServerDefinition().getProperty();
  		Map instancePropsMap = new HashMap();
  		for (Iterator iter = props.iterator(); iter.hasNext();) {

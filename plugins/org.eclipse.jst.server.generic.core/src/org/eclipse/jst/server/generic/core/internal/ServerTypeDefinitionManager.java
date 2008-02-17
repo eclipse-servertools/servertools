@@ -79,7 +79,7 @@ public class ServerTypeDefinitionManager
         if (serverdef != null) {
             ServerRuntime runtimedef = fXmlUtils.getRuntimeTypeDefinition(runtimeTypeId);
             if (runtimedef == null) {
-            	// Fall back to the original usage
+            	// Fall back to single .serverdef
                 serverdef = fXmlUtils.getServerTypeDefinition(runtimeTypeId);
             }
             else {
@@ -87,7 +87,7 @@ public class ServerTypeDefinitionManager
             }
         }
         else {
-            // Fall back to the original usage
+            // Fall back to the single serverdef
             serverdef = fXmlUtils.getServerTypeDefinition(runtimeTypeId);
         }
         
