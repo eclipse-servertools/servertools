@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -348,8 +349,20 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
  		Map instancePropsMap = new HashMap();
  		for (Iterator iter = props.iterator(); iter.hasNext();) {
 			Property element = (Property) iter.next();
-			if(Property.CONTEXT_SERVER.equalsIgnoreCase(element.getContext()))
-				instancePropsMap.put(element.getId(), element.getDefault());
+			if(Property.CONTEXT_SERVER.equalsIgnoreCase(element.getContext())) {
+				//if the property type is this is a combo, parse the value and use the first token as the default
+				if (Property.TYPE_SELECT.equals(element.getType()) ||
+						Property.TYPE_SELECT_EDIT.equals(element.getType())) {
+		    		StringTokenizer tokenizer = new StringTokenizer(element.getDefault(),","); //$NON-NLS-1$
+		    		if (tokenizer.hasMoreTokens()) {
+		    			String firstToken = tokenizer.nextToken();
+		    			instancePropsMap.put(element.getId(), firstToken);
+		    		}
+				} else {
+					//not a combo, so just pass through the default value
+					instancePropsMap.put(element.getId(), element.getDefault());
+				}
+			}
 		}
  		setServerInstanceProperties(instancePropsMap);
  	}
