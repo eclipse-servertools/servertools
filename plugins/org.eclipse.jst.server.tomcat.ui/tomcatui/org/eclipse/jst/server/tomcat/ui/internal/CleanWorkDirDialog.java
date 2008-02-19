@@ -65,7 +65,7 @@ public class CleanWorkDirDialog extends Dialog {
 	protected IModule module;
 	protected int state;
 	protected String mode;
-	protected IStatus completionStatus = Status.OK_STATUS;
+	protected IStatus completionStatus;
 	
 	/**
 	 * Creates a dialog instance confirm deletion of the work directory for a
@@ -196,6 +196,8 @@ public class CleanWorkDirDialog extends Dialog {
 		}
 
 		protected IStatus run(IProgressMonitor monitor) {
+			final Object mutex = new Object();
+			
 			// If state has changed since dialog was open, abort
 			if (server.getServerState() != state) {
 				return newErrorStatus(ERROR_PREDELETE, Messages.errorCouldNotCleanStateChange, null);
@@ -203,7 +205,10 @@ public class CleanWorkDirDialog extends Dialog {
 
 			IOperationListener listener = new IOperationListener() {
 				public void done(IStatus result) {
-					completionStatus = result;
+					synchronized (mutex) {
+						completionStatus = result;
+						mutex.notifyAll();
+					}
 				}
 			};
 			boolean restart = false;
@@ -215,8 +220,19 @@ public class CleanWorkDirDialog extends Dialog {
 					return wrapErrorStatus(status, ERROR_PREDELETE, Messages.errorCouldNotCleanCantStop);
 				}
 
-				server.stop(false, listener);
+				// Stop the server and wait for completion
+				synchronized (mutex) {
+					server.stop(false, listener);
 
+					while (completionStatus == null) {
+						try {
+							mutex.wait();
+						} catch (InterruptedException e) {
+							// Ignore
+						}
+					}
+				}
+				
 				if (!completionStatus.isOK()) {
 					return wrapErrorStatus(completionStatus, ERROR_PREDELETE, Messages.errorCouldNotCleanStopFailed);
 				}
@@ -224,6 +240,7 @@ public class CleanWorkDirDialog extends Dialog {
 					return newErrorStatus(ERROR_PREDELETE, Messages.errorCouldNotCleanStopFailed, null);
 				}
 				restart = true;
+				completionStatus = null;
 			}
 				
 			// Delete the work directory
@@ -251,13 +268,26 @@ public class CleanWorkDirDialog extends Dialog {
 				return wrapErrorStatus(status, ERROR_DURINGDELETE,
 						restart ? Messages.errorErrorDuringCleanWasRunning : Messages.errorErrorDuringClean);
 			}
-				
+
 			if (restart) {
 				status = server.canStart(mode);
 				if (!status.isOK()) {
 					return wrapErrorStatus(status, ERROR_POSTDELETE, Messages.errorCleanCantRestart);
 				}
-				server.start(mode, listener);
+
+				// Restart the server and wait for completion
+				synchronized (mutex) {
+					server.start(mode, listener);
+
+					while (completionStatus == null) {
+						try {
+							mutex.wait();
+						} catch (InterruptedException e) {
+							// Ignore
+						}
+					}
+				}
+				
 				if (!completionStatus.isOK()) {
 					return wrapErrorStatus(completionStatus, ERROR_POSTDELETE, Messages.errorCleanRestartFailed);
 				}
