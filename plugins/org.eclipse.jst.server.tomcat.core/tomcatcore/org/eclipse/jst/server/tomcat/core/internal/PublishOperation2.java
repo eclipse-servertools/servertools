@@ -15,10 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.jst.server.core.PublishUtil;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.*;
+import org.eclipse.wst.server.core.util.PublishHelper;
 /**
  * Tomcat publish helper.
  */
@@ -27,6 +27,7 @@ public class PublishOperation2 extends PublishOperation {
 	protected IModule[] module;
 	protected int kind;
 	protected int deltaKind;
+	private PublishHelper helper;
 
 	/**
 	 * Construct the operation object to publish the specified module
@@ -43,6 +44,15 @@ public class PublishOperation2 extends PublishOperation {
 		this.module = module;
 		this.kind = kind;
 		this.deltaKind = deltaKind;
+		IPath base = server.getRuntimeBaseDirectory();
+		if (base != null) {
+			helper = new PublishHelper(base.append("temp").toFile());
+		}
+		else {
+			// We are doomed without a base directory.  However, allow the catastrophe
+			// to occur elsewhere and hope for a useful error message.
+			helper = new PublishHelper(null);
+		}
 	}
 
 	/**
@@ -81,7 +91,7 @@ public class PublishOperation2 extends PublishOperation {
 				|| server.getTomcatServer().isServeModulesWithoutPublish()) {
 			File f = path.toFile();
 			if (f.exists()) {
-				IStatus[] stat = PublishUtil.deleteDirectory(f, monitor);
+				IStatus[] stat = PublishHelper.deleteDirectory(f, monitor);
 				addArrayToList(status, stat);
 			}
 			
@@ -92,7 +102,7 @@ public class PublishOperation2 extends PublishOperation {
 		
 		if (kind == IServer.PUBLISH_CLEAN || kind == IServer.PUBLISH_FULL) {
 			IModuleResource[] mr = server.getResources(module);
-			IStatus[] stat = PublishUtil.publishFull(mr, path, monitor);
+			IStatus[] stat = helper.publishFull(mr, path, monitor);
 			addArrayToList(status, stat);
 			return;
 		}
@@ -101,7 +111,7 @@ public class PublishOperation2 extends PublishOperation {
 		
 		int size = delta.length;
 		for (int i = 0; i < size; i++) {
-			IStatus[] stat = PublishUtil.publishDelta(delta[i], path, monitor);
+			IStatus[] stat = helper.publishDelta(delta[i], path, monitor);
 			addArrayToList(status, stat);
 		}
 	}
@@ -133,7 +143,7 @@ public class PublishOperation2 extends PublishOperation {
 			path.toFile().mkdirs();
 		
 		IModuleResource[] mr = server.getResources(module);
-		IStatus[] stat = PublishUtil.publishZip(mr, jarPath, monitor);
+		IStatus[] stat = helper.publishZip(mr, jarPath, monitor);
 		addArrayToList(status, stat);
 	}
 

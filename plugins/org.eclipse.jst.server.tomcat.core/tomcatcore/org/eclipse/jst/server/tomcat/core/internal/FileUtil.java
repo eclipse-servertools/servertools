@@ -14,8 +14,8 @@ import java.io.*;
 import java.net.URL;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.jst.server.core.PublishUtil;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.server.core.util.PublishHelper;
 /**
  * Utility class with an assortment of useful file methods.
  */
@@ -187,7 +187,7 @@ public class FileUtil {
 					// delete file if it can't be found or isn't the correct type
 					if (!found) {
 						if (isDir)
-							PublishUtil.deleteDirectory(toFiles[i], null);
+							PublishHelper.deleteDirectory(toFiles[i], null);
 						else
 							toFiles[i].delete();
 					}

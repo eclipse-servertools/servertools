@@ -22,7 +22,6 @@ import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.*;
-import org.eclipse.jst.server.core.PublishUtil;
 import org.eclipse.jst.server.tomcat.core.internal.xml.Factory;
 import org.eclipse.jst.server.tomcat.core.internal.xml.XMLUtil;
 import org.eclipse.jst.server.tomcat.core.internal.xml.server32.*;
@@ -31,6 +30,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 import org.eclipse.wst.server.core.ServerPort;
+import org.eclipse.wst.server.core.util.PublishHelper;
 /**
  * Tomcat v3.2 server configuration.
  */
@@ -730,7 +730,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 						if (confDir.isPrefixOf(ctxWorkPath)) {
 							File ctxWorkDir = ctxWorkPath.toFile();
 							if (ctxWorkDir.exists() && ctxWorkDir.isDirectory()) {
-								IStatus [] results = PublishUtil.deleteDirectory(ctxWorkDir, ProgressUtil.getSubMonitorFor(monitor, 100));
+								IStatus [] results = PublishHelper.deleteDirectory(ctxWorkDir, ProgressUtil.getSubMonitorFor(monitor, 100));
 								if (results.length > 0) {
 									Trace.trace(Trace.SEVERE, "Could not delete work directory " + ctxWorkDir.getPath() + " for removed context " + oldPath);
 									for (int i = 0; i < results.length; i++) {

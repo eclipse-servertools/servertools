@@ -32,7 +32,7 @@ import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.IModulePublishHelper;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.model.*;
-import org.eclipse.wst.server.core.util.PublishUtil;
+import org.eclipse.wst.server.core.util.PublishHelper;
 import org.eclipse.wst.server.core.util.SocketUtil;
 /**
  * Generic Tomcat server.
@@ -255,10 +255,11 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			}
 		}
 		
+		PublishHelper helper = new PublishHelper(getRuntimeBaseDirectory().append("temp").toFile());
 		if (moduleTree.length == 1) // web module
-			publishDir(deltaKind, p, moduleTree, monitor);
+			publishDir(deltaKind, p, moduleTree, helper, monitor);
 		else // utility jar
-			publishJar(kind, deltaKind, p, moduleTree, monitor);
+			publishJar(kind, deltaKind, p, moduleTree, helper, monitor);
 		
 		setModulePublishState(moduleTree, IServer.PUBLISH_STATE_NONE);
 		
@@ -278,7 +279,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 * @param monitor
 	 * @throws CoreException
 	 */
-	private void publishDir(int deltaKind, Properties p, IModule module[], IProgressMonitor monitor) throws CoreException {
+	private void publishDir(int deltaKind, Properties p, IModule module[], PublishHelper helper, IProgressMonitor monitor) throws CoreException {
 		List status = new ArrayList();
 		// Remove if requested or if previously published and are now serving without publishing
 		if (deltaKind == REMOVED || getTomcatServer().isServeModulesWithoutPublish()) {
@@ -287,7 +288,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 				try {
 					File f = new File(publishPath);
 					if (f.exists()) {
-						IStatus[] stat = PublishUtil.deleteDirectory(f, monitor);
+						IStatus[] stat = PublishHelper.deleteDirectory(f, monitor);
 						PublishOperation2.addArrayToList(status, stat);
 					}
 				} catch (Exception e) {
@@ -306,7 +307,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 					jarPaths[i] = new Path("WEB-INF/lib").append(childModules[i].getName() + ".jar");
 				}
 			}
-			IStatus[] stat = PublishUtil.publishSmart(mr, path, jarPaths, monitor);
+			IStatus[] stat = helper.publishSmart(mr, path, jarPaths, monitor);
 			PublishOperation2.addArrayToList(status, stat);
 			p.put(module[0].getId(), path.toOSString());
 		}
@@ -322,7 +323,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 * @param monitor
 	 * @throws CoreException
 	 */
-	private void publishJar(int kind, int deltaKind, Properties p, IModule[] module, IProgressMonitor monitor) throws CoreException {
+	private void publishJar(int kind, int deltaKind, Properties p, IModule[] module, PublishHelper helper, IProgressMonitor monitor) throws CoreException {
 		// Remove if requested or if previously published and are now serving without publishing
 		if (deltaKind == REMOVED || getTomcatServer().isServeModulesWithoutPublish()) {
 			try {
@@ -348,7 +349,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			}
 			
 			IModuleResource[] mr = getResources(module);
-			IStatus[] stat = PublishUtil.publishZip(mr, jarPath, monitor);
+			IStatus[] stat = helper.publishZip(mr, jarPath, monitor);
 			List status = new ArrayList();
 			PublishOperation2.addArrayToList(status, stat);
 			PublishOperation2.throwException(status);
@@ -957,7 +958,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 					for (int i = 0; i < size; i++) {
 						File current = files[i];
 						if (current.isDirectory()) {
-							IStatus [] results = PublishUtil.deleteDirectory(current, ProgressUtil.getSubMonitorFor(monitor, 10));
+							IStatus [] results = PublishHelper.deleteDirectory(current, ProgressUtil.getSubMonitorFor(monitor, 10));
 							if (results != null && results.length > 0) {
 								for (int j = 0; j < results.length; j++) {
 									ms.add(results[j]);
@@ -990,7 +991,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		IPath basePath = getRuntimeBaseDirectory();
 		IPath workPath = getTomcatConfiguration().getContextWorkDirectory(basePath, module);
 		if (workPath != null) {
-			IStatus [] results = PublishUtil.deleteDirectory(workPath.toFile(), monitor);
+			IStatus [] results = PublishHelper.deleteDirectory(workPath.toFile(), monitor);
 			MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, "Problem occurred deleting work directory for module.", null);
 			if (results != null && results.length > 0) {
 				for (int i = 0; i < results.length; i++) {

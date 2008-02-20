@@ -37,7 +37,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jst.server.core.PublishUtil;
 import org.eclipse.jst.server.tomcat.core.internal.wst.ModuleTraverser;
 import org.eclipse.jst.server.tomcat.core.internal.xml.Factory;
 import org.eclipse.jst.server.tomcat.core.internal.xml.XMLUtil;
@@ -48,6 +47,7 @@ import org.eclipse.jst.server.tomcat.core.internal.xml.server40.ServerInstance;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
+import org.eclipse.wst.server.core.util.PublishHelper;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -317,7 +317,7 @@ public class TomcatVersionHelper {
 						if (baseDir.isPrefixOf(ctxWorkPath)) {
 							File ctxWorkDir = ctxWorkPath.toFile();
 							if (ctxWorkDir.exists() && ctxWorkDir.isDirectory()) {
-								IStatus [] results = PublishUtil.deleteDirectory(ctxWorkDir, ProgressUtil.getSubMonitorFor(monitor, 100));
+								IStatus [] results = PublishHelper.deleteDirectory(ctxWorkDir, ProgressUtil.getSubMonitorFor(monitor, 100));
 								if (results.length > 0) {
 									Trace.trace(Trace.SEVERE, "Could not delete work directory " + ctxWorkDir.getPath() + " for removed context " + oldPath);
 									for (int i = 0; i < results.length; i++) {
