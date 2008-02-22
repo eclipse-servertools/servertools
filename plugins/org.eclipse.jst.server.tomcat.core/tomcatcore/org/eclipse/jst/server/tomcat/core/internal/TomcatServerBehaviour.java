@@ -295,6 +295,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 					throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0,
 							NLS.bind(Messages.errorPublishCouldNotRemoveModule,module[0].getName()), e));
 				}
+				p.remove(module[0].getId());
 			}
 		} else {
 			IPath path = getModuleDeployDirectory(module[0]);
@@ -328,7 +329,10 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		if (deltaKind == REMOVED || getTomcatServer().isServeModulesWithoutPublish()) {
 			try {
 				String publishPath = (String) p.get(module[1].getId());
-				new File(publishPath).delete();
+				if (publishPath != null) {
+					new File(publishPath).delete();
+					p.remove(module[1].getId());
+				}
 			} catch (Exception e) {
 				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, "Could not remove module", e));
 			}
