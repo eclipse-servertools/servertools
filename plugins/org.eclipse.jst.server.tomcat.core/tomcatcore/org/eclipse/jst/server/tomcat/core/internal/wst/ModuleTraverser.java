@@ -277,7 +277,6 @@ public class ModuleTraverser {
         Map classpathDeps = getComponentClasspathDependencies(project, false);
         for (Iterator iterator = classpathDeps.keySet().iterator(); iterator.hasNext();) {
 			IClasspathEntry entry = (IClasspathEntry)iterator.next();
-			IClasspathAttribute attrib = (IClasspathAttribute)classpathDeps.get(entry);
 			boolean isClassFolder = isClassFolderEntry(entry);
 			String rtFolder = null;
 			if (isClassFolder) {
@@ -316,6 +315,12 @@ public class ModuleTraverser {
             IPath outputPath) throws JavaModelException {
         if (outputPath == null)
             outputPath = javaProject.getOutputLocation();
+        // If we have the root of a project, return project location
+        if (outputPath.segmentCount() == 1) {
+        	return ResourcesPlugin.getWorkspace().getRoot().getProject(outputPath.lastSegment())
+        			.getLocation();
+        }
+        // Otherwise return project folder location
         return ResourcesPlugin.getWorkspace().getRoot().getFolder(outputPath)
                 .getLocation();
     }
