@@ -94,9 +94,6 @@ Clieint instances of this type will delegate to instances of this class to launc
                <documentation>
                   the fully qualified classname of the launchable object that this client supports
                </documentation>
-               <appinfo>
-                  <meta.attribute kind="java"/>
-               </appinfo>
             </annotation>
          </attribute>
          <attribute name="priority" type="string">
