@@ -95,7 +95,7 @@ public class RuntimeTypeComposite extends AbstractTreeComposite {
 	}
 
 	protected String getDescriptionLabel() {
-		return Messages.runtimeTypeCompDescription;
+		return null;
 	}
 
 	public void refresh() {

@@ -228,7 +228,6 @@ public class Messages extends NLS {
 	public static String columnName;
 	public static String columnType;
 	public static String runtimeTypeCompTree;
-	public static String runtimeTypeCompDescription;
 	public static String configureRuntimes;
 	public static String addRuntime;
 	public static String wizNewServerSelectExisting;

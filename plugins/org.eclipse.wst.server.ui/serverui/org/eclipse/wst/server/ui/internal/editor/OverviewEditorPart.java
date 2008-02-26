@@ -515,6 +515,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			serverConfiguration.setEditable(false);
 			GridData data = new GridData(GridData.FILL_HORIZONTAL);
 			data.horizontalIndent = decorationWidth;
+			data.widthHint = 75;
 			serverConfiguration.setLayoutData(data);
 			
 			whs.setHelp(serverConfiguration, ContextIds.EDITOR_CONFIGURATION);
