@@ -119,10 +119,6 @@ public class PreviewRuntime extends RuntimeDelegate implements IJavaRuntimeWorki
 	 * @see RuntimeDelegate#validate()
 	 */
 	public IStatus validate() {
-		IStatus status = super.validate();
-		if (!status.isOK())
-			return status;
-		
 		if (getVMInstall() == null)
 			return new Status(IStatus.ERROR, PreviewPlugin.PLUGIN_ID, 0, Messages.errorJRE, null);
 		
