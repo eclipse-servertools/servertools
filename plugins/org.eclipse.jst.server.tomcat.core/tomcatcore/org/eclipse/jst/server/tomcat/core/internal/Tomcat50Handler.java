@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -85,7 +85,7 @@ public class Tomcat50Handler implements ITomcatVersionHandler {
 	 * @see ITomcatVersionHandler#getRuntimeVMArguments(IPath, IPath, IPath, boolean)
 	 */
 	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, IPath deployPath, boolean isTestEnv) {
-		return TomcatVersionHelper.getCatalinaVMArguments(installPath, configPath, deployPath, isTestEnv);
+		return TomcatVersionHelper.getCatalinaVMArguments(installPath, configPath, deployPath, getEndorsedDirectories(installPath), isTestEnv);
 	}
 
 	/**
@@ -184,4 +184,11 @@ public class Tomcat50Handler implements ITomcatVersionHandler {
 	public boolean supportsSeparateContextFiles() {
 		return true;
 	}
+
+	/**
+	 * @see ITomcatVersionHandler#getEndorsedDirectories(IPath)
+	 */
+	public String getEndorsedDirectories(IPath installPath) {
+		return installPath.append("common").append("endorsed").toOSString();
+	}	
 }

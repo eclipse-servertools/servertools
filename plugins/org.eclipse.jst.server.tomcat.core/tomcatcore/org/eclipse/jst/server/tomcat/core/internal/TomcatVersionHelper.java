@@ -157,7 +157,7 @@ public class TomcatVersionHelper {
 	 * @param isTestEnv test environment flag
 	 * @return array of strings containing VM arguments
 	 */
-	public static String[] getCatalinaVMArguments(IPath installPath, IPath instancePath, IPath deployPath, boolean isTestEnv) {
+	public static String[] getCatalinaVMArguments(IPath installPath, IPath instancePath, IPath deployPath, String endorsedDirs, boolean isTestEnv) {
 		List list = new ArrayList();
 		if (isTestEnv)
 			list.add("-Dcatalina.base=\"" + instancePath.toOSString() + "\"");
@@ -166,7 +166,7 @@ public class TomcatVersionHelper {
 		list.add("-Dcatalina.home=\"" + installPath.toOSString() + "\"");
 		// Include a system property for the configurable deploy location
 		list.add("-Dwtp.deploy=\"" + deployPath.toOSString() + "\"");
-		list.add("-Djava.endorsed.dirs=\"" + installPath.append("common").append("endorsed").toOSString() + "\"");
+		list.add("-Djava.endorsed.dirs=\"" + endorsedDirs + "\"");
 		
 		String[] s = new String[list.size()];
 		list.toArray(s);

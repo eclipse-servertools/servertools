@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -93,9 +93,7 @@ public class Tomcat40Handler implements ITomcatVersionHandler {
 		list.add("-Dcatalina.home=\"" + installPath.toOSString() + "\"");
 		// Include a system property for the configurable deploy location
 		list.add("-Dwtp.deploy=\"" + deployPath.toOSString() + "\"");
-		String endorsed = installPath.append("bin").toOSString() +
-			installPath.append("common").append("lib").toOSString();
-		list.add("-Djava.endorsed.dirs=\"" + endorsed + "\"");
+		list.add("-Djava.endorsed.dirs=\"" + getEndorsedDirectories(installPath) + "\"");
 		
 		String[] s = new String[list.size()];
 		list.toArray(s);
@@ -181,4 +179,14 @@ public class Tomcat40Handler implements ITomcatVersionHandler {
 	public boolean supportsSeparateContextFiles() {
 		return false;
 	}
+
+	/**
+	 * @see ITomcatVersionHandler#getEndorsedDirectories(IPath)
+	 */
+	public String getEndorsedDirectories(IPath installPath) {
+		return installPath.append("bin").toOSString() + 
+		java.io.File.pathSeparator +
+		installPath.append("common").append("lib").toOSString();
+	}
+	
 }
