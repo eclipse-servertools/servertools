@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jst.server.ui.internal.RuntimeLabelProvider;
-import org.eclipse.jst.server.ui.internal.StandardJreLabelProvider;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponent;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponentType;
@@ -74,8 +73,4 @@ public class LabelProviderTest extends TestCase {
 		lp.getLabel();
 	}
 
-	public void testJRELabelProvider() {
-		StandardJreLabelProvider lp = new StandardJreLabelProvider(getRuntimeComponent());
-		lp.getLabel();
-	}
 }
