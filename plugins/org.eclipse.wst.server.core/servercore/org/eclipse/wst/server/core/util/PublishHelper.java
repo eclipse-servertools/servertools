@@ -51,12 +51,15 @@ public final class PublishHelper {
 	/**
 	 * Create a new PublishHelper.
 	 * 
-	 * @param tempDir a temporary directory to use during publishing
+	 * @param tempDir a temporary directory to use during publishing, or <code>null</code>
+	 *    to use the default. If it does not exist, the folder will be created
 	 */
 	public PublishHelper(File tempDir) {
 		this.tempDir = tempDir;
 		if (tempDir == null)
 			tempDir = defaultTempDir;
+		else if (!tempDir.exists())
+			tempDir.mkdirs();
 	}
 
 	/**
@@ -94,7 +97,7 @@ public final class PublishHelper {
 			throw e;
 		} catch (Exception e) {
 			IPath path = mf.getModuleRelativePath().append(mf.getName());
-			Trace.trace(Trace.SEVERE, "Error copying file: " + to.toOSString() + " to " + path.toOSString(), e);
+			Trace.trace(Trace.SEVERE, "Error copying file: " + path.toOSString() + " to " + to.toOSString(), e);
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCopyingFile, path.toOSString(), e.getLocalizedMessage()), null));
 		} finally {
 			if (tempFile != null && tempFile.exists())
