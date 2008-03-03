@@ -239,7 +239,7 @@ public abstract class ServerBehaviourDelegate {
 	/**
 	 * Disposes of this server delegate.
 	 * <p>
-	 * This method is called by the web server core framework.
+	 * This method is called by the server core framework.
 	 * Clients should never call this method.
 	 * </p>
 	 * <p>
@@ -396,18 +396,119 @@ public abstract class ServerBehaviourDelegate {
 	/**
 	 * Returns whether the given module can be restarted.
 	 * <p>
-	 * [issue: It's unclear whether this operations is guaranteed to be fast
-	 * or whether it could involve communication with any actual
-	 * server. If it is not fast, the method should take a progress
-	 * monitor.]
+	 * This call should complete reasonably fast and not require communication
+	 * with the (potentially remote) server. If communication is required it
+	 * should be done asynchronously and this method should either fail until
+	 * that is complete or succeed and handle failure in the xxModule methods.
 	 * </p>
 	 * 
 	 * @param module the module
 	 * @return <code>true</code> if the given module can be
-	 * restarted, and <code>false</code> otherwise 
+	 *    restarted, and <code>false</code> otherwise 
 	 */
 	public boolean canControlModule(IModule[] module) {
 		return false;
+	}
+
+	/**
+	 * Returns whether this server is in a state that it can
+	 * be started in the given mode.
+	 * <p>
+	 * This call should complete reasonably fast and not require communication
+	 * with the (potentially remote) server. If communication is required it
+	 * should be done asynchronously and this method should either fail until
+	 * that is complete or succeed and handle failure during start.
+	 * </p><p>
+	 * This method is called by the server core framework,
+	 * in response to a call to <code>IServer.canStart()</code>.
+	 * The framework has already filtered out obviously invalid situations,
+	 * such as starting a server that is already running.
+	 * Clients should never call this method directly.
+	 * </p>
+	 * 
+	 * @param launchMode a mode in which a server can be launched,
+	 *    one of the mode constants defined by
+	 *    {@link org.eclipse.debug.core.ILaunchManager}
+	 * @return a status object with code <code>IStatus.OK</code> if the server can
+	 *    be started, otherwise a status object indicating why it can't
+	 */
+	public IStatus canStart(String launchMode) {
+		return Status.OK_STATUS;
+	}
+
+	/**
+	 * Returns whether this server is in a state that it can
+	 * be restarted in the given mode. Note that only servers
+	 * that are currently running can be restarted.
+	 * <p>
+	 * This call should complete reasonably fast and not require communication
+	 * with the (potentially remote) server. If communication is required it
+	 * should be done asynchronously and this method should either fail until
+	 * that is complete or succeed and handle failure during restart.
+	 * </p><p>
+	 * This method is called by the server core framework,
+	 * in response to a call to <code>IServer.canRestart()</code>.
+	 * The framework has already filtered out obviously invalid situations,
+	 * such as restarting a stopped server.
+	 * Clients should never call this method directly.
+	 * </p>
+	 * 
+	 * @param mode a mode in which a server can be launched,
+	 *    one of the mode constants defined by
+	 *    {@link org.eclipse.debug.core.ILaunchManager}
+	 * @return a status object with code <code>IStatus.OK</code> if the server can
+	 *    be restarted, otherwise a status object indicating why it can't
+	 */
+	public IStatus canRestart(String mode) {
+		return Status.OK_STATUS;
+	}
+
+	/**
+	 * Returns whether this server is in a state that it can
+	 * be stopped.
+	 * Servers can be stopped if they are not already stopped and if
+	 * they belong to a state-set that can be stopped.
+	 * <p>
+	 * This call should complete reasonably fast and not require communication
+	 * with the (potentially remote) server. If communication is required it
+	 * should be done asynchronously and this method should either fail until
+	 * that is complete or succeed and handle failure during stop.
+	 * </p><p>
+	 * This method is called by the server core framework,
+	 * in response to a call to <code>IServer.canStop()</code>.
+	 * The framework has already filtered out obviously invalid situations,
+	 * such as stopping a server that is already stopped.
+	 * Clients should never call this method directly.
+	 * </p>
+	 * 
+	 * @return a status object with code <code>IStatus.OK</code> if the server can
+	 *   be stopped, otherwise a status object indicating why it can't
+	 */
+	public IStatus canStop() {
+		return Status.OK_STATUS;
+	}
+
+	/**
+	 * Returns whether this server is in a state that it can
+	 * be published to.
+	 * <p>
+	 * This call should complete reasonably fast and not require communication
+	 * with the (potentially remote) server. If communication is required it
+	 * should be done asynchronously and this method should either fail until
+	 * that is complete or succeed and handle failure during publish.
+	 * </p><p>
+	 * This method is called by the server core framework,
+	 * in response to a call to <code>IServer.canPublish()</code>.
+	 * The framework has already filtered out obviously invalid situations,
+	 * such as publishing to a server in the wrong mode.
+	 * Clients should never call this method directly.
+	 * </p>
+	 * 
+	 * @return a status object with code <code>IStatus.OK</code> if the server can
+	 *   be published to, otherwise a status object indicating what is wrong
+	 */
+	public IStatus canPublish() {
+		return Status.OK_STATUS;
 	}
 
 	/**

@@ -838,6 +838,9 @@ public class Server extends Base implements IServer {
 		if (getServerType().hasServerConfiguration() && configuration == null)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishNoConfiguration, null);
 		
+		if (behaviourDelegate != null)
+			return behaviourDelegate.canPublish();
+		
 		return Status.OK_STATUS;
 	}
 
@@ -1298,6 +1301,9 @@ public class Server extends Base implements IServer {
 		if (!getServerType().supportsLaunchMode(mode2))
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorLaunchMode, null);
 		
+		if (behaviourDelegate != null)
+			return behaviourDelegate.canStart(mode2);
+		
 		return Status.OK_STATUS;
 	}
 
@@ -1476,12 +1482,14 @@ public class Server extends Base implements IServer {
 		
 		if (!getServerType().supportsLaunchMode(mode2))
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorLaunchMode, null);
-
-		int state = getServerState();
-		if (state == STATE_STARTED)
-			return Status.OK_STATUS;
 		
-		return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorRestartNotStarted, null);
+		if (getServerState() != STATE_STARTED)
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorRestartNotStarted, null);
+		
+		if (behaviourDelegate != null)
+			return behaviourDelegate.canRestart(mode2);
+		
+		return Status.OK_STATUS;
 	}
 
 	/**
@@ -1597,6 +1605,9 @@ public class Server extends Base implements IServer {
 		
 		if (!getServerType().supportsLaunchMode(getMode()))
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorLaunchMode, null);
+		
+		if (behaviourDelegate != null)
+			return behaviourDelegate.canStop();
 		
 		return Status.OK_STATUS;
 	}
