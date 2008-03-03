@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
@@ -30,6 +31,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -105,14 +107,25 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 					edit.setEnabled(false);
 					remove.setEnabled(false);
 					pathLabel.setText("");
-				} else if (runtime.isReadOnly()) {
-					edit.setEnabled(false);
-					remove.setEnabled(false);
-					pathLabel.setText(runtime.getLocation() + "");
 				} else {
-					edit.setEnabled(true);
-					remove.setEnabled(true);
-					pathLabel.setText(runtime.getLocation() + "");
+					IStatus status = runtime.validate(new NullProgressMonitor());
+					if (status != null && status.getSeverity() == IStatus.ERROR) {
+						Color c = pathLabel.getDisplay().getSystemColor(SWT.COLOR_RED);
+						pathLabel.setForeground(c);
+						pathLabel.setText(status.getMessage());
+					} else if (runtime.getLocation() != null) {
+						pathLabel.setForeground(edit.getForeground());
+						pathLabel.setText(runtime.getLocation() + "");
+					} else
+						pathLabel.setText("");
+					
+					if (runtime.isReadOnly()) {
+						edit.setEnabled(false);
+						remove.setEnabled(false);
+					} else {
+						edit.setEnabled(ServerUIPlugin.hasWizardFragment(runtime.getRuntimeType().getId()));
+						remove.setEnabled(true);
+					}
 				}
 			}
 		});

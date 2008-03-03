@@ -393,12 +393,15 @@ public class OverviewEditorPart extends ServerEditorPart {
 		// runtime
 		if (server != null && server.getServerType() != null && server.getServerType().hasRuntime()) {
 			final IRuntime runtime = server.getRuntime();
-			Hyperlink link = toolkit.createHyperlink(composite, Messages.serverEditorOverviewRuntime, SWT.NONE);
-			link.addHyperlinkListener(new HyperlinkAdapter() {
-				public void linkActivated(HyperlinkEvent e) {
-					editRuntime(runtime);
-				}
-			});
+			if (ServerUIPlugin.hasWizardFragment(runtime.getRuntimeType().getId())) {
+				Hyperlink link = toolkit.createHyperlink(composite, Messages.serverEditorOverviewRuntime, SWT.NONE);
+				link.addHyperlinkListener(new HyperlinkAdapter() {
+					public void linkActivated(HyperlinkEvent e) {
+						editRuntime(runtime);
+					}
+				});
+			} else
+				createLabel(toolkit, composite, Messages.serverEditorOverviewRuntime);
 			
 			IRuntimeType runtimeType = server.getServerType().getRuntimeType();
 			runtimes = ServerUIPlugin.getRuntimes(runtimeType);

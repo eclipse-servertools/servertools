@@ -612,6 +612,30 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	}
 
 	/**
+	 * Returns true if the given id has possible wizard fragments, and
+	 * false otherwise.
+	 *
+	 * @param typeId the server or runtime type id
+	 * @return true if the given id has possible wizard fragments, and
+	 *    false otherwise
+	 */
+	public static boolean hasWizardFragment(String typeId) {
+		if (typeId == null)
+			return false;
+		
+		if (wizardFragments == null)
+			loadWizardFragments();
+		
+		Iterator iterator = wizardFragments.keySet().iterator();
+		while (iterator.hasNext()) {
+			String key = (String) iterator.next();
+			if (typeId.equals(key))
+				return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Returns the wizard fragment with the given id.
 	 *
 	 * @param typeId the server or runtime type id
@@ -620,7 +644,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	public static WizardFragment getWizardFragment(String typeId) {
 		if (typeId == null)
 			return null;
-
+		
 		if (wizardFragments == null)
 			loadWizardFragments();
 		
