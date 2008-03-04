@@ -202,7 +202,8 @@ public final class ServerCore {
 	private static synchronized void addRuntimeTypes(IConfigurationElement[] cf, List<IRuntimeType> list) {
 		for (IConfigurationElement ce : cf) {
 			try {
-				list.add(new RuntimeType(ce));
+				if (!ServerPlugin.contains(ServerPlugin.getExcludedServerAdapters(), ce.getAttribute("id")))
+					list.add(new RuntimeType(ce));
 				Trace.trace(Trace.EXTENSION_POINT, "  Loaded runtimeType: " + ce.getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load runtimeType: " + ce.getAttribute("id"), t);
@@ -235,7 +236,8 @@ public final class ServerCore {
 	private static synchronized void addServerTypes(IConfigurationElement[] cf, List<IServerType> list) {
 		for (IConfigurationElement ce : cf) {
 			try {
-				list.add(new ServerType(ce));
+				if (!ServerPlugin.contains(ServerPlugin.getExcludedServerAdapters(), ce.getAttribute("id")))
+					list.add(new ServerType(ce));
 				Trace.trace(Trace.EXTENSION_POINT, "  Loaded serverType: " + ce.getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load serverType: " + ce.getAttribute("id"), t);

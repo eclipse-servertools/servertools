@@ -31,16 +31,10 @@ public class RuntimeLocator implements IRuntimeLocator {
 		return element;
 	}
 
-	/*
-	 * @see IRuntimeLocator#getId()
-	 */
 	public String getId() {
 		return element.getAttribute("id");
 	}
 
-	/*
-	 * @see IRuntimeLocator
-	 */
 	protected String[] getTypeIds() {
 		try {
 			return ServerPlugin.tokenize(element.getAttribute("typeIds"), ",");
@@ -49,11 +43,8 @@ public class RuntimeLocator implements IRuntimeLocator {
 		}
 	}
 
-	/*
-	 * @see IRuntimeLocator
-	 */
 	public boolean supportsType(String id) {
-		return ServerPlugin.supportsType(getTypeIds(), id);
+		return ServerPlugin.contains(getTypeIds(), id);
 	}
 
 	protected RuntimeLocatorDelegate getDelegate() {

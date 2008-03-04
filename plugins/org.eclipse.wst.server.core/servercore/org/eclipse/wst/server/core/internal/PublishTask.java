@@ -33,16 +33,10 @@ public class PublishTask implements IPublishTask {
 		this.element = element;
 	}
 
-	/*
-	 * @see
-	 */
 	public String getId() {
 		return element.getAttribute("id");
 	}
 
-	/*
-	 * @see
-	 */
 	protected String[] getTypeIds() {
 		try {
 			return ServerPlugin.tokenize(element.getAttribute("typeIds"), ",");
@@ -51,11 +45,8 @@ public class PublishTask implements IPublishTask {
 		}
 	}
 
-	/*
-	 * @see
-	 */
 	public boolean supportsType(String id) {
-		return ServerPlugin.supportsType(getTypeIds(), id);
+		return ServerPlugin.contains(getTypeIds(), id);
 	}
 
 	/*

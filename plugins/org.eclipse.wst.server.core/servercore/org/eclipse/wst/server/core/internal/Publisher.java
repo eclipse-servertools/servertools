@@ -50,9 +50,6 @@ public class Publisher {
 		return element.getAttribute("description");
 	}
 
-	/*
-	 * @see
-	 */
 	protected String[] getTypeIds() {
 		try {
 			return ServerPlugin.tokenize(element.getAttribute("typeIds"), ",");
@@ -61,15 +58,12 @@ public class Publisher {
 		}
 	}
 
-	/*
-	 * @see
-	 */
 	public boolean supportsType(String id) {
-		return ServerPlugin.supportsType(getTypeIds(), id);
+		return ServerPlugin.contains(getTypeIds(), id);
 	}
 
 	/*
-	 * @see IPublishTask#getDelegate()
+	 * @see IPublisher#getDelegate()
 	 */
 	public PublisherDelegate getDelegate() {
 		if (delegate == null) {

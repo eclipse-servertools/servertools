@@ -34,6 +34,7 @@ import org.osgi.framework.BundleListener;
  */
 public class ServerPlugin extends Plugin {
 	public static final String PROJECT_PREF_FILE = ".serverPreference";
+	public static final String EXCLUDE_SERVER_ADAPTERS = "excludeServerAdapters";
 
 	private static final String SHUTDOWN_JOB_FAMILY = "org.eclipse.wst.server.core.family";
 	//public static final String REGISTRY_JOB_FAMILY = "org.eclipse.wst.server.registry.family";
@@ -425,13 +426,15 @@ public class ServerPlugin extends Plugin {
 	}
 
 	/**
-	 * Returns true if ids contains id.
+	 * Returns <code>true</code> if the array of strings contains a specific
+	 * string, or <code>false</code> otherwise.
 	 * 
-	 * @param ids
-	 * @param id
-	 * @return true if the id is supported
+	 * @param ids an array of strings, or <code>null</code>
+	 * @param id a string
+	 * @return <code>true</code> if the array of strings contains a specific
+	 *    string, or <code>false</code> otherwise
 	 */
-	public static boolean supportsType(String[] ids, String id) {
+	public static boolean contains(String[] ids, String id) {
 		if (id == null || id.length() == 0)
 			return false;
 
@@ -448,11 +451,11 @@ public class ServerPlugin extends Plugin {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Recursively delete a directory.
 	 *
-	 * @param dir java.io.File
+	 * @param dir a folder
 	 * @param monitor a progress monitor, or <code>null</code> if no progress
 	 *    reporting is required
 	 */
@@ -1193,5 +1196,18 @@ public class ServerPlugin extends Plugin {
 			return true;
 		}
 		return false;
+	}
+
+	public static String[] getExcludedServerAdapters() {
+		return tokenize(getProperty(EXCLUDE_SERVER_ADAPTERS), ",");
+	}
+
+	private static String getProperty(String key) {
+		if (key == null)
+			return null;
+		String value = null;
+		if (Platform.getProduct() != null)
+			return Platform.getProduct().getProperty(key);
+		return value;
 	}
 }
