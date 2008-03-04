@@ -936,7 +936,7 @@ public class Server extends Base implements IServer {
 	public IStatus publish(int kind, IProgressMonitor monitor) {
 		if (getServerType() == null)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorMissingAdapter, null);
-
+		
 		// check what is out of sync and publish
 		if (getServerType().hasServerConfiguration() && configuration == null)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorNoConfiguration, null);
@@ -960,7 +960,7 @@ public class Server extends Base implements IServer {
 	 * Publish the given modules to the server.
 	 * TODO: Implementation!
 	 */
-	public void publish(int kind, List<IModule[]> modules2, IAdaptable info, IOperationListener listener) {
+	public void publish(final int kind, final List<IModule[]> modules2, final IAdaptable info, final IOperationListener listener) {
 		if (getServerType() == null) {
 			listener.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorMissingAdapter, null));
 			return;
@@ -985,7 +985,8 @@ public class Server extends Base implements IServer {
 			}
 		}
 		
-		doPublish(kind, modules2, new NullProgressMonitor(), info);
+		IStatus status = doPublish(kind, modules2, new NullProgressMonitor(), info);
+		listener.done(status);
 	}
 
 	protected IStatus doPublish(int kind, List<IModule[]> modules3, IProgressMonitor monitor, IAdaptable info) {

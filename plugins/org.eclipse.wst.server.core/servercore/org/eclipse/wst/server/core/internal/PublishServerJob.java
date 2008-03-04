@@ -113,8 +113,23 @@ public class PublishServerJob extends ChainedJob {
 				return Status.OK_STATUS;
 		}
 		
-		getServer().publish(kind, modules, info, null); // TODO
-		return Status.OK_STATUS;
-		//return getServer().publish(kind, monitor);
+		final IStatus[] status = new IStatus[1];
+		getServer().publish(kind, modules, info, new IServer.IOperationListener() {
+			public void done(IStatus result) {
+				status[0] = result;
+			}
+		});
+		
+		while (status[0] == null & !monitor.isCanceled()) {
+			try {
+				Thread.sleep(200);
+			} catch (Exception e) {
+				// ignore
+			}
+		}
+		if (status[0] != null)
+			return status[0];
+		
+		return Status.CANCEL_STATUS;
 	}
 }
