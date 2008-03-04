@@ -123,7 +123,10 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 						edit.setEnabled(false);
 						remove.setEnabled(false);
 					} else {
-						edit.setEnabled(ServerUIPlugin.hasWizardFragment(runtime.getRuntimeType().getId()));
+						if (runtime.getRuntimeType() != null)
+							edit.setEnabled(ServerUIPlugin.hasWizardFragment(runtime.getRuntimeType().getId()));
+						else
+							edit.setEnabled(false);
 						remove.setEnabled(true);
 					}
 				}
