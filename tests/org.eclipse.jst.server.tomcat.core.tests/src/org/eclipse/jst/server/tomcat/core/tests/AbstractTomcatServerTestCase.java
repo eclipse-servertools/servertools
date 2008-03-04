@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.server.tomcat.core.tests;
 
+import java.io.File;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
@@ -22,6 +23,8 @@ import org.eclipse.jst.server.tomcat.core.internal.TomcatServerBehaviour;
 import org.eclipse.jst.server.tomcat.core.tests.module.ModuleTestCase;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
+import org.eclipse.wst.server.core.model.IModuleFolder;
+import org.eclipse.wst.server.core.model.IModuleResource;
 import org.eclipse.wst.server.core.tests.ext.AbstractServerTestCase;
 
 public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCase {
@@ -152,6 +155,36 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 	}
 
 	protected abstract void verifyPublishedModule(IPath baseDir, IModule module) throws Exception;
+	
+	protected void verifyPublishedModuleFiles(IModule module) throws Exception {
+		File moduleDir = new File(getTomcatServerBehaviour().getModuleDeployDirectory(module).toOSString());
+		assertTrue("Module " + module.getName() + " root directory doesn't exist: " + moduleDir.getPath(), moduleDir.exists());
+		IModuleResource [] resources = ((Server)getServer()).getResources(new IModule [] { module });
+		for (int i = 0; i < resources.length; i++) {
+			if (resources[i] instanceof IModuleFolder) {
+				verifyPublishedModuleFolder(moduleDir, (IModuleFolder)resources[i]);
+			}
+			else {
+				String path = resources[i].getModuleRelativePath().append(resources[i].getName()).toOSString();
+				File file = new File(moduleDir, path);
+				assertTrue("Module file doesn't exist: " + file.getPath(), file.exists());
+			}
+		}
+	}
+	
+	protected void verifyPublishedModuleFolder(File moduleDir, IModuleFolder mf) throws Exception {
+		IModuleResource [] resources = mf.members();
+		for (int i = 0; i < resources.length; i++) {
+			if (resources[i] instanceof IModuleFolder) {
+				verifyPublishedModuleFolder(moduleDir, (IModuleFolder)resources[i]);
+			}
+			else {
+				String path = resources[i].getModuleRelativePath().append(resources[i].getName()).toOSString();
+				File file = new File(moduleDir, path);
+				assertTrue("Module file/folder doesn't exist: " + file.getPath(), file.exists());
+			}
+		}
+	}	
 	
 	/**
 	 * @throws Exception
