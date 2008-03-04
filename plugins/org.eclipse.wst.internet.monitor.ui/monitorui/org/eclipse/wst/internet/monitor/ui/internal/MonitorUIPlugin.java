@@ -47,12 +47,15 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 	public static final String IMG_ELCL_SORT_RESPONSE_TIME = "IMG_ELCL_SORT_RESPONSE_TIME";
 	public static final String IMG_ELCL_CLEAR = "IMG_ELCL_CLEAR";
 	public static final String IMG_ELCL_HTTP_HEADER = "IMG_ELCL_HTTP_HEADER";
+	public static final String IMG_ELCL_PIN = "IMG_ELCL_PIN";
 	public static final String IMG_CLCL_SORT_RESPONSE_TIME = "IMG_CLCL_SORT_RESPONSE_TIME";
 	public static final String IMG_CLCL_CLEAR = "IMG_CLCL_CLEAR";
 	public static final String IMG_CLCL_HTTP_HEADER = "IMG_CLCL_HTTP_HEADER";
+	public static final String IMG_CLCL_PIN = "IMG_CLCL_PIN";
 	public static final String IMG_DLCL_SORT_RESPONSE_TIME = "IMG_DLCL_SORT_RESPONSE_TIME";
 	public static final String IMG_DLCL_CLEAR = "IMG_DLCL_CLEAR";
 	public static final String IMG_DLCL_HTTP_HEADER = "IMG_DLCL_HTTP_HEADER";
+	public static final String IMG_DLCL_PIN = "IMG_DLCL_PIN";
 
 	public static final String IMG_REQUEST_RESPONSE = "requestResponse";
 	public static final String IMG_RESEND_REQUEST_RESPONSE = "resendRequestResponse";
@@ -62,6 +65,7 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 	public static final String IMG_MONITOR_OFF = "monitorOff";
 
 	private static final String SHOW_VIEW_ON_ACTIVITY = "show-view";
+	private static final String PIN_VIEW = "pin-view";
 	private static final String SHOW_HEADER = "show-header";
 
 	protected List<Request> requests = new ArrayList<Request>();
@@ -111,26 +115,29 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 	 */
 	protected ImageRegistry createImageRegistry() {
 		ImageRegistry registry = super.createImageRegistry();
-
+		
 		registerImage(registry, IMG_REQUEST_RESPONSE, URL_OBJ + "tcp.gif");
 		registerImage(registry, IMG_RESEND_REQUEST_RESPONSE, URL_ELCL + "resendRequest.gif");
 		
 		registerImage(registry, IMG_HOST, URL_OBJ + "host.gif");
 		registerImage(registry, IMG_MONITOR_ON, URL_OBJ + "monitorOn.gif");
 		registerImage(registry, IMG_MONITOR_OFF, URL_OBJ + "monitorOff.gif");
-
+		
 		registerImage(registry, IMG_CLCL_CLEAR, URL_CLCL + "clear.gif");
 		registerImage(registry, IMG_CLCL_SORT_RESPONSE_TIME, URL_CLCL + "sortResponseTime.gif");
 		registerImage(registry, IMG_CLCL_HTTP_HEADER, URL_CLCL + "httpHeader.gif");
-
+		registerImage(registry, IMG_CLCL_PIN, URL_CLCL + "pin.gif");
+		
 		registerImage(registry, IMG_ELCL_CLEAR, URL_ELCL + "clear.gif");
 		registerImage(registry, IMG_ELCL_SORT_RESPONSE_TIME, URL_ELCL + "sortResponseTime.gif");
 		registerImage(registry, IMG_ELCL_HTTP_HEADER, URL_ELCL + "httpHeader.gif");
-
+		registerImage(registry, IMG_ELCL_PIN, URL_ELCL + "pin.gif");
+		
 		registerImage(registry, IMG_DLCL_CLEAR, URL_DLCL + "clear.gif");
 		registerImage(registry, IMG_DLCL_SORT_RESPONSE_TIME, URL_DLCL + "sortResponseTime.gif");
 		registerImage(registry, IMG_DLCL_HTTP_HEADER, URL_DLCL + "httpHeader.gif");
-
+		registerImage(registry, IMG_DLCL_PIN, URL_DLCL + "pin.gif");
+		
 		return registry;
 	}
 
@@ -194,8 +201,9 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-
+		
 		getPreferenceStore().setDefault(MonitorUIPlugin.SHOW_VIEW_ON_ACTIVITY, true);
+		getPreferenceStore().setDefault(MonitorUIPlugin.PIN_VIEW, false);
 		
 		MonitorCore.addMonitorListener(monitorListener);
 		
@@ -231,6 +239,15 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 
 	public static void setShowOnActivityPreference(boolean b) {
 		getInstance().getPreferenceStore().setValue(SHOW_VIEW_ON_ACTIVITY, b);
+		getInstance().savePluginPreferences();
+	}
+
+	public static boolean getPinViewPreference() {
+		return getInstance().getPreferenceStore().getBoolean(PIN_VIEW);
+	}
+
+	public static void setPinViewPreference(boolean b) {
+		getInstance().getPreferenceStore().setValue(PIN_VIEW, b);
 		getInstance().savePluginPreferences();
 	}
 

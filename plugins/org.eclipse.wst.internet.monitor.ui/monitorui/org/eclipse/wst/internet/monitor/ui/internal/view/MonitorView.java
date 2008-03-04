@@ -87,7 +87,8 @@ public class MonitorView extends ViewPart {
 			public void run() {
 				if (!(rr instanceof ResendHTTPRequest)) {
 				  treeViewer.refresh(MonitorTreeContentProvider.ROOT);
-				  treeViewer.setSelection(new StructuredSelection(rr), true);
+				  if (!MonitorUIPlugin.getPinViewPreference())
+					  treeViewer.setSelection(new StructuredSelection(rr), true);
 				}
 			}
 		});
@@ -415,9 +416,26 @@ public class MonitorView extends ViewPart {
 	}
 
 	/**
-	 * 
+	 * Initialize the tool-bar and menu actions.
 	 */
 	public void initializeActions() {
+		final IAction pinAction = new Action() {
+			public void run() {
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						boolean pin = MonitorUIPlugin.getPinViewPreference();
+						MonitorUIPlugin.setPinViewPreference(!pin);
+					}
+				});
+			}
+		};
+		pinAction.setChecked(false);
+		pinAction.setToolTipText(Messages.actionPin);
+		pinAction.setImageDescriptor(MonitorUIPlugin.getImageDescriptor(MonitorUIPlugin.IMG_ELCL_PIN));
+		pinAction.setHoverImageDescriptor(MonitorUIPlugin.getImageDescriptor(MonitorUIPlugin.IMG_CLCL_PIN));
+		pinAction.setDisabledImageDescriptor(MonitorUIPlugin.getImageDescriptor(MonitorUIPlugin.IMG_DLCL_PIN));
+		
+		
 		final IAction sortByResponseTimeAction = new Action() {
 			public void run() {
 				Display.getDefault().asyncExec(new Runnable() {
@@ -475,6 +493,7 @@ public class MonitorView extends ViewPart {
 		IToolBarManager tbm = getViewSite().getActionBars().getToolBarManager();
 		tbm.add(sortByResponseTimeAction);
 		tbm.add(clearAction);
+		tbm.add(pinAction);
 		
 		IContentFilter[] filters = MonitorPlugin.getInstance().getContentFilters();
 		IMenuManager menuManager = getViewSite().getActionBars().getMenuManager();
@@ -516,17 +535,17 @@ public class MonitorView extends ViewPart {
 				try {
 					IWorkbench workbench = MonitorUIPlugin.getInstance().getWorkbench();
 					IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
-	
+					
 					IWorkbenchPage page = workbenchWindow.getActivePage();
-	
+					
 					IViewPart view2 = page.findView(VIEW_ID);
 					
 					if (view2 != null)
 						page.bringToTop(view2);
 					else
 						page.showView(VIEW_ID);
-
-					if (view != null)
+					
+					if (view != null && !MonitorUIPlugin.getPinViewPreference())
 						view.setSelection(request);
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "Error opening TCP/IP view", e);
