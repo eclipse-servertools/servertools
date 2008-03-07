@@ -186,6 +186,8 @@ public class ModulePublishInfo {
 
 	private IModuleResource[] loadResource(DataInput in, IPath path) throws IOException {
 		int size = in.readInt();
+		if (size > 1000000)
+			throw new IOException("Folder capacity limit reached");
 		IModuleResource[] resources2 = new IModuleResource[size];
 		
 		for (int i = 0; i < size; i++) {
@@ -232,7 +234,7 @@ public class ModulePublishInfo {
 		if (resources2 == null)
 			return;
 		int size = resources2.length;
-		out.writeInt(0);
+		out.writeInt(size);
 		for (int i = 0; i < size; i++) {
 			if (resources2[i] instanceof IModuleFile) {
 				IModuleFile file = (IModuleFile) resources2[i];
