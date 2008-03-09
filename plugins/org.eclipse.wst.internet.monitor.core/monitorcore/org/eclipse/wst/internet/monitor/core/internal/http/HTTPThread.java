@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.wst.internet.monitor.core.internal.http;
 
 import java.io.*;
 import org.eclipse.wst.internet.monitor.core.internal.Connection;
+import org.eclipse.wst.internet.monitor.core.internal.Messages;
 import org.eclipse.wst.internet.monitor.core.internal.Trace;
 import org.eclipse.wst.internet.monitor.core.internal.provisional.Request;
 /**
@@ -139,10 +140,10 @@ Host: localhost:8081
 	 */
 	protected void fillBuffer() throws IOException {
 		int n = in.read(readBuffer);
-	
+		
 		if (n <= 0)
 			throw new IOException("End of input");
-	
+		
 		// add to full buffer
 		int len = buffer.length - bufferIndex;
 		if (len < 0)
@@ -197,10 +198,27 @@ Host: localhost:8081
 		
 		if (isRequest) {
 			if (contentLength != -1) {
-				byte[] b = readBytes(contentLength);
-				out.write(b);
-				conn.addRequest(b, false);
-				setHTTPBody(b);
+				if (contentLength < 1024 * 1024) { // 1Mb
+					byte[] b = readBytes(contentLength);
+					out.write(b);
+					conn.addRequest(b, false);
+					setHTTPBody(b);
+				} else {
+					byte[] b = removeFromBuffer(Math.min(bufferIndex, contentLength));
+					int bytesLeft = contentLength - b.length;
+					out.write(b);
+					
+					int n = 0;
+					while (bytesLeft > 0) {
+						n = in.read(readBuffer);
+						bytesLeft -= n;
+						out.write(readBuffer, 0, n);
+					}
+					
+					b = Messages.errorContentSize.getBytes();
+					conn.addRequest(b, false);
+					setHTTPBody(b);
+				}
 			} else if (transferEncoding != -1 && transferEncoding != ENCODING_IDENTITY) {
 				parseChunk();
 			}
@@ -257,13 +275,33 @@ Host: localhost:8081
 		
 		// spec 4.4.3
 		if (contentLength != -1) {
-			byte[] b = readBytes(contentLength);
-			out.write(b);
-			if (isRequest)
-				conn.addRequest(b, false);
-			else
-				conn.addResponse(b, false);
-			setHTTPBody(b);
+			if (contentLength < 1024 * 1024) { // 1Mb
+				byte[] b = readBytes(contentLength);
+				out.write(b);
+				if (isRequest)
+					conn.addRequest(b, false);
+				else
+					conn.addResponse(b, false);
+				setHTTPBody(b);
+			} else {
+				byte[] b = removeFromBuffer(Math.min(bufferIndex, contentLength));
+				int bytesLeft = contentLength - b.length;
+				out.write(b);
+				
+				int n = 0;
+				while (bytesLeft > 0) {
+					n = in.read(readBuffer);
+					bytesLeft -= n;
+					out.write(readBuffer, 0, n);
+				}
+				
+				b = Messages.errorContentSize.getBytes();
+				if (isRequest)
+					conn.addRequest(b, false);
+				else
+					conn.addResponse(b, false);
+				setHTTPBody(b);
+			}
 			return;
 		}
 		
@@ -390,11 +428,11 @@ Host: localhost:8081
 	
 			b = readLine();
 		}
-
+		
 		Trace.trace(Trace.PARSING, "Parsing final header line: '" + new String(b) + "'");
-
+		
 		outputBytes(b, false);
-
+		
 		Request rr = conn.getRequestResponse(isRequest);
 		Trace.trace(Trace.PARSING, "Setting header length: " + rr.getRequest(Request.ALL).length);
 		
@@ -409,7 +447,7 @@ Host: localhost:8081
 		Trace.trace(Trace.PARSING, "readBytes() " + n + " for: " + this);
 		while (buffer.length - bufferIndex < n)
 			fillBuffer();
-	
+		
 		return removeFromBuffer(bufferIndex + n);
 	}
 
@@ -420,7 +458,7 @@ Host: localhost:8081
 	 */
 	protected byte[] readLine() throws IOException {
 		Trace.trace(Trace.PARSING, "readLine() for: " + this);
-	
+		
 		int n = getFirstCRLF();
 		while (n < 0) {
 			fillBuffer();
@@ -440,7 +478,7 @@ Host: localhost:8081
 		// copy line out of buffer
 		byte[] b = new byte[n - bufferIndex];
 		System.arraycopy(buffer, bufferIndex, b, 0, n - bufferIndex);
-	
+		
 		if (buffer.length > BUFFER * 2 || bufferIndex > BUFFER) {
 			// remove line from buffer
 			int size = buffer.length;
@@ -450,7 +488,7 @@ Host: localhost:8081
 			bufferIndex = 0;
 		} else
 			bufferIndex = n;
-	
+		
 		return b;
 	}
 
