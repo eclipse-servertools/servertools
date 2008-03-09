@@ -78,10 +78,6 @@
     class="org.eclipse.wst.server.ui.internal.audio.AudioPreferencePage">
       <keywordReference id="org.eclipse.wst.server.audio.preferenceKeywords"/>
   </page>
-  <page
-    id="org.eclipse.internet"
-    name="%preferenceInternetTitle"
-    class="org.eclipse.wst.server.ui.internal.webbrowser.InternetPreferencePage"/>
 </extension>
 
 <extension point="org.eclipse.ui.keywords">

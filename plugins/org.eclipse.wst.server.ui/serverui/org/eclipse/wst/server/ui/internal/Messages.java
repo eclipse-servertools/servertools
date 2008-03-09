@@ -350,7 +350,6 @@ public class Messages extends NLS {
 	public static String audioNone;
 	public static String audioDefault;
 
-	public static String preferenceInternetDescription;
 	public static String internalWebBrowserName;
 
 	static {
