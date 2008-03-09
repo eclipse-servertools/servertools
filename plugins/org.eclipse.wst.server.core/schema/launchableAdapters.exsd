@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.wst.server.core">
+<schema targetNamespace="org.eclipse.wst.server.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appInfo>
+      <appinfo>
          <meta.schema plugin="org.eclipse.wst.server.core" id="launchableAdapters" name="Launchable Adapters"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          This extension point provides a way for a server to support the Run on Server scenario.
       </documentation>
@@ -41,9 +41,9 @@
 
    <element name="launchableAdapter">
       <annotation>
-         <appInfo>
+         <appinfo>
             <meta.element labelAttribute="id"/>
-         </appInfo>
+         </appinfo>
       </annotation>
       <complexType>
          <attribute name="id" type="string" use="required">
@@ -59,9 +59,9 @@
                   specifies the fully qualified name of the Java class that extends &lt;samp&gt;LaunchableAdapterDelegate&lt;/samp&gt;.
 Launchable adapter instances of this type will delegate to instances of this class.
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.LaunchableAdapterDelegate"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="typeIds" type="string">
@@ -71,22 +71,29 @@ Launchable adapter instances of this type will delegate to instances of this cla
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="priority" type="string">
+            <annotation>
+               <documentation>
+                  an optional priority atrribute which specifies a relative ordering of launchable adapters. Adapters with a higher number are always used first. To override another adapter, simply provide a higher priority value that the other adapter. The priority is 0 if no priority is specified
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="since"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          1.0
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="examples"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          The following is an example of a launchable adapter extension point:
 
@@ -102,27 +109,20 @@ Launchable adapter instances of this type will delegate to instances of this cla
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="apiInfo"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;code&gt;org.eclipse.wst.server.core.model.LaunchableAdapterDelegate&lt;/code&gt; and contains a public 0-arg constructor.
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="implementation"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
+
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="copyright"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          Copyright (c) 2000, 2005 IBM Corporation and others.&lt;br&gt;
 All rights reserved. This program and the accompanying materials are made 

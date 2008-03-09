@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,7 +38,7 @@ public class ModuleArtifactAdapter {
 	/**
 	 * Returns the id of this ModuleArtifactAdapter.
 	 *
-	 * @return java.lang.String
+	 * @return an id
 	 */
 	public String getId() {
 		return element.getAttribute("id");
@@ -188,7 +188,7 @@ public class ModuleArtifactAdapter {
 	/**
 	 * Return a string representation of this object.
 	 * 
-	 * @return java.lang.String
+	 * @return a string
 	 */
 	public String toString() {
 		return "ModuleArtifactAdapter[" + getId() + "]";

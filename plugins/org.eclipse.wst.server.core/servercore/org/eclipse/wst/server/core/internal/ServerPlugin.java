@@ -43,7 +43,7 @@ public class ServerPlugin extends Plugin {
 	protected static int num = 0;
 
 	// cached copy of all launchable adapters
-	private static List<ILaunchableAdapter> launchableAdapters;
+	private static List<LaunchableAdapter> launchableAdapters;
 
 	// cached copy of all launchable clients
 	private static List<IClient> clients;
@@ -530,13 +530,26 @@ public class ServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "launchableAdapters");
 
 		int size = cf.length;
-		List<ILaunchableAdapter> list = new ArrayList<ILaunchableAdapter>(size);
+		List<LaunchableAdapter> list = new ArrayList<LaunchableAdapter>(size);
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new LaunchableAdapter(cf[i]));
 				Trace.trace(Trace.EXTENSION_POINT, "  Loaded launchableAdapter: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load launchableAdapter: " + cf[i].getAttribute("id"), t);
+			}
+		}
+		
+		// sort by index to put lower numbers first in order
+		size = list.size();
+		for (int i = 0; i < size-1; i++) {
+			for (int j = i+1; j < size; j++) {
+				LaunchableAdapter a = list.get(i);
+				LaunchableAdapter b = list.get(j);
+				if (a.getPriority() < b.getPriority()) {
+					list.set(i, b);
+					list.set(j, a);
+				}
 			}
 		}
 		launchableAdapters = list;
