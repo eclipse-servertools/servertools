@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.wst.server_core.feature.patch"
-      label="Patch Feature for Server Core"
-      version="2.0.2.qualifier"
-      provider-name="Eclipse.org">
+    label="%featureName"
+    version="2.0.2.qualifier"
+    provider-name="%providerName">
 
-   <description>
-      %description
-   </description>
+    <description>%description</description>
 
-   <copyright>
-      %copyright
-   </copyright>
+    <copyright>%copyright</copyright>
 
-   <license url="%licenseURL">
-      %license
-   </license>
+    <license url="%licenseURL">%license</license>
 
    <requires>
       <import feature="org.eclipse.wst.server_core.feature" version="2.0.2.v200802150100-2-CN8s733H3_3Ic" patch="true"/>
