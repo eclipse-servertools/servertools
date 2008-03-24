@@ -76,12 +76,6 @@ public class Server extends Base implements IServer {
 
 	protected static final char[] INVALID_CHARS = new char[] {'\\', '/', ':', '*', '?', '"', '<', '>', '|', '\0', '@', '&'};
 
-	protected static final IOperationListener NULL_OPERATION_LISTENER = new IOperationListener() {
-		public void done(IStatus result) {
-			// do nothing
-		}
-	};
-
 	protected IServerType serverType;
 	protected ServerDelegate delegate;
 	protected ServerBehaviourDelegate behaviourDelegate;
@@ -405,7 +399,7 @@ public class Server extends Base implements IServer {
 			
 			final int serverTimeout = ((ServerType) getServerType()).getStopTimeout();
 			if (serverTimeout > 0) {
-				Thread thread = new Thread("Synchronous server stop") {
+				Thread thread = new Thread("Server Stop Job") {
 					public void run() {
 						try {
 							Thread.sleep(serverTimeout);
@@ -1224,39 +1218,36 @@ public class Server extends Base implements IServer {
 	 * Publish the given modules to the server.
 	 * TODO: Implementation!
 	 */
-	public void publish(final int kind, final List<IModule[]> modules2, final IAdaptable info, IOperationListener opListener) {
-		if (opListener == null)
-			opListener = NULL_OPERATION_LISTENER;
-		
+	public void publish(final int kind, final List<IModule[]> modules2, final IAdaptable info, final IOperationListener opListener) {
 		if (getServerType() == null) {
-			opListener.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorMissingAdapter, null));
+			if (opListener != null)
+				opListener.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorMissingAdapter, null));
 			return;
 		}
 		
 		// check what is out of sync and publish
 		if (getServerType().hasServerConfiguration() && configuration == null) {
-			opListener.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorNoConfiguration, null));
+			if (opListener != null)
+				opListener.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorNoConfiguration, null));
 			return;
 		}
 		
 		// make sure that the delegate is loaded and the server state is correct
 		loadAdapter(ServerBehaviourDelegate.class, null);
 		
-		PublishJob publishJob = null;
+		boolean start = false;
 		if (((ServerType)getServerType()).startBeforePublish() && (getServerState() == IServer.STATE_STOPPED))
-			publishJob = new PublishJob(kind, modules2, true, info);
-		else
-			publishJob = new PublishJob(kind, modules2, false, info);
-		publishJob.schedule();
+			start = true;
 		
+		PublishJob publishJob = new PublishJob(kind, modules2, true, info);
 		if (opListener != null) {
-			try {
-				publishJob.join();
-			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Error waiting for job", e);
-			}
-			opListener.done(publishJob.getResult());
+			publishJob.addJobChangeListener(new JobChangeAdapter() {
+				public void done(IJobChangeEvent event) {
+					opListener.done(event.getResult());
+				}
+			});
 		}
+		publishJob.schedule();
 	}
 
 	/**
@@ -1805,7 +1796,8 @@ public class Server extends Base implements IServer {
 	 */
 	public void start(String mode2, final IOperationListener opListener) {
 		if (getServerType() == null) {
-			opListener.done(Status.OK_STATUS);
+			if (opListener != null)
+				opListener.done(Status.OK_STATUS);
 			return;
 		}
 		
@@ -1821,11 +1813,13 @@ public class Server extends Base implements IServer {
 		}
 		
 		StartJob startJob = new StartJob(mode2, pub);
-		startJob.addJobChangeListener(new JobChangeAdapter() {
-			public void done(IJobChangeEvent event) {
-				opListener.done(event.getResult());
-			}
-		});
+		if (opListener != null) {
+			startJob.addJobChangeListener(new JobChangeAdapter() {
+				public void done(IJobChangeEvent event) {
+					opListener.done(event.getResult());
+				}
+			});
+		}
 		startJob.schedule();
 	}
 
@@ -1865,54 +1859,54 @@ public class Server extends Base implements IServer {
 	/*
 	 * @see IServer#restart(String, IOperationListener)
 	 */
-	public void restart(String mode2, IOperationListener opListener) {
-		if (opListener == null)
-			opListener = NULL_OPERATION_LISTENER;
-		
+	public void restart(String mode2, final IOperationListener opListener) {
 		if (getServerType() == null) {
-			opListener.done(Status.OK_STATUS);
+			if (opListener != null)
+				opListener.done(Status.OK_STATUS);
 			return;
 		}
 		
 		if (getServerState() == STATE_STOPPED) {
-			opListener.done(Status.OK_STATUS);
+			if (opListener != null)
+				opListener.done(Status.OK_STATUS);
 			return;
 		}
 		
-		final IOperationListener ol = opListener;
 		RestartJob restartJob = new RestartJob(mode2);
-		restartJob.addJobChangeListener(new JobChangeAdapter() {
-			public void done(IJobChangeEvent event) {
-				ol.done(event.getResult());
-			}
-		});
+		if (opListener != null) {
+			restartJob.addJobChangeListener(new JobChangeAdapter() {
+				public void done(IJobChangeEvent event) {
+					opListener.done(event.getResult());
+				}
+			});
+		}
 		restartJob.schedule();
 	}
 
 	/*
 	 * @see IServer#stop(boolean, IOperationListener)
 	 */
-	public void stop(boolean force, IOperationListener opListener) {
-		if (opListener == null)
-			opListener = NULL_OPERATION_LISTENER;
-		
+	public void stop(boolean force, final IOperationListener opListener) {
 		if (getServerType() == null) {
-			opListener.done(Status.OK_STATUS);
+			if (opListener != null)
+				opListener.done(Status.OK_STATUS);
 			return;
 		}
 		
 		if (getServerState() == IServer.STATE_STOPPED) {
-			opListener.done(Status.OK_STATUS);
+			if (opListener != null)
+				opListener.done(Status.OK_STATUS);
 			return;
 		}
 		
-		final IOperationListener ol = opListener;
 		StopJob job = new StopJob(force);
-		job.addJobChangeListener(new JobChangeAdapter() {
-			public void done(IJobChangeEvent event) {
-				ol.done(event.getResult());
-			}
-		});
+		if (opListener != null) {
+			job.addJobChangeListener(new JobChangeAdapter() {
+				public void done(IJobChangeEvent event) {
+					opListener.done(event.getResult());
+				}
+			});
+		}
 		job.schedule();
 	}
 
@@ -2593,7 +2587,7 @@ public class Server extends Base implements IServer {
 
 							// restart in a quarter second (give other listeners a chance
 							// to hear the stopped message)
-							Thread t = new Thread("Restart thread") {
+							Thread t = new Thread("Server Restart") {
 								public void run() {
 									try {
 										Thread.sleep(250);
@@ -2658,7 +2652,7 @@ public class Server extends Base implements IServer {
 		final Timer timer = new Timer();
 		
 		final IProgressMonitor monitor2 = monitor;
-		Thread thread = new Thread("Synchronous Server Start") {
+		Thread thread = new Thread("Server Start Job") {
 			public void run() {
 				try {
 					int totalTimeout = serverTimeout;

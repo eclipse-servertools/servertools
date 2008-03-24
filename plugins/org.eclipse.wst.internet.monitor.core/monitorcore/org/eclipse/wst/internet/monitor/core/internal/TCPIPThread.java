@@ -34,7 +34,7 @@ public class TCPIPThread extends Thread {
 	 * @param isRequest
 	 */
 	public TCPIPThread(Connection conn, Request request, InputStream in, OutputStream out, boolean isRequest) {
-		super();
+		super("TCP/IP Monitor TCP/IP Connection");
 		this.conn = conn;
 		this.request = request;
 		this.in = in;

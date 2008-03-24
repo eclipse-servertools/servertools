@@ -84,7 +84,7 @@ Host: localhost:8081
 	 * @param port
 	 */
 	public HTTPThread(Connection conn2, InputStream in, OutputStream out, HTTPConnection conn, boolean isRequest, String host, int port) {
-		super();
+		super("TCP/IP Monitor HTTP Connection");
 		this.conn2 = conn2;
 		this.in = in;
 		this.out = out;
