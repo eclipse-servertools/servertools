@@ -96,6 +96,7 @@ public abstract class ServerEditorPart extends EditorPart {
 	 * Set the managed form that this part is using.
 	 * 
 	 * @param managedForm a managed form
+	 * @since 3.0
 	 */
 	protected void setManagedForm(IManagedForm managedForm) {
 		this.managedForm = managedForm;
@@ -107,6 +108,7 @@ public abstract class ServerEditorPart extends EditorPart {
 	 * 
 	 * @return managedForm the managed form that this part is using, or <code>null</code>
 	 *    if no managed form has been set
+	 * @since 3.0
 	 */
 	protected IManagedForm getManagedForm() {
 		return managedForm;

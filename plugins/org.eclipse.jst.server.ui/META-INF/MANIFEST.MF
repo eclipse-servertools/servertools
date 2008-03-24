@@ -24,5 +24,5 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)",
  org.eclipse.wst.common.modulecore;bundle-version="[1.1.0,1.2.0)",
  org.eclipse.jface.text;bundle-version="[3.2.0,4.0.0)",
  org.eclipse.jdt.debug.ui;bundle-version="[3.2.100,4.0.0)"
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

@@ -26,7 +26,7 @@ public abstract class ChainedJob extends Job {
 	private IJobChangeListener listener;
 
 	/**
-	 * Create a new dependant job.
+	 * Create a new dependent job.
 	 * 
 	 * @param name the name of the job
 	 * @param server the server to publish to

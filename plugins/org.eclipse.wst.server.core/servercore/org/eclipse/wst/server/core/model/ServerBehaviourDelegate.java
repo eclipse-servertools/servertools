@@ -431,6 +431,7 @@ public abstract class ServerBehaviourDelegate {
 	 *    {@link org.eclipse.debug.core.ILaunchManager}
 	 * @return a status object with code <code>IStatus.OK</code> if the server can
 	 *    be started, otherwise a status object indicating why it can't
+    * @since 3.0
 	 */
 	public IStatus canStart(String launchMode) {
 		return Status.OK_STATUS;
@@ -458,6 +459,7 @@ public abstract class ServerBehaviourDelegate {
 	 *    {@link org.eclipse.debug.core.ILaunchManager}
 	 * @return a status object with code <code>IStatus.OK</code> if the server can
 	 *    be restarted, otherwise a status object indicating why it can't
+    * @since 3.0
 	 */
 	public IStatus canRestart(String mode) {
 		return Status.OK_STATUS;
@@ -483,6 +485,7 @@ public abstract class ServerBehaviourDelegate {
 	 * 
 	 * @return a status object with code <code>IStatus.OK</code> if the server can
 	 *   be stopped, otherwise a status object indicating why it can't
+    * @since 3.0
 	 */
 	public IStatus canStop() {
 		return Status.OK_STATUS;
@@ -506,6 +509,7 @@ public abstract class ServerBehaviourDelegate {
 	 * 
 	 * @return a status object with code <code>IStatus.OK</code> if the server can
 	 *   be published to, otherwise a status object indicating what is wrong
+    * @since 3.0
 	 */
 	public IStatus canPublish() {
 		return Status.OK_STATUS;
@@ -989,7 +993,7 @@ public abstract class ServerBehaviourDelegate {
 	 * 
 	 * @param kind the publish kind
 	 * @param modules a list of modules
-	 * @param deltaKind a list of delta kinds
+	 * @param deltaKind2 a list of delta kinds
 	 * @param multi a multistatus to add the status to
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired

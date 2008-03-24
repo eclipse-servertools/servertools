@@ -357,6 +357,7 @@ public interface IServer extends IServerAttributes {
 	 * @param listener an operation listener to receive notification when this
 	 *    operation is done, or <code>null</code> if notification is not
 	 *    required
+	 * @since 3.0
 	 */
 	public void publish(int kind, List<IModule[]> modules, IAdaptable info, IOperationListener listener);
 

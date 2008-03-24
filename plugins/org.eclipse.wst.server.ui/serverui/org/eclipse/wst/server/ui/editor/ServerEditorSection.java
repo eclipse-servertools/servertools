@@ -160,7 +160,8 @@ public abstract class ServerEditorSection {
 	 * managed form has been set.
 	 * 
 	 * @return the managed form that the editor is using, or <code>null</code> if no
-	 *    managed form has been set.
+	 *    managed form has been set
+	 * @since 3.0
 	 */
 	protected IManagedForm getManagedForm() {
 		return editor.getManagedForm();

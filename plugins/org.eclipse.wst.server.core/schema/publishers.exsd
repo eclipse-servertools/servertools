@@ -3,10 +3,13 @@
 <schema targetNamespace="org.eclipse.wst.server.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="org.eclipse.wst.server.core" id="publishTasks" name="Publish Tasks"/>
+         <meta.schema plugin="org.eclipse.wst.server.core" id="publishers" name="Publishers"/>
       </appinfo>
       <documentation>
          This extension point is used to provide a task that is run while publishing to a server.
+
+&lt;b&gt;Provisional API:&lt;/b&gt;
+This class/interface is part of an interim API that is still under development and expected to change significantly before reaching stability. It is being made available at this early stage to solicit feedback from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken (repeatedly) as the API evolves.
       </documentation>
    </annotation>
 
@@ -101,7 +104,7 @@ Publish instances of this type will delegate to instances of this class.
          <meta.section type="since"/>
       </appinfo>
       <documentation>
-         1.0
+         3.0
       </documentation>
    </annotation>
 
@@ -110,7 +113,7 @@ Publish instances of this type will delegate to instances of this class.
          <meta.section type="examples"/>
       </appinfo>
       <documentation>
-         The following is an example of a publish task extension point:
+         The following is an example of a publisher extension point:
 
 &lt;pre&gt;
 
@@ -118,14 +121,12 @@ Publish instances of this type will delegate to instances of this class.
       </documentation>
    </annotation>
 
-
-
    <annotation>
       <appinfo>
          <meta.section type="copyright"/>
       </appinfo>
       <documentation>
-         Copyright (c) 2000, 2005 IBM Corporation and others.&lt;br&gt;
+         Copyright (c) 2008 IBM Corporation and others.&lt;br&gt;
 All rights reserved. This program and the accompanying materials are made 
 available under the terms of the Eclipse Public License v1.0 which accompanies 
 this distribution, and is available at 
@@ -138,8 +139,10 @@ this distribution, and is available at
          <meta.section type="apiInfo"/>
       </appinfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;code&gt;org.eclipse.wst.server.core.model.PublishTaskDelegate&lt;/code&gt;.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;code&gt;org.eclipse.wst.server.core.model.PublisherDelegate&lt;/code&gt;.
       </documentation>
    </annotation>
+
+
 
 </schema>

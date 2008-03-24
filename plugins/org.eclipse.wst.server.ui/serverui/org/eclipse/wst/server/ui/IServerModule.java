@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,9 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 /**
  * A helper interface for modules that are deployed to a server, commonly
- * used to help actions interact with modules in the Servers view. 
+ * used to help actions interact with modules in the Servers view.
+ *
+ * @since 3.0
  */
 public interface IServerModule {
 	/**
