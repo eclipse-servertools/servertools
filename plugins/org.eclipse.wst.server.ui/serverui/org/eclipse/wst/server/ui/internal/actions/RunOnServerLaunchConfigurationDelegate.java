@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,21 +21,14 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
-import org.eclipse.debug.internal.ui.DebugUIPlugin;
-import org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationManager;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.internal.ChainedJob;
 import org.eclipse.wst.server.core.internal.IClient;
 import org.eclipse.wst.server.core.internal.ILaunchableAdapter;
-import org.eclipse.wst.server.core.internal.PublishServerJob;
-import org.eclipse.wst.server.core.internal.RestartServerJob;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
-import org.eclipse.wst.server.core.internal.ServerType;
-import org.eclipse.wst.server.core.internal.StartServerJob;
 import org.eclipse.wst.server.core.model.ModuleArtifactDelegate;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 import org.eclipse.wst.server.ui.internal.LaunchClientJob;
@@ -145,7 +138,7 @@ public class RunOnServerLaunchConfigurationDelegate extends LaunchConfigurationD
 			IBreakpointManager breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
 			boolean disabledBreakpoints = false;
 			
-			if (server.getServerRestartState()) {
+			if (server.getServerRestartState()) { // TODO - restart state might not be set until after publish
 				int result = RunOnServerActionDelegate.openRestartDialog(shell);
 				if (result == 0) {
 					launchMode = mode;
@@ -217,22 +210,31 @@ public class RunOnServerLaunchConfigurationDelegate extends LaunchConfigurationD
 				}
 			}
 			
-			PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, info);
-			LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
-			publishJob.setNextJob(clientJob);
-			
+			final LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
 			if (restart) {
-				RestartServerJob restartJob = new RestartServerJob(server, launchMode);
-				restartJob.setNextJob(publishJob);
-				restartJob.schedule();
-			} else
-				publishJob.schedule();
+				final IServer server2 = server;
+				server.restart(launchMode, new IServer.IOperationListener() {
+					public void done(IStatus result) {
+						server2.publish(IServer.PUBLISH_INCREMENTAL, null, info, new IServer.IOperationListener() {
+							public void done(IStatus result2) {
+								if (result2.isOK())
+									clientJob.schedule();
+							}
+						});
+					}
+				});
+			} else {
+				server.publish(IServer.PUBLISH_INCREMENTAL, null, info, new IServer.IOperationListener() {
+					public void done(IStatus result) {
+						if (result.isOK())
+							clientJob.schedule();
+					}
+				});
+			}
 		} else if (state != IServer.STATE_STOPPING) {
-			PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, info);
-			StartServerJob startServerJob = new StartServerJob(server, launchMode);
-			LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
+			final LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
 			
-			ChainedJob myJob = new ChainedJob("test", server) {
+			/*ChainedJob myJob = new ChainedJob("test", server) {
 				protected IStatus run(IProgressMonitor monitor2) {
 					try {
 						LaunchConfigurationManager lcm = DebugUIPlugin.getDefault().getLaunchConfigurationManager();
@@ -242,19 +244,14 @@ public class RunOnServerLaunchConfigurationDelegate extends LaunchConfigurationD
 					}
 					return Status.OK_STATUS;
 				}
-			};
+			};*/
 			
-			if (((ServerType)server.getServerType()).startBeforePublish()) {
-				startServerJob.setNextJob(publishJob);
-				publishJob.setNextJob(clientJob);
-				clientJob.setNextJob(myJob);
-				startServerJob.schedule();
-			} else {
-				publishJob.setNextJob(startServerJob);
-				startServerJob.setNextJob(clientJob);
-				clientJob.setNextJob(myJob);
-				publishJob.schedule();
-			}
+			server.start(launchMode, new IServer.IOperationListener() {
+				public void done(IStatus result) {
+					if (result.isOK())
+						clientJob.schedule();
+				}
+			});
 		}
 		launch2.terminate();
 	}

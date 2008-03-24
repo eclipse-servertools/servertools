@@ -31,11 +31,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.IClient;
 import org.eclipse.wst.server.core.internal.ILaunchableAdapter;
-import org.eclipse.wst.server.core.internal.PublishServerJob;
-import org.eclipse.wst.server.core.internal.RestartServerJob;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
-import org.eclipse.wst.server.core.internal.ServerType;
-import org.eclipse.wst.server.core.internal.StartServerJob;
 import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.model.ModuleArtifactDelegate;
 import org.eclipse.wst.server.ui.internal.*;
@@ -421,30 +417,36 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 						}
 					}
 					
-					PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, info);
-					LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
-					publishJob.setNextJob(clientJob);
-					
+					final LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
 					if (restart) {
-						RestartServerJob restartJob = new RestartServerJob(server, launchMode);
-						restartJob.setNextJob(publishJob);
-						restartJob.schedule();
-					} else
-						publishJob.schedule();
-				} else if (state != IServer.STATE_STOPPING) {
-					PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, info);
-					StartServerJob startServerJob = new StartServerJob(server, launchMode);
-					LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
-					
-					if (((ServerType)server.getServerType()).startBeforePublish()) {
-						startServerJob.setNextJob(publishJob);
-						publishJob.setNextJob(clientJob);
-						startServerJob.schedule();
+						final IServer server3 = server;
+						server.restart(launchMode, new IServer.IOperationListener() {
+							public void done(IStatus result) {
+								server3.publish(IServer.PUBLISH_INCREMENTAL, null, info, new IServer.IOperationListener() {
+									public void done(IStatus result2) {
+										if (result2.isOK())
+											clientJob.schedule();
+									}
+								});
+							}
+						});
 					} else {
-						publishJob.setNextJob(startServerJob);
-						startServerJob.setNextJob(clientJob);
-						publishJob.schedule();
+						server.publish(IServer.PUBLISH_INCREMENTAL, null, info, new IServer.IOperationListener() {
+							public void done(IStatus result) {
+								if (result.isOK())
+									clientJob.schedule();
+							}
+						});
 					}
+				} else if (state != IServer.STATE_STOPPING) {
+					final LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
+					
+					server.start(launchMode, new IServer.IOperationListener() {
+						public void done(IStatus result) {
+							if (result.isOK())
+								clientJob.schedule();
+						}
+					});
 				}
 			}
 		};

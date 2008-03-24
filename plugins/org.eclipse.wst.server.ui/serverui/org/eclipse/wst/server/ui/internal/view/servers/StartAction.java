@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,16 +12,11 @@ package org.eclipse.wst.server.ui.internal.view.servers;
 
 import java.util.Iterator;
 
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.internal.PublishServerJob;
-import org.eclipse.wst.server.core.internal.RestartServerJob;
-import org.eclipse.wst.server.core.internal.ServerType;
-import org.eclipse.wst.server.core.internal.StartServerJob;
+import org.eclipse.wst.server.core.IServer.IOperationListener;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -153,34 +148,14 @@ public class StartAction extends AbstractServerAction {
 			if (!ServerUIPlugin.saveEditors())
 				return;
 			
-			if (!ServerCore.isAutoPublishing()) {
-				StartServerJob startJob = new StartServerJob(server, launchMode);
-				startJob.schedule();
-				return;
-			}
-			
-			final IAdaptable info = new IAdaptable() {
+			/*final IAdaptable info = new IAdaptable() {
 				public Object getAdapter(Class adapter) {
 					if (Shell.class.equals(adapter))
 						return shell;
 					return null;
 				}
-			};
-			
-			try {
-				PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, info); 
-				StartServerJob startJob = new StartServerJob(server, launchMode);
-				
-				if (((ServerType)server.getServerType()).startBeforePublish()) {
-					startJob.setNextJob(publishJob);
-					startJob.schedule();
-				} else {
-					publishJob.setNextJob(startJob);
-					publishJob.schedule();
-				}
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error starting server", e);
-			}
+			};*/
+			server.start(launchMode, (IOperationListener)null);
 		} else {
 			if (shell != null && !ServerUIPlugin.promptIfDirty(shell, server))
 				return;
@@ -189,8 +164,7 @@ public class StartAction extends AbstractServerAction {
 				String launchMode2 = launchMode;
 				if (launchMode2 == null)
 					launchMode2 = server.getMode();
-				RestartServerJob restartJob = new RestartServerJob(server, launchMode2);
-				restartJob.schedule();
+				server.restart(launchMode2, (IOperationListener) null);
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Error restarting server", e);
 			}

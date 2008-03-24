@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,9 +13,10 @@ package org.eclipse.wst.server.core.internal;
 import org.eclipse.core.runtime.*;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.internal.ServerSchedulingRule;
 /**
  * A job for restarting a server.
+ * 
+ * @deprecated - use API directly, it will kick off jobs as required
  */
 public class RestartServerJob extends ChainedJob {
 	protected String launchMode;
@@ -25,7 +26,6 @@ public class RestartServerJob extends ChainedJob {
 	public RestartServerJob(IServer server, String launchMode) {
 		super(NLS.bind(Messages.jobRestartingServer, server.getName()), server);
 		this.launchMode = launchMode;
-		setRule(new ServerSchedulingRule(server));
 	}
 
 	/* (non-Javadoc)

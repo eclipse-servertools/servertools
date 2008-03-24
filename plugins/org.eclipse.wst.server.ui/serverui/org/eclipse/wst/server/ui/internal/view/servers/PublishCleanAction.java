@@ -15,7 +15,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.internal.PublishServerJob;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.swt.widgets.Shell;
@@ -53,18 +52,16 @@ public class PublishCleanAction extends AbstractServerAction {
 		if (!ServerUIPlugin.saveEditors())
 			return;
 		
-		final IAdaptable info = new IAdaptable() {
-			public Object getAdapter(Class adapter) {
-				if (Shell.class.equals(adapter))
-					return shell;
-				return null;
-			}
-		};
-		
 		if (MessageDialog.openConfirm(shell, Messages.defaultDialogTitle, Messages.dialogPublishClean)) {
-			PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_CLEAN, info);
-			publishJob.setUser(true);
-			publishJob.schedule();
+			IAdaptable info = new IAdaptable() {
+				public Object getAdapter(Class adapter) {
+					if (Shell.class.equals(adapter))
+						return shell;
+					return null;
+				}
+			};
+			
+			server.publish(IServer.PUBLISH_CLEAN, null, info, null);
 		}
 	}
 }

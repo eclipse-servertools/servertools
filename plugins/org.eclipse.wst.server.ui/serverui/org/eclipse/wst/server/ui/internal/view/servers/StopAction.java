@@ -16,8 +16,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.internal.StartServerJob;
-import org.eclipse.wst.server.core.internal.StopServerJob;
+import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -60,13 +59,13 @@ public class StopAction extends AbstractServerAction {
 	}
 
 	public static void stop(IServer server, Shell shell) {
-		ServerUIPlugin.addTerminationWatch(shell, server, ServerUIPlugin.STOP);
+		ServerUIPlugin.addTerminationWatch(shell, server, ServerUIPlugin.STOP); // TODO - should redo
 		
 		IJobManager jobManager = Job.getJobManager();
 		Job[] jobs = jobManager.find(ServerUtil.SERVER_JOB_FAMILY);
 		for (Job j: jobs) {
-			if (j instanceof StartServerJob) {
-				StartServerJob startJob = (StartServerJob) j;
+			if (j instanceof Server.StartJob) {
+				Server.StartJob startJob = (Server.StartJob) j;
 				if (startJob.getServer().equals(server)) {
 					startJob.cancel();
 					return;
@@ -74,7 +73,6 @@ public class StopAction extends AbstractServerAction {
 			}
 		}
 		
-		StopServerJob stopJob = new StopServerJob(server);
-		stopJob.schedule();
+		server.stop(false);
 	}
 }

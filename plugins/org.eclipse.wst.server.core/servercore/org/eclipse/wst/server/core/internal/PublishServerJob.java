@@ -12,20 +12,18 @@ package org.eclipse.wst.server.core.internal;
 
 import java.util.List;
 
-import org.eclipse.core.resources.IResourceRuleFactory;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
 /**
  * Job to publish to a particular server.
+ * 
+ * @deprecated - use API directly, it will kick off jobs as required
  */
 public class PublishServerJob extends ChainedJob {
 	protected int kind;
@@ -66,15 +64,6 @@ public class PublishServerJob extends ChainedJob {
 		this.kind = kind;
 		this.modules = modules;
 		this.info = info;
-		
-		IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
-		
-		// 102227 - lock entire workspace during publish		
-		ISchedulingRule[] rules = new ISchedulingRule[2];
-		rules[0] = ruleFactory.createRule(ResourcesPlugin.getWorkspace().getRoot());
-		rules[1] = new ServerSchedulingRule(server);
-		
-		setRule(MultiRule.combine(rules));
 	}
 
 	/**

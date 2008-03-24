@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.internal.PublishServerJob;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -52,7 +51,7 @@ public class PublishAction extends AbstractServerAction {
 		if (!ServerUIPlugin.saveEditors())
 			return;
 		
-		final IAdaptable info = new IAdaptable() {
+		IAdaptable info = new IAdaptable() {
 			public Object getAdapter(Class adapter) {
 				if (Shell.class.equals(adapter))
 					return shell;
@@ -60,8 +59,6 @@ public class PublishAction extends AbstractServerAction {
 			}
 		};
 		
-		PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, info);
-		publishJob.setUser(true);
-		publishJob.schedule();
+		server.publish(IServer.PUBLISH_INCREMENTAL, null, info, null);
 	}
 }

@@ -14,8 +14,10 @@ import java.util.*;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.debug.core.*;
 
@@ -38,7 +40,7 @@ public class Server extends Base implements IServer {
 	/**
 	 * The most recent launch used to start the server.
 	 */
-	private static ILaunch launch;
+	protected static ILaunch launch;
 
 	protected static final List<String> EMPTY_LIST = new ArrayList<String>(0);
 
@@ -73,6 +75,12 @@ public class Server extends Base implements IServer {
 	public static final String PROP_STOP_TIMEOUT = "stop-timeout";	
 
 	protected static final char[] INVALID_CHARS = new char[] {'\\', '/', ':', '*', '?', '"', '<', '>', '|', '\0', '@', '&'};
+
+	protected static final IOperationListener NULL_OPERATION_LISTENER = new IOperationListener() {
+		public void done(IStatus result) {
+			// do nothing
+		}
+	};
 
 	protected IServerType serverType;
 	protected ServerDelegate delegate;
@@ -141,27 +149,34 @@ public class Server extends Base implements IServer {
 			if (getServerState() != IServer.STATE_STARTED)
 				return;
 			
-			PublishServerJob publishJob = new PublishServerJob(Server.this, IServer.PUBLISH_AUTO, null);
-			publishJob.schedule();
+			publish(IServer.PUBLISH_AUTO, null, null, null);
 		}
 	}
 
-	public class ResourceChangeJob extends ChainedJob {
+	public class ResourceChangeJob extends Job {
 		private IModule module;
 
-		public ResourceChangeJob(IModule module, IServer server) {
-			super(NLS.bind(Messages.jobUpdateServer, server.getName()), server);
+		public ResourceChangeJob(IModule module) {
+			super(NLS.bind(Messages.jobUpdateServer, Server.this.getName()));
 			this.module = module;
 			
 			if (module.getProject() == null)
-				setRule(new ServerSchedulingRule(server));
+				setRule(new ServerSchedulingRule(Server.this));
 			else {
 				ISchedulingRule[] rules = new ISchedulingRule[2];
 				IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
 				rules[0] = ruleFactory.createRule(module.getProject());
-				rules[1] = new ServerSchedulingRule(server);
+				rules[1] = new ServerSchedulingRule(Server.this);
 				setRule(MultiRule.combine(rules));
 			}
+		}
+
+		public boolean belongsTo(Object family) {
+			return ServerUtil.SERVER_JOB_FAMILY.equals(family);
+		}
+
+		protected IServer getServer() {
+			return Server.this;
 		}
 
 		protected IModule getModule() {
@@ -206,6 +221,251 @@ public class Server extends Base implements IServer {
 				autoPublish();
 			
 			return Status.OK_STATUS;
+		}
+	}
+
+	public class PublishJob extends Job {
+		protected int kind;
+		protected List<IModule[]> modules4;
+		protected IAdaptable info;
+		protected boolean start;
+
+		/**
+		 * Create a new publishing job.
+		 * 
+		 * @param kind the kind of publish
+		 * @param info the IAdaptable (or <code>null</code>) provided by the
+		 *    caller in order to supply UI information for prompting the
+		 *    user if necessary. When this parameter is not
+		 *    <code>null</code>, it should minimally contain an adapter
+		 *    for the Shell class.
+		 */
+		public PublishJob(int kind, IAdaptable info) {
+			this(kind, null, false, info);
+		}
+
+		/**
+		 * Create a new publishing job.
+		 * 
+		 * @param kind the kind of publish
+		 * @param modules4 a list of modules to publish, or <code>null</code> to
+		 *    publish all modules
+		 * @param start true if we need to start the server first
+		 * @param info the IAdaptable (or <code>null</code>) provided by the
+		 *    caller in order to supply UI information for prompting the
+		 *    user if necessary. When this parameter is not
+		 *    <code>null</code>, it should minimally contain an adapter
+		 *    for the Shell class.
+		 */
+		public PublishJob(int kind, List<IModule[]> modules4, boolean start, IAdaptable info) {
+			super(NLS.bind(Messages.publishing, Server.this.getName()));
+			this.kind = kind;
+			this.modules4 = modules4;
+			this.start = start;
+			this.info = info;
+			
+			IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
+			
+			// 102227 - lock entire workspace during publish		
+			ISchedulingRule[] rules = new ISchedulingRule[2];
+			rules[0] = ruleFactory.createRule(ResourcesPlugin.getWorkspace().getRoot());
+			rules[1] = new ServerSchedulingRule(Server.this);
+			
+			setRule(MultiRule.combine(rules));
+		}
+
+		public boolean belongsTo(Object family) {
+			return ServerUtil.SERVER_JOB_FAMILY.equals(family);
+		}
+
+		protected IStatus run(IProgressMonitor monitor) {
+			if (start) {
+				IStatus status = startImpl(ILaunchManager.RUN_MODE, monitor);
+				if (status != null && status.getSeverity() == IStatus.ERROR)
+					return status;
+			}
+			
+			return publishImpl(kind, modules4, info, monitor);
+		}
+	}
+
+	public class StartJob extends Job {
+		protected static final byte PUBLISH_NONE = 0;
+		protected static final byte PUBLISH_BEFORE = 1;
+		protected static final byte PUBLISH_AFTER = 2;
+
+		protected String launchMode;
+		protected byte publish;
+
+		public StartJob(String launchMode, byte publish) {
+			super(NLS.bind(Messages.jobStartingServer, Server.this.getName()));
+			this.launchMode = launchMode;
+			this.publish = publish;
+			
+			if (publish != PUBLISH_NONE) {
+				IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
+				
+				// 102227 - lock entire workspace during publish		
+				ISchedulingRule[] rules = new ISchedulingRule[2];
+				rules[0] = ruleFactory.createRule(ResourcesPlugin.getWorkspace().getRoot());
+				rules[1] = new ServerSchedulingRule(Server.this);
+				
+				setRule(MultiRule.combine(rules));
+			} else
+				setRule(new ServerSchedulingRule(Server.this));
+		}
+
+		public boolean belongsTo(Object family) {
+			return ServerUtil.SERVER_JOB_FAMILY.equals(family);
+		}
+
+		public IServer getServer() {
+			return Server.this;
+		}
+
+		protected IStatus run(IProgressMonitor monitor) {
+			if (publish == PUBLISH_BEFORE) {
+				IStatus status = publishImpl(IServer.PUBLISH_INCREMENTAL, null, null, monitor);
+				if (status != null && status.getSeverity() == IStatus.ERROR)
+					return status;
+			}
+			
+			IStatus stat = startImpl(launchMode, monitor);
+			
+			if (publish == PUBLISH_AFTER) {
+				IStatus status = publishImpl(IServer.PUBLISH_INCREMENTAL, null, null, monitor);
+				if (status != null && status.getSeverity() == IStatus.ERROR)
+					return status;
+			}
+			return stat;
+		}
+	}
+
+	public class RestartJob extends Job {
+		protected String launchMode;
+
+		public RestartJob(String launchMode) {
+			super(NLS.bind(Messages.jobRestartingServer, Server.this.getName()));
+			this.launchMode = launchMode;
+			setRule(new ServerSchedulingRule(Server.this));
+		}
+
+		public boolean belongsTo(Object family) {
+			return ServerUtil.SERVER_JOB_FAMILY.equals(family);
+		}
+
+		protected IStatus run(IProgressMonitor monitor) {
+			return restartImpl(launchMode, monitor);
+		}
+	}
+
+	public class StopJob extends Job {
+		protected boolean force;
+
+		public StopJob(boolean force) {
+			super(NLS.bind(Messages.jobStoppingServer, Server.this.getName()));
+			setRule(new ServerSchedulingRule(Server.this));
+			this.force = force;
+		}
+
+		public boolean belongsTo(Object family) {
+			return ServerUtil.SERVER_JOB_FAMILY.equals(family);
+		}
+
+		protected IStatus run(IProgressMonitor monitor) {
+			final Object mutex = new Object();
+			
+			// add listener to the server
+			IServerListener listener = new IServerListener() {
+				public void serverChanged(ServerEvent event) {
+					int eventKind = event.getKind();
+					IServer server = event.getServer();
+					if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
+						int state = server.getServerState();
+						if (Server.this == server && state == IServer.STATE_STOPPED) {
+							// notify waiter
+							synchronized (mutex) {
+								try {
+									mutex.notifyAll();
+								} catch (Exception e) {
+									Trace.trace(Trace.SEVERE, "Error notifying server stop", e);
+								}
+							}
+						}
+					}
+				}
+			};
+			addServerListener(listener);
+			
+			class Timer {
+				boolean timeout;
+				boolean alreadyDone;
+			}
+			final Timer timer = new Timer();
+			
+			final int serverTimeout = ((ServerType) getServerType()).getStopTimeout();
+			if (serverTimeout > 0) {
+				Thread thread = new Thread("Synchronous server stop") {
+					public void run() {
+						try {
+							Thread.sleep(serverTimeout);
+							if (!timer.alreadyDone) {
+								timer.timeout = true;
+								// notify waiter
+								synchronized (mutex) {
+									Trace.trace(Trace.FINEST, "stop notify timeout");
+									mutex.notifyAll();
+								}
+							}
+						} catch (Exception e) {
+							Trace.trace(Trace.SEVERE, "Error notifying server stop timeout", e);
+						}
+					}
+				};
+				thread.setDaemon(true);
+				thread.start();
+			}
+			
+			// stop the server
+			stop();
+			
+			// wait for it! wait for it!
+			synchronized (mutex) {
+				try {
+					while (!timer.timeout && getServerState() != IServer.STATE_STOPPED)
+						mutex.wait();
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "Error waiting for server stop", e);
+				}
+			}
+			removeServerListener(listener);
+			
+			//can't throw exceptions
+			/*if (timer.timeout)
+				return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorStartTimeout, getName()), null);
+			else
+				timer.alreadyDone = true;
+			
+			if (getServerState() == IServer.STATE_STOPPED)
+				return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorStartFailed", getName()), null);*/
+			return Status.OK_STATUS;
+		}
+
+		protected void stop() {
+			if (getServerState() == STATE_STOPPED)
+				return;
+			
+			Trace.trace(Trace.FINEST, "Stopping server: " + Server.this.toString());
+			
+			try {
+				getBehaviourDelegate(null).stop(force);
+			} catch (RuntimeException e) {
+				Trace.trace(Trace.SEVERE, "Error calling delegate stop() " + Server.this.toString(), e);
+				throw e;
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "Error calling delegate stop() " + Server.this.toString(), t);
+				throw new RuntimeException(t);
+			}
 		}
 	}
 
@@ -637,7 +897,7 @@ public class Server extends Base implements IServer {
 			}
 		}
 		
-		ResourceChangeJob job = new ResourceChangeJob(module, this);
+		ResourceChangeJob job = new ResourceChangeJob(module);
 		job.setSystem(true);
 		job.setPriority(Job.BUILD);
 		job.schedule();
@@ -669,6 +929,7 @@ public class Server extends Base implements IServer {
 			autoPublishThread = new AutoPublishThread();
 			autoPublishThread.time = time;
 			autoPublishThread.setPriority(Thread.MIN_PRIORITY + 1);
+			autoPublishThread.setDaemon(true);
 			autoPublishThread.start();
 		}
 	}
@@ -742,7 +1003,7 @@ public class Server extends Base implements IServer {
 	/**
 	 * Fire a publish start event.
 	 */
-	private void firePublishStarted() {
+	protected void firePublishStarted() {
 		Trace.trace(Trace.FINEST, "->- Firing publish started event ->-");
 	
 		if (publishListeners == null || publishListeners.isEmpty())
@@ -769,7 +1030,7 @@ public class Server extends Base implements IServer {
 	 *
 	 * @param status publishing status
 	 */
-	private void firePublishFinished(IStatus status) {
+	protected void firePublishFinished(IStatus status) {
 		Trace.trace(Trace.FINEST, "->- Firing publishing finished event: " + status + " ->-");
 	
 		if (publishListeners == null || publishListeners.isEmpty())
@@ -944,90 +1205,57 @@ public class Server extends Base implements IServer {
 		// make sure that the delegate is loaded and the server state is correct
 		loadAdapter(ServerBehaviourDelegate.class, monitor);
 		
-		if (((ServerType)getServerType()).startBeforePublish() && (getServerState() == IServer.STATE_STOPPED)) {
-			try {
-				synchronousStart(ILaunchManager.RUN_MODE, monitor);
-			} catch (CoreException ce) {
-				Trace.trace(Trace.SEVERE, "Error starting server", ce);
-				return ce.getStatus();
-			}
-		}
+		PublishJob publishJob = null;
+		if (((ServerType)getServerType()).startBeforePublish() && (getServerState() == IServer.STATE_STOPPED))
+			publishJob = new PublishJob(kind, null, true, null);
+		else
+			publishJob = new PublishJob(kind, null);
+		publishJob.schedule();
 		
-		return doPublish(kind, null, monitor, null);
+		try {
+			publishJob.join();
+		} catch (InterruptedException e) {
+			Trace.trace(Trace.WARNING, "Error waiting for job", e);
+		}
+		return publishJob.getResult();
 	}
 
 	/*
 	 * Publish the given modules to the server.
 	 * TODO: Implementation!
 	 */
-	public void publish(final int kind, final List<IModule[]> modules2, final IAdaptable info, final IOperationListener listener) {
+	public void publish(final int kind, final List<IModule[]> modules2, final IAdaptable info, IOperationListener opListener) {
+		if (opListener == null)
+			opListener = NULL_OPERATION_LISTENER;
+		
 		if (getServerType() == null) {
-			listener.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorMissingAdapter, null));
+			opListener.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorMissingAdapter, null));
 			return;
 		}
 		
 		// check what is out of sync and publish
 		if (getServerType().hasServerConfiguration() && configuration == null) {
-			listener.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorNoConfiguration, null));
+			opListener.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorNoConfiguration, null));
 			return;
 		}
 		
 		// make sure that the delegate is loaded and the server state is correct
 		loadAdapter(ServerBehaviourDelegate.class, null);
 		
-		if (((ServerType)getServerType()).startBeforePublish() && (getServerState() == IServer.STATE_STOPPED)) {
+		PublishJob publishJob = null;
+		if (((ServerType)getServerType()).startBeforePublish() && (getServerState() == IServer.STATE_STOPPED))
+			publishJob = new PublishJob(kind, modules2, true, info);
+		else
+			publishJob = new PublishJob(kind, modules2, false, info);
+		publishJob.schedule();
+		
+		if (opListener != null) {
 			try {
-				synchronousStart(ILaunchManager.RUN_MODE, new NullProgressMonitor());
-			} catch (CoreException ce) {
-				Trace.trace(Trace.SEVERE, "Error starting server", ce);
-				listener.done(ce.getStatus());
-				return;
+				publishJob.join();
+			} catch (Exception e) {
+				Trace.trace(Trace.WARNING, "Error waiting for job", e);
 			}
-		}
-		
-		IStatus status = doPublish(kind, modules2, new NullProgressMonitor(), info);
-		listener.done(status);
-	}
-
-	protected IStatus doPublish(int kind, List<IModule[]> modules3, IProgressMonitor monitor, IAdaptable info) {
-		Trace.trace(Trace.FINEST, "-->-- Publishing to server: " + toString() + " -->--");
-		
-		stopAutoPublish();
-		
-		try {
-			long time = System.currentTimeMillis();
-			firePublishStarted();
-			
-			getServerPublishInfo().startCaching();
-			IStatus status = Status.OK_STATUS;
-			try {
-				getBehaviourDelegate(monitor).publish(kind, modules3, monitor, info);
-			} catch (CoreException ce) {
-				Trace.trace(Trace.WARNING, "Error during publishing", ce);
-				status = ce.getStatus();
-			}
-			
-			final List<IModule[]> modules2 = new ArrayList<IModule[]>();
-			visit(new IModuleVisitor() {
-				public boolean visit(IModule[] module) {
-					if (getModulePublishState(module) == IServer.PUBLISH_STATE_NONE)
-						getServerPublishInfo().fill(module);
-					
-					modules2.add(module);
-					return true;
-				}
-			}, monitor);
-			
-			getServerPublishInfo().removeDeletedModulePublishInfo(this, modules2);
-			getServerPublishInfo().clearCache();
-			getServerPublishInfo().save();
-			
-			firePublishFinished(Status.OK_STATUS);
-			Trace.trace(Trace.PERFORMANCE, "Server.publish(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
-			return status;
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate publish() " + toString(), e);
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e);
+			opListener.done(publishJob.getResult());
 		}
 	}
 
@@ -1421,20 +1649,22 @@ public class Server extends Base implements IServer {
 	 */
 	public void start(String mode2, IProgressMonitor monitor) throws CoreException {
 		Trace.trace(Trace.FINEST, "Starting server: " + toString() + ", launchMode: " + mode2);
+		if (getServerType() == null)
+			return;
 		
 		// make sure that the delegate is loaded and the server state is correct
-		loadAdapter(ServerBehaviourDelegate.class, monitor);
+		loadAdapter(ServerBehaviourDelegate.class, null);
 		
-		try {
-			ILaunchConfiguration launchConfig = getLaunchConfiguration(true, monitor);
-			//if (launchConfig == null)
-			//	throw new CoreException();
-			launch = launchConfig.launch(mode2, monitor); // , true); - causes workspace lock
-			Trace.trace(Trace.FINEST, "Launch: " + launch);
-		} catch (CoreException e) {
-			Trace.trace(Trace.SEVERE, "Error starting server " + toString(), e);
-			throw e;
+		byte pub = StartJob.PUBLISH_NONE;
+		if (ServerCore.isAutoPublishing() && shouldPublish()) {
+			if (((ServerType)getServerType()).startBeforePublish())
+				pub = StartJob.PUBLISH_AFTER;
+			else
+				pub = StartJob.PUBLISH_BEFORE;
 		}
+		
+		StartJob startJob = new StartJob(mode2, pub);
+		startJob.schedule();
 	}
 
 	/**
@@ -1525,70 +1755,16 @@ public class Server extends Base implements IServer {
 		if (getServerType() == null || getServerState() == STATE_STOPPED)
 			return;
 		
+		if (getServerType() == null)
+			return;
+		
+		if (getServerState() == STATE_STOPPED)
+			return;
+		
 		Trace.trace(Trace.FINEST, "Restarting server: " + getName());
 		
-		try {
-			try {
-				getBehaviourDelegate(monitor).restart(mode2);
-				return;
-			} catch (CoreException ce) {
-				if (ce.getStatus().getSeverity() == IStatus.ERROR)
-					Trace.trace(Trace.SEVERE, "Error calling delegate restart() " + toString());
-				else
-					Trace.trace(Trace.FINER, "Error calling delegate restart() " + toString());
-			}
-			
-			// add listener to start it as soon as it is stopped
-			addServerListener(new IServerListener() {
-				public void serverChanged(ServerEvent event) {
-					int eventKind = event.getKind();
-					IServer server = event.getServer();
-					if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
-						if (server.getServerState() == STATE_STOPPED) {
-							server.removeServerListener(this);
-							
-							// restart in a quarter second (give other listeners a chance
-							// to hear the stopped message)
-							Thread t = new Thread() {
-								public void run() {
-									try {
-										Thread.sleep(250);
-									} catch (Exception e) {
-										// ignore
-									}
-									ServerType st = (ServerType) getServerType();
-									if (st.startBeforePublish()) {
-										try {
-											Server.this.start(mode2, monitor);
-										} catch (Exception e) {
-											Trace.trace(Trace.SEVERE, "Error while restarting server", e);
-										}
-									}
-									if (ServerCore.isAutoPublishing() && shouldPublish()) {
-										publish(PUBLISH_INCREMENTAL, null);
-									}
-									if (getServerState() != IServer.STATE_STARTED) {
-										try {
-											Server.this.start(mode2, monitor);
-										} catch (Exception e) {
-											Trace.trace(Trace.SEVERE, "Error while restarting server", e);
-										}
-									}
-								}
-							};
-							t.setDaemon(true);
-							t.setPriority(Thread.NORM_PRIORITY - 2);
-							t.start();
-						}
-					}
-				}
-			});
-			
-			// stop the server
-			stop(false);
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error restarting server", e);
-		}
+		RestartJob restartJob = new RestartJob(mode2);
+		restartJob.schedule();
 	}
 
 	/**
@@ -1620,17 +1796,8 @@ public class Server extends Base implements IServer {
 		if (getServerState() == STATE_STOPPED)
 			return;
 		
-		Trace.trace(Trace.FINEST, "Stopping server: " + toString());
-		
-		try {
-			getBehaviourDelegate(null).stop(force);
-		} catch (RuntimeException e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate stop() " + toString(), e);
-			throw e;
-		} catch (Throwable t) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate stop() " + toString(), t);
-			throw new RuntimeException(t);
-		}
+		StopJob job = new StopJob(force);
+		job.schedule();
 	}
 
 	/**
@@ -1642,239 +1809,49 @@ public class Server extends Base implements IServer {
 			return;
 		}
 		
-		Trace.trace(Trace.FINEST, "start 1");
-		
 		// make sure that the delegate is loaded and the server state is correct
 		loadAdapter(ServerBehaviourDelegate.class, null);
 		
-		/*if (((ServerType)getServerType()).startBeforePublish() &&
-				(ServerCore.isAutoPublishing() || this.getAutoPublishSetting() == AUTO_PUBLISH_ENABLE)) {
-			// TODO
-			publish(IServer.PUBLISH_INCREMENTAL, null);
-			PublishServerJob publishJob = new PublishServerJob(this, IServer.PUBLISH_INCREMENTAL, false);
-			publishJob.schedule();
-			try {
-				publishJob.join();
-			} catch (InterruptedException e) {
-				// ignore
+		byte pub = StartJob.PUBLISH_NONE;
+		if (ServerCore.isAutoPublishing() && shouldPublish()) {
+			if (((ServerType)getServerType()).startBeforePublish())
+				pub = StartJob.PUBLISH_AFTER;
+			else
+				pub = StartJob.PUBLISH_BEFORE;
+		}
+		
+		StartJob startJob = new StartJob(mode2, pub);
+		startJob.addJobChangeListener(new JobChangeAdapter() {
+			public void done(IJobChangeEvent event) {
+				opListener.done(event.getResult());
 			}
-		}*/
-		
-		class Operation {
-			public boolean isDone;
-			public IServerListener listener;
-			
-			public synchronized void complete(IStatus status) {
-				if (isDone)
-					return;
-				
-				isDone = true;
-				removeServerListener(listener);
-				
-				/*if (!((ServerType)getServerType()).startBeforePublish() &&
-						(ServerCore.isAutoPublishing() || Server.this.getAutoPublishSetting() == AUTO_PUBLISH_ENABLE)) {
-					// TODO
-					publish(IServer.PUBLISH_INCREMENTAL, null);
-					PublishServerJob publishJob = new PublishServerJob(Server.this, IServer.PUBLISH_INCREMENTAL, false);
-					publishJob.schedule();
-					try {
-						publishJob.join();
-					} catch (InterruptedException e) {
-						// ignore
-					}
-				}*/
-				
-				opListener.done(status);
-				
-			}
-		}
-		final Operation operation = new Operation();
-		
-		// add listener to the server
-		IServerListener listener = new IServerListener() {
-			public void serverChanged(ServerEvent event) {
-				if (operation.isDone)
-					return;
-				int eventKind = event.getKind();
-				IServer server = event.getServer();
-				if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
-					int state = server.getServerState();
-					if (state == IServer.STATE_STARTED)
-						operation.complete(Status.OK_STATUS);
-					else if (state == IServer.STATE_STOPPED)
-						operation.complete(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartFailed, getName()), null));
-				}
-			}
-		};
-		operation.listener = listener;
-		addServerListener(listener);
-		
-		// add timeout thread
-		final int serverTimeout = getStartTimeout()*1000;
-		if (serverTimeout > 0) {
-			Thread thread = new Thread("Server start timeout") {
-				public void run() {
-					try {
-						Thread.sleep(serverTimeout);
-						if (operation.isDone)
-							return;
-						Server.this.stop(false);
-						operation.complete(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartTimeout, new String[] { getName(), (serverTimeout / 1000) + "" }), null));
-					} catch (Exception e) {
-						Trace.trace(Trace.SEVERE, "Error notifying server start timeout", e);
-					}
-				}
-			};
-			thread.setDaemon(true);
-			thread.start();
-		}
-		
-		Trace.trace(Trace.FINEST, "start 2");
-		
-		// start the server
-		IProgressMonitor monitor = new NullProgressMonitor();
-		try {
-			start(mode2, monitor);
-		} catch (CoreException e) {
-			operation.complete(e.getStatus());
-			return;
-		}
-		if (monitor.isCanceled()) {
-			operation.complete(Status.CANCEL_STATUS);
-			return;
-		}
-		
-		Trace.trace(Trace.FINEST, "start 3");
+		});
+		startJob.schedule();
 	}
 
 	public void synchronousStart(String mode2, IProgressMonitor monitor) throws CoreException {
 		if (getServerType() == null)
 			return;
 		
-		Trace.trace(Trace.FINEST, "synchronousStart 1");
-		
 		// make sure that the delegate is loaded and the server state is correct
 		loadAdapter(ServerBehaviourDelegate.class, monitor);
 		
-		final boolean[] notified = new boolean[1];
-		
-		monitor = ProgressUtil.getMonitorFor(monitor);
-		
-		// add listener to the server
-		IServerListener listener = new IServerListener() {
-			public void serverChanged(ServerEvent event) {
-				int eventKind = event.getKind();
-				IServer server = event.getServer();
-				if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
-					int state = server.getServerState();
-					if (state == IServer.STATE_STARTED || state == IServer.STATE_STOPPED) {
-						// notify waiter
-						synchronized (notified) {
-							try {
-								Trace.trace(Trace.FINEST, "synchronousStart notify");
-								notified[0] = true;
-								notified.notifyAll();
-							} catch (Exception e) {
-								Trace.trace(Trace.SEVERE, "Error notifying server start", e);
-							}
-						}
-					}
-				}
-			}
-		};
-		addServerListener(listener);
-		
-		final int serverTimeout = ((ServerType) getServerType()).getStartTimeout();
-		class Timer {
-			boolean timeout;
-			boolean alreadyDone;
+		byte pub = StartJob.PUBLISH_NONE;
+		if (ServerCore.isAutoPublishing() && shouldPublish()) {
+			if (((ServerType)getServerType()).startBeforePublish())
+				pub = StartJob.PUBLISH_AFTER;
+			else
+				pub = StartJob.PUBLISH_BEFORE;
 		}
-		final Timer timer = new Timer();
 		
-		final IProgressMonitor monitor2 = monitor;
-		Thread thread = new Thread("Synchronous Server Start") {
-			public void run() {
-				try {
-					int totalTimeout = serverTimeout;
-					if (totalTimeout < 0)
-						totalTimeout = 1;
-					boolean userCancelled = false;
-					int retryPeriod = 2500;
-					while (!notified[0] && totalTimeout > 0 && !userCancelled && !timer.alreadyDone) {
-						Thread.sleep(retryPeriod);
-						if (serverTimeout > 0)
-							totalTimeout -= retryPeriod;
-						if (!notified[0] && !timer.alreadyDone && monitor2.isCanceled()) {
-							// user cancelled - set the server state to stopped
-							userCancelled = true;
-							setServerState(IServer.STATE_STOPPED);
-							// notify waiter
-							synchronized (notified) {
-								Trace.trace(Trace.FINEST, "synchronousStart user cancelled");
-								notified[0] = true;
-								notified.notifyAll();
-							}
-						}
-					}
-					if (!userCancelled && !timer.alreadyDone && !notified[0]) {
-						// notify waiter
-						synchronized (notified) {
-							Trace.trace(Trace.FINEST, "synchronousStart notify timeout");
-							if (!timer.alreadyDone && totalTimeout <= 0)
-								timer.timeout = true;
-							notified[0] = true;
-							notified.notifyAll();
-						}
-					}
-				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error notifying server start timeout", e);
-				}
-			}
-		};
-		thread.setDaemon(true);
-		thread.start();
-	
-		Trace.trace(Trace.FINEST, "synchronousStart 2");
-	
-		// start the server
+		StartJob startJob = new StartJob(mode2, pub);
+		startJob.schedule();
+		
 		try {
-			start(mode2, monitor);
-		} catch (CoreException e) {
-			removeServerListener(listener);
-			timer.alreadyDone = true;
-			throw e;
+			startJob.join();
+		} catch (InterruptedException e) {
+			Trace.trace(Trace.WARNING, "Error waiting for job", e);
 		}
-		if (monitor.isCanceled()) {
-			removeServerListener(listener);
-			timer.alreadyDone = true;
-			return;
-		}
-		
-		Trace.trace(Trace.FINEST, "synchronousStart 3");
-		
-		// wait for it! wait for it! ...
-		synchronized (notified) {
-			try {
-				while (!notified[0] && !monitor.isCanceled() && !timer.timeout
-						&& !(getServerState() == IServer.STATE_STARTED || getServerState() == IServer.STATE_STOPPED)) {
-					notified.wait();
-				}
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error waiting for server start", e);
-			}
-			timer.alreadyDone = true;
-		}
-		removeServerListener(listener);
-		
-		if (timer.timeout) {
-			stop(false);
-			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartTimeout, new String[] { getName(), (serverTimeout / 1000) + "" }), null));
-		}
-		
-		if (getServerState() == IServer.STATE_STOPPED)
-			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartFailed, getName()), null));
-		
-		Trace.trace(Trace.FINEST, "synchronousStart 4");
 	}
 
 	/*
@@ -1888,100 +1865,37 @@ public class Server extends Base implements IServer {
 	/*
 	 * @see IServer#restart(String, IOperationListener)
 	 */
-	public void restart(String mode2, IOperationListener listener) {
-		if (getServerType() == null)
+	public void restart(String mode2, IOperationListener opListener) {
+		if (opListener == null)
+			opListener = NULL_OPERATION_LISTENER;
+		
+		if (getServerType() == null) {
+			opListener.done(Status.OK_STATUS);
 			return;
-		
-		if (getServerState() == STATE_STOPPED)
-			return;
-		
-		Trace.trace(Trace.FINEST, "Restarting server: " + getName());
-		
-		try {
-			final IOperationListener listener2 = listener;
-			IServerListener curListener = new IServerListener() {
-				public void serverChanged(ServerEvent event) {
-					int eventKind = event.getKind();
-					IServer server = event.getServer();
-					if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
-						if (server.getServerState() == STATE_STARTED) {
-							server.removeServerListener(this);
-							listener2.done(Status.OK_STATUS);
-						}
-					}
-				}
-			};
-			try {
-				addServerListener(curListener);
-				getBehaviourDelegate(null).restart(mode2);
-				return;
-			} catch (CoreException ce) {
-				if (ce.getStatus().getSeverity() == IStatus.ERROR)
-					Trace.trace(Trace.SEVERE, "Error calling delegate restart() " + toString());
-				else
-					Trace.trace(Trace.FINER, "Error calling delegate restart() " + toString());
-				removeServerListener(curListener);
-			}
-			
-			final String mode3 = mode2;
-			// add listener to start it as soon as it is stopped
-			addServerListener(new IServerListener() {
-				public void serverChanged(ServerEvent event) {
-					int eventKind = event.getKind();
-					IServer server = event.getServer();
-					if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
-						if (server.getServerState() == STATE_STOPPED) {
-							server.removeServerListener(this);
-
-							// restart in a quarter second (give other listeners a chance
-							// to hear the stopped message)
-							Thread t = new Thread("Restart thread") {
-								public void run() {
-									try {
-										Thread.sleep(250);
-									} catch (Exception e) {
-										// ignore
-									}
-									ServerType st = (ServerType) getServerType();
-									if (st.startBeforePublish()) {
-										try {
-											Server.this.start(mode3, listener2);
-										} catch (Exception e) {
-											Trace.trace(Trace.SEVERE, "Error while restarting server", e);
-										}
-									}
-									if (ServerCore.isAutoPublishing() && shouldPublish()) {
-										publish(PUBLISH_INCREMENTAL, null);
-									}
-									if (getServerState() != IServer.STATE_STARTED) {
-										try {
-											Server.this.start(mode3, listener2);
-										} catch (Exception e) {
-											Trace.trace(Trace.SEVERE, "Error while restarting server", e);
-										}
-									}
-								}
-							};
-							t.setDaemon(true);
-							t.setPriority(Thread.NORM_PRIORITY - 2);
-							t.start();
-						}
-					}
-				}
-			});
-			
-			// stop the server
-			stop(false);
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error restarting server", e);
-			listener.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartFailed, getName()), null));
 		}
+		
+		if (getServerState() == STATE_STOPPED) {
+			opListener.done(Status.OK_STATUS);
+			return;
+		}
+		
+		final IOperationListener ol = opListener;
+		RestartJob restartJob = new RestartJob(mode2);
+		restartJob.addJobChangeListener(new JobChangeAdapter() {
+			public void done(IJobChangeEvent event) {
+				ol.done(event.getResult());
+			}
+		});
+		restartJob.schedule();
 	}
 
 	/*
 	 * @see IServer#stop(boolean, IOperationListener)
 	 */
-	public void stop(boolean force, final IOperationListener opListener) {
+	public void stop(boolean force, IOperationListener opListener) {
+		if (opListener == null)
+			opListener = NULL_OPERATION_LISTENER;
+		
 		if (getServerType() == null) {
 			opListener.done(Status.OK_STATUS);
 			return;
@@ -1992,61 +1906,14 @@ public class Server extends Base implements IServer {
 			return;
 		}
 		
-		class Operation {
-			public boolean isDone;
-			public IServerListener listener;
-			
-			public synchronized void complete(IStatus status) {
-				if (isDone)
-					return;
-				
-				isDone = true;
-				opListener.done(status);
-				removeServerListener(listener);
+		final IOperationListener ol = opListener;
+		StopJob job = new StopJob(force);
+		job.addJobChangeListener(new JobChangeAdapter() {
+			public void done(IJobChangeEvent event) {
+				ol.done(event.getResult());
 			}
-		}
-		final Operation operation = new Operation();
-		
-		// add listener to the server
-		IServerListener listener = new IServerListener() {
-			public void serverChanged(ServerEvent event) {
-				int eventKind = event.getKind();
-				IServer server = event.getServer();
-				if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
-					int state = server.getServerState();
-					if (state == IServer.STATE_STOPPED)
-						operation.complete(Status.OK_STATUS);
-				}
-			}
-		};
-		operation.listener = listener;
-		addServerListener(listener);
-	
-		final int serverTimeout = getStopTimeout()*1000;
-		if (serverTimeout > 0) {
-			Thread thread = new Thread("Server stop timeout") {
-				public void run() {
-					try {
-						Thread.sleep(serverTimeout);
-						if (operation.isDone)
-							return;
-						operation.complete(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorRestartFailed, getName()), null));
-					} catch (Exception e) {
-						Trace.trace(Trace.SEVERE, "Error notifying server stop timeout", e);
-					}
-				}
-			};
-			thread.setDaemon(true);
-			thread.start();
-		}
-		
-		// stop the server
-		try {
-			stop(force);
-		} catch (RuntimeException e) {
-			operation.complete(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorRestartFailed, getName()), null));
-			return;
-		}
+		});
+		job.schedule();
 	}
 
 	/*
@@ -2059,84 +1926,15 @@ public class Server extends Base implements IServer {
 		if (getServerState() == IServer.STATE_STOPPED)
 			return;
 		
-		final Object mutex = new Object();
-		
-		// add listener to the server
-		IServerListener listener = new IServerListener() {
-			public void serverChanged(ServerEvent event) {
-				int eventKind = event.getKind();
-				IServer server = event.getServer();
-				if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
-					int state = server.getServerState();
-					if (Server.this == server && state == IServer.STATE_STOPPED) {
-						// notify waiter
-						synchronized (mutex) {
-							try {
-								mutex.notifyAll();
-							} catch (Exception e) {
-								Trace.trace(Trace.SEVERE, "Error notifying server stop", e);
-							}
-						}
-					}
-				}
-			}
-		};
-		addServerListener(listener);
-		
-		class Timer {
-			boolean timeout;
-			boolean alreadyDone;
+		StopJob job = new StopJob(force);
+		job.schedule();
+		try {
+			job.join();
+		} catch (InterruptedException e) {
+			Trace.trace(Trace.WARNING, "Error waiting for job", e);
 		}
-		final Timer timer = new Timer();
-		
-		final int serverTimeout = ((ServerType) getServerType()).getStopTimeout();
-		if (serverTimeout > 0) {
-			Thread thread = new Thread("Synchronous server stop") {
-				public void run() {
-					try {
-						Thread.sleep(serverTimeout);
-						if (!timer.alreadyDone) {
-							timer.timeout = true;
-							// notify waiter
-							synchronized (mutex) {
-								Trace.trace(Trace.FINEST, "stop notify timeout");
-								mutex.notifyAll();
-							}
-						}
-					} catch (Exception e) {
-						Trace.trace(Trace.SEVERE, "Error notifying server stop timeout", e);
-					}
-				}
-			};
-			thread.setDaemon(true);
-			thread.start();
-		}
-	
-		// stop the server
-		stop(force);
-	
-		// wait for it! wait for it!
-		synchronized (mutex) {
-			try {
-				while (!timer.timeout && getServerState() != IServer.STATE_STOPPED)
-					mutex.wait();
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error waiting for server stop", e);
-			}
-		}
-		removeServerListener(listener);
-		
-		/*
-		//can't throw exceptions
-		if (timer.timeout)
-			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorStartFailed", getName()), null));
-		else
-			timer.alreadyDone = true;
-		
-		if (getServerState() == IServer.STATE_STOPPED)
-			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorStartFailed", getName()), null));*/
 	}
-	
+
 	/*
 	 * Trigger a restart of the given module and wait until it has finished restarting.
 	 *
@@ -2708,5 +2506,259 @@ public class Server extends Base implements IServer {
 	public int getServerState(IProgressMonitor monitor) {
 		loadAdapter(ServerBehaviourDelegate.class, monitor);
 		return getServerState();
+	}
+
+	protected IStatus publishImpl(int kind, List<IModule[]> modules4, IAdaptable info, IProgressMonitor monitor) {
+		Trace.trace(Trace.FINEST, "-->-- Publishing to server: " + Server.this.toString() + " -->--");
+		
+		stopAutoPublish();
+		
+		try {
+			long time = System.currentTimeMillis();
+			firePublishStarted();
+			
+			getServerPublishInfo().startCaching();
+			IStatus status = Status.OK_STATUS;
+			try {
+				getBehaviourDelegate(monitor).publish(kind, modules4, monitor, info);
+			} catch (CoreException ce) {
+				Trace.trace(Trace.WARNING, "Error during publishing", ce);
+				status = ce.getStatus();
+			}
+			
+			final List<IModule[]> modules2 = new ArrayList<IModule[]>();
+			visit(new IModuleVisitor() {
+				public boolean visit(IModule[] module) {
+					if (getModulePublishState(module) == IServer.PUBLISH_STATE_NONE)
+						getServerPublishInfo().fill(module);
+					
+					modules2.add(module);
+					return true;
+				}
+			}, monitor);
+			
+			getServerPublishInfo().removeDeletedModulePublishInfo(Server.this, modules2);
+			getServerPublishInfo().clearCache();
+			getServerPublishInfo().save();
+			
+			firePublishFinished(Status.OK_STATUS);
+			Trace.trace(Trace.PERFORMANCE, "Server.publish(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
+			return status;
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error calling delegate publish() " + Server.this.toString(), e);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e);
+		}
+	}
+
+	protected IStatus restartImpl(String launchMode, IProgressMonitor monitor) {
+		Trace.trace(Trace.FINEST, "Restarting server: " + getName());
+		
+		//final IStatus[] status2 = new IStatus[1];
+		
+		try {
+			IServerListener curListener = new IServerListener() {
+				public void serverChanged(ServerEvent event) {
+					int eventKind = event.getKind();
+					IServer server = event.getServer();
+					if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
+						if (server.getServerState() == STATE_STARTED) {
+							server.removeServerListener(this);
+							//status2[0] = Status.OK_STATUS;
+						}
+					}
+				}
+			};
+			
+			try {
+				addServerListener(curListener);
+				getBehaviourDelegate(null).restart(launchMode);
+				return Status.OK_STATUS;
+			} catch (CoreException ce) {
+				if (ce.getStatus().getSeverity() == IStatus.ERROR)
+					Trace.trace(Trace.SEVERE, "Error calling delegate restart() " + Server.this.toString());
+				else
+					Trace.trace(Trace.FINER, "Error calling delegate restart() " + Server.this.toString());
+				removeServerListener(curListener);
+			}
+			
+			final String mode3 = launchMode;
+			// add listener to start it as soon as it is stopped
+			addServerListener(new IServerListener() {
+				public void serverChanged(ServerEvent event) {
+					int eventKind = event.getKind();
+					IServer server = event.getServer();
+					if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
+						if (server.getServerState() == STATE_STOPPED) {
+							server.removeServerListener(this);
+
+							// restart in a quarter second (give other listeners a chance
+							// to hear the stopped message)
+							Thread t = new Thread("Restart thread") {
+								public void run() {
+									try {
+										Thread.sleep(250);
+									} catch (Exception e) {
+										// ignore
+									}
+									
+									Server.this.start(mode3, (IOperationListener)null);
+								}
+							};
+							t.setDaemon(true);
+							t.setPriority(Thread.NORM_PRIORITY - 2);
+							t.start();
+						}
+					}
+				}
+			});
+			
+			// stop the server
+			stop(false);
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error restarting server", e);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartFailed, getName()), null);
+		}
+		return Status.OK_STATUS;
+	}
+
+	protected IStatus startImpl(String launchMode, IProgressMonitor monitor) {
+		final boolean[] notified = new boolean[1];
+		
+		monitor = ProgressUtil.getMonitorFor(monitor);
+		
+		// add listener to the server
+		IServerListener listener = new IServerListener() {
+			public void serverChanged(ServerEvent event) {
+				int eventKind = event.getKind();
+				IServer server = event.getServer();
+				if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
+					int state = server.getServerState();
+					if (state == IServer.STATE_STARTED || state == IServer.STATE_STOPPED) {
+						// notify waiter
+						synchronized (notified) {
+							try {
+								Trace.trace(Trace.FINEST, "synchronousStart notify");
+								notified[0] = true;
+								notified.notifyAll();
+							} catch (Exception e) {
+								Trace.trace(Trace.SEVERE, "Error notifying server start", e);
+							}
+						}
+					}
+				}
+			}
+		};
+		addServerListener(listener);
+		
+		final int serverTimeout = ((ServerType) getServerType()).getStartTimeout();
+		class Timer {
+			boolean timeout;
+			boolean alreadyDone;
+		}
+		final Timer timer = new Timer();
+		
+		final IProgressMonitor monitor2 = monitor;
+		Thread thread = new Thread("Synchronous Server Start") {
+			public void run() {
+				try {
+					int totalTimeout = serverTimeout;
+					if (totalTimeout < 0)
+						totalTimeout = 1;
+					boolean userCancelled = false;
+					int retryPeriod = 2500;
+					while (!notified[0] && totalTimeout > 0 && !userCancelled && !timer.alreadyDone) {
+						Thread.sleep(retryPeriod);
+						if (serverTimeout > 0)
+							totalTimeout -= retryPeriod;
+						if (!notified[0] && !timer.alreadyDone && monitor2.isCanceled()) {
+							// user cancelled - set the server state to stopped
+							userCancelled = true;
+							setServerState(IServer.STATE_STOPPED);
+							// notify waiter
+							synchronized (notified) {
+								Trace.trace(Trace.FINEST, "synchronousStart user cancelled");
+								notified[0] = true;
+								notified.notifyAll();
+							}
+						}
+					}
+					if (!userCancelled && !timer.alreadyDone && !notified[0]) {
+						// notify waiter
+						synchronized (notified) {
+							Trace.trace(Trace.FINEST, "synchronousStart notify timeout");
+							if (!timer.alreadyDone && totalTimeout <= 0)
+								timer.timeout = true;
+							notified[0] = true;
+							notified.notifyAll();
+						}
+					}
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "Error notifying server start timeout", e);
+				}
+			}
+		};
+		thread.setDaemon(true);
+		thread.start();
+	
+		Trace.trace(Trace.FINEST, "synchronousStart 2");
+	
+		// start the server
+		try {
+			startImpl2(launchMode, monitor);
+		} catch (CoreException e) {
+			removeServerListener(listener);
+			timer.alreadyDone = true;
+			return e.getStatus();
+		}
+		if (monitor.isCanceled()) {
+			removeServerListener(listener);
+			timer.alreadyDone = true;
+			return Status.CANCEL_STATUS;
+		}
+		
+		Trace.trace(Trace.FINEST, "synchronousStart 3");
+		
+		// wait for it! wait for it! ...
+		synchronized (notified) {
+			try {
+				while (!notified[0] && !monitor.isCanceled() && !timer.timeout
+						&& !(getServerState() == IServer.STATE_STARTED || getServerState() == IServer.STATE_STOPPED)) {
+					notified.wait();
+				}
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "Error waiting for server start", e);
+			}
+			timer.alreadyDone = true;
+		}
+		removeServerListener(listener);
+		
+		if (timer.timeout) {
+			stop(false);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartTimeout, new String[] { getName(), (serverTimeout / 1000) + "" }), null);
+		}
+		
+		if (getServerState() == IServer.STATE_STOPPED)
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartFailed, getName()), null);
+		
+		Trace.trace(Trace.FINEST, "synchronousStart 4");
+		return Status.OK_STATUS;
+	}
+
+	protected void startImpl2(String mode2, IProgressMonitor monitor) throws CoreException {
+		Trace.trace(Trace.FINEST, "Starting server: " + Server.this.toString() + ", launchMode: " + mode2);
+		
+		// make sure that the delegate is loaded and the server state is correct
+		loadAdapter(ServerBehaviourDelegate.class, monitor);
+		
+		try {
+			ILaunchConfiguration launchConfig = getLaunchConfiguration(true, monitor);
+			//if (launchConfig == null)
+			//	throw new CoreException();
+			launch = launchConfig.launch(mode2, monitor); // , true); - causes workspace lock
+			Trace.trace(Trace.FINEST, "Launch: " + launch);
+		} catch (CoreException e) {
+			Trace.trace(Trace.SEVERE, "Error starting server " + Server.this.toString(), e);
+			throw e;
+		}
 	}
 }
