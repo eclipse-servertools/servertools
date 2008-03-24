@@ -8,7 +8,6 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
- 
 package org.eclipse.wst.server.ui.tests;
 
 import junit.framework.TestCase;
@@ -19,19 +18,17 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.ui.IServerToolTip;
+import org.eclipse.wst.server.ui.internal.provisional.IServerToolTip;
 import org.eclipse.wst.server.ui.internal.ServerToolTip;
 
-public class ServerTooltipTestCase extends TestCase{
-	
+public class ServerTooltipTestCase extends TestCase {
 	public ServerTooltipTestCase() {
 		super();
 	}
 
 	protected static ServerToolTip tooltip;
 	protected static IServerToolTip exTooltip;
-	
-	
+
 	public void test00CreateExtensionToolTip(){
 		exTooltip = new IServerToolTip(){
 			public void createContent(Composite parent, IServer server) {
@@ -51,6 +48,5 @@ public class ServerTooltipTestCase extends TestCase{
 	
 	public void test02DeactivateToolTip(){
 		tooltip.deactivate();
-	}
-	
+	}	
 }
