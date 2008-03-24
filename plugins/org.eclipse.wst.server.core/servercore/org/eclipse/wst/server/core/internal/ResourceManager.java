@@ -316,6 +316,8 @@ public class ResourceManager {
 	}
 
 	protected boolean isActiveBundle(String bundleId) {
+		if (activeBundles == null)
+			return false;
 		return activeBundles.contains(bundleId);
 	}
 
@@ -1034,7 +1036,7 @@ public class ResourceManager {
 		
 		RuntimeType runtimeType = (RuntimeType) runtime.getRuntimeType();
 		String bundleId = runtimeType.getNamespace();
-		if (!activeBundles.contains(bundleId))
+		if (activeBundles != null && !activeBundles.contains(bundleId))
 			activeBundles.add(bundleId);
 	}
 
@@ -1054,7 +1056,7 @@ public class ResourceManager {
 		
 		ServerType serverType = (ServerType) server.getServerType();
 		String bundleId = serverType.getNamespace();
-		if (!activeBundles.contains(bundleId))
+		if (activeBundles != null && !activeBundles.contains(bundleId))
 			activeBundles.add(bundleId);
 	}
 
