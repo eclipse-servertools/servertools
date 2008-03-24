@@ -13,6 +13,7 @@ package org.eclipse.wst.server.ui.internal.view.servers;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.internal.Server;
@@ -22,11 +23,12 @@ import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.provisional.UIDecoratorManager;
 import org.eclipse.wst.server.ui.internal.viewers.BaseCellLabelProvider;
+import org.eclipse.wst.server.ui.internal.viewers.ServerTreeContentProvider;
 import org.eclipse.swt.graphics.Image;
 /**
  * Server table label provider.
  */
-public class ServerTableLabelProvider extends BaseCellLabelProvider{
+public class ServerTableLabelProvider extends BaseCellLabelProvider {
 	public static final String[] syncState = new String[] {
 		Messages.viewSyncOkay,
 		Messages.viewSyncRestart,
@@ -67,6 +69,13 @@ public class ServerTableLabelProvider extends BaseCellLabelProvider{
 	}
 
 	public Image getColumnImage(Object element, int columnIndex) {
+		if (element instanceof ServerTreeContentProvider.TreeElement) {
+			if (columnIndex == 0) {
+				ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
+				return sharedImages.getImage(ISharedImages.IMG_OBJ_FOLDER);
+			}
+			return null;
+		}
 		if (element instanceof ModuleServer) {
 			ModuleServer ms = (ModuleServer) element;
 			if (columnIndex == 0) {
@@ -140,6 +149,11 @@ public class ServerTableLabelProvider extends BaseCellLabelProvider{
 	}
 
 	public String getColumnText(Object element, int columnIndex) {
+		if (element instanceof ServerTreeContentProvider.TreeElement) {
+			if (columnIndex == 0)
+				return ((ServerTreeContentProvider.TreeElement) element).text;
+			return "";
+		}
 		if (element instanceof ModuleServer) {
 			ModuleServer ms = (ModuleServer) element;
 			if (columnIndex == 0) {

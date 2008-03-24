@@ -81,7 +81,7 @@ public abstract class AbstractTreeComposite extends Composite {
 		data.horizontalSpan = 2;
 		label.setLayoutData(data);
 		
-		tree = new FilteredTree(this, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE, new ServerPatternFilter());
+		createTree();
 		data = new GridData(GridData.FILL_BOTH);
 		data.horizontalSpan = 2;
 		tree.setLayoutData(data);
@@ -113,6 +113,10 @@ public abstract class AbstractTreeComposite extends Composite {
 		}
 		
 		tree.forceFocus();
+	}
+
+	protected void createTree() {
+		tree = new FilteredTree(this, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE, new ServerPatternFilter());
 	}
 
 	protected abstract String getDescriptionLabel();

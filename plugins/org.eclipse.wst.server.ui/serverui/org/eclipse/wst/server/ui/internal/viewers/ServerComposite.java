@@ -21,13 +21,18 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.ui.dialogs.FilteredTree;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.view.servers.ServerTableLabelProvider;
 /**
  * 
  */
@@ -52,10 +57,20 @@ public class ServerComposite extends AbstractTreeComposite {
 		
 		this.listener = listener2;
 		
+		Tree tree2 = treeViewer.getTree();
+		TreeColumn column = new TreeColumn(tree2, SWT.SINGLE);
+		column.setText(Messages.viewServer);
+		column.setWidth(325);
+		
+		TreeColumn column2 = new TreeColumn(tree2, SWT.SINGLE);
+		column2.setText(Messages.viewState);
+		column2.setWidth(100);
+		
 		contentProvider = new ServerTreeContentProvider(module, launchMode);
 		treeViewer.setContentProvider(contentProvider);
 		
-		ILabelProvider labelProvider = new ServerTreeLabelProvider();
+		//ILabelProvider labelProvider = new ServerTreeLabelProvider();
+		ILabelProvider labelProvider = new ServerTableLabelProvider();
 		labelProvider.addListener(new ILabelProviderListener() {
 			public void labelProviderChanged(LabelProviderChangedEvent event) {
 				Object[] obj = event.getElements();
@@ -88,8 +103,8 @@ public class ServerComposite extends AbstractTreeComposite {
 		});
 	}
 
-	public ServerComposite(Composite parent, ServerSelectionListener listener2) {
-		this(parent, listener2, null, null);
+	protected void createTree() {
+		tree = new FilteredTree(this, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION, new ServerPatternFilter());
 	}
 
 	public void setIncludeIncompatibleVersions(boolean b) {
