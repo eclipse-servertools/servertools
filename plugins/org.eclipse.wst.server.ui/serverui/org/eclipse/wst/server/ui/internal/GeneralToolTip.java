@@ -8,20 +8,26 @@
  * Contributors:
  *    IBM Corporation - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.server.ui;
+package org.eclipse.wst.server.ui.internal;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.server.core.IServer;
-/**
- * Provides extra information to the hover over mouse action of a server
- *
- */
-public interface IServerToolTip {
-	/**
-	 * Allows adopters to add widgets to the tooltip.
-	 * 
-	 * @param parent the parent
-	 * @param server the server
-	 */
-	public void createContent(Composite parent, IServer server);
+import org.eclipse.wst.server.ui.internal.provisional.IServerToolTip;
+
+public class GeneralToolTip implements IServerToolTip {
+	public GeneralToolTip() {
+		// do nothing
+	}
+
+	public void createContent(Composite parent, IServer server) {
+		Text text = new Text(parent,SWT.NONE);
+		text.setBackground(parent.getBackground());
+		String s = "";
+		if (server.getRuntime() != null)
+			s += server.getRuntime().getName() + " - ";
+		s += server.getModules().length + " modules";
+		text.setText(s);
+	}
 }

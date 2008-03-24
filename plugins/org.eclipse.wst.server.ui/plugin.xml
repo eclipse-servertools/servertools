@@ -495,7 +495,7 @@ M4 = Platform-specific fourth key
 <extension point="org.eclipse.wst.server.ui.serverToolTip">
   <serverToolTip
     id="org.eclipse.wst.server.ui.GeneralToolTip"
-    class="org.eclipse.wst.server.ui.GeneralToolTip"
+    class="org.eclipse.wst.server.ui.internal.GeneralToolTip"
     serverTypes="*"/>
 </extension>
 

@@ -50,10 +50,8 @@ import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.ui.IServerModule;
-import org.eclipse.wst.server.ui.IServerToolTip;
-/**
- * 
- */
+import org.eclipse.wst.server.ui.internal.provisional.IServerToolTip;
+
 public class ServerToolTip extends ToolTip {	
 	protected Hashtable<String,ArrayList<IServerToolTip>> toolTipProviders = new Hashtable<String,ArrayList<IServerToolTip>>();	
 	protected static Shell CURRENT_TOOLTIP;
