@@ -247,6 +247,7 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 
 		serverDir = toolkit.createText(composite, null, SWT.SINGLE);
 		data = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		data.widthHint = 75;
 		serverDir.setLayoutData(data);
 		serverDir.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
