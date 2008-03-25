@@ -328,7 +328,7 @@ public interface IServerAttributes extends IAdaptable {
 	 * 
 	 * <p>If it does return valid parent(s), this method will always return
 	 * the topmost parent module(s), even if there are a few levels
-	 * (a heirarchy) of modules.</p>
+	 * (a hierarchy) of modules.</p>
 	 * 
 	 * @param module a module
 	 * @param monitor a progress monitor, or <code>null</code> if progress
