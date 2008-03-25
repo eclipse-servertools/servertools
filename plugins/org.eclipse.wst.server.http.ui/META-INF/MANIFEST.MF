@@ -9,7 +9,7 @@ Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.server.http.ui.internal;x-internal:=true
 Require-Bundle: org.eclipse.ui.forms;bundle-version="[3.2.0,4.0.0)",
  org.eclipse.wst.server.core;bundle-version="[1.0.204,2.0.0)",
- org.eclipse.wst.server.ui;bundle-version="[1.0.103,1.1.0)",
+ org.eclipse.wst.server.ui;bundle-version="[1.0.103,2.0.0)",
  org.eclipse.wst.server.http.core;bundle-version="[1.0.0,2.0.0)",
  org.eclipse.wst.common.project.facet.ui;bundle-version="[1.2.0,2.0.0)"
 Bundle-ActivationPolicy: lazy
