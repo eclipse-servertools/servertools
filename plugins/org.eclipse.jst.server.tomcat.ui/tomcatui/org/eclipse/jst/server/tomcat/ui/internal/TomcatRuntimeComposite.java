@@ -102,8 +102,10 @@ public class TomcatRuntimeComposite extends Composite {
 			installLabel.setText("");
 		} else {
 			ir = ServerPlugin.findInstallableRuntime(runtimeWC.getRuntimeType().getId());
-			install.setEnabled(true);
-			installLabel.setText(ir.getName());
+			if (ir != null) {
+				install.setEnabled(true);
+				installLabel.setText(ir.getName());
+			}
 		}
 		
 		init();
