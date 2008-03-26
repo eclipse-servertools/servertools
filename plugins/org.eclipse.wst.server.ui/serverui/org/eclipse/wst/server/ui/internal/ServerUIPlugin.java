@@ -29,6 +29,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.*;
 import org.eclipse.wst.server.core.internal.Trace;
+import org.eclipse.wst.server.core.model.LaunchableAdapterDelegate;
 import org.eclipse.wst.server.core.util.PublishAdapter;
 import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
 import org.eclipse.wst.server.ui.internal.editor.IServerEditorInput;
@@ -883,15 +884,8 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 				throw new CoreException(lastStatus);
 		}
 		if (launchable == null) {
-			launchableAdapter = new ILaunchableAdapter() {
-				public String getId() {
-					return "org.eclipse.wst.server.ui.launchable.adapter.default";
-				}
-
-				public Object getLaunchable(IServer server3, IModuleArtifact moduleArtifact2) throws CoreException {
-					return "launchable";
-				}
-			};
+			launchableAdapter = ServerPlugin.findLaunchableAdapter(DefaultLaunchableAdapter.ID);
+			
 			try {
 				launchable = launchableAdapter.getLaunchable(server, moduleArtifact);
 			} catch (CoreException ce) {
@@ -899,6 +893,13 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 			}
 		}
 		return new Object[] { launchableAdapter, launchable };
+	}
+
+	public static class DefaultLaunchableAdapter extends LaunchableAdapterDelegate {
+		public static final String ID = "org.eclipse.wst.server.ui.launchable.adapter.default";
+		public Object getLaunchable(IServer server, IModuleArtifact moduleArtifact) {
+			return "launchable";
+		}
 	}
 
 	public static Object[] adaptLabelChangeObjects(Object[] obj) {

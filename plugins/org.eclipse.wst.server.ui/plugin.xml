@@ -499,4 +499,10 @@ M4 = Platform-specific fourth key
     serverTypes="*"/>
 </extension>
 
+<extension point="org.eclipse.wst.server.core.launchableAdapters">
+  <launchableAdapter
+    class="org.eclipse.wst.server.ui.internal.ServerUIPlugin$DefaultLaunchableAdapter"
+    id="org.eclipse.wst.server.ui.launchable.adapter.default"/>
+</extension>
+
 </plugin>
