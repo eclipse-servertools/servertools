@@ -228,20 +228,6 @@ public class Server extends Base implements IServer {
 		 * Create a new publishing job.
 		 * 
 		 * @param kind the kind of publish
-		 * @param info the IAdaptable (or <code>null</code>) provided by the
-		 *    caller in order to supply UI information for prompting the
-		 *    user if necessary. When this parameter is not
-		 *    <code>null</code>, it should minimally contain an adapter
-		 *    for the Shell class.
-		 */
-		public PublishJob(int kind, IAdaptable info) {
-			this(kind, null, false, info);
-		}
-
-		/**
-		 * Create a new publishing job.
-		 * 
-		 * @param kind the kind of publish
 		 * @param modules4 a list of modules to publish, or <code>null</code> to
 		 *    publish all modules
 		 * @param start true if we need to start the server first
@@ -1111,7 +1097,7 @@ public class Server extends Base implements IServer {
 		if (((ServerType)getServerType()).startBeforePublish() && (getServerState() == IServer.STATE_STOPPED))
 			publishJob = new PublishJob(kind, null, true, null);
 		else
-			publishJob = new PublishJob(kind, null);
+			publishJob = new PublishJob(kind, null, false, null);
 		publishJob.schedule();
 		
 		try {
@@ -1147,7 +1133,7 @@ public class Server extends Base implements IServer {
 		if (((ServerType)getServerType()).startBeforePublish() && (getServerState() == IServer.STATE_STOPPED))
 			start = true;
 		
-		PublishJob publishJob = new PublishJob(kind, modules2, true, info);
+		PublishJob publishJob = new PublishJob(kind, modules2, start, info);
 		if (opListener != null) {
 			publishJob.addJobChangeListener(new JobChangeAdapter() {
 				public void done(IJobChangeEvent event) {
