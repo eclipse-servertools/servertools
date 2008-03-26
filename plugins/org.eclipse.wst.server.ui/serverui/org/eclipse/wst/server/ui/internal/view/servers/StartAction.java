@@ -77,9 +77,12 @@ public class StartAction extends AbstractServerAction {
 					IServer server = (IServer) obj;
 					if (server.getServerState() == IServer.STATE_STARTED ||
 						 server.getServerState() == IServer.STATE_STARTING) {
-						setText(Messages.actionRestart);		
-					} else
+						setText(Messages.actionRestart);
+						setToolTipText(Messages.actionRestartToolTip);
+					} else {
 						setText(Messages.actionStart);
+						setToolTipText(Messages.actionStartToolTip);
+					}
 				}
 			}	
 		} else if (this.launchMode == ILaunchManager.DEBUG_MODE) {
@@ -94,9 +97,12 @@ public class StartAction extends AbstractServerAction {
 					IServer server = (IServer) obj;
 					if (server.getServerState() == IServer.STATE_STARTED ||
 						 server.getServerState() == IServer.STATE_STARTING) {
-						setText(Messages.actionDebugRestart);		
-					} else
+						setText(Messages.actionDebugRestart);
+						setToolTipText(Messages.actionDebugRestartToolTip);
+					} else {
 						setText(Messages.actionDebug);
+						setToolTipText(Messages.actionDebugToolTip);
+					}
 				}
 			}
 		} else if (this.launchMode == ILaunchManager.PROFILE_MODE) {
@@ -111,9 +117,12 @@ public class StartAction extends AbstractServerAction {
 					IServer server = (IServer) obj;
 					if (server.getServerState() == IServer.STATE_STARTED ||
 						 server.getServerState() == IServer.STATE_STARTING) {
-						setText(Messages.actionProfileRestart);		
-					} else
+						setText(Messages.actionProfileRestart);
+						setToolTipText(Messages.actionProfileRestartToolTip);
+					} else {
 						setText(Messages.actionProfile);
+						setToolTipText(Messages.actionProfileToolTip);
+					}
 				}
 			}
 		}		

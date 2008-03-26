@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -122,11 +122,13 @@ public class Messages extends NLS {
 	public static String actionDebugToolTip;
 	public static String actionDebug;
 	public static String actionDebugRestart;
+	public static String actionDebugRestartToolTip;
 	public static String actionStartToolTip;
 	public static String actionStart;
 	public static String actionProfileToolTip;
 	public static String actionProfile;
 	public static String actionProfileRestart;
+	public static String actionProfileRestartToolTip;
 	public static String actionRestartToolTip;
 	public static String actionRestart;
 	public static String actionPublishToolTip;
