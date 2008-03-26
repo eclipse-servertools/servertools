@@ -2724,8 +2724,8 @@ public class Server extends Base implements IServer {
 		// wait for it! wait for it!
 		synchronized (mutex) {
 			try {
-				while (!timer.timeout && (getServerState() != IServer.STATE_STOPPED ||
-						getServerState() != IServer.STATE_STARTED))
+				while (!timer.timeout && getServerState() != IServer.STATE_STOPPED &&
+						getServerState() != IServer.STATE_STARTED)
 					mutex.wait();
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Error waiting for server stop", e);
