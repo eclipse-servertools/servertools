@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,9 +25,15 @@ import org.eclipse.wst.server.core.model.ModuleArtifactDelegate;
  * @plannedfor 3.0
  */
 public class EJBBean extends ModuleArtifactDelegate {
+	public final static String EJB_11 = "1.1";
+	public final static String EJB_20 = "2.0";
+	public final static String EJB_21 = "2.1";
+	public final static String EJB_30 = "3.0";
+	
 	private String jndiName;
 	private boolean local;
 	private boolean remote;
+	private String version;
 
 	/**
 	 * Create a new EJBBean.
@@ -44,6 +50,26 @@ public class EJBBean extends ModuleArtifactDelegate {
 		this.jndiName = jndiName;
 		this.remote = remote;
 		this.local = local;
+		this.version = "2.1";
+	}
+	
+	/**
+	 * Create a new EJBBean with a specific version
+	 * 
+	 * @param module the module that the EJB is contained in
+	 * @param jndiName the JNDI name of the EJB
+	 * @param remote <code>true</code> if the EJB has a remote interface, and
+	 *    <code>false</code> otherwise
+	 * @param local <code>true</code> if the EJB has a local interface, and
+	 *    <code>false</code> otherwise
+	 * @param version the level of the EJB specification that this EJB uses. Use one of the <code>EJB_xx</code> constants declared on {@link EJBBean}
+	 */
+	public EJBBean(IModule module, String jndiName, boolean remote, boolean local, String version) {
+		super(module);
+		this.jndiName = jndiName;
+		this.remote = remote;
+		this.local = local;
+		this.version = version;
 	}
 
 	/**
@@ -80,6 +106,15 @@ public class EJBBean extends ModuleArtifactDelegate {
 	 */
 	public boolean hasLocalInterface() {
 		return local;
+	}
+	
+	/**
+	 * Returns the level of the specification of the EJB
+	 *
+	 * @return the level of the specification of the EJB
+	 */
+	public String getVersion() {
+		return version;
 	}
 
 	/*
