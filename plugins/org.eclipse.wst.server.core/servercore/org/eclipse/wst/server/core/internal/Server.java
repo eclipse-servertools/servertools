@@ -367,99 +367,7 @@ public class Server extends Base implements IServer {
 		}
 
 		protected IStatus run(IProgressMonitor monitor) {
-			final Object mutex = new Object();
-			
-			// add listener to the server
-			IServerListener listener = new IServerListener() {
-				public void serverChanged(ServerEvent event) {
-					int eventKind = event.getKind();
-					IServer server = event.getServer();
-					if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
-						int state = server.getServerState();
-						if (Server.this == server && state == IServer.STATE_STOPPED) {
-							// notify waiter
-							synchronized (mutex) {
-								try {
-									mutex.notifyAll();
-								} catch (Exception e) {
-									Trace.trace(Trace.SEVERE, "Error notifying server stop", e);
-								}
-							}
-						}
-					}
-				}
-			};
-			addServerListener(listener);
-			
-			class Timer {
-				boolean timeout;
-				boolean alreadyDone;
-			}
-			final Timer timer = new Timer();
-			
-			final int serverTimeout = ((ServerType) getServerType()).getStopTimeout();
-			if (serverTimeout > 0) {
-				Thread thread = new Thread("Server Stop Job") {
-					public void run() {
-						try {
-							Thread.sleep(serverTimeout);
-							if (!timer.alreadyDone) {
-								timer.timeout = true;
-								// notify waiter
-								synchronized (mutex) {
-									Trace.trace(Trace.FINEST, "stop notify timeout");
-									mutex.notifyAll();
-								}
-							}
-						} catch (Exception e) {
-							Trace.trace(Trace.SEVERE, "Error notifying server stop timeout", e);
-						}
-					}
-				};
-				thread.setDaemon(true);
-				thread.start();
-			}
-			
-			// stop the server
-			stop();
-			
-			// wait for it! wait for it!
-			synchronized (mutex) {
-				try {
-					while (!timer.timeout && getServerState() != IServer.STATE_STOPPED)
-						mutex.wait();
-				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error waiting for server stop", e);
-				}
-			}
-			removeServerListener(listener);
-			
-			//can't throw exceptions
-			/*if (timer.timeout)
-				return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorStartTimeout, getName()), null);
-			else
-				timer.alreadyDone = true;
-			
-			if (getServerState() == IServer.STATE_STOPPED)
-				return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorStartFailed", getName()), null);*/
-			return Status.OK_STATUS;
-		}
-
-		protected void stop() {
-			if (getServerState() == STATE_STOPPED)
-				return;
-			
-			Trace.trace(Trace.FINEST, "Stopping server: " + Server.this.toString());
-			
-			try {
-				getBehaviourDelegate(null).stop(force);
-			} catch (RuntimeException e) {
-				Trace.trace(Trace.SEVERE, "Error calling delegate stop() " + Server.this.toString(), e);
-				throw e;
-			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "Error calling delegate stop() " + Server.this.toString(), t);
-				throw new RuntimeException(t);
-			}
+			return stopImpl(force, monitor);
 		}
 	}
 
@@ -2652,7 +2560,7 @@ public class Server extends Base implements IServer {
 		final Timer timer = new Timer();
 		
 		final IProgressMonitor monitor2 = monitor;
-		Thread thread = new Thread("Server Start Job") {
+		Thread thread = new Thread("Server Start Timeout") {
 			public void run() {
 				try {
 					int totalTimeout = serverTimeout;
@@ -2665,7 +2573,7 @@ public class Server extends Base implements IServer {
 						if (serverTimeout > 0)
 							totalTimeout -= retryPeriod;
 						if (!notified[0] && !timer.alreadyDone && monitor2.isCanceled()) {
-							// user cancelled - set the server state to stopped
+							// user canceled - set the server state to stopped
 							userCancelled = true;
 							setServerState(IServer.STATE_STOPPED);
 							// notify waiter
@@ -2753,6 +2661,104 @@ public class Server extends Base implements IServer {
 		} catch (CoreException e) {
 			Trace.trace(Trace.SEVERE, "Error starting server " + Server.this.toString(), e);
 			throw e;
+		}
+	}
+
+	protected IStatus stopImpl(boolean force, IProgressMonitor monitor) {
+		final Object mutex = new Object();
+		
+		// add listener to the server
+		IServerListener listener = new IServerListener() {
+			public void serverChanged(ServerEvent event) {
+				int eventKind = event.getKind();
+				IServer server = event.getServer();
+				if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
+					int state = server.getServerState();
+					if (Server.this == server && (state == IServer.STATE_STOPPED || state == IServer.STATE_STARTED)) {
+						// notify waiter
+						synchronized (mutex) {
+							try {
+								mutex.notifyAll();
+							} catch (Exception e) {
+								Trace.trace(Trace.SEVERE, "Error notifying server stop", e);
+							}
+						}
+					}
+				}
+			}
+		};
+		addServerListener(listener);
+		
+		class Timer {
+			boolean timeout;
+			boolean alreadyDone;
+		}
+		final Timer timer = new Timer();
+		
+		final int serverTimeout = ((ServerType) getServerType()).getStopTimeout();
+		if (serverTimeout > 0) {
+			Thread thread = new Thread("Server Stop Timeout") {
+				public void run() {
+					try {
+						Thread.sleep(serverTimeout);
+						if (!timer.alreadyDone) {
+							timer.timeout = true;
+							// notify waiter
+							synchronized (mutex) {
+								Trace.trace(Trace.FINEST, "stop notify timeout");
+								mutex.notifyAll();
+							}
+						}
+					} catch (Exception e) {
+						Trace.trace(Trace.SEVERE, "Error notifying server stop timeout", e);
+					}
+				}
+			};
+			thread.setDaemon(true);
+			thread.start();
+		}
+		
+		// stop the server
+		stopImpl2(force);
+		
+		// wait for it! wait for it!
+		synchronized (mutex) {
+			try {
+				while (!timer.timeout && (getServerState() != IServer.STATE_STOPPED ||
+						getServerState() != IServer.STATE_STARTED))
+					mutex.wait();
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "Error waiting for server stop", e);
+			}
+		}
+		removeServerListener(listener);
+		
+		//can't throw exceptions
+		/*if (timer.timeout)
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorStartTimeout, getName()), null);
+		else
+			timer.alreadyDone = true;
+		*/
+		if (getServerState() == IServer.STATE_STARTED)
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStopFailed, getName()), null);
+		
+		return Status.OK_STATUS;
+	}
+
+	protected void stopImpl2(boolean force) {
+		if (getServerState() == STATE_STOPPED)
+			return;
+		
+		Trace.trace(Trace.FINEST, "Stopping server: " + Server.this.toString());
+		
+		try {
+			getBehaviourDelegate(null).stop(force);
+		} catch (RuntimeException e) {
+			Trace.trace(Trace.SEVERE, "Error calling delegate stop() " + Server.this.toString(), e);
+			throw e;
+		} catch (Throwable t) {
+			Trace.trace(Trace.SEVERE, "Error calling delegate stop() " + Server.this.toString(), t);
+			throw new RuntimeException(t);
 		}
 	}
 }
