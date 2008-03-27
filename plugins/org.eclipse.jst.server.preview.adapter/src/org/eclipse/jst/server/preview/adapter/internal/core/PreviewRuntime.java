@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.server.preview.adapter.internal.core;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -54,23 +55,13 @@ public class PreviewRuntime extends RuntimeDelegate implements IJavaRuntimeWorki
 	}
 
 	protected static IPath getJarredPluginPath(Bundle bundle) {
-		Path runtimeLibFullPath = null;
-		String jarPluginLocation = bundle.getLocation().substring(7);
-		
-		// handle case where jars are installed outside of eclipse installation
-		Path jarPluginPath = new Path(jarPluginLocation);
-		if (jarPluginPath.isAbsolute())
-			runtimeLibFullPath = jarPluginPath;
-		// handle normal case where all plugins under eclipse install
-		else {
-			int ind = jarPluginLocation.lastIndexOf(":");
-			if (ind > 0)
-				jarPluginLocation = jarPluginLocation.substring(ind+1);
-			
-			String installPath = Platform.getInstallLocation().getURL().getPath();
-			runtimeLibFullPath = new Path(installPath+"/"+jarPluginLocation);
+		try {
+			File file = FileLocator.getBundleFile(bundle);
+			return new Path(file.getCanonicalPath());
+		} catch (IOException e) {
+			// ignore, return null
+			return null;
 		}
-		return runtimeLibFullPath;
 	}
 
 	protected String getVMInstallTypeId() {
@@ -79,13 +70,6 @@ public class PreviewRuntime extends RuntimeDelegate implements IJavaRuntimeWorki
 
 	protected String getVMInstallId() {
 		return getAttribute(PROP_VM_INSTALL_ID, (String)null);
-	}
-
-	/**
-	 * @see RuntimeDelegate#setDefaults(IProgressMonitor)
-	 */
-	public void setDefaults(IProgressMonitor monitor) {
-		getRuntimeWorkingCopy().setLocation(new Path(""));
 	}
 
 	/**
@@ -119,6 +103,10 @@ public class PreviewRuntime extends RuntimeDelegate implements IJavaRuntimeWorki
 	 * @see RuntimeDelegate#validate()
 	 */
 	public IStatus validate() {
+		IStatus status = super.validate();
+		if (!status.isOK() && status.getMessage().length() > 0)
+			return status;
+		
 		if (getVMInstall() == null)
 			return new Status(IStatus.ERROR, PreviewPlugin.PLUGIN_ID, 0, Messages.errorJRE, null);
 		
