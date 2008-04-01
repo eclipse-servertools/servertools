@@ -61,7 +61,7 @@ This class/interface is part of an interim API that is still under development a
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  a translatable name used to identify this publisher
                </documentation>
                <appinfo>
                   <meta.attribute translatable="true"/>
@@ -71,7 +71,7 @@ This class/interface is part of an interim API that is still under development a
          <attribute name="description" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  a translatable description of this publisher
                </documentation>
                <appinfo>
                   <meta.attribute translatable="true"/>
@@ -92,7 +92,7 @@ Publish instances of this type will delegate to instances of this class.
          <attribute name="order" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  an integer that specifies the order that the publisher is processed. if the value is less than 0 it will be processed before calling the server behaviour delegate&apos;s publishing methods, and may modify the workspace. if the value is more than 0, it will be called after the server behaviour delegate&apos;s publishing methods and may not modify the workspace
                </documentation>
             </annotation>
          </attribute>

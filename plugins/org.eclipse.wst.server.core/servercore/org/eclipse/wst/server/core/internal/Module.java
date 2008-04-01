@@ -117,7 +117,7 @@ public class Module implements IModule {
 					delegate.initialize(this);
 					Trace.trace(Trace.PERFORMANCE, "Module.getDelegate(): <" + (System.currentTimeMillis() - time) + " " + factory.getId());
 				} catch (Throwable t) {
-					Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
+					Trace.trace(Trace.WARNING, "Could not create delegate " + toString(), t);
 				}
 			}
 		}

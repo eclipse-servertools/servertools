@@ -293,7 +293,7 @@ public class InstallableRuntime implements IInstallableRuntime {
 			Trace.trace(Trace.SEVERE, "Error unzipping runtime", e);
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
 					NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
-		} 
+		}
 	}
 
 	private void unzip(InputStream in, IPath path, IProgressMonitor monitor) throws IOException {
