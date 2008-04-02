@@ -540,7 +540,7 @@ public class ServerPlugin extends Plugin {
 			}
 		}
 		
-		// sort by index to put lower numbers first in order
+		// sort by priority to put higher numbers first
 		size = list.size();
 		for (int i = 0; i < size-1; i++) {
 			for (int j = i+1; j < size; j++) {
@@ -577,7 +577,7 @@ public class ServerPlugin extends Plugin {
 			}
 		}
 		
-		// sort by index to put lower numbers first in order
+		// sort by priority to put higher numbers first
 		size = list.size();
 		for (int i = 0; i < size-1; i++) {
 			for (int j = i+1; j < size; j++) {

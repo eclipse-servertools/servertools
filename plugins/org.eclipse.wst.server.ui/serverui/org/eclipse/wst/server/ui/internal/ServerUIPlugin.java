@@ -73,6 +73,13 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	public static final byte STOP = 1;
 	//public static final byte RESTART = 2;
 
+	public static class DefaultLaunchableAdapter extends LaunchableAdapterDelegate {
+		public static final String ID = "org.eclipse.wst.server.ui.launchable.adapter.default";
+		public Object getLaunchable(IServer server, IModuleArtifact moduleArtifact) {
+			return "launchable";
+		}
+	}
+
 	// singleton instance of this class
 	private static ServerUIPlugin singleton;
 
@@ -480,9 +487,13 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 				try {
 					IWorkbench workbench = ServerUIPlugin.getInstance().getWorkbench();
 					IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
-	
+					if (workbenchWindow == null) {
+						Trace.trace(Trace.FINER, "No active workbench window");
+						return;
+					}
+					
 					IWorkbenchPage page = workbenchWindow.getActivePage();
-	
+					
 					IViewPart view2 = page.findView(VIEW_ID);
 					
 					if (view2 != null) {
@@ -496,7 +507,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 					} else
 						page.showView(VIEW_ID);
 				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error opening TCP/IP view", e);
+					Trace.trace(Trace.SEVERE, "Error opening Servers view", e);
 				}
 			}
 		});
@@ -858,9 +869,6 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	}
 
 	public static Object[] getLaunchableAdapter(IServer server, IModuleArtifact moduleArtifact) throws CoreException {
-		ILaunchableAdapter launchableAdapter = null;
-		Object launchable = null;
-		
 		ILaunchableAdapter[] adapters = ServerPlugin.getLaunchableAdapters();
 		if (adapters != null) {
 			int size2 = adapters.length;
@@ -870,36 +878,22 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 				try {
 					Object launchable2 = adapter.getLaunchable(server, moduleArtifact);
 					Trace.trace(Trace.FINEST, "adapter= " + adapter + ", launchable= " + launchable2);
-					if (launchable2 != null) {
-						launchableAdapter = adapter;
-						launchable = launchable2;
-					}
+					if (launchable2 != null)
+						return new Object[] { adapter, launchable2 };
 				} catch (CoreException ce) {
 					lastStatus = ce.getStatus();
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "Error in launchable adapter", e);
 				}
 			}
-			if (launchable == null && lastStatus != null)
+			if (lastStatus != null)
 				throw new CoreException(lastStatus);
 		}
-		if (launchable == null) {
-			launchableAdapter = ServerPlugin.findLaunchableAdapter(DefaultLaunchableAdapter.ID);
-			
-			try {
-				launchable = launchableAdapter.getLaunchable(server, moduleArtifact);
-			} catch (CoreException ce) {
-				// ignore
-			}
-		}
+		
+		// backup
+		ILaunchableAdapter launchableAdapter = ServerPlugin.findLaunchableAdapter(DefaultLaunchableAdapter.ID);
+		Object launchable = launchableAdapter.getLaunchable(server, moduleArtifact);
 		return new Object[] { launchableAdapter, launchable };
-	}
-
-	public static class DefaultLaunchableAdapter extends LaunchableAdapterDelegate {
-		public static final String ID = "org.eclipse.wst.server.ui.launchable.adapter.default";
-		public Object getLaunchable(IServer server, IModuleArtifact moduleArtifact) {
-			return "launchable";
-		}
 	}
 
 	public static Object[] adaptLabelChangeObjects(Object[] obj) {

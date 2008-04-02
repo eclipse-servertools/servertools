@@ -73,7 +73,7 @@ public class LaunchClientJob extends ChainedJob {
 		// display client on UI thread
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				Trace.trace(Trace.FINEST, "Attempting to load client: " + client);
+				Trace.trace(Trace.FINEST, "Attempting to load client: " + client.getId());
 				try {
 					Object launchable = launchableAdapter.getLaunchable(server, moduleArtifact);
 					IStatus status = client.launch(server, launchable, launchMode, server.getLaunch());

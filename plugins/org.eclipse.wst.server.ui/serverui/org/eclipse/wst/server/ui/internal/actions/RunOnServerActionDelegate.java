@@ -291,31 +291,31 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			client = wizard.getSelectedClient();
 			launchableAdapter = wizard.getLaunchableAdapter();
 		}
-			
+		
 		// if there is no client, use a dummy
-		if (client == null){		
-				client = new IClient() {
-					public String getDescription() {
-						return Messages.clientDefaultDescription;
-					}
+		if (client == null) {		
+			client = new IClient() {
+				public String getDescription() {
+					return Messages.clientDefaultDescription;
+				}
 
-					public String getId() {
-						return "org.eclipse.wsth.server.ui.client.default";
-					}
+				public String getId() {
+					return "org.eclipse.wst.server.ui.client.default";
+				}
 
-					public String getName() {
-						return Messages.clientDefaultName;
-					}
+				public String getName() {
+					return Messages.clientDefaultName;
+				}
 
-					public IStatus launch(IServer server3, Object launchable2, String launchMode3, ILaunch launch) {
-						return Status.OK_STATUS;
-					}
+				public IStatus launch(IServer server3, Object launchable2, String launchMode3, ILaunch launch) {
+					return Status.OK_STATUS;
+				}
 
-					public boolean supports(IServer server3, Object launchable2, String launchMode3) {
-						return true;
-					}
-				};
-		}		
+				public boolean supports(IServer server3, Object launchable2, String launchMode3) {
+					return true;
+				}
+			};
+		}
 		
 		if (moduleArtifact instanceof ModuleArtifactDelegate) {
 			boolean canLoad = false;
