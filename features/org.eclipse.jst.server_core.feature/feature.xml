@@ -32,14 +32,16 @@
       <import plugin="org.eclipse.debug.core" version="3.2.0" match="compatible"/>
       <import plugin="org.eclipse.jdt.core" version="3.2.0" match="compatible"/>
       <import plugin="org.eclipse.jdt.launching" version="3.2.0" match="compatible"/>
-      <import plugin="org.eclipse.wst.server.core" version="1.0.103" />
       <import plugin="org.eclipse.wst.common.project.facet.core" version="1.1.0" match="compatible"/>
-      <import plugin="org.eclipse.jst.server.core" version="1.0.102" />
       <import plugin="org.eclipse.emf.common" version="2.2.0" match="compatible"/>
-      <import plugin="org.eclipse.emf.ecore" version="2.2.0"/>
-      <import plugin="org.eclipse.emf.ecore.xmi" version="2.2.0"/>
       <import plugin="org.apache.ant" version="1.6.5" match="compatible"/>
       <import plugin="org.eclipse.core.variables" version="3.1.0" match="compatible"/>
+      <import plugin="org.eclipse.wst.server.core" version="1.0.304" match="compatible"/>
+      <import plugin="org.eclipse.jst.common.project.facet.core" version="1.1.0" match="compatible"/>
+      <import plugin="org.eclipse.wst.server.core" version="1.0.102" match="compatible"/>
+      <import plugin="org.eclipse.jst.server.core" version="1.0.102" match="compatible"/>
+      <import plugin="org.eclipse.emf.ecore" version="2.2.0" match="compatible"/>
+      <import plugin="org.eclipse.emf.ecore.xmi" version="2.2.0" match="compatible"/>
    </requires>
 
    <plugin
