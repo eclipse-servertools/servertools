@@ -200,8 +200,8 @@ public class ServersView extends ViewPart {
 		
 		// init the tooltip
 		ServerToolTip toolTip = new ServerToolTip(treeTable);
-		toolTip.setShift(new Point(-5, -5));
-		toolTip.setPopupDelay(200); // in ms
+		toolTip.setShift(new Point(10, 3));
+		toolTip.setPopupDelay(400); // in ms
 		toolTip.setHideOnMouseDown(true);
 		toolTip.activate();
 		
