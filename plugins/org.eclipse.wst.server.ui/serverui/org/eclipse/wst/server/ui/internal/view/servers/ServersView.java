@@ -205,6 +205,11 @@ public class ServersView extends ViewPart {
 		toolTip.setHideOnMouseDown(true);
 		toolTip.activate();
 		
+		if (tableViewer.getTree().getItemCount() > 0) {
+			Object obj = tableViewer.getTree().getItem(0).getData();
+			tableViewer.setSelection(new StructuredSelection(obj));
+		}
+		
 		Thread thread = new Thread() {
 			public void run() {
 				try {

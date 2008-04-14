@@ -257,12 +257,6 @@ public class ServerTableViewer extends TreeViewer {
 		};
 		view.getViewSite().getPage().addSelectionListener(dsListener);*/
 		
-		//if (getTree().getItemCount() > 0)
-		//	getTree().setSelection(getTree().getItem(0));
-		
-		if (getTree().getItemCount() > 0)
-			this.setSelection(new StructuredSelection(getTree().getItem(0).getData()));
-		
 		if (color == null) {
 			Display display = getControl().getDisplay();
 			color = display.getSystemColor(SWT.COLOR_DARK_GRAY);
