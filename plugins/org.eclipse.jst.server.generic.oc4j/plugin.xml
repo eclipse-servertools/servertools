@@ -197,6 +197,13 @@
     </supported>    
    </extension>
    
+  <extension point="org.eclipse.wst.common.project.facet.core.defaultFacets">
+     <default-facets>
+        <runtime-component id="org.eclipse.jst.server.generic.runtime.oracle"/>
+        <facet id="wst.jsdt.web" version="1.0"/>
+     </default-facets>
+  </extension>
+
    <extension point="org.eclipse.wst.common.project.facet.ui.images">
     <image runtime-component-type="org.eclipse.jst.server.generic.runtime.oracle"
           path="icons/obj16/oracle.gif"/>   

@@ -348,6 +348,13 @@
     </supported>
   </extension>
   
+  <extension point="org.eclipse.wst.common.project.facet.core.defaultFacets">
+     <default-facets>
+        <runtime-component id="org.eclipse.jst.server.tomcat"/>
+        <facet id="wst.jsdt.web" version="1.0"/>
+     </default-facets>
+  </extension>
+  
   <extension point="org.eclipse.jst.server.core.runtimeFacetMappings">
     <runtimeFacetMapping
       runtimeTypeId="org.eclipse.jst.server.tomcat.runtime.32"
