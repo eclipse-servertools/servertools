@@ -957,7 +957,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			} else {
 				autoPublishDisable.setEnabled(true);
 				autoPublishEnable.setEnabled(true);
-				autoPublishTime.setEnabled(true);
+				autoPublishTime.setEnabled(publishSetting == Server.AUTO_PUBLISH_ENABLE);
 			}
 		}
 		
