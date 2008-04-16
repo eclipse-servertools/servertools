@@ -25,12 +25,10 @@
        <moduleType
          types="jst.utility"
          versions="1.0"/>
-   
     </runtimeType>
   </extension>
 
    <extension point="org.eclipse.wst.server.core.serverTypes">
-
      <serverType
            runtime="true"
            class="org.eclipse.jst.server.generic.core.internal.GenericServer"
@@ -48,14 +46,10 @@
            launchModes="run,debug"
            startBeforePublish="true">
      </serverType>
-     
-     
 	</extension>
 
 <!-- UI Components-->
-    <extension
-       point="org.eclipse.wst.server.ui.wizardFragments">
-
+   <extension point="org.eclipse.wst.server.ui.wizardFragments">
      <fragment
         id="org.eclipse.jst.server.generic.runtime"
         typeIds="org.eclipse.jst.server.generic.runtime.websphere.6"
@@ -64,11 +58,9 @@
         id="org.eclipse.jst.server.generic.server"
         typeIds="org.eclipse.jst.servers.websphere.6"
         class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>   
-        
   </extension>
   
   <extension point="org.eclipse.wst.server.ui.serverImages">
-         
      <image
          id="org.eclipse.jst.server.generic.image"
          icon="icons/obj16/websphere.gif"
@@ -77,7 +69,6 @@
          id="org.eclipse.jst.server.generic.image"
          icon="icons/obj16/websphere.gif"
          typeIds="org.eclipse.jst.server.generic.runtime.websphere.6"/>
-
 	</extension>
   
 <!-- Server type definitions -->
@@ -137,12 +128,12 @@
          version="1.0,1.5"/>
     </supported>
   </extension>
-  
+
   <extension point="org.eclipse.wst.common.project.facet.core.defaultFacets">
-     <default-facets>
-        <runtime-component id="org.eclipse.jst.server.generic.runtime.websphere"/>
-        <facet id="wst.jsdt.web" version="1.0"/>
-     </default-facets>
+    <default-facets>
+      <runtime-component id="org.eclipse.jst.server.generic.runtime.websphere"/>
+      <facet id="wst.jsdt.web" version="1.0"/>
+    </default-facets>
   </extension>
 
   <extension point="org.eclipse.wst.common.project.facet.ui.images">

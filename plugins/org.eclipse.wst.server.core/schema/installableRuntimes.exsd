@@ -1,12 +1,14 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.wst.server.core">
+<schema targetNamespace="org.eclipse.wst.server.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appInfo>
+      <appinfo>
          <meta.schema plugin="org.eclipse.wst.server.core" id="installableRuntimes" name="Installable Runtimes"/>
-      </appInfo>
+      </appinfo>
       <documentation>
-         This extension point is used to install new runtimes from remote update manager sites.
+         This extension point is used to install new runtimes (i.e. server installations) from a remote server.
+
+New users should use the &apos;runtime&apos; element (which allows you to point to any zip file on any server) and not the original &apos;installableRuntime&apos; element (which requires a remote update manager site).
       </documentation>
    </annotation>
 
@@ -42,9 +44,9 @@
 
    <element name="installableRuntime">
       <annotation>
-         <appInfo>
+         <appinfo>
             <meta.element labelAttribute="id" deprecated="true"/>
-         </appInfo>
+         </appinfo>
       </annotation>
       <complexType>
          <attribute name="id" type="string" use="required">
@@ -80,9 +82,9 @@
                <documentation>
                   the id of the bundle in which the runtime zip is in
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute deprecated="true"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="bundleVersion" type="string">
@@ -90,9 +92,9 @@
                <documentation>
                   the optional version of the bundle in which the runtime zip is in
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute deprecated="true"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="path" type="string">
@@ -100,9 +102,9 @@
                <documentation>
                   if bundleId is specified then represents the relative path of the runtime zip inside the bundle, otherwise it assumes a relative path of the runtime archive inside the feature directory
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute deprecated="true"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -110,9 +112,9 @@
 
    <element name="runtime">
       <annotation>
-         <appInfo>
+         <appinfo>
             <meta.element labelAttribute="id"/>
-         </appInfo>
+         </appinfo>
       </annotation>
       <complexType>
          <attribute name="id" type="string" use="required">
@@ -154,18 +156,18 @@
    </element>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="since"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          &lt;b&gt;This extension point is part of an interim API that is still under development and expected to change significantly before reaching stability. It is being made available at this early stage to solicit feedback from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken (repeatedly) as the API evolves.&lt;/b&gt;
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="examples"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          The following is an example of an installable runtime extension point:
 
@@ -211,28 +213,13 @@ If the runtime archive is not packaged within the feature, then you need to map 
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="apiInfo"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
+
+
 
    <annotation>
-      <appInfo>
-         <meta.section type="implementation"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
-
-   <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="copyright"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          Copyright (c) 2005 IBM Corporation and others.&lt;br&gt;
 All rights reserved. This program and the accompanying materials are made 

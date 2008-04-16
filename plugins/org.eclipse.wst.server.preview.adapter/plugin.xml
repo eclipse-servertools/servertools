@@ -84,6 +84,13 @@
     </adapter>
   </extension>
 
+  <extension point="org.eclipse.wst.common.project.facet.core.defaultFacets">
+    <default-facets>
+      <runtime-component id="org.eclipse.wst.server.preview.runtime"/>
+      <facet id="wst.jsdt.web" version="1.0"/>
+    </default-facets>
+  </extension>
+
   <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
     <launchConfigurationTypeImage
       id="org.eclipse.wst.server.preview.launchConfigurationTypeImage"

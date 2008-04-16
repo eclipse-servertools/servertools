@@ -382,10 +382,10 @@
   </extension>
   
   <extension point="org.eclipse.wst.common.project.facet.core.defaultFacets">
-     <default-facets>
-        <runtime-component id="org.eclipse.jst.server.generic.runtime.jboss"/>
-        <facet id="wst.jsdt.web" version="1.0"/>
-     </default-facets>
+    <default-facets>
+      <runtime-component id="org.eclipse.jst.server.generic.runtime.jboss"/>
+      <facet id="wst.jsdt.web" version="1.0"/>
+    </default-facets>
   </extension>
   
   <extension point="org.eclipse.wst.common.project.facet.ui.images">
