@@ -33,7 +33,7 @@ import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
 /**
  * A label provider for all server related objects.
  */
-public class ServerLabelProvider implements ILabelProvider, IColorProvider {
+public class ServerLabelProvider implements ILabelProvider, IColorProvider, IWorkbenchAdapter {
 	private ILabelDecorator decorator;
 	protected transient List<ILabelProviderListener> listeners;
 	protected ILabelProviderListener providerListener;
@@ -282,6 +282,18 @@ public class ServerLabelProvider implements ILabelProvider, IColorProvider {
 				return c;
 			}
 		}
+		return null;
+	}
+
+	public Object[] getChildren(Object o) { 
+		return null;
+	}
+
+	public String getLabel(Object o) {
+		return getText(o);
+	}
+
+	public Object getParent(Object o) {
 		return null;
 	}
 }

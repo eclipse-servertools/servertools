@@ -12,6 +12,8 @@ package org.eclipse.wst.server.ui.internal;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.ui.IActionFilter;
+import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.eclipse.wst.server.ui.ServerUICore;
 /**
  * Adapter factory to adapt servers to IActionFilter.
  */
@@ -28,6 +30,9 @@ public class ServerAdapterFactory implements IAdapterFactory {
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		if (adapterType == IActionFilter.class)
 			return actionFilter;
+		
+		if (adapterType == IWorkbenchAdapter.class)
+			return ServerUICore.getLabelProvider();
 			
 		return null;
 	}
