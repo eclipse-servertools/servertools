@@ -144,46 +144,59 @@ public class DeleteServerDialog extends MessageDialog {
 			final boolean deleteRunning = (checkDeleteRunning != null && checkDeleteRunning.getSelection());
 			final boolean deleteRunningStop = (checkDeleteRunningStop != null && checkDeleteRunningStop.getSelection());
 			
-			Job job = new Job(Messages.deleteServerTask) {
-				protected IStatus run(IProgressMonitor monitor) {
+			Thread t = new Thread("Delete servers") {
+				public void run() {
 					if (runningServersList.size() > 0) {
 						// stop servers and/or updates servers' list
 						prepareForDeletion(deleteRunning, deleteRunningStop);
 					}
 					
-					if (servers.length == 0) {
-						// all servers have been deleted from list
-						return Status.OK_STATUS;
-					}
-					try {
-						int size = servers.length;
-						for (int i = 0; i < size; i++)
-							servers[i].delete();
-						
-						if (checked) {
-							size = configs.length;
-							for (int i = 0; i < size; i++)
-								configs[i].delete(true, true, monitor);
-						}
-					} catch (Exception e) {
-						Trace.trace(Trace.SEVERE, "Error while deleting resources", e);
-						return new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, 0, e.getMessage(), e); 
-					}
+					Job job = new Job(Messages.deleteServerTask) {
+						protected IStatus run(IProgressMonitor monitor) {
+							if (servers.length == 0) {
+								// all servers have been deleted from list
+								return Status.OK_STATUS;
+							}
+							try {
+								if (monitor.isCanceled())
+									return Status.CANCEL_STATUS;
+								
+								int size = servers.length;
+								for (int i = 0; i < size; i++)
+									servers[i].delete();
+								
+								if (monitor.isCanceled())
+									return Status.CANCEL_STATUS;
+								
+								if (checked) {
+									size = configs.length;
+									for (int i = 0; i < size; i++)
+										configs[i].delete(true, true, monitor);
+								}
+							} catch (Exception e) {
+								Trace.trace(Trace.SEVERE, "Error while deleting resources", e);
+								return new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, 0, e.getMessage(), e); 
+							}
 							
-					return Status.OK_STATUS;
+							return Status.OK_STATUS;
+						}
+					};
+					
+					// set rule for workspace and servers
+					int size = servers.length;
+					ISchedulingRule[] rules = new ISchedulingRule[size+1];
+					for (int i = 0; i < size; i++)
+						rules[i] = new ServerSchedulingRule(servers[i]);
+					IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
+					rules[size] = ruleFactory.createRule(ResourcesPlugin.getWorkspace().getRoot());
+					job.setRule(MultiRule.combine(rules));
+					job.setPriority(Job.BUILD);
+					
+					job.schedule();
 				}
 			};
-			
-			// set rule for workspace and servers
-			int size = servers.length;
-			ISchedulingRule[] rules = new ISchedulingRule[size+1];
-			for (int i = 0; i < size; i++)
-				rules[i] = new ServerSchedulingRule(servers[i]);
-			IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
-			rules[size] = ruleFactory.createRule(ResourcesPlugin.getWorkspace().getRoot());
-			job.setRule(MultiRule.combine(rules));
-			
-			job.schedule();
+			t.setDaemon(true);
+			t.start();
 		}
 		super.buttonPressed(buttonId);
 	}
@@ -228,7 +241,7 @@ public class DeleteServerDialog extends MessageDialog {
 				}
 				try {
 					while (expected != listener.getNumberStopped()) {
-						Thread.sleep(100);
+						Thread.sleep(200);
 					}
 				} catch (InterruptedException e) {
 					Trace.trace(Trace.WARNING, "Interrupted while waiting for servers stop");
