@@ -52,11 +52,17 @@ public class AcceptThread {
 					// accept the connection from the client
 					Socket localSocket = serverSocket.accept();
 					
+					int timeout = monitor.getTimeout();
+					if (timeout != 0)
+						localSocket.setSoTimeout(timeout);
+					
 					try {
 						// connect to the remote server
 						Socket remoteSocket = new Socket();
-						remoteSocket.setSoTimeout(10000);
-						remoteSocket.connect(new InetSocketAddress(monitor.getRemoteHost(), monitor.getRemotePort()), monitor.getTimeout());
+						if (timeout != 0)
+							remoteSocket.setSoTimeout(timeout);
+						
+						remoteSocket.connect(new InetSocketAddress(monitor.getRemoteHost(), monitor.getRemotePort()), timeout);
 						
 						// relay the call through
 						String protocolId = monitor.getProtocol();

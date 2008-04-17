@@ -76,7 +76,7 @@ public interface IMonitor {
 	public String getProtocol();
 
 	/**
-	 * Returns the connection timeout. Returns 0 if there is no timeout.
+	 * Returns the connection timeout (in ms). Returns 0 if there is no timeout.
 	 * 
 	 * @return the timeout
 	 */

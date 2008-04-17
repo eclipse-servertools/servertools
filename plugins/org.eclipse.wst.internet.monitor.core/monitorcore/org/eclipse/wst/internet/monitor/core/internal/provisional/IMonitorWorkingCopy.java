@@ -74,7 +74,7 @@ public interface IMonitorWorkingCopy extends IMonitor {
 	public void setProtocol(String protocolId);
 
 	/**
-	 * Sets the connection timeout. Use 0 to clear the timeout.
+	 * Sets the connection timeout (in ms). Use 0 to clear the timeout.
 	 * 
 	 * @param timeout the connection timeout
 	 * @see IMonitor#getTimeout()
