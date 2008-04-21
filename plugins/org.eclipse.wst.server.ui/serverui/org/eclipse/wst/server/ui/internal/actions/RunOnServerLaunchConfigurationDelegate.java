@@ -44,6 +44,11 @@ public class RunOnServerLaunchConfigurationDelegate extends LaunchConfigurationD
 	public static final String ATTR_LAUNCHABLE_ADAPTER_ID = "launchable-adapter-id";
 	public static final String ATTR_CLIENT_ID = "client-id";
 
+	protected boolean saveBeforeLaunch(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor) throws CoreException {
+		// ignore
+		return true;
+	}
+
 	public void launch(ILaunchConfiguration configuration, String launchMode, final ILaunch launch2,
 			IProgressMonitor monitor) throws CoreException {
 		
