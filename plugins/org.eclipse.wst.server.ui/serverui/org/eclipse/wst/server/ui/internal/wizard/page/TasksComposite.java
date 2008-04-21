@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,8 +22,10 @@ import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -32,14 +34,12 @@ import org.eclipse.ui.PlatformUI;
 /**
  * A wizard page used to select server and module tasks.
  */
-public class TasksComposite extends Composite {
+public class TasksComposite extends ScrolledComposite {
 	protected IWizardHandle wizard;
-	
-	protected Composite comp;
 
 	// the list of elements to select from
 	protected List tasks;
-	
+
 	protected boolean created;
 
 	/**
@@ -49,9 +49,9 @@ public class TasksComposite extends Composite {
 	 * @param wizard a wizard handle
 	 */
 	public TasksComposite(Composite parent, IWizardHandle wizard) {
-		super(parent, SWT.NONE);
+		super(parent, SWT.H_SCROLL | SWT.V_SCROLL);
 		this.wizard = wizard;
-	
+		
 		wizard.setTitle(Messages.wizTaskTitle);
 		wizard.setDescription(Messages.wizTaskDescription);
 		wizard.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_WIZBAN_SELECT_SERVER));
@@ -70,8 +70,6 @@ public class TasksComposite extends Composite {
 			}
 		}
 		
-		//createControl();
-		//layout(true);
 		created = false;
 	}
 
@@ -81,8 +79,14 @@ public class TasksComposite extends Composite {
 	public void createControl() {
 		if (created)
 			return;
+		
+		setLayoutData(new GridData(GridData.FILL_BOTH));
+				
+		Composite comp = new Composite(this, SWT.NONE);
+		setContent(comp);
 		TasksLayout layout = new TasksLayout(SWTUtil.convertVerticalDLUsToPixels(this, 4));
-		setLayout(layout);
+		comp.setLayout(layout);
+		comp.setLayoutData(new GridData(GridData.FILL_BOTH));
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, ContextIds.SELECT_TASK_WIZARD);
 		
 		int size = 0;
@@ -92,7 +96,7 @@ public class TasksComposite extends Composite {
 		for (int i = 0; i < size; i++) {
 			Object obj = tasks.get(i);
 			final TasksWizardFragment.TaskInfo sti = (TasksWizardFragment.TaskInfo) obj;
-			final Button checkbox = new Button(this, SWT.CHECK | SWT.WRAP);
+			final Button checkbox = new Button(comp, SWT.CHECK | SWT.WRAP);
 			String label = sti.task2.getLabel();
 			if (label != null)
 				checkbox.setText(label);
@@ -108,7 +112,7 @@ public class TasksComposite extends Composite {
 				}
 			});
 			
-			Label description = new Label(this, SWT.WRAP);
+			Label description = new Label(comp, SWT.WRAP);
 			String desc = sti.task2.getDescription();
 			if (desc != null)
 				description.setText(desc);
@@ -127,7 +131,13 @@ public class TasksComposite extends Composite {
 			Trace.trace(Trace.SEVERE, "Task composite appeared with no tasks!");
 		
 		Dialog.applyDialogFont(this);
+		
+		setExpandHorizontal(true);
+		setExpandVertical(true);
+		
+		setMinSize(comp.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		layout(true, true);
+		
 		created = true;
 	}
 }

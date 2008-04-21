@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,8 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
  * 
  */
 public class TasksWizardFragment extends WizardFragment {
+	private static final int TASKS_PER_PAGE = 5;
+
 	public class TaskInfo implements IOrdered {
 		public int kind;
 		public String id;
@@ -117,7 +119,6 @@ public class TasksWizardFragment extends WizardFragment {
 		if (tasks == null || tasks.isEmpty())
 			return;
 		
-		int TASKS_PER_PAGE = 5;
 		int size = tasks.size();
 		int pages = (size - 1) / TASKS_PER_PAGE + 1;
 		for (int i = 0; i < pages; i++) {

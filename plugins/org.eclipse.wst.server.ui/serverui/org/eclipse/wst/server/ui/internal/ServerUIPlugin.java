@@ -440,7 +440,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 			return true;
 		return ServerUIPlugin.getInstance().getWorkbench().saveAllEditors(b == ServerUIPreferences.SAVE_EDITORS_PROMPT);			
 	}
-	
+
 	/**
 	 * Prompts the user if the server is dirty. Returns true if the server was
 	 * not dirty or if the user decided to continue anyway. Returns false if
