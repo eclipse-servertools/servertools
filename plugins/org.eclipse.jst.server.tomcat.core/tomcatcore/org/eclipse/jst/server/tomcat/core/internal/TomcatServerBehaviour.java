@@ -13,6 +13,7 @@ package org.eclipse.jst.server.tomcat.core.internal;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -124,6 +125,15 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 */
 	protected String[] getRuntimeVMArguments() {
 		IPath installPath = getServer().getRuntime().getLocation();
+		// If installPath is relative, convert to canonical path and hope for the best
+		if (!installPath.isAbsolute()) {
+			try {
+				String installLoc = (new File(installPath.toOSString())).getCanonicalPath();
+				installPath = new Path(installLoc);
+			} catch (IOException e) {
+				// Ignore if there is a problem
+			}
+		}
 		IPath configPath = getRuntimeBaseDirectory();
 		IPath deployPath;
 		// If serving modules without publishing, use workspace path as the deploy path
@@ -133,6 +143,15 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		// Else normal publishing for modules
 		else {
 			deployPath = getServerDeployDirectory();
+			// If deployPath is relative, convert to canonical path and hope for the best
+			if (!deployPath.isAbsolute()) {
+				try {
+					String deployLoc = (new File(deployPath.toOSString())).getCanonicalPath();
+					deployPath = new Path(deployLoc);
+				} catch (IOException e) {
+					// Ignore if there is a problem
+				}
+			}
 		}
 		return getTomcatVersionHandler().getRuntimeVMArguments(installPath, configPath,
 				deployPath, getTomcatServer().isTestEnvironment());

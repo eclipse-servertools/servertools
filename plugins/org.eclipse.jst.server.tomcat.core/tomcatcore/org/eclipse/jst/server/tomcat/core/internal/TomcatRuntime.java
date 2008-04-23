@@ -11,11 +11,13 @@
 package org.eclipse.jst.server.tomcat.core.internal;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -78,7 +80,17 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 	}
 
 	public List getRuntimeClasspath() {
-		return getVersionHandler().getRuntimeClasspath(getRuntime().getLocation());
+		IPath installPath = getRuntime().getLocation();
+		// If installPath is relative, convert to canonical path and hope for the best
+		if (!installPath.isAbsolute()) {
+			try {
+				String installLoc = (new File(installPath.toOSString())).getCanonicalPath();
+				installPath = new Path(installLoc);
+			} catch (IOException e) {
+				// Ignore if there is a problem
+			}
+		}
+		return getVersionHandler().getRuntimeClasspath(installPath);
 	}
 
 	/**
