@@ -28,7 +28,16 @@ public interface IWebModule extends IJ2EEModule {
 	 * @return java.lang.String
 	 */
 	public String getContextRoot();
-
+		
+	/**
+	 * Returns the context root of the module. If the the webModule belongs to an earModule, the context root with higher
+	 * presedence will be returned.   
+	 * 
+	 * @param earModule The EARModule if exist, if not null
+	 * @return java.lang.String
+	 */
+	public String getContextRoot(IModule earModule);
+	
 	/**
 	 * Returns the utility modules contained within this WAR.
 	 *
