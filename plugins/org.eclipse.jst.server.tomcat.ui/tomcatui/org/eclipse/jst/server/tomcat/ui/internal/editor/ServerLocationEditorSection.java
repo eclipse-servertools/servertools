@@ -523,7 +523,7 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 								new Status(IStatus.ERROR, TomcatUIPlugin.PLUGIN_ID, NLS.bind(Messages.errorServerDirUnderRoot, METADATADIR))};
 					}
 				}
-				else if (installDirPath.equals(path))
+				else if (path.equals(installDirPath))
 					return new IStatus [] {
 						new Status(IStatus.ERROR, TomcatUIPlugin.PLUGIN_ID,
 								NLS.bind(Messages.errorServerDirCustomNotInstall,
@@ -572,7 +572,7 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 						return;
 					}
 				}
-				else if (installDirPath.equals(path)) {
+				else if (path.equals(installDirPath)) {
 					setErrorMessage(NLS.bind(Messages.errorServerDirCustomNotInstall,
 							NLS.bind(Messages.serverEditorServerDirInstall, "").trim()));
 					return;
