@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -165,8 +166,16 @@ public class NewServerComposite extends Composite {
 		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
 		whs.setHelp(this, ContextIds.NEW_SERVER_WIZARD);
 		
-		if (module != null)
+		if (module != null) {
+			if (ILaunchManager.DEBUG_MODE.equals(launchMode))
+				wizard.setTitle(Messages.wizDebugOnServerTitle);
+			else if (ILaunchManager.PROFILE_MODE.equals(launchMode))
+				wizard.setTitle(Messages.wizProfileOnServerTitle);
+			else
+				wizard.setTitle(Messages.wizRunOnServerTitle);
+			wizard.setDescription(Messages.wizNewServerRunOnServerDescription);
 			createLabel(this, Messages.wizNewServerSelect, 1);
+		}
 		
 		Button existing = null;
 		if (module != null) {
@@ -213,7 +222,7 @@ public class NewServerComposite extends Composite {
 			createExistingComposite(stack);
 		createAutoComposite(stack);
 		createManualComposite(stack);
-	
+		
 		if (existingComp != null && existing != null) {
 			if (isExistingServer()) {
 				mode = MODE_EXISTING;

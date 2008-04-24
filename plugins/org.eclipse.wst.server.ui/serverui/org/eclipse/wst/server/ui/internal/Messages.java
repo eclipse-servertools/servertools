@@ -190,6 +190,7 @@ public class Messages extends NLS {
 	public static String createServerProjectDialogTitle;
 	public static String wizNewServerTitle;
 	public static String wizNewServerDescription;
+	public static String wizNewServerRunOnServerDescription;
 	public static String wizNewServerSelect;
 	public static String wizNewServerManual;
 	public static String wizSelectServerPreferred;
