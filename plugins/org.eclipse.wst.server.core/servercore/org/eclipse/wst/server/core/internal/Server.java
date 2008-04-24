@@ -2458,11 +2458,11 @@ public class Server extends Base implements IServer {
 				getBehaviourDelegate(null).restart(launchMode);
 				return Status.OK_STATUS;
 			} catch (CoreException ce) {
-				if (ce.getStatus().getSeverity() == IStatus.ERROR)
-					Trace.trace(Trace.SEVERE, "Error calling delegate restart() " + Server.this.toString());
-				else
-					Trace.trace(Trace.FINER, "Error calling delegate restart() " + Server.this.toString());
 				removeServerListener(curListener);
+				if (ce.getStatus().getCode() != -1) {
+					Trace.trace(Trace.SEVERE, "Error calling delegate restart() " + Server.this.toString());
+					return ce.getStatus();
+				}
 			}
 			
 			final String mode3 = launchMode;
