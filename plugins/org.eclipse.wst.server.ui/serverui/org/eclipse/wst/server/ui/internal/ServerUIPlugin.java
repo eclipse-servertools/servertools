@@ -278,12 +278,11 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 
 			public void run() {
 				while (alive) {
-					ServerType serverType = (ServerType) server.getServerType();
-					int delay = serverType.getStartTimeout();
+					int delay = server.getStartTimeout() * 1000;
 					if (mode == 1)
-						delay = serverType.getStopTimeout();
+						delay = server.getStopTimeout() * 1000;
 					else if (mode == 2)
-						delay += serverType.getStopTimeout();
+						delay += server.getStopTimeout() * 1000;
 					
 					if (delay < 0)
 						return;

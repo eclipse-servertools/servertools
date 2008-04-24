@@ -17,7 +17,7 @@ import java.net.URLConnection;
 
 import org.eclipse.jst.server.preview.adapter.internal.Trace;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.internal.ServerType;
+import org.eclipse.wst.server.core.internal.Server;
 /**
  * Thread used to ping server to test when it is started.
  */
@@ -59,7 +59,7 @@ public class PingThread {
 	}
 
 	private int guessMaxPings() {
-		int startTimeout = ((ServerType) server.getServerType()).getStartTimeout();
+		int startTimeout = ((Server)server).getStartTimeout() * 1000;
 		if (startTimeout > 0)
 			return startTimeout / PING_INTERVAL;
 		return -1;
