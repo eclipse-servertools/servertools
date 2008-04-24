@@ -37,4 +37,8 @@ public class TestWebModule extends TestJ2EEModule implements IWebModule {
 	public String getURI(IModule module) {
 		return null;
 	}
+
+	public String getContextRoot(IModule earModule) {
+		return null;
+	}
 }
