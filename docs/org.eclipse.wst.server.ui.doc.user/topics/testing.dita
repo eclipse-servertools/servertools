@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <task id="testing_wst" xml:lang="en-us">
@@ -8,15 +8,15 @@
 more application artifacts on a server.</shortdesc>
 <prolog><metadata>
 <keywords id="index"><indexterm>artifacts<indexterm>testing on servers</indexterm></indexterm>
-<indexterm>servers<indexterm>testing artifacts</indexterm></indexterm>
-</keywords>
+<indexterm>servers<indexterm>testing artifacts</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <prereq></prereq>
 <context></context>
 <steps>
-<step id="testing_step1"><cmd>In the Project Explorer view from the J2EE perspective,
-expand the project that contains the file you want to test.</cmd></step>
+<step id="testing_step1"><cmd>In the Project Explorer view from the Java EE
+perspective, expand the project that contains the file you want to test.</cmd>
+</step>
 <step id="testing_step2"><cmd>Right-click the artifact that you want to test.</cmd>
 <info>Examples of artifacts include the Web project or a file within the Web
 project (such as a JSP file, servlet, or HTML file), or an enterprise bean.</info>
@@ -35,8 +35,8 @@ a new server.</chdesc></chrow>
 <step id="testing_step5"><cmd>Under the <uicontrol>Select the server that
 you want to use</uicontrol> list, select a server you want to run your application.</cmd>
 <info>The list of available servers, under the <uicontrol>Select the server
-that you want to use</uicontrol> list, depends on the J2EE specification level
-you defined for the artifact and the supported servers on this workbench.</info>
+that you want to use</uicontrol> list, depends on the Java EE specification
+level you defined for the artifact and the supported servers on this workbench.</info>
 </step>
 <step id="testing_step6"><cmd>(Optional) Click <uicontrol>Next</uicontrol> to
 configure additional settings, such as configuring settings specific to the
@@ -54,10 +54,10 @@ the default name to hold the generated server configuration files.</li>
 server settings.)</li>
 <li id="testing_li5">If the  <uicontrol>Automatically publish when starting
 servers</uicontrol> check box on the Server preferences page (<menucascade>
-<uicontrol>Window > Preferences > Server > Launching</uicontrol>
-</menucascade>) is selected, the workbench checks to see if your project and
-files on the server are synchronized. If they are not, the project and the
-files are automatically updated when the server is restarted.</li>
+<uicontrol>Window > Preferences > Server > Launching</uicontrol></menucascade>)
+is selected, the workbench checks to see if your project and files on the
+server are synchronized. If they are not, the project and the files are automatically
+updated when the server is restarted.</li>
 <li id="testing_li6">Depending on the artifact you are testing, the output
 of running your artifact may display in the Console view or in a Web browser
 that automatically opens.</li>
@@ -65,4 +65,3 @@ that automatically opens.</li>
 </steps>
 </taskbody>
 </task>
-<?Pub *0000003825?>

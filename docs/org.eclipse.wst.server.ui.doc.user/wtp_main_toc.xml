@@ -4,7 +4,9 @@
 
 <toc label="Testing and publishing applications" topic="topics/cwover.html">
 <topic label="Application testing and publishing" href="topics/cwover.html">
-<topic label="Servers view" href="topics/rwrcview.html"/>
+<topic label="Servers view" href="topics/rwrcview.html">
+<topic label="Keyboard shortcuts for Server Tools" href="topics/raccessserver.html"/>
+</topic>
 <topic label="Resources used by the Server Tools" href="topics/cwres.html"/>
 <topic label="Which server will start" href="topics/cwflow.html"/>
 <link toc="wtp_test.xml"/>

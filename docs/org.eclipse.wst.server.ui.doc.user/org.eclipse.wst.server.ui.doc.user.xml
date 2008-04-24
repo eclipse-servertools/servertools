@@ -38,4 +38,5 @@
 <topic label="Clean projects published on the server" href="topics/tclean.html"/>
 <topic label="Testing on an HTTP Preview server" href="topics/thttppreview.html"/>
 <topic label="Testing on a J2EE Preview server" href="topics/tj2eepreview.html"/>
+<topic label="Keyboard shortcuts for Server Tools" href="topics/raccessserver.html"/>
 </toc>

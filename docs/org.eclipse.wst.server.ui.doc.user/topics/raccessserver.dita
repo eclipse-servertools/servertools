@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DITA Reference//EN"
+ "reference.dtd">
+<?Pub Inc?>
+<reference id="raccessserver" xml:lang="en-us">
+<title>Keyboard shortcuts for Server Tools</title>
+<shortdesc>This documentation describes the keyboard shortcuts for tasks in
+the Servers view; and running and debugging artifacts on a server.</shortdesc>
+<prolog><metadata>
+<keywords><indexterm>accessibility<indexterm>keyboard shortcuts<indexterm>Servers
+Tool</indexterm></indexterm></indexterm><indexterm>keyboard shortcuts<indexterm>Servers
+Tool</indexterm></indexterm><indexterm>shortcuts<indexterm>keyboard<indexterm>Servers
+Tool</indexterm></indexterm></indexterm><indexterm>Servers Tool<indexterm>accessibility</indexterm></indexterm>
+<indexterm>Servers Tool<?Pub Caret?><indexterm>keyboard shortcuts</indexterm></indexterm>
+</keywords>
+</metadata></prolog>
+<refbody>
+<table><title>Keyboard shortcuts for Server Tools</title>
+<tgroup cols="3"><colspec colname="col2"/><colspec colname="COLSPEC2" colwidth="1*"/>
+<colspec colname="COLSPEC1" colwidth="1*"/>
+<thead>
+<row valign="bottom">
+<entry colname="col2">Function</entry>
+<entry colname="COLSPEC2">Key combination</entry>
+<entry colname="COLSPEC1">When</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry colname="col2">Debug on Server</entry>
+<entry colname="COLSPEC2">Alt + Shift + D, R</entry>
+<entry colname="COLSPEC1">In workbench</entry>
+</row>
+<row>
+<entry colname="col2">Run on Server</entry>
+<entry colname="COLSPEC2">Alt + Shift + X, R</entry>
+<entry colname="COLSPEC1">In workbench</entry>
+</row>
+<row>
+<entry colname="col2">Debug</entry>
+<entry colname="COLSPEC2">Ctrl + Alt + D</entry>
+<entry colname="COLSPEC1">In Servers view</entry>
+</row>
+<row>
+<entry colname="col2">Publish</entry>
+<entry colname="COLSPEC2">Ctrl + Alt + P</entry>
+<entry colname="COLSPEC1">In Servers view</entry>
+</row>
+<row>
+<entry colname="col2">Start</entry>
+<entry colname="COLSPEC2">Ctrl + Alt + R</entry>
+<entry colname="COLSPEC1">In Servers view</entry>
+</row>
+<row>
+<entry colname="col2">Stop</entry>
+<entry colname="COLSPEC2">Ctrl + Alt + S</entry>
+<entry colname="COLSPEC1">In Servers view</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</refbody>
+</reference>
+<?Pub *0000002304?>

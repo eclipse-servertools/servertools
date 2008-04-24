@@ -320,4 +320,31 @@
       <topic href="topics/tj2eepreview.html#tj2eepreview_wst" title="Testing on a J2EE Preview server"/>
     </entry>
   </entry>
+  <entry keyword="accessibility">
+    <entry keyword="keyboard shortcuts">
+      <entry keyword="Servers Tool">
+        <topic href="topics/raccessserver.html#raccessserver" title="Keyboard shortcuts for Server Tools"/>
+      </entry>
+    </entry>
+  </entry>
+  <entry keyword="keyboard shortcuts">
+    <entry keyword="Servers Tool">
+      <topic href="topics/raccessserver.html#raccessserver" title="Keyboard shortcuts for Server Tools"/>
+    </entry>
+  </entry>
+  <entry keyword="shortcuts">
+    <entry keyword="keyboard">
+      <entry keyword="Servers Tool">
+        <topic href="topics/raccessserver.html#raccessserver" title="Keyboard shortcuts for Server Tools"/>
+      </entry>
+    </entry>
+  </entry>
+  <entry keyword="Servers Tool">
+    <entry keyword="accessibility">
+      <topic href="topics/raccessserver.html#raccessserver" title="Keyboard shortcuts for Server Tools"/>
+    </entry>
+    <entry keyword="keyboard shortcuts">
+      <topic href="topics/raccessserver.html#raccessserver" title="Keyboard shortcuts for Server Tools"/>
+    </entry>
+  </entry>
 </index>

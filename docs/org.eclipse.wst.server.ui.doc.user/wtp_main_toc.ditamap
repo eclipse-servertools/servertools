@@ -2,10 +2,13 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
  "map.dtd">
+<?Pub Sty _display FontColor="red"?>
 <map title="Testing and publishing applications">
 <topicref href="topics/cwover.dita" linking="normal" locktitle="yes" navtitle="Application testing and publishing"
 scope="peer">
 <topicref href="topics/rwrcview.dita" locktitle="yes" navtitle="Servers view">
+<topicref href="topics/raccessserver.dita" navtitle="Keyboard shortcuts for Server Tools"><?Pub Caret?>
+</topicref>
 </topicref>
 <topicref href="topics/cwres.dita" locktitle="yes" navtitle="Resources used by the Server Tools">
 </topicref>
@@ -18,3 +21,4 @@ scope="peer">
 <navref mapref="wtp_manage.ditamap"/>
 <navref mapref="wtp_pref.ditamap"/></topicref>
 </map>
+<?Pub *0000001038?>

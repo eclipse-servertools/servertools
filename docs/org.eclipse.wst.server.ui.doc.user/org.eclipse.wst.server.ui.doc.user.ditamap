@@ -64,7 +64,9 @@
 </topicref>
 <topicref href="topics/thttppreview.dita" navtitle="Testing on a HTTP Preview server">
 </topicref>
-<topicref href="topics/tj2eepreview.dita" navtitle="Testing on a J2EE Preview server"><?Pub Caret?>
+<topicref href="topics/tj2eepreview.dita" navtitle="Testing on a J2EE Preview server">
+</topicref>
+<topicref href="topics/raccessserver.dita" navtitle="Keyboard shortcuts for Server Tools"><?Pub Caret?>
 </topicref>
 </map>
-<?Pub *0000003457?>
+<?Pub *0000003560?>
