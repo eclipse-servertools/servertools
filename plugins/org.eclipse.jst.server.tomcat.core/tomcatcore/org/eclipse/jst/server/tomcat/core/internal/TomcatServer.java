@@ -159,7 +159,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 			if (config == null)
 				return null;
 			
-			String url = "http://localhost";
+			String url = "http://" + getServer().getHost();
 			int port = config.getMainPort().getPort();
 			port = ServerUtil.getMonitoredPort(getServer(), port, "web");
 			if (port != 80)
