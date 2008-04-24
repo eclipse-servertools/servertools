@@ -46,21 +46,6 @@ import org.eclipse.wst.server.core.IServer.IOperationListener;
  *
  */
 public class CleanWorkDirDialog extends Dialog {
-	/**
-	 * Error code when error occurs prior to deletion
-	 */
-	public static final int ERROR_PREDELETE = 0;
-	
-	/**
-	 * Error code when error occurs during the deletion
-	 */
-	public static final int ERROR_DURINGDELETE = 1;
-
-	/**
-	 * Error code when error occurs after deletion
-	 */
-	public static final int ERROR_POSTDELETE = 2;
-	
 	protected IServer server;
 	protected IModule module;
 	protected int state;
@@ -143,49 +128,31 @@ public class CleanWorkDirDialog extends Dialog {
 	}
 
 	protected void okPressed() {
-		// Create job to perform the deletion
-		DeleteWorkDirJob job = new DeleteWorkDirJob(Messages.cleanServerTask);
-		job.setRule(ServerUtil.getServerSchedulingRule(server));
-		
-		job.addJobChangeListener(new JobChangeAdapter() {
-			public void done(IJobChangeEvent event) {
-				IStatus status = event.getResult();
-				if (!status.isOK()) {
-					String title = module != null ? Messages.errorCleanModuleTitle : Messages.errorCleanServerTitle;
-					String message = "Message unset";
-					switch (status.getCode()) {
-					case CleanWorkDirDialog.ERROR_PREDELETE:
-						message = module != null ?
-								NLS.bind(Messages.errorCouldNotCleanModule, module.getName(), server.getName()) :
-									NLS.bind(Messages.errorCouldNotCleanServer, server.getName());
-						break;
-					case CleanWorkDirDialog.ERROR_DURINGDELETE:
-						message = module != null ?
-								NLS.bind(Messages.errorCleanFailedModule, module.getName(), server.getName()) :
-									NLS.bind(Messages.errorCleanFailedServer, server.getName());
-						break;
-					default:
-						message = module != null ?
-								NLS.bind(Messages.errorCleanNoRestartModule, module.getName()) :
-									NLS.bind(Messages.errorCleanNoRestartServer, server.getName());
-						break;
-					}
-					TomcatUIPlugin.openError(title, message, status);
-				}
-			}
-		});
-		
+		String jobName = NLS.bind(Messages.cleanServerTask,
+				module != null ? module.getName() : server.getName());
+		// Create job to perform the cleaning, including stopping and starting the server if necessary
+		CleanWorkDirJob job = new CleanWorkDirJob(jobName);
+		// Note: Since stop and start, if needed, will set scheduling rules in their jobs,
+		// don't set one here. Instead do the actual deletion in a child job too with the
+		// scheduling rule on that job, like stop and start.
 		job.schedule();
 		
 		super.okPressed();
 	}
 	
-	class DeleteWorkDirJob extends Job {
+	/*
+	 * Job to clean the appropriate Tomcat work directory.  It includes
+	 * stopping and starting the server if the server is currently running.
+	 * The stopping, deletion, and starting are all done with child jobs,
+	 * each using the server scheduling rule.  Thus, this job should
+	 * not use this rule or it will block these child jobs. 
+	 */
+	class CleanWorkDirJob extends Job {
 		/**
 		 * @param name name for job
 		 */
-		public DeleteWorkDirJob(String name) {
-			super(name);
+		public CleanWorkDirJob(String jobName) {
+			super(jobName);
 		}
 
 		/**
@@ -197,10 +164,19 @@ public class CleanWorkDirDialog extends Dialog {
 
 		protected IStatus run(IProgressMonitor monitor) {
 			final Object mutex = new Object();
+
+			IWebModule webModule = null;
+			if (module != null) {
+				webModule = (IWebModule)module.loadAdapter(IWebModule.class, null);
+				if (webModule == null) {
+					return newErrorStatus(NLS.bind(Messages.errorCantIdentifyWebApp, module.getName()), null);
+				}
+			}
 			
 			// If state has changed since dialog was open, abort
 			if (server.getServerState() != state) {
-				return newErrorStatus(ERROR_PREDELETE, Messages.errorCouldNotCleanStateChange, null);
+				return newErrorStatus(
+						NLS.bind(Messages.errorCouldNotCleanStateChange, server.getName()), null);
 			}
 
 			IOperationListener listener = new IOperationListener() {
@@ -211,68 +187,90 @@ public class CleanWorkDirDialog extends Dialog {
 					}
 				}
 			};
+			
 			boolean restart = false;
 			IStatus status = Status.OK_STATUS;
 			// If server isn't stopped, try to stop, clean, and restart
 			if (state != IServer.STATE_STOPPED) {
 				status = server.canStop();
 				if (!status.isOK()) {
-					return wrapErrorStatus(status, ERROR_PREDELETE, Messages.errorCouldNotCleanCantStop);
+					return wrapErrorStatus(status, 
+							NLS.bind(Messages.errorCouldNotCleanCantStop, server.getName()));
 				}
 
-				// Stop the server and wait for completion
-				synchronized (mutex) {
-					server.stop(false, listener);
+				boolean done = false;
+				boolean force = false;
+				while (!done) {
+					// Stop the server and wait for completion
+					synchronized (mutex) {
+						server.stop(force, listener);
 
-					while (completionStatus == null) {
-						try {
-							mutex.wait();
-						} catch (InterruptedException e) {
-							// Ignore
+						while (completionStatus == null) {
+							try {
+								mutex.wait();
+							} catch (InterruptedException e) {
+								// Ignore
+							}
 						}
 					}
+					// If forced, or there was an error (doesn't include timeout), or we are stopped, time to exit
+					if (force || !completionStatus.isOK() || server.getServerState() == IServer.STATE_STOPPED) {
+						done = true;
+					}
+					else {
+						force = TomcatUIPlugin.queryCleanTermination(server);
+						completionStatus = null;
+					}
 				}
-				
+			
 				if (!completionStatus.isOK()) {
-					return wrapErrorStatus(completionStatus, ERROR_PREDELETE, Messages.errorCouldNotCleanStopFailed);
+					// If stop job failed, assume error was displayed for that job
+					return Status.OK_STATUS;
 				}
 				if (server.getServerState() != IServer.STATE_STOPPED) {
-					return newErrorStatus(ERROR_PREDELETE, Messages.errorCouldNotCleanStopFailed, null);
+					return newErrorStatus(
+							NLS.bind(Messages.errorCouldNotCleanStopFailed, server.getName()), null);
 				}
 				restart = true;
 				completionStatus = null;
 			}
-				
-			// Delete the work directory
-			TomcatServerBehaviour tsb = (TomcatServerBehaviour)server.loadAdapter(
-					TomcatServerBehaviour.class, monitor);
-			try {
-				if (module != null) {
-					IWebModule webModule = (IWebModule)module.loadAdapter(IWebModule.class, null);
-					if (webModule != null) {
-						ITomcatWebModule tcWebModule = new WebModule(webModule.getContextRoot(), "", "", true);
-						status = tsb.cleanContextWorkDir(tcWebModule, null);
+			
+			DeleteWorkDirJob deleteJob = new DeleteWorkDirJob(getName(), webModule, restart);
+			deleteJob.setRule(ServerUtil.getServerSchedulingRule(server));
+
+			deleteJob.addJobChangeListener(new JobChangeAdapter() {
+				public void done(IJobChangeEvent event) {
+					synchronized (mutex) {
+						completionStatus = event.getResult();
+						mutex.notifyAll();
 					}
-					else {
-						return newErrorStatus(ERROR_DURINGDELETE, 
-								restart ? Messages.errorCantIdentifyWebAppWasRunning : Messages.errorCantIdentifyWebApp, null);
+
+				}
+			});
+
+			// Perform the work directory deletion job
+			synchronized (mutex) {
+				deleteJob.schedule();
+
+				while (completionStatus == null) {
+					try {
+						mutex.wait();
+					} catch (InterruptedException e) {
+						// Ignore
 					}
 				}
-				else {
-					status = tsb.cleanServerWorkDir(null);
-				}
-			} catch (CoreException ce) {
-				status = ce.getStatus();
 			}
-			if (!status.isOK()) {
-				return wrapErrorStatus(status, ERROR_DURINGDELETE,
-						restart ? Messages.errorErrorDuringCleanWasRunning : Messages.errorErrorDuringClean);
+			if (!completionStatus.isOK()) {
+				// If delete job failed, assume error was displayed for that job
+				return Status.OK_STATUS;
 			}
+			completionStatus = null;
 
 			if (restart) {
 				status = server.canStart(mode);
 				if (!status.isOK()) {
-					return wrapErrorStatus(status, ERROR_POSTDELETE, Messages.errorCleanCantRestart);
+					return wrapErrorStatus(status, 
+							NLS.bind(Messages.errorCleanCantRestart, server.getName()));
 				}
 
 				// Restart the server and wait for completion
@@ -289,8 +287,71 @@ public class CleanWorkDirDialog extends Dialog {
 				}
 				
 				if (!completionStatus.isOK()) {
-					return wrapErrorStatus(completionStatus, ERROR_POSTDELETE, Messages.errorCleanRestartFailed);
+					// If start job failed, assume error was displayed for that job
+					return Status.OK_STATUS;
 				}
+			}
+			return status;
+		}
+	}
+	
+	/*
+	 * Job to actually delete the work directory.  This is done
+	 * in a separate job so it can be a "sibling" of potential
+	 * stop and start jobs. This allows it to have a server
+	 * scheduling rule.
+	 */
+	class DeleteWorkDirJob extends Job {
+		private IWebModule webModule;
+		private boolean restart;
+		
+		/**
+		 * @param name name for job
+		 */
+		public DeleteWorkDirJob(String jobName, IWebModule webModule, boolean restart) {
+			super(jobName);
+			this.webModule = webModule;
+			this.restart = restart;
+		}
+
+		/**
+		 * @see Job#belongsTo(Object)
+		 */
+		public boolean belongsTo(Object family) {
+			return ServerUtil.SERVER_JOB_FAMILY.equals(family);
+		}
+
+		protected IStatus run(IProgressMonitor monitor) {
+			
+			IStatus status = Status.OK_STATUS;
+			// If server isn't stopped, abort the attempt to delete the work directory
+			if (server.getServerState() != IServer.STATE_STOPPED) {
+				return newErrorStatus(
+						NLS.bind(Messages.errorCantDeleteServerNotStopped, 
+								webModule != null ? module.getName() : server.getName()), null);
+			}				
+
+			// Delete the work directory
+			TomcatServerBehaviour tsb = (TomcatServerBehaviour)server.loadAdapter(
+					TomcatServerBehaviour.class, monitor);
+			try {
+				if (webModule != null) {
+					ITomcatWebModule tcWebModule = new WebModule(webModule.getContextRoot(), "", "", true);
+					status = tsb.cleanContextWorkDir(tcWebModule, null);
+				}
+				else {
+					status = tsb.cleanServerWorkDir(null);
+				}
+			} catch (CoreException ce) {
+				status = ce.getStatus();
+			}
+			if (!status.isOK()) {
+				String cleanName = module != null ? module.getName() : server.getName();
+				return wrapErrorStatus(status,
+						restart ?
+								NLS.bind(Messages.errorErrorDuringCleanWasRunning, 
+										cleanName , server.getName()) :
+								NLS.bind(Messages.errorErrorDuringClean, cleanName));
 			}
 			return status;
 		}
@@ -303,13 +364,13 @@ public class CleanWorkDirDialog extends Dialog {
 		}
 	}
 
-	protected IStatus newErrorStatus(int errorCode, String message, Throwable throwable) {
-		return new Status(IStatus.ERROR, TomcatUIPlugin.PLUGIN_ID, errorCode,
+	protected IStatus newErrorStatus(String message, Throwable throwable) {
+		return new Status(IStatus.ERROR, TomcatUIPlugin.PLUGIN_ID, 0,
 				message, throwable);
 	}
 	
-	protected IStatus wrapErrorStatus(IStatus status, int errorCode, String message) {
-		MultiStatus ms = new MultiStatus(TomcatUIPlugin.PLUGIN_ID, errorCode, message, null);
+	protected IStatus wrapErrorStatus(IStatus status, String message) {
+		MultiStatus ms = new MultiStatus(TomcatUIPlugin.PLUGIN_ID, 0, message, null);
 		ms.add(status);
 		return ms;
 	}

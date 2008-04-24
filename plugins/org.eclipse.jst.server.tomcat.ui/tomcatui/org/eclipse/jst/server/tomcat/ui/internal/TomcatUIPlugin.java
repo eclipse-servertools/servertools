@@ -16,12 +16,15 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.wst.server.core.IServer;
 /**
  * The actual Tomcat plugin. It allows the rest of the classes
  * to load images and get a handle to the desktop.
@@ -146,6 +149,37 @@ public class TomcatUIPlugin extends AbstractUIPlugin {
 			}
 		});
 	}
+	
+	public static boolean queryCleanTermination(IServer server) {
+		CleanTerminationRunnable tr = new CleanTerminationRunnable(server);
+		Display.getDefault().syncExec(tr);
+		return tr.shouldTerminate();
+	}
+	
+	public static class CleanTerminationRunnable implements Runnable {
+		IServer server;
+		boolean terminate;
+		
+		CleanTerminationRunnable(IServer server) {
+			this.server = server;
+		}
+
+		public void run() {
+			Shell shell = getShell();
+			TerminationDialog dialog = new TerminationDialog(shell,
+					Messages.cleanTerminateServerDialogTitle,
+					NLS.bind(Messages.cleanTerminateServerDialogMessage, server.getName()));
+			dialog.open();
+			if (dialog.getReturnCode() == IDialogConstants.OK_ID) {
+				terminate = true;
+			}
+		}
+	
+		boolean shouldTerminate() {
+			return terminate;
+		}
+	}
+
 	/**
 	 * Convenience method to get a shell
 	 *

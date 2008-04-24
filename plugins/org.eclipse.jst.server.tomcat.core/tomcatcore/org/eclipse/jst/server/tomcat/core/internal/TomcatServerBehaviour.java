@@ -500,9 +500,10 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			return;
 		}
 		int state = getServer().getServerState();
-		if (state == IServer.STATE_STOPPED)
+		// If stopped or stopping, no need to run stop command again
+		if (state == IServer.STATE_STOPPED ||  state == IServer.STATE_STOPPING)
 			return;
-		else if (state == IServer.STATE_STARTING || state == IServer.STATE_STOPPING) {
+		else if (state == IServer.STATE_STARTING) {
 			terminate();
 			return;
 		}
@@ -1014,14 +1015,18 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		IPath basePath = getRuntimeBaseDirectory();
 		IPath workPath = getTomcatConfiguration().getContextWorkDirectory(basePath, module);
 		if (workPath != null) {
-			IStatus [] results = PublishHelper.deleteDirectory(workPath.toFile(), monitor);
-			MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, "Problem occurred deleting work directory for module.", null);
-			if (results != null && results.length > 0) {
-				for (int i = 0; i < results.length; i++) {
-					ms.add(results[i]);
+			File workDir = workPath.toFile();
+			result = Status.OK_STATUS;
+			if (workDir.exists() && workDir.isDirectory()) {
+				IStatus [] results = PublishHelper.deleteDirectory(workDir, monitor);
+				MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, "Problem occurred deleting work directory for module.", null);
+				if (results != null && results.length > 0) {
+					for (int i = 0; i < results.length; i++) {
+						ms.add(results[i]);
+					}
 				}
+				result = ms;
 			}
-			result = ms;
 		}
 		else {
 			result = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, "Could not determine work directory for module", null);

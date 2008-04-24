@@ -47,4 +47,5 @@ public interface ContextIds {
 	public static final String RUNTIME_COMPOSITE = TomcatUIPlugin.PLUGIN_ID + ".twnr0000";
 
 	public static final String SERVER_CLEAN_WORK_DIR = TomcatUIPlugin.PLUGIN_ID + ".tvcp0000";
+	public static final String SERVER_CLEAN_WORK_DIR_TERMINATE = TomcatUIPlugin.PLUGIN_ID + ".tvcp0001";
 }
