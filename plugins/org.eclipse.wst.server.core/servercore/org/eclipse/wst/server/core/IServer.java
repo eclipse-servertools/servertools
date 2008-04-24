@@ -13,6 +13,7 @@ package org.eclipse.wst.server.core;
 import java.util.List;
 
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 /**
@@ -70,7 +71,7 @@ import org.eclipse.debug.core.ILaunchConfiguration;
  * 
  * @since 1.0
  */
-public interface IServer extends IServerAttributes {
+public interface IServer extends IServerAttributes, ISchedulingRule {
 	/**
 	 * An operation listener is used to receive notification back about a
 	 * specific server operation, such as starting or stopping a server.

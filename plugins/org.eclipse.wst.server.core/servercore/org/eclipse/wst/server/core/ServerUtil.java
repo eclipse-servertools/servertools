@@ -741,8 +741,9 @@ public class ServerUtil {
 	 * @param server a server
 	 * @return a scheduling rule for this server
 	 * @since 2.0
+	 * @deprecated the server instance is now a scheduling rule directly
 	 */
 	public static ISchedulingRule getServerSchedulingRule(IServer server) {
-		return new ServerSchedulingRule(server);
+		return server;
 	}
 }

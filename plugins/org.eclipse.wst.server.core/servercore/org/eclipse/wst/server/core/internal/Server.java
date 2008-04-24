@@ -155,12 +155,12 @@ public class Server extends Base implements IServer {
 			this.module = module;
 			
 			if (module.getProject() == null)
-				setRule(new ServerSchedulingRule(Server.this));
+				setRule(Server.this);
 			else {
 				ISchedulingRule[] rules = new ISchedulingRule[2];
 				IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
 				rules[0] = ruleFactory.createRule(module.getProject());
-				rules[1] = new ServerSchedulingRule(Server.this);
+				rules[1] = Server.this;
 				setRule(MultiRule.combine(rules));
 			}
 		}
@@ -249,7 +249,7 @@ public class Server extends Base implements IServer {
 			// 102227 - lock entire workspace during publish		
 			ISchedulingRule[] rules = new ISchedulingRule[2];
 			rules[0] = ruleFactory.createRule(ResourcesPlugin.getWorkspace().getRoot());
-			rules[1] = new ServerSchedulingRule(Server.this);
+			rules[1] = Server.this;
 			
 			setRule(MultiRule.combine(rules));
 		}
@@ -288,11 +288,11 @@ public class Server extends Base implements IServer {
 				// 102227 - lock entire workspace during publish		
 				ISchedulingRule[] rules = new ISchedulingRule[2];
 				rules[0] = ruleFactory.createRule(ResourcesPlugin.getWorkspace().getRoot());
-				rules[1] = new ServerSchedulingRule(Server.this);
+				rules[1] = Server.this;
 				
 				setRule(MultiRule.combine(rules));
 			} else
-				setRule(new ServerSchedulingRule(Server.this));
+				setRule(Server.this);
 		}
 
 		public boolean belongsTo(Object family) {
@@ -327,7 +327,7 @@ public class Server extends Base implements IServer {
 		public RestartJob(String launchMode) {
 			super(NLS.bind(Messages.jobRestartingServer, Server.this.getName()));
 			this.launchMode = launchMode;
-			setRule(new ServerSchedulingRule(Server.this));
+			setRule(Server.this);
 		}
 
 		public boolean belongsTo(Object family) {
@@ -344,7 +344,7 @@ public class Server extends Base implements IServer {
 
 		public StopJob(boolean force) {
 			super(NLS.bind(Messages.jobStoppingServer, Server.this.getName()));
-			setRule(new ServerSchedulingRule(Server.this));
+			setRule(Server.this);
 			this.force = force;
 		}
 
@@ -1391,10 +1391,6 @@ public class Server extends Base implements IServer {
 			return behaviourDelegate;
 		
 		return Platform.getAdapterManager().loadAdapter(this, adapter.getName());
-	}
-
-	public String toString() {
-		return getName();
 	}
 
 	/**
@@ -2746,5 +2742,25 @@ public class Server extends Base implements IServer {
 			Trace.trace(Trace.SEVERE, "Error calling delegate stop() " + Server.this.toString(), t);
 			throw new RuntimeException(t);
 		}
+	}
+
+	public boolean contains(ISchedulingRule rule) {
+		return (rule instanceof IServer || rule instanceof ServerSchedulingRule);
+	}
+
+	public boolean isConflicting(ISchedulingRule rule) {
+		if (!(rule instanceof IServer) && !(rule instanceof ServerSchedulingRule))
+			return false;
+		
+		if (rule instanceof IServer) {
+			IServer s = (IServer) rule;
+			return this.equals(s);
+		}
+		ServerSchedulingRule ssrule = (ServerSchedulingRule) rule;
+		return ssrule.server.equals(this);
+	}
+
+	public String toString() {
+		return getName();
 	}
 }

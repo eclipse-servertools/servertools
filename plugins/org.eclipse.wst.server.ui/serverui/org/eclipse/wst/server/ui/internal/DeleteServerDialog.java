@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,7 +41,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServer.IOperationListener;
-import org.eclipse.wst.server.core.internal.ServerSchedulingRule;
 /**
  * Dialog that prompts a user to delete server(s) and/or server configuration(s).
  */
@@ -186,7 +185,7 @@ public class DeleteServerDialog extends MessageDialog {
 					int size = servers.length;
 					ISchedulingRule[] rules = new ISchedulingRule[size+1];
 					for (int i = 0; i < size; i++)
-						rules[i] = new ServerSchedulingRule(servers[i]);
+						rules[i] = servers[i];
 					IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
 					rules[size] = ruleFactory.createRule(ResourcesPlugin.getWorkspace().getRoot());
 					job.setRule(MultiRule.combine(rules));
