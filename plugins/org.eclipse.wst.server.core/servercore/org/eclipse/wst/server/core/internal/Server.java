@@ -632,7 +632,7 @@ public class Server extends Base implements IServer {
 	protected void fireRestartStateChangeEvent() {
 		Trace.trace(Trace.LISTENERS, "->- Firing server restart change event: " + getName() + " ->-");
 		
-		if (notificationManager == null || notificationManager.hasListenerEntries())
+		if (notificationManager == null || notificationManager.hasNoListeners())
 			return;
 		
 		notificationManager.broadcastChange(
@@ -646,7 +646,7 @@ public class Server extends Base implements IServer {
 	protected void fireServerStateChangeEvent() {
 		Trace.trace(Trace.LISTENERS, "->- Firing server state change event: " + getName() + ", " + getServerState() + " ->-");
 		
-		if (notificationManager == null || notificationManager.hasListenerEntries())
+		if (notificationManager == null || notificationManager.hasNoListeners())
 			return;
 		
 		notificationManager.broadcastChange(
@@ -660,7 +660,7 @@ public class Server extends Base implements IServer {
 	protected void fireServerChangeEvent() {
 		Trace.trace(Trace.LISTENERS, "->- Firing server change event: " + getName() + ", " + getServerState() + " ->-");
 		
-		if (notificationManager == null || notificationManager.hasListenerEntries())
+		if (notificationManager == null || notificationManager.hasNoListeners())
 			return;
 		
 		notificationManager.broadcastChange(
@@ -674,7 +674,7 @@ public class Server extends Base implements IServer {
 	protected void fireModuleStateChangeEvent(IModule[] module) {
 		Trace.trace(Trace.LISTENERS, "->- Firing module state change event: " + getName() + ", " + getServerState() + " ->-");
 		
-		if (notificationManager == null || notificationManager.hasListenerEntries())
+		if (notificationManager == null || notificationManager.hasNoListeners())
 			return;
 		
 		notificationManager.broadcastChange(
@@ -688,7 +688,7 @@ public class Server extends Base implements IServer {
 	protected void fireModulePublishStateChangeEvent(IModule[] module) {
 		Trace.trace(Trace.LISTENERS, "->- Firing module publish state change event: " + getName() + ", " + getServerState() + " ->-");
 		
-		if (notificationManager == null || notificationManager.hasListenerEntries())
+		if (notificationManager == null || notificationManager.hasNoListeners())
 			return;
 		
 		notificationManager.broadcastChange(
@@ -702,7 +702,7 @@ public class Server extends Base implements IServer {
 	protected void fireModuleRestartChangeEvent(IModule[] module) {
 		Trace.trace(Trace.LISTENERS, "->- Firing module restart change event: " + getName() + ", " + getServerState() + " ->-");
 		
-		if (notificationManager == null || notificationManager.hasListenerEntries())
+		if (notificationManager == null || notificationManager.hasNoListeners())
 			return;
 		
 		notificationManager.broadcastChange(
@@ -946,7 +946,7 @@ public class Server extends Base implements IServer {
 	protected void firePublishStateChange() {
 		Trace.trace(Trace.FINEST, "->- Firing publish state change event ->-");
 		
-		if (notificationManager == null || notificationManager.hasListenerEntries())
+		if (notificationManager == null || notificationManager.hasNoListeners())
 			return;
 		
 		notificationManager.broadcastChange(
@@ -960,7 +960,7 @@ public class Server extends Base implements IServer {
 	protected void firePublishStateChange(IModule[] module) {
 		Trace.trace(Trace.FINEST, "->- Firing publish state change event: " + module + " ->-");
 	
-		if (notificationManager == null || notificationManager.hasListenerEntries())
+		if (notificationManager == null || notificationManager.hasNoListeners())
 			return;
 	
 		notificationManager.broadcastChange(
@@ -2534,7 +2534,7 @@ public class Server extends Base implements IServer {
 		};
 		addServerListener(listener);
 		
-		final int serverTimeout = ((ServerType) getServerType()).getStartTimeout();
+		final int serverTimeout = getStartTimeout() * 1000;
 		class Timer {
 			boolean timeout;
 			boolean alreadyDone;
@@ -2677,7 +2677,7 @@ public class Server extends Base implements IServer {
 		}
 		final Timer timer = new Timer();
 		
-		final int serverTimeout = ((ServerType) getServerType()).getStopTimeout();
+		final int serverTimeout = getStopTimeout() * 1000;
 		if (serverTimeout > 0) {
 			Thread thread = new Thread("Server Stop Timeout") {
 				public void run() {

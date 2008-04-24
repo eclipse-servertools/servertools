@@ -118,12 +118,11 @@ public class ServerNotificationManager {
 	}
 
 	/**
-	 * Returns true if the listener list is not empty; otherwise, returns false.
-	 * TODO: this actually returns the negative
+	 * Returns true if the listener list is empty, or false otherwise.
 	 * 
-	 * @return true if the listener list is not empty; otherwise, returns false
+	 * @return true if the listener list is empty, or false otherwise
 	 */
-	protected boolean hasListenerEntries() {
+	protected boolean hasNoListeners() {
 		return listenerList.isEmpty();
 	}
 
@@ -137,18 +136,17 @@ public class ServerNotificationManager {
 		if (curListener == null)
 			return;
 		
-		ListenerEntry matchedListenerEntry = null;
-		Iterator listenerIter = listenerList.iterator();
-		while (matchedListenerEntry == null && listenerIter.hasNext()) {
-			ListenerEntry curEntry = (ListenerEntry)listenerIter.next();
-			if (curListener.equals(curEntry.getListener())) {
-				matchedListenerEntry = curEntry;
+		synchronized (listenerList) {
+			ListenerEntry matchedListenerEntry = null;
+			Iterator listenerIter = listenerList.iterator();
+			while (matchedListenerEntry == null && listenerIter.hasNext()) {
+				ListenerEntry curEntry = (ListenerEntry)listenerIter.next();
+				if (curListener.equals(curEntry.getListener())) {
+					matchedListenerEntry = curEntry;
+				}
 			}
-		}
-		if (matchedListenerEntry != null) {
-			synchronized (listenerList) {
+			if (matchedListenerEntry != null)
 				listenerList.remove(matchedListenerEntry);
-			}
 		}
 	}
 }
