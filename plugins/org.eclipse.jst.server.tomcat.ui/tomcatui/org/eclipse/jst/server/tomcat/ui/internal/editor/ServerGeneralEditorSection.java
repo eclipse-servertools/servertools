@@ -41,7 +41,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.internal.PublishServerJob;
 import org.eclipse.wst.server.ui.editor.ServerEditorSection;
 /**
  * Tomcat server general editor page.
@@ -287,8 +286,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 				};
 			}
 			// Force a clean publish
-			PublishServerJob publishJob = new PublishServerJob(tomcatServer.getServer(), IServer.PUBLISH_CLEAN, false);
-			publishJob.schedule();
+			tomcatServer.getServer().publish(IServer.PUBLISH_CLEAN, null, null, null);
 			noPublishChanged = false;
 		}
 		if (separateContextFilesChanged) {
