@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.wst.server.core.*;
@@ -197,6 +198,12 @@ public class ServerEventTestCase extends TestCase {
 			}
 			public void publish(int kind, List<IModule[]> modules, IAdaptable info, IOperationListener listener) {
 				// do nothing
+			}
+			public boolean contains(ISchedulingRule rule) {
+				return false;
+			}
+			public boolean isConflicting(ISchedulingRule rule) {
+				return false;
 			}
 		};
 	}
