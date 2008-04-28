@@ -100,7 +100,9 @@ public class ServerPublishInfo {
 
 	public boolean hasModulePublishInfo(IModule[] module) {
 		String key = getKey(module);
-		return modulePublishInfo.containsKey(key);
+		synchronized (modulePublishInfo) {
+			return modulePublishInfo.containsKey(key);
+		}
 	}
 
 	/*public void removeModulePublishInfo(IModule[] module) {
@@ -132,36 +134,38 @@ public class ServerPublishInfo {
 		int size = moduleList.size();
 		List<String> removed = new ArrayList<String>();
 		
-		Iterator iterator = modulePublishInfo.keySet().iterator();
-		while (iterator.hasNext()) {
-			String key = (String) iterator.next();
-			
-			boolean found = false;
-			for (int i = 0; i < size; i++) {
-				IModule[] module = (IModule[]) moduleList.get(i);
-				String key2 = getKey(module);
-				if (key != null && key.equals(key2))
-					found = true;
-			}
-			
-			if (server != null) {
-				try {
-					Integer in = server.modulePublishState.get(key);
-					if (in != null && in.intValue() != IServer.PUBLISH_STATE_NONE)
+		synchronized (modulePublishInfo) {
+			Iterator iterator = modulePublishInfo.keySet().iterator();
+			while (iterator.hasNext()) {
+				String key = (String) iterator.next();
+				
+				boolean found = false;
+				for (int i = 0; i < size; i++) {
+					IModule[] module = (IModule[]) moduleList.get(i);
+					String key2 = getKey(module);
+					if (key != null && key.equals(key2))
 						found = true;
-				} catch (Exception e) {
-					// ignore
 				}
+				
+				if (server != null) {
+					try {
+						Integer in = server.modulePublishState.get(key);
+						if (in != null && in.intValue() != IServer.PUBLISH_STATE_NONE)
+							found = true;
+					} catch (Exception e) {
+						// ignore
+					}
+				}
+				
+				if (!found)
+					removed.add(key);
 			}
 			
-			if (!found)
-				removed.add(key);
-		}
-		
-		iterator = removed.iterator();
-		while (iterator.hasNext()) {
-			String key = (String) iterator.next();
-			modulePublishInfo.remove(key);
+			iterator = removed.iterator();
+			while (iterator.hasNext()) {
+				String key = (String) iterator.next();
+				modulePublishInfo.remove(key);
+			}
 		}
 	}
 
@@ -172,63 +176,67 @@ public class ServerPublishInfo {
 		String key = getKey(module);
 		
 		// check if it now exists
-		if (modulePublishInfo.containsKey(key))
-			return modulePublishInfo.get(key);
-		
-		// have to create a new one
-		IModule mod = module[module.length - 1];
-		ModulePublishInfo mpi = new ModulePublishInfo(getKey(module), mod.getName(), mod.getModuleType());
-		modulePublishInfo.put(key, mpi);
-		return mpi;
+		synchronized (modulePublishInfo) {
+			if (modulePublishInfo.containsKey(key))
+				return modulePublishInfo.get(key);
+			
+			// have to create a new one
+			IModule mod = module[module.length - 1];
+			ModulePublishInfo mpi = new ModulePublishInfo(getKey(module), mod.getName(), mod.getModuleType());
+			modulePublishInfo.put(key, mpi);
+			return mpi;
+		}
 	}
 
 	public void addRemovedModules(List<IModule[]> moduleList) {
 		int size = moduleList.size();
 		List<ModulePublishInfo> removed = new ArrayList<ModulePublishInfo>();
-		Iterator iterator = modulePublishInfo.keySet().iterator();
-		while (iterator.hasNext()) {
-			String key = (String) iterator.next();
-		
-			boolean found = false;
-			for (int i = 0; i < size; i++) {
-				IModule[] module = moduleList.get(i);
-				String key2 = getKey(module);
-				if (key != null && key.equals(key2))
-					found = true;
-			}
-			if (!found) {
-				ModulePublishInfo mpi = modulePublishInfo.get(key);
-				removed.add(mpi);
-			}
-		}
-		
-		iterator = removed.iterator();
-		while (iterator.hasNext()) {
-			ModulePublishInfo mpi = (ModulePublishInfo) iterator.next();
-			IModule[] module2 = getModule(mpi.getModuleId());
-			if (module2 == null || module2.length == 0) {
-				String moduleId = mpi.getModuleId();
-				if (moduleId != null) {
-					String[] ids = getModuleIds(moduleId);
-					int depth = ids.length;
-					
-					module2 = new IModule[depth];
-					String s = "";
-					for (int i = 0; i < depth; i++) {
-						s += ids[i];
-						if (i == depth - 1)
-							module2[i] = mpi.getDeletedModule();
-						else {
-							ModulePublishInfo mpi2 = modulePublishInfo.get(s);
-							if (mpi2 != null)
-								module2[i] = mpi2.getDeletedModule();
-						}
-						s += "#";
-					}
+		synchronized (modulePublishInfo) {
+			Iterator iterator = modulePublishInfo.keySet().iterator();
+			while (iterator.hasNext()) {
+				String key = (String) iterator.next();
+			
+				boolean found = false;
+				for (int i = 0; i < size; i++) {
+					IModule[] module = moduleList.get(i);
+					String key2 = getKey(module);
+					if (key != null && key.equals(key2))
+						found = true;
+				}
+				if (!found) {
+					ModulePublishInfo mpi = modulePublishInfo.get(key);
+					removed.add(mpi);
 				}
 			}
-			if (module2 != null && module2.length > 0)
-				moduleList.add(module2);
+			
+			iterator = removed.iterator();
+			while (iterator.hasNext()) {
+				ModulePublishInfo mpi = (ModulePublishInfo) iterator.next();
+				IModule[] module2 = getModule(mpi.getModuleId());
+				if (module2 == null || module2.length == 0) {
+					String moduleId = mpi.getModuleId();
+					if (moduleId != null) {
+						String[] ids = getModuleIds(moduleId);
+						int depth = ids.length;
+						
+						module2 = new IModule[depth];
+						String s = "";
+						for (int i = 0; i < depth; i++) {
+							s += ids[i];
+							if (i == depth - 1)
+								module2[i] = mpi.getDeletedModule();
+							else {
+								ModulePublishInfo mpi2 = modulePublishInfo.get(s);
+								if (mpi2 != null)
+									module2[i] = mpi2.getDeletedModule();
+							}
+							s += "#";
+						}
+					}
+				}
+				if (module2 != null && module2.length > 0)
+					moduleList.add(module2);
+			}
 		}
 	}
 
@@ -316,12 +324,14 @@ public class ServerPublishInfo {
 			// version
 			out.writeByte(1);
 			
-			out.writeInt(modulePublishInfo.keySet().size());
-			Iterator iterator = modulePublishInfo.keySet().iterator();
-			while (iterator.hasNext()) {
-				String controlRef = (String) iterator.next();
-				ModulePublishInfo mpi = modulePublishInfo.get(controlRef);
-				mpi.save(out);
+			synchronized (modulePublishInfo) {
+				out.writeInt(modulePublishInfo.keySet().size());
+				Iterator iterator = modulePublishInfo.keySet().iterator();
+				while (iterator.hasNext()) {
+					String controlRef = (String) iterator.next();
+					ModulePublishInfo mpi = modulePublishInfo.get(controlRef);
+					mpi.save(out);
+				}
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not save publish information", e);
@@ -502,17 +512,21 @@ public class ServerPublishInfo {
 	 *    <code>false</code> otherwise
 	 */
 	protected boolean hasStructureChanged(List modules) {
-		return modules.size() != modulePublishInfo.keySet().size();
+		synchronized (modulePublishInfo) {
+			return modules.size() != modulePublishInfo.keySet().size();
+		}
 	}
 
 	/**
 	 * Fill the module cache.
 	 */
 	public void startCaching() {
-		Iterator iterator = modulePublishInfo.values().iterator();
-		while (iterator.hasNext()) {
-			ModulePublishInfo mpi = (ModulePublishInfo) iterator.next();
-			mpi.startCaching();
+		synchronized (modulePublishInfo) {
+			Iterator iterator = modulePublishInfo.values().iterator();
+			while (iterator.hasNext()) {
+				ModulePublishInfo mpi = (ModulePublishInfo) iterator.next();
+				mpi.startCaching();
+			}
 		}
 	}
 
@@ -520,10 +534,12 @@ public class ServerPublishInfo {
 	 * Clears all caches of current module resources and deltas.
 	 */
 	public void clearCache() {
-		Iterator iterator = modulePublishInfo.values().iterator();
-		while (iterator.hasNext()) {
-			ModulePublishInfo mpi = (ModulePublishInfo) iterator.next();
-			mpi.clearCache();
+		synchronized (modulePublishInfo) {
+			Iterator iterator = modulePublishInfo.values().iterator();
+			while (iterator.hasNext()) {
+				ModulePublishInfo mpi = (ModulePublishInfo) iterator.next();
+				mpi.clearCache();
+			}
 		}
 	}
 }
