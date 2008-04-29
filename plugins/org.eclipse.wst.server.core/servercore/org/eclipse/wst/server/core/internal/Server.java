@@ -37,11 +37,6 @@ public class Server extends Base implements IServer {
 	 */
 	public static final String ATTR_SERVER_ID = "server-id";
 
-	/**
-	 * The most recent launch used to start the server.
-	 */
-	protected static ILaunch launch;
-
 	protected static final List<String> EMPTY_LIST = new ArrayList<String>(0);
 
 	/**
@@ -104,6 +99,11 @@ public class Server extends Base implements IServer {
 
 	protected transient ServerPublishInfo publishInfo;
 	protected transient AutoPublishThread autoPublishThread;
+
+	/**
+	 * The most recent launch used to start the server.
+	 */
+	protected transient ILaunch launch;
 
 /*	private static final String[] stateStrings = new String[] {
 		"unknown", "starting", "started", "started_debug",
