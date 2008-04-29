@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,9 +23,18 @@ import org.eclipse.wst.server.ui.internal.Messages;
  * Action to show the property page for a server.
  */
 public class PropertiesAction extends AbstractServerAction {
+	protected String propertyPageId;
+
 	public PropertiesAction(Shell shell, ISelectionProvider selectionProvider) {
+		this(shell, null, selectionProvider);
+	}
+
+	public PropertiesAction(Shell shell, String propertyPageId, ISelectionProvider selectionProvider) {
 		super(shell, selectionProvider, Messages.actionProperties);
-		setActionDefinitionId(IWorkbenchActionDefinitionIds.PROPERTIES);
+		this.propertyPageId = propertyPageId;
+		if (propertyPageId == null)
+			setActionDefinitionId(IWorkbenchActionDefinitionIds.PROPERTIES);
+		
 		try {
 			selectionChanged((IStructuredSelection) selectionProvider.getSelection());
 		} catch (Exception e) {
@@ -34,7 +43,9 @@ public class PropertiesAction extends AbstractServerAction {
 	}
 
 	public void perform(IServer server) {
-		Dialog dialog = PreferencesUtil.createPropertyDialogOn(shell, server, "org.eclipse.wst.server.ui.properties", null, null);
+		if (propertyPageId == null)
+			propertyPageId = "org.eclipse.wst.server.ui.properties";
+		Dialog dialog = PreferencesUtil.createPropertyDialogOn(shell, server, propertyPageId, null, null);
 		dialog.open();
 	}
 }

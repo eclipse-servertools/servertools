@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -68,7 +68,7 @@ public class ServersView extends ViewPart {
 	// actions on a server
 	protected Action[] actions;
 	protected Action actionModifyModules;
-	protected Action openAction, showInConsoleAction, showInDebugAction, propertiesAction;
+	protected Action openAction, showInConsoleAction, showInDebugAction, propertiesAction, monitorPropertiesAction;
 	protected Action copyAction, pasteAction, deleteAction, renameAction;
 
 	/**
@@ -303,6 +303,7 @@ public class ServersView extends ViewPart {
 		// create the properties action
 		propertiesAction = new PropertiesAction(shell, provider);
 		actionBars.setGlobalActionHandler(ActionFactory.PROPERTIES.getId(), propertiesAction);
+		monitorPropertiesAction = new PropertiesAction(shell, "org.eclipse.wst.server.ui.properties.monitor", provider);
 		
 		// add toolbar buttons
 		IContributionManager cm = getViewSite().getActionBars().getToolBarManager();
@@ -407,6 +408,9 @@ public class ServersView extends ViewPart {
 						
 						if (menuManager.isEmpty())
 							menuManager.add(noneAction);
+						
+						menuManager.add(new Separator());
+						menuManager.add(monitorPropertiesAction);
 					}
 				});
 				
