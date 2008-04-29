@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
@@ -78,6 +79,13 @@ public class ShowInConsoleAction extends AbstractServerAction {
 			IWorkbenchPage page = window.getActivePage();
 			if (page != null) {
 				IWorkbenchPart part = page.findView(IConsoleConstants.ID_CONSOLE_VIEW);
+				if (part == null) {
+					try {
+						part = page.showView(IConsoleConstants.ID_CONSOLE_VIEW);
+					} catch (PartInitException e) {
+						Trace.trace(Trace.SEVERE, "Could not open console view");
+					}
+				}
 				if (part != null) {
 					IConsoleView view = (IConsoleView) part.getAdapter(IConsoleView.class);
 					if (view != null) {
