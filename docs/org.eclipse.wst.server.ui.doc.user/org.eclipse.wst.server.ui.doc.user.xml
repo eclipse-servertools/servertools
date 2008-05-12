@@ -21,7 +21,7 @@
 <topic label="Creating a server" href="topics/twcrtins.html"/>
 <topic label="Deleting a server" href="topics/twdelins.html"/>
 <topic label="Editing a server" href="topics/twedtins.html"/>
-<topic label="Defining the installed server runtime environments preferences" href="topics/twinstprf.html"/>
+<topic label="Defining the server runtime environments preferences" href="topics/twinstprf.html"/>
 <topic label="Managing servers" href="topics/twmanage.html"/>
 <topic label="Setting a default server" href="topics/twprefin.html"/>
 <topic label="Publishing your application" href="topics/twpub.html"/>

@@ -8,21 +8,21 @@
 <meta content="index,follow" name="Robots" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta content="task" name="DC.Type" />
-<meta name="DC.Title" content="Defining the installed server runtime environments preferences" />
+<meta name="DC.Title" content="Defining the server runtime environments preferences" />
 <meta name="abstract" content="Using the Preferences page, you can direct the workbench to use a specific runtime environment of an application server for compiling, testing, or running your application." />
 <meta name="description" content="Using the Preferences page, you can direct the workbench to use a specific runtime environment of an application server for compiling, testing, or running your application." />
-<meta content="preferences, installed server runtime environments, defining, servers, runtime environment, workbench, defining server runtime environment, wizards, New Server Runtime, applications, New Server Runtime wizard, installed server runtime environments, setting preferences" name="DC.subject" />
-<meta content="preferences, installed server runtime environments, defining, servers, runtime environment, workbench, defining server runtime environment, wizards, New Server Runtime, applications, New Server Runtime wizard, installed server runtime environments, setting preferences" name="keywords" />
+<meta content="preferences, server runtime environments, defining, servers, runtime environment, workbench, defining server runtime environment, wizards, New Server Runtime, applications, defining server runtime environment, New Server Runtime wizard, setting preferences" name="DC.subject" />
+<meta content="preferences, server runtime environments, defining, servers, runtime environment, workbench, defining server runtime environment, wizards, New Server Runtime, applications, defining server runtime environment, New Server Runtime wizard, setting preferences" name="keywords" />
 <meta content="XHTML" name="DC.Format" />
 <meta content="twinstprf_wst" name="DC.Identifier" />
 <meta content="en-us" name="DC.Language" />
 <link href="../../org.eclipse.wst.doc.user/common.css" type="text/css" rel="stylesheet" />
-<title>Defining the installed server runtime environments preferences</title>
+<title>Defining the server runtime environments preferences</title>
 </head>
 <body id="twinstprf_wst"><a name="twinstprf_wst"><!-- --></a>
 
 
-<h1 class="topictitle1">Defining the installed server runtime environments preferences</h1>
+<h1 class="topictitle1">Defining the server runtime environments preferences</h1>
 
 
 
@@ -30,9 +30,9 @@
 to use a specific runtime environment of an application server for compiling,
 testing, or running your application.</p>
 
-<div class="section" id="twinstprf_wst__context"><a name="twinstprf_wst__context"><!-- --></a><div class="p">An <em>installed server runtime environment</em> is
-composed of the following definitions:  <ul>
-<li>a name to identify the installed server runtime environment</li>
+<div class="section" id="twinstprf_wst__context"><a name="twinstprf_wst__context"><!-- --></a><div class="p">A <em>server runtime environment</em> is composed of
+the following definitions:  <ul>
+<li>a name to identify the server runtime environment</li>
 
 <li>the type of server that specifies the vendor and version-level of the
 server</li>
@@ -42,30 +42,29 @@ server</li>
 <li>in some cases, also includes a reference to a Java runtime environment</li>
 
 </ul>
-If an installed server runtime environment is referencing a stub directory
-of the server, you can only compile your application against the stub server.
- However, if referencing a full installation of the server, you can compile,
-test, and run your application against the installation of the server.</div>
-To
-define an installed server runtime environment, complete the following steps:</div>
+If a server runtime environment is referencing a stub directory of the
+server, you can only compile your application against the stub server.  However,
+if referencing a full installation of the server, you can compile, test, and
+run your application against the installation of the server.</div>
+To define
+a server runtime environment, complete the following steps:</div>
 
 <a name="twinstprf_wst__steps"><!-- --></a><ol id="twinstprf_wst__steps">
 <li class="stepexpand"><span>From the Window menu, select  <span class="uicontrol">Preferences</span>.</span>
 </li>
 
 <li class="stepexpand"><span>In the Preferences window, expand the <span class="uicontrol">Server</span> folder
-and then select  <span class="uicontrol">Installed Runtimes</span>.</span> The
-Installed Server Runtime Environments section of the Preferences dialog is
-displayed.</li>
+and then select  <span class="uicontrol">Runtime Environments</span>.</span> The
+Server Runtime Environments section of the Preferences dialog is displayed.
+</li>
 
 <li class="stepexpand"><span><strong>Optional: </strong>Click the <span class="uicontrol">Search</span> button.
-This searches your local directory for installed server runtime environments.
-Searching on a remote host is not supported.</span>
+This searches your local directory for server runtime environments. Searching
+on a remote host is not supported.</span>
 <ol type="a">
-<li><span>The Search for Runtimes dialog box opens. In the <span class="uicontrol">Folder</span> field,
+<li><span>The Search for Runtime Environments dialog box opens. In the <span class="uicontrol">Folder</span> field,
 browse or type the directory where you would like the workbench to start searching
-for installed server runtime environments. Click <span class="uicontrol">OK</span>.</span>
-</li>
+for server runtime environments. Click <span class="uicontrol">OK</span>.</span></li>
 
 <li><span>If a list of installations is displayed, select the desired
 target server and click <span class="uicontrol">OK</span> in the displayed dialog;
@@ -78,15 +77,14 @@ task.</span></li>
 </li>
 
 <li class="stepexpand"><span>Click <span class="uicontrol">Add</span>.</span> The New Server Runtime
-wizard opens.
+Environments wizard opens.
 <ol type="a">
-<li class="substepexpand"><span>Under the <span class="uicontrol">Select
-the runtime type</span> list, select a server and version level as the
-target installed server runtime environment.</span> <div class="tip"><span class="tiptitle">Tip:</span> In
-the text field under the <span class="uicontrol">Select the runtime type</span> label,
-you can replace the text <kbd class="userinput">type filter text</kbd> with keywords
-to filter the list of available application servers. The following are examples
-of filter keywords:<dl>
+<li class="substepexpand"><span>Under the <span class="uicontrol">Select the type of runtime environment</span> list,
+select a server and version level as the target server runtime environment.</span>
+ <div class="tip"><span class="tiptitle">Tip:</span> In the text field under the <span class="uicontrol">Select the type
+of runtime environment</span> label, you can replace the text <kbd class="userinput">type
+filter text</kbd> with keywords to filter the list of available application
+servers. The following are examples of filter keywords:<dl>
 <dt class="dlterm"><kbd class="userinput">Apache</kbd></dt>
 
 <dd>Filters the list of available servers where the vendor is Apache</dd>
@@ -122,14 +120,14 @@ level or any servers that may have a version-level of 1.2.</dd>
 </div>
 </li>
 
-<li class="substepexpand"><span>When you add an installed server runtime environment,
-by default a server is created and added as an entry in the Servers view.
-If you want to only add the installed server runtime environment and not create
-the server in the Servers view, clear the <span class="uicontrol">Create a new local server</span> check
-box.</span></li>
+<li class="substepexpand"><span>When you add a server runtime environment, by default a server
+is created and added as an entry in the Servers view. If you want to only
+add the server runtime environment and not create the server in the Servers
+view, clear the <span class="uicontrol">Create a new local server</span> check box.</span>
+</li>
 
-<li class="substepexpand"><span>Click <span class="uicontrol">Next</span>. The Runtime panel for the
-server is displayed.</span></li>
+<li class="substepexpand"><span>Click <span class="uicontrol">Next</span>. A panel for the server is
+displayed.</span></li>
 
 <li class="substepexpand"><span>For <span class="uicontrol">Installation directory</span> or <span class="uicontrol">Location</span> field,
 type or browse to the location of the target server.</span> <div class="tip"><span class="tiptitle">Tip:</span> If
@@ -142,8 +140,8 @@ such a <tt>\bin\lib</tt> directory for a Java™ development kit installation.
 </li>
 
 <li class="substepexpand"><span>Click <span class="uicontrol">Finish</span>.</span> The target server
-name and type is added to the table in the Installed Server Runtime Environment
-section.</li>
+name and type is added to the table in the Server Runtime Environment section.
+</li>
 
 <li class="substepexpand"><span>In the Preferences dialog, click <span class="uicontrol">OK</span>.</span>
 </li>
@@ -155,21 +153,19 @@ section.</li>
 </ol>
 
 <div class="section" id="twinstprf_wst__postreq"><a name="twinstprf_wst__postreq"><!-- --></a><p id="twinstprf_wst__postreq_p1"><a name="twinstprf_wst__postreq_p1"><!-- --></a>To change the list of available target
-servers, click <strong>Window &gt; Preferences &gt; Server &gt; Installed Runtimes</strong> to
-go to the Installed Server Runtime Environments section of the Preferences
-dialog. Use the <strong>Add</strong>, <strong>Edit</strong>, <strong>Remove</strong> or <strong>Search</strong> options
-to change the list of target servers as needed.</p>
-<div class="p" id="twinstprf_wst__postreq_p2"><a name="twinstprf_wst__postreq_p2"><!-- --></a>To change
-the target server for a module:<ol>
+servers, click <strong>Window &gt; Preferences &gt; Server &gt; Runtime Environments</strong> to
+go to the Server Runtime Environments section of the Preferences dialog. Use
+the <strong>Add</strong>, <strong>Edit</strong>, <strong>Remove</strong> or <strong>Search</strong> options to change
+the list of target servers as needed.</p>
+<div class="p" id="twinstprf_wst__postreq_p2"><a name="twinstprf_wst__postreq_p2"><!-- --></a>To change the
+target server for a module:<ol>
 <li>Right-click on the module in the Project Explorer view and click <strong>Properties
 &gt; Project Facets</strong>. The Project Facets page opens.</li>
 
-<li>Select the <span class="uicontrol">Modify Project</span> button.
-The Modify Faceted Project dialog box opens.</li>
+<li>Select the <span class="uicontrol">Runtimes</span> tab.</li>
 
-<li>Select the <span class="uicontrol">Show Runtimes</span> button.</li>
-
-<li>Under the <strong>Runtimes</strong> table, select the target servers for the module.</li>
+<li>Under the <strong>Runtimes</strong> table, select the target servers
+for the module.</li>
 
 </ol>
  </div>

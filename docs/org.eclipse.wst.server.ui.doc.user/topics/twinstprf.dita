@@ -4,49 +4,47 @@
  "task.dtd">
 <?Pub Inc?>
 <task id="twinstprf_wst" xml:lang="en-us">
-<title id="title">Defining the installed server runtime environments preferences</title>
+<title id="title">Defining the server runtime environments preferences</title>
 <shortdesc id="shortdesc">Using the Preferences page, you can direct the workbench
 to use a specific runtime environment of an application server for compiling,
 testing, or running your application.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>preferences<indexterm>installed server runtime
-environments<indexterm>defining</indexterm></indexterm></indexterm><indexterm>servers<indexterm>runtime
-environment<indexterm>defining</indexterm></indexterm></indexterm><indexterm>runtime
-environment<indexterm>defining</indexterm></indexterm><indexterm>workbench<indexterm>defining
-server runtime environment</indexterm></indexterm><indexterm>wizards<indexterm>New
-Server Runtime</indexterm></indexterm><indexterm>applications<indexterm>defining
+<keywords id="index"><indexterm>preferences<indexterm>server runtime environments<indexterm>defining</indexterm></indexterm></indexterm>
+<indexterm>servers<indexterm>runtime environment<indexterm>defining</indexterm></indexterm></indexterm>
+<indexterm>runtime environment<indexterm>defining</indexterm></indexterm>
+<indexterm>workbench<indexterm>defining server runtime environment</indexterm></indexterm>
+<indexterm>wizards<indexterm>New Server Runtime</indexterm></indexterm><indexterm>applications<indexterm>defining
 server runtime environment</indexterm></indexterm><indexterm>New Server Runtime
-wizard</indexterm><indexterm>installed server runtime environments<indexterm>setting
+wizard</indexterm><indexterm>server runtime environments<indexterm>setting
 preferences</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
-<context id="context"><p>An <i>installed server runtime environment</i> is
-composed of the following definitions:  <ul>
-<li>a name to identify the installed server runtime environment</li>
+<context id="context"><p>A <i>server runtime environment</i> is composed of
+the following definitions:  <ul>
+<li>a name to identify the server runtime environment</li>
 <li>the type of server that specifies the vendor and version-level of the
 server</li>
 <li>the directory path to a local installation of the server</li>
 <li>in some cases, also includes a reference to a Java runtime environment</li>
-</ul>If an installed server runtime environment is referencing a stub directory
-of the server, you can only compile your application against the stub server.
- However, if referencing a full installation of the server, you can compile,
-test, and run your application against the installation of the server.</p>To
-define an installed server runtime environment, complete the following steps:</context>
+</ul>If a server runtime environment is referencing a stub directory of the
+server, you can only compile your application against the stub server.  However,
+if referencing a full installation of the server, you can compile, test, and
+run your application against the installation of the server.</p>To define
+a server runtime environment, complete the following steps:</context>
 <steps id="steps">
 <step><cmd>From the Window menu, select  <uicontrol>Preferences</uicontrol>.</cmd>
 </step>
 <step><cmd>In the Preferences window, expand the <uicontrol>Server</uicontrol> folder
-and then select  <uicontrol>Installed Runtimes</uicontrol>.</cmd><info>The
-Installed Server Runtime Environments section of the Preferences dialog is
-displayed.</info></step>
+and then select  <uicontrol>Runtime Environments</uicontrol>.</cmd><info>The
+Server Runtime Environments section of the Preferences dialog is displayed.</info>
+</step>
 <step><cmd importance="optional"><b>Optional: </b>Click the <uicontrol>Search</uicontrol> button.
-This searches your local directory for installed server runtime environments.
-Searching on a remote host is not supported.</cmd>
+This searches your local directory for server runtime environments. Searching
+on a remote host is not supported.</cmd>
 <substeps>
-<substep><cmd>The Search for Runtimes dialog box opens. In the <uicontrol>Folder</uicontrol> field,
+<substep><cmd>The Search for Runtime Environments dialog box opens. In the <uicontrol>Folder</uicontrol> field,
 browse or type the directory where you would like the workbench to start searching
-for installed server runtime environments. Click <uicontrol>OK</uicontrol>.</cmd>
-</substep>
+for server runtime environments. Click <uicontrol>OK</uicontrol>.</cmd></substep>
 <substep><cmd>If a list of installations is displayed, select the desired
 target server and click <uicontrol>OK</uicontrol> in the displayed dialog;
 then click <uicontrol>OK</uicontrol> in the Preferences dialog. If no installations
@@ -55,15 +53,14 @@ task.</cmd></substep>
 </substeps>
 </step>
 <step><cmd>Click <uicontrol>Add</uicontrol>.</cmd><info>The New Server Runtime
-wizard opens.</info>
+Environments wizard opens.</info>
 <substeps>
-<substep><cmd><draft-comment>Modified this step</draft-comment>Under the <uicontrol>Select
-the runtime type</uicontrol> list, select a server and version level as the
-target installed server runtime environment.</cmd><info><note type="tip">In
-the text field under the <uicontrol>Select the runtime type</uicontrol> label,
-you can replace the text <userinput>type filter text</userinput> with keywords
-to filter the list of available application servers. The following are examples
-of filter keywords:<dl><dlentry>
+<substep><cmd>Under the <uicontrol>Select the type of runtime environment</uicontrol> list,
+select a server and version level as the target server runtime environment.</cmd>
+<info><note type="tip">In the text field under the <uicontrol>Select the type
+of runtime environment</uicontrol> label, you can replace the text <userinput>type
+filter text</userinput> with keywords to filter the list of available application
+servers. The following are examples of filter keywords:<dl><dlentry>
 <dt><userinput>Apache</userinput></dt>
 <dd>Filters the list of available servers where the vendor is Apache</dd>
 </dlentry><dlentry>
@@ -84,13 +81,13 @@ JEE 5 specification level.</dd>
 <dd>Filters the list of available servers that supports J2EE 1.2 specification
 level or any servers that may have a version-level of 1.2.</dd>
 </dlentry></dl></note></info></substep>
-<substep><cmd>W<?Pub Caret1?>hen you add an installed server runtime environment,
-by default a server is created and added as an entry in the Servers view.
-If you want to only add the installed server runtime environment and not create
-the server in the Servers view, clear the <uicontrol>Create a new local server</uicontrol> check
-box.</cmd></substep>
-<substep><cmd>Click <uicontrol>Next</uicontrol>. The Runtime panel for the
-server is displayed.</cmd></substep>
+<substep><cmd>When you add a server runtime environment, by default a server
+is created and added as an entry in the Servers view. If you want to only
+add the server runtime environment and not create the server in the Servers
+view, clear the <uicontrol>Create a new local server</uicontrol> check box.</cmd>
+</substep>
+<substep><cmd>Click <uicontrol>Next</uicontrol>. A panel for the server is
+displayed.</cmd></substep>
 <substep><cmd>For <uicontrol>Installation directory</uicontrol> or <uicontrol>Location</uicontrol> field,
 type or browse to the location of the target server.</cmd><info><note type="tip">If
 you specify a false location for the target server, use the workbench to assemble
@@ -101,27 +98,25 @@ such a <tt>\bin\lib</tt> directory for a <tm tmclass="special" tmowner="Sun Micr
 tmtype="tm" trademark="Java">Java</tm> development kit installation.</info>
 </substep>
 <substep><cmd>Click <uicontrol>Finish</uicontrol>.</cmd><info>The target server
-name and type is added to the table in the Installed Server Runtime Environment
-section.</info></substep>
+name and type is added to the table in the Server Runtime Environment section.</info>
+</substep>
 <substep><cmd>In the Preferences dialog, click <uicontrol>OK</uicontrol>.</cmd>
 </substep>
 </substeps>
 </step>
 </steps>
 <postreq id="postreq"><p id="postreq_p1">To change the list of available target
-servers, click <b>Window > Preferences > Server > Installed Runtimes</b> to
-go to the Installed Server Runtime Environments section of the Preferences
-dialog. Use the <b>Add</b>, <b>Edit</b>, <b>Remove</b> or <b>Search</b> options
-to change the list of target servers as needed.</p><p id="postreq_p2">To change
-the target server for a module:<ol>
+servers, click <b>Window > Preferences > Server > Runtime Environments</b> to
+go to the Server Runtime Environments section of the Preferences dialog. Use
+the <b>Add</b>, <b>Edit</b>, <b>Remove</b> or <b>Search</b> options to change
+the list of target servers as needed.</p><p id="postreq_p2">To change the
+target server for a module:<ol>
 <li>Right-click on the module in the Project Explorer view and click <b>Properties
 > Project Facets</b>. The Project Facets page opens.</li>
-<li><draft-comment>Gui changed from "Add/Remove Project Facets" to "Modify
-Faceted Project "</draft-comment>Select the <uicontrol>Modify Project</uicontrol> button.
-The Modify Faceted Project dialog box opens.</li>
-<li>Select the <uicontrol>Show Runtimes</uicontrol> button.</li>
-<li>Under the <b>Runtimes</b> table, select the target servers for the module.</li>
+<li>Select the <uicontrol>Runtimes</uicontrol> tab.</li>
+<li>Under the <b>Runtimes</b> table, select th<?Pub Caret?>e target servers
+for the module.</li>
 </ol> </p></postreq>
 </taskbody>
 </task>
-<?Pub *0000007340?>
+<?Pub *0000006969?>

@@ -2,8 +2,7 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
  "map.dtd">
-<?Pub Sty _display FontColor="red"?>
-<map title="For building purposes">
+<map id="wstservertoolsTOC" title="For building purposes">
 <topicref href="topics/cwflow.dita" navtitle="Which test server will start">
 </topicref>
 <topicref href="topics/cwover.dita" navtitle="Application testing and publishing">
@@ -66,7 +65,6 @@
 </topicref>
 <topicref href="topics/tj2eepreview.dita" navtitle="Testing on a J2EE Preview server">
 </topicref>
-<topicref href="topics/raccessserver.dita" navtitle="Keyboard shortcuts for Server Tools"><?Pub Caret?>
+<topicref href="topics/raccessserver.dita" navtitle="Keyboard shortcuts for Server Tools">
 </topicref>
 </map>
-<?Pub *0000003560?>
