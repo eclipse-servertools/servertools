@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS type="org.eclipse.help.contexts"?>
 <!-- /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,15 +43,15 @@
 </description>
 </context>
 <context id="spge0000">
-<description>Use this page to define a list of server runtimes available for selection in the current workspace.
+<description>Use this page to define a list of server runtime environments available for selection in the current workspace.
 
-An installed server runtime environment is composed of the following definitions:
--a name to identify the installed server runtime environment
+A server runtime environment is composed of the following definitions:
+-a name to identify the server runtime environment
 -the type of server that specifies the vendor and version-level of the server
 -the directory path to a local installation of the server
 -In some cases, also includes a reference to a Java runtime environment
 
-If an installed server runtime environment is referencing a stub directory of the server, you can only compile your application against the stub server.  However, if referencing a full installation of the server, you can compile, test, and run your application against the installation of the server.
+If a server runtime environment is referencing a stub directory of the server, you can only compile your application against the stub server.  However, if referencing a full installation of the server, you can compile, test, and run your application against the installation of the server.
 </description>
 </context>
 
@@ -231,9 +231,9 @@ For example, if you specified the Configuration path to be <b>/Servers/Tomcat v4
 </context>
 
 <context id="seop0008">
-<description>Specifies the name of the installed server runtime environment as defined in the Preferences page (Window > Preferences > Server > Installed Runtimes).
-The installed server runtime environment defines the runtime environment of an application server for compiling your application.
-To change the installed server runtime environment, select the <b>Runtime</b> link.
+<description>Specifies the name of the server runtime environment as defined in the Preferences page (Window > Preferences > Server > Runtime Environments).
+The server runtime environments define the runtime environment of an application server for compiling your application.
+To change the server runtime environment, select the <b>Runtime Environment</b> link.
 </description>
 
 </context>
@@ -258,9 +258,9 @@ To change the installed server runtime environment, select the <b>Runtime</b> li
 </context>
 
 <context id="swnr0000">
-<description>Under the <b>Select the runtime type</b> list, select a server and version-level as the target installed server runtime environment. 
-<b>Tip:</b> In the text field under the <b>Select the runtime type</b> label, you can replace the text <b>type filter text</b> with keywords to filter the list of available application servers. The following are examples of filter keywords, see the help topic for details: Apache, WebSphere, ejb, web, 5.0, or 1.2.  
-When you add an installed server runtime environment, by default a server is created and added as an entry in the Servers view. If you want to only add the installed server runtime environment and not create the server in the Servers view, clear the <b>Create a new local server</b> check box. 
+<description>Under the <b>Select the type of runtime environment</b> list, select a server and version-level as the target server runtime environment. 
+<b>Tip:</b> In the text field under the <b>Select the type of runtime environment</b> label, you can replace the text <b>type filter text</b> with keywords to filter the list of available application servers. The following are examples of filter keywords, see the help topic for details: Apache, WebSphere, ejb, web, 5.0, or 1.2.  
+When you add a server runtime environment, by default a server is created and added as an entry in the Servers view. If you want to only add the server runtime environment and not create the server in the Servers view, clear the <b>Create a new local server</b> check box. 
 To continue, click <b>Next</b>.
 </description>
 </context>
