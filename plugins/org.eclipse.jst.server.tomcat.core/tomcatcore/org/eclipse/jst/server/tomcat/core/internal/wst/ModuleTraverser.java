@@ -34,6 +34,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
 import org.eclipse.jst.server.tomcat.core.internal.Trace;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.UnresolveableURIException;
 import org.eclipse.wst.common.componentcore.internal.ComponentResource;
@@ -168,15 +169,24 @@ public class ModuleTraverser {
 
                 if (PlatformURLModuleConnection.CLASSPATH.equals(
                 		refHandle.segment(ModuleURIUtil.ModuleURI.SUB_PROTOCOL_INDX))) {
-                    //IJavaProject jproj = JavaCore.create(proj);
                     IPath refPath = getResolvedPathForArchiveComponent(refHandle);
                     // If an archive component, add to list
                     if (refPath != null) {
                     	if (!refPath.isAbsolute()) {
                     		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(refPath);
-                    		refPath = file.getLocation();
+                    		IPath refPath2 = file.getLocation();
+                    		if (refPath2 != null) {
+                    			visitor.visitArchiveComponent(rtFolder, refPath2);
+                    		}
+                    		else {
+                    			Trace.trace(Trace.WARNING, NLS.bind(
+                    					"Could not get the location of a referenced component.  It may not exist.  Project={0}, Parent Component={1}, Referenced Component Path={2}",
+                    					new Object[] { proj.getName(), comp.getName(), refPath}));
+                    		}
                     	}
-            			visitor.visitArchiveComponent(rtFolder, refPath);
+                    	else {
+                    		visitor.visitArchiveComponent(rtFolder, refPath);
+                    	}
                     }
                     else {
                     	// TODO Determine if any use case would arrive here.
@@ -355,9 +365,13 @@ public class ModuleTraverser {
 			}
 			if (found) {
 				IPath path = JavaCore.getClasspathVariable(classpathVar);
-				URI finaluri = URI.createURI(path.toOSString() + IPath.SEPARATOR + remainingPath);
-				return Path.fromOSString(finaluri.toString());
+				if (path != null) {
+					URI finaluri = URI.createURI(path.toOSString() + IPath.SEPARATOR + remainingPath);
+					return Path.fromOSString(finaluri.toString());
+				}
 			}
+			Trace.trace(Trace.WARNING,
+					NLS.bind("Tomcat publishing could not resolve dependency URI \"{0}\".  A value for classpath variable {1} was not found.", uri, classpathVar));
 		}
 		return null;
 	}
