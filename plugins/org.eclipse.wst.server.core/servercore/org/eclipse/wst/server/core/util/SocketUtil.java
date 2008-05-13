@@ -78,23 +78,21 @@ public class SocketUtil {
 			try {
 				InetAddress[] addrs = InetAddress.getAllByName(host);
 				int length = addrs.length;
-				synchronized (lock) {
-					for (int j = 0; j < length; j++) {
-						InetAddress addr = addrs[0];
-						String hostname = addr.getHostName();
-						String hostname2 = addr.getCanonicalHostName();
-						synchronized (lock) {
-							if (addr.isLoopbackAddress()) {
-								if (hostname != null && !addressList.contains(hostname))
-									addressList.add(hostname);
-								if (hostname2 != null && !addressList.contains(hostname2))
-									addressList.add(hostname2);
-							} else {
-								if (hostname != null && !nonAddressList.contains(hostname))
-									nonAddressList.add(hostname);
-								if (hostname2 != null && !nonAddressList.contains(hostname2))
-									nonAddressList.add(hostname2);
-							}
+				for (int j = 0; j < length; j++) {
+					InetAddress addr = addrs[0];
+					String hostname = addr.getHostName();
+					String hostname2 = addr.getCanonicalHostName();
+					synchronized (lock) {
+						if (addr.isLoopbackAddress()) {
+							if (hostname != null && !addressList.contains(hostname))
+								addressList.add(hostname);
+							if (hostname2 != null && !addressList.contains(hostname2))
+								addressList.add(hostname2);
+						} else {
+							if (hostname != null && !nonAddressList.contains(hostname))
+								nonAddressList.add(hostname);
+							if (hostname2 != null && !nonAddressList.contains(hostname2))
+								nonAddressList.add(hostname2);
 						}
 					}
 				}
