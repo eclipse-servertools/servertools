@@ -377,20 +377,22 @@ public abstract class ServerBehaviourDelegate {
 	}
 
 	/**
-	 * Restart this server. The server should use the server
-	 * listener to notify progress. It must use the same debug
-	 * flags as was originally passed into the start() method.
+	 * Restart this server using a more optimized behavior than a full stop
+	 * and start. The server should use the server listener to notify progress.
 	 * 
-	 * This method is used if there is a quick/better way to restart
-	 * the server. If it throws a CoreException, the normal stop/start
-	 * actions will be used.
+	 * This method is used to find out if there is an optimized path to restart
+	 * the server that's better than a full stop and start (launch). If this
+	 * method throws a CoreException with a status code of -1, it is a sign
+	 * that either there is no optimized path, or that the path has failed,
+	 * and in either case the framework will use the regular stop/start
+	 * behavior.
 	 * 
 	 * @param launchMode the mode to restart in, one of the mode constants
 	 *    defined by {@link ILaunchManager}
 	 * @throws CoreException if there was a problem restarting
 	 */
 	public void restart(String launchMode) throws CoreException {
-		throw new CoreException(new Status(IStatus.WARNING, ServerPlugin.PLUGIN_ID, 0, "Restart not supported", null));
+		throw new CoreException(new Status(IStatus.WARNING, ServerPlugin.PLUGIN_ID, -1, "Restart not supported", null));
 	}
 
 	/**
