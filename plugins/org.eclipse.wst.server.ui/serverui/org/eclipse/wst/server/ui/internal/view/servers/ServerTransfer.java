@@ -12,14 +12,15 @@ package org.eclipse.wst.server.ui.internal.view.servers;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 
 import org.eclipse.swt.dnd.ByteArrayTransfer;
+import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.IMemento;
+import org.eclipse.wst.server.core.internal.Server;
+import org.eclipse.wst.server.core.internal.XMLMemento;
 /*
  * The element serialization format is:
  *  (int) number of servers
@@ -72,17 +73,18 @@ public class ServerTransfer extends ByteArrayTransfer {
 		IServer[] servers = (IServer[]) data;
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			DataOutputStream dataOut = new DataOutputStream(out);
-
-			// write the number of elements
-			dataOut.writeInt(servers.length);
-
+			
+			XMLMemento memento = XMLMemento.createWriteRoot("servers");
+			
 			// write each element
-			for (int i= 0; i < servers.length; i++)
-				dataOut.writeUTF(servers[i].getId());
-
+			for (int i = 0; i < servers.length; i++) {
+				IMemento child = memento.createChild("server");
+				((Server)servers[i]).serialize(child);
+			}
+			
+			memento.save(out);
+			
 			// cleanup
-			dataOut.close();
 			out.close();
 			byte[] bytes = out.toByteArray();
 			super.javaToNative(bytes, transferData);
@@ -98,17 +100,22 @@ public class ServerTransfer extends ByteArrayTransfer {
 		byte[] bytes = (byte[]) super.nativeToJava(transferData);
 		if (bytes == null)
 			return null;
-		DataInputStream in = new DataInputStream(new ByteArrayInputStream(bytes));
+		ByteArrayInputStream in = new ByteArrayInputStream(bytes);
 		try {
-			int count = in.readInt();
+			IMemento memento = XMLMemento.loadMemento(in);
+			IMemento[] children = memento.getChildren("server");
+			
+			int count = children.length;
 			IServer[] results = new IServer[count];
 			for (int i = 0; i < count; i++) {
-				String id = in.readUTF();
-				results[i] = ServerCore.findServer(id);
+				Server server = new Server(null);
+				server.deserialize(children[i]);
+				results[i] = server;
 			}
 			return results;
-		} catch (IOException e) {
-			return null;
+		} catch (Exception e) {
+			DND.error(DND.ERROR_INVALID_DATA);
 		}
+		return null;
 	}
 }

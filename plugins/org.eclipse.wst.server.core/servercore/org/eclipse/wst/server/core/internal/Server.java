@@ -1925,6 +1925,14 @@ public class Server extends Base implements IServer {
 		resolve();
 	}
 
+	public void serialize(IMemento memento) {
+		save(memento);
+	}
+
+	public void deserialize(IMemento memento) {
+		load(memento);
+	}
+
 	protected void resolve() {
 		IServerType oldServerType = serverType;
 		String serverTypeId = getAttribute("server-type-id", (String)null);

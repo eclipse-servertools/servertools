@@ -281,8 +281,10 @@ public final class XMLMemento implements IMemento {
 	
 	/**
 	 * Save this Memento to a Writer.
+	 * 
+	 * @throws IOException if there is a problem saving
 	 */
-	protected void save(OutputStream os) throws IOException {
+	public void save(OutputStream os) throws IOException {
 		Result result = new StreamResult(os);
 		Source source = new DOMSource(factory);
 		try {
