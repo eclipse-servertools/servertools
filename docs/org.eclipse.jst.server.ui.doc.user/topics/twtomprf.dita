@@ -2,18 +2,19 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
-<?Pub Sty _display FontColor="red"?>
 <task id="twtomprf_jst" xml:lang="en-us">
 <title id="title">Adding the Apache Tomcat runtimes</title>
 <shortdesc id="shortdesc">Using the Preferences page, you can define the server
 runtime environment definitions for the Apache Tomcat server. To define these
 definitions, complete the following: </shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>servers<indexterm>runtime environments<indexterm>Apache
-Tomcat</indexterm></indexterm></indexterm><indexterm>Apache Tomcat<indexterm>defining
-runtime environment</indexterm></indexterm><indexterm>runtime environment<indexterm>defining<indexterm>Apache
-Tomcat</indexterm></indexterm></indexterm><indexterm>workbench<indexterm>defining
-server runtime environment <indexterm>Apache Tomcat</indexterm></indexterm></indexterm>
+<keywords id="index"><indexterm keyref="twtomprf|1|serversruntimeenvironmentsApacheTomcat"
+status="changed">servers<indexterm>Apache Tomcat</indexterm></indexterm><indexterm
+keyref="twtomprf|2|ApacheTomcatdefiningruntimeenvironment" status="new">Apache
+Tomcat<indexterm>defining runtime environment</indexterm></indexterm><indexterm
+keyref="twtomprf|3|runtimeenvironmentdefiningApacheTomcat" status="changed">runtime
+environments<indexterm>Apache Tomcat</indexterm></indexterm><indexterm keyref="twtomprf|4|workbenchdefiningserverruntimeenvironmentApacheTomcat"
+status="changed">workbench<indexterm>Apache Tomcat server runtime environment</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>
@@ -38,9 +39,9 @@ then select  <uicontrol>Runtime Environments</uicontrol>.</cmd></step>
 </step>
 <step><cmd>When you add a server runtime environment, by default a server
 is created and added as an entry in the Servers view. If you want to only
-add the <?Pub Caret?>server runtime environment and not create the server
-in the Servers view, clear the <uicontrol>Create a new local server</uicontrol> check
-box.</cmd></step>
+add the server runtime environment and not create the server in the Servers
+view, clear the <uicontrol>Create a new local server</uicontrol> check box.</cmd>
+</step>
 <step><cmd>The Tomcat Server page opens when you click  <uicontrol>Next</uicontrol>.</cmd>
 </step>
 <step><cmd>In the <uicontrol>Tomcat installation directory</uicontrol> field,
@@ -59,4 +60,3 @@ with the workbench.</desc>
 </link>
 </related-links>
 </task>
-<?Pub *0000003006?>

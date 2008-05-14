@@ -2,8 +2,6 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
-<?Pub Sty _display FontColor="red"?>
-<?Pub Inc?>
 <task id="tomcat_jst" xml:lang="en-us">
 <title id="title">Creating a Tomcat server</title>
 <shortdesc id="shortdesc">The server tools feature supports the Apache Tomcat
@@ -11,9 +9,14 @@ runtime environment, running locally. With Tomcat, you can only test Web project
 that contain servlets and JSPs. To set up a server to test projects on Apache
 Tomcat, complete the following: </shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>Apache Tomcat<indexterm>testing Web projects</indexterm></indexterm>
-<indexterm>runtime environments<indexterm>Apache Tomcat</indexterm></indexterm>
-<indexterm>servers<indexterm>Apache Tomcat</indexterm></indexterm></keywords>
+<keywords id="index"><indexterm keyref="tomcat|1|ApacheTomcattestingWebprojects"
+status="changed">testing<indexterm>Web projects</indexterm></indexterm><indexterm
+keyref="tomcat|3|serversApacheTomcat" status="new">servers<indexterm>Apache
+Tomcat</indexterm></indexterm></keywords>
+</metadata><metadata>
+<keywords><indexterm keyref="tomcat|10|WebprojectstestingwithApacheTomcat"
+status="new">Web projects<indexterm>testing with Apache Tomcat</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <prereq id="prereq"><b>Prerequisites</b><p><ul>
@@ -43,7 +46,7 @@ Tomcat server.</cmd></substep>
 </step>
 </steps>
 </taskbody>
-<related-links id="relatedlinks"><?Pub Caret?>
+<related-links id="relatedlinks">
 <link href="http://wiki.eclipse.org/WTP_Tomcat_FAQ" scope="external"><linktext>WTP
 Tomcat FAQ</linktext>
 <desc>See this link for additional information about using the Apache Tomcat
@@ -51,4 +54,3 @@ server with the workbench.</desc>
 </link>
 </related-links>
 </task>
-<?Pub *0000002669?>
