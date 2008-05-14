@@ -15,6 +15,7 @@ import java.util.*;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
@@ -244,14 +245,11 @@ public class Server extends Base implements IServer {
 			this.start = start;
 			this.info = info;
 			
-			IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
-			
-			// 102227 - lock entire workspace during publish		
-			ISchedulingRule[] rules = new ISchedulingRule[2];
-			rules[0] = ruleFactory.createRule(ResourcesPlugin.getWorkspace().getRoot());
-			rules[1] = Server.this;
-			
-			setRule(MultiRule.combine(rules));
+			// 102227 - lock entire workspace during publish
+			ISchedulingRule rule = MultiRule.combine(new ISchedulingRule[] {
+				ResourcesPlugin.getWorkspace().getRoot(), Server.this
+			});
+			setRule(rule);
 		}
 
 		public boolean belongsTo(Object family) {
@@ -1093,19 +1091,24 @@ public class Server extends Base implements IServer {
 		// make sure that the delegate is loaded and the server state is correct
 		loadAdapter(ServerBehaviourDelegate.class, monitor);
 		
-		PublishJob publishJob = null;
-		if (((ServerType)getServerType()).startBeforePublish() && (getServerState() == IServer.STATE_STOPPED))
-			publishJob = new PublishJob(kind, null, true, null);
-		else
-			publishJob = new PublishJob(kind, null, false, null);
-		publishJob.schedule();
+		ISchedulingRule rule = MultiRule.combine(new ISchedulingRule[] {
+			ResourcesPlugin.getWorkspace().getRoot(), Server.this
+		});
 		
+		IJobManager jobManager = Job.getJobManager();
 		try {
-			publishJob.join();
-		} catch (InterruptedException e) {
-			Trace.trace(Trace.WARNING, "Error waiting for job", e);
+			jobManager.beginRule(rule, monitor);
+			
+			if (((ServerType)getServerType()).startBeforePublish() && (getServerState() == IServer.STATE_STOPPED)) {
+				IStatus status = startImpl(ILaunchManager.RUN_MODE, monitor);
+				if (status != null && status.getSeverity() == IStatus.ERROR)
+					return status;
+			}
+			
+			return publishImpl(kind, null, null, monitor);
+		} finally {
+			jobManager.endRule(rule);
 		}
-		return publishJob.getResult();
 	}
 
 	/*

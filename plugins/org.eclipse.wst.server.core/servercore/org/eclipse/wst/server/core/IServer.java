@@ -309,6 +309,11 @@ public interface IServer extends IServerAttributes, ISchedulingRule {
 	 * framework is safe, there is no guarantee that other bundles are UI-safe
 	 * and the risk of UI deadlock is high. 
 	 * </p>
+	 * <p>
+	 * Since this method is synchronous and requires access to the workspace,
+	 * it will block until it can access a resource and server scheduling lock.
+	 * To publish asynchronously using a job, use the alternate publish() method.
+	 * </p>
 	 * 
 	 * @param kind the kind of publish being requested. Valid values are:
 	 *    <ul>
