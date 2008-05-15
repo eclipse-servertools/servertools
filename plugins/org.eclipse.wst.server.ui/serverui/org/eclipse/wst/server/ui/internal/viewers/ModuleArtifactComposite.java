@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007,2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,30 +13,18 @@ package org.eclipse.wst.server.ui.internal.viewers;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.model.ModuleArtifactDelegate;
 import org.eclipse.wst.server.ui.internal.Messages;
 
 public class ModuleArtifactComposite extends Dialog {
 	protected IModuleArtifact[] moduleArtifacts;
-	private TableViewer tableViewer;	
+	private ListViewer listViewer;
 	private String launchMode;		
 	private IModuleArtifact selection;
 
@@ -48,6 +36,7 @@ public class ModuleArtifactComposite extends Dialog {
 	 */
 	public ModuleArtifactComposite(Shell parent,final IModuleArtifact[] moduleArtifacts, String launchMode){
 		super(parent);
+		setShellStyle(SWT.RESIZE | getShellStyle());
 		this.moduleArtifacts = moduleArtifacts;
 		this.launchMode = launchMode;
 	}
@@ -96,16 +85,15 @@ public class ModuleArtifactComposite extends Dialog {
 		Text description = new Text(composite,SWT.NONE);
 		description.setText(Messages.wizModuleArtifactsDescription);
 		description.setEditable(false);
-		description.setEnabled(true);
 		description.setCursor(composite.getDisplay().getSystemCursor(SWT.CURSOR_ARROW));
 		
-		createTable(composite);
+		createContent(composite);
 		
 		return composite;
 	}
 
-	private void createTable(Composite parent) {
-		Composite tableComposite = new Composite(parent,SWT.NONE);
+	private void createContent(Composite parent) {
+		Composite contentComposite = new Composite(parent,SWT.NONE |SWT.RESIZE);
 		GridLayout layout = new GridLayout();
 		layout.marginWidth = 10;
 		layout.verticalSpacing = 5;		
@@ -113,53 +101,54 @@ public class ModuleArtifactComposite extends Dialog {
 				
 		GridData data = new GridData(GridData.FILL_BOTH);
 		
-		tableComposite.setLayout(layout);
-		tableComposite.setLayoutData(data);
-		tableComposite.setFont(parent.getFont());
+		contentComposite.setLayout(layout);
+		contentComposite.setLayoutData(data);
+		contentComposite.setFont(parent.getFont());
 		
-		Label tableTitle = new Label(tableComposite,SWT.None);
+		Label tableTitle = new Label(contentComposite,SWT.None);
 		tableTitle.setText(Messages.wizModuleArtifactsAvailableList);
-		
-		Table table = new Table(tableComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION);
+
+		listViewer = new ListViewer(contentComposite,SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		data = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
-		data.heightHint = 100;
-		table.setLayoutData(data);
-		table.setLinesVisible(true);
-		table.setHeaderVisible(false);
-		table.setFocus();
-		TableLayout tableLayout = new TableLayout();
-		table.setLayout(tableLayout);
-		
-		tableLayout.addColumnData(new ColumnWeightData(100, 100, true));
-		new TableColumn(table, SWT.NONE);		
-		
-		tableViewer = new TableViewer(table);
-		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				getSelection();
+		listViewer.getList().setLayoutData(data);
+		listViewer.getList().setFocus();
+
+		listViewer.setContentProvider(new BaseContentProvider() {
+			public Object[] getElements(Object inputElement) {
+				return moduleArtifacts;
 			}
 		});
 		
-		tableViewer.setLabelProvider(new BaseLabelProvider() {
+		listViewer.setLabelProvider(new BaseLabelProvider() {
 			public String getText(Object element) {				
 				if (element instanceof ModuleArtifactDelegate) {
+					// Try to display the object using its name 
 					ModuleArtifactDelegate moduleArtifact = (ModuleArtifactDelegate)element;
-					if (moduleArtifact.getName() == null || moduleArtifact.getName().length() == 0) {
-						return moduleArtifact.getClass().getName();
+					String artifactName = moduleArtifact.getName();
+					if (artifactName != null && artifactName.length() >= 0) {
+						int classNameIndex = artifactName.lastIndexOf(".");
+						String packageName = artifactName.substring(0, classNameIndex);
+						String className = artifactName.substring(classNameIndex+1);
+						if (packageName != null && (packageName.length()<=0) == false){
+							return className + " ("+moduleArtifact.getName()+")";
+						}
+						return moduleArtifact.getName();
 					}
-					return moduleArtifact.getName();
+
+					// If the name is empty we can then use the module artifact class name  
+					return moduleArtifact.getClass().getName();				
 				}
 				return Messages.elementUnknownName;
 			}
 		});
 		
-		tableViewer.setContentProvider(new BaseContentProvider() {
-			public Object[] getElements(Object inputElement) {				
-				return moduleArtifacts;
+		listViewer.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				buttonPressed(IDialogConstants.OK_ID);
 			}
 		});
-		
-		tableViewer.setInput(AbstractTreeContentProvider.ROOT);
+			
+		listViewer.setInput(AbstractTreeContentProvider.ROOT);
 	}
 
 	/**
@@ -168,7 +157,7 @@ public class ModuleArtifactComposite extends Dialog {
 	 * @return the selected module artifact
 	 */
 	public IModuleArtifact getSelection() {
-		IStructuredSelection selection2 = (IStructuredSelection) tableViewer.getSelection();
+		IStructuredSelection selection2 = (IStructuredSelection) listViewer.getSelection();
 		if (selection2 == null || selection2.getFirstElement() == null)
 			return selection;
 		

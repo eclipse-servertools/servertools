@@ -31,6 +31,7 @@ public class EJBBean extends ModuleArtifactDelegate {
 	public final static String EJB_30 = "3.0";
 	
 	private String jndiName;
+	private String interfaceName;
 	private boolean local;
 	private boolean remote;
 	private String version;
@@ -70,6 +71,28 @@ public class EJBBean extends ModuleArtifactDelegate {
 		this.remote = remote;
 		this.local = local;
 		this.version = version;
+	}
+	
+	/**
+	 * Create a new EJBBean with its interface name. This API is intended to be use by EJB 3.0.
+	 * 
+	 * @param module the module that the EJB is contained in
+	 * @param jndiName the JNDI name of the EJB
+	 * @param remote <code>true</code> if the EJB has a remote interface, and
+	 *    <code>false</code> otherwise
+	 * @param local <code>true</code> if the EJB has a local interface, and
+	 *    <code>false</code> otherwise    
+	 * @param version the level of the EJB specification that this EJB uses. Use one of the <code>EJB_xx</code> constants declared on {@link EJBBean}
+	 * @param interfaceName the interface name of the EJB
+	 */
+
+	public EJBBean(IModule module, String jndiName, boolean remote, boolean local, String version, String interfaceName) {
+		super(module);
+		this.jndiName = jndiName;
+		this.remote = remote;
+		this.local = local;
+		this.version = version;
+		this.interfaceName = interfaceName;
 	}
 
 	/**
@@ -121,7 +144,15 @@ public class EJBBean extends ModuleArtifactDelegate {
 	 * @see ModuleArtifactDelegate#getName()
 	 */
 	public String getName() {
-		return NLS.bind(Messages.artifactEJB, jndiName.toString());
+		String ejbName;
+		// EJB 2.0 don't have an inteface name, but they set the jndi name
+		if (interfaceName != null && !(interfaceName.length()<=0)){
+			ejbName = interfaceName;
+		}
+		else{
+			ejbName = jndiName;
+		}
+		return NLS.bind(Messages.artifactEJB, ejbName);
 	}
 
 	/*
@@ -157,5 +188,13 @@ public class EJBBean extends ModuleArtifactDelegate {
 			sb.append("F");
 		sb.append(jndiName);
 		return sb.toString();
+	}
+
+	/**
+	 * Gets the name of interface represented by this object 
+	 * @return
+	 */
+	public String getInterfaceName() {
+		return interfaceName;
 	}
 }
