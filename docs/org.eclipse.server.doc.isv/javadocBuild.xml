@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--overview="${basedir}/html/api_reference/erview/overview.html"-->
+<project default="main" basedir=".">
+
+	<property file="javadoc.properties" />
+	<property name="outputDir" value="${basedir}"/>
+	<property name="eclipse.home" value="${basedir}/.."/>
+	<property name="apiPackages" value="${basedir}/apiPackages.txt" />
+	<property name="srcFolders" value="${basedir}/srcFolders.txt" />
+	
+	<target name="main" depends="clean, pluginAPI, pluginSourceFolders, prephtml, javadoc, packagetoc" description="Builds Plugin Javadoc" />
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties"> 
+	  <classpath>
+	    <pathelement location="${basedir}/lib/ant-contrib-0.6.jar" />
+	  </classpath>
+	</taskdef>
+
+	<taskdef name="doco.parseAPIPackages" classname="org.eclipse.jst.jsf.genapi.util.ParseAPIPackages"> 
+	  <classpath>
+	    <pathelement location="${basedir}/lib/parseAPIPackages.jar" />
+	  </classpath>
+	</taskdef>
+
+	<taskdef name="doco.parseSourceFolders" classname="org.eclipse.jst.jsf.genapi.util.ParseBundleSourceFolders"> 
+	  <classpath>
+	    <pathelement location="${basedir}/lib/parseAPIPackages.jar" />
+	  </classpath>
+	</taskdef>
+	
+	<target name="pluginSources">
+		<!-- find all plugins -->
+		<loadfile
+			failonerror="true"		      
+		    srcFile="${basedir}/../releng.servertools/maps/wst-server-core.map" 
+			property="plugin.sources" >
+			<filterchain>
+				<tokenfilter>
+					<containsstring contains="plugin@"/>
+				</tokenfilter>
+				<replacestring from="plugin@" to="" />
+				<replaceregex pattern="=.*" replace=";"/>		
+			</filterchain>
+		</loadfile>
+		<echo file="plugins.xml" message="${plugin.sources}"/>
+	</target>
+	
+	
+	<target name="pluginSourceFolders" depends="pluginSources">
+		<!-- find all API packages from MANIFESTS in plugins -->
+		<for param="plugin" list="${plugin.sources}" delimiter=";" trim="true">
+			<sequential>	
+					<doco.parseSourceFolders
+						bundleid="@{plugin}"
+						filename="${srcFolders}" 
+						delimiter=";" />
+			</sequential>
+		</for>		
+		<echo message="--- source folders ---" />
+		<loadfile
+			failonerror="true"		      
+		    srcFile="${srcFolders}" 
+			property="plugin.sourceFolders" >
+			<filterchain>
+				<prefixlines prefix=".."/>
+			</filterchain>
+		</loadfile>
+		<echo message="${plugin.sourceFolders}" />
+	</target>
+	
+	<target name="pluginAPI" depends="pluginSources">
+		<!-- find all API packages from MANIFESTS in plugins -->
+		<for param="plugin" list="${plugin.sources}" delimiter=";" trim="true">
+			<sequential>	
+					<doco.parseAPIPackages 
+						filename="${apiPackages}" 
+						bundleid="@{plugin}" 
+						exceptionlist="${api.exceptions}"/>		
+				
+			</sequential>
+		</for>
+		<echo message="--- API packages ---" />
+		<loadfile
+			failonerror="true"		      
+		    srcFile="${apiPackages}" 
+			property="api.packages" >
+		</loadfile>
+		<echo message="${api.packages}" />
+		
+	</target>
+	
+	<target name="clean">
+		<delete file="${apiPackages}" />
+		<delete file="${srcFolders}" />
+		<delete>
+			<fileset dir="${outputDir}/html/api_reference/" >
+				<include name="**/*.html"/>
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="prephtml" description="Transforms XML to HTML.">
+		<xslt 	style="javadoc.xsl" 
+				destdir=".." 
+				basedir=".."	
+				includes="**/overview.xml,**/package.xml" 
+				excludes="**/build/*,**/@dot/**"
+		/>
+	</target>
+
+	<target name="javadoc">
+		<echo message="========= ${eclipse.home}"/>
+		<mkdir dir="${outputDir}/api-overview/overview" />
+
+		<copy todir="${outputDir}/api-overview/overview" flatten="true" >
+			<fileset dir="${basedir}/api-overview/overview/"/>
+			<fileset dir="${basedir}/.." includes="*/javadoc-images/*.jpg"/>
+		</copy>
+		<javadoc 
+        	access="public" 
+    		additionalparam="-breakiterator -tag model:X -tag generated:X -tag ordered:X"
+			author="false" 
+			classpath="${classpath}" 
+			destdir="${outputDir}/html/api_reference" 
+			doctitle="${api.title}" 
+			nodeprecated="false" 
+			nodeprecatedlist="false" 
+			noindex="false" 
+			nonavbar="false" 
+			notree="false" 
+        	overview="${basedir}/api-overview/overview.html"
+			packagenames="${api.packages}" 
+			sourcepath="${plugin.sourceFolders}" 
+			splitindex="true" 
+			use="true" 
+			version="true"
+			breakiterator="yes"
+        	verbose="false"
+        	failonerror="false"
+			>
+			<tag name="ignore"     description="ignore" enabled="false"/>
+			<tag name="generated"  description="ignore" enabled="false"/>
+			<tag name="model"      description="ignore" enabled="false"/>
+			<tag name="modifiable" description="ignore" enabled="false"/>
+			<tag name="extends"    description="ignore" enabled="false"/>
+			<tag name="implements" description="ignore" enabled="false"/>
+			<tag name="ordered"    description="ignore" enabled="false"/>
+		</javadoc>
+	</target>
+
+	<target name="packagetoc">
+		<loadfile
+				  failonerror="false"
+			      property="jsf.packages"
+			      srcFile="${outputDir}/html/api_reference/package-list">
+			<filterchain>
+				<filterreader classname="org.apache.tools.ant.filters.PrefixLines">
+					<param name="prefix" value="&lt;/package&gt;&lt;package&gt;"/>
+				</filterreader>
+				<striplinebreaks/>
+			</filterchain>
+		</loadfile>
+
+		<!-- Create packages.xml file -->
+		<echo file="packages.xml">&lt;packages&gt;&lt;package&gt;${jsf.packages}&lt;/package&gt;&lt;/packages&gt;</echo>
+
+		<xslt basedir="${outputdir}" in="packages.xml" out="javadoctoc.xml" style="javadocToc.xsl">
+			<outputproperty name="method" value="xml"/>
+			<outputproperty name="indent" value="yes"/>
+		</xslt>
+	</target>
+</project>
