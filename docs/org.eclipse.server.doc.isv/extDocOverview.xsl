@@ -15,7 +15,7 @@
 		<html>
 		<head>
 		<xsl:text disable-output-escaping="yes">
-		&lt;meta name="copyright" content="Copyright (c) Oracle Corporation and others 2000, 2008. This page is made available under license. For full details see the LEGAL in the documentation book that contains this page." &gt;
+		&lt;meta name="copyright" content="Copyright (c) IBM Corporation and others 2008. This page is made available under license. For full details see the LEGAL in the documentation book that contains this page." &gt;
 
    		&lt;meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"&gt;
    		</xsl:text>
