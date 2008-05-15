@@ -8,7 +8,8 @@
 	<property name="apiPackages" value="${basedir}/apiPackages.txt" />
 	<property name="srcFolders" value="${basedir}/srcFolders.txt" />
 	
-	<target name="main" depends="clean, pluginAPI, pluginSourceFolders, prephtml, javadoc, packagetoc" description="Builds Plugin Javadoc" />
+	<target name="main" depends="pluginAPI, pluginSourceFolders" description="Builds Plugin Javadoc" />  
+	<!-- depends="clean, pluginAPI, pluginSourceFolders, prephtml, javadoc, packagetoc" description="Builds Plugin Javadoc" /> -->
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties"> 
 	  <classpath>
 	    <pathelement location="${basedir}/lib/ant-contrib-0.6.jar" />
@@ -28,11 +29,13 @@
 	</taskdef>
 	
 	<target name="pluginSources">
+		
 		<!-- find all plugins -->
+		<echo message="--- Searching for plugins ----"> </echo>
 		<loadfile
 			failonerror="true"		      
 		    srcFile="${basedir}/../releng.servertools/maps/wst-server-core.map" 
-			property="plugin.sources" >
+			property="plugin.sources.server.core.map" >
 			<filterchain>
 				<tokenfilter>
 					<containsstring contains="plugin@"/>
@@ -41,9 +44,38 @@
 				<replaceregex pattern="=.*" replace=";"/>		
 			</filterchain>
 		</loadfile>
-		<echo file="plugins.xml" message="${plugin.sources}"/>
+		<loadfile
+			failonerror="true"		      
+			srcFile="${basedir}/../releng.servertools/maps/wst-server-ui.map" 
+			property="plugin.sources.server.ui.map" >
+			<filterchain>
+				<tokenfilter>
+					<containsstring contains="plugin@"/>
+				</tokenfilter>
+				<replacestring from="plugin@" to="" />
+				<replaceregex pattern="=.*" replace=";"/>		
+			</filterchain>
+		</loadfile>
+		<loadfile
+			failonerror="true"		      
+			srcFile="${basedir}/../releng.servertools/maps/jst-server.map" 
+			property="plugin.sources.jst.map" >
+			<filterchain>
+				<tokenfilter>
+					<containsstring contains="plugin@"/>
+				</tokenfilter>
+				<replacestring from="plugin@" to="" />
+				<replaceregex pattern="=.*" replace=";"/>		
+			</filterchain>
+		</loadfile>
+		<echo file="plugins.xml" message="${plugin.sources.jst.map}${plugin.sources.server.core.map}${plugin.sources.server.ui.map}"/>
+		<loadfile
+			failonerror="true"		      
+			srcFile="plugins.xml" 
+			property="plugin.sources" >
+		</loadfile>
+		<echo message="plugin.sources"/>
 	</target>
-	
 	
 	<target name="pluginSourceFolders" depends="pluginSources">
 		<!-- find all API packages from MANIFESTS in plugins -->
