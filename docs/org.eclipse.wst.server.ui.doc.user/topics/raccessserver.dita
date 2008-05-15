@@ -2,18 +2,17 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE reference PUBLIC "-//OASIS//DTD DITA Reference//EN"
  "reference.dtd">
-<?Pub Inc?>
 <reference id="raccessserver" xml:lang="en-us">
 <title>Keyboard shortcuts for Server Tools</title>
 <shortdesc>This documentation describes the keyboard shortcuts for tasks in
 the Servers view; and running and debugging artifacts on a server.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>accessibility<indexterm>keyboard shortcuts<indexterm>Servers
-Tool</indexterm></indexterm></indexterm><indexterm>keyboard shortcuts<indexterm>Servers
-Tool</indexterm></indexterm><indexterm>shortcuts<indexterm>keyboard<indexterm>Servers
-Tool</indexterm></indexterm></indexterm><indexterm>Servers Tool<indexterm>accessibility</indexterm></indexterm>
-<indexterm>Servers Tool<?Pub Caret?><indexterm>keyboard shortcuts</indexterm></indexterm>
-</keywords>
+<keywords><indexterm keyref="raccessserver|1|accessibilitykeyboardshortcutsServersTool"
+status="changed">accessibility<indexterm>keyboard shortcuts<indexterm>server
+tools</indexterm></indexterm></indexterm><indexterm keyref="raccessserver|2|keyboardshortcutsServersTool"
+status="new">keyboard shortcuts<indexterm>Servers Tool</indexterm></indexterm>
+<indexterm keyref="raccessserver|5|ServersToolkeyboardshortcuts" status="changed">servers<indexterm>keyboard
+shortcuts for server tools</indexterm></indexterm></keywords>
 </metadata></prolog>
 <refbody>
 <table><title>Keyboard shortcuts for Server Tools</title>
@@ -62,4 +61,3 @@ Tool</indexterm></indexterm></indexterm><indexterm>Servers Tool<indexterm>access
 </table>
 </refbody>
 </reference>
-<?Pub *0000002304?>

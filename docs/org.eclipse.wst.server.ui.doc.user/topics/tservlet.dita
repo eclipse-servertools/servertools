@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <task id="tservlet_wst" xml:lang="en-us">
@@ -10,11 +10,13 @@ of your program by setting breakpoints, suspending threads, stepping through
 the code, and examining the contents of the variables. You can debug a servlet
 on a server without losing the state of your application.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>breakpoints<indexterm>adding to servlets</indexterm></indexterm>
-<indexterm>servers<indexterm>debugging servlets</indexterm></indexterm>
-<indexterm>servlets<indexterm>debugging on servers</indexterm></indexterm>
-<indexterm>threads<indexterm>suspending in servlets</indexterm></indexterm>
-</keywords>
+<keywords id="index"><indexterm keyref="tservlet|1|breakpointsaddingtoservlets"
+status="changed">breakpoints<indexterm>servlets</indexterm></indexterm><indexterm
+keyref="tservlet|2|serversdebuggingservlets" status="new">servers<indexterm>debugging
+servlets</indexterm></indexterm><indexterm keyref="tservlet|3|servletsdebuggingonservers"
+status="new">servlets<indexterm>debugging on servers</indexterm></indexterm>
+<indexterm keyref="tservlet|4|threadssuspendinginservlets" status="new">threads<indexterm>suspending
+in servlets</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <context id="tservlet_context">To debug a servlet on a server:</context>
@@ -51,4 +53,3 @@ update the changes, restart the server.</info></step>
 <result id="tservlet_result"><b>Result:</b><p>The server recognizes your changes.</p></result>
 </taskbody>
 </task>
-<?Pub *0000003141?>

@@ -2,19 +2,20 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
-<?Pub Sty _display FontColor="red"?>
-<?Pub Inc?>
 <task id="tj2eepreview_wst" xml:lang="en-us">
 <title id="title">Testing on a J2EE Preview server</title>
 <shortdesc id="shortdesc">Use the J2EE Preview server when you want to quickly
 compile, test and run resources in a J2EE Web project. The J2EE Web projects
 you can test on a J2EE Preview server are static Web projects, dynamic Web
-projects<?Pub Caret?> and utility projects.  Hereafter, the term J2EE Web
-project refers to any of these previously mentioned projects.</shortdesc>
+projects and utility projects.  Hereafter, the term J2EE Web project refers
+to any of these previously mentioned projects.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>J2EE Preview<indexterm>testing J2EE Web projects</indexterm></indexterm>
-<indexterm>runtime environments<indexterm>J2EE Preview</indexterm></indexterm>
-<indexterm>servers<indexterm>J2EE Preview server</indexterm></indexterm></keywords>
+<keywords id="index"><indexterm keyref="tj2eepreview|1|J2EEPreviewtestingJ2EEWebprojects"
+status="changed">J2EE<indexterm>testing on preview servers</indexterm></indexterm>
+<indexterm keyref="tj2eepreview|2|runtimeenvironmentsJ2EEPreview" status="new">runtime
+environments<indexterm>J2EE Preview</indexterm></indexterm><indexterm keyref="tj2eepreview|3|serversJ2EEPreviewserver"
+status="new">servers<indexterm>J2EE Preview server</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <context id="context">The J2EE Preview server is an embedded application server
@@ -53,4 +54,3 @@ projects</uicontrol>. Click <uicontrol>Finish</uicontrol>.</cmd></step>
 <result id="result">The internal Web browser opens and displays the Web content.</result>
 </taskbody>
 </task>
-<?Pub *0000003281?>

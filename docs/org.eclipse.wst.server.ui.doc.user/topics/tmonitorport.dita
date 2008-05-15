@@ -11,8 +11,10 @@ Examples of types of server ports you can monitor are Hypertext Transfer Protoco
 (HTTP), the administrative port of the server, proxy and many other vendor-specific
 ports.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>properties<indexterm>monitoring server ports</indexterm></indexterm>
-<indexterm>ports<indexterm>servers</indexterm></indexterm><indexterm>views<indexterm>Server<indexterm>monitoring
+<keywords id="index"><indexterm keyref="tmonitorport|1|propertiesmonitoringserverports"
+status="new">properties<indexterm>monitoring server ports</indexterm></indexterm>
+<indexterm keyref="tmonitorport|2|portsservers" status="new">ports<indexterm>servers</indexterm></indexterm>
+<indexterm keyref="tmonitorport|3|viewsServermonitoringserverports" status="changed">views<indexterm>servers<indexterm>monitoring
 server ports</indexterm></indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>

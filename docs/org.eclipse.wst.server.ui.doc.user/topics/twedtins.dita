@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <task id="twedtins_wst" xml:lang="en-us">
@@ -8,8 +8,9 @@
 The fields that you change are dependant on what runtime environment the server
 is defined to use, or whether it is defined as a local or remote server.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>servers<indexterm>editing</indexterm><indexterm>editor</indexterm></indexterm>
-<indexterm>editors<indexterm>server</indexterm></indexterm></keywords>
+<keywords id="index"><indexterm keyref="twedtins|1|serversediting" status="new">servers<indexterm>editing</indexterm></indexterm>
+<indexterm keyref="twedtins|3|editorsserver" status="new">editors<indexterm>server</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <context id="context">To edit a server:</context>
@@ -36,4 +37,3 @@ The server has been changed on the file system.  Do you want to load the changes
 </steps>
 </taskbody>
 </task>
-<?Pub *0000002014?>

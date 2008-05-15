@@ -7,9 +7,11 @@
 <shortdesc id="cwres_shortdesc">To test and publish on your server, you need
 to define one or more of the following resources:</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>preferences<indexterm>installed server runtime
-environments</indexterm></indexterm><indexterm>runtime environments<indexterm>description</indexterm></indexterm>
-<indexterm>servers<indexterm>testing applications</indexterm></indexterm>
+<keywords id="index"><indexterm keyref="cwres|1|preferencesinstalledserverruntimeenvironments"
+status="changed">preferences<indexterm>installed server runtime environments<indexterm>resources</indexterm></indexterm></indexterm>
+<indexterm keyref="cwres|2|runtimeenvironmentsdescription" status="new">runtime
+environments<indexterm>description</indexterm></indexterm><indexterm keyref="cwres|3|serverstestingapplications"
+status="new">servers<indexterm>testing applications</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <conbody>
@@ -38,9 +40,9 @@ to the <i>Displaying or hiding the metadata of the server</i> link at the
 bottom of this topic.</p></section>
 <section><title id="cwres_serverconfig_title">Server configurations</title><p
 id="cwres_serverconfig_p1"><ph>Server configurations are files that contain
-information <?Pub Caret?>to set up and publish to a server. For example, these
-files may include information about what port to run the server, security
-preferences and other vendor-specific server settings.</ph></p><p id="cwres_serverconfig_p2">On
+information to set up and publish to a server. For example, these files may
+include information about what port to run the server, security preferences
+and other vendor-specific server settings.</ph></p><p id="cwres_serverconfig_p2">On
 the workbench, the metadata of the server configurations is automatically
 created and stored in a <i>configuration data folder</i> under a server project.
 The naming convention of the configuration data folder is dependant on the
@@ -64,4 +66,3 @@ when a project is added to the server configuration. A server can point to
 one or more projects. A project can be pointed from one or more server configurations.</p></section>
 </conbody>
 </concept>
-<?Pub *0000004248?>

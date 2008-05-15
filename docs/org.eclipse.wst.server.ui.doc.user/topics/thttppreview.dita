@@ -2,8 +2,6 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
-<?Pub Sty _display FontColor="red"?>
-<?Pub Inc?>
 <task id="thttppreview_wst" xml:lang="en-us">
 <title id="title">Testing on an HTTP Preview server</title>
 <shortdesc id="shortdesc">Use the HTTP Preview server when you want to quickly
@@ -15,15 +13,16 @@ through its development cycle you are encourage to test and run on an external
 HTTP server.  You can use the HTTP Preview server as a convenient way to check
 for errors before you do a final test on an external HTTP server.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>HTTP Preview<indexterm>testing static Web
-projects</indexterm></indexterm><indexterm>runtime environments<indexterm>HTTP
-Preview</indexterm></indexterm><indexterm>servers<indexterm>HTTP Preview server</indexterm></indexterm>
+<keywords id="index"><indexterm keyref="thttppreview|1|HTTPPreviewtestingstaticWebprojects"
+status="changed">HTTP preview server<indexterm>testing static Web projects</indexterm></indexterm>
+<indexterm keyref="thttppreview|2|runtimeenvironmentsHTTPPreview" status="new">runtime
+environments<indexterm>HTTP Preview</indexterm></indexterm><indexterm keyref="thttppreview|3|serversHTTPPreviewserver"
+status="new">servers<indexterm>HTTP Preview server</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>
-<context id="context"><?Pub Caret1?>To create and test on an HTTP Preview
-server for previewing your resources in a static Web project, complete the
-following steps:</context>
+<context id="context">To create and test on an HTTP Preview server for previewing
+your resources in a static Web project, complete the following steps:</context>
 <steps id="steps">
 <step><cmd>In the Servers view, right-click and select <uicontrol>New</uicontrol> > <uicontrol>Server</uicontrol>.
 The Define a New Server wizard opens.</cmd></step>
@@ -52,4 +51,3 @@ projects</uicontrol>. Click <uicontrol>Finish</uicontrol>.</cmd></step>
 Web content.</result>
 </taskbody>
 </task>
-<?Pub *0000003064?>

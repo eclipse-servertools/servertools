@@ -2,17 +2,20 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
-<?Pub Inc?>
 <task id="tmetasrv_wst" xml:lang="en-us">
 <title id="tmetasrv_wst_title">Displaying or hiding the metadata of the server</title>
 <shortdesc id="tmetasrv_wst_shortdesc">On the workbench, you have the option
 to display or hide the metadata of the server.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>servers<indexterm>displaying metadata</indexterm><indexterm>hiding
-metadata</indexterm></indexterm><indexterm>workbench<indexterm>displaying
-server metadata</indexterm><indexterm>hiding server metadata</indexterm></indexterm>
-<indexterm>serverName.server file<indexterm>displaying on workbench</indexterm><indexterm>hiding
-from workbench</indexterm></indexterm></keywords>
+<keywords id="index"><indexterm keyref="tmetasrv|1|serversdisplayingmetadata"
+status="new">servers<indexterm>displaying metadata</indexterm></indexterm>
+<indexterm keyref="tmetasrv|2|servershidingmetadata" status="new">servers<indexterm>hiding
+metadata</indexterm></indexterm><indexterm keyref="tmetasrv|3|workbenchdisplayingservermetadata"
+status="changed">workbench<indexterm>server metadata</indexterm></indexterm>
+<indexterm keyref="tmetasrv|5|serverName.serverfiledisplayingonworkbench"
+status="changed">serverName.server file<indexterm>displaying</indexterm></indexterm>
+<indexterm keyref="tmetasrv|6|serverName.serverfilehidingfromworkbench" status="changed">serverName.server
+file<indexterm>hiding</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <context id="tmetasrv_wst_context"><p id="tmetasrv_wst_p1">The <i>metadata</i> contains
@@ -52,7 +55,6 @@ and then expand your server project to locate the <i>serverName</i>.server
 file, where <i>serverName</i> is the name assigned to your server.</cmd></step>
 <step id="tmetasrv_step4"><cmd>(<b>Optional</b>) You can double-click <i>serverName</i>.server
 file to edit the data in the server editor.</cmd></step>
-</steps><?Pub Caret?>
+</steps>
 </taskbody>
 </task>
-<?Pub *0000003572?>

@@ -11,8 +11,10 @@ When you find there is old code or an invalid state of code running on the
 server, try using this clean option to see if this helps remove these invalid
 states from the server.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>server<indexterm>cleaning projects</indexterm></indexterm>
-<indexterm>projects<indexterm>cleaning on server</indexterm></indexterm><indexterm>clean<indexterm>projects</indexterm></indexterm>
+<keywords id="index"><indexterm keyref="tclean|1|servercleaningprojects" status="changed">servers<indexterm>cleaning
+projects</indexterm></indexterm><indexterm keyref="tclean|2|projectscleaningonserver"
+status="new">projects<indexterm>cleaning on server</indexterm></indexterm>
+<indexterm keyref="tclean|3|cleanprojects" status="changed">projects<indexterm>clean</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
  "concept.dtd">
-<?Pub Inc?>
 <concept id="cwover_wst" xml:lang="en-us">
 <title id="cwover_title">Testing and publishing on your server</title>
 <shortdesc id="cwover_shortdesc"><ph id="cwover_shortdesc_ph1">The testing
@@ -10,9 +9,10 @@ and publishing tools provides runtime environments where you can test JSP
 files, servlets, HTML files,</ph> <ph id="cwover_shortdesc_ph2">and <tm tmclass="special"
 tmowner="Sun Microsystems, Inc." tmtype="tm" trademark="Java">Java</tm> classes.</ph></shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>application client projects<indexterm>testing on servers</indexterm></indexterm>
-<indexterm>servers<indexterm>testing project resources</indexterm></indexterm>
-</keywords>
+<keywords id="index"><indexterm keyref="cwover|1|applicationclientprojectstestingonservers"
+status="changed">application client projects<indexterm>testing</indexterm></indexterm>
+<indexterm keyref="cwover|2|serverstestingprojectresources" status="new">servers<indexterm>testing
+project resources</indexterm></indexterm></keywords>
 </metadata></prolog>
 <conbody>
 <p id="cwover_p1">You can use the workbench to test and publish resources
@@ -37,4 +37,3 @@ You can either have the development environment create the servers automatically
 for you, or you can create them using a wizard.</p></section>
 </conbody>
 </concept>
-<?Pub *0000002714?>

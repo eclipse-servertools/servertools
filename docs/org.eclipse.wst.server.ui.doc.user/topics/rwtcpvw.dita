@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE reference  PUBLIC "-//OASIS//DTD DITA Reference//EN"
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DITA Reference//EN"
  "reference.dtd">
 <reference id="rwtcpvw_wst" xml:lang="en-us">
 <title id="title">TCP/IP Monitor view</title>
@@ -8,13 +8,14 @@
 all the requests and the responses between a Web browser and server. If you
 want the TCP/IP Monitor view to open when there is TCP/IP activity, select
 the  <uicontrol>Show TCP/IP Monitor view when there is activity</uicontrol> check
-box on the TCPIP/IP Monitor preferences page (  <menucascade><uicontrol>Window </uicontrol>
+box on the TCP/IP Monitor preferences page (  <menucascade><uicontrol>Window </uicontrol>
 <uicontrol>Run/Debug</uicontrol><uicontrol>TCP/IP Monitor</uicontrol></menucascade>).</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>servers<indexterm>TCP/IP monitors</indexterm></indexterm>
-<indexterm>TCP/IP monitors<indexterm>overview</indexterm></indexterm>
-<indexterm>views<indexterm>TCP/IP monitors</indexterm></indexterm>
-</keywords>
+<keywords id="index"><indexterm keyref="rwtcpvw|1|serversTCP/IPmonitors" status="new">servers<indexterm>TCP/IP
+monitors</indexterm></indexterm><indexterm keyref="rwtcpvw|2|TCP/IPmonitorsoverview"
+status="changed">TCP/IP<indexterm>monitors</indexterm></indexterm><indexterm
+keyref="rwtcpvw|3|viewsTCP/IPmonitors" status="new">views<indexterm>TCP/IP
+monitors</indexterm></indexterm></keywords>
 </metadata></prolog>
 <refbody>
 <section id="section"><p>You can monitor the TCP/IP activity using the TCP/IP
@@ -37,4 +38,3 @@ it takes for a request to arrive at the TCP/IP Monitor until the response
 is forwarded from the server.</p></section>
 </refbody>
 </reference>
-<?Pub *0000002803?>

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
-<?Pub Inc?>
 <task id="twlaunchpref_wst" xml:lang="en-us">
 <title id="title">Defining the launching preferences</title>
 <shortdesc id="shortdesc"><ph id="shortdesc_ph1">Using the Preferences page,
@@ -10,9 +9,11 @@ you can define the preferences that the servers use when starting or switching
 server modes. Switching server modes occurs when you use the <uicontrol>Run
 on Server</uicontrol></ph><ph id="shortdesc_ph2"> or <uicontrol>Debug on Server</uicontrol> commands.</ph></shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>preferences<indexterm>server launches</indexterm></indexterm>
-<indexterm>servers<indexterm>launching preferences</indexterm></indexterm>
-<indexterm>workbench<indexterm>server launching preferences</indexterm></indexterm>
+<keywords id="index"><indexterm keyref="twlaunchpref|1|preferencesserverlaunches"
+status="changed">preferences<indexterm>servers<indexterm>launching</indexterm></indexterm></indexterm>
+<indexterm keyref="twlaunchpref|2|serverslaunchingpreferences" status="new">servers<indexterm>launching
+preferences</indexterm></indexterm><indexterm keyref="twlaunchpref|3|workbenchserverlaunchingpreferences"
+status="changed">workbench<indexterm>launching preferences</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>
@@ -92,4 +93,3 @@ breakpoints set in your applications</li>
 </steps>
 </taskbody>
 </task>
-<?Pub *0000005697?>

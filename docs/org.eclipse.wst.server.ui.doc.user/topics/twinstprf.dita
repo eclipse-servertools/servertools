@@ -2,21 +2,24 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
-<?Pub Inc?>
 <task id="twinstprf_wst" xml:lang="en-us">
 <title id="title">Defining the server runtime environments preferences</title>
 <shortdesc id="shortdesc">Using the Preferences page, you can direct the workbench
 to use a specific runtime environment of an application server for compiling,
 testing, or running your application.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>preferences<indexterm>server runtime environments<indexterm>defining</indexterm></indexterm></indexterm>
-<indexterm>servers<indexterm>runtime environment<indexterm>defining</indexterm></indexterm></indexterm>
-<indexterm>runtime environment<indexterm>defining</indexterm></indexterm>
-<indexterm>workbench<indexterm>defining server runtime environment</indexterm></indexterm>
-<indexterm>wizards<indexterm>New Server Runtime</indexterm></indexterm><indexterm>applications<indexterm>defining
-server runtime environment</indexterm></indexterm><indexterm>New Server Runtime
-wizard</indexterm><indexterm>server runtime environments<indexterm>setting
-preferences</indexterm></indexterm></keywords>
+<keywords id="index"><indexterm keyref="twinstprf|1|preferencesinstalledserverruntimeenvironmentsdefining"
+status="new">preferences<indexterm>installed server runtime environments<indexterm>defining</indexterm></indexterm></indexterm>
+<indexterm keyref="twinstprf|2|serversruntimeenvironmentdefining" status="new">servers<indexterm>runtime
+environment<indexterm>defining</indexterm></indexterm></indexterm><indexterm
+keyref="twinstprf|3|runtimeenvironmentdefining" status="changed">runtime environments<indexterm>defining</indexterm></indexterm>
+<indexterm keyref="twinstprf|4|workbenchdefiningserverruntimeenvironment"
+status="changed">workbench<indexterm>server runtime environment</indexterm></indexterm>
+<indexterm keyref="twinstprf|6|applicationsdefiningserverruntimeenvironment"
+status="new">applications<indexterm>defining server runtime environment</indexterm></indexterm>
+<indexterm keyref="twinstprf|8|installedserverruntimeenvironmentssettingpreferences"
+status="changed">server runtime environments<indexterm>preferences</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <context id="context"><p>A <i>server runtime environment</i> is composed of
@@ -114,9 +117,7 @@ target server for a module:<ol>
 <li>Right-click on the module in the Project Explorer view and click <b>Properties
 > Project Facets</b>. The Project Facets page opens.</li>
 <li>Select the <uicontrol>Runtimes</uicontrol> tab.</li>
-<li>Under the <b>Runtimes</b> table, select th<?Pub Caret?>e target servers
-for the module.</li>
+<li>Under the <b>Runtimes</b> table, select the target servers for the module.</li>
 </ol> </p></postreq>
 </taskbody>
 </task>
-<?Pub *0000006969?>

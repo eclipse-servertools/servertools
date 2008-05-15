@@ -2,8 +2,6 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE reference PUBLIC "-//OASIS//DTD DITA Reference//EN"
  "reference.dtd">
-<?Pub Sty _display FontColor="red"?>
-<?Pub Inc?>
 <reference id="rwrcview_wst" xml:lang="en-us">
 <title id="rwrcview_title">Servers view</title>
 <shortdesc><ph id="rwrcview_ph1">The Servers view (similar to the one shown
@@ -15,8 +13,9 @@ or stop the servers. In addition, you can use the Servers view to determine
 the current status and state of the server; and the projects added to the
 server from the workbench.</ph></shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>servers<indexterm>managing using the Servers
-view</indexterm></indexterm><indexterm>views<indexterm>Servers</indexterm></indexterm>
+<keywords id="index"><indexterm keyref="rwrcview|1|serversmanagingusingtheServersview"
+status="new">servers<indexterm>managing using the Servers view</indexterm></indexterm>
+<indexterm keyref="rwrcview|2|viewsServers" status="changed">views<indexterm>servers<indexterm>overview</indexterm></indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <refbody>
@@ -166,7 +165,7 @@ synchronized or republished. When the Servers view does not display a current
 status for the project, the workbench cannot retrieve the status of the project
 from the server, the server is stopped or the server does not support this
 function.</p><p id="rwrcview_p3a">The following table lists the possible project
-status:</p><table><?Pub Caret?><title>Description of project status</title>
+status:</p><table><title>Description of project status</title>
 <tgroup cols="2"><colspec colname="COLSPEC0"/><colspec colname="COLSPEC1"/>
 <thead>
 <row>
@@ -191,4 +190,3 @@ be updated.</entry>
 </table></section>
 </refbody>
 </reference>
-<?Pub *0000008712?>

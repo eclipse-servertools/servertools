@@ -2,7 +2,6 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
-<?Pub Inc?>
 <task id="twcrtins_wst" xml:lang="en-us">
 <title id="title">Creating a server</title>
 <shortdesc><ph id="shortdesc">You can create a server to identify the runtime
@@ -10,9 +9,9 @@ environment that you want to use for testing your project resources. The term <i
 a server</i> defines creating a pointer from the workbench to an existing
 installation of an application server</ph>.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>servers<indexterm>creating</indexterm><indexterm>creating
-a pointer</indexterm></indexterm><indexterm>wizards<indexterm>New Server</indexterm></indexterm>
-<indexterm>New Server wizard</indexterm></keywords>
+<keywords id="index"><indexterm keyref="twcrtins|1|serverscreating" status="new">servers<indexterm>creating</indexterm></indexterm>
+<indexterm keyref="twcrtins|2|serverscreatingapointer" status="new">servers<indexterm>creating
+a pointer</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <context id="context">To create a server:</context>
@@ -41,9 +40,9 @@ resources.</cmd>
 <substeps>
 <substep><cmd>(Optional) Refer to the <uicontrol>Description</uicontrol> section
 for brief details about the server you have selected.</cmd></substep>
-<substep><cmd>(<?Pub Caret1?>Optional) In the text field under the <uicontrol>Select
-the server type</uicontrol> label, you can replace the text <userinput>type
-filter text</userinput> with keywords to filter the list of available application
+<substep><cmd>(Optional) In the text field under the <uicontrol>Select the
+server type</uicontrol> label, you can replace the text <userinput>type filter
+text</userinput> with keywords to filter the list of available application
 servers.</cmd><info>The following are examples of filter keywords:<dl><dlentry>
 <dt><userinput>Apache</userinput></dt>
 <dd>Filters the list of available servers where the vendor is Apache</dd>
@@ -76,4 +75,3 @@ appears in the Servers view under the  <uicontrol>Server</uicontrol> column.</in
 </steps>
 </taskbody>
 </task>
-<?Pub *0000004002?>

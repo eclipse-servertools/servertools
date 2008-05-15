@@ -55,12 +55,9 @@
       <topic href="topics/twedtins.html#twedtins_wst" title="Editing a server"/>
       <topic href="topics/tcreate.html#tcreate_wst" title="Creating, editing, and deleting servers"/>
     </entry>
-    <entry keyword="editor">
-      <topic href="topics/twedtins.html#twedtins_wst" title="Editing a server"/>
-    </entry>
     <entry keyword="runtime environment">
       <entry keyword="defining">
-        <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the installed server runtime environments preferences"/>
+        <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the server runtime environments preferences"/>
       </entry>
     </entry>
     <entry keyword="managing">
@@ -90,46 +87,57 @@
     <entry keyword="launching preferences">
       <topic href="topics/twlaunchpref.html#twlaunchpref_wst" title="Defining the launching preferences"/>
     </entry>
+    <entry keyword="cleaning projects">
+      <topic href="topics/tclean.html#tclean_wst" title="Clean projects published on the server"/>
+    </entry>
     <entry keyword="HTTP Preview server">
       <topic href="topics/thttppreview.html#thttppreview_wst" title="Testing on an HTTP Preview server"/>
     </entry>
     <entry keyword="J2EE Preview server">
       <topic href="topics/tj2eepreview.html#tj2eepreview_wst" title="Testing on a J2EE Preview server"/>
     </entry>
+    <entry keyword="keyboard shortcuts for server tools">
+      <topic href="topics/raccessserver.html#raccessserver" title="Keyboard shortcuts for Server Tools"/>
+    </entry>
   </entry>
   <entry keyword="application client projects">
-    <entry keyword="testing on servers">
+    <entry keyword="testing">
       <topic href="topics/cwover.html#cwover_wst" title="Testing and publishing on your server"/>
     </entry>
   </entry>
   <entry keyword="preferences">
     <entry keyword="installed server runtime environments">
-      <topic href="topics/cwres.html#cwres_wst" title="Resources used to test and publish on your server"/>
+      <entry keyword="resources">
+        <topic href="topics/cwres.html#cwres_wst" title="Resources used to test and publish on your server"/>
+      </entry>
       <entry keyword="defining">
-        <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the installed server runtime environments preferences"/>
+        <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the server runtime environments preferences"/>
       </entry>
     </entry>
     <entry keyword="servers">
       <entry keyword="overview">
         <topic href="topics/tpref.html#tpref_wst" title="Defining server preferences"/>
       </entry>
+      <entry keyword="audio">
+        <topic href="topics/tprefaud.html#tprefaud_wst" title="Defining the audio preferences"/>
+      </entry>
       <entry keyword="testing">
         <topic href="topics/twsrvprf.html#twsrvprf_wst" title="Defining the server preference"/>
       </entry>
-    </entry>
-    <entry keyword="server audio">
-      <topic href="topics/tprefaud.html#tprefaud_wst" title="Defining the audio preferences"/>
+      <entry keyword="launching">
+        <topic href="topics/twlaunchpref.html#twlaunchpref_wst" title="Defining the launching preferences"/>
+      </entry>
     </entry>
     <entry keyword="TCP/IP Monitor">
       <topic href="topics/twtcpprf.html#twtcpprf_wst" title="Defining the TCP/IP Monitor preferences"/>
-    </entry>
-    <entry keyword="server launches">
-      <topic href="topics/twlaunchpref.html#twlaunchpref_wst" title="Defining the launching preferences"/>
     </entry>
   </entry>
   <entry keyword="runtime environments">
     <entry keyword="description">
       <topic href="topics/cwres.html#cwres_wst" title="Resources used to test and publish on your server"/>
+    </entry>
+    <entry keyword="defining">
+      <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the server runtime environments preferences"/>
     </entry>
     <entry keyword="HTTP Preview">
       <topic href="topics/thttppreview.html#thttppreview_wst" title="Testing on an HTTP Preview server"/>
@@ -139,33 +147,32 @@
     </entry>
   </entry>
   <entry keyword="views">
-    <entry keyword="Servers">
-      <topic href="topics/rwrcview.html#rwrcview_wst" title="Servers view"/>
-    </entry>
-    <entry keyword="TCP/IP monitors">
-      <topic href="topics/rwtcpvw.html#rwtcpvw_wst" title="TCP/IP Monitor view"/>
-    </entry>
-    <entry keyword="server preferences">
-      <topic href="topics/twsrvprf.html#twsrvprf_wst" title="Defining the server preference"/>
-    </entry>
-    <entry keyword="TCP/IP Monitor">
-      <entry keyword="preferences">
-        <topic href="topics/twtcpprf.html#twtcpprf_wst" title="Defining the TCP/IP Monitor preferences"/>
+    <entry keyword="servers">
+      <entry keyword="overview">
+        <topic href="topics/rwrcview.html#rwrcview_wst" title="Servers view"/>
       </entry>
-    </entry>
-    <entry keyword="Server">
       <entry keyword="monitoring server ports">
         <topic href="topics/tmonitorport.html#tmonitorport_wst" title="Monitoring server ports"/>
       </entry>
     </entry>
-  </entry>
-  <entry keyword="TCP/IP monitors">
-    <entry keyword="overview">
+    <entry keyword="TCP/IP monitors">
       <topic href="topics/rwtcpvw.html#rwtcpvw_wst" title="TCP/IP Monitor view"/>
+      <topic href="topics/twtcpprf.html#twtcpprf_wst" title="Defining the TCP/IP Monitor preferences"/>
+    </entry>
+    <entry keyword="server preferences">
+      <topic href="topics/twsrvprf.html#twsrvprf_wst" title="Defining the server preference"/>
+    </entry>
+  </entry>
+  <entry keyword="TCP/IP">
+    <entry keyword="monitors">
+      <topic href="topics/rwtcpvw.html#rwtcpvw_wst" title="TCP/IP Monitor view"/>
+    </entry>
+    <entry keyword="preferences">
+      <topic href="topics/twtcpprf.html#twtcpprf_wst" title="Defining the TCP/IP Monitor preferences"/>
     </entry>
   </entry>
   <entry keyword="JSP files">
-    <entry keyword="debugging on a server">
+    <entry keyword="debugging">
       <topic href="topics/tdbgjsp.html#tdbgjsp_wst" title="Debugging a JSP file on a server"/>
     </entry>
   </entry>
@@ -179,7 +186,7 @@
       <topic href="topics/tj2ee.html#tj2ee_wst" title="Testing applications on a server"/>
     </entry>
     <entry keyword="defining server runtime environment">
-      <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the installed server runtime environments preferences"/>
+      <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the server runtime environments preferences"/>
     </entry>
     <entry keyword="publishing to servers">
       <topic href="topics/twpub.html#twpub_wst" title="Publishing your application"/>
@@ -191,30 +198,27 @@
       <topic href="topics/twsrtins.html#twsrtins_wst" title="Starting a server"/>
     </entry>
   </entry>
-  <entry keyword="audio preferences">
-    <entry keyword="setting">
+  <entry keyword="audio">
+    <entry keyword="preferences">
       <topic href="topics/tprefaud.html#tprefaud_wst" title="Defining the audio preferences"/>
     </entry>
   </entry>
   <entry keyword="workbench">
-    <entry keyword="server audio preferences">
+    <entry keyword="audio preferences">
       <topic href="topics/tprefaud.html#tprefaud_wst" title="Defining the audio preferences"/>
     </entry>
-    <entry keyword="defining server runtime environment">
-      <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the installed server runtime environments preferences"/>
+    <entry keyword="server runtime environment">
+      <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the server runtime environments preferences"/>
     </entry>
-    <entry keyword="displaying server metadata">
+    <entry keyword="server metadata">
       <topic href="topics/tmetasrv.html#tmetasrv_wst" title="Displaying or hiding the metadata of the server"/>
     </entry>
-    <entry keyword="hiding server metadata">
-      <topic href="topics/tmetasrv.html#tmetasrv_wst" title="Displaying or hiding the metadata of the server"/>
-    </entry>
-    <entry keyword="server launching preferences">
+    <entry keyword="launching preferences">
       <topic href="topics/twlaunchpref.html#twlaunchpref_wst" title="Defining the launching preferences"/>
     </entry>
   </entry>
   <entry keyword="breakpoints">
-    <entry keyword="adding to servlets">
+    <entry keyword="servlets">
       <topic href="topics/tservlet.html#tservlet_wst" title="Debugging a servlet on a server"/>
     </entry>
   </entry>
@@ -247,46 +251,25 @@
     <entry keyword="cleaning on server">
       <topic href="topics/tclean.html#tclean_wst" title="Clean projects published on the server"/>
     </entry>
-  </entry>
-  <entry keyword="wizards">
-    <entry keyword="New Server">
-      <topic href="topics/twcrtins.html#twcrtins_wst" title="Creating a server"/>
+    <entry keyword="clean">
+      <topic href="topics/tclean.html#tclean_wst" title="Clean projects published on the server"/>
     </entry>
-    <entry keyword="New Server Runtime">
-      <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the installed server runtime environments preferences"/>
-    </entry>
-  </entry>
-  <entry keyword="New Server wizard">
-    <topic href="topics/twcrtins.html#twcrtins_wst" title="Creating a server"/>
   </entry>
   <entry keyword="editors">
     <entry keyword="server">
       <topic href="topics/twedtins.html#twedtins_wst" title="Editing a server"/>
     </entry>
   </entry>
-  <entry keyword="runtime environment">
-    <entry keyword="defining">
-      <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the installed server runtime environments preferences"/>
-    </entry>
-  </entry>
-  <entry keyword="New Server Runtime wizard">
-    <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the installed server runtime environments preferences"/>
-  </entry>
-  <entry keyword="installed server runtime environments">
-    <entry keyword="setting preferences">
-      <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the installed server runtime environments preferences"/>
-    </entry>
-  </entry>
-  <entry keyword="TCP/IP">
+  <entry keyword="server runtime environments">
     <entry keyword="preferences">
-      <topic href="topics/twtcpprf.html#twtcpprf_wst" title="Defining the TCP/IP Monitor preferences"/>
+      <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the server runtime environments preferences"/>
     </entry>
   </entry>
   <entry keyword="serverName.server file">
-    <entry keyword="displaying on workbench">
+    <entry keyword="displaying">
       <topic href="topics/tmetasrv.html#tmetasrv_wst" title="Displaying or hiding the metadata of the server"/>
     </entry>
-    <entry keyword="hiding from workbench">
+    <entry keyword="hiding">
       <topic href="topics/tmetasrv.html#tmetasrv_wst" title="Displaying or hiding the metadata of the server"/>
     </entry>
   </entry>
@@ -300,50 +283,25 @@
       <topic href="topics/tmonitorport.html#tmonitorport_wst" title="Monitoring server ports"/>
     </entry>
   </entry>
-  <entry keyword="server">
-    <entry keyword="cleaning projects">
-      <topic href="topics/tclean.html#tclean_wst" title="Clean projects published on the server"/>
-    </entry>
-  </entry>
-  <entry keyword="clean">
-    <entry keyword="projects">
-      <topic href="topics/tclean.html#tclean_wst" title="Clean projects published on the server"/>
-    </entry>
-  </entry>
-  <entry keyword="HTTP Preview">
+  <entry keyword="HTTP preview server">
     <entry keyword="testing static Web projects">
       <topic href="topics/thttppreview.html#thttppreview_wst" title="Testing on an HTTP Preview server"/>
     </entry>
   </entry>
-  <entry keyword="J2EE Preview">
-    <entry keyword="testing J2EE Web projects">
+  <entry keyword="J2EE">
+    <entry keyword="testing on preview servers">
       <topic href="topics/tj2eepreview.html#tj2eepreview_wst" title="Testing on a J2EE Preview server"/>
     </entry>
   </entry>
   <entry keyword="accessibility">
     <entry keyword="keyboard shortcuts">
-      <entry keyword="Servers Tool">
+      <entry keyword="server tools">
         <topic href="topics/raccessserver.html#raccessserver" title="Keyboard shortcuts for Server Tools"/>
       </entry>
     </entry>
   </entry>
   <entry keyword="keyboard shortcuts">
     <entry keyword="Servers Tool">
-      <topic href="topics/raccessserver.html#raccessserver" title="Keyboard shortcuts for Server Tools"/>
-    </entry>
-  </entry>
-  <entry keyword="shortcuts">
-    <entry keyword="keyboard">
-      <entry keyword="Servers Tool">
-        <topic href="topics/raccessserver.html#raccessserver" title="Keyboard shortcuts for Server Tools"/>
-      </entry>
-    </entry>
-  </entry>
-  <entry keyword="Servers Tool">
-    <entry keyword="accessibility">
-      <topic href="topics/raccessserver.html#raccessserver" title="Keyboard shortcuts for Server Tools"/>
-    </entry>
-    <entry keyword="keyboard shortcuts">
       <topic href="topics/raccessserver.html#raccessserver" title="Keyboard shortcuts for Server Tools"/>
     </entry>
   </entry>

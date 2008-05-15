@@ -10,8 +10,10 @@ program by setting breakpoints, suspending threads, stepping through the code,
 and examining the contents of the variables. You can debug a JavaServer Pages
 (JSP) without losing the state of your application. </shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>JSP files<indexterm>debugging on a server</indexterm></indexterm>
-<indexterm>servers<indexterm>debugging JSP files</indexterm></indexterm></keywords>
+<keywords id="index"><indexterm keyref="tdbgjsp|1|JSPfilesdebuggingonaserver"
+status="changed">JSP files<indexterm>debugging</indexterm></indexterm><indexterm
+keyref="tdbgjsp|2|serversdebuggingJSPfiles" status="new">servers<indexterm>debugging
+JSP files</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <context id="tdbgjsp_context">To debug a JSP file on a server:</context>
