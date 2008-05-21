@@ -3,5 +3,7 @@
 <plugin>
    <extension point="org.eclipse.help.toc">
       <toc file="tocreference.xml"/>
+      <toc file="javadoctoc.xml"/>
+      <toc file="topics_ExtPoint_Reference.xml"/>
    </extension>
 </plugin>
