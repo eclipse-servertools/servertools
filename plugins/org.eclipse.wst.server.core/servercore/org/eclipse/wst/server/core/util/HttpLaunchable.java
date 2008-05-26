@@ -42,6 +42,6 @@ public class HttpLaunchable {
 	 * @see Object#toString()
 	 */
 	public String toString() {
-		return "HttpLaunchable[url=" + url.toString() + "]";
+		return "HttpLaunchable[url=" + url + "]";
 	}
 }
