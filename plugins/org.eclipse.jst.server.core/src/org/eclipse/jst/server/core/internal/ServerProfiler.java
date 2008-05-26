@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.server.core.internal;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunch;
@@ -73,13 +74,14 @@ public class ServerProfiler {
 		return null;
 	}
 
-	public void process(ILaunch launch, IVMInstall vmInstall, VMRunnerConfiguration vmConfig, IProgressMonitor monitor) {
+	public void process(ILaunch launch, IVMInstall vmInstall, VMRunnerConfiguration vmConfig, IProgressMonitor monitor) throws CoreException {
 		try {
 			ServerProfilerDelegate del = getDelegate();
 			if (del != null)
 				del.process(launch, vmInstall, vmConfig, monitor);
-		} catch (Throwable t) {
-			Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
+		} catch (CoreException ce) {
+			Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), ce);
+			throw ce;
 		}
 	}
 
