@@ -21,6 +21,7 @@ public class Messages extends NLS {
 	public static String installDir;
 	public static String browse;
 	public static String install;
+	public static String installDialogTitle;
 	public static String selectInstallDir;
 	public static String installedJRE;
 	public static String installedJREs;

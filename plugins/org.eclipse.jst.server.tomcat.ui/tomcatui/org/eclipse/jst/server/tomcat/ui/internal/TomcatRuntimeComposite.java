@@ -183,7 +183,7 @@ public class TomcatRuntimeComposite extends Composite {
 				}
 				TaskModel taskModel = new TaskModel();
 				taskModel.putObject(LicenseWizardFragment.LICENSE, license);
-				TaskWizard wizard2 = new TaskWizard(Messages.install, new WizardFragment() {
+				TaskWizard wizard2 = new TaskWizard(Messages.installDialogTitle, new WizardFragment() {
 					protected void createChildFragments(List list) {
 						list.add(new LicenseWizardFragment());
 					}
@@ -192,7 +192,6 @@ public class TomcatRuntimeComposite extends Composite {
 				WizardDialog dialog2 = new WizardDialog(getShell(), wizard2);
 				if (dialog2.open() == Window.CANCEL)
 					return;
-				
 				
 				DirectoryDialog dialog = new DirectoryDialog(TomcatRuntimeComposite.this.getShell());
 				dialog.setMessage(Messages.selectInstallDir);
