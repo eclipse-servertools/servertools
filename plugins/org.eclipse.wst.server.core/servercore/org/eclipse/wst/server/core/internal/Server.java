@@ -15,7 +15,6 @@ import java.util.*;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
@@ -1091,24 +1090,13 @@ public class Server extends Base implements IServer {
 		// make sure that the delegate is loaded and the server state is correct
 		loadAdapter(ServerBehaviourDelegate.class, monitor);
 		
-		ISchedulingRule rule = MultiRule.combine(new ISchedulingRule[] {
-			ResourcesPlugin.getWorkspace().getRoot(), Server.this
-		});
-		
-		IJobManager jobManager = Job.getJobManager();
-		try {
-			jobManager.beginRule(rule, monitor);
-			
-			if (((ServerType)getServerType()).startBeforePublish() && (getServerState() == IServer.STATE_STOPPED)) {
-				IStatus status = startImpl(ILaunchManager.RUN_MODE, monitor);
-				if (status != null && status.getSeverity() == IStatus.ERROR)
-					return status;
-			}
-			
-			return publishImpl(kind, null, null, monitor);
-		} finally {
-			jobManager.endRule(rule);
+		if (((ServerType)getServerType()).startBeforePublish() && (getServerState() == IServer.STATE_STOPPED)) {
+			IStatus status = startImpl(ILaunchManager.RUN_MODE, monitor);
+			if (status != null && status.getSeverity() == IStatus.ERROR)
+				return status;
 		}
+		
+		return publishImpl(kind, null, null, monitor);
 	}
 
 	/*
