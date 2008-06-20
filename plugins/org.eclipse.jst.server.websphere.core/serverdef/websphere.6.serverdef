@@ -178,7 +178,7 @@
 		<archive path="${wasHome}/lib/scheduler-client.jar"/>
 		<archive path="${wasHome}/lib/scheduler-service.jar"/>
 		<archive path="${wasHome}/lib/security.jar"/>
-		<archive path="${wasHome}/lib/securityImpl.jar"/>
+		<archive path="${wasHome}/lib/securityimpl.jar"/>
 		<archive path="${wasHome}/lib/servletevent.jar"/>
 		<archive path="${wasHome}/lib/sib.common.jar"/>
 		<archive path="${wasHome}/lib/sib.server.jar"/>

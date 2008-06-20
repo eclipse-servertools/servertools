@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.jst.server.websphere.core; singleton:=true
-Bundle-Version: 1.0.301.qualifier
+Bundle-Version: 1.0.302.qualifier
 Bundle-ClassPath: webspherecore.jar
 Bundle-Activator: org.eclipse.jst.server.websphere.core.CorePlugin
 Bundle-Vendor: %providerName
