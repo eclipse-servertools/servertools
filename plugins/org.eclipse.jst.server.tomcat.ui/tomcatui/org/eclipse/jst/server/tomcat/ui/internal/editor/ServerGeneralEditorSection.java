@@ -230,7 +230,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 		updating = true;
 		ITomcatVersionHandler tvh = tomcatServer.getTomcatVersionHandler();
 		
-		boolean supported = tvh.supportsServeModulesWithoutPublish();
+		boolean supported = tvh != null && tvh.supportsServeModulesWithoutPublish();
 		String label = NLS.bind(Messages.serverEditorNoPublish,
 				supported ? "" : Messages.serverEditorNotSupported);
 		noPublish.setText(label);
@@ -240,7 +240,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 		else
 			noPublish.setEnabled(true);
 
-		supported = tvh.supportsSeparateContextFiles();
+		supported = tvh != null && tvh.supportsSeparateContextFiles();
 		label = NLS.bind(Messages.serverEditorSeparateContextFiles,
 				supported ? "" : Messages.serverEditorNotSupported);
 		separateContextFiles.setText(label);
@@ -252,7 +252,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 
 		secure.setSelection(tomcatServer.isSecure());
 		
-		supported = tvh.supportsDebugArgument();
+		supported = tvh != null && tvh.supportsDebugArgument();
 		label = NLS.bind(Messages.serverEditorDebugMode,
 				supported ? "" : Messages.serverEditorNotSupported);
 		debug.setText(label);

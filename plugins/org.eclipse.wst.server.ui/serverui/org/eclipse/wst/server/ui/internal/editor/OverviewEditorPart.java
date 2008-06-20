@@ -393,7 +393,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 		// runtime
 		if (server != null && server.getServerType() != null && server.getServerType().hasRuntime()) {
 			final IRuntime runtime = server.getRuntime();
-			if (ServerUIPlugin.hasWizardFragment(runtime.getRuntimeType().getId())) {
+			if (runtime != null && ServerUIPlugin.hasWizardFragment(runtime.getRuntimeType().getId())) {
 				Hyperlink link = toolkit.createHyperlink(composite, Messages.serverEditorOverviewRuntime, SWT.NONE);
 				link.addHyperlinkListener(new HyperlinkAdapter() {
 					public void linkActivated(HyperlinkEvent e) {

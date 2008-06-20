@@ -449,18 +449,16 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 	protected void updateServerDirButtons() {
 		if (tomcatServer.getInstanceDirectory() == null) {
 			IPath path = tomcatServer.getRuntimeBaseDirectory();
-			if (path.equals(installDirPath)) {
+			if (path != null && path.equals(installDirPath)) {
 				serverDirInstall.setSelection(true);
 				serverDirMetadata.setSelection(false);
 				serverDirCustom.setSelection(false);
-			}
-			else {
+			} else {
 				serverDirMetadata.setSelection(true);
 				serverDirInstall.setSelection(false);
 				serverDirCustom.setSelection(false);
 			}
-		}
-		else {
+		} else {
 			serverDirCustom.setSelection(true);
 			serverDirMetadata.setSelection(false);
 			serverDirInstall.setSelection(false);
@@ -476,7 +474,9 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 	
 	protected void updateServerDir() {
 		IPath path = tomcatServer.getRuntimeBaseDirectory();
-		if (workspacePath.isPrefixOf(path)) {
+		if (path == null)
+			serverDir.setText("");
+		else if (workspacePath.isPrefixOf(path)) {
 			int cnt = path.matchingFirstSegments(workspacePath);
 			path = path.removeFirstSegments(cnt).setDevice(null);
 			serverDir.setText(path.toOSString());
@@ -485,8 +485,7 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 				if (tomcatServer.isTestEnvironment() && tomcatServer.getInstanceDirectory() == null)
 					tempDirPath = path;
 			}
-		}
-		else
+		} else
 			serverDir.setText(path.toOSString());
 	}
 	
@@ -581,7 +580,7 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 			else {
 				IPath path = tomcatServer.getRuntimeBaseDirectory();
 				// If non-custom instance dir is not the install and metadata isn't the selection, return error
-				if (!path.equals(installDirPath) && !serverDirMetadata.getSelection()) {
+				if (path != null && !path.equals(installDirPath) && !serverDirMetadata.getSelection()) {
 					setErrorMessage(NLS.bind(Messages.errorServerDirCustomNotMetadata, 
 							NLS.bind(Messages.serverEditorServerDirMetadata, "").trim()));
 				}
