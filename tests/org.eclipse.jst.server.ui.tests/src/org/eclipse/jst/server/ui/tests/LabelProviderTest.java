@@ -56,6 +56,10 @@ public class LabelProviderTest extends TestCase {
 						public int compareTo(Object o) {
 							return 0;
 						}
+
+						public Object getAdapter(Class adapter) {
+							return null;
+						}
 						
 					};
 				}
