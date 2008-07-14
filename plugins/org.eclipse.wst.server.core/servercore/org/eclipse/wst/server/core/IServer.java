@@ -465,7 +465,7 @@ public interface IServer extends IServerAttributes, ISchedulingRule {
 	public boolean getServerRestartState();
 
 	/**
-	 * Asynchronously restarts this server. This operation does
+	 * Synchronously restarts this server. This operation does
 	 * nothing if this server cannot be stopped ({@link #canRestart(String)}
 	 * returns <code>false</code>.
 	 * This method cannot be used to start the server from a stopped state.

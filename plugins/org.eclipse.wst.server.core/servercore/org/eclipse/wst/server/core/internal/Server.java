@@ -14,16 +14,12 @@ import java.util.*;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.core.runtime.jobs.MultiRule;
+import org.eclipse.core.runtime.jobs.*;
 import org.eclipse.debug.core.*;
-
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.*;
+
 /**
  * 
  */
@@ -2454,7 +2450,10 @@ public class Server extends Base implements IServer {
 			
 			try {
 				addServerListener(curListener);
-				getBehaviourDelegate(null).restart(launchMode);
+				
+				// Synchroneous restart
+				restartImpl2(launchMode, monitor);
+				
 				return Status.OK_STATUS;
 			} catch (CoreException ce) {
 				removeServerListener(curListener);
@@ -2504,6 +2503,136 @@ public class Server extends Base implements IServer {
 		return Status.OK_STATUS;
 	}
 
+	/**
+	 * Synchroneous restart. Throws a core exception in case the the adopter doesn't implement restart 
+	 * @param launchMode
+	 * @param monitor
+	 * @return IStatus 
+	 * @throws CoreException
+	 */
+	protected IStatus restartImpl2(String launchMode, IProgressMonitor monitor) throws CoreException{
+		final boolean[] notified = new boolean[1];
+		
+		// add listener to the server
+		IServerListener listener = new IServerListener() {
+			public void serverChanged(ServerEvent event) {
+				int eventKind = event.getKind();
+				IServer server = event.getServer();
+				if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
+					int state = server.getServerState();
+					if (state == IServer.STATE_STARTED) {
+						// notify waiter
+						synchronized (notified) {
+							try {
+								Trace.trace(Trace.FINEST, "synchronousRestart notify");
+								notified[0] = true;
+								notified.notifyAll();
+							} catch (Exception e) {
+								Trace.trace(Trace.SEVERE, "Error notifying server restart", e);
+							}
+						}
+					}
+				}
+			}
+		};
+		addServerListener(listener);
+		
+		final int restartTimeout = (getStartTimeout() * 1000) + (getStopTimeout() * 1000);
+		class Timer {
+			boolean timeout;
+			boolean alreadyDone;
+		}
+		final Timer timer = new Timer();
+		
+		final IProgressMonitor monitor2 = monitor;
+		Thread thread = new Thread("Server Restart Timeout") {
+			public void run() {
+				try {
+					int totalTimeout = restartTimeout;
+					if (totalTimeout < 0)
+						totalTimeout = 1;
+					boolean userCancelled = false;
+					int retryPeriod = 2500;
+					while (!notified[0] && totalTimeout > 0 && !userCancelled && !timer.alreadyDone) {
+						Thread.sleep(retryPeriod);
+						if (restartTimeout > 0)
+							totalTimeout -= retryPeriod;
+						if (!notified[0] && !timer.alreadyDone && monitor2.isCanceled()) {
+							// user canceled - set the server state to stopped
+							userCancelled = true;
+							setServerState(IServer.STATE_STOPPED);
+							// notify waiter
+							synchronized (notified) {
+								Trace.trace(Trace.FINEST, "synchronousRestart user cancelled");
+								notified[0] = true;
+								notified.notifyAll();
+							}
+						}
+					}
+					if (!userCancelled && !timer.alreadyDone && !notified[0]) {
+						// notify waiter
+						synchronized (notified) {
+							Trace.trace(Trace.FINEST, "synchronousRestart notify timeout");
+							if (!timer.alreadyDone && totalTimeout <= 0)
+								timer.timeout = true;
+							notified[0] = true;
+							notified.notifyAll();
+						}
+					}
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "Error notifying server restart timeout", e);
+				}
+			}
+		};
+		thread.setDaemon(true);
+		thread.start();
+	
+		Trace.trace(Trace.FINEST, "synchronousRestart 2");
+	
+		// call the delegate restart
+		try {
+			getBehaviourDelegate(null).restart(launchMode);
+		} catch (CoreException e) {
+			removeServerListener(listener);
+			timer.alreadyDone = true;
+			throw new CoreException(e.getStatus());
+		}
+		if (monitor.isCanceled()) {
+			removeServerListener(listener);
+			timer.alreadyDone = true;
+			return Status.CANCEL_STATUS;
+		}
+		
+		Trace.trace(Trace.FINEST, "synchronousRestart 3");
+		
+		// wait for it! wait for it! ...
+		synchronized (notified) {
+			try {
+				while (!notified[0] && !monitor.isCanceled() && !timer.timeout
+						&& !(getServerState() == IServer.STATE_STARTED)) {
+					notified.wait();
+				}
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "Error waiting for server restart", e);
+			}
+			timer.alreadyDone = true;
+		}
+		removeServerListener(listener);
+		
+		if (timer.timeout) {
+			stop(false);
+			// TODO this message should be changed to restart time out
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorRestartFailed, new String[] { getName(), (restartTimeout / 1000) + "" }), null);
+		}
+		
+		if (getServerState() == IServer.STATE_STOPPED)
+			// TODO this message should be changed to restart time out
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorRestartFailed, getName()), null);
+		
+		Trace.trace(Trace.FINEST, "synchronousRestart 4");
+		return Status.OK_STATUS;
+	}
+	
 	protected IStatus startImpl(String launchMode, IProgressMonitor monitor) {
 		final boolean[] notified = new boolean[1];
 		
