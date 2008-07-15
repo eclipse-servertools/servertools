@@ -10,6 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal;
 
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
@@ -27,7 +28,7 @@ public class GeneralToolTip implements IServerToolTip {
 		String s = "";
 		if (server.getRuntime() != null)
 			s += server.getRuntime().getName() + " - ";
-		s += server.getModules().length + " modules";
+		s += NLS.bind(Messages.modules, server.getModules().length + "");
 		text.setText(s);
 	}
 }
