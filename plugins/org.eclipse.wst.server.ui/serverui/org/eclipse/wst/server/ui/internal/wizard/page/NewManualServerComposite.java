@@ -465,10 +465,10 @@ public class NewManualServerComposite extends Composite {
 				}
 				if (sel < 0) {
 					sel = 0;
-					setRuntime(runtimes[0]);
 				}
 				
 				runtimeCombo.select(sel);
+				setRuntime(runtimes[0]);
 			}
 			
 			IRuntimeType runtimeType = serverType.getRuntimeType();
