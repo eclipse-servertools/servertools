@@ -305,10 +305,12 @@ public class Server extends Base implements IServer {
 			
 			IStatus stat = startImpl(launchMode, monitor);
 			
-			if (publish == PUBLISH_AFTER) {
-				IStatus status = publishImpl(IServer.PUBLISH_INCREMENTAL, null, null, monitor);
-				if (status != null && status.getSeverity() == IStatus.ERROR)
-					return status;
+			if ( IStatus.ERROR != stat.getSeverity() ) {
+				if (publish == PUBLISH_AFTER) {
+					IStatus status = publishImpl(IServer.PUBLISH_INCREMENTAL, null, null, monitor);
+					if (status != null && status.getSeverity() == IStatus.ERROR)
+						return status;
+				}
 			}
 			return stat;
 		}
