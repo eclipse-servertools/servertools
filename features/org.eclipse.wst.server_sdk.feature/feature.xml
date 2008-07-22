@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.server_sdk.feature"
       label="%featureName"
-      version="3.0.0.qualifier"
+      version="3.0.1.qualifier"
       provider-name="%providerName">
 
    <description>
@@ -28,14 +28,5 @@
    <includes
          id="org.eclipse.wst.server_ui.feature.source"
          version="0.0.0"/>
-
-<!--
-   <plugin
-         id="org.eclipse.server.doc.isv"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"
-         unpack="false"/>
--->
 
 </feature>
