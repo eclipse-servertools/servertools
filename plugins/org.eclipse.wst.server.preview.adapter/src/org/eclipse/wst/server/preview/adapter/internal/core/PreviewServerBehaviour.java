@@ -31,6 +31,7 @@ import org.eclipse.wst.server.core.model.IModuleResource;
 import org.eclipse.wst.server.core.model.IModuleResourceDelta;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.eclipse.wst.server.core.util.IStaticWeb;
+import org.eclipse.wst.server.core.util.ProjectModule;
 import org.eclipse.wst.server.core.util.PublishUtil;
 import org.eclipse.wst.server.core.util.SocketUtil;
 /**
@@ -100,7 +101,8 @@ public class PreviewServerBehaviour extends ServerBehaviourDelegate {
 			String type = module.getModuleType().getId();
 			if ("wst.web".equals(type)) {
 				IStaticWeb staticWeb = (IStaticWeb) module.loadAdapter(IStaticWeb.class, null);
-				mod.putString("context", staticWeb.getContextRoot());
+				if (staticWeb != null)
+					mod.putString("context", staticWeb.getContextRoot());
 				mod.putString("type", "static");
 			}
 			mod.putString("path", getModulePublishDirectory(module).toPortableString());
@@ -160,7 +162,10 @@ public class PreviewServerBehaviour extends ServerBehaviourDelegate {
 	 * Publishes the given module to the server.
 	 */
 	protected void publishModule(int kind, int deltaKind, IModule[] moduleTree, IProgressMonitor monitor) throws CoreException {
-		IModule module = moduleTree[moduleTree.length - 1]; 
+		IModule module = moduleTree[moduleTree.length - 1];
+		if (isSingleRootStructure(module))
+			return;
+		
 		IPath to = getModulePublishDirectory(module);
 		
 		if (kind == IServer.PUBLISH_CLEAN || deltaKind == ServerBehaviourDelegate.REMOVED) {
@@ -238,12 +243,38 @@ public class PreviewServerBehaviour extends ServerBehaviourDelegate {
 	}
 
 	/**
+	 * Returns <code>true</code> if the module in the workspace has a single
+	 * root structure - i.e. matches the spec disk layout - and <code>false</code>
+	 * otherwise.
+	 * 
+	 * @return <code>true</code> if the module in the workspace has a single
+	 *    root structure - i.e. matches the spec disk layout - and
+	 *    <code>false</code> otherwise
+	 */
+	protected boolean isSingleRootStructure(IModule module) {
+		ProjectModule pm = (ProjectModule) module.loadAdapter(ProjectModule.class, null);
+		if (pm == null)
+			return false;
+		
+		return pm.isSingleRootStructure();
+	}
+
+	/**
 	 * Returns the module's publish path.
 	 * 
 	 * @param module a module
 	 * @return the publish directory for the module
 	 */
 	protected IPath getModulePublishDirectory(IModule module) {
+		if (isSingleRootStructure(module)) {
+			IStaticWeb webModule = (IStaticWeb) module.loadAdapter(IStaticWeb.class, null);
+			if (webModule != null) {
+				//IContainer[] moduleFolder = webModule.getResourceFolders();
+				//if (moduleFolder != null && moduleFolder.length > 0)
+				//	return moduleFolder[0].getLocation();							
+			}
+		}
+		
 		return getTempDirectory().append(module.getName());
 	}
 
