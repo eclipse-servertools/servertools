@@ -52,11 +52,11 @@ public final class PublishHelper {
 	/**
 	 * Create a new PublishHelper.
 	 * 
-	 * @param tempDir a temporary directory to use during publishing, or <code>null</code>
+	 * @param tempDirectory a temporary directory to use during publishing, or <code>null</code>
 	 *    to use the default. If it does not exist, the folder will be created
 	 */
-	public PublishHelper(File tempDir) {
-		this.tempDir = tempDir;
+	public PublishHelper(File tempDirectory) {
+		this.tempDir = tempDirectory;
 		if (tempDir == null)
 			tempDir = defaultTempDir;
 		else if (!tempDir.exists())
