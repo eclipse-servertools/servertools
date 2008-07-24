@@ -10,46 +10,23 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.wizard.page;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.LabelProviderChangedEvent;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.swt.widgets.Widget;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.ui.ServerUICore;
@@ -713,20 +690,34 @@ public class ModifyModulesComposite extends Composite {
 		if (ms == null ||  ms.length == 0) {
 			add.setEnabled(false);
 		} else {
-			boolean enabled = true;
+			boolean enabled = false;
+			// iterate through selection, if we find at least ONE module that can't be added, exit the loop
 			for (int i = 0; i < ms.length; i++) {
 				IModule module = getModule(ms[i]);
 				if (module != null) {
 					try {
 						IStatus status = errorMap.get(module);
-						if (modules.contains(module) && status != null) {
-							if (status.getSeverity() == IStatus.ERROR) {
+						if (modules.contains(module)) {
+							if (status == null )
+								enabled = true;
+							else if (status.getSeverity() == IStatus.ERROR) {
+								// this module can't be added because has errors, exit the loop
 								enabled = false;
 								wizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
-							} else if (status.getSeverity() == IStatus.WARNING)
+								break;
+							} else if (status.getSeverity() == IStatus.WARNING){
+								enabled = true;
 								wizard.setMessage(status.getMessage(), IMessageProvider.WARNING);
-							else if (status.getSeverity() == IStatus.INFO)
+							}
+							else if (status.getSeverity() == IStatus.INFO){
+								enabled = true;
 								wizard.setMessage(status.getMessage(), IMessageProvider.INFORMATION);
+							}
+						}
+						else{
+							// at least ONE module from the selection can't be added, exit the loop   
+							enabled = false;
+							break;
 						}
 					} catch (Exception e) {
 						Trace.trace(Trace.INFO,"Unable to handle error map for module:" + module); 
@@ -741,16 +732,29 @@ public class ModifyModulesComposite extends Composite {
 		if (ms == null ||  ms.length == 0) {
 			remove.setEnabled(false);
 		} else {
-			boolean enabled = true;
+			boolean enabled = false;
+			// iterate through selection, if we find at least ONE module that can't be added, exit the loop
 			for (int i = 0; i < ms.length; i++) {
 				IModule module = getModule(ms[i]);
 				if (module != null && deployed.contains(module)) {
 					// provide error about removing required single module
-					if (requiredModules != null && requiredModules.length == 1 &&
-							requiredModules[0].equals(module)) {
-						wizard.setMessage(NLS.bind(Messages.wizModuleRequiredModule, module.getName()), IMessageProvider.ERROR);
-						enabled = false;
+					// required modules can't be removed
+					if (requiredModules != null){
+						if (requiredModules.length == 1 && requiredModules[0].equals(module)) {
+							// this is a required module and can't be removed, exit the loop
+							wizard.setMessage(NLS.bind(Messages.wizModuleRequiredModule, module.getName()), IMessageProvider.ERROR);
+							enabled = false;
+							break;
+						}
 					}
+					else 
+						enabled = true;
+				}
+				else{
+					// this module is not found in the 'deployed' array, the module might be a child
+					// at least ONE module from the selection can't be removed, exit the loop
+					enabled = false;
+					break;
 				}
 			}
 			remove.setEnabled(enabled);
@@ -823,9 +827,6 @@ public class ModifyModulesComposite extends Composite {
 				deployedTreeViewer.remove(ms);
 			}
 		}
-		
-		//availableTreeViewer.refresh();
-		//deployedTreeViewer.refresh();
 
 		setEnablement();
 	}
