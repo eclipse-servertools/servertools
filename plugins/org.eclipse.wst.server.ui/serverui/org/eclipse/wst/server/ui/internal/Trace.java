@@ -12,6 +12,8 @@ package org.eclipse.wst.server.ui.internal;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -32,6 +34,8 @@ public class Trace {
 		"CONFIG ", "INFO   ", "WARNING", "SEVERE ", "FINER  ", "FINEST ", "PERF   ", "EXTENSION"};
 
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm.ss.SSS");
+
+	private static Set<String> logged = new HashSet<String>();
 
 	/**
 	 * Trace constructor comment.
@@ -58,8 +62,15 @@ public class Trace {
 	 * @param t a throwable
 	 */
 	public static void trace(byte level, String s, Throwable t) {
-		if (level == SEVERE)
-			ServerUIPlugin.getInstance().getLog().log(new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, s, t));
+		if (s == null)
+			return;
+		
+		if (level == SEVERE) {
+			if (!logged.contains(s)) {
+				ServerUIPlugin.getInstance().getLog().log(new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, s, t));
+				logged.add(s);
+			}
+		}
 		
 		if (!ServerUIPlugin.getInstance().isDebugging())
 			return;

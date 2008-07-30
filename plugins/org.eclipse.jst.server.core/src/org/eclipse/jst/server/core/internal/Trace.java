@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jst.server.core.internal;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 /**
@@ -34,6 +37,8 @@ public class Trace {
 	public static final byte FINEST = 3;
 
 	public static final byte PUBLISHING = 4;
+
+	private static Set<String> logged = new HashSet<String>();
 
 	/**
 	 * Trace constructor comment.
@@ -60,8 +65,15 @@ public class Trace {
 	 * @param t Throwable
 	 */
 	public static void trace(byte level, String s, Throwable t) {
-		if (level == SEVERE)
-			JavaServerPlugin.getInstance().getLog().log(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, s, t));
+		if (s == null)
+			return;
+		
+		if (level == SEVERE) {
+			if (!logged.contains(s)) {
+				JavaServerPlugin.getInstance().getLog().log(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, s, t));
+				logged.add(s);
+			}
+		}
 		
 		if (!JavaServerPlugin.getInstance().isDebugging())
 			return;
