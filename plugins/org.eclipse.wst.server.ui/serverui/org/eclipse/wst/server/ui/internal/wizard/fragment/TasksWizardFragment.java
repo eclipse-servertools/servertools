@@ -105,7 +105,7 @@ public class TasksWizardFragment extends WizardFragment {
 		}
 	}
 
-	protected List tasks;
+	protected List<TaskInfo> tasks;
 	protected boolean hasOptionalTasks;
 	protected boolean hasPreferredTasks;
 
@@ -241,21 +241,60 @@ public class TasksWizardFragment extends WizardFragment {
 			wc = (ServerWorkingCopy)server.createWorkingCopy();
 			createdWC = true;
 		}
-		wc.resetPreferredPublishOperations();
-		wc.resetOptionalPublishOperations();
 		
+		// compare lists
+		List<String> disabled = new ArrayList<String>();
+		List<String> enabled = new ArrayList<String>();
 		Iterator iterator = tasks.iterator();
 		while (iterator.hasNext()) {
 			TaskInfo task = (TaskInfo)iterator.next();
 			if (PublishOperation.REQUIRED == task.kind)
 				continue;
 			
+			String id = wc.getPublishOperationId(task.task2);
 			if (PublishOperation.PREFERRED == task.kind) {
 				if (!task.isSelected())
-					wc.disablePreferredPublishOperations(task.task2);
+					disabled.add(id);
 			} else if (PublishOperation.OPTIONAL == task.kind) {
 				if (task.isSelected())
-					wc.enableOptionalPublishOperations(task.task2);
+					enabled.add(id);
+			}
+		}
+		
+		List<String> curDisabled = wc.getDisabledPreferredPublishOperationIds();
+		List<String> curEnabled = wc.getEnabledOptionalPublishOperationIds();
+		
+		boolean different = false;
+		if (curEnabled.size() != enabled.size() || curDisabled.size() != disabled.size()) {
+			different = true;
+		} else {
+			for (String id : curDisabled) {
+				if (!disabled.contains(id))
+					different = true;
+			}
+			for (String id : curEnabled) {
+				if (!enabled.contains(id))
+					different = true;
+			}
+		}
+		
+		if (different) {
+			wc.resetPreferredPublishOperations();
+			wc.resetOptionalPublishOperations();
+			
+			Iterator<TaskInfo> iterator2 = tasks.iterator();
+			while (iterator2.hasNext()) {
+				TaskInfo task = iterator2.next();
+				if (PublishOperation.REQUIRED == task.kind)
+					continue;
+				
+				if (PublishOperation.PREFERRED == task.kind) {
+					if (!task.isSelected())
+						wc.disablePreferredPublishOperations(task.task2);
+				} else if (PublishOperation.OPTIONAL == task.kind) {
+					if (task.isSelected())
+						wc.enableOptionalPublishOperations(task.task2);
+				}
 			}
 		}
 		
