@@ -123,6 +123,7 @@ public class ServerPropertyPage extends PropertyPage {
 			Button switchLocation = new Button(composite, SWT.PUSH);
 			switchLocation.setText(Messages.actionSwitchServerLocation);
 			switchLocation.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+			switchLocation.setEnabled(!server.isReadOnly());
 			switchLocation.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					try {

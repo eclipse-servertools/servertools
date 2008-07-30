@@ -306,9 +306,11 @@ public class ServersView extends ViewPart {
 		monitorPropertiesAction = new PropertiesAction(shell, "org.eclipse.wst.server.ui.properties.monitor", provider);
 		
 		// add toolbar buttons
-		IContributionManager cm = getViewSite().getActionBars().getToolBarManager();
+		IContributionManager cm = actionBars.getToolBarManager();
 		for (int i = 0; i < actions.length - 1; i++)
 			cm.add(actions[i]);
+		
+		cm.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
 	private static void fillNewContextMenu(Shell shell, ISelection selection, IMenuManager menu) {

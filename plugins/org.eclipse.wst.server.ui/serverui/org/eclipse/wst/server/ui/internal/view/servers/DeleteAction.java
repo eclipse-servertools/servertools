@@ -50,6 +50,9 @@ public class DeleteAction extends AbstractServerAction {
 		
 		int size = servers.length;
 		for (int i = 0; i < size; i++) {
+			if (servers[i].isReadOnly())
+				return false;
+			
 			if (servers[i].getServerConfiguration() != null)
 				list.add(servers[i].getServerConfiguration());
 		}
