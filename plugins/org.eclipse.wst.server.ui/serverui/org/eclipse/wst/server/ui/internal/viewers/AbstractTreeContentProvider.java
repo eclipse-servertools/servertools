@@ -10,11 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -196,6 +194,14 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 		if (initialSelection == null) {
 			InitialSelectionProvider isp = ServerUIPlugin.getInitialSelectionProvider();
 			initialSelection = isp.getInitialSelection(getAllObjects());
+		}
+		return initialSelection;
+	}
+	
+	public Object getInitialSelection(IProject project){
+		if (initialSelection == null) {
+			InitialSelectionProvider isp = ServerUIPlugin.getInitialSelectionProvider();
+			initialSelection = isp.getInitialSelection(getAllObjects(),project);
 		}
 		return initialSelection;
 	}

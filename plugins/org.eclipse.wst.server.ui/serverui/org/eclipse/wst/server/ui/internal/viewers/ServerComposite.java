@@ -156,8 +156,8 @@ public class ServerComposite extends AbstractTreeComposite {
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
 						try {
-							if (contentProvider.getInitialSelection() != null)
-								treeViewer.setSelection(new StructuredSelection(contentProvider.getInitialSelection()), true);
+							if (contentProvider.getInitialSelection(module.getProject()) != null)
+								treeViewer.setSelection(new StructuredSelection(contentProvider.getInitialSelection(module.getProject())), true);
 						} catch (Exception e) {
 							// ignore - wizard has already been closed
 						}
