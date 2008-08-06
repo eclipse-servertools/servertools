@@ -16,38 +16,20 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.*;
 import org.eclipse.jface.internal.text.html.HTML2TextReader;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerType;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.ui.IServerModule;
 import org.eclipse.wst.server.ui.internal.provisional.IServerToolTip;
@@ -75,14 +57,18 @@ public class ServerToolTip extends ToolTip {
 		tree.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent  e) {
 				if (e.keyCode == SWT.ESC) {
-					CURRENT_TOOLTIP.setVisible(false);
-					CURRENT_TOOLTIP.dispose();
+					if (CURRENT_TOOLTIP != null) {
+						CURRENT_TOOLTIP.dispose();
+						CURRENT_TOOLTIP = null;
+					}
 					activate();
 				}
 				if (e.keyCode == SWT.F6) {
-					deactivate();
-					hide();
-					createFocusedTooltip(tree);					
+					if (CURRENT_TOOLTIP == null) {
+						deactivate();
+						hide();
+						createFocusedTooltip(tree);
+					}
 				}
 			}
 			public void keyReleased(KeyEvent e){
