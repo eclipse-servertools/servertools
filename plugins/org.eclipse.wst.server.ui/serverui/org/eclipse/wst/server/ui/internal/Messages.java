@@ -183,6 +183,7 @@ public class Messages extends NLS {
 	public static String wizModuleRemoveAll;
 	public static String wizModuleRequiredModule;
 	public static String wizModuleRequiredModules;
+	public static String wizModulePublishImmediately;
 	public static String wizTaskTitle;
 	public static String wizTaskDescription;
 	public static String wizErrorInvalidFolder;

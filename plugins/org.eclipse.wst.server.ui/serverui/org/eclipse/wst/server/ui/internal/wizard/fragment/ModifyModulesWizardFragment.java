@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.IModuleVisitor;
 import org.eclipse.wst.server.core.internal.Server;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
 import org.eclipse.wst.server.ui.internal.wizard.page.ModifyModulesComposite;
@@ -31,9 +32,14 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 	protected ModifyModulesComposite comp;
 
 	protected IModule module;
+	protected boolean showPublishOption;
 
 	public ModifyModulesWizardFragment() {
 		// do nothing
+	}
+
+	public ModifyModulesWizardFragment(boolean showPublishOption) {
+		this.showPublishOption = showPublishOption;
 	}
 
 	public ModifyModulesWizardFragment(IModule module) {
@@ -48,7 +54,7 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 	 * @see org.eclipse.wst.server.ui.internal.task.WizardTask#getWizardPage()
 	 */
 	public Composite createComposite(Composite parent, IWizardHandle handle) {
-		comp = new ModifyModulesComposite(parent, handle, module);
+		comp = new ModifyModulesComposite(parent, handle, module, showPublishOption);
 		return comp;
 	}
 
@@ -120,7 +126,10 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 	}
 
 	public void performFinish(IProgressMonitor monitor) throws CoreException {
-		if (comp != null)
+		if (comp != null) {
 			WizardTaskUtil.modifyModules(comp.getModulesToAdd(), comp.getModulesToRemove(), getTaskModel(), monitor);
+			if (showPublishOption)
+				ServerUIPlugin.getPreferences().setPublishOnAddRemoveModule(comp.shouldPublishImmediately());
+		}
 	}
 }

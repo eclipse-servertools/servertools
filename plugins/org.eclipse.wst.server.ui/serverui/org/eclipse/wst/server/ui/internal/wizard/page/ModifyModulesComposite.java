@@ -49,6 +49,8 @@ public class ModifyModulesComposite extends Composite {
 	protected IRuntime runtime;
 	protected boolean runtimeDirty;
 	protected Object refreshModules;
+	protected boolean showPublishOption;
+	protected boolean publishImmediately;
 
 	protected Map<ChildModuleMapKey, IModule[]> childModuleMap = new HashMap<ChildModuleMapKey, IModule[]>();
 	protected Map<IModule, IModule[]> parentModuleMap = new HashMap<IModule, IModule[]>();
@@ -211,6 +213,27 @@ public class ModifyModulesComposite extends Composite {
 		super(parent, SWT.NONE);
 		this.wizard = wizard;
 		requiredModule = module;
+		
+		wizard.setTitle(Messages.wizModuleTitle);
+		wizard.setDescription(Messages.wizModuleDescription);
+		wizard.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_WIZBAN_SELECT_SERVER));
+		
+		createControl();
+	}
+
+	/**
+	 * Create a new ModifyModulesComposite.
+	 * 
+	 * @param parent a parent composite
+	 * @param wizard a wizard
+	 * @param module the module that is being added
+	 * @param showPublishOption show the publishing options
+	 */
+	public ModifyModulesComposite(Composite parent, IWizardHandle wizard, IModule module, boolean showPublishOption) {
+		super(parent, SWT.NONE);
+		this.wizard = wizard;
+		requiredModule = module;
+		this.showPublishOption = showPublishOption;
 		
 		wizard.setTitle(Messages.wizModuleTitle);
 		wizard.setDescription(Messages.wizModuleDescription);
@@ -614,6 +637,22 @@ public class ModifyModulesComposite extends Composite {
 			}
 		});
 		
+		if (showPublishOption) {
+			final Button publish = new Button(this, SWT.CHECK);
+			publish.setText(Messages.wizModulePublishImmediately);
+			data = new GridData(GridData.FILL_HORIZONTAL);
+			data.horizontalSpan = 3;
+			publish.setLayoutData(data);
+			
+			publishImmediately = ServerUIPlugin.getPreferences().getPublishOnAddRemoveModule();
+			publish.setSelection(publishImmediately);
+			publish.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent event) {
+					publishImmediately = publish.getSelection();
+				}
+			});
+		}
+		
 		setEnablement();
 		availableTree.setFocus();
 		
@@ -899,5 +938,9 @@ public class ModifyModulesComposite extends Composite {
 
 	public boolean isComplete() {
 		return isComplete;
+	}
+
+	public boolean shouldPublishImmediately() {
+		return publishImmediately;
 	}
 }
