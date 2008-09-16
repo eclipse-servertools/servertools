@@ -29,6 +29,7 @@ public class ServerUIPreferences {
 	private static final String PREF_ENABLE_BREAKPOINTS = "enable-breakpoints";
 	private static final String PREF_RESTART = "restart";
 	private static final String PREF_CREATE_SERVER_WITH_RUNTIME = "create-server";
+	private static final String PREF_PUBLISH_ON_ADD_REMOVE = "publish-on-add-remove";
 
 	public static final byte SAVE_EDITORS_ALWAYS = 2;
 	public static final byte SAVE_EDITORS_NEVER = 0;
@@ -72,6 +73,7 @@ public class ServerUIPreferences {
 		preferences.setDefault(PREF_HOST_NAMES, "localhost");
 		preferences.setDefault(PREF_SHOW_ON_ACTIVITY, true);
 		preferences.setDefault(PREF_CREATE_SERVER_WITH_RUNTIME, false);
+		preferences.setDefault(PREF_PUBLISH_ON_ADD_REMOVE, true);
 	}
 
 	/**
@@ -338,6 +340,25 @@ public class ServerUIPreferences {
 	 */
 	public void setCreateServerWithRuntime(boolean b) {
 		preferences.setValue(PREF_CREATE_SERVER_WITH_RUNTIME, b);
+		ServerUIPlugin.getInstance().savePluginPreferences();
+	}
+
+	/**
+	 * Returns the setting for publishing when modules are added or removed.
+	 * 
+	 * @return boolean
+	 */
+	public boolean getPublishOnAddRemoveModule() {
+		return preferences.getBoolean(PREF_PUBLISH_ON_ADD_REMOVE);
+	}
+
+	/**
+	 * Sets the value for publishing when modules are added or removed.
+	 * 
+	 * @param b
+	 */
+	public void setPublishOnAddRemoveModule(boolean b) {
+		preferences.setValue(PREF_PUBLISH_ON_ADD_REMOVE, b);
 		ServerUIPlugin.getInstance().savePluginPreferences();
 	}
 }

@@ -16,8 +16,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.ui.internal.Messages;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFragment;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
@@ -26,7 +26,7 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
 public class ModifyModulesWizard extends TaskWizard {
 	static class ModifyModulesWizard2 extends WizardFragment {
 		protected void createChildFragments(List<WizardFragment> list) {
-			list.add(new ModifyModulesWizardFragment());
+			list.add(new ModifyModulesWizardFragment(true));
 			list.add(WizardTaskUtil.SaveServerFragment);
 			
 			list.add(new WizardFragment() {
@@ -34,7 +34,8 @@ public class ModifyModulesWizard extends TaskWizard {
 					IServerAttributes svr = (IServerAttributes) getTaskModel().getObject(TaskModel.TASK_SERVER);
 					if (svr instanceof IServer) {
 						IServer server = (IServer) svr;
-						if (server.getServerState() != IServer.STATE_STOPPED && ((Server)server).getAutoPublishSetting() != Server.AUTO_PUBLISH_DISABLE) {
+						if (server.getServerState() != IServer.STATE_STOPPED &&
+								ServerUIPlugin.getPreferences().getPublishOnAddRemoveModule()) {
 							IAdaptable info = null;
 							/*IAdaptable info = new IAdaptable() {
 								public Object getAdapter(Class adapter) {

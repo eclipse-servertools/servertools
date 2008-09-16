@@ -16,8 +16,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.ui.internal.Messages;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.swt.widgets.Shell;
 /**
@@ -53,7 +53,8 @@ public class RemoveModuleAction extends Action {
 				wc.modifyModules(null, new IModule[] { module }, null);
 				server = wc.save(true, null);
 				
-				if (server.getServerState() != IServer.STATE_STOPPED && ((Server)server).getAutoPublishSetting() != Server.AUTO_PUBLISH_DISABLE) {
+				if (server.getServerState() != IServer.STATE_STOPPED &&
+						ServerUIPlugin.getPreferences().getPublishOnAddRemoveModule()) {
 					final IAdaptable info = new IAdaptable() {
 						public Object getAdapter(Class adapter) {
 							if (Shell.class.equals(adapter))
