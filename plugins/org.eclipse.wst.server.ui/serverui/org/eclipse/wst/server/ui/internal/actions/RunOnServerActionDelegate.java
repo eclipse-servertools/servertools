@@ -751,7 +751,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			// TODO - multiple module artifacts
 			IModuleArtifact[] moduleArtifacts = ServerPlugin.getModuleArtifacts(globalSelection);
 			IModuleArtifact moduleArtifact = null;
-			if (moduleArtifacts != null)
+			if (moduleArtifacts != null && moduleArtifacts.length > 0)
 				moduleArtifact = moduleArtifacts[0];
 			
 			IModule module = null;
