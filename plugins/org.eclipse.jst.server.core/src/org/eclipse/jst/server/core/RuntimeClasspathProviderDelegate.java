@@ -65,7 +65,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 
 	private Map<String, IPath> runtimePathMap = new HashMap<String, IPath>();
 
-	private Map<String, IClasspathEntry[]> previousClasspath = new HashMap<String, IClasspathEntry[]>();
+	private Map<String, Integer> previousClasspath = new HashMap<String, Integer>();
 
 	public RuntimeClasspathProviderDelegate() {
 		// default constructor
@@ -158,13 +158,13 @@ public abstract class RuntimeClasspathProviderDelegate {
 		
 		String key = project.getName() + "/" + runtime.getId();
 		if (!previousClasspath.containsKey(key))
-			previousClasspath.put(key, entries);
+			previousClasspath.put(key, new Integer(entries.length));
 		else {
-			IClasspathEntry[] previousEntries = previousClasspath.get(key);
+			Integer previousEntries = previousClasspath.get(key);
 			
-			if ((previousEntries == null) || (previousEntries.length != entries.length)) {
+			if ((previousEntries == null) || (previousEntries.intValue() != entries.length)) {
 				Trace.trace(Trace.FINEST, "Classpath update: " + key + " " + entries);
-				previousClasspath.put(key, entries);
+				previousClasspath.put(key, new Integer(entries.length));
 				
 				IPath path = new Path(RuntimeClasspathContainer.SERVER_CONTAINER);
 				path = path.append(extensionId).append(runtime.getId());
