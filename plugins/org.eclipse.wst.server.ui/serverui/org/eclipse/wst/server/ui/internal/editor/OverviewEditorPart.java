@@ -741,7 +741,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
 		
-		//	 timeouts
+		//	timeouts
 		if (server != null) {
 			final Server svr = (Server) server;
 			
@@ -754,7 +754,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			startTimeoutSpinner = new Spinner(composite, SWT.BORDER);
 			startTimeoutSpinner.setEnabled(true);
 			startTimeoutSpinner.setMinimum(1);
-			startTimeoutSpinner.setMaximum(60*30); // 30 minutes
+			startTimeoutSpinner.setMaximum(60*60*24); // 24 hours
 			startTimeoutSpinner.setIncrement(5);
 			startTimeoutSpinner.setSelection(svr.getStartTimeout());
 			SWTUtil.setSpinnerTooltip(startTimeoutSpinner);
@@ -772,7 +772,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			stopTimeoutSpinner = new Spinner(composite, SWT.BORDER);
 			stopTimeoutSpinner.setEnabled(true);
 			stopTimeoutSpinner.setMinimum(1);
-			stopTimeoutSpinner.setMaximum(60*30); // 30 minutes
+			stopTimeoutSpinner.setMaximum(60*60*24); // 24 hours
 			stopTimeoutSpinner.setIncrement(5);
 			stopTimeoutSpinner.setSelection(svr.getStopTimeout());
 			SWTUtil.setSpinnerTooltip(stopTimeoutSpinner);
