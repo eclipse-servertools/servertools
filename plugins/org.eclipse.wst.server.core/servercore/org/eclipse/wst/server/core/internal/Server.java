@@ -579,7 +579,11 @@ public class Server extends Base implements IServer {
 	public void setServerState(int state) {
 		if (state == serverState)
 			return;
-
+		
+		// ensure that any server monitors are started
+		if (state == IServer.STATE_STARTED)
+			ServerMonitorManager.getInstance();
+		
 		this.serverState = state;
 		fireServerStateChangeEvent();
 	}
@@ -2214,7 +2218,7 @@ public class Server extends Base implements IServer {
 		try {
 			getBehaviourDelegate(null).startModule(module, null);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate restartModule() " + toString(), e);
+			Trace.trace(Trace.SEVERE, "Error calling delegate startModule() " + toString(), e);
 		}
 	}
 
@@ -2227,7 +2231,7 @@ public class Server extends Base implements IServer {
 		try {
 			getBehaviourDelegate(null).stopModule(module, null);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate restartModule() " + toString(), e);
+			Trace.trace(Trace.SEVERE, "Error calling delegate stopModule() " + toString(), e);
 		}
 	}
 
@@ -2679,7 +2683,7 @@ public class Server extends Base implements IServer {
 					if (totalTimeout < 0)
 						totalTimeout = 1;
 					boolean userCancelled = false;
-					int retryPeriod = 2500;
+					int retryPeriod = 1000;
 					while (!notified[0] && totalTimeout > 0 && !userCancelled && !timer.alreadyDone) {
 						Thread.sleep(retryPeriod);
 						if (serverTimeout > 0)
@@ -2687,7 +2691,8 @@ public class Server extends Base implements IServer {
 						if (!notified[0] && !timer.alreadyDone && monitor2.isCanceled()) {
 							// user canceled - set the server state to stopped
 							userCancelled = true;
-							setServerState(IServer.STATE_STOPPED);
+							if (launch != null && !launch.isTerminated())
+								launch.terminate();
 							// notify waiter
 							synchronized (notified) {
 								Trace.trace(Trace.FINEST, "synchronousStart user cancelled");
@@ -2751,7 +2756,7 @@ public class Server extends Base implements IServer {
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartTimeout, new String[] { getName(), (serverTimeout / 1000) + "" }), null);
 		}
 		
-		if (getServerState() == IServer.STATE_STOPPED)
+		if (!monitor.isCanceled() && getServerState() == IServer.STATE_STOPPED)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartFailed, getName()), null);
 		
 		Trace.trace(Trace.FINEST, "synchronousStart 4");
