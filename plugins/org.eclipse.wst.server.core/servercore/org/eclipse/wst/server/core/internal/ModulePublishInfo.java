@@ -319,12 +319,32 @@ public class ModulePublishInfo {
 		try {
 			long time = System.currentTimeMillis();
 			IModuleResource[] x = pm.members();
+			if (ServerPlugin.getInstance().isDebugging())
+				printModule(x,"resources: ");
+			
 			Trace.trace(Trace.PERFORMANCE, "Time to get members() for " + module[size - 1].getName() + ": " + (System.currentTimeMillis() - time));
 			return x;
 		} catch (CoreException ce) {
 			Trace.trace(Trace.WARNING, "Possible failure in getModuleResources", ce);
 		}
 		return EMPTY_MODULE_RESOURCE;
+	}
+	
+	private void printModule(IModuleResource[] r, String s) {
+		for (IModuleResource mrr : r) {
+			printModule(mrr, s + "  ");
+		}
+	}
+
+	private void printModule(IModuleResource r, String s) {
+		Trace.trace(Trace.RESOURCES, s + r.getName());
+		if (r instanceof IModuleFolder) {
+			IModuleFolder mf = (IModuleFolder) r;
+			IModuleResource[] mr = mf.members();
+			for (IModuleResource mrr : mr) {
+				printModule(mrr, s + "  ");
+			}
+		}
 	}
 
 	protected IModuleResourceDelta[] getDelta(IModule[] module) {
@@ -344,6 +364,7 @@ public class ModulePublishInfo {
 		IModuleResource[] resources2 = null;
 		try {
 			resources2 = pm.members();
+			printModule(resources2, "delta:");
 		} catch (CoreException ce) {
 			Trace.trace(Trace.WARNING, "Possible failure in getDelta", ce);
 		}
