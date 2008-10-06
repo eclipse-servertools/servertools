@@ -79,6 +79,13 @@ public class ModuleTraverser {
 	 * via the virtual component API.
 	 */
 	public static final String CLASSPATH_COMPONENT_NON_DEPENDENCY = "org.eclipse.jst.component.nondependency"; //$NON-NLS-1
+	
+	/**
+	 * Argument values that are used to select component dependency attribute type. 
+	 */
+	private static final int DEPENDECYATTRIBUTETYPE_DEPENDENCY_OR_NONDEPENDENCY = 0;
+	private static final int DEPENDECYATTRIBUTETYPE_CLASSPATH_COMPONENT_DEPENDENCY = 1;
+	private static final int DEPENDECYATTRIBUTETYPE_CLASSPATH_COMPONENT_NONDEPENDENCY = 2;
 
 	/**
      * Scans the module using the specified visitor.
@@ -432,7 +439,8 @@ public class ModuleTraverser {
 			
 			final IPath pkgFragPath = root.getPath();
 			final IClasspathEntry resolvedEntry = (IClasspathEntry) pathToResolvedEntry.get(pkgFragPath);
-			final IClasspathAttribute resolvedAttrib = checkForComponentDependencyAttribute(resolvedEntry);
+			final IClasspathAttribute resolvedAttrib = checkForComponentDependencyAttribute(resolvedEntry,
+					DEPENDECYATTRIBUTETYPE_DEPENDENCY_OR_NONDEPENDENCY);
 			// attribute for the resolved entry must either be unspecified or it must be the
 			// dependency attribute for it to be included
 			if (resolvedAttrib == null || resolvedAttrib.getName().equals(CLASSPATH_COMPONENT_DEPENDENCY)) {
@@ -461,7 +469,8 @@ public class ModuleTraverser {
 		final IClasspathEntry[] entries = javaProject.getRawClasspath();
         for (int i = 0; i < entries.length; i++) {
             final IClasspathEntry entry = entries[i];
-            final IClasspathAttribute attrib = checkForComponentDependencyAttribute(entry);
+            final IClasspathAttribute attrib = checkForComponentDependencyAttribute(entry,
+            		DEPENDECYATTRIBUTETYPE_CLASSPATH_COMPONENT_DEPENDENCY);
             if (attrib != null) {
             	referencedRawEntries.put(entry, attrib);
             }
@@ -472,7 +481,7 @@ public class ModuleTraverser {
 	/*
 	 * Derived from ClasspathDependencyUtil.checkForComponentDependencyAttribute()
 	 */
-	private static IClasspathAttribute checkForComponentDependencyAttribute(final IClasspathEntry entry) {
+	private static IClasspathAttribute checkForComponentDependencyAttribute(final IClasspathEntry entry, final int attributeType) {
 		if (entry == null) {
 			return null;
 		}
@@ -481,7 +490,15 @@ public class ModuleTraverser {
 	    	final IClasspathAttribute attribute = attributes[i];
 	    	final String name = attribute.getName();
 	    	if (name.equals(CLASSPATH_COMPONENT_DEPENDENCY)) {
-	    		return attribute;
+	    		if (attributeType == DEPENDECYATTRIBUTETYPE_DEPENDENCY_OR_NONDEPENDENCY
+	    				|| attributeType == DEPENDECYATTRIBUTETYPE_CLASSPATH_COMPONENT_DEPENDENCY) {
+	    			return attribute;
+	    		}
+	    	} else if (name.equals(CLASSPATH_COMPONENT_NON_DEPENDENCY)) {
+	    		if (attributeType == DEPENDECYATTRIBUTETYPE_DEPENDENCY_OR_NONDEPENDENCY
+	    				|| attributeType == DEPENDECYATTRIBUTETYPE_CLASSPATH_COMPONENT_NONDEPENDENCY) {
+	    			return attribute;
+	    		}
 	    	}
 	    }
 	    return null;
