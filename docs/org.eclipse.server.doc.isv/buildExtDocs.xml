@@ -3,7 +3,7 @@
 
 	<property file="buildExtDocs.properties"/>
 	<property name="outputDir" value="${basedir}${file.separator}html${file.separator}extpts_reference"/>
-	<property name="jsfOutputDir" value="${outputDir}${file.separator}serverTools${file.separator}"/>
+	<property name="jsfOutputDir" value="${outputDir}${file.separator}servertools${file.separator}"/>
 
 	<!-- <taskdef name="pde.convertSchemaToHTML" classname="org.eclipse.pde.internal.core.ant.ConvertSchemaToHTML"/> -->
 	
@@ -33,7 +33,7 @@
  		<pathconvert property="ext-doc-ent" refid="ext-docs-list-ent" pathsep="&lt;/file&gt;/n/n&lt;file&gt;">
  			<map from="${jsfOutputDir}" to=""/>
  		</pathconvert>
- 		<echo file="servertoolsextdocs.xml">&lt;files component="serverTools"&gt;&lt;file&gt;${ext-doc-ent}&lt;/file&gt;&lt;/files&gt;</echo>
+ 		<echo file="servertoolsextdocs.xml">&lt;files component="servertools"&gt;&lt;file&gt;${ext-doc-ent}&lt;/file&gt;&lt;/files&gt;</echo>
  		 						
  	</target>
 	
