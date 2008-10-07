@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--overview="${basedir}/html/api_reference/erview/overview.html"-->
+<project default="main" basedir=".">
+
+	<property file="javadoc.properties" />
+	<property name="outputDir" value="${basedir}"/>
+	<property name="eclipse.home" value="${basedir}/.."/>
+	
+	<target name="main" depends="clean, prephtml, javadoc, packagetoc" description="Builds Plugin Javadoc" />
+
+	<target name="clean">
+		<delete>
+			<fileset dir="${outputDir}/html/api_reference/" >
+				<include name="**/*.html"/>
+			</fileset>
+		</delete>
+	</target>
+	
+	<target name="prephtml" description="Transforms XML to HTML.">	
+		<xslt 	style="javadoc.xsl" 
+				destdir=".." 
+				basedir=".."	
+				includes="**/overview.xml,**/package.xml" 
+				excludes="**/build/*,**/@dot/**"
+		/>  
+	</target>
+
+    <target name="javadoc">
+	    <echo message="========= ${eclipse.home}"/>
+    	<mkdir dir="${outputDir}/api-overview/overview" />
+
+		<copy todir="${outputDir}/api-overview/overview" flatten="true" >
+			<fileset dir="${basedir}/api-overview/overview/"/> 
+			<fileset dir="${basedir}/.." includes="*/javadoc-images/*.jpg"/> 
+		</copy>
+        <javadoc 
+        	access="public" 
+    		additionalparam="-breakiterator -tag model:X -tag generated:X -tag ordered:X"
+			author="false" 
+			classpath="${classpath}" 
+			destdir="${outputDir}/html/api_reference" 
+			doctitle="${api.title}" 
+			nodeprecated="false" 
+			nodeprecatedlist="false" 
+			noindex="false" 
+			nonavbar="false" 
+			notree="false" 
+        	overview="${basedir}/api-overview/overview.html"
+			packagenames="${api.packages}" 
+			sourcepath="${plugin.sourcefolders}" 
+			splitindex="true" 
+			use="true" 
+			version="true"
+			breakiterator="yes"
+        	verbose="false"
+        	failonerror="false"
+			>
+				<tag name="ignore"     description="ignore" enabled="false"/>
+				<tag name="generated"  description="ignore" enabled="false"/>
+				<tag name="model"      description="ignore" enabled="false"/>
+				<tag name="modifiable" description="ignore" enabled="false"/>
+				<tag name="extends"    description="ignore" enabled="false"/>
+				<tag name="implements" description="ignore" enabled="false"/>
+				<tag name="ordered"    description="ignore" enabled="false"/>
+        	</javadoc>
+    </target> 
+	
+	<target name="packagetoc">			
+			<loadfile
+				  failonerror="false"
+			      property="jsf.packages"
+			      srcFile="${outputDir}/html/api_reference/package-list">
+				  <filterchain>
+				  	<filterreader classname="org.apache.tools.ant.filters.PrefixLines">
+				  	  <param name="prefix" value="&lt;/package&gt;&lt;package&gt;"/>
+				  	</filterreader>
+				  	<striplinebreaks/>
+				 </filterchain>
+			</loadfile>
+			
+			<!-- Create packages.xml file -->
+			<echo file="packages.xml">&lt;packages&gt;&lt;package&gt;${jsf.packages}&lt;/package&gt;&lt;/packages&gt;</echo>
+			
+			<xslt basedir="${outputdir}" in="packages.xml" out="javadoctoc.xml" style="javadocToc.xsl">
+				<outputproperty name="method" value="xml"/>
+				<outputproperty name="indent" value="yes"/>
+			</xslt>
+		</target>
+</project>

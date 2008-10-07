@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+	 	<toc label="Extension Points Reference">
+<topic label="org.eclipse.jst.server.core.internalRuntimeComponentProviders" href="html/extpts_reference/servertools/org_eclipse_jst_server_core_internalRuntimeComponentProviders.html"/>
+<topic label="org.eclipse.jst.server.core.runtimeClasspathProviders" href="html/extpts_reference/servertools/org_eclipse_jst_server_core_runtimeClasspathProviders.html"/>
+<topic label="org.eclipse.jst.server.core.runtimeFacetMappings" href="html/extpts_reference/servertools/org_eclipse_jst_server_core_runtimeFacetMappings.html"/>
+<topic label="org.eclipse.jst.server.core.serverProfilers" href="html/extpts_reference/servertools/org_eclipse_jst_server_core_serverProfilers.html"/>
+<topic label="org.eclipse.wst.server.core.clients" href="html/extpts_reference/servertools/org_eclipse_wst_server_core_clients.html"/>
+<topic label="org.eclipse.wst.server.core.installableRuntimes" href="html/extpts_reference/servertools/org_eclipse_wst_server_core_installableRuntimes.html"/>
+<topic label="org.eclipse.wst.server.core.installableServers" href="html/extpts_reference/servertools/org_eclipse_wst_server_core_installableServers.html"/>
+<topic label="org.eclipse.wst.server.core.internalServerMonitors" href="html/extpts_reference/servertools/org_eclipse_wst_server_core_internalServerMonitors.html"/>
+<topic label="org.eclipse.wst.server.core.internalStartup" href="html/extpts_reference/servertools/org_eclipse_wst_server_core_internalStartup.html"/>
+<topic label="org.eclipse.wst.server.core.launchableAdapters" href="html/extpts_reference/servertools/org_eclipse_wst_server_core_launchableAdapters.html"/>
+<topic label="org.eclipse.wst.server.core.moduleArtifactAdapters" href="html/extpts_reference/servertools/org_eclipse_wst_server_core_moduleArtifactAdapters.html"/>
+<topic label="org.eclipse.wst.server.core.moduleFactories" href="html/extpts_reference/servertools/org_eclipse_wst_server_core_moduleFactories.html"/>
+<topic label="org.eclipse.wst.server.core.moduleTypes" href="html/extpts_reference/servertools/org_eclipse_wst_server_core_moduleTypes.html"/>
+<topic label="org.eclipse.wst.server.core.publishers" href="html/extpts_reference/servertools/org_eclipse_wst_server_core_publishers.html"/>
+<topic label="org.eclipse.wst.server.core.publishTasks" href="html/extpts_reference/servertools/org_eclipse_wst_server_core_publishTasks.html"/>
+<topic label="org.eclipse.wst.server.core.runtimeFacetComponentProviders" href="html/extpts_reference/servertools/org_eclipse_wst_server_core_runtimeFacetComponentProviders.html"/>
+<topic label="org.eclipse.wst.server.core.runtimeLocators" href="html/extpts_reference/servertools/org_eclipse_wst_server_core_runtimeLocators.html"/>
+<topic label="org.eclipse.wst.server.core.runtimeTargetHandlers" href="html/extpts_reference/servertools/org_eclipse_wst_server_core_runtimeTargetHandlers.html"/>
+<topic label="org.eclipse.wst.server.core.runtimeTypes" href="html/extpts_reference/servertools/org_eclipse_wst_server_core_runtimeTypes.html"/>
+<topic label="org.eclipse.wst.server.core.serverLocators" href="html/extpts_reference/servertools/org_eclipse_wst_server_core_serverLocators.html"/>
+<topic label="org.eclipse.wst.server.core.serverTypes" href="html/extpts_reference/servertools/org_eclipse_wst_server_core_serverTypes.html"/>
+<topic label="org.eclipse.wst.server.ui.audio" href="html/extpts_reference/servertools/org_eclipse_wst_server_ui_audio.html"/>
+<topic label="org.eclipse.wst.server.ui.editorActions" href="html/extpts_reference/servertools/org_eclipse_wst_server_ui_editorActions.html"/>
+<topic label="org.eclipse.wst.server.ui.editorPages" href="html/extpts_reference/servertools/org_eclipse_wst_server_ui_editorPages.html"/>
+<topic label="org.eclipse.wst.server.ui.editorPageSections" href="html/extpts_reference/servertools/org_eclipse_wst_server_ui_editorPageSections.html"/>
+<topic label="org.eclipse.wst.server.ui.initialSelectionProvider" href="html/extpts_reference/servertools/org_eclipse_wst_server_ui_initialSelectionProvider.html"/>
+<topic label="org.eclipse.wst.server.ui.serverImages" href="html/extpts_reference/servertools/org_eclipse_wst_server_ui_serverImages.html"/>
+<topic label="org.eclipse.wst.server.ui.serverToolTip" href="html/extpts_reference/servertools/org_eclipse_wst_server_ui_serverToolTip.html"/>
+<topic label="org.eclipse.wst.server.ui.wizardFragments" href="html/extpts_reference/servertools/org_eclipse_wst_server_ui_wizardFragments.html"/>
+</toc>
