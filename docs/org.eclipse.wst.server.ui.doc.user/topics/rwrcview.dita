@@ -52,8 +52,9 @@ id="rwrcview_section_server_state_table_title">Description of the server states<
 <tbody>
 <row id="rwrcview_section_server_state_starting">
 <entry><ph>Starting</ph></entry>
-<entry>The workbench is in the process of connecting and begin the server
-process.<note type="tip">Verify the actual server is started.</note></entry>
+<entry>The workbench is in the process of connecting to the server and is
+beginning the server process.<note type="tip">Verify the actual server is
+started.</note></entry>
 </row>
 <row id="rwrcview_section_server_state_started">
 <entry colname="COLSPEC0">Started</entry>
@@ -67,15 +68,13 @@ and server are ready to diagnose applications on the server.</entry>
 </row>
 <row id="rwrcview_section_server_state_stopping">
 <entry>Stopping</entry>
-<entry>The workbench is in the process of connecting and ending the process
-on the server.</entry>
+<entry>The workbench is in the process of connecting to the server and is
+ending the process on the server.</entry>
 </row>
 <row id="rwrcview_section_server_state_stopped">
-<entry>Stopped</entry>
-<entry>The server process has ended. Or the workbench is unable to connect
-to the server.<note type="tip">When attempting to connect to the server and
-the state of the server remains in stopped, verify the actual server is started
-and the port information is correctly provided in the workbench.</note></entry>
+<entry id="rwrcview_section_server_state_stopped_entry">Stopped</entry>
+<entry><ph id="rwrcview_section_server_state_stopped_description">The server
+process has ended. Or the workbench is unable to connect to the server.</ph></entry>
 </row>
 </tbody>
 </tgroup>

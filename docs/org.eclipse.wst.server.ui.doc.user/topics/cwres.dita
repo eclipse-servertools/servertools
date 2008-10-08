@@ -8,7 +8,7 @@
 to define one or more of the following resources:</shortdesc>
 <prolog><metadata>
 <keywords id="index"><indexterm keyref="cwres|1|preferencesinstalledserverruntimeenvironments"
-status="changed">preferences<indexterm>installed server runtime environments<indexterm>resources</indexterm></indexterm></indexterm>
+status="changed">preferences<indexterm>server runtime environments<indexterm>resources</indexterm></indexterm></indexterm>
 <indexterm keyref="cwres|2|runtimeenvironmentsdescription" status="new">runtime
 environments<indexterm>description</indexterm></indexterm><indexterm keyref="cwres|3|serverstestingapplications"
 status="new">servers<indexterm>testing applications</indexterm></indexterm>
@@ -17,7 +17,7 @@ status="new">servers<indexterm>testing applications</indexterm></indexterm>
 <conbody>
 <ul id="cwres_ul">
 <li>A server</li>
-<li>An installed server runtime environment</li>
+<li>A server runtime environment</li>
 </ul>
 <p id="cwres_p1">If a server has server configuration files, in most situations,
 these server configuration files are created for you automatically and contained
@@ -50,19 +50,20 @@ vendor, typically it has the following convention: <i>serverName</i>@<i>hostname
 where <i>serverName</i> is the name assigned to the server, and <i>hostname</i> is
 the fully qualified DNS name or IP address of the host machine where the server
 is running.</p></section>
-<section id="cwres_installed_runtime"><title>Installed Server Runtime Environment</title>You
+<section id="cwres_installed_runtime"><title>Server Runtime Environment</title>You
 need to define the runtime environment of an application server for compiling
-your application. A server contains a reference to an installed server runtime
-environment it is currently using. For details on how to define an installed
-server runtime environment, refer to the <i>Defining the installed server
-runtime environments</i> link at the bottom of this topic.</section>
+your application. A server contains a reference to a server runtime environment
+it is currently using. For details on how to define a server runtime environment,
+refer to the <i>Defining the server runtime environments <?Pub Caret?>preference</i> link
+at the bottom of this topic.</section>
 <section id="cwres_relationship"><title>Relationship between the resources</title><p>For
-each server, you can specify the server configuration and installed server
-runtime environment that should be used for that server. A server can only
-point to one or no server configuration. However, a server configuration can
-be pointed from one or more servers.</p><p>A relationship between a server
-configuration and an application project, for example an EAR project, is created
-when a project is added to the server configuration. A server can point to
-one or more projects. A project can be pointed from one or more server configurations.</p></section>
+each server, you can specify the server configuration and server runtime environment
+that should be used for that server. A server can only point to one or no
+server configuration. However, a server configuration can be pointed from
+one or more servers.</p><p>A relationship between a server configuration and
+an application project, for example an EAR project, is created when a project
+is added to the server configuration. A server can point to one or more projects.
+A project can be pointed from one or more server configurations.</p></section>
 </conbody>
 </concept>
+<?Pub *0000004416?>

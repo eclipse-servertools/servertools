@@ -106,12 +106,9 @@
     </entry>
   </entry>
   <entry keyword="preferences">
-    <entry keyword="installed server runtime environments">
+    <entry keyword="server runtime environments">
       <entry keyword="resources">
         <topic href="topics/cwres.html#cwres_wst" title="Resources used to test and publish on your server"/>
-      </entry>
-      <entry keyword="defining">
-        <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the server runtime environments preferences"/>
       </entry>
     </entry>
     <entry keyword="servers">
@@ -126,6 +123,11 @@
       </entry>
       <entry keyword="launching">
         <topic href="topics/twlaunchpref.html#twlaunchpref_wst" title="Defining the launching preferences"/>
+      </entry>
+    </entry>
+    <entry keyword="installed server runtime environments">
+      <entry keyword="defining">
+        <topic href="topics/twinstprf.html#twinstprf_wst" title="Defining the server runtime environments preferences"/>
       </entry>
     </entry>
     <entry keyword="TCP/IP Monitor">

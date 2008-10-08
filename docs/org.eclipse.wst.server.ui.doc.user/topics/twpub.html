@@ -43,21 +43,23 @@ the files are automatically updated when the server is either started or restart
 <p id="twpub_wst__twpub_p2"><a name="twpub_wst__twpub_p2"><!-- --></a>To publish your application manually you can complete one of
 the following in the Servers view:</p>
 <div class="p" id="twpub_wst__twpub_auto2"><a name="twpub_wst__twpub_auto2"><!-- --></a>In the workbench,
-you have several options to choose for the <em>Automatic Publishing</em> settings.
-You can set these <em>Automatic Publishing</em> settings by going into the Servers
-view, right-click the server and select <span class="uicontrol">Open</span>. The Server
-editor opens. In the <em>Overview</em> page of the server editor, under the <span class="uicontrol">Automatic
-Publishing</span> settings, you are going to find the following settings:<ul>
+you have several options to choose for the <em>Publishing</em> settings. You
+can set these <em>Publishing</em> settings by going into the Servers view, right-click
+the server and select <span class="uicontrol">Open</span>. The Server editor opens.
+In the <em>Overview</em> page of the server editor, under the <span class="uicontrol">Publishing</span> settings,
+you are going to find the following settings:<ul>
 <li><span class="uicontrol">Never publish automatically</span>: Specifies the workbench
 should never publish files to the server.</li>
 
-<li><span class="uicontrol">Use automatic publishing settings</span>: Specifies that
-a change to the files running on the server should automatically be published
-to the server in the next <em>seconds</em> interval, where <em>seconds</em> is
-the number of seconds you have specified in the <span class="uicontrol">Publishing interval</span> control.
-If you set the publishing interval to 0 seconds, a change to
-the files running on the server should automatically request a publish command
-to occur.</li>
+<li><span class="uicontrol">Automatically publish when resources change</span>:
+Specifies that when a change is made to the files running on the server, the
+number of <em>seconds</em> specified in the <span class="uicontrol">Publishing interval </span>control
+will need to pass before the workbench calls a publish to happen on the server.
+However, if you make a subsequent change to the files before this time interval
+has completed, the publish is delayed as the timer is reset. The workbench
+makes a publish to the server only after the full time interval has passed.
+ If you set the publishing interval to 0 seconds, a change to the files running
+on the server should automatically request a publish command to occur.</li>
 
 </ul>
 </div>

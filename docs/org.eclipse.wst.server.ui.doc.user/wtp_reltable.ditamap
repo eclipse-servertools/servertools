@@ -40,7 +40,7 @@
 <relcell>
 <topicref href="topics/tmetasrv.dita" linking="targetonly" navtitle="Displaying or hiding the metadata of the server">
 </topicref>
-<topicref href="topics/twinstprf.dita" linking="targetonly" navtitle="Defining the installed server runtime environments">
+<topicref href="topics/twinstprf.dita" linking="targetonly" navtitle="Defining the server runtime environments preference"><?Pub Caret?>
 </topicref>
 </relcell>
 <relcell></relcell>
@@ -64,10 +64,10 @@
 </topicref>
 </relcell>
 <relcell>
-<topicref href="topics/rwtcpvw.dita" navtitle="TCP/IP monitor view"></topicref><?Pub Caret1?>
+<topicref href="topics/rwtcpvw.dita" navtitle="TCP/IP monitor view"></topicref>
 </relcell>
 <relcell></relcell>
 </relrow>
 </reltable>
 </map>
-<?Pub *0000002005?>
+<?Pub *0000002042?>

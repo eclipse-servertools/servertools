@@ -98,7 +98,7 @@ modules and then use the application server to deploy the modules.</note></info>
 <info>If you selected the target server as <b>J2EE Runtime Library</b> (a
 generic J2EE container), specify a directory that contains <tt>.jar</tt> files
 such a <tt>\bin\lib</tt> directory for a <tm tmclass="special" tmowner="Sun Microsystems, Inc."
-tmtype="tm" trademark="Java">Java</tm> development kit installation.</info>
+tmtype="tm" trademark="Java">Java</tm> developer kit (JDK) <?Pub Caret?>installation.</info>
 </substep>
 <substep><cmd>Click <uicontrol>Finish</uicontrol>.</cmd><info>The target server
 name and type is added to the table in the Server Runtime Environment section.</info>
@@ -121,3 +121,4 @@ target server for a module:<ol>
 </ol> </p></postreq>
 </taskbody>
 </task>
+<?Pub *0000007308?>
