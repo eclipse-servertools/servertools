@@ -392,16 +392,18 @@ public class OverviewEditorPart extends ServerEditorPart {
 		
 		// runtime
 		if (server != null && server.getServerType() != null && server.getServerType().hasRuntime()) {
-			final IRuntime runtime = server.getRuntime();
-			if (runtime != null && ServerUIPlugin.hasWizardFragment(runtime.getRuntimeType().getId())) {
-				Hyperlink link = toolkit.createHyperlink(composite, Messages.serverEditorOverviewRuntime, SWT.NONE);
-				link.addHyperlinkListener(new HyperlinkAdapter() {
-					public void linkActivated(HyperlinkEvent e) {
+			final Hyperlink link = toolkit.createHyperlink(composite, Messages.serverEditorOverviewRuntime, SWT.NONE);
+			link.addHyperlinkListener(new HyperlinkAdapter() {
+				public void linkActivated(HyperlinkEvent e) {
+					IRuntime runtime = server.getRuntime();
+					if (runtime != null && ServerUIPlugin.hasWizardFragment(runtime.getRuntimeType().getId()))
 						editRuntime(runtime);
-					}
-				});
-			} else
-				createLabel(toolkit, composite, Messages.serverEditorOverviewRuntime);
+				}
+			});
+			
+			final IRuntime runtime = server.getRuntime();
+			if (runtime == null || !ServerUIPlugin.hasWizardFragment(runtime.getRuntimeType().getId()))
+				link.setEnabled(false);
 			
 			IRuntimeType runtimeType = server.getServerType().getRuntimeType();
 			runtimes = ServerUIPlugin.getRuntimes(runtimeType);
@@ -427,6 +429,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 						updating = true;
 						IRuntime newRuntime = runtimes[runtimeCombo.getSelectionIndex()];
 						execute(new SetServerRuntimeCommand(getServer(), newRuntime));
+						link.setEnabled(newRuntime != null && !ServerUIPlugin.hasWizardFragment(newRuntime.getRuntimeType().getId()));
 						updating = false;
 					} catch (Exception ex) {
 						// ignore
