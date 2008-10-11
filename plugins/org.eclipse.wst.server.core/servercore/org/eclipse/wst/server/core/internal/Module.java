@@ -244,6 +244,13 @@ public class Module implements IModule {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.server.core.IModule#exists()
+	 */
+	public boolean exists() {
+		return true;
+	}
+
 	/**
 	 * Return a string representation of this object.
 	 * 

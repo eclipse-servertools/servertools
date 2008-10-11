@@ -76,6 +76,10 @@ public class DeletedModule implements IModule {
 		return false;
 	}
 
+	public boolean exists() {
+		return false;
+	}
+
 	public String toString() {
 		return "DeletedModule[" + name + "," + id + "]";
 	}
