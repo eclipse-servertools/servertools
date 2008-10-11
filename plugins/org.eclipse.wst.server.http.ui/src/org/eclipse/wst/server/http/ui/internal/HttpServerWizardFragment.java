@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,13 +20,6 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
  */
 public class HttpServerWizardFragment extends WizardFragment {
 	protected HttpServerComposite comp;
-
-	/**
-	 * ServerWizardFragment constructor
-	 */
-	public HttpServerWizardFragment() {
-		setComplete(true);
-	}
 
 	public boolean hasComposite() {
 		return true;
@@ -50,5 +43,11 @@ public class HttpServerWizardFragment extends WizardFragment {
 			IServerWorkingCopy runtime = (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
 			comp.setServer(runtime);
 		}
+	}
+	
+	public boolean isComplete() {
+		if (comp != null)
+			return comp.isComplete();
+		return true;
 	}
 }

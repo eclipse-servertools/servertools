@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ public class Messages extends NLS {
 	public static String wizardDescription;
 	public static String wizardDuplicateName;
 	public static String wizardMissingRuntimeName;
+	public static String wizardMissingPublishInfo;
 	public static String wizardTitle;
 	public static String editorSectionTitle;
 	public static String editorSectionDescription;

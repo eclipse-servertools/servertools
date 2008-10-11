@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.server.http.ui.internal;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.TaskModel;
@@ -54,10 +53,8 @@ public class HttpRuntimeWizardFragment extends WizardFragment {
 	}
 
 	public boolean isComplete() {
-		IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
-		if (runtime == null)
-			return false;
-		IStatus status = runtime.validate(null);
-		return (status == null || status.getSeverity() != IStatus.ERROR);
+		if (comp != null)
+			return comp.isComplete();
+		return true;
 	}
 }

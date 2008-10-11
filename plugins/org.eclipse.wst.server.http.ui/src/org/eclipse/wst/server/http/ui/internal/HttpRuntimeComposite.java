@@ -144,6 +144,11 @@ public class HttpRuntimeComposite extends Composite {
 				}
 			}
 		}
+		wizard.update();
+	}
+
+	protected boolean isComplete() {
+		return wizard.getMessageType() != IMessageProvider.ERROR;
 	}
 
 	private void createPublishLocationGroup(Composite publishInfoGroup) {
@@ -185,11 +190,11 @@ public class HttpRuntimeComposite extends Composite {
 	}
 
 	private boolean checkRuntimeName(String name2) {
-		name2 = name2.trim();
-		if (name2.equals(runtimeWC.getName())) {
+		if (runtimeWC.getOriginal() != null && name2.equals(runtimeWC.getOriginal().getName())) {
 			return true;
 		}
 		
+		name2 = name2.trim();
 		IRuntime[] runtimes = ServerCore.getRuntimes();
 		if (runtimes != null) {
 			for (IRuntime runtime2 : runtimes) {
