@@ -1103,7 +1103,7 @@ public class Server extends Base implements IServer {
 
 	/*
 	 * Publish the given modules to the server.
-	 * TODO: Implementation!
+	 * TODO: Implementation of publishing individual modules!
 	 */
 	public void publish(final int kind, final List<IModule[]> modules2, final IAdaptable info, final IOperationListener opListener) {
 		if (getServerType() == null) {
@@ -1134,6 +1134,11 @@ public class Server extends Base implements IServer {
 				}
 			});
 		}
+		
+		// to make the publishing dialog appear, require adaptable to covert String.class
+		// into "user" string. a bit of a kludge, but works fine for now
+		if (info.getAdapter(String.class).equals("user"))
+			publishJob.setUser(true);
 		publishJob.schedule();
 	}
 
@@ -2457,7 +2462,7 @@ public class Server extends Base implements IServer {
 			try {
 				addServerListener(curListener);
 				
-				// Synchroneous restart
+				// synchronous restart
 				restartImpl2(launchMode, monitor);
 				
 				return Status.OK_STATUS;
@@ -2478,7 +2483,7 @@ public class Server extends Base implements IServer {
 					if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
 						if (server.getServerState() == STATE_STOPPED) {
 							server.removeServerListener(this);
-
+							
 							// restart in a quarter second (give other listeners a chance
 							// to hear the stopped message)
 							Thread t = new Thread("Server Restart") {
@@ -2566,7 +2571,8 @@ public class Server extends Base implements IServer {
 						if (!notified[0] && !timer.alreadyDone && monitor2.isCanceled()) {
 							// user canceled - set the server state to stopped
 							userCancelled = true;
-							setServerState(IServer.STATE_STOPPED);
+							if (launch != null && !launch.isTerminated())
+								launch.terminate();
 							// notify waiter
 							synchronized (notified) {
 								Trace.trace(Trace.FINEST, "synchronousRestart user cancelled");
@@ -2592,9 +2598,9 @@ public class Server extends Base implements IServer {
 		};
 		thread.setDaemon(true);
 		thread.start();
-	
+		
 		Trace.trace(Trace.FINEST, "synchronousRestart 2");
-	
+		
 		// call the delegate restart
 		try {
 			getBehaviourDelegate(null).restart(launchMode);
@@ -2627,12 +2633,10 @@ public class Server extends Base implements IServer {
 		
 		if (timer.timeout) {
 			stop(false);
-			// TODO this message should be changed to restart time out
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorRestartFailed, new String[] { getName(), (restartTimeout / 1000) + "" }), null);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorRestartTimeout, new String[] { getName(), (restartTimeout / 1000) + "" }), null);
 		}
 		
-		if (getServerState() == IServer.STATE_STOPPED)
-			// TODO this message should be changed to restart time out
+		if (!monitor.isCanceled() && getServerState() == IServer.STATE_STOPPED)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorRestartFailed, getName()), null);
 		
 		Trace.trace(Trace.FINEST, "synchronousRestart 4");
@@ -2852,11 +2856,11 @@ public class Server extends Base implements IServer {
 		
 		//can't throw exceptions
 		/*if (timer.timeout)
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorStartTimeout, getName()), null);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorStopTimeout, getName()), null);
 		else
 			timer.alreadyDone = true;
 		*/
-		if (getServerState() == IServer.STATE_STARTED)
+		if (!monitor.isCanceled() && getServerState() == IServer.STATE_STARTED)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStopFailed, getName()), null);
 		
 		return Status.OK_STATUS;
