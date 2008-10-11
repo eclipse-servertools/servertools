@@ -24,7 +24,7 @@ public class RestartServerJob extends ChainedJob {
 	protected IStatus resultStatus;
 
 	public RestartServerJob(IServer server, String launchMode) {
-		super(NLS.bind(Messages.jobRestartingServer, server.getName()), server);
+		super(NLS.bind(Messages.jobRestarting, server.getName()), server);
 		this.launchMode = launchMode;
 	}
 

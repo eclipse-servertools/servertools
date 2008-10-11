@@ -22,7 +22,7 @@ public class StartServerJob extends ChainedJob {
 	protected String launchMode;
 
 	public StartServerJob(IServer server, String launchMode) {
-		super(NLS.bind(Messages.jobStartingServer, server.getName()), server);
+		super(NLS.bind(Messages.jobStarting, server.getName()), server);
 		this.launchMode = launchMode;
 	}
 

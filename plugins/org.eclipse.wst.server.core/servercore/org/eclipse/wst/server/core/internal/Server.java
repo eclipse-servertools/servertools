@@ -143,7 +143,21 @@ public class Server extends Base implements IServer {
 		}
 	}
 
-	public class ResourceChangeJob extends Job {
+	private abstract class ServerJob extends Job {
+		public ServerJob(String name) {
+			super(name);
+		}
+
+		public boolean belongsTo(Object family) {
+			return ServerUtil.SERVER_JOB_FAMILY.equals(family);
+		}
+	
+		public IServer getServer() {
+			return Server.this;
+		}
+	}
+
+	public class ResourceChangeJob extends ServerJob {
 		private IModule module;
 
 		public ResourceChangeJob(IModule module) {
@@ -159,14 +173,6 @@ public class Server extends Base implements IServer {
 				rules[1] = Server.this;
 				setRule(MultiRule.combine(rules));
 			}
-		}
-
-		public boolean belongsTo(Object family) {
-			return ServerUtil.SERVER_JOB_FAMILY.equals(family);
-		}
-
-		protected IServer getServer() {
-			return Server.this;
 		}
 
 		protected IModule getModule() {
@@ -214,7 +220,7 @@ public class Server extends Base implements IServer {
 		}
 	}
 
-	public class PublishJob extends Job {
+	public class PublishJob extends ServerJob {
 		protected int kind;
 		protected List<IModule[]> modules4;
 		protected IAdaptable info;
@@ -247,10 +253,6 @@ public class Server extends Base implements IServer {
 			setRule(rule);
 		}
 
-		public boolean belongsTo(Object family) {
-			return ServerUtil.SERVER_JOB_FAMILY.equals(family);
-		}
-
 		protected IStatus run(IProgressMonitor monitor) {
 			if (start) {
 				IStatus status = startImpl(ILaunchManager.RUN_MODE, monitor);
@@ -262,7 +264,7 @@ public class Server extends Base implements IServer {
 		}
 	}
 
-	public class StartJob extends Job {
+	public class StartJob extends ServerJob {
 		protected static final byte PUBLISH_NONE = 0;
 		protected static final byte PUBLISH_BEFORE = 1;
 		protected static final byte PUBLISH_AFTER = 2;
@@ -271,7 +273,7 @@ public class Server extends Base implements IServer {
 		protected byte publish;
 
 		public StartJob(String launchMode, byte publish) {
-			super(NLS.bind(Messages.jobStartingServer, Server.this.getName()));
+			super(NLS.bind(Messages.jobStarting, Server.this.getName()));
 			this.launchMode = launchMode;
 			this.publish = publish;
 			
@@ -286,14 +288,6 @@ public class Server extends Base implements IServer {
 				setRule(MultiRule.combine(rules));
 			} else
 				setRule(Server.this);
-		}
-
-		public boolean belongsTo(Object family) {
-			return ServerUtil.SERVER_JOB_FAMILY.equals(family);
-		}
-
-		public IServer getServer() {
-			return Server.this;
 		}
 
 		protected IStatus run(IProgressMonitor monitor) {
@@ -316,17 +310,13 @@ public class Server extends Base implements IServer {
 		}
 	}
 
-	public class RestartJob extends Job {
+	public class RestartJob extends ServerJob {
 		protected String launchMode;
 
 		public RestartJob(String launchMode) {
-			super(NLS.bind(Messages.jobRestartingServer, Server.this.getName()));
+			super(NLS.bind(Messages.jobRestarting, Server.this.getName()));
 			this.launchMode = launchMode;
 			setRule(Server.this);
-		}
-
-		public boolean belongsTo(Object family) {
-			return ServerUtil.SERVER_JOB_FAMILY.equals(family);
 		}
 
 		protected IStatus run(IProgressMonitor monitor) {
@@ -334,17 +324,13 @@ public class Server extends Base implements IServer {
 		}
 	}
 
-	public class StopJob extends Job {
+	public class StopJob extends ServerJob {
 		protected boolean force;
 
 		public StopJob(boolean force) {
-			super(NLS.bind(Messages.jobStoppingServer, Server.this.getName()));
+			super(NLS.bind(Messages.jobStopping, Server.this.getName()));
 			setRule(Server.this);
 			this.force = force;
-		}
-
-		public boolean belongsTo(Object family) {
-			return ServerUtil.SERVER_JOB_FAMILY.equals(family);
 		}
 
 		protected IStatus run(IProgressMonitor monitor) {
@@ -2198,7 +2184,7 @@ public class Server extends Base implements IServer {
 	 * return true if the module should be restarted (is out of
 	 * sync) or false if the module does not need to be restarted.
 	 *
-	 * @param module org.eclipse.wst.server.core.model.IModule
+	 * @param module the module
 	 * @return boolean
 	 */
 	public boolean getModuleRestartState(IModule[] module) {
@@ -2214,43 +2200,254 @@ public class Server extends Base implements IServer {
 		return false;
 	}
 
+	abstract class OperationContext {
+		public abstract void run(IProgressMonitor monitor) throws CoreException;
+		public void cancel() {
+			// do nothing
+		}
+		public abstract String getTimeoutMessage();
+		public abstract String getFailureMessage();
+	}
+	/**
+	 * 
+	 * @param module the module that the operation applies to, or null for a server operation
+	 * @param monitor cannot be null
+	 * @return the status
+	 */
+	protected IStatus runAndWait(final IModule[] module, OperationContext runnable, final int operationTimeout, IProgressMonitor monitor) {
+		final boolean[] notified = new boolean[1];
+		IServerListener listener = new IServerListener() {
+			public void serverChanged(ServerEvent event) {
+				int eventKind = event.getKind();
+				if ((eventKind | ServerEvent.STATE_CHANGE) != 0) {
+					if ((module == null && (eventKind | ServerEvent.SERVER_CHANGE) != 0) ||
+							(module != null && module.equals(event.getModule()) && (eventKind | ServerEvent.MODULE_CHANGE) != 0)) {
+						int state = getServerState();
+						if (state == IServer.STATE_STARTED || state == IServer.STATE_STOPPED) {
+							// notify waiter
+							synchronized (notified) {
+								try {
+									Trace.trace(Trace.FINEST, "runAndWait notify");
+									notified[0] = true;
+									notified.notifyAll();
+								} catch (Exception e) {
+									Trace.trace(Trace.SEVERE, "Error notifying runAndWait", e);
+								}
+							}
+						}
+					}
+				}
+			}
+		};
+		
+		class Timer {
+			boolean timeout;
+			boolean alreadyDone;
+		}
+		final Timer timer = new Timer();
+		
+		final IProgressMonitor monitor2 = monitor;
+		Thread thread = new Thread("Server RunAndWait Timeout") {
+			public void run() {
+				try {
+					int totalTimeout = operationTimeout;
+					if (totalTimeout < 0)
+						totalTimeout = 1;
+					boolean userCancelled = false;
+					int retryPeriod = 1000;
+					while (!notified[0] && totalTimeout > 0 && !userCancelled && !timer.alreadyDone) {
+						Thread.sleep(retryPeriod);
+						if (operationTimeout > 0)
+							totalTimeout -= retryPeriod;
+						if (!notified[0] && !timer.alreadyDone && monitor2.isCanceled()) {
+							// user canceled
+							userCancelled = true;
+							if (launch != null && !launch.isTerminated())
+								launch.terminate();//TODO
+							// notify waiter
+							synchronized (notified) {
+								Trace.trace(Trace.FINEST, "runAndWait user cancelled");
+								notified[0] = true;
+								notified.notifyAll();
+							}
+						}
+					}
+					if (!userCancelled && !timer.alreadyDone && !notified[0]) {
+						// notify waiter
+						synchronized (notified) {
+							Trace.trace(Trace.FINEST, "runAndWait notify timeout");
+							if (!timer.alreadyDone && totalTimeout <= 0)
+								timer.timeout = true;
+							notified[0] = true;
+							notified.notifyAll();
+						}
+					}
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "Error notifying runAndWait timeout", e);
+				}
+			}
+		};
+		thread.setDaemon(true);
+		thread.start();
+	
+		Trace.trace(Trace.FINEST, "runAndWait 2");
+	
+		// do the operation
+		try {
+			runnable.run(monitor);
+		} catch (CoreException e) {
+			removeServerListener(listener);
+			timer.alreadyDone = true;
+			return e.getStatus();
+		}
+		if (monitor.isCanceled()) {
+			removeServerListener(listener);
+			timer.alreadyDone = true;
+			return Status.CANCEL_STATUS;
+		}
+		
+		Trace.trace(Trace.FINEST, "runAndWait 3");
+		
+		// wait for it! wait for it! ...
+		synchronized (notified) {
+			try {
+				while (!notified[0] && !monitor.isCanceled() && !timer.timeout
+						&& !(getServerState() == IServer.STATE_STARTED || getServerState() == IServer.STATE_STOPPED)) {
+					notified.wait();
+				}
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "Error waiting for operation", e);
+			}
+			timer.alreadyDone = true;
+		}
+		removeServerListener(listener);
+		
+		if (timer.timeout) {
+			stop(false);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 1, NLS.bind(Messages.errorStartTimeout, new String[] { getName(), (operationTimeout / 1000) + "" }), null);
+		}
+		
+		if (!monitor.isCanceled() && getServerState() == IServer.STATE_STOPPED)
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 2, NLS.bind(Messages.errorStartFailed, getName()), null);
+		
+		return Status.OK_STATUS;
+	}
+
 	/*
 	 * @see IServer#startModule(IModule[], IOperationListener)
 	 */
-	public void startModule(IModule[] module, IOperationListener listener) {
+	public void startModule(final IModule[] module, final IOperationListener opListener) {
 		if (module == null || module.length == 0)
 			throw new IllegalArgumentException("Module cannot be null or empty or empty");
-		try {
-			getBehaviourDelegate(null).startModule(module, null);
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate startModule() " + toString(), e);
+		
+		Job moduleJob = new ServerJob(NLS.bind(Messages.jobStarting, module[0].getName())) {
+			protected IStatus run(IProgressMonitor monitor) {
+				return runAndWait(module, new OperationContext() {
+					public String getFailureMessage() {
+						return Messages.errorStartFailed;
+					}
+
+					public String getTimeoutMessage() {
+						return Messages.errorStartTimeout;
+					}
+
+					public void run(IProgressMonitor monitor2) throws CoreException {
+						try {
+							getBehaviourDelegate(monitor2).startModule(module, monitor2);
+						} catch (Exception e) {
+							Trace.trace(Trace.SEVERE, "Error calling delegate startModule() " + toString(), e);
+							throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, e.getMessage()));
+						}
+					}
+				}, getStartTimeout(), monitor);
+			}
+		};
+		if (opListener != null) {
+			moduleJob.addJobChangeListener(new JobChangeAdapter() {
+				public void done(IJobChangeEvent event) {
+					opListener.done(event.getResult());
+				}
+			});
 		}
+		moduleJob.schedule();
 	}
 
 	/*
 	 * @see IServer#stopModule(IModule[], IOperationListener)
 	 */
-	public void stopModule(IModule[] module, IOperationListener listener) {
+	public void stopModule(final IModule[] module, final IOperationListener opListener) {
 		if (module == null || module.length == 0)
-			throw new IllegalArgumentException("Module cannot be null or empty or empty");
-		try {
-			getBehaviourDelegate(null).stopModule(module, null);
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate stopModule() " + toString(), e);
+			throw new IllegalArgumentException("Module cannot be null or empty");
+		
+		Job moduleJob = new ServerJob(NLS.bind(Messages.jobStopping, module[0].getName())) {
+			protected IStatus run(IProgressMonitor monitor) {
+				return runAndWait(module, new OperationContext() {
+					public String getFailureMessage() {
+						return Messages.errorStopFailed;
+					}
+
+					public String getTimeoutMessage() {
+						return Messages.errorStopFailed;
+					}
+
+					public void run(IProgressMonitor monitor2) throws CoreException {
+						try {
+							getBehaviourDelegate(monitor2).stopModule(module, monitor2);
+						} catch (Exception e) {
+							Trace.trace(Trace.SEVERE, "Error calling delegate stopModule() " + toString(), e);
+							throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, e.getMessage()));
+						}
+					}
+				}, getStopTimeout(), monitor);
+			}
+		};
+		if (opListener != null) {
+			moduleJob.addJobChangeListener(new JobChangeAdapter() {
+				public void done(IJobChangeEvent event) {
+					opListener.done(event.getResult());
+				}
+			});
 		}
+		moduleJob.schedule();
 	}
 
 	/*
 	 * @see IServer#restartModule(IModule[], IOperationListener, IProgressMonitor)
 	 */
-	public void restartModule(IModule[] module, IOperationListener listener) {
+	public void restartModule(final IModule[] module, final IOperationListener opListener) {
 		if (module == null || module.length == 0)
 			throw new IllegalArgumentException("Module cannot be null or empty");
-		try {
-			getBehaviourDelegate(null).restartModule(module, null);
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate restartModule() " + toString(), e);
+		
+		Job moduleJob = new ServerJob(NLS.bind(Messages.jobRestarting, module[0].getName())) {
+			protected IStatus run(IProgressMonitor monitor) {
+				return runAndWait(module, new OperationContext() {
+					public String getFailureMessage() {
+						return Messages.errorRestartFailed;
+					}
+
+					public String getTimeoutMessage() {
+						return Messages.errorRestartTimeout;
+					}
+
+					public void run(IProgressMonitor monitor2) throws CoreException {
+						try {
+							getBehaviourDelegate(monitor2).restartModule(module, monitor2);
+						} catch (Exception e) {
+							Trace.trace(Trace.SEVERE, "Error calling delegate restartModule() " + toString(), e);
+							throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, e.getMessage()));
+						}
+					}
+				}, getStopTimeout() + getStartTimeout(), monitor);
+			}
+		};
+		if (opListener != null) {
+			moduleJob.addJobChangeListener(new JobChangeAdapter() {
+				public void done(IJobChangeEvent event) {
+					opListener.done(event.getResult());
+				}
+			});
 		}
+		moduleJob.schedule();
 	}
 
 	/**

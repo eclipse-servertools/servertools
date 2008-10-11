@@ -20,7 +20,7 @@ import org.eclipse.wst.server.core.IServer;
  */
 public class StopServerJob extends ChainedJob {
 	public StopServerJob(IServer server) {
-		super(NLS.bind(Messages.jobStoppingServer, server.getName()), server);
+		super(NLS.bind(Messages.jobStopping, server.getName()), server);
 	}
 
 	/* (non-Javadoc)
