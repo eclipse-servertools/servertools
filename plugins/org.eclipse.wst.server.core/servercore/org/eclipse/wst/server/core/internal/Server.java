@@ -1123,7 +1123,7 @@ public class Server extends Base implements IServer {
 		
 		// to make the publishing dialog appear, require adaptable to covert String.class
 		// into "user" string. a bit of a kludge, but works fine for now
-		if (info != null && info.getAdapter(String.class).equals("user"))
+		if (info != null && "user".equals(info.getAdapter(String.class)))
 			publishJob.setUser(true);
 		publishJob.schedule();
 	}
