@@ -853,7 +853,10 @@ public abstract class ServerBehaviourDelegate {
 			if (taskStatus != null && !taskStatus.isOK())
 				tempMulti.addAll(taskStatus);
 			
-			executePublishers(kind, moduleList, monitor, info2);
+			// execute publishers
+			taskStatus = executePublishers(kind, moduleList, monitor, info2);
+			if (taskStatus != null && !taskStatus.isOK())
+				tempMulti.addAll(taskStatus);
 			
 			if (monitor.isCanceled())
 				return Status.CANCEL_STATUS;
@@ -1063,13 +1066,15 @@ public abstract class ServerBehaviourDelegate {
 	 *    org.eclipse.swt.widgets.Shell.class
 	 * @throws CoreException
 	 */
-	protected void executePublishers(int kind, List<IModule[]> modules, IProgressMonitor monitor, IAdaptable info) throws CoreException {
+	protected MultiStatus executePublishers(int kind, List<IModule[]> modules, IProgressMonitor monitor, IAdaptable info) throws CoreException {
 		Publisher[] publishers = ((Server)getServer()).getEnabledPublishers();
 		int size = publishers.length;
 		Trace.trace(Trace.FINEST, "Executing publishers: " + size);
 		
 		if (size == 0)
-			return;
+			return null;
+		
+		MultiStatus multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.taskPerforming, null);
 		
 		TaskModel taskModel = new TaskModel();
 		taskModel.putObject(TaskModel.TASK_SERVER, getServer());
@@ -1080,7 +1085,8 @@ public abstract class ServerBehaviourDelegate {
 			monitor.subTask(NLS.bind(Messages.taskPerforming, pub.getName()));
 			try {
 				pub.setTaskModel(taskModel);
-				pub.execute(kind, ProgressUtil.getSubMonitorFor(monitor, 500), info);
+				IStatus pubStatus = pub.execute(kind, ProgressUtil.getSubMonitorFor(monitor, 500), info);
+				multi.add(pubStatus);
 			} catch (CoreException ce) {
 				Trace.trace(Trace.SEVERE, "Publisher failed", ce);
 				throw ce;
@@ -1088,8 +1094,9 @@ public abstract class ServerBehaviourDelegate {
 			
 			// return early if the monitor has been canceled
 			if (monitor.isCanceled())
-				return;
+				return multi;
 		}
+		return multi;
 	}
 
 	/**
