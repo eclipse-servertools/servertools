@@ -1,0 +1,4 @@
+# Debugging options for the org.eclipse.wst.server.discovery plugin
+
+# Turn on general debugging
+org.eclipse.wst.server.discovery/debug=true

@@ -1,0 +1,10 @@
+<extensions>
+    <site url="http://www.apache.org/dist/geronimo/eclipse/updates/"/>
+    <site url="http://download.boulder.ibm.com/ibmdl/pub/software/websphere/wasce/updates/"/>
+    <site url="http://www.pramati.com/downloads/eclipse/updates/"/>
+    <site url="http://update.eclipse.org/updates/3.3/"/>
+    <site url="http://download.oracle.com/otn_software/oepe/ganymede/wls-adapter/"/>
+    <site url="https://ajax.dev.java.net/eclipse"/>
+    <site url="https://www.sdn.sap.com/downloads/updates/netweaver/nwds/sapnwserver/"/>
+    <site url="http://www.webtide.com/eclipse"/>
+</extensions>
