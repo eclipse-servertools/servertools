@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.discovery.internal.model;
 
-import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -75,7 +75,7 @@ public class ExtensionUpdateSite implements IExtensionSite {
 	public List<IExtension> getExtensions(IProgressMonitor monitor) throws CoreException {
 		try {
 			UpdateSiteMetadataRepositoryFactory mrf = new UpdateSiteMetadataRepositoryFactory();
-			URL url2 = new URL(url);
+			URI url2 = new URI(url);
 			IMetadataRepository repo = mrf.load(url2, monitor);
 			//System.out.println("Repo: " + repo);
 			//Query query = new InstallableUnitQuery(null);

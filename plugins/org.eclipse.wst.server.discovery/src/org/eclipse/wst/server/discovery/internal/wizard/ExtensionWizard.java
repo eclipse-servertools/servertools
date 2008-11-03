@@ -13,9 +13,9 @@ package org.eclipse.wst.server.discovery.internal.wizard;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.equinox.internal.p2.ui.dialogs.AcceptLicensesWizardPage;
+import org.eclipse.equinox.internal.provisional.p2.ui.policy.Policy;
 import org.eclipse.equinox.internal.provisional.p2.metadata.IInstallableUnit;
-import org.eclipse.equinox.internal.provisional.p2.ui.SimpleLicenseManager;
+import org.eclipse.equinox.internal.p2.ui.dialogs.AcceptLicensesWizardPage;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.osgi.util.NLS;
@@ -39,7 +39,8 @@ public class ExtensionWizard extends Wizard {
 	public void addPages() {
 		super.addPages();
 		//licensePage = new LicenseWizardPage();
-		licensePage = new AcceptLicensesWizardPage(new IInstallableUnit[0], new SimpleLicenseManager(), null);
+		Policy policy = new Policy();
+		licensePage = new AcceptLicensesWizardPage(policy, new IInstallableUnit[0], null);
 		extensionPage = new ExtensionWizardPage(licensePage);
 		addPage(extensionPage);
 		addPage(licensePage);

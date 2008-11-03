@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.discovery.internal;
 
-import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -37,8 +37,8 @@ public class P2Test {
 			System.out.println("---p2---");
 			//SimpleMetadataRepositoryFactory mrf = new SimpleMetadataRepositoryFactory();
 			UpdateSiteMetadataRepositoryFactory mrf = new UpdateSiteMetadataRepositoryFactory();
-			URL url = new URL("http://www.apache.org/dist/geronimo/eclipse/updates/");
-			IMetadataRepository repo = mrf.load(url, null);
+			URI uri = new URI("http://www.apache.org/dist/geronimo/eclipse/updates/");
+			IMetadataRepository repo = mrf.load(uri, null);
 			System.out.println("Repo: " + repo);
 			//Query query = new InstallableUnitQuery(null);
 			Query query = new InstallableUnitQuery("org.eclipse.wst.server.core.serverAdapter");
