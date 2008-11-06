@@ -299,6 +299,7 @@ public class Messages extends NLS {
 	public static String serverEditorOverviewRuntimeCommand;
 	public static String serverEditorOverviewOpenLaunchConfiguration;
 	public static String errorMissingConfiguration;
+	public static String errorConfigurationNotAccessible;
 	public static String viewStatusStarting4;
 	public static String viewStatusStarted2;
 	public static String viewStatusStopping4;

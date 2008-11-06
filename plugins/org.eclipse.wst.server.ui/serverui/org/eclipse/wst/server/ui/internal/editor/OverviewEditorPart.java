@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -38,6 +39,7 @@ import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Image;
@@ -983,8 +985,16 @@ public class OverviewEditorPart extends ServerEditorPart {
 			mForm.getMessageManager().removeMessage("config", serverConfiguration);
 			if (server != null && server.getServerType() != null && server.getServerType().hasServerConfiguration()) {
 				IFolder folder = getServer().getServerConfiguration();
-				if (folder == null || !folder.exists())
-					mForm.getMessageManager().addMessage("config", Messages.errorMissingConfiguration, null, IMessageProvider.ERROR, serverConfiguration);
+				
+	 			if (folder == null || !folder.exists()) {
+					IProject project = null;
+					if (folder != null)
+						project = folder.getProject();
+					if (project != null && project.exists() && !project.isOpen())
+						mForm.getMessageManager().addMessage("config", NLS.bind(Messages.errorConfigurationNotAccessible, project.getName()), null, IMessageProvider.ERROR, serverConfiguration);
+					else
+						mForm.getMessageManager().addMessage("config", Messages.errorMissingConfiguration, null, IMessageProvider.ERROR, serverConfiguration);
+	 			}
 			}
 		}
 		

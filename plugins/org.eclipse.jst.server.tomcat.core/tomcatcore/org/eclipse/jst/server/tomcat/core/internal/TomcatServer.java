@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jst.server.core.FacetUtil;
 import org.eclipse.jst.server.core.IWebModule;
@@ -76,8 +77,12 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 			IFolder folder = getServer().getServerConfiguration();
 			if (folder == null || !folder.exists()) {
 				String path = null;
-				if (folder != null)
+				if (folder != null) {
 					path = folder.getFullPath().toOSString();
+					IProject project = folder.getProject();
+					if (project != null && project.exists() && !project.isOpen()) 
+						throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorConfigurationProjectClosed, path, project.getName()), null));
+				}
 				throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorNoConfiguration, path), null));
 			}
 			

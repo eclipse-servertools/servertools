@@ -68,6 +68,7 @@ public class Messages extends NLS {
 	public static String errorCleanupServer;
 	public static String publisherPublishTask;
 	public static String errorNoConfiguration;
+	public static String errorConfigurationProjectClosed;
 	public static String errorWebModulesOnly;
 	public static String errorNoRuntime;
 	public static String publishServerTask;
