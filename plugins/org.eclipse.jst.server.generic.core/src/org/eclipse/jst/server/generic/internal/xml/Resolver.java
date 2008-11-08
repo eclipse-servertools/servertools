@@ -96,6 +96,7 @@ public class Resolver {
 	}
 
 	private int skipToProperty(String str,HashMap cache) {
+		if (str == null )return -1;
 		int start = -1; 
 		int end =  0;
 		String key=""; //$NON-NLS-1$
