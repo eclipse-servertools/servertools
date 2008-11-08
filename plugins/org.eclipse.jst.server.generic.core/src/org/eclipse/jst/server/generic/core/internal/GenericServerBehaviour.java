@@ -356,12 +356,9 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
         GenericServerRuntime runtime = getRuntimeDelegate();
 
         IVMInstall vmInstall = runtime.getVMInstall();
+        if (vmInstall == null ) vmInstall = JavaRuntime.getDefaultVMInstall();
         workingCopy.setAttribute(
-                IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_TYPE, runtime
-                        .getVMInstallTypeId());
-        workingCopy.setAttribute(
-                IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_NAME,
-                vmInstall.getName());
+                IJavaLaunchConfigurationConstants.ATTR_JRE_CONTAINER_PATH, JavaRuntime.newJREContainerPath(vmInstall).toPortableString());
 
         setupLaunchClasspath(workingCopy, vmInstall, getStartClasspath());
 
