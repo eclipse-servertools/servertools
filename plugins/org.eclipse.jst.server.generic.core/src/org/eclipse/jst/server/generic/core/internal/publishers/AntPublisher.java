@@ -37,6 +37,8 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
+import org.eclipse.jdt.launching.IVMInstall;
+import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.generic.core.internal.CorePlugin;
 import org.eclipse.jst.server.generic.core.internal.GenericPublisher;
@@ -320,9 +322,12 @@ public class AntPublisher extends GenericPublisher {
 		wc.setAttribute(IDebugUIConstants.ATTR_PRIVATE, true);
 
 		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_SOURCE_PATH_PROVIDER, "org.eclipse.ant.ui.AntClasspathProvider"); //$NON-NLS-1$
-		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_NAME, getServerRuntime().getVMInstall().getName());
-		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_TYPE, getServerRuntime().getVMInstall().getVMInstallType()
-				.getId());
+		
+		IVMInstall vmInstall = getServerRuntime().getVMInstall();
+		if(vmInstall == null )//fallback to default VM if null.
+			vmInstall = JavaRuntime.getDefaultVMInstall();
+		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_JRE_CONTAINER_PATH, JavaRuntime.newJREContainerPath(vmInstall).toPortableString());
+
 		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
 				"org.eclipse.ant.internal.ui.antsupport.InternalAntRunner"); //$NON-NLS-1$
 		wc.setAttribute(DebugPlugin.ATTR_PROCESS_FACTORY_ID, IAntUIConstants.REMOTE_ANT_PROCESS_FACTORY_ID);
