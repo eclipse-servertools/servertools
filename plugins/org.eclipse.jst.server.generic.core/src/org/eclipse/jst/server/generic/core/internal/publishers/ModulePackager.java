@@ -27,11 +27,15 @@ import org.eclipse.core.runtime.Path;
  * Packages resources to a .zip file
  */
 public class ModulePackager {
+	private static final int BUFFER_SIZE = 65536;
+	private byte[] readBuffers;
+	
 	private static final String JAR_FILE_SEPERATOR = "/"; //$NON-NLS-1$
 	private JarOutputStream outputStream;
-//	private StringBuffer manifestContents;
 
 	private boolean useCompression = true;
+
+	
 
 	/**
 	 * Create an instance of this class.
@@ -150,13 +154,13 @@ public class ModulePackager {
 
 		try {
 			output = new ByteArrayOutputStream();
-			int chunkSize = contentStream.available();
-			byte[] readBuffer = new byte[chunkSize];
-			int n = contentStream.read(readBuffer);
-
-			while (n > 0) {
-				output.write(readBuffer);
-				n = contentStream.read(readBuffer);
+			if( readBuffers == null )
+				readBuffers = new byte[BUFFER_SIZE];
+			int n = 0;
+			while (n > -1) {
+				n = contentStream.read(readBuffers);
+				if (n > 0)
+					output.write(readBuffers);
 			}
 		} finally {
 			if (output != null)
