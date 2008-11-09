@@ -26,7 +26,6 @@ import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.model.IModuleResource;
 import org.eclipse.wst.server.core.model.IModuleResourceDelta;
 import org.eclipse.wst.server.core.util.ProjectModule;
-import org.eclipse.wst.server.core.util.PublishUtil;
 
 /**
  * Utility for EAR module assembly.
@@ -54,7 +53,7 @@ public class EarModuleAssembler extends AbstractModuleAssembler {
 			if( jeeModule != null && jeeModule.isBinary() ){//Binary module just copy
 				ProjectModule pm = (ProjectModule) module.loadAdapter(ProjectModule.class, null);
 				IModuleResource[] resources = pm.members();
-				PublishUtil.publishFull(resources, parent, monitor);
+				publishHelper.publishFull(resources, parent, monitor);
 				continue;//done! no need to go further
 			}
 			if( shouldRepack( module ) ){	

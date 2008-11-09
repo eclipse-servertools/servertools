@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.wst.server.core.util.PublishUtil;
 import org.eclipse.jst.server.generic.core.internal.CorePlugin;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
@@ -28,6 +27,7 @@ import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.model.IModuleFolder;
 import org.eclipse.wst.server.core.model.IModuleResource;
 import org.eclipse.wst.server.core.util.ProjectModule;
+import org.eclipse.wst.server.core.util.PublishHelper;
 
 /**
  * Base class for module assemblers
@@ -40,6 +40,7 @@ public abstract class AbstractModuleAssembler {
 	protected IModule fModule; 
 	protected GenericServer fServer;
 	protected IPath fAssembleRoot;
+	protected PublishHelper publishHelper;
 	
 	protected AbstractModuleAssembler(IModule module, GenericServer server, IPath assembleRoot)
 	{
@@ -47,6 +48,8 @@ public abstract class AbstractModuleAssembler {
 		fServerdefinition=server.getServerDefinition();
 		fServer=server;
 		fAssembleRoot = assembleRoot;
+		//TODO: Verify the temporary directory location.
+		publishHelper = new PublishHelper(CorePlugin.getDefault().getStateLocation().append("tmp").toFile());
 	}
 	
 	/**
@@ -157,7 +160,7 @@ public abstract class AbstractModuleAssembler {
 
 	protected IPath copyModule(IModule module, IProgressMonitor monitor) throws CoreException {
 		ProjectModule pm =(ProjectModule)module.loadAdapter(ProjectModule.class, monitor);
-		IStatus[] status = PublishUtil.publishSmart(pm.members(), fAssembleRoot, monitor);
+		IStatus[] status = publishHelper.publishSmart(pm.members(), fAssembleRoot, monitor);
 		if (status != null && status.length > 0)
 			throw new CoreException(status[0]);
 		return fAssembleRoot;
