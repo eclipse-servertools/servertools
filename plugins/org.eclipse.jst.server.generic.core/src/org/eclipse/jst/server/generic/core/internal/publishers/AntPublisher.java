@@ -89,6 +89,8 @@ public class AntPublisher extends GenericPublisher {
 	protected static final String PROP_CONTEXT_ROOT = "contextRoot";//$NON-NLS-1$
 
 	protected static final String PROP_PROJECT_NAME = "project.name";//$NON-NLS-1$
+	
+	protected static final String PROP_PROJECT_LOCATION = "project.location";
 
 	protected static final String MODULE_PUBLISH_TARGET_PREFIX = "target.publish."; //$NON-NLS-1$
 
@@ -252,6 +254,7 @@ public class AntPublisher extends GenericPublisher {
 		props.put(PROP_PROJECT_WORKING_DIR, getProjectWorkingLocation().toString());
 		props.put(PROP_MODULE_NAME, moduleName);
 		props.put(PROP_CONTEXT_ROOT, contextRoot);
+			
 		if (isModuleType(webModule, "jst.ear")) {//$NON-NLS-1$
 			props.put(PROP_MODULE_ARCHIVE_NAME, moduleName + ".ear"); //$NON-NLS-1$
 		} else if (isModuleType(webModule, "jst.web")) { //$NON-NLS-1$
@@ -262,6 +265,7 @@ public class AntPublisher extends GenericPublisher {
 		if (webModule.getProject() != null) {
 			props.put(PROP_MODULE_DIR, getModuleWorkingDir().toString());
 			props.put(PROP_PROJECT_NAME, webModule.getProject().getName());
+			props.put(PROP_PROJECT_LOCATION, webModule.getProject().getLocation().toString());
 		}
 		props.put(PROP_SERVER_PUBLISH_DIR, modDir);
 		return props;
