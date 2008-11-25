@@ -37,6 +37,52 @@
     category="org.eclipse.wst.server.ui"
     class="org.eclipse.wst.server.ui.internal.view.servers.ServersView"
     icon="icons/cview16/servers_view.gif"/>
+
+  <view
+    id="org.eclipse.wst.server.ui.ServersViewProposed"
+    name="%viewServers_new"
+    category="org.eclipse.wst.server.ui"
+    class="org.eclipse.wst.server.ui.internal.view.servers.provisional.ServersView"
+    icon="icons/cview16/servers_view.gif"/>
+</extension>
+<extension
+      point="org.eclipse.ui.navigator.navigatorContent">
+   <navigatorContent
+         activeByDefault="true"
+         contentProvider="org.eclipse.wst.server.ui.internal.view.servers.provisional.ServerContentProvider"
+         icon="icons/cview16/servers_view.gif"
+         id="org.eclipse.wst.server.ui.ServersView.content.root"
+         labelProvider="org.eclipse.wst.server.ui.internal.view.servers.provisional.ServerLabelProvider"
+         name="Servers View Default Content"
+         priority="normal">
+      <triggerPoints>
+         <instanceof
+               value="org.eclipse.wst.server.core.internal.ServerPlugin">
+         </instanceof>
+      </triggerPoints>
+      <possibleChildren>
+         <or>
+            <instanceof
+                  value="org.eclipse.wst.server.core.IServer">
+            </instanceof>
+            <instanceof
+                  value="org.eclipse.wst.server.ui.internal.view.servers.ModuleServer">
+            </instanceof>
+         </or></possibleChildren>
+   </navigatorContent>
+</extension>
+
+               <extension
+      point="org.eclipse.ui.navigator.viewer">
+   <viewerContentBinding
+         viewerId="org.eclipse.wst.server.ui.ServersViewProposed">
+      <includes>
+         <contentExtension
+               isRoot="true"
+               pattern="org.eclipse.wst.server.ui.ServersView.content.root">
+         </contentExtension>
+      </includes>
+   </viewerContentBinding>
 </extension>
 
 <extension point="org.eclipse.ui.perspectiveExtensions">
@@ -502,6 +548,27 @@ M4 = Platform-specific fourth key
         class="org.eclipse.wst.server.ui.internal.ServerUIPlugin$DefaultLaunchableAdapter"
         id="org.eclipse.wst.server.ui.launchable.adapter.default"
         priority="-999999"/>
+</extension>
+<extension
+      point="org.eclipse.ui.decorators">
+   <decorator
+         class="org.eclipse.wst.server.ui.internal.view.servers.provisional.ServerDecorator"
+         icon="icons/obj16/server.gif"
+         id="org.eclipse.wst.server.ui.navigatorDecorator"
+         label="Server State Decorator"
+         lightweight="true"
+         location="BOTTOM_RIGHT">
+      <enablement>
+         <or>
+            <objectClass
+                  name="org.eclipse.wst.server.core.IServer">
+            </objectClass>
+            <objectClass
+                  name="org.eclipse.wst.server.ui.internal.view.servers.ModuleServer">
+            </objectClass>
+         </or>
+      </enablement>
+   </decorator>
 </extension>
 
 </plugin>
