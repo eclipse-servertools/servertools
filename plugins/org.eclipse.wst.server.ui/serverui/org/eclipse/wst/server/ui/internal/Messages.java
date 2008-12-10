@@ -304,9 +304,11 @@ public class Messages extends NLS {
 	public static String viewStatusStarted2;
 	public static String viewStatusStopping4;
 	public static String viewStatusStopped2;
+	public static String viewStatusStarting;
 	public static String viewStatusStarting1;
 	public static String viewStatusStarting2;
 	public static String viewStatusStarting3;
+	public static String viewStatusStopping;
 	public static String viewStatusStopping1;
 	public static String viewStatusStopping2;
 	public static String viewStatusStopping3;

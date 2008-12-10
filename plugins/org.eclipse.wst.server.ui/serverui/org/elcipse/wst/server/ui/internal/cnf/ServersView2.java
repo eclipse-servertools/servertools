@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.ui.internal.view.servers.provisional;
+package org.elcipse.wst.server.ui.internal.cnf;
 
 import java.util.Iterator;
 
@@ -17,71 +17,31 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IContributionManager;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.*;
 import org.eclipse.jface.bindings.TriggerSequence;
-import org.eclipse.jface.viewers.IOpenListener;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.OpenEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
-import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.ServerPort;
+import org.eclipse.ui.navigator.INavigatorViewerDescriptor;
+import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.internal.UpdateServerJob;
 import org.eclipse.wst.server.core.model.ServerDelegate;
-import org.eclipse.wst.server.ui.internal.Messages;
-import org.eclipse.wst.server.ui.internal.ServerToolTip;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-import org.eclipse.wst.server.ui.internal.Trace;
+import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.actions.NewServerWizardAction;
-import org.eclipse.wst.server.ui.internal.view.servers.CopyAction;
-import org.eclipse.wst.server.ui.internal.view.servers.DeleteAction;
-import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
-import org.eclipse.wst.server.ui.internal.view.servers.ModuleSloshAction;
-import org.eclipse.wst.server.ui.internal.view.servers.MonitorServerPortAction;
-import org.eclipse.wst.server.ui.internal.view.servers.OpenAction;
-import org.eclipse.wst.server.ui.internal.view.servers.PasteAction;
-import org.eclipse.wst.server.ui.internal.view.servers.PropertiesAction;
-import org.eclipse.wst.server.ui.internal.view.servers.PublishAction;
-import org.eclipse.wst.server.ui.internal.view.servers.PublishCleanAction;
-import org.eclipse.wst.server.ui.internal.view.servers.RemoveModuleAction;
-import org.eclipse.wst.server.ui.internal.view.servers.RenameAction;
-import org.eclipse.wst.server.ui.internal.view.servers.RestartModuleAction;
-import org.eclipse.wst.server.ui.internal.view.servers.ShowInConsoleAction;
-import org.eclipse.wst.server.ui.internal.view.servers.ShowInDebugAction;
-import org.eclipse.wst.server.ui.internal.view.servers.StartAction;
-import org.eclipse.wst.server.ui.internal.view.servers.StartModuleAction;
-import org.eclipse.wst.server.ui.internal.view.servers.StopAction;
-import org.eclipse.wst.server.ui.internal.view.servers.StopModuleAction;
+import org.eclipse.wst.server.ui.internal.view.servers.*;
 /**
  * A view of servers, their modules, and status.
  */
-public class ServersView extends CommonNavigator {
+public class ServersView2 extends CommonNavigator {
 	
 	protected CommonViewer tableViewer;
 	
@@ -96,28 +56,33 @@ public class ServersView extends CommonNavigator {
 	protected Action actionModifyModules;
 	protected Action openAction, showInConsoleAction, showInDebugAction, propertiesAction, monitorPropertiesAction;
 	protected Action copyAction, pasteAction, deleteAction, renameAction;
-	
+
 	/**
 	 * ServersView constructor comment.
 	 */
-	public ServersView() {
+	public ServersView2() {
 		super();
 	}
 
 	@Override
 	public void createPartControl(Composite parent) {
-		super.createPartControl(parent);
+		clipboard = new Clipboard(Display.getCurrent());
 		
-		clipboard = new Clipboard(getCommonViewer().getControl().getDisplay());
+		super.createPartControl(parent);
 		
 		deferInitialization();
 	}
 	
+	@Override
+	protected void updateTitle() {
+		// nothing to do
+	}
+
 	private void deferInitialization() {
 		TreeItem item = new TreeItem(getCommonViewer().getTree(), SWT.NONE);
 		item.setText(Messages.viewInitializing);
 			
-		initializeActions(getCommonViewer());
+		//initializeActions(getCommonViewer());
 		
 		Job job = new Job(Messages.jobInitializingServersView) {
 			public IStatus run(IProgressMonitor monitor) {
@@ -125,10 +90,6 @@ public class ServersView extends CommonNavigator {
 				int size = servers.length;
 				for (int i = 0; i < size; i++) {
 					((Server)servers[i]).getAllModules().iterator();
-					/*while (iterator.hasNext()) {
-						Module module = (Module) iterator.next();
-						module.g
-					}*/
 				}
 				
 
@@ -154,23 +115,8 @@ public class ServersView extends CommonNavigator {
 		// TODO Angel says: What to do here? 
 		//tableViewer.initialize();				
 		
-		// TODO Angel says: This probably shouldn't be here 
+		// TODO Angel says: is this the best place for this? 
 		tableViewer = getCommonViewer();
-		
-		tableViewer.addOpenListener(new IOpenListener() {
-			public void open(OpenEvent event) {
-				try {
-					IStructuredSelection sel = (IStructuredSelection) event.getSelection();
-					Object data = sel.getFirstElement();
-					if (!(data instanceof IServer))
-						return;
-					IServer server = (IServer) data;
-					ServerUIPlugin.editServer(server);
-				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Could not open server", e);
-				}
-			}
-		});
 		
 		MenuManager menuManager = new MenuManager("#PopupMenu");
 		menuManager.setRemoveAllWhenShown(true);
@@ -267,8 +213,7 @@ public class ServersView extends CommonNavigator {
 			MenuManager showInMenu = new MenuManager(text);
 			showInMenu.add(showInConsoleAction);
 			showInMenu.add(showInDebugAction);
-			//IActionBars actionBars = getViewSite().getActionBars();
-			//actionBars.setGlobalActionHandler("group.show", showInMenu);
+			
 			menu.add(showInMenu);
 			menu.add(new Separator());
 		} else
@@ -352,12 +297,67 @@ public class ServersView extends CommonNavigator {
 	}
 	
 	
-	/**
-	 * Initialize actions
-	 * 
-	 * @param provider a selection provider
-	 */
-	public void initializeActions(ISelectionProvider provider) {
+//	/**
+//	 * Initialize actions
+//	 * 
+//	 * @param provider a selection provider
+//	 */
+//	public void initializeActions(ISelectionProvider provider) {
+//		Shell shell = getSite().getShell();
+//		IActionBars actionBars = getViewSite().getActionBars();
+//		
+//		actions = new Action[6];
+//		// create the start actions
+//		actions[0] = new StartAction(shell, provider, ILaunchManager.DEBUG_MODE);
+//		actionBars.setGlobalActionHandler("org.eclipse.wst.server.debug", actions[0]);
+//		actions[1] = new StartAction(shell, provider, ILaunchManager.RUN_MODE);
+//		actionBars.setGlobalActionHandler("org.eclipse.wst.server.run", actions[1]);
+//		actions[2] = new StartAction(shell, provider, ILaunchManager.PROFILE_MODE);
+//		
+//		// create the stop action
+//		actions[3] = new StopAction(shell, provider);
+//		actionBars.setGlobalActionHandler("org.eclipse.wst.server.stop", actions[3]);
+//		
+//		// create the publish actions
+//		actions[4] = new PublishAction(shell, provider);
+//		actionBars.setGlobalActionHandler("org.eclipse.wst.server.publish", actions[4]);
+//		actions[5] = new PublishCleanAction(shell, provider);
+//		
+//		// create the open action
+//		openAction = new OpenAction(provider);
+//		actionBars.setGlobalActionHandler("org.eclipse.ui.navigator.Open", openAction);
+//		
+//		// create copy, paste, and delete actions
+//		pasteAction = new PasteAction(shell, provider,  clipboard);
+//		copyAction = new CopyAction(provider, clipboard, pasteAction);
+//		deleteAction = new DeleteAction(shell, provider);
+//		renameAction = new RenameAction(shell, getCommonViewer(), provider);
+//		actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), copyAction);
+//		actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), pasteAction);
+//		actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), deleteAction);
+//		actionBars.setGlobalActionHandler(ActionFactory.RENAME.getId(), renameAction);
+//		
+//		// create the other actions
+//		actionModifyModules = new ModuleSloshAction(shell, provider);
+//		showInConsoleAction = new ShowInConsoleAction(provider);
+//		showInDebugAction = new ShowInDebugAction(provider);
+//		
+//		// create the properties action
+//		propertiesAction = new PropertiesAction(shell, provider);
+//		actionBars.setGlobalActionHandler(ActionFactory.PROPERTIES.getId(), propertiesAction);
+//		monitorPropertiesAction = new PropertiesAction(shell, "org.eclipse.wst.server.ui.properties.monitor", provider);
+//		
+//		// add toolbar buttons
+//		IContributionManager cm = actionBars.getToolBarManager();
+//		for (int i = 0; i < actions.length - 1; i++)
+//			cm.add(actions[i]);
+//		
+//		cm.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+//	}
+	
+	@Override
+	protected ActionGroup createCommonActionGroup() {
+		CommonViewer provider = getCommonViewer();
 		Shell shell = getSite().getShell();
 		IActionBars actionBars = getViewSite().getActionBars();
 		
@@ -408,6 +408,24 @@ public class ServersView extends CommonNavigator {
 			cm.add(actions[i]);
 		
 		cm.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+		
+		INavigatorViewerDescriptor viewDescriptor = getCommonViewer().getNavigatorContentService().getViewerDescriptor();	
+		
+		return super.createCommonActionGroup();
+	}
+
+	@Override
+	protected void handleDoubleClick(DoubleClickEvent anEvent) {
+		try {
+			IStructuredSelection sel = (IStructuredSelection) anEvent.getSelection();
+			Object data = sel.getFirstElement();
+			if (!(data instanceof IServer))
+				return;
+			IServer server = (IServer) data;
+			ServerUIPlugin.editServer(server);
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Could not open server", e);
+		}
 	}
 	
 }

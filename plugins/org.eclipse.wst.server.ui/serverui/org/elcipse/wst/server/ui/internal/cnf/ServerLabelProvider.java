@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,8 +8,9 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.ui.internal.view.servers.provisional;
+package org.elcipse.wst.server.ui.internal.cnf;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -61,6 +62,12 @@ public class ServerLabelProvider extends LabelProvider {
 			IServer server = (IServer) element;
 			if (server.getServerType() != null) {
 				image = ImageResource.getImage(server.getServerType().getId());
+				// TODO Angel says: Need to discuss about it
+				// Because we are now grabbing the ServerState the type will not show. It might be best to create a new icon for the state
+				ImageDescriptor imgDescriptor = ServerDecorator.getServerStateImage(server);
+				if (image != null){
+					image = imgDescriptor.createImage();
+				}
 			}
 		}
 		return image;
@@ -73,6 +80,12 @@ public class ServerLabelProvider extends LabelProvider {
 	}
 
 	public boolean isLabelProperty(Object element, String property) {
-		return false;
+		if (element instanceof IServer){
+			IServer server = (IServer)element;
+			if (property.equalsIgnoreCase("ICON")){
+				return true;
+			}
+		}
+		return true;
 	}
 }

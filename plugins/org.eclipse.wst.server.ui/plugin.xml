@@ -39,21 +39,22 @@
     icon="icons/cview16/servers_view.gif"/>
 
   <view
-    id="org.eclipse.wst.server.ui.ServersViewProposed"
-    name="%viewServers_new"
-    category="org.eclipse.wst.server.ui"
-    class="org.eclipse.wst.server.ui.internal.view.servers.provisional.ServersView"
-    icon="icons/cview16/servers_view.gif"/>
+        allowMultiple="false"
+        category="org.eclipse.wst.server.ui"
+        class="org.elcipse.wst.server.ui.internal.cnf.ServersView2"
+        icon="icons/cview16/servers_view.gif"
+        id="org.eclipse.wst.server.ui.ServersView2"
+        name="%viewServers_new"/>
 </extension>
 <extension
       point="org.eclipse.ui.navigator.navigatorContent">
    <navigatorContent
          activeByDefault="true"
-         contentProvider="org.eclipse.wst.server.ui.internal.view.servers.provisional.ServerContentProvider"
+         contentProvider="org.elcipse.wst.server.ui.internal.cnf.ServerContentProvider"
          icon="icons/cview16/servers_view.gif"
          id="org.eclipse.wst.server.ui.ServersView.content.root"
-         labelProvider="org.eclipse.wst.server.ui.internal.view.servers.provisional.ServerLabelProvider"
-         name="Servers View Default Content"
+         labelProvider="org.elcipse.wst.server.ui.internal.cnf.ServerLabelProvider"
+         name="%defaultProvider"
          priority="normal">
       <triggerPoints>
          <instanceof
@@ -75,7 +76,7 @@
                <extension
       point="org.eclipse.ui.navigator.viewer">
    <viewerContentBinding
-         viewerId="org.eclipse.wst.server.ui.ServersViewProposed">
+         viewerId="org.eclipse.wst.server.ui.ServersView2">
       <includes>
          <contentExtension
                isRoot="true"
@@ -91,7 +92,7 @@
     <view
       relative="org.eclipse.debug.ui.DebugView"
       relationship="stack"
-      id="org.eclipse.wst.server.ui.ServersView">
+      id="org.eclipse.wst.server.ui.ServersView2">
     </view>
   </perspectiveExtension>
 </extension>
@@ -552,12 +553,13 @@ M4 = Platform-specific fourth key
 <extension
       point="org.eclipse.ui.decorators">
    <decorator
-         class="org.eclipse.wst.server.ui.internal.view.servers.provisional.ServerDecorator"
+         class="org.elcipse.wst.server.ui.internal.cnf.ServerDecorator"
          icon="icons/obj16/server.gif"
          id="org.eclipse.wst.server.ui.navigatorDecorator"
          label="Server State Decorator"
          lightweight="true"
-         location="BOTTOM_RIGHT">
+         location="BOTTOM_RIGHT"
+         state="true">
       <enablement>
          <or>
             <objectClass

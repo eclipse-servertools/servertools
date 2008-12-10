@@ -1,26 +1,24 @@
-package org.eclipse.wst.server.ui.internal.view.servers.provisional;
+/*******************************************************************************
+ * Copyright (c) 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - Initial API and implementation
+ *******************************************************************************/
+package org.elcipse.wst.server.ui.internal.cnf;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IPublishListener;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerLifecycleListener;
-import org.eclipse.wst.server.core.IServerListener;
-import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.ServerEvent;
+import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.internal.UpdateServerJob;
 import org.eclipse.wst.server.core.util.PublishAdapter;
@@ -41,9 +39,8 @@ public class ServerContentProvider extends BaseContentProvider implements ITreeC
 	protected boolean animationActive = false;
 	protected boolean stopAnimation = false;
 	protected boolean initialized = false;
-	
-	
-	private StructuredViewer viewer;
+		
+	protected StructuredViewer viewer;
 	
 	public ServerContentProvider() {
 		addListeners();
@@ -144,7 +141,7 @@ public class ServerContentProvider extends BaseContentProvider implements ITreeC
 			}
 		}
 	}
-
+	
 	// Listeners and refreshing the viewer
 	protected void addListeners() {
 		serverResourceListener = new IServerLifecycleListener() {
@@ -187,29 +184,7 @@ public class ServerContentProvider extends BaseContentProvider implements ITreeC
 						refreshServer(server, true);
 						int state = event.getState();
 						String id = server.getId();
-						if (state == IServer.STATE_STARTING || state == IServer.STATE_STOPPING) {
-							boolean startThread = false;
-							synchronized (starting) {
-								if (!starting.contains(id)) {
-									if (starting.isEmpty())
-										startThread = true;
-									starting.add(id);
-								}
-							}
-							if (startThread)
-								startThread();
-						} else {
-							boolean stopThread = false;
-							synchronized (starting) {
-								if (starting.contains(id)) {
-									starting.remove(id);
-									if (starting.isEmpty())
-										stopThread = true;
-								}
-							}
-							if (stopThread)
-								stopThread();
-						}
+						animate(id, state);
 					} else
 						refreshServer(server);
 				} else if ((eventKind & ServerEvent.MODULE_CHANGE) != 0) {
@@ -232,6 +207,33 @@ public class ServerContentProvider extends BaseContentProvider implements ITreeC
 		}
 	}
 
+	protected void animate(String serverId, int state){
+		if (state == IServer.STATE_STARTING || state == IServer.STATE_STOPPING) {
+			boolean startThread = false;
+			synchronized (starting) {
+				if (!starting.contains(serverId)) {
+					if (starting.isEmpty())
+						startThread = true;
+					starting.add(serverId);
+				}
+			}
+			if (startThread){
+				startThread();
+			}
+		} else {
+			boolean stopThread = false;
+			synchronized (starting) {
+				if (starting.contains(serverId)) {
+					starting.remove(serverId);
+					if (starting.isEmpty())
+						stopThread = true;
+				}
+			}
+			if (stopThread)
+				stopThread();
+		}
+	}
+	
 	protected void deferInitialization() {
 		Job job = new Job(Messages.jobInitializingServersView) {
 			public IStatus run(IProgressMonitor monitor) {
@@ -269,12 +271,13 @@ public class ServerContentProvider extends BaseContentProvider implements ITreeC
 			public void run() {
 				try {
 					if( viewer != null && !viewer.getControl().isDisposed()) {
+						// This will trigger some animation
 						viewer.refresh(server);
 						if( resetSelection ) {
 							ISelection sel = viewer.getSelection();
 							viewer.setSelection(sel);
 						}
-						ServerDecorator.getDefault().redecorate(server);
+						//TODO: Angel says: This doesn't seem to be needed ServerDecorator.getDefault().redecorate(server);
 					}
 				} catch (Exception e) {
 					// ignore
@@ -294,6 +297,9 @@ public class ServerContentProvider extends BaseContentProvider implements ITreeC
 	}
 
 	
+	/**
+	 * Start the animation thread
+	 */
 	protected void startThread() {
 		if (animationActive)
 			return;
@@ -304,6 +310,7 @@ public class ServerContentProvider extends BaseContentProvider implements ITreeC
 		final int SLEEP = 200;
 		final Runnable[] animator = new Runnable[1];
 		animator[0] = new Runnable() {
+			@SuppressWarnings("synthetic-access")
 			public void run() {
 				if (!stopAnimation) {
 					try {
@@ -313,13 +320,14 @@ public class ServerContentProvider extends BaseContentProvider implements ITreeC
 							size = starting.size();
 							servers = new String[size];
 							starting.toArray(servers);
+							
 						}
 						
 						for (int i = 0; i < size; i++) {
 							IServer server = ServerCore.findServer(servers[i]);
 							if (server != null ) {
 								ServerDecorator.animate();
-								refreshServer(server);
+								viewer.update(server, new String[]{"ICON"});
 							}
 						}
 					} catch (Exception e) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,32 +8,23 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.ui.internal.provisional;
+package org.elcipse.wst.server.ui.internal.cnf;
 
 import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
+import org.eclipse.wst.server.ui.internal.provisional.UIDecorator;
 
-public class ConnectedUIDecorator extends UIDecorator {
+public class CNFManagedUIDecorator extends UIDecorator {
 	private static final String[] serverStateUnmanaged = new String[] {
 		"",
 		Messages.viewStatusStarting4,
 		Messages.viewStatusStarted2,
 		Messages.viewStatusStopping4,
 		Messages.viewStatusStopped2};
-
-	private static final String[] startingText = new String[] {
-		Messages.viewStatusStarting1,
-		Messages.viewStatusStarting2,
-		Messages.viewStatusStarting3};
-	
-	private static final String[] stoppingText = new String[] {
-		Messages.viewStatusStopping1,
-		Messages.viewStatusStopping2,
-		Messages.viewStatusStopping3};
 	
 	private static final Image[] startingImages = new Image[] {
 		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_1),
@@ -41,11 +32,24 @@ public class ConnectedUIDecorator extends UIDecorator {
 		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_3)
 	};
 	
+	private static final ImageDescriptor[] startingImagesDescriptor = new ImageDescriptor[] {
+		ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STARTING_1),
+		ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STARTING_2),
+		ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STARTING_3)
+	};
+	
 	private static final Image[] stoppingImages = new Image[] {
 		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_1),
 		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_2),
 		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_2)
 	};
+	
+	private static final ImageDescriptor[] stoppingImagesDescriptor = new ImageDescriptor[] {
+		ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STOPPING_1),
+		ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STOPPING_2),
+		ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STOPPING_3)
+	};
+	
 
 	/**
 	 * @see UIDecorator#getStateLabel(int, String, int)
@@ -54,9 +58,9 @@ public class ConnectedUIDecorator extends UIDecorator {
 		if (state == IServer.STATE_UNKNOWN)
 			return "";
 		else if (state == IServer.STATE_STARTING)
-			return startingText[count];
+			return Messages.viewStatusStarting;
 		else if (state == IServer.STATE_STOPPING)
-			return stoppingText[count];
+			return Messages.viewStatusStopping;
 		else if (state == IServer.STATE_STARTED) {
 			if (ILaunchManager.DEBUG_MODE.equals(mode))
 				return Messages.viewStatusStartedDebug;
@@ -93,15 +97,36 @@ public class ConnectedUIDecorator extends UIDecorator {
 		}
 	}
 	
-	public boolean canRestart() {
-		return false;
+	/**
+	 * @see UIDecorator#getStateImage(int, String, int)
+	 */
+	public ImageDescriptor getStateImageDescriptor(int state, String mode, int count) {
+		if (state == IServer.STATE_UNKNOWN)
+			return null;
+		else if (state == IServer.STATE_STARTING)
+			return startingImagesDescriptor[count];
+		else if (state == IServer.STATE_STOPPING)
+			return stoppingImagesDescriptor[count];
+		else if (state == IServer.STATE_STOPPED)
+			return ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STOPPED);
+		else { //if (state == IServer.STATE_STARTED) {
+			//String mode = server.getMode();
+			if (ILaunchManager.DEBUG_MODE.equals(mode))
+				return ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STARTED_DEBUG);
+			else if (ILaunchManager.PROFILE_MODE.equals(mode))
+				return ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STARTED_PROFILE);
+			else
+				return ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STARTED);
+		}
 	}
 	
-	public void setupAction(Action action, int action2) {
-		action.setToolTipText(Messages.actionStopToolTip2);
-		action.setText(Messages.actionStop2);
-		action.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_DISCONNECT));
-		action.setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_DISCONNECT));
-		action.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_DISCONNECT));
+	
+
+	public String getModuleName() {
+		return "module";
+	}
+	
+	public boolean canRestart() {
+		return true;
 	}
 }

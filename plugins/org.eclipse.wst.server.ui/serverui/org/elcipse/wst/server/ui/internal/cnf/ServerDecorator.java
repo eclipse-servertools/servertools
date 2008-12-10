@@ -1,11 +1,18 @@
-package org.eclipse.wst.server.ui.internal.view.servers.provisional;
+/*******************************************************************************
+ * Copyright (c) 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - Initial API and implementation
+ *******************************************************************************/
+ package org.elcipse.wst.server.ui.internal.cnf;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.viewers.IDecoration;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ILightweightLabelDecorator;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.LabelProviderChangedEvent;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.wst.server.core.IServer;
@@ -59,35 +66,23 @@ public class ServerDecorator extends LabelProvider implements ILightweightLabelD
 
 	public void decorate(Object element, IDecoration decoration) {
 		if( element instanceof IServer ) {
-			String state = getServerStateLabel((IServer)element);
-			String status = getServerStatusLabel((IServer)element);
+			IServer server = (IServer)element;
+			String state = getServerStateLabel(server );
+			String status = getServerStatusLabel(server );
+			
 			decoration.addSuffix(combine(state, status));
 		} else if( element instanceof ModuleServer ) {
-			String state = getModuleStateText((ModuleServer)element);
-			String status = getModuleStatusText((ModuleServer)element);
+			ModuleServer module = (ModuleServer)element;
+			String state = getModuleStateText(module);
+			String status = getModuleStatusText(module);
+			
 			decoration.addSuffix(combine(state, status));
 		}
-	}
-	
-	protected String combine(String state, String status) {
-		if(isEmpty(state) && isEmpty(status))
-			return "";
-		if( isEmpty(state))
-			return "  [" + status + "]";
-		if( isEmpty(status))
-			return "  [" + state + "]";
-		return "  [" + state + ", " + status + "]";
-	}
-	
-	protected boolean isEmpty(String s) {
-		return (s == null || "".equals(s));
 	}
 	
 	public void redecorate(IServer server) {
 		fireLabelProviderChanged(new LabelProviderChangedEvent(this));
 	}
-
-	
 	
 	/*
 	 * Utility methods
@@ -106,7 +101,7 @@ public class ServerDecorator extends LabelProvider implements ILightweightLabelD
 
 	public static String getStateLabel(IServerType serverType, int state, String mode) {
 		return serverType == null ? null : 
-			UIDecoratorManager.getUIDecorator(serverType).getStateLabel(state, mode, count);
+			UIDecoratorManager.getCNFUIDecorator(serverType).getStateLabel(state, mode, count);
 	}
 	
 	public static String getServerStatusLabel(IServer server) {
@@ -138,14 +133,14 @@ public class ServerDecorator extends LabelProvider implements ILightweightLabelD
 		return syncState[i];
 	}
 
-	public static Image getServerStateImage(IServer server) {
+	public static ImageDescriptor getServerStateImage(IServer server) {
 		return server == null ? null : 
 			getStateImage(server.getServerType(), server.getServerState(), server.getMode());
 	}
 
-	public static Image getStateImage(IServerType serverType, int state, String mode) {
+	public static ImageDescriptor getStateImage(IServerType serverType, int state, String mode) {
 		return serverType == null ? null : 
-			UIDecoratorManager.getUIDecorator(serverType).getStateImage(state, mode, getCount());
+			UIDecoratorManager.getCNFUIDecorator(serverType).getStateImageDescriptor(state, mode, getCount());
 	}
 	
 	public static String getModuleText(ModuleServer ms ) { 
@@ -192,5 +187,19 @@ public class ServerDecorator extends LabelProvider implements ILightweightLabelD
 				return sharedImages.getImage(ISharedImages.IMG_OBJS_INFO_TSK);
 		}
 		return null;
+	}
+	
+	protected String combine(String state, String status) {
+		if(isEmpty(state) && isEmpty(status))
+			return "";
+		if( isEmpty(state))
+			return "  [" + status + "]";
+		if( isEmpty(status))
+			return "  [" + state + "]";
+		return "  [" + state + ", " + status + "]";
+	}
+	
+	protected boolean isEmpty(String s) {
+		return (s == null || "".equals(s));
 	}
 }

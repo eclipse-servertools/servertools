@@ -1,4 +1,14 @@
-package org.eclipse.wst.server.ui.internal.view.servers.provisional;
+/*******************************************************************************
+ * Copyright (c) 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - Initial API and implementation
+ *******************************************************************************/
+package org.elcipse.wst.server.ui.internal.cnf;
 
 import java.util.Iterator;
 
@@ -38,25 +48,7 @@ import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.actions.NewServerWizardAction;
-import org.eclipse.wst.server.ui.internal.view.servers.CopyAction;
-import org.eclipse.wst.server.ui.internal.view.servers.DeleteAction;
-import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
-import org.eclipse.wst.server.ui.internal.view.servers.ModuleSloshAction;
-import org.eclipse.wst.server.ui.internal.view.servers.MonitorServerPortAction;
-import org.eclipse.wst.server.ui.internal.view.servers.OpenAction;
-import org.eclipse.wst.server.ui.internal.view.servers.PasteAction;
-import org.eclipse.wst.server.ui.internal.view.servers.PropertiesAction;
-import org.eclipse.wst.server.ui.internal.view.servers.PublishAction;
-import org.eclipse.wst.server.ui.internal.view.servers.PublishCleanAction;
-import org.eclipse.wst.server.ui.internal.view.servers.RemoveModuleAction;
-import org.eclipse.wst.server.ui.internal.view.servers.RenameAction;
-import org.eclipse.wst.server.ui.internal.view.servers.RestartModuleAction;
-import org.eclipse.wst.server.ui.internal.view.servers.ShowInConsoleAction;
-import org.eclipse.wst.server.ui.internal.view.servers.ShowInDebugAction;
-import org.eclipse.wst.server.ui.internal.view.servers.StartAction;
-import org.eclipse.wst.server.ui.internal.view.servers.StartModuleAction;
-import org.eclipse.wst.server.ui.internal.view.servers.StopAction;
-import org.eclipse.wst.server.ui.internal.view.servers.StopModuleAction;
+import org.eclipse.wst.server.ui.internal.view.servers.*;
 
 /**
  * TODO Angel says: Not currently besing used this code was moved up to the ServersView to get similar support
