@@ -81,7 +81,6 @@ public class ServerLabelProvider extends LabelProvider {
 
 	public boolean isLabelProperty(Object element, String property) {
 		if (element instanceof IServer){
-			IServer server = (IServer)element;
 			if (property.equalsIgnoreCase("ICON")){
 				return true;
 			}

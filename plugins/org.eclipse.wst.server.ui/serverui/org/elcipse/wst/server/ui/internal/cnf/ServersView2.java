@@ -30,7 +30,6 @@ import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
-import org.eclipse.ui.navigator.INavigatorViewerDescriptor;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.internal.UpdateServerJob;
@@ -408,8 +407,6 @@ public class ServersView2 extends CommonNavigator {
 			cm.add(actions[i]);
 		
 		cm.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-		
-		INavigatorViewerDescriptor viewDescriptor = getCommonViewer().getNavigatorContentService().getViewerDescriptor();	
 		
 		return super.createCommonActionGroup();
 	}

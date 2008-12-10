@@ -267,7 +267,6 @@ public class ServerContentProvider extends BaseContentProvider implements ITreeC
 	
 	protected void refreshServer(final IServer server, final boolean resetSelection) {
 		Display.getDefault().asyncExec(new Runnable() {
-			@SuppressWarnings("synthetic-access")
 			public void run() {
 				try {
 					if( viewer != null && !viewer.getControl().isDisposed()) {
@@ -277,7 +276,7 @@ public class ServerContentProvider extends BaseContentProvider implements ITreeC
 							ISelection sel = viewer.getSelection();
 							viewer.setSelection(sel);
 						}
-						//TODO: Angel says: This doesn't seem to be needed ServerDecorator.getDefault().redecorate(server);
+						//TODO: Angel says: This doesn't seem to be needed: ServerDecorator.getDefault().redecorate(server);
 					}
 				} catch (Exception e) {
 					// ignore
@@ -310,7 +309,6 @@ public class ServerContentProvider extends BaseContentProvider implements ITreeC
 		final int SLEEP = 200;
 		final Runnable[] animator = new Runnable[1];
 		animator[0] = new Runnable() {
-			@SuppressWarnings("synthetic-access")
 			public void run() {
 				if (!stopAnimation) {
 					try {
