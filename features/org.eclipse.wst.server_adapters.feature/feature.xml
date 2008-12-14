@@ -22,8 +22,16 @@
    </url>
 
    <requires>
-      <import feature="org.eclipse.platform" version="3.4.0"/>
+      <import feature="org.eclipse.platform" version="3.5.0"/>
    </requires>
+
+  <!-- temp. See https://bugs.eclipse.org/bugs/show_bug.cgi?id=258742 -->
+   <plugin
+         id="org.mortbay.jetty"
+         download-size="6870"
+         install-size="6870"
+         version="5.1.14.qualifier"
+         unpack="false"/>
 
    <plugin
          id="org.eclipse.wst.server.preview.adapter"
