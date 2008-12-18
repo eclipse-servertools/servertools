@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,7 +41,8 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 		"javax.servlet",
 		"javax.servlet.jsp",
 		"org.apache.jasper",
-		"org.mortbay.jetty",
+		"org.mortbay.jetty.server",
+		"org.mortbay.jetty.util",
 		"org.eclipse.wst.server.preview"
 	};
 
@@ -72,8 +73,8 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 			jars[i] = path.toOSString();
 		}
 		
-		if (new File(jars[6] + "bin").exists())
-			jars[6] = jars[6] + "bin";
+		if (new File(jars[7] + "bin").exists())
+			jars[7] = jars[7] + "bin";
 		
 		IVMInstall vm = verifyVMInstall(configuration);
 		
