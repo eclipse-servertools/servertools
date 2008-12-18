@@ -117,20 +117,21 @@
 	       <include name="client/*.jar" />
 	       <include name="server/default/lib/*.jar" />
 	       	       
-	       <include name="server/default/deployers/jbossweb.deployer/jsf-libs/*.jar" />	       
+		   <include name="server/default/deploy/jbossweb.sar/jsf-libs/*.jar" />
 
 	       <!-- This will be ignored if EJB3 is not there 5.0 -->
 	       <include name="lib/*.jar" />
 	       <include name="server/default/deployers/jbossweb.deployer/*.jar" />
 	       <include name="server/default/deployers/jboss-aop-jboss5.deployer/*.jar" />
-		   <include name="server/default/deployers/ejb3.deployer/jboss-annotations-ejb3.jar" />
+	       <include name="common/lib/*.jar" />
+	       <include name="server/default/deploy/jbossweb.sar/*.jar" />
 	       
 	       <!-- for validation to work this library is defined as an archive -->
-	       <exclude name="server/default/lib/mail.jar" />
+		   <exclude name="lib/jboss-kernel.jar" />
 	    </fileset>
 	    
 	    <!-- leave one generic jar as an archive so that validation works -->
-		<archive path="${serverRootDirectory}/server/default/lib/mail.jar" />
+		<archive path="${serverRootDirectory}/lib/jboss-kernel.jar" />
    
 	</classpath>
 	<jndiConnection>
