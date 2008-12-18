@@ -73,8 +73,9 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 			jars[i] = path.toOSString();
 		}
 		
-		if (new File(jars[7] + "bin").exists())
-			jars[7] = jars[7] + "bin";
+		System.out.println(jars[7] + File.separator + "bin");
+		if (new File(jars[7] + File.separator + "bin").exists())
+			jars[7] = jars[7] + File.separator + "bin";
 		
 		IVMInstall vm = verifyVMInstall(configuration);
 		
