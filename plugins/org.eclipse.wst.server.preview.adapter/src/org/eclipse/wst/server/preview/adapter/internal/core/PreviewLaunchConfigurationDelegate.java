@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,10 +37,10 @@ import org.osgi.framework.Bundle;
  */
 public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 	private static final String[] REQUIRED_BUNDLE_IDS = new String[] {
+		"org.apache.commons.logging",
 		"javax.servlet",
 		"javax.servlet.jsp",
-		"org.mortbay.jetty.server",
-		"org.mortbay.jetty.util",
+		"org.mortbay.jetty",
 		"org.eclipse.wst.server.preview"
 	};
 
@@ -64,8 +64,9 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 		
 		PreviewServerBehaviour previewServer = (PreviewServerBehaviour) server.loadAdapter(PreviewServerBehaviour.class, null);
 		
-		StringBuffer cp = new StringBuffer();
 		int size = REQUIRED_BUNDLE_IDS.length;
+		//String[] jars = new String[size];
+		StringBuffer cp = new StringBuffer();
 		for (int i = 0; i < size; i++) {
 			Bundle b = Platform.getBundle(REQUIRED_BUNDLE_IDS[i]);
 			IPath path = null;
@@ -74,7 +75,6 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 			if (path == null)
 				throw new CoreException(new Status(IStatus.ERROR, PreviewPlugin.PLUGIN_ID, "Could not find required bundle " + REQUIRED_BUNDLE_IDS[i]));
 			
-			// run from workbench support
 			if (i == 4 && path.append("bin").toFile().exists())
 				path = path.append("bin");
 			

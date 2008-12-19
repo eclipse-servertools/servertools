@@ -43,8 +43,6 @@ public class ServerConfig {
 					boolean isStatic = "static".equals(mod.getString("type"));
 					String path = mod.getString("path");
 					String context = mod.getString("context");
-					if (context != null && !context.startsWith("/"))
-						context = "/" + context;
 					Module module = new Module(name, isStatic, context, path);
 					list.add(module);
 				}
