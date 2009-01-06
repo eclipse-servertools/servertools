@@ -19,7 +19,7 @@ import org.eclipse.wst.server.core.model.IModuleResource;
  * An implementation of {@link IModuleFolder} for physical folders on disk or in the
  * workspace.
  *
- * @since 3.0
+ * @since 1.1
  */
 public class ModuleFolder implements IModuleFolder {
 	private static final IModuleResource[] EMPTY_RESOURCE_ARRAY = new IModuleResource[0];

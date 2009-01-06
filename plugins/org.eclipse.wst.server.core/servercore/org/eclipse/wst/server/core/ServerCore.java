@@ -458,7 +458,7 @@ public final class ServerCore {
 	 * 
 	 * @return <code>true</code> if the preference is set to automatically
 	 *    publish when starting servers, or <code>false</code> otherwise
-	 * @since 3.0
+	 * @since 1.1
 	 */
 	public static boolean isAutoPublishing() {
 		return ServerPreferences.getInstance().isAutoPublishing();

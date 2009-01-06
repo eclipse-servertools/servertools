@@ -32,7 +32,7 @@ import org.eclipse.wst.server.core.model.IModuleResourceDelta;
 /**
  * Utility class with an assortment of useful publishing file methods.
  *
- * @since 3.0
+ * @since 1.1
  */
 public final class PublishHelper {
 	// size of the buffer

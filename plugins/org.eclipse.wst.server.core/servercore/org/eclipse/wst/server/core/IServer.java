@@ -69,6 +69,7 @@ import org.eclipse.debug.core.ILaunchConfiguration;
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
  * 
+ * @noimplement
  * @since 1.0
  */
 public interface IServer extends IServerAttributes, ISchedulingRule {
@@ -691,7 +692,7 @@ public interface IServer extends IServerAttributes, ISchedulingRule {
 	 * 
 	 * @return the launch used to start the currently running server, or <code>null</code>
 	 *    if the launch is unavailable or could not be found
-	 * @since 3.0
+	 * @since 1.1
 	 */
 	public ILaunch getLaunch();
 
@@ -699,7 +700,7 @@ public interface IServer extends IServerAttributes, ISchedulingRule {
 	 * Returns the start timeout in seconds.
 	 * 
 	 * @return the start timeout in seconds
-	 * @since 3.0
+	 * @since 1.1
 	 */
 	public int getStartTimeout();
 
@@ -707,7 +708,7 @@ public interface IServer extends IServerAttributes, ISchedulingRule {
 	 * Returns the stop timeout in seconds.
 	 * 
 	 * @return the stop timeout in seconds
-	 * @since 3.0
+	 * @since 1.1
 	 */
 	public int getStopTimeout();
 

@@ -67,6 +67,7 @@ public final class PublishUtil {
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @return a possibly-empty array of error and warning status 
+	 * @since 1.1
 	 */
 	public static IStatus[] publishSmart(IModuleResource[] resources, IPath path, IPath[] ignore, IProgressMonitor monitor) {
 		return publishHelper.publishSmart(resources, path, ignore, monitor);

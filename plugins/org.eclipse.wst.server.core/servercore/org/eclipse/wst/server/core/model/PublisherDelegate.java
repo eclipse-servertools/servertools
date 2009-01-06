@@ -23,7 +23,8 @@ import org.eclipse.wst.server.core.TaskModel;
  * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
  * (repeatedly) as the API evolves.
  * </p>
- * @plannedfor 3.1
+ * 
+ * @since 1.1
  */
 public abstract class PublisherDelegate {
 	private TaskModel model;

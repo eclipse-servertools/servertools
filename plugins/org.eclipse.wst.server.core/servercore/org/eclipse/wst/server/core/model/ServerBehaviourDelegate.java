@@ -44,6 +44,7 @@ import org.eclipse.wst.server.core.internal.*;
  * to extend the <code>serverTypes</code> extension point.
  * </p>
  * 
+ * @noimplement
  * @see IServer
  * @see IServerWorkingCopy
  * @since 1.0
@@ -433,7 +434,7 @@ public abstract class ServerBehaviourDelegate {
 	 *    {@link org.eclipse.debug.core.ILaunchManager}
 	 * @return a status object with code <code>IStatus.OK</code> if the server can
 	 *    be started, otherwise a status object indicating why it can't
-    * @since 3.0
+    * @since 1.1
 	 */
 	public IStatus canStart(String launchMode) {
 		return Status.OK_STATUS;
@@ -461,7 +462,7 @@ public abstract class ServerBehaviourDelegate {
 	 *    {@link org.eclipse.debug.core.ILaunchManager}
 	 * @return a status object with code <code>IStatus.OK</code> if the server can
 	 *    be restarted, otherwise a status object indicating why it can't
-    * @since 3.0
+    * @since 1.1
 	 */
 	public IStatus canRestart(String mode) {
 		return Status.OK_STATUS;
@@ -487,7 +488,7 @@ public abstract class ServerBehaviourDelegate {
 	 * 
 	 * @return a status object with code <code>IStatus.OK</code> if the server can
 	 *   be stopped, otherwise a status object indicating why it can't
-    * @since 3.0
+    * @since 1.1
 	 */
 	public IStatus canStop() {
 		return Status.OK_STATUS;
@@ -511,7 +512,7 @@ public abstract class ServerBehaviourDelegate {
 	 * 
 	 * @return a status object with code <code>IStatus.OK</code> if the server can
 	 *   be published to, otherwise a status object indicating what is wrong
-    * @since 3.0
+    * @since 1.1
 	 */
 	public IStatus canPublish() {
 		return Status.OK_STATUS;
@@ -1065,6 +1066,7 @@ public abstract class ServerBehaviourDelegate {
 	 *    it should minimally contain an adapter for the
 	 *    org.eclipse.swt.widgets.Shell.class
 	 * @throws CoreException
+	 * @since 1.1
 	 */
 	protected MultiStatus executePublishers(int kind, List<IModule[]> modules, IProgressMonitor monitor, IAdaptable info) throws CoreException {
 		Publisher[] publishers = ((Server)getServer()).getEnabledPublishers();

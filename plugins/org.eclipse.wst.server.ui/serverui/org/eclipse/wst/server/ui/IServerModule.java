@@ -16,7 +16,7 @@ import org.eclipse.wst.server.core.IServer;
  * A helper interface for modules that are deployed to a server, commonly
  * used to help actions interact with modules in the Servers view.
  *
- * @since 3.0
+ * @since 1.1
  */
 public interface IServerModule {
 	/**

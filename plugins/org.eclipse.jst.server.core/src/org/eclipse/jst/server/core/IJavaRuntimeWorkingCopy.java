@@ -19,7 +19,7 @@ import org.eclipse.jdt.launching.IVMInstall;
  * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken
  * (repeatedly) as the API evolves.
  * </p>
- * @since 3.0
+ * @since 1.1
  */
 public interface IJavaRuntimeWorkingCopy extends IJavaRuntime {
 	/**

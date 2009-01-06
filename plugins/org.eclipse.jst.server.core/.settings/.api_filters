@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component id="org.eclipse.jst.server.core" version="2">
+    <resource path="src/org/eclipse/jst/server/core/IWebModule.java" type="org.eclipse.jst.server.core.IWebModule">
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.jst.server.core.IWebModule"/>
+                <message_argument value="getContextRoot(IModule)"/>
+            </message_arguments>
+        </filter>
+    </resource>
+</component>

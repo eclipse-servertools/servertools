@@ -19,25 +19,27 @@ import org.eclipse.wst.server.core.IModule;
  * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
  * (repeatedly) as the API evolves.
  * </p>
+ * 
  * @plannedfor 3.0
  */
 public interface IWebModule extends IJ2EEModule {
 	/**
 	 * Returns the context root of the module.
 	 * 
-	 * @return java.lang.String
+	 * @return the context root
 	 */
 	public String getContextRoot();
-		
+
 	/**
 	 * Returns the context root of the module. If the the webModule belongs to an earModule, the context root with higher
-	 * presedence will be returned.   
+	 * precedence will be returned.   
 	 * 
 	 * @param earModule The EARModule if exist, if not null
-	 * @return java.lang.String
+	 * @return the context root
+	 * @since 1.1
 	 */
 	public String getContextRoot(IModule earModule);
-	
+
 	/**
 	 * Returns the utility modules contained within this WAR.
 	 *

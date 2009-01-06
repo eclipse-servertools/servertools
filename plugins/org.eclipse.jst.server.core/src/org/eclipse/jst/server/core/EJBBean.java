@@ -22,12 +22,24 @@ import org.eclipse.wst.server.core.model.ModuleArtifactDelegate;
  * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
  * (repeatedly) as the API evolves.
  * </p>
- * @plannedfor 3.0
+ * @since 1.1
  */
 public class EJBBean extends ModuleArtifactDelegate {
+	/**
+	 * @since 1.1
+	 */
 	public final static String EJB_11 = "1.1";
+	/**
+	 * @since 1.1
+	 */
 	public final static String EJB_20 = "2.0";
+	/**
+	 * @since 1.1
+	 */
 	public final static String EJB_21 = "2.1";
+	/**
+	 * @since 1.1
+	 */
 	public final static String EJB_30 = "3.0";
 	
 	private String jndiName;
@@ -64,6 +76,7 @@ public class EJBBean extends ModuleArtifactDelegate {
 	 * @param local <code>true</code> if the EJB has a local interface, and
 	 *    <code>false</code> otherwise
 	 * @param version the level of the EJB specification that this EJB uses. Use one of the <code>EJB_xx</code> constants declared on {@link EJBBean}
+	 * @since 1.1
 	 */
 	public EJBBean(IModule module, String jndiName, boolean remote, boolean local, String version) {
 		super(module);
@@ -84,6 +97,7 @@ public class EJBBean extends ModuleArtifactDelegate {
 	 *    <code>false</code> otherwise    
 	 * @param version the level of the EJB specification that this EJB uses. Use one of the <code>EJB_xx</code> constants declared on {@link EJBBean}
 	 * @param interfaceName the interface name of the EJB
+	 * @since 1.1
 	 */
 
 	public EJBBean(IModule module, String jndiName, boolean remote, boolean local, String version, String interfaceName) {
@@ -135,6 +149,7 @@ public class EJBBean extends ModuleArtifactDelegate {
 	 * Returns the level of the specification of the EJB
 	 *
 	 * @return the level of the specification of the EJB
+	 * @since 1.1
 	 */
 	public String getVersion() {
 		return version;
@@ -191,8 +206,10 @@ public class EJBBean extends ModuleArtifactDelegate {
 	}
 
 	/**
-	 * Gets the name of interface represented by this object 
-	 * @return
+	 * Gets the name of interface represented by this object
+	 *  
+	 * @return the interface name
+	 * @since 1.1
 	 */
 	public String getInterfaceName() {
 		return interfaceName;

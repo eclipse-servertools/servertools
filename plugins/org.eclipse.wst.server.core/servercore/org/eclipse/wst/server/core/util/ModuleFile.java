@@ -19,7 +19,7 @@ import org.eclipse.wst.server.core.model.IModuleFile;
  * An implementation of {@link IModuleFile} for physical files on disk or in the
  * workspace.
  *
- * @since 3.0
+ * @since 1.1
  */
 public class ModuleFile implements IModuleFile {
 	private IFile file;

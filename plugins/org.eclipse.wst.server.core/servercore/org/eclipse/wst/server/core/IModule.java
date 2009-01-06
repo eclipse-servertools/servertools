@@ -42,6 +42,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * </p>
  * <p>This interface is not intended to be implemented by clients.</p>
  * 
+ * @noimplement
  * @since 1.0
  */
 public interface IModule extends IAdaptable {
@@ -96,6 +97,7 @@ public interface IModule extends IAdaptable {
 	 * 
 	 * @return <code>true</code> if the module exists,
 	 *    and <code>false</code> otherwise
+	 * @since 1.1
 	 */
 	public boolean exists();
 
