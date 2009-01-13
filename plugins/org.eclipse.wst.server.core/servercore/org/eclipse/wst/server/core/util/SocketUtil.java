@@ -116,26 +116,39 @@ public class SocketUtil {
 	}
 
 	/**
-	 * Finds an unused port between the given from and to values.
+	 * Finds an unused local port between the given from and to values.
 	 * 
 	 * @param low lowest possible port number
 	 * @param high highest possible port number
 	 * @return an unused port number, or <code>-1</code> if no used ports could be found
 	 */
 	public static int findUnusedPort(int low, int high) {
+		return findUnusedPort(null, low, high);
+	}
+
+	/**
+	 * Finds an unused local port between the given from and to values.
+	 * 
+	 * @param address a local InetAddress
+	 * @param low lowest possible port number
+	 * @param high highest possible port number
+	 * @return an unused port number, or <code>-1</code> if no used ports could be found
+	 * @since 1.1
+	 */
+	public static int findUnusedPort(InetAddress address, int low, int high) {
 		if (high < low)
 			return -1;
 		
 		for (int i = 0; i < 10; i++) {
 			int port = getRandomPort(low, high);
-			if (!isPortInUse(port))
+			if (!isPortInUse(address, port))
 				return port;
 		}
 		return -1;
 	}
 
 	/**
-	 * Return a random port number in the given range.
+	 * Return a random local port number in the given range.
 	 * 
 	 * @param low lowest possible port number
 	 * @param high highest possible port number
@@ -146,7 +159,7 @@ public class SocketUtil {
 	}
 
 	/**
-	 * Checks to see if the given port number is being used. 
+	 * Checks to see if the given local port number is being used. 
 	 * Returns <code>true</code> if the given port is in use, and <code>false</code>
 	 * otherwise. Retries every 500ms for "count" tries.
 	 *
@@ -156,14 +169,30 @@ public class SocketUtil {
 	 *    <code>false</code> otherwise
 	 */
 	public static boolean isPortInUse(int port, int count) {
-		boolean inUse = isPortInUse(port);
+		return isPortInUse(null, port, count);
+	}
+
+	/**
+	 * Checks to see if the given local port number is being used. 
+	 * Returns <code>true</code> if the given port is in use, and <code>false</code>
+	 * otherwise. Retries every 500ms for "count" tries.
+	 *
+	 * @param address a local InetAddress
+	 * @param port the port number to check
+	 * @param count the number of times to retry
+	 * @return boolean <code>true</code> if the port is in use, and
+	 *    <code>false</code> otherwise
+	 * @since 1.1
+	 */
+	public static boolean isPortInUse(InetAddress address, int port, int count) {
+		boolean inUse = isPortInUse(address, port);
 		while (inUse && count > 0) {
 			try {
 				Thread.sleep(500);
 			} catch (Exception e) {
 				// ignore
 			}
-			inUse = isPortInUse(port);
+			inUse = isPortInUse(address, port);
 			count --;
 		}
 	
@@ -171,7 +200,7 @@ public class SocketUtil {
 	}
 
 	/**
-	 * Checks to see if the given port number is being used.
+	 * Checks to see if the given local port number is being used.
 	 * Returns <code>true</code> if the given port is in use, and <code>false</code>
 	 * otherwise.
 	 *
@@ -180,9 +209,24 @@ public class SocketUtil {
 	 *    <code>false</code> otherwise
 	 */
 	public static boolean isPortInUse(int port) {
+		return isPortInUse(null, port);
+	}
+		
+	/**
+	 * Checks to see if the given local port number is being used.
+	 * Returns <code>true</code> if the given port is in use, and <code>false</code>
+	 * otherwise.
+	 * 
+	 * @param address a local InetAddress
+	 * @param port the port number to check
+	 * @return boolean <code>true</code> if the port is in use, and
+	 *    <code>false</code> otherwise
+	 * @since 1.1
+	 */
+	public static boolean isPortInUse(InetAddress address, int port) {
 		ServerSocket s = null;
 		try {
-			s = new ServerSocket(port);
+			s = new ServerSocket(port, 0, address);
 		} catch (SocketException e) {
 			return true;
 		} catch (IOException e) {
@@ -213,13 +257,15 @@ public class SocketUtil {
 	 * quickly and the results of this call will be returned immediately.
 	 * </p><p>
 	 * On machines where the network configuration of the machine is bad or the
-	 * network has problems, this first method call will take at most 250ms, but
-	 * the results may be incorrect (incomplete).
+	 * network has problems, the first call to this method will always return after
+	 * 250ms, even if the caching is not complete. At that point it may return
+	 * "false negative" results. (i.e. the method will return <code>false</code>
+	 * even though it may later determine that the host address is a local host)
 	 * </p><p>
 	 * All subsequent calls (until the network configuration changes) will
 	 * return very quickly. If the background process is still running it will
 	 * continue to fill the cache and each subsequent call to this method may be
-	 * more correct.
+	 * more correct/complete.
 	 * </p>
 	 * 
 	 * @param host a hostname or IP address
@@ -230,7 +276,7 @@ public class SocketUtil {
 		if (host == null || host.equals(""))
 			return false;
 		
-		if ("localhost".equals(host) || "127.0.0.1".equals(host))
+		if ("localhost".equals(host) || "127.0.0.1".equals(host) || "::1".equals(host))
 			return true;
 		
 		// check simple cases
