@@ -76,7 +76,7 @@ public class DefaultMonitorDelegate extends ServerMonitorDelegate {
 		try {
 			IMonitor monitor = monitors.get(port);
 			int mport = -1;
-			if (monitor == null) {
+			if (monitor == null || monitor.getLocalPort() != monitorPort) {
 				mport = monitorPort;
 				if (mport == -1)
 					mport = SocketUtil.findUnusedPort(5000, 15000);
