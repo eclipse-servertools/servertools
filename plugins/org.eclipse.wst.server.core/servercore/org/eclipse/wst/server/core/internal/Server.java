@@ -449,10 +449,11 @@ public class Server extends Base implements IServer {
 				try {
 					long time = System.currentTimeMillis();
 					delegate = ((ServerType) serverType).createServerDelegate();
-					InternalInitializer.initializeServerDelegate(delegate, Server.this, monitor);
+					if (delegate != null)
+						InternalInitializer.initializeServerDelegate(delegate, Server.this, monitor);
 					Trace.trace(Trace.PERFORMANCE, "Server.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
 				} catch (Throwable t) {
-					Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
+					ServerPlugin.logExtensionFailure(toString(), t);
 				}
 			}
 		}
@@ -468,13 +469,14 @@ public class Server extends Base implements IServer {
 				try {
 					long time = System.currentTimeMillis();
 					behaviourDelegate = ((ServerType) serverType).createServerBehaviourDelegate();
-					InternalInitializer.initializeServerBehaviourDelegate(behaviourDelegate, Server.this, monitor);
+					if (behaviourDelegate != null)
+						InternalInitializer.initializeServerBehaviourDelegate(behaviourDelegate, Server.this, monitor);
 					Trace.trace(Trace.PERFORMANCE, "Server.getBehaviourDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
 					
 					if (getServerState() == IServer.STATE_STARTED)
 						autoPublish();
 				} catch (Throwable t) {
-					Trace.trace(Trace.SEVERE, "Could not create behaviour delegate " + toString(), t);
+					ServerPlugin.logExtensionFailure(toString(), t);
 				}
 			}
 		}
@@ -2028,7 +2030,7 @@ public class Server extends Base implements IServer {
 		try {
 			return getDelegate(monitor).canModifyModules(add, remove);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate canModifyModules() " + toString(), e);
+			ServerPlugin.logExtensionFailure(toString(), e);
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, e.getMessage(), e);
 		}
 	}
@@ -2142,7 +2144,7 @@ public class Server extends Base implements IServer {
 				return null;
 			return children;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate getChildModules() " + toString(), e);
+			ServerPlugin.logExtensionFailure(toString(), e);
 			return null;
 		}
 	}
@@ -2159,7 +2161,7 @@ public class Server extends Base implements IServer {
 			//Trace.trace(Trace.FINER, "CoreException calling delegate getParentModules() " + toString(), se);
 			throw se;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate getParentModules() " + toString(), e);
+			ServerPlugin.logExtensionFailure(toString(), e);
 			return null;
 		}
 	}
@@ -2183,7 +2185,7 @@ public class Server extends Base implements IServer {
 			if (b)
 				return Status.OK_STATUS;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate canRestartRuntime() " + toString(), e);
+			ServerPlugin.logExtensionFailure(toString(), e);
 		}
 		return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorRestartModule, null);
 	}
@@ -2258,7 +2260,7 @@ public class Server extends Base implements IServer {
 		try {
 			return getDelegate(monitor).getServerPorts();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate getServerPorts() " + toString(), e);
+			ServerPlugin.logExtensionFailure(toString(), e);
 			return null;
 		}
 	}
