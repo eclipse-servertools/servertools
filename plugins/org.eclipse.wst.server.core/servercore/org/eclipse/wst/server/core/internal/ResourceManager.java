@@ -196,7 +196,7 @@ public class ResourceManager {
 				}
 				Trace.trace(Trace.EXTENSION_POINT, "  Loaded startup: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load startup: " + cf[i].getAttribute("id"), t);
+				ServerPlugin.logExtensionFailure(cf[i].getAttribute("id"), t);
 			}
 		}
 		

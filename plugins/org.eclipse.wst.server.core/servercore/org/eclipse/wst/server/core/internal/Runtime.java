@@ -63,7 +63,7 @@ public class Runtime extends Base implements IRuntime {
 		try {
 			return getDelegate(monitor).validate();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate validate() " + toString(), e);
+			ServerPlugin.logExtensionFailure(toString(), e);
 			return null;
 		}
 	}
@@ -77,11 +77,11 @@ public class Runtime extends Base implements IRuntime {
 				try {
 					long time = System.currentTimeMillis();
 					delegate = ((RuntimeType) runtimeType).createRuntimeDelegate();
-					InternalInitializer.initializeRuntimeDelegate(delegate, this, monitor);
-					//delegate.initialize(this);
+					if (delegate != null)
+						InternalInitializer.initializeRuntimeDelegate(delegate, this, monitor);
 					Trace.trace(Trace.PERFORMANCE, "Runtime.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getRuntimeType().getId());
 				} catch (Throwable t) {
-					Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
+					ServerPlugin.logExtensionFailure(toString(), t);
 				}
 			}
 		}

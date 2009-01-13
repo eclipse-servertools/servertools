@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponent;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.internal.Trace;
 /**
  * 
@@ -104,7 +105,7 @@ public class RuntimeComponentProviderWrapper {
 			try {
 				delegate = (RuntimeFacetComponentProviderDelegate) element.createExecutableExtension("class");
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
+				ServerPlugin.logExtensionFailure(toString(), t);
 			}
 		}
 		return delegate;
@@ -119,7 +120,7 @@ public class RuntimeComponentProviderWrapper {
 		try {
 			return getDelegate().getRuntimeComponents(runtime);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
+			ServerPlugin.logExtensionFailure(toString(), e);
 		}
 		return null;
 	}

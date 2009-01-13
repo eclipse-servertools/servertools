@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jst.server.core.RuntimeClasspathProviderDelegate;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 /**
  * 
  */
@@ -129,7 +130,7 @@ public class RuntimeClasspathProviderWrapper {
 				delegate = (RuntimeClasspathProviderDelegate) element.createExecutableExtension("class");
 				delegate.initialize(getId());
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
+				ServerPlugin.logExtensionFailure(toString(), t);
 			}
 		}
 		return delegate;
@@ -144,21 +145,18 @@ public class RuntimeClasspathProviderWrapper {
 		try {
 			return getDelegate().resolveClasspathContainerImpl(project, runtime);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
+			ServerPlugin.logExtensionFailure(toString(), e);
 		}
 		return null;
 	}
 
-	/*
-	 * @see RuntimeClasspathProviderDelegate#requestClasspathContainerUpdate(IRuntime, IClasspathEntry[])
-	 */
 	public void requestClasspathContainerUpdate(IRuntime runtime, IClasspathEntry[] entries) {
 		if (runtime == null)
 			return;
 		try {
 			getDelegate().requestClasspathContainerUpdate(runtime, entries);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
+			ServerPlugin.logExtensionFailure(toString(), e);
 		}
 	}
 
@@ -171,7 +169,7 @@ public class RuntimeClasspathProviderWrapper {
 		try {
 			return getDelegate().hasRuntimeClasspathChanged(runtime);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
+			ServerPlugin.logExtensionFailure(toString(), e);
 		}
 		return false;
 	}
