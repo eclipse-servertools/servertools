@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,9 +43,10 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wst.server.discovery.internal.ExtensionUtility;
+import org.eclipse.wst.server.discovery.internal.ImageResource;
 import org.eclipse.wst.server.discovery.internal.Messages;
 import org.eclipse.wst.server.discovery.internal.Trace;
-import org.eclipse.wst.server.discovery.internal.model.IExtension;
+import org.eclipse.wst.server.discovery.internal.model.Extension;
 /**
  * 
  */
@@ -53,7 +54,7 @@ public class ExtensionComposite extends Composite {
 	private static final String ROOT = "root";
 
 	public interface ExtensionSelectionListener {
-		public void extensionSelected(IExtension extension);
+		public void extensionSelected(Extension extension);
 	}
 
 	protected Table table;
@@ -92,13 +93,8 @@ public class ExtensionComposite extends Composite {
 		
 		font = new Font(getDisplay(), fd);
 		
-		GridData data = new GridData(GridData.FILL_BOTH);
-		data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
-		data.heightHint = 350;
-		setLayoutData(data);
-		
 		table = new Table(this, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
-		data = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
+		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
 		//data.horizontalSpan = 2;
 		//data.heightHint = 250;
 		data.widthHint = 350;
@@ -218,11 +214,11 @@ public class ExtensionComposite extends Composite {
 							sb.append(", ");
 						sb.append(hosts[i]);
 					}
-					String s = NLS.bind(Messages.wizNewInstallableServerSiteError, sb.toString());
+					String s = NLS.bind(Messages.discoverSiteError, sb.toString());
 					gc.drawText(s, event.x + TEXT_MARGIN, event.y + TEXT_MARGIN, true);
 					return;
 				}
-				IExtension ei = (IExtension) obj;
+				Extension ei = (Extension) obj;
 				if (ei == null)
 					return;
 				
@@ -249,7 +245,7 @@ public class ExtensionComposite extends Composite {
 				//Image image = getImage(ei.getImage());
 				Image image = ei.getImage();
 				if (image == null)
-					image = ImageResource.getImage(ImageResource.IMG_WIZBAN_NEW_SERVER); // TODO
+					image = ImageResource.getImage(ImageResource.IMG_WIZARD); // TODO
 				int iw = image.getBounds().width;
 				int ih = image.getBounds().height;
 				gc.drawImage(image, 0, 0, iw, ih, event.x + TEXT_MARGIN, event.y + TEXT_MARGIN, 40, 40);
@@ -271,13 +267,13 @@ public class ExtensionComposite extends Composite {
 		
 		tableViewer.setSorter(new ViewerSorter() {
 			public int compare(Viewer viewer, Object e1, Object e2) {
-				if ((e1 instanceof IExtension) && !(e2 instanceof IExtension))
+				if ((e1 instanceof Extension) && !(e2 instanceof Extension))
 					return -1;
-				if (!(e1 instanceof IExtension) && (e2 instanceof IExtension))
+				if (!(e1 instanceof Extension) && (e2 instanceof Extension))
 					return 1;
 				try {
-					IExtension f1 = (IExtension) e1;
-					IExtension f2 = (IExtension) e2;
+					Extension f1 = (Extension) e1;
+					Extension f2 = (Extension) e2;
 					return (f1.getName().compareToIgnoreCase(f2.getName()));
 				} catch (Exception e) {
 					return 0;
@@ -322,9 +318,9 @@ public class ExtensionComposite extends Composite {
 			public void selectionChanged(SelectionChangedEvent event) {
 				StructuredSelection sel = (StructuredSelection) tableViewer.getSelection();
 				Object obj = sel.getFirstElement();
-				IExtension extension = null;
-				if (obj instanceof IExtension)
-					extension = (IExtension) obj;
+				Extension extension = null;
+				if (obj instanceof Extension)
+					extension = (Extension) obj;
 				
 				handleSelection(extension);
 				if (extension != null)
@@ -382,7 +378,7 @@ public class ExtensionComposite extends Composite {
 		}
 	}
 
-	protected void handleSelection(IExtension extension) {
+	protected void handleSelection(Extension extension) {
 		listener.extensionSelected(extension);
 	}
 
@@ -454,13 +450,13 @@ public class ExtensionComposite extends Composite {
 	public void deferredInitialize(final List<Object> list, IProgressMonitor monitor) {
 		final List<String> failedSites = new ArrayList<String>();
 		ExtensionUtility.ExtensionListener listener2 = new ExtensionUtility.ExtensionListener() {
-			public void extensionFound(IExtension feature) {
+			public void extensionFound(Extension feature) {
 				list.add(feature);
 				if (progress != null)
 					list.set(0, progress);
 			}
 
-			public void extensionRemoved(IExtension feature) {
+			public void extensionRemoved(Extension feature) {
 				list.remove(feature);
 			}
 

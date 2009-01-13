@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.discovery.internal.wizard;
+package org.eclipse.wst.server.discovery.internal;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -19,8 +19,6 @@ import org.eclipse.jface.resource.ImageRegistry;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.server.discovery.internal.Activator;
-import org.eclipse.wst.server.discovery.internal.Trace;
 /**
  * Utility class to handle image resources.
  */
@@ -50,11 +48,8 @@ public class ImageResource {
 
 	// --- constants for images ---
 
-	// Wizard Banner Images
-	public static final String IMG_WIZBAN_NEW_SERVER = "newServerWiz";
-
-	// General Object Images
-	public static final String IMG_SERVER = "server";
+	public static final String IMG_WIZARD = "wizard";
+	public static final String IMG_EXTENSION = "extension";
 
 	/**
 	 * Cannot construct an ImageResource. Use static methods only.
@@ -109,15 +104,12 @@ public class ImageResource {
 	protected static void initializeImageRegistry() {
 		imageRegistry = new ImageRegistry();
 		imageDescriptors = new HashMap<String, ImageDescriptor>();
-
-		// wizard banners
-		registerImage(IMG_WIZBAN_NEW_SERVER, URL_WIZBAN + "new_server_wiz.png");		
-	
-		// general object images
-		registerImage(IMG_SERVER, URL_OBJ + "server.gif");
-			
+		
+		registerImage(IMG_WIZARD, URL_WIZBAN + "install_wiz.gif");
+		registerImage(IMG_EXTENSION, URL_OBJ + "iu_obj.gif");
+		
 		PlatformUI.getWorkbench().getProgressService().registerIconForFamily(
-				getImageDescriptor(IMG_SERVER), Activator.JOB_FAMILY);
+				getImageDescriptor(IMG_EXTENSION), Activator.JOB_FAMILY);
 	}
 
 	/**

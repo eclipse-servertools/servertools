@@ -10,40 +10,46 @@
  *******************************************************************************/
 package org.eclipse.wst.server.discovery.internal.wizard;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.equinox.internal.p2.ui.dialogs.AcceptLicensesWizardPage;
+import org.eclipse.equinox.internal.provisional.p2.director.ProvisioningPlan;
 import org.eclipse.equinox.internal.provisional.p2.metadata.IInstallableUnit;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.wst.server.discovery.ExtensionWizard;
 import org.eclipse.wst.server.discovery.internal.Messages;
-import org.eclipse.wst.server.discovery.internal.model.IExtension;
+import org.eclipse.wst.server.discovery.internal.Trace;
+import org.eclipse.wst.server.discovery.internal.model.Extension;
 
 public class ExtensionWizardPage extends WizardPage {
 	private ExtensionComposite comp;
-	//private LicenseWizardPage licensePage;
-	private AcceptLicensesWizardPage licensePage;
-	private IExtension extension;
+	protected AcceptLicensesWizardPage licensePage;
+	protected ErrorWizardPage errorPage;
+	protected IWizardPage nextPage;
+	private Extension extension;
 
-	//protected ExtensionWizardPage(LicenseWizardPage licenseWizardPage) {
-	protected ExtensionWizardPage(AcceptLicensesWizardPage licenseWizardPage) {
+	public ExtensionWizardPage(AcceptLicensesWizardPage licenseWizardPage, ErrorWizardPage errorWizardPage) {
 		super("extension");
 		this.licensePage = licenseWizardPage;
-		setTitle(Messages.wizNewInstallableServerTitle);
-		setDescription(Messages.wizNewInstallableServerDescription);
+		this.errorPage = errorWizardPage;
+		setTitle(Messages.wizExtensionTitle);
+		setDescription(Messages.wizExtensionDescription);
 		setPageComplete(false);
 	}
 
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
 		Composite composite = new Composite(parent, SWT.NULL);
-		composite.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL
-				| GridData.HORIZONTAL_ALIGN_FILL));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 		
 		GridLayout layout = new GridLayout();
 		layout.horizontalSpacing = convertHorizontalDLUsToPixels(4);
@@ -55,41 +61,61 @@ public class ExtensionWizardPage extends WizardPage {
 		//WorkbenchHelp.setHelp(this, ContextIds.SELECT_CLIENT_WIZARD);
 		
 		Label label = new Label(composite, SWT.WRAP);
-		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_BEGINNING);
+		GridData data = new GridData(SWT.FILL, SWT.BEGINNING, false, false);
 		data.horizontalSpan = 3;
-		data.widthHint = 225;
 		label.setLayoutData(data);
-		label.setText(Messages.wizNewInstallableServerMessage);
+		label.setText(Messages.wizExtensionMessage);
 		
 		comp = new ExtensionComposite(composite, SWT.NONE, new ExtensionComposite.ExtensionSelectionListener() {
-			public void extensionSelected(IExtension sel) {
+			public void extensionSelected(Extension sel) {
 				handleSelection(sel);
 			}
 		});
-		data = new GridData(GridData.FILL_BOTH);
-		data.heightHint = 200;
+		data = new GridData(SWT.FILL, SWT.FILL, true, false);
+		data.widthHint = 200;
+		data.heightHint = 400;
 		comp.setLayoutData(data);
 		
 		Dialog.applyDialogFont(composite);
 		setControl(composite);
 	}
 
-	protected void handleSelection(IExtension sel) {
+	protected void handleSelection(Extension sel) {
 		extension = sel;
 		if (extension == null)
 			licensePage.update(new IInstallableUnit[0], null);
 		else {
-			IProgressMonitor monitor = new NullProgressMonitor(); 
-			licensePage.update(extension.getIUs(), extension.getProvisioningPlan(monitor));
+			try {
+				getContainer().run(true, true, new IRunnableWithProgress() {
+					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+						final ProvisioningPlan plan = extension.getProvisioningPlan(monitor);
+						if (plan != null && plan.getStatus().isOK()) {
+							getShell().getDisplay().asyncExec(new Runnable() {
+								public void run() {
+									licensePage.update(extension.getIUs(), plan);
+									nextPage = licensePage;
+									((ExtensionWizard)getWizard()).setSecondPage(nextPage);
+								}
+							});
+						} else {
+							getShell().getDisplay().asyncExec(new Runnable() {
+								public void run() {
+									errorPage.setStatus(plan.getStatus());
+								}
+							});
+							nextPage = errorPage;
+							((ExtensionWizard)getWizard()).setSecondPage(nextPage);
+						}
+					}
+				});
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "Error verifying license", e);
+			} 
 		}
-		/*if (extension == null)
-			licensePage.setLicense(null);
-		else
-			licensePage.setLicense(extension.getLicense());*/
 		setPageComplete(extension != null);
 	}
 
-	public IExtension getExtension() {
+	public Extension getExtension() {
 		return extension;
 	}
 }

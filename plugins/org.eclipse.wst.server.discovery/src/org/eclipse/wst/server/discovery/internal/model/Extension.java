@@ -29,10 +29,10 @@ import org.eclipse.wst.server.discovery.internal.Activator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Version;
 
-public class Extension implements IExtension {
+public class Extension {
 	private ImageDescriptor imageDescriptor;
 	private IInstallableUnit iu;
-	
+
 	private ProvisioningContext provContext;
 	private ProvisioningPlan plan;
 
@@ -45,17 +45,15 @@ public class Extension implements IExtension {
 	}
 
 	public String getName() {
-		//return iu.getProperty(IInstallableUnit.PROP_NAME);
 		return IUPropertyUtils.getIUProperty(iu, IInstallableUnit.PROP_NAME);
 	}
 
 	public String getDescription() {
-		//return iu.getProperty(IInstallableUnit.PROP_DESCRIPTION);
 		return IUPropertyUtils.getIUProperty(iu, IInstallableUnit.PROP_DESCRIPTION);
 	}
 
 	public Image getImage() {
-		// TODO Auto-generated method stub
+		// TODO no image support in p2 yet
 		return null;
 	}
 
@@ -64,7 +62,6 @@ public class Extension implements IExtension {
 	}
 
 	public String getProvider() {
-		//return iu.getProperty(IInstallableUnit.PROP_PROVIDER);
 		return IUPropertyUtils.getIUProperty(iu, IInstallableUnit.PROP_PROVIDER);
 	}
 
@@ -80,17 +77,14 @@ public class Extension implements IExtension {
 		BundleContext bundleContext = Activator.getDefault().getBundle().getBundleContext();
 		
 		ProvisioningPlan plan = getProvisioningPlan(monitor);
-		System.out.println("plan: " + plan.getStatus());
-		//if (!plan.getStatus().isOK())
-		//	return plan.getStatus();
+		if (!plan.getStatus().isOK())
+			return plan.getStatus();
 		
 		IProfileRegistry profileRegistry = (IProfileRegistry) ServiceHelper.getService(bundleContext, IProfileRegistry.class.getName());
 		IProfile profile = profileRegistry.getProfile(IProfileRegistry.SELF);
 		
-		//ProvisioningContext provContext = plan.
 		IEngine engine = (IEngine) ServiceHelper.getService(bundleContext, IEngine.SERVICE_NAME);
-		IStatus status = engine.perform(profile, new DefaultPhaseSet(), plan.getOperands(), provContext, monitor);
-		return status;
+		return engine.perform(profile, new DefaultPhaseSet(), plan.getOperands(), provContext, monitor);
 	}
 
 	public IInstallableUnit[] getIUs() {
@@ -110,7 +104,6 @@ public class Extension implements IExtension {
 		pcr.addInstallableUnits(new IInstallableUnit[] { iu } );
 		provContext = new ProvisioningContext();
 		plan = planner.getProvisioningPlan(pcr, provContext, monitor);
-		System.out.println(plan.getStatus());
 		return plan;
 	}
 }

@@ -27,26 +27,13 @@ import org.eclipse.equinox.internal.provisional.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.internal.provisional.p2.metadata.query.InstallableUnitQuery;
 import org.eclipse.equinox.internal.provisional.p2.query.Collector;
 import org.eclipse.equinox.internal.provisional.p2.query.Query;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.server.discovery.internal.model.Extension;
 import org.eclipse.wst.server.discovery.internal.model.ExtensionUpdateSite;
-import org.eclipse.wst.server.discovery.internal.model.IExtension;
-import org.eclipse.wst.server.discovery.internal.wizard.ExtensionWizard;
 import org.osgi.framework.Version;
 
 public class ExtensionUtility {
-	public static boolean launchExtensionWizard(Shell shell, String title, String message) {
-		ExtensionWizard wizard2 = new ExtensionWizard();
-		WizardDialog dialog = new WizardDialog(shell, wizard2);
-		if (dialog.open() != Window.CANCEL)
-			return true;
-		return false;
-	}
-
-	private static ExtensionUpdateSite[] getExtensionSites(URL url) throws CoreException {
+	private static ExtensionUpdateSite[] getExtensionUpdateSites(URL url) throws CoreException {
 		InputStream in = null;
 		try {
 			in = url.openStream();
@@ -77,18 +64,18 @@ public class ExtensionUtility {
 	}
 
 	/**
-	 * Returns an array of all known extension items.
+	 * Returns an array of all known extension update sites.
 	 * <p>
 	 * A new array is returned on each call, so clients may store or modify the result.
 	 * </p>
 	 * 
-	 * @return the array of extensions items {@link ExtensionSite}
+	 * @return the array of extensions items {@link ExtensionUpdateSite}
 	 */
-	private static ExtensionUpdateSite[] getExtensionSites() {
+	private static ExtensionUpdateSite[] getExtensionUpdateSites() {
 		URL url = Activator.getDefault().getBundle().getEntry("serverAdapterSites.xml");
 		
 		try {
-			return getExtensionSites(url);
+			return getExtensionUpdateSites(url);
 		} catch (CoreException ce) {
 			Trace.trace(Trace.SEVERE, "Could not get extension items");
 			return new ExtensionUpdateSite[0];
@@ -102,15 +89,15 @@ public class ExtensionUtility {
 	 * @param newFeature
 	 * @return true if the new feature is already installed, or a newer one is.
 	 */
-	private static boolean alreadyExists(List<IExtension> existing, IExtension newFeature) {
+	private static boolean alreadyExists(List<Extension> existing, Extension newFeature) {
 		if (existing.contains(newFeature))
 			return true;
 		
 		Version newV = newFeature.getVersion();
 		
-		Iterator<IExtension> iterator = existing.iterator();
+		Iterator<Extension> iterator = existing.iterator();
 		while (iterator.hasNext()) {
-			IExtension feature = iterator.next();
+			Extension feature = iterator.next();
 			if (feature.getId().equals(newFeature.getId())) {
 				if (feature.getVersion().compareTo(newV) >= 0)
 					return true;
@@ -120,17 +107,17 @@ public class ExtensionUtility {
 		return false;
 	}
 
-	private static void addExtension(List<IExtension> list, List<IExtension> existing, IExtension newFeature, ExtensionListener listener) {
+	private static void addExtension(List<Extension> list, List<Extension> existing, Extension newFeature, ExtensionListener listener) {
 		if (alreadyExists(existing, newFeature))
 			return;
 		
 		synchronized (list) {
 			Version newV = newFeature.getVersion();
-			IExtension remove = null;
+			Extension remove = null;
 			
-			Iterator<IExtension> iterator = list.iterator();
+			Iterator<Extension> iterator = list.iterator();
 			while (iterator.hasNext()) {
-				IExtension feature = iterator.next(); 
+				Extension feature = iterator.next(); 
 				if (feature.getId().equals(newFeature.getId())) {
 					if (feature.getVersion().compareTo(newV) < 0) {
 						remove = feature;
@@ -148,30 +135,32 @@ public class ExtensionUtility {
 		listener.extensionFound(newFeature);
 	}
 
-	private static void addExtensions(List<IExtension> list, List<IExtension> existing, List<IExtension> newFeatures, ExtensionListener listener) {
-		Iterator iterator = newFeatures.iterator();
-		while (iterator.hasNext()) {
-			addExtension(list, existing, (IExtension) iterator.next(), listener);
-		}
+	protected static void addExtensions(List<Extension> list, List<Extension> existing, List<Extension> newFeatures, ExtensionListener listener) {
+		Iterator<Extension> iterator = newFeatures.iterator();
+		while (iterator.hasNext())
+			addExtension(list, existing, iterator.next(), listener);
 	}
 
 	public interface ExtensionListener {
-		public void extensionFound(IExtension extension);
-		public void extensionRemoved(IExtension feature);
+		public void extensionFound(Extension extension);
+		public void extensionRemoved(Extension feature);
 		public void siteFailure(String host);
 	}
 
-	private static List<IExtension> getExistingFeatures(IProgressMonitor monitor) throws CoreException {
-		monitor.beginTask(Messages.installableServerLocal, 100);
+	private static List<Extension> getExistingFeatures(IProgressMonitor monitor) throws CoreException {
+		monitor.beginTask(Messages.discoverLocalConfiguration, 100);
 		
 		IProfileRegistry profileRegistry = (IProfileRegistry) ServiceHelper.getService(Activator.getDefault().getBundle().getBundleContext(), IProfileRegistry.class.getName());
 		IProfile profile = profileRegistry.getProfile(IProfileRegistry.SELF);
 		
 		Query query = new InstallableUnitQuery(null);
-		Collector collector = new Collector(); 
-		profile.query(query, collector, null);
+		//Query query = new InstallableUnitQuery("org.eclipse.wst.server.core.serverAdapter");
+		//List<String> list2 = new ArrayList();
+		//Query query = new ExtensionInstallableUnitQuery(list2);
+		Collector collector = new Collector();
+		profile.query(query, collector, monitor);
 		
-		List<IExtension> list = new ArrayList<IExtension>();
+		List<Extension> list = new ArrayList<Extension>();
 		Iterator iter = collector.iterator();
 		while (iter.hasNext()) {
 			IInstallableUnit iu = (IInstallableUnit) iter.next();
@@ -184,20 +173,20 @@ public class ExtensionUtility {
 		return list;
 	}
 
-	public static IExtension[] getAllExtensions(final String id, final ExtensionListener listener, IProgressMonitor monitor) throws CoreException {
+	public static Extension[] getAllExtensions(final String id, final ExtensionListener listener, IProgressMonitor monitor) throws CoreException {
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.beginTask("", 1100);
 		
-		monitor.subTask(Messages.installableServerLocal);
-		final List<IExtension> existing = getExistingFeatures(ProgressUtil.getSubMonitorFor(monitor, 100));
+		monitor.subTask(Messages.discoverLocalConfiguration);
+		final List<Extension> existing = getExistingFeatures(ProgressUtil.getSubMonitorFor(monitor, 100));
 		
-		final ExtensionUpdateSite[] items = getExtensionSites();
+		final ExtensionUpdateSite[] items = getExtensionUpdateSites();
 		if (items == null || items.length == 0)
-			return new IExtension[0];
+			return new Extension[0];
 		final int x = 1000 / items.length;
 		
 		monitor.worked(50);
-		final List<IExtension> list = new ArrayList<IExtension>();
+		final List<Extension> list = new ArrayList<Extension>();
 		int size = items.length;
 		
 		Thread[] threads = new Thread[size];
@@ -206,24 +195,24 @@ public class ExtensionUtility {
 				if (monitor.isCanceled())
 					return null;
 				
-				monitor.subTask(NLS.bind(Messages.installableServerSearching, items[i].getUrl()));
+				monitor.subTask(NLS.bind(Messages.discoverSearching, items[i].getUrl()));
 				final int ii = i;
 				final IProgressMonitor monitor2 = monitor;
-				threads[i] = new Thread("Extension Checker") {
+				threads[i] = new Thread("Extension Checker for" + items[i].getUrl()) {
 					public void run() {
 						try {
-							List<IExtension> list2 = items[ii].getExtensions(ProgressUtil.getSubMonitorFor(monitor2, x));
+							List<Extension> list2 = items[ii].getExtensions(ProgressUtil.getSubMonitorFor(monitor2, x));
 							addExtensions(list, existing, list2, listener);
 						} catch (CoreException ce) {
 							listener.siteFailure(ce.getLocalizedMessage());
-							Trace.trace(Trace.WARNING, "Error downloading server adapter info", ce);
+							Trace.trace(Trace.WARNING, "Error downloading extension info", ce);
 						}
 					}
 				};
 				threads[i].setDaemon(true);
 				threads[i].start();
 			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Error downloading server adapter info 2", e);
+				Trace.trace(Trace.WARNING, "Error downloading extension info 2", e);
 			}
 		}
 		
@@ -235,11 +224,11 @@ public class ExtensionUtility {
 				if (threads[i].isAlive())
 					threads[i].join();
 			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Error downloading server adapter info 3", e);
+				Trace.trace(Trace.WARNING, "Error downloading extension info 3", e);
 			}
 		}
 		
-		IExtension[] ef = new IExtension[list.size()];
+		Extension[] ef = new Extension[list.size()];
 		list.toArray(ef);
 		monitor.done();
 		return ef;

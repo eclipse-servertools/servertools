@@ -17,4 +17,5 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.wst.server.discovery,
  org.eclipse.wst.server.discovery.internal;x-internal:=true,
+ org.eclipse.wst.server.discovery.internal.model;x-internal:=true,
  org.eclipse.wst.server.discovery.internal.wizard;x-internal:=true

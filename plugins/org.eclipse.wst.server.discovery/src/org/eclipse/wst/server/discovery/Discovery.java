@@ -10,11 +10,16 @@
  *******************************************************************************/
 package org.eclipse.wst.server.discovery;
 
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wst.server.discovery.internal.ExtensionUtility;
 
 public class Discovery {
 	public static boolean launchExtensionWizard(Shell shell, String title, String message) {
-		return ExtensionUtility.launchExtensionWizard(shell, title, message);
+		ExtensionWizard wizard = new ExtensionWizard();
+		WizardDialog dialog = new WizardDialog(shell, wizard);
+		if (dialog.open() != Window.CANCEL)
+			return true;
+		return false;
 	}
 }

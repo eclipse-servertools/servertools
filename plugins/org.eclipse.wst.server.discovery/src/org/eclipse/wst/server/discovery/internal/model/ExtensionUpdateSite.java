@@ -30,7 +30,7 @@ import org.eclipse.wst.server.discovery.internal.Trace;
 *   feature version (optional)
 *   alternate name (optional) - defaults to feature name
 */
-public class ExtensionUpdateSite implements IExtensionSite {
+public class ExtensionUpdateSite {
 	private static final List<String> EMPTY_LIST = new ArrayList<String>(0);
 
 	private String url;
@@ -49,41 +49,30 @@ public class ExtensionUpdateSite implements IExtensionSite {
 		this.categories = categories;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.discovery.internal.model.IExtensionSite#getUrl()
-	 */
 	public String getUrl() {
 		return url;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.discovery.internal.model.IExtensionSite#getFeatureId()
-	 */
 	public String getFeatureId() {
 		return featureId;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.discovery.internal.model.IExtensionSite#getCategories()
-	 */
 	public List<String> getCategories() {
 		if (categories == null)
 			return EMPTY_LIST;
 		return categories;
 	}
 
-	public List<IExtension> getExtensions(IProgressMonitor monitor) throws CoreException {
+	public List<Extension> getExtensions(IProgressMonitor monitor) throws CoreException {
 		try {
 			UpdateSiteMetadataRepositoryFactory mrf = new UpdateSiteMetadataRepositoryFactory();
 			URI url2 = new URI(url);
 			IMetadataRepository repo = mrf.load(url2, monitor);
-			//System.out.println("Repo: " + repo);
-			//Query query = new InstallableUnitQuery(null);
 			Query query = new InstallableUnitQuery("org.eclipse.wst.server.core.serverAdapter");
 			Collector collector = new Collector(); 
 			repo.query(query, collector, monitor);
 			
-			List<IExtension> list = new ArrayList<IExtension>();
+			List<Extension> list = new ArrayList<Extension>();
 			Iterator iter = collector.iterator();
 			while (iter.hasNext()) {
 				IInstallableUnit iu = (IInstallableUnit) iter.next();
@@ -107,8 +96,8 @@ public class ExtensionUpdateSite implements IExtensionSite {
 			}
 			return list;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error get update info", e);
-			return new ArrayList<IExtension>(0);
+			Trace.trace(Trace.WARNING, "Error getting update info", e);
+			return new ArrayList<Extension>(0);
 		}
 	}
 }

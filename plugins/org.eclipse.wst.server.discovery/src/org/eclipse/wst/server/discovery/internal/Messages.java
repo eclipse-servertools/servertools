@@ -15,22 +15,20 @@ import org.eclipse.osgi.util.NLS;
  * Translated messages.
  */
 public class Messages extends NLS {
-	public static String installableServerLocal;
-	public static String installableServerSearching;
-	public static String wizNewInstallableServerConfirm;
-	public static String wizNewInstallableServerJob;
-	public static String defaultDialogTitle;
-	public static String wizNewInstallableServerRestart;
-	public static String wizNewInstallableServerTitle;
-	public static String wizNewInstallableServerDescription;
-	public static String wizLicenseTitle;
-	public static String wizLicenseDescription;
-	public static String wizNewInstallableServerMessage;
-	public static String wizLicenseAccept;
-	public static String wizLicenseDecline;
-	public static String wizLicenseNone;
-	public static String wizNewInstallableServerSiteError;
+	public static String dialogTitle;
 	public static String viewInitializing;
+
+	public static String wizExtensionTitle;
+	public static String wizExtensionDescription;
+	public static String wizExtensionMessage;
+
+	public static String discoverSearching;
+	public static String discoverLocalConfiguration;
+	public static String discoverSiteError;
+
+	public static String installConfirm;
+	public static String installJobName;
+	public static String installPromptRestart;
 
 	static {
 		NLS.initializeMessages(Activator.PLUGIN_ID + ".internal.Messages", Messages.class);
