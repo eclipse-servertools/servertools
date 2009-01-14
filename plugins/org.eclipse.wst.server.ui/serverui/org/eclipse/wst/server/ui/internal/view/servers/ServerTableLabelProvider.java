@@ -57,7 +57,8 @@ public class ServerTableLabelProvider extends BaseCellLabelProvider {
 	 * ServerTableLabelProvider constructor comment.
 	 */
 	public ServerTableLabelProvider() {
-		super();
+		// Ensure decorator is initialized.
+		super(null);
 	}
 
 	public void setDefaultServer(IServer ds) {
