@@ -21,11 +21,6 @@
       <update label="%updateSiteName" url="http://download.eclipse.org/webtools/updates/"/>
    </url>
 
-   <requires>
-      <import feature="org.eclipse.platform" version="3.4.0"/>
-      <import feature="org.eclipse.test" version="3.3.0"/>
-   </requires>
-
    <plugin
          id="org.eclipse.wst.internet.monitor.ui.tests"
          download-size="0"

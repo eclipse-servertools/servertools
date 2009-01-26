@@ -21,10 +21,6 @@
       <update label="%updateSiteName" url="http://download.eclipse.org/webtools/updates/"/>
    </url>
 
-   <requires>
-      <import feature="org.eclipse.platform" version="3.5.0"/>
-   </requires>
-
    <plugin
          id="org.eclipse.wst.server.preview.adapter"
          download-size="0"

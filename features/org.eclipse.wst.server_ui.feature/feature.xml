@@ -29,10 +29,6 @@
          id="org.eclipse.wst.server_core.feature"
          version="0.0.0"/>
 
-   <requires>
-      <import feature="org.eclipse.platform" version="3.4.0"/>
-   </requires>
-
    <plugin
          id="org.eclipse.wst.internet.monitor.ui"
          download-size="0"
