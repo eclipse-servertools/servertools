@@ -59,9 +59,6 @@ public class ShowInConsoleAction extends AbstractServerAction {
 	}
 
 	protected void selectProcess(IProcess process) {
-		// see bug 250999 - debug UI must be loaded before looking for debug consoles
-		org.eclipse.debug.ui.console.IConsole.class.toString();
-		
 		IConsoleManager consoleManager = ConsolePlugin.getDefault().getConsoleManager();
 		IConsole[] consoles = consoleManager.getConsoles();
 		int size = consoles.length;

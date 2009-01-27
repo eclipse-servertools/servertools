@@ -133,19 +133,19 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 				}
 			}
 		}
-		
+
 		// select first item in list
 		if (serverCombo.getItemCount() > 0)
 			serverCombo.select(0);
-		
+
 		handleServerSelection();
-		
+
 		serverCombo.forceFocus();
-		
+
 		Dialog.applyDialogFont(composite);
 		setControl(composite);
 	}
-
+	
 	private boolean isSupportedServer(String serverTypeId) {
 		if (serverTypeIds == null)
 			return true;
@@ -156,13 +156,13 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		}
 		return false;
 	}
-
+	
 	private static boolean matches(String a, String b) {
 		if (a == null || b == null || "*".equals(a) || "*".equals(b) || a.startsWith(b) || b.startsWith(a))
 			return true;
 		return false;
 	}
-
+	
 	/**
 	 * Called when a server is selected.
 	 * This method should not be called directly.
@@ -248,8 +248,6 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 				if (serverCombo.getItemCount() > 0)
 					serverCombo.select(0);
 			}
-			handleServerSelection();
-			
 			// flag should only be set if launch has been attempted on the config
 			if (configuration.getAttribute(READ_ONLY, false))
 				serverCombo.setEnabled(false);

@@ -307,10 +307,7 @@ public class ExtensionUtility {
 					return CHOICE_INSTALL_TRUST_ONCE;
 				}
 			};
-			IConfiguredSite[] sites = SiteManager.getLocalSite().getCurrentConfiguration().getConfiguredSites();
-			if (sites == null || sites.length == 0)
-				throw new CoreException(new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, "No locally configured sites"));
-			sites[0].install(feature, verificationListener, monitor);
+			SiteManager.getLocalSite().getCurrentConfiguration().getConfiguredSites()[0].install(feature, verificationListener, monitor);
 		} catch (CoreException ce) {
 			Trace.trace(Trace.WARNING, "Error installing server adapter", ce);
 			throw ce;

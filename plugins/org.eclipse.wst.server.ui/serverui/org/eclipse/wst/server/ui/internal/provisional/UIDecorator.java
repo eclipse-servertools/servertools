@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005,2008 IBM Corporation and others.
+ * Copyright (c) 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,6 @@
 package org.eclipse.wst.server.ui.internal.provisional;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
@@ -38,10 +37,6 @@ public abstract class UIDecorator {
 	 * @return org.eclipse.jface.parts.IImage
 	 */
 	public abstract Image getStateImage(int state, String mode, int count);
-	
-	public ImageDescriptor getStateImageDescriptor(int state, String mode, int count){
-		return null;
-	}
 
 	public String getModuleName() {
 		return "module";

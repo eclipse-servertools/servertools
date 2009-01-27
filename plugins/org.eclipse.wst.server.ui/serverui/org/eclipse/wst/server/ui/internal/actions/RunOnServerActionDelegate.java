@@ -422,21 +422,31 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 						final IServer server3 = server;
 						server.restart(launchMode, new IServer.IOperationListener() {
 							public void done(IStatus result) {
-								server3.publish(IServer.PUBLISH_INCREMENTAL, null, info, new IServer.IOperationListener() {
-									public void done(IStatus result2) {
-										if (result2.isOK())
-											clientJob.schedule();
-									}
-								});
+								// Only publish if the server requires publish before launching the client.
+								if (server3.shouldPublish()) {
+									server3.publish(IServer.PUBLISH_INCREMENTAL, null, info, new IServer.IOperationListener() {
+										public void done(IStatus result2) {
+											if (result2.isOK())
+												clientJob.schedule();
+										}
+									});
+								} else {
+									clientJob.schedule();
+								}
 							}
 						});
 					} else {
-						server.publish(IServer.PUBLISH_INCREMENTAL, null, info, new IServer.IOperationListener() {
-							public void done(IStatus result) {
-								if (result.isOK())
-									clientJob.schedule();
-							}
-						});
+						// Only publish if the server requires publish before launching the client.
+						if (server.shouldPublish()) {
+							server.publish(IServer.PUBLISH_INCREMENTAL, null, info, new IServer.IOperationListener() {
+								public void done(IStatus result) {
+									if (result.isOK())
+										clientJob.schedule();
+								}
+							});
+						} else {
+							clientJob.schedule();
+						}
 					}
 				} else if (state != IServer.STATE_STOPPING) {
 					final LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);

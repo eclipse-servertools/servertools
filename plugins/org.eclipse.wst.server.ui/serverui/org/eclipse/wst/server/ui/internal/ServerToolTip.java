@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -245,25 +245,26 @@ public class ServerToolTip extends ToolTip {
 		for (int i=0; i < extensions.length; i++){			
 			IConfigurationElement exElement = extensions[i];
 			
-			try {
-				// sort the extensions based on serverType
-				String exServerType = exElement.getAttribute("serverTypes");
-				
-				for (IServerType serverType : serverTypes) {
-					if ("*".equals(exServerType) || exServerType.startsWith(serverType.getId())) {
+			// Sort the extensions based on serverType
+			String exServerType = exElement.getAttribute("serverTypes");
+			
+			for (IServerType serverType : serverTypes) {
+				if (exServerType.compareTo("*") == 0 || 
+						exServerType.startsWith(serverType.getId()) == true) {
+					try {
 						IServerToolTip exTooltip = (IServerToolTip) exElement.createExecutableExtension("class");
 						ArrayList<IServerToolTip> listOfProviders = new ArrayList<IServerToolTip>(); 
-						if (toolTipProviders.containsKey(serverType))
+						if (toolTipProviders.containsKey(serverType)) {
 							listOfProviders = toolTipProviders.get(serverType);
-						
+						}
 						listOfProviders.add(exTooltip);
 						toolTipProviders.put(serverType.getId(), listOfProviders);
+					} catch (CoreException e) {
+						Trace.trace(Trace.SEVERE, "Tooltip failed to load" + extensions[i].toString(), e);
 					}
+					Trace.trace(Trace.EXTENSION_POINT, "  Loaded serverToolTip: " + extensions[i].getAttribute("id"));
 				}
-			} catch (CoreException e) {
-				Trace.trace(Trace.SEVERE, "Tooltip failed to load" + extensions[i].toString(), e);
 			}
-			Trace.trace(Trace.EXTENSION_POINT, "  Loaded serverToolTip: " + extensions[i].getAttribute("id"));
 		}
 	}
 
@@ -272,7 +273,7 @@ public class ServerToolTip extends ToolTip {
 //	protected class StickyTipMouseListener implements MouseListener{
 //
 //		public void mouseDoubleClick(MouseEvent e) {
-//			// Auto-generated method stub
+//			// TODO Auto-generated method stub
 //			
 //		}
 //
@@ -287,7 +288,9 @@ public class ServerToolTip extends ToolTip {
 //		}
 //
 //		public void mouseUp(MouseEvent e) {
-//			// Auto-generated method stub
+//			// TODO Auto-generated method stub
+//			
 //		}
+//		
 //	}	
 }

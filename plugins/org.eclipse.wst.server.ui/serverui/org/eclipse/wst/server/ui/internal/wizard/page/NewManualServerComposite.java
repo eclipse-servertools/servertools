@@ -234,7 +234,8 @@ public class NewManualServerComposite extends Composite {
 		addRuntime.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				IServerType serverType = serverTypeComposite.getSelectedServerType();
-				showRuntimeWizard(serverType);
+				if (showRuntimeWizard(serverType) != Window.CANCEL)
+					updateRuntimeCombo(serverType);
 			}
 		});
 		
@@ -286,16 +287,7 @@ public class NewManualServerComposite extends Composite {
 		TaskWizard wizard2 = new TaskWizard(Messages.wizNewRuntimeWizardTitle, fragment, taskModel);
 		wizard2.setForcePreviousAndNextButtons(true);
 		WizardDialog dialog = new WizardDialog(getShell(), wizard2);
-		int returnValue = dialog.open();
-		if (returnValue != Window.CANCEL) {
-			updateRuntimeCombo(serverType);
-			IRuntime rt = (IRuntime)taskModel.getObject(TaskModel.TASK_RUNTIME);
-			if (rt != null && rt.getName() != null && runtimeCombo.indexOf(rt.getName()) != -1) {
-				setRuntime(rt);
-				runtimeCombo.select(runtimeCombo.indexOf(rt.getName()));
-			}
-		}
-		return returnValue;
+		return dialog.open();
 	}
 
 	public void setHost(String host) {

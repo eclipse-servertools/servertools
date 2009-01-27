@@ -55,8 +55,6 @@ public class PublishAction extends AbstractServerAction {
 			public Object getAdapter(Class adapter) {
 				if (Shell.class.equals(adapter))
 					return shell;
-				if (String.class.equals(adapter))
-					return "user";
 				return null;
 			}
 		};

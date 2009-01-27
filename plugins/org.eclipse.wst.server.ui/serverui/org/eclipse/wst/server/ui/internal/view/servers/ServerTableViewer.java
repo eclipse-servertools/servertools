@@ -58,6 +58,7 @@ public class ServerTableViewer extends TreeViewer {
 	protected static Set<String> starting = new HashSet<String>(4);
 
 	protected ServerTableLabelProvider labelProvider;
+	protected ILabelProviderListener labelProviderListener;
 	//protected ISelectionListener dsListener;
 
 	protected ServersView view;
@@ -452,6 +453,13 @@ public class ServerTableViewer extends TreeViewer {
 				((Server) servers[i]).addPublishListener(publishListener);
 			}
 		}
+		
+		labelProviderListener = new ILabelProviderListener() {
+			public void labelProviderChanged(LabelProviderChangedEvent event) {
+		    handleLabelProviderChanged(event);
+		  }
+		};
+		labelProvider.addListener(labelProviderListener);
 	}
 
 	protected void refreshServer(final IServer server) {
@@ -485,6 +493,11 @@ public class ServerTableViewer extends TreeViewer {
 				if (publishListener != null)
 					((Server) servers[i]).removePublishListener(publishListener);
 			}
+		}
+		
+		// Remove the label provider listeners.
+		if (labelProvider != null && labelProviderListener != null) {
+			labelProvider.removeListener(labelProviderListener);
 		}
 		
 		clipboard.dispose();

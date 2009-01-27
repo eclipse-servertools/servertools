@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.Messages;
@@ -37,6 +42,13 @@ public class RestartModuleAction extends Action {
 	 * Implementation of method defined on <code>IAction</code>.
 	 */
 	public void run() {
-		server.restartModule(module, null);
+		int size = module.length;
+		Job restartJob = new Job(NLS.bind(Messages.jobRestarting, module[size-1].getName())) {
+			protected IStatus run(IProgressMonitor monitor) {
+				server.restartModule(module, null);
+				return Status.OK_STATUS;
+			}
+		};
+		restartJob.schedule();
 	}
 }

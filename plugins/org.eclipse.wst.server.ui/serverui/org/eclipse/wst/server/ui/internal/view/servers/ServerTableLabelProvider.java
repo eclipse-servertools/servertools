@@ -57,7 +57,8 @@ public class ServerTableLabelProvider extends BaseCellLabelProvider {
 	 * ServerTableLabelProvider constructor comment.
 	 */
 	public ServerTableLabelProvider() {
-		super();
+		// Ensure decorator is initialized.
+		super(null);
 	}
 
 	public void setDefaultServer(IServer ds) {
@@ -168,10 +169,9 @@ public class ServerTableLabelProvider extends BaseCellLabelProvider {
 				}
 				return name;
 			} else if (columnIndex == 1) {
-				//if (ms.server == null)
-				//	return "";
-				//return getStateLabel(ms.server.getServerType(), ms.server.getModuleState(ms.module), null);
-				return "";
+				if (ms.server == null)
+					return "";
+				return getStateLabel(ms.server.getServerType(), ms.server.getModuleState(ms.module), null);
 			} else if (columnIndex == 2) {
 				IStatus status = ((Server) ms.server).getModuleStatus(ms.module);
 				if (status != null)
