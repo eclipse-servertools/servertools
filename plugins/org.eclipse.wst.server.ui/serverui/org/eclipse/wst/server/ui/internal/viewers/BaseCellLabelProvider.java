@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ILabelDecorator;
-import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.PlatformUI;
@@ -21,6 +19,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public abstract class BaseCellLabelProvider extends ColumnLabelProvider {
 	public ILabelDecorator decorator;
+	protected ILabelProviderListener providerListener;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ColumnLabelProvider#update(org.eclipse.jface.viewers.ViewerCell)
@@ -38,7 +37,7 @@ public abstract class BaseCellLabelProvider extends ColumnLabelProvider {
 	 * Create a BaseCellLabelProvider
 	 */
 	public BaseCellLabelProvider() {
-		super();
+		super();		
 	}
 
 	/**
@@ -47,9 +46,18 @@ public abstract class BaseCellLabelProvider extends ColumnLabelProvider {
 	 */
 	public BaseCellLabelProvider(ILabelDecorator decorator) {
 		super();
-		if (decorator == null)
+			
+		if (decorator == null){
 			decorator = PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator();
-		
+			providerListener = new ILabelProviderListener() {
+				@SuppressWarnings("synthetic-access")
+				public void labelProviderChanged(LabelProviderChangedEvent event) {
+					fireLabelProviderChanged(event);
+				}
+			};
+			decorator.addListener(providerListener);
+		}
+	
 		this.decorator = decorator;
 	} 
 
@@ -63,6 +71,13 @@ public abstract class BaseCellLabelProvider extends ColumnLabelProvider {
 
 	public int getToolTipTimeDisplayed(Object object) {	
 		return 5000;
+	}
+	
+	public void dispose() {
+		if (decorator != null && providerListener != null) {
+			decorator.removeListener(providerListener);
+		}
+		super.dispose();
 	}
 
 	/**
