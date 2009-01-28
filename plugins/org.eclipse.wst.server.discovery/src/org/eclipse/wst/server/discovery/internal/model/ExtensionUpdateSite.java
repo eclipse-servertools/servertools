@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.equinox.internal.p2.updatesite.metadata.UpdateSiteMetadataRepositoryFactory;
 import org.eclipse.equinox.internal.provisional.p2.metadata.IInstallableUnit;
+import org.eclipse.equinox.internal.provisional.p2.metadata.IRequiredCapability;
 import org.eclipse.equinox.internal.provisional.p2.metadata.RequiredCapability;
 import org.eclipse.equinox.internal.provisional.p2.metadata.query.InstallableUnitQuery;
 import org.eclipse.equinox.internal.provisional.p2.metadata.repository.IMetadataRepository;
@@ -76,9 +77,9 @@ public class ExtensionUpdateSite {
 			Iterator iter = collector.iterator();
 			while (iter.hasNext()) {
 				IInstallableUnit iu = (IInstallableUnit) iter.next();
-				RequiredCapability[] req = iu.getRequiredCapabilities();
+				IRequiredCapability[] req = iu.getRequiredCapabilities();
 				if (req != null) {
-					for (RequiredCapability rc : req) {
+					for (IRequiredCapability rc : req) {
 						query = new InstallableUnitQuery(rc.getName(), rc.getRange());
 						Collector collector2 = new Collector();
 						repo.query(query, collector2, monitor);
