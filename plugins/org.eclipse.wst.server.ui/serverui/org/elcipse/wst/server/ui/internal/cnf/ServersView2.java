@@ -70,12 +70,7 @@ public class ServersView2 extends CommonNavigator {
 		super.createPartControl(parent);
 		
 		deferInitialization();
-	}
-	
-	@Override
-	protected void updateTitle() {
-		// nothing to do
-	}
+	}	
 
 	private void deferInitialization() {
 		TreeItem item = new TreeItem(getCommonViewer().getTree(), SWT.NONE);
