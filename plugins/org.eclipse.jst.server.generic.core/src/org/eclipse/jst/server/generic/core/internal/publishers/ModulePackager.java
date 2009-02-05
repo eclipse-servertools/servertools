@@ -160,7 +160,7 @@ public class ModulePackager {
 			while (n > -1) {
 				n = contentStream.read(readBuffers);
 				if (n > 0)
-					output.write(readBuffers);
+					output.write(readBuffers, 0, n);
 			}
 		} finally {
 			if (output != null)
