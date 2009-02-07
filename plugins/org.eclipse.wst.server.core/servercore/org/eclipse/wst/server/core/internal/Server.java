@@ -1644,12 +1644,11 @@ public class Server extends Base implements IServer {
 		byte pub = StartJob.PUBLISH_NONE;
 		if (ServerCore.isAutoPublishing() && shouldPublish()) {
 			if (((ServerType)getServerType()).startBeforePublish())
-				pub = StartJob.PUBLISH_AFTER;
-			else
 				return Status.OK_STATUS;
+			pub = StartJob.PUBLISH_BEFORE;
 		}
 		
-		final IStatus [] pubStatus = new IStatus[1];
+		final IStatus [] pubStatus = new IStatus[]{Status.OK_STATUS};
 		
 		// publish before start
 		byte publish = pub;
@@ -1675,21 +1674,21 @@ public class Server extends Base implements IServer {
 				return Status.CANCEL_STATUS;
 			}
 		}
-		return Status.OK_STATUS;
+		return pubStatus[0];
 	}
 	
-	protected IStatus publishAfterStart(IProgressMonitor monitor, boolean synchronous){
+	protected IStatus publishAfterStart(IProgressMonitor monitor, boolean synchronous, final IOperationListener op){
 		
 		// check if we need to publish
 		byte pub = StartJob.PUBLISH_NONE;
 		if (ServerCore.isAutoPublishing() && shouldPublish()) {
 			if (((ServerType)getServerType()).startBeforePublish())
+				pub = StartJob.PUBLISH_AFTER;
+			else
 				return Status.OK_STATUS;
-			
-			pub = StartJob.PUBLISH_AFTER;
 		}
 		
-		final IStatus [] pubStatus = new IStatus[1];
+		final IStatus [] pubStatus = new IStatus[]{Status.OK_STATUS};
 		
 		// publish after start
 		byte publish = pub;
@@ -1700,6 +1699,9 @@ public class Server extends Base implements IServer {
 					IStatus status = event.getResult();
 					if (status != null && status.getSeverity() == IStatus.ERROR)
 						pubStatus[0] = status; 
+					if (op != null){
+						op.done(status);
+					}
 				}
 				
 			});
@@ -1714,7 +1716,7 @@ public class Server extends Base implements IServer {
 				return Status.CANCEL_STATUS;
 			}
 		}
-		return Status.OK_STATUS;
+		return pubStatus[0];
 	}
 	
 	/**
@@ -1739,7 +1741,7 @@ public class Server extends Base implements IServer {
 		StartJob startJob = new StartJob(mode2);
 		startJob.schedule();
 		
-		publishAfterStart(monitor,false);
+		publishAfterStart(monitor,false,null);
 
 	}
 	
@@ -1763,19 +1765,27 @@ public class Server extends Base implements IServer {
 			Trace.trace(Trace.FINEST,"Failed publish job during start routine");
 			return;
 		}
-		
+
+		// check the publish flag (again) to determine when to call opListener.done 
+		byte pub = StartJob.PUBLISH_NONE;
+		if (ServerCore.isAutoPublishing() && shouldPublish()) {
+			if (((ServerType)getServerType()).startBeforePublish())
+				pub = StartJob.PUBLISH_AFTER;
+			else
+				pub = StartJob.PUBLISH_BEFORE;
+		}
+
 		StartJob startJob = new StartJob(mode2);
-		if (opListener != null) {
+		if (opListener != null && pub == StartJob.PUBLISH_BEFORE) {
 			startJob.addJobChangeListener(new JobChangeAdapter() {
 				public void done(IJobChangeEvent event) {
-					publishAfterStart(null,false);
 					opListener.done(event.getResult());
 				}
 			});
 		}
 		startJob.schedule();
 		
-		publishAfterStart(null,false);
+		publishAfterStart(null,false, opListener);
 	}
 
 	public void synchronousStart(String mode2, IProgressMonitor monitor) throws CoreException {
@@ -1802,7 +1812,7 @@ public class Server extends Base implements IServer {
 			Trace.trace(Trace.WARNING, "Error waiting for job", e);
 		}
 		
-		publishAfterStart(monitor,true);
+		publishAfterStart(monitor,true,null);
 	}
 
 	/*
@@ -2701,12 +2711,10 @@ public class Server extends Base implements IServer {
 		
 		if (timer.timeout) {
 			stop(false);
-			// TODO this message should be changed to restart time out
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorRestartFailed, new String[] { getName(), (restartTimeout / 1000) + "" }), null);
 		}
 		
 		if (getServerState() == IServer.STATE_STOPPED)
-			// TODO this message should be changed to restart time out
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorRestartFailed, getName()), null);
 		
 		Trace.trace(Trace.FINEST, "synchronousRestart 4");
