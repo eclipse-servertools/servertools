@@ -23,6 +23,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
+import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.InternalInitializer;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 /**
@@ -242,12 +243,13 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 	}
 	
 	/**
-	 * Set the defaults.
+	 * Set the defaults for this runtime, including the name.
 	 * 
-	 * @param monitor
+	 * @param monitor a progress monitor, or null
 	 */
 	protected void setDefaults(IProgressMonitor monitor) {
 		try {
+			ServerUtil.setRuntimeDefaultName(this);
 			getWorkingCopyDelegate(monitor).setDefaults(monitor);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate setDefaults() " + toString(), e);

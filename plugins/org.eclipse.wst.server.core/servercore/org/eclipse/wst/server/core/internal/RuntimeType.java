@@ -143,7 +143,6 @@ public class RuntimeType implements IRuntimeType {
 			return null;
 		
 		RuntimeWorkingCopy rwc = new RuntimeWorkingCopy(null, id, this);
-		ServerUtil.setRuntimeDefaultName(rwc);
 		rwc.setDefaults(monitor);
 		return rwc;
 	}

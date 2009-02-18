@@ -188,7 +188,7 @@ public class ServerType implements IServerType {
 		ServerWorkingCopy swc = new ServerWorkingCopy(id, file, runtime, this);
 		if (hasRuntime())
 			swc.setRuntime(runtime);
-		ServerUtil.setServerDefaultName(swc);
+		
 		swc.setDefaults(monitor);
 		
 		if (hasServerConfiguration() && runtime != null && runtime.getLocation() != null && !runtime.getLocation().isEmpty())
@@ -241,9 +241,7 @@ public class ServerType implements IServerType {
 			else {
 				// create runtime
 				try {
-					IRuntimeWorkingCopy runtimeWC = runtimeType.createRuntime(id, monitor);
-					ServerUtil.setRuntimeDefaultName(runtimeWC);
-					runtime = runtimeWC;
+					runtime = runtimeType.createRuntime(id, monitor);
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "Couldn't create runtime", e);
 				}
@@ -253,7 +251,6 @@ public class ServerType implements IServerType {
 		ServerWorkingCopy swc = new ServerWorkingCopy(id, file, runtime, this);
 		if (runtime != null)
 			swc.setRuntime(runtime);
-		ServerUtil.setServerDefaultName(swc);
 		
 		swc.setDefaults(monitor);
 		if (swc.getServerType().hasServerConfiguration())

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -193,7 +193,7 @@ public class NewManualServerComposite extends Composite {
 			
 			IAction resetDefaultAction = new Action("", IAction.AS_PUSH_BUTTON) {//$NON-NLS-1$
 				public void run() {
-					ServerUtil.setServerDefaultName(server);
+					((ServerWorkingCopy)server).setDefaults(null);
 					serverName.setText(server.getName());
 					serverNameModified = false;
 					if (serverNameToolBar != null)
@@ -317,7 +317,7 @@ public class NewManualServerComposite extends Composite {
 			server.setHost(host);
 			if (!serverNameModified) {
 				updatingServerName = true;
-				ServerUtil.setServerDefaultName(server);
+				((ServerWorkingCopy)server).setDefaults(null);
 				serverName.setText(server.getName());
 				updatingServerName = false;
 			}
@@ -338,7 +338,7 @@ public class NewManualServerComposite extends Composite {
 		server = cache.getCachedServer(serverType, isLocalhost);
 		if (server != null) {
 			server.setHost(host);
-			ServerUtil.setServerDefaultName(server);
+			((ServerWorkingCopy)server).setDefaults(null);
 			runtime = server.getRuntime();
 			listener.runtimeSelected(runtime);
 			return;
@@ -355,7 +355,6 @@ public class NewManualServerComposite extends Composite {
 			server = cache.createServer(serverType, run, isLocalhost, null);
 			if (server != null) {
 				server.setHost(host);
-				ServerUtil.setServerDefaultName(server);
 				
 				if (serverType.hasRuntime() && server.getRuntime() == null) {
 					runtime = null;
@@ -365,6 +364,7 @@ public class NewManualServerComposite extends Composite {
 					if (server.getServerType() != null && server.getServerType().hasServerConfiguration() && !runtime.getLocation().isEmpty())
 						((ServerWorkingCopy)server).importRuntimeConfiguration(runtime, null);
 				}
+				
 				((ServerWorkingCopy)server).setDefaults(null);
 			}
 		} catch (CoreException ce) {
@@ -422,7 +422,6 @@ public class NewManualServerComposite extends Composite {
 		// create a new runtime
 		try {
 			IRuntimeWorkingCopy runtimeWC = runtimeType.createRuntime(null, null);
-			ServerUtil.setRuntimeDefaultName(runtimeWC);
 			runtimes = new IRuntime[1];
 			runtimes[0] = runtimeWC;
 			newRuntime = runtimeWC;
@@ -496,7 +495,12 @@ public class NewManualServerComposite extends Composite {
 		runtime = runtime2;
 		if (server != null) {
 			server.setRuntime(runtime);
-			ServerUtil.setServerDefaultName(server);
+			((ServerWorkingCopy)server).setDefaults(null);
+			if (!serverNameModified) {
+				updatingServerName = true;
+				serverName.setText(server.getName());
+				updatingServerName = false;
+			}
 		}
 		listener.runtimeSelected(runtime);
 	}

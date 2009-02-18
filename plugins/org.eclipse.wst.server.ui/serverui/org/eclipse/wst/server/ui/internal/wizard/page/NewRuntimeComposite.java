@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -120,7 +120,6 @@ public class NewRuntimeComposite extends Composite {
 			if (runtime == null) {
 				try {
 					runtime = runtimeType.createRuntime(null, null);
-					ServerUtil.setRuntimeDefaultName(runtime);
 					if (runtime != null)
 						cache.put(runtimeType, runtime);
 				} catch (Exception e) {
@@ -176,8 +175,6 @@ public class NewRuntimeComposite extends Composite {
 		try {
 			server = serverType.createServer(null, null, runtime, null);
 			if (server != null) {
-				server.setHost("localhost");
-				ServerUtil.setServerDefaultName(server);
 				serverCache.put(runtime, server);
 				return server;
 			}

@@ -639,8 +639,16 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		}
 	}
 
+	/**
+	 * Sets the defaults for this server, including the name. This method should be
+	 * called when creating a server, or when any major settings (e.g. runtime, host)
+	 * change.
+	 * 
+	 * @param monitor a progress monitor, or null
+	 */
 	public void setDefaults(IProgressMonitor monitor) {
 		try {
+			ServerUtil.setServerDefaultName(this);
 			getWorkingCopyDelegate(monitor).setDefaults(monitor);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate setDefaults() " + toString(), e);

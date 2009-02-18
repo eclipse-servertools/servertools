@@ -401,7 +401,7 @@ public class ServerUtil {
 		
 		// base the name on the runtime if it exists and has been changed from the default
 		IRuntime runtime = server.getRuntime();
-		if (runtime != null) {
+		if (runtime != null && !(runtime instanceof RuntimeWorkingCopy)) {
 			IRuntimeWorkingCopy wc = runtime.createWorkingCopy();
 			setRuntimeDefaultName(wc);
 			if (!wc.getName().equals(runtime.getName()))
