@@ -10,14 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.server.discovery.internal;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.equinox.internal.provisional.p2.metadata.IInstallableUnit;
-import org.eclipse.equinox.internal.provisional.p2.query.Collector;
-import org.eclipse.equinox.internal.provisional.p2.query.Query;
+import org.eclipse.equinox.internal.provisional.p2.query.MatchQuery;
 
-public class ExtensionInstallableUnitQuery implements Query {
+public class ExtensionInstallableUnitQuery extends MatchQuery {
 	private List<String> list;
 
 	public ExtensionInstallableUnitQuery(List<String> list) {
@@ -31,10 +29,5 @@ public class ExtensionInstallableUnitQuery implements Query {
 		if (list.contains(candidate.getId()))
 			return true;
 		return false;
-	}
-
-	public Collector perform(Iterator iterator, Collector result) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }
