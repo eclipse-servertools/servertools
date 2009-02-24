@@ -41,7 +41,7 @@
   <view
         allowMultiple="false"
         category="org.eclipse.wst.server.ui"
-        class="org.elcipse.wst.server.ui.internal.cnf.ServersView2"
+        class="org.eclipse.wst.server.ui.internal.cnf.ServersView2"
         icon="icons/cview16/servers_view.gif"
         id="org.eclipse.wst.server.ui.ServersView2"
         name="%viewServers_new"/>
@@ -50,16 +50,21 @@
       point="org.eclipse.ui.navigator.navigatorContent">
    <navigatorContent
          activeByDefault="true"
-         contentProvider="org.elcipse.wst.server.ui.internal.cnf.ServerContentProvider"
+         contentProvider="org.eclipse.wst.server.ui.internal.cnf.ServerContentProvider"
          icon="icons/cview16/servers_view.gif"
          id="org.eclipse.wst.server.ui.ServersView.content.root"
-         labelProvider="org.elcipse.wst.server.ui.internal.cnf.ServerLabelProvider"
+         labelProvider="org.eclipse.wst.server.ui.internal.cnf.ServerLabelProvider"
          name="%defaultProvider"
-         priority="normal">
+         priority="highest">
       <triggerPoints>
-         <instanceof
-               value="org.eclipse.wst.server.core.internal.ServerPlugin">
-         </instanceof>
+         <or>
+            <instanceof
+                  value="org.eclipse.wst.server.core.IServer">
+            </instanceof>
+            <instanceof
+                  value="org.eclipse.wst.server.ui.internal.view.servers.ModuleServer">
+            </instanceof>
+         </or>
       </triggerPoints>
       <possibleChildren>
          <or>
@@ -553,7 +558,7 @@ M4 = Platform-specific fourth key
 <extension
       point="org.eclipse.ui.decorators">
    <decorator
-         class="org.elcipse.wst.server.ui.internal.cnf.ServerDecorator"
+         class="org.eclipse.wst.server.ui.internal.cnf.ServerDecorator"
          icon="icons/obj16/server.gif"
          id="org.eclipse.wst.server.ui.navigatorDecorator"
          label="Server State Decorator"
