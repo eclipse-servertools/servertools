@@ -56,6 +56,9 @@ public class ServerToolTip extends ToolTip {
 		
 		tree.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent  e) {
+				if (e == null)
+					return;
+				
 				if (e.keyCode == SWT.ESC) {
 					if (CURRENT_TOOLTIP != null) {
 						CURRENT_TOOLTIP.dispose();
