@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -198,27 +198,22 @@ Host: localhost:8081
 		
 		if (isRequest) {
 			if (contentLength != -1) {
-				if (contentLength < 1024 * 1024) { // 1Mb
-					byte[] b = readBytes(contentLength);
-					out.write(b);
-					conn.addRequest(b, false);
-					setHTTPBody(b);
-				} else {
-					byte[] b = removeFromBuffer(Math.min(bufferIndex, contentLength));
-					int bytesLeft = contentLength - b.length;
-					out.write(b);
-					
-					int n = 0;
-					while (bytesLeft > 0) {
-						n = in.read(readBuffer);
-						bytesLeft -= n;
-						out.write(readBuffer, 0, n);
-					}
-					
-					b = Messages.errorContentSize.getBytes();
-					conn.addRequest(b, false);
-					setHTTPBody(b);
+				byte[] b = removeFromBuffer(Math.min(buffer.length, bufferIndex + contentLength));
+				int bytesLeft = contentLength - b.length;
+				Trace.trace(Trace.PARSING, "[Request] bytesLeft: "+ bytesLeft);
+				out.write(b);
+				
+				int n = 0;
+				while (bytesLeft > 0) {  
+					n = in.read(readBuffer, 0, Math.min(readBuffer.length, bytesLeft));
+					bytesLeft -= n;
+					out.write(readBuffer, 0, n);					
+					Trace.trace(Trace.PARSING,  "[Request] bytes read: "+ n + " bytesLeft: "+ bytesLeft);
 				}
+				
+				b = Messages.errorContentSize.getBytes();
+				conn.addRequest(b, false);
+				setHTTPBody(b);
 			} else if (transferEncoding != -1 && transferEncoding != ENCODING_IDENTITY) {
 				parseChunk();
 			}
@@ -275,33 +270,25 @@ Host: localhost:8081
 		
 		// spec 4.4.3
 		if (contentLength != -1) {
-			if (contentLength < 1024 * 1024) { // 1Mb
-				byte[] b = readBytes(contentLength);
-				out.write(b);
-				if (isRequest)
-					conn.addRequest(b, false);
-				else
-					conn.addResponse(b, false);
-				setHTTPBody(b);
-			} else {
-				byte[] b = removeFromBuffer(Math.min(bufferIndex, contentLength));
-				int bytesLeft = contentLength - b.length;
-				out.write(b);
-				
-				int n = 0;
-				while (bytesLeft > 0) {
-					n = in.read(readBuffer);
-					bytesLeft -= n;
-					out.write(readBuffer, 0, n);
-				}
-				
-				b = Messages.errorContentSize.getBytes();
-				if (isRequest)
-					conn.addRequest(b, false);
-				else
-					conn.addResponse(b, false);
-				setHTTPBody(b);
+			byte[] b = removeFromBuffer(Math.min(buffer.length, bufferIndex + contentLength));
+			int bytesLeft = contentLength - b.length;
+			Trace.trace(Trace.PARSING,"bytesLeft: "+ bytesLeft);
+			out.write(b);
+			
+			int n = 0;
+			while (bytesLeft > 0) {
+				n = in.read(readBuffer, 0, Math.min(readBuffer.length, bytesLeft));
+				bytesLeft -= n;
+				Trace.trace(Trace.PARSING,"bytes read: "+n + " bytesLeft: "+ bytesLeft);
+				out.write(readBuffer, 0, n);
 			}
+			
+			b = Messages.errorContentSize.getBytes();
+			if (isRequest)
+				conn.addRequest(b, false);
+			else
+				conn.addResponse(b, false);
+			setHTTPBody(b);
 			return;
 		}
 		
@@ -310,6 +297,20 @@ Host: localhost:8081
 		Trace.trace(Trace.PARSING, "Unknown body for: " + this);
 	}
 
+	// Use this method to dump the content of a byte array
+	//
+	//	private void dumpBuffer(byte[] b) {
+	//		Trace.trace(Trace.PARSING, "Buffer dump to default.out:");
+	//		Trace.trace(Trace.PARSING, "Byte array: " + b.length);
+	//		for (int i = 0; i < b.length; i++) {
+	//			System.out.print(" [" + (char) b[i] + "]"); // +" ["+b[i+1]+"] "
+	//			if (i % 20 == 0) {
+	//				System.out.println();
+	//			}
+	//		}
+	//	}
+	
+	
 	/**
 	 * Parse an HTTP chunk.
 	 * 
