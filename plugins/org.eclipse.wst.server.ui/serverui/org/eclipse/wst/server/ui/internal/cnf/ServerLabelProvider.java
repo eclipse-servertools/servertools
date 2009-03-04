@@ -65,7 +65,7 @@ public class ServerLabelProvider extends LabelProvider {
 				// TODO Angel says: Need to discuss about it
 				// Because we are now grabbing the ServerState the type will not show. It might be best to create a new icon for the state
 				ImageDescriptor imgDescriptor = ServerDecorator.getServerStateImage(server);
-				if (image != null){
+				if (image != null && imgDescriptor != null){
 					image = imgDescriptor.createImage();
 				}
 			}

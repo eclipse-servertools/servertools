@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.cnf;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -34,6 +36,7 @@ import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.internal.UpdateServerJob;
 import org.eclipse.wst.server.core.model.ServerDelegate;
+import org.eclipse.wst.server.core.util.PublishAdapter;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.actions.NewServerWizardAction;
 import org.eclipse.wst.server.ui.internal.view.servers.*;
@@ -49,6 +52,16 @@ public class ServersView2 extends CommonNavigator {
 	protected Action noneAction = new Action(Messages.dialogMonitorNone) {
 		// dummy action
 	};
+	
+	protected IPublishListener publishListener;
+	protected IServerListener serverListener;
+		
+	// servers that are currently publishing and starting
+	protected static Set<String> publishing = new HashSet<String>(4);
+	protected static Set<String> starting = new HashSet<String>(4);
+	protected boolean animationActive = false;
+	protected boolean stopAnimation = false;
+	
 	
 	// actions on a server
 	protected Action[] actions;
@@ -107,7 +120,8 @@ public class ServersView2 extends CommonNavigator {
 	
 	protected void deferredInitialize() {
 		// TODO Angel says: What to do here? 
-		//tableViewer.initialize();				
+		//tableViewer.initialize();
+		addListener();
 		
 		// TODO Angel says: is this the best place for this? 
 		tableViewer = getCommonViewer();
@@ -163,6 +177,89 @@ public class ServersView2 extends CommonNavigator {
 		thread.start();
 	}
 	
+	protected void handlePublishChange(IServer server, boolean isPublishing) {
+		String serverId = server.getId();
+		if (isPublishing)
+			publishing.add(serverId);
+		else
+			publishing.remove(serverId);
+	
+		refreshServer(server);
+	}
+	
+	protected void refreshServer(IServer server){
+		tableViewer.refresh(server);
+	}
+	
+	protected void addListener(){
+		
+		publishListener = new PublishAdapter() {
+			public void publishStarted(IServer server) {
+				handlePublishChange(server, true);
+			}
+			
+			public void publishFinished(IServer server, IStatus status) {
+				handlePublishChange(server, false);
+			}
+		};
+		
+		serverListener = new IServerListener() {
+			public void serverChanged(ServerEvent event) {
+				if (event == null)
+					return;
+				
+				int eventKind = event.getKind();
+				IServer server = event.getServer();
+				if ((eventKind & ServerEvent.SERVER_CHANGE) != 0) {
+					// server change event
+					if ((eventKind & ServerEvent.STATE_CHANGE) != 0) {
+						refreshServer(server);
+						int state = event.getState();
+						String id = server.getId();
+						if (state == IServer.STATE_STARTING || state == IServer.STATE_STOPPING) {
+							boolean startThread = false;
+							synchronized (starting) {
+								if (!starting.contains(id)) {
+									if (starting.isEmpty())
+										startThread = true;
+									starting.add(id);
+								}
+							}
+							if (startThread)
+								startThread();
+						} else {
+							boolean stopThread = false;
+							synchronized (starting) {
+								if (starting.contains(id)) {
+									starting.remove(id);
+									if (starting.isEmpty())
+										stopThread = true;
+								}
+							}
+							if (stopThread)
+								stopThread();
+						}
+					} else
+						refreshServer(server);
+				} else if ((eventKind & ServerEvent.MODULE_CHANGE) != 0) {
+					// module change event
+					if ((eventKind & ServerEvent.STATE_CHANGE) != 0 || (eventKind & ServerEvent.PUBLISH_STATE_CHANGE) != 0) {
+						refreshServer(server);
+					}
+				}
+			}
+		};
+		
+		// add listeners to servers
+		IServer[] servers = ServerCore.getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				servers[i].addServerListener(serverListener);
+				((Server) servers[i]).addPublishListener(publishListener);
+			}
+		}
+	}
 	
 	protected void fillContextMenu(Shell shell, IMenuManager menu) {
 		// get selection but avoid no selection or multiple selection
@@ -290,65 +387,6 @@ public class ServersView2 extends CommonNavigator {
 		menu.add(newServerAction);
 	}
 	
-	
-//	/**
-//	 * Initialize actions
-//	 * 
-//	 * @param provider a selection provider
-//	 */
-//	public void initializeActions(ISelectionProvider provider) {
-//		Shell shell = getSite().getShell();
-//		IActionBars actionBars = getViewSite().getActionBars();
-//		
-//		actions = new Action[6];
-//		// create the start actions
-//		actions[0] = new StartAction(shell, provider, ILaunchManager.DEBUG_MODE);
-//		actionBars.setGlobalActionHandler("org.eclipse.wst.server.debug", actions[0]);
-//		actions[1] = new StartAction(shell, provider, ILaunchManager.RUN_MODE);
-//		actionBars.setGlobalActionHandler("org.eclipse.wst.server.run", actions[1]);
-//		actions[2] = new StartAction(shell, provider, ILaunchManager.PROFILE_MODE);
-//		
-//		// create the stop action
-//		actions[3] = new StopAction(shell, provider);
-//		actionBars.setGlobalActionHandler("org.eclipse.wst.server.stop", actions[3]);
-//		
-//		// create the publish actions
-//		actions[4] = new PublishAction(shell, provider);
-//		actionBars.setGlobalActionHandler("org.eclipse.wst.server.publish", actions[4]);
-//		actions[5] = new PublishCleanAction(shell, provider);
-//		
-//		// create the open action
-//		openAction = new OpenAction(provider);
-//		actionBars.setGlobalActionHandler("org.eclipse.ui.navigator.Open", openAction);
-//		
-//		// create copy, paste, and delete actions
-//		pasteAction = new PasteAction(shell, provider,  clipboard);
-//		copyAction = new CopyAction(provider, clipboard, pasteAction);
-//		deleteAction = new DeleteAction(shell, provider);
-//		renameAction = new RenameAction(shell, getCommonViewer(), provider);
-//		actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), copyAction);
-//		actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), pasteAction);
-//		actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), deleteAction);
-//		actionBars.setGlobalActionHandler(ActionFactory.RENAME.getId(), renameAction);
-//		
-//		// create the other actions
-//		actionModifyModules = new ModuleSloshAction(shell, provider);
-//		showInConsoleAction = new ShowInConsoleAction(provider);
-//		showInDebugAction = new ShowInDebugAction(provider);
-//		
-//		// create the properties action
-//		propertiesAction = new PropertiesAction(shell, provider);
-//		actionBars.setGlobalActionHandler(ActionFactory.PROPERTIES.getId(), propertiesAction);
-//		monitorPropertiesAction = new PropertiesAction(shell, "org.eclipse.wst.server.ui.properties.monitor", provider);
-//		
-//		// add toolbar buttons
-//		IContributionManager cm = actionBars.getToolBarManager();
-//		for (int i = 0; i < actions.length - 1; i++)
-//			cm.add(actions[i]);
-//		
-//		cm.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-//	}
-	
 	@Override
 	protected ActionGroup createCommonActionGroup() {
 		CommonViewer provider = getCommonViewer();
@@ -420,4 +458,53 @@ public class ServersView2 extends CommonNavigator {
 		}
 	}
 	
+	/**
+	 * Start the animation thread
+	 */
+	protected void startThread() {
+		if (animationActive)
+			return;
+		
+		stopAnimation = false;
+		
+		final Display display = tableViewer == null ? Display.getDefault() : tableViewer.getControl().getDisplay();
+		final int SLEEP = 200;
+		final Runnable[] animator = new Runnable[1];
+		animator[0] = new Runnable() {
+			public void run() {
+				if (!stopAnimation) {
+					try {
+						int size = 0;
+						String[] servers;
+						synchronized (starting) {
+							size = starting.size();
+							servers = new String[size];
+							starting.toArray(servers);
+							
+						}
+						
+						for (int i = 0; i < size; i++) {
+							IServer server = ServerCore.findServer(servers[i]);
+							if (server != null ) {
+								ServerDecorator.animate();
+								tableViewer.update(server, new String[]{"ICON"});
+							}
+						}
+					} catch (Exception e) {
+						Trace.trace(Trace.FINEST, "Error in Servers view animation", e);
+					}
+					display.timerExec(SLEEP, animator[0]);
+				}
+			}
+		};
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				display.timerExec(SLEEP, animator[0]);
+			}
+		});
+	}
+
+	protected void stopThread() {
+		stopAnimation = true;
+	}
 }

@@ -32,8 +32,8 @@
     name="%category"/>
 
   <view
-    id="org.eclipse.wst.server.ui.ServersView"
-    name="%viewServers"
+    id="org.eclipse.wst.server.ui.ServersView2"
+    name="%viewServers_old"
     category="org.eclipse.wst.server.ui"
     class="org.eclipse.wst.server.ui.internal.view.servers.ServersView"
     icon="icons/cview16/servers_view.gif"/>
@@ -43,8 +43,8 @@
         category="org.eclipse.wst.server.ui"
         class="org.eclipse.wst.server.ui.internal.cnf.ServersView2"
         icon="icons/cview16/servers_view.gif"
-        id="org.eclipse.wst.server.ui.ServersView2"
-        name="%viewServers_new"/>
+        id="org.eclipse.wst.server.ui.ServersView"
+        name="%viewServers"/>
 </extension>
 <extension
       point="org.eclipse.ui.navigator.navigatorContent">
@@ -81,7 +81,7 @@
                <extension
       point="org.eclipse.ui.navigator.viewer">
    <viewerContentBinding
-         viewerId="org.eclipse.wst.server.ui.ServersView2">
+         viewerId="org.eclipse.wst.server.ui.ServersView">
       <includes>
          <contentExtension
                isRoot="true"
