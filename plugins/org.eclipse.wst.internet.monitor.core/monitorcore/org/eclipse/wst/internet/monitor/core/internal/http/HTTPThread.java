@@ -198,7 +198,15 @@ Host: localhost:8081
 		
 		if (isRequest) {
 			if (contentLength != -1) {
+				byte[] b2 = null;
+				int b2Index = 0;
+				if (contentLength < 1024 * 1024)
+					b2 = new byte[contentLength];
 				byte[] b = removeFromBuffer(Math.min(buffer.length, bufferIndex + contentLength));
+				if (b2 != null) {
+					System.arraycopy(b, 0, b2, 0, b.length);
+					b2Index += b.length;
+				}
 				int bytesLeft = contentLength - b.length;
 				Trace.trace(Trace.PARSING, "[Request] bytesLeft: "+ bytesLeft);
 				out.write(b);
@@ -207,13 +215,20 @@ Host: localhost:8081
 				while (bytesLeft > 0) {  
 					n = in.read(readBuffer, 0, Math.min(readBuffer.length, bytesLeft));
 					bytesLeft -= n;
+					if (b2 != null) {
+						System.arraycopy(readBuffer, 0, b2, b2Index, n);
+						b2Index += n;
+					}
 					out.write(readBuffer, 0, n);					
 					Trace.trace(Trace.PARSING,  "[Request] bytes read: "+ n + " bytesLeft: "+ bytesLeft);
 				}
 				
-				b = Messages.errorContentSize.getBytes();
-				conn.addRequest(b, false);
-				setHTTPBody(b);
+				// restore the byte array for display
+				if (b2 == null)
+					b2 = Messages.errorContentSize.getBytes();
+				
+				conn.addRequest(b2, false);
+				setHTTPBody(b2);
 			} else if (transferEncoding != -1 && transferEncoding != ENCODING_IDENTITY) {
 				parseChunk();
 			}
@@ -270,7 +285,15 @@ Host: localhost:8081
 		
 		// spec 4.4.3
 		if (contentLength != -1) {
+			byte[] b2 = null;
+			int b2Index = 0;
+			if (contentLength < 1024 * 1024)
+				b2 = new byte[contentLength];
 			byte[] b = removeFromBuffer(Math.min(buffer.length, bufferIndex + contentLength));
+			if (b2 != null) {
+				System.arraycopy(b, 0, b2, 0, b.length);
+				b2Index += b.length;
+			}
 			int bytesLeft = contentLength - b.length;
 			Trace.trace(Trace.PARSING,"bytesLeft: "+ bytesLeft);
 			out.write(b);
@@ -279,16 +302,23 @@ Host: localhost:8081
 			while (bytesLeft > 0) {
 				n = in.read(readBuffer, 0, Math.min(readBuffer.length, bytesLeft));
 				bytesLeft -= n;
+				if (b2 != null) {
+					System.arraycopy(readBuffer, 0, b2, b2Index, n);
+					b2Index += n;
+				}
 				Trace.trace(Trace.PARSING,"bytes read: "+n + " bytesLeft: "+ bytesLeft);
 				out.write(readBuffer, 0, n);
 			}
+						
+			// restore the byte array for display
+			if (b2 == null)
+				b2 = Messages.errorContentSize.getBytes();
 			
-			b = Messages.errorContentSize.getBytes();
 			if (isRequest)
-				conn.addRequest(b, false);
+				conn.addRequest(b2, false);
 			else
-				conn.addResponse(b, false);
-			setHTTPBody(b);
+				conn.addResponse(b2, false);
+			setHTTPBody(b2);
 			return;
 		}
 		
