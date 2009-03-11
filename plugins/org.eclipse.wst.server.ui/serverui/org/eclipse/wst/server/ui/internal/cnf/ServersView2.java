@@ -22,7 +22,6 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.bindings.TriggerSequence;
 import org.eclipse.jface.viewers.*;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.*;
@@ -53,6 +52,7 @@ public class ServersView2 extends CommonNavigator {
 		// dummy action
 	};
 	
+	protected IServerLifecycleListener serverResourceListener;
 	protected IPublishListener publishListener;
 	protected IServerListener serverListener;
 		
@@ -79,16 +79,13 @@ public class ServersView2 extends CommonNavigator {
 	@Override
 	public void createPartControl(Composite parent) {
 		clipboard = new Clipboard(Display.getCurrent());
-		
 		super.createPartControl(parent);
-		
 		deferInitialization();
 	}
 
 	private void deferInitialization() {
-		TreeItem item = new TreeItem(getCommonViewer().getTree(), SWT.NONE);
-		item.setText(Messages.viewInitializing);
-			
+		// TODO Angel Says: Need to do a final check on this line below. I don't think there is anything else
+		// that we need from to port from the old Servers View
 		//initializeActions(getCommonViewer());
 		
 		Job job = new Job(Messages.jobInitializingServersView) {
@@ -119,8 +116,6 @@ public class ServersView2 extends CommonNavigator {
 	}
 	
 	protected void deferredInitialize() {
-		// TODO Angel says: What to do here? 
-		//tableViewer.initialize();
 		addListener();
 		
 		// TODO Angel says: is this the best place for this? 
@@ -184,15 +179,64 @@ public class ServersView2 extends CommonNavigator {
 		else
 			publishing.remove(serverId);
 	
-		refreshServer(server);
+		refreshServerState(server);
 	}
 	
-	protected void refreshServer(IServer server){
-		tableViewer.refresh(server);
+	/**
+	 * @deprecated
+	 * @param server
+	 */
+	protected void refreshServer(final IServer server){
+		Trace.trace(Trace.FINEST, "Refreshing UI for server="+server);
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {		
+				IDecoratorManager dm = PlatformUI.getWorkbench().getDecoratorManager();
+				dm.update("org.eclipse.wst.server.ui.navigatorDecorator");
+				tableViewer.setSelection(tableViewer.getSelection());
+			}
+		});
+	}
+	
+	protected void refreshServerContent(final IServer server){
+		Trace.trace(Trace.FINEST, "Refreshing Content for server="+server);
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {		
+				tableViewer.refresh(server, true);
+			}
+		});
+	}
+	
+	protected void refreshServerState(final IServer server){
+		Trace.trace(Trace.FINEST, "Refreshing UI for server="+server);
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {		
+				IDecoratorManager dm = PlatformUI.getWorkbench().getDecoratorManager();
+				dm.update("org.eclipse.wst.server.ui.navigatorDecorator");
+				tableViewer.setSelection(tableViewer.getSelection());
+			}
+		});
 	}
 	
 	protected void addListener(){
+		// To enable the UI updating of servers and its childrens  
+		serverResourceListener = new IServerLifecycleListener() {
+			public void serverAdded(IServer server) {
+				addServer(server);
+				server.addServerListener(serverListener);
+				((Server) server).addPublishListener(publishListener);
+			}
+			public void serverChanged(IServer server) {
+				refreshServerContent(server);
+			}
+			public void serverRemoved(IServer server) {
+				removeServer(server);
+				server.removeServerListener(serverListener);
+				((Server) server).removePublishListener(publishListener);
+			}
+		};
+		ServerCore.addServerLifecycleListener(serverResourceListener);
 		
+		// To enable the refresh of the State decorator
 		publishListener = new PublishAdapter() {
 			public void publishStarted(IServer server) {
 				handlePublishChange(server, true);
@@ -207,13 +251,12 @@ public class ServersView2 extends CommonNavigator {
 			public void serverChanged(ServerEvent event) {
 				if (event == null)
 					return;
-				
+								
 				int eventKind = event.getKind();
 				IServer server = event.getServer();
 				if ((eventKind & ServerEvent.SERVER_CHANGE) != 0) {
 					// server change event
 					if ((eventKind & ServerEvent.STATE_CHANGE) != 0) {
-						refreshServer(server);
 						int state = event.getState();
 						String id = server.getId();
 						if (state == IServer.STATE_STARTING || state == IServer.STATE_STOPPING) {
@@ -239,14 +282,16 @@ public class ServersView2 extends CommonNavigator {
 							if (stopThread)
 								stopThread();
 						}
-					} else
-						refreshServer(server);
+						refreshServerState(server);
+					} 
 				} else if ((eventKind & ServerEvent.MODULE_CHANGE) != 0) {
 					// module change event
 					if ((eventKind & ServerEvent.STATE_CHANGE) != 0 || (eventKind & ServerEvent.PUBLISH_STATE_CHANGE) != 0) {
-						refreshServer(server);
+						refreshServerContent(server);
 					}
 				}
+				// TODO Angel Says: I don't think we need this
+				//refreshServer(server);
 			}
 		};
 		
@@ -440,7 +485,6 @@ public class ServersView2 extends CommonNavigator {
 			cm.add(actions[i]);
 		
 		cm.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-		
 		return super.createCommonActionGroup();
 	}
 
@@ -456,6 +500,38 @@ public class ServersView2 extends CommonNavigator {
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not open server", e);
 		}
+	}
+	
+	protected void addServer(final IServer server) {
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				tableViewer.add(tableViewer.getInput(), server);
+			}
+		});
+	}
+
+	protected void removeServer(final IServer server) {
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				tableViewer.remove(server);
+			}
+		});
+	}
+	
+	@Override
+	public void dispose() {
+		ServerCore.removeServerLifecycleListener(serverResourceListener);
+
+		// remove listeners from servers
+		IServer[] servers = ServerCore.getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				servers[i].removeServerListener(serverListener);
+				((Server) servers[i]).removePublishListener(publishListener);
+			}
+		}
+		super.dispose();
 	}
 	
 	/**

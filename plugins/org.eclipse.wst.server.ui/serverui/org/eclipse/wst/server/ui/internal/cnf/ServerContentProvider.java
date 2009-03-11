@@ -12,46 +12,23 @@ package org.eclipse.wst.server.ui.internal.cnf;
 
 import java.util.*;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.viewers.*;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.wst.server.core.*;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.Server;
-import org.eclipse.wst.server.core.internal.UpdateServerJob;
-import org.eclipse.wst.server.core.util.PublishAdapter;
-import org.eclipse.wst.server.ui.internal.Messages;
-import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
 import org.eclipse.wst.server.ui.internal.viewers.BaseContentProvider;
 
-public class ServerContentProvider extends BaseContentProvider implements ITreeContentProvider {
+public class ServerContentProvider extends BaseContentProvider implements ITreeContentProvider{
+	// TODO Angel Says: Need to review if this is needed
 	public static Object INITIALIZING = new Object();
-	protected IServerLifecycleListener serverResourceListener;
-	protected IPublishListener publishListener;
-	protected IServerListener serverListener;
 
+	// TODO Angel Says: Need to review how to port this function into CNF
 	// servers that are currently publishing and starting
 	protected static Set<String> publishing = new HashSet<String>(4);
-	protected static Set<String> starting = new HashSet<String>(4);
-	protected boolean animationActive = false;
-	protected boolean stopAnimation = false;
-	protected boolean initialized = false;
 		
-	protected StructuredViewer viewer;
-	
-	public ServerContentProvider() {
-		addListeners();
-	}
-	
 	public Object[] getElements(Object element) {
-		if( !initialized ) {
-			deferInitialization();
-			return new Object[] {INITIALIZING};
-		}
-		
 		List<IServer> list = new ArrayList<IServer>();
 		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
@@ -112,10 +89,8 @@ public class ServerContentProvider extends BaseContentProvider implements ITreeC
 				IModule[] curChildModule = curServer.getChildModules(curModule, null);
 				if (curChildModule != null && curChildModule.length > 0)
 					return true;
-				
 				return false;
 			}
-			
 			return false;
 		}
 		if( element instanceof IServer ) {
@@ -123,225 +98,4 @@ public class ServerContentProvider extends BaseContentProvider implements ITreeC
 		}
 		return false;
 	}
-	
-	public void inputChanged(Viewer aViewer, Object oldInput, Object newInput) {
-		viewer = (StructuredViewer) aViewer;
-	}
-
-	public void dispose() {
-		ServerCore.removeServerLifecycleListener(serverResourceListener);
-		
-		// remove listeners from servers
-		IServer[] servers = ServerCore.getServers();
-		if (servers != null) {
-			int size = servers.length;
-			for (int i = 0; i < size; i++) {
-				servers[i].removeServerListener(serverListener);
-				((Server) servers[i]).removePublishListener(publishListener);
-			}
-		}
-	}
-	
-	// Listeners and refreshing the viewer
-	protected void addListeners() {
-		serverResourceListener = new IServerLifecycleListener() {
-			public void serverAdded(IServer server) {
-				refreshServer(null);
-				server.addServerListener(serverListener);
-				((Server) server).addPublishListener(publishListener);
-			}
-			public void serverChanged(IServer server) {
-				refreshServer(server);
-			}
-			public void serverRemoved(IServer server) {
-				refreshServer(null);
-				server.removeServerListener(serverListener);
-				((Server) server).removePublishListener(publishListener);
-			}
-		};
-		ServerCore.addServerLifecycleListener(serverResourceListener);
-		
-		publishListener = new PublishAdapter() {
-			public void publishStarted(IServer server) {
-				handlePublishChange(server, true);
-			}
-			
-			public void publishFinished(IServer server, IStatus status) {
-				handlePublishChange(server, false);
-			}
-		};
-		
-		serverListener = new IServerListener() {
-			public void serverChanged(ServerEvent event) {
-				if (event == null)
-					return;
-				
-				int eventKind = event.getKind();
-				IServer server = event.getServer();
-				if ((eventKind & ServerEvent.SERVER_CHANGE) != 0) {
-					// server change event
-					if ((eventKind & ServerEvent.STATE_CHANGE) != 0) {
-						refreshServer(server, true);
-						int state = event.getState();
-						String id = server.getId();
-						animate(id, state);
-					} else
-						refreshServer(server);
-				} else if ((eventKind & ServerEvent.MODULE_CHANGE) != 0) {
-					// module change event
-					if ((eventKind & ServerEvent.STATE_CHANGE) != 0 || (eventKind & ServerEvent.PUBLISH_STATE_CHANGE) != 0) {
-						refreshServer(server);
-					}
-				}
-			}
-		};
-		
-		// add listeners to servers
-		IServer[] servers = ServerCore.getServers();
-		if (servers != null) {
-			int size = servers.length;
-			for (int i = 0; i < size; i++) {
-				servers[i].addServerListener(serverListener);
-				((Server) servers[i]).addPublishListener(publishListener);
-			}
-		}
-	}
-
-	protected void animate(String serverId, int state){
-		if (state == IServer.STATE_STARTING || state == IServer.STATE_STOPPING) {
-			boolean startThread = false;
-			synchronized (starting) {
-				if (!starting.contains(serverId)) {
-					if (starting.isEmpty())
-						startThread = true;
-					starting.add(serverId);
-				}
-			}
-			if (startThread){
-				startThread();
-			}
-		} else {
-			boolean stopThread = false;
-			synchronized (starting) {
-				if (starting.contains(serverId)) {
-					starting.remove(serverId);
-					if (starting.isEmpty())
-						stopThread = true;
-				}
-			}
-			if (stopThread)
-				stopThread();
-		}
-	}
-	
-	protected void deferInitialization() {
-		Job job = new Job(Messages.jobInitializingServersView) {
-			public IStatus run(IProgressMonitor monitor) {
-				IServer[] servers = ServerCore.getServers();
-				int size = servers.length;
-				for (int i = 0; i < size; i++) {
-					((Server)servers[i]).getAllModules().iterator();
-				}
-				
-				for (int i = 0; i < size; i++) {
-					IServer server = servers[i];
-					if (server.getServerType() != null && server.getServerState() == IServer.STATE_UNKNOWN) {
-						UpdateServerJob job2 = new UpdateServerJob(server);
-						job2.schedule();
-					}
-				}
-				initialized = true;
-				refreshServer(null);
-				return Status.OK_STATUS;
-			}
-		};
-		
-		job.setSystem(true);
-		job.setPriority(Job.SHORT);
-		job.schedule();
-	}
-	
-	protected void refreshServer(final IServer server) {
-		refreshServer(server, false);
-	}
-	
-	protected void refreshServer(final IServer server, final boolean resetSelection) {
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				try {
-					if( viewer != null && !viewer.getControl().isDisposed()) {
-						// This will trigger some animation
-						viewer.refresh(server);
-						if( resetSelection ) {
-							ISelection sel = viewer.getSelection();
-							viewer.setSelection(sel);
-						}
-						//TODO: Angel says: This doesn't seem to be needed: ServerDecorator.getDefault().redecorate(server);
-					}
-				} catch (Exception e) {
-					// ignore
-				}
-			}
-		});
-	}
-	
-	protected void handlePublishChange(IServer server, boolean isPublishing) {
-		String serverId = server.getId();
-		if (isPublishing)
-			publishing.add(serverId);
-		else
-			publishing.remove(serverId);
-	
-		refreshServer(server);
-	}
-
-	
-	/**
-	 * Start the animation thread
-	 */
-	protected void startThread() {
-		if (animationActive)
-			return;
-		
-		stopAnimation = false;
-		
-		final Display display = viewer == null ? Display.getDefault() : viewer.getControl().getDisplay();
-		final int SLEEP = 200;
-		final Runnable[] animator = new Runnable[1];
-		animator[0] = new Runnable() {
-			public void run() {
-				if (!stopAnimation) {
-					try {
-						int size = 0;
-						String[] servers;
-						synchronized (starting) {
-							size = starting.size();
-							servers = new String[size];
-							starting.toArray(servers);
-							
-						}
-						
-						for (int i = 0; i < size; i++) {
-							IServer server = ServerCore.findServer(servers[i]);
-							if (server != null ) {
-								ServerDecorator.animate();
-								viewer.update(server, new String[]{"ICON"});
-							}
-						}
-					} catch (Exception e) {
-						Trace.trace(Trace.FINEST, "Error in Servers view animation", e);
-					}
-					display.timerExec(SLEEP, animator[0]);
-				}
-			}
-		};
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				display.timerExec(SLEEP, animator[0]);
-			}
-		});
-	}
-
-	protected void stopThread() {
-		stopAnimation = true;
-	}}
+}

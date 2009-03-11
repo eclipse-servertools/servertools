@@ -29,6 +29,7 @@ public class ServerLabelProvider extends LabelProvider {
 	 */
 	public ServerLabelProvider() {
 		super();
+		//TODO: Angel says: Look at bug# 258184
 	}
 
 	public String getText(Object element) {
@@ -62,7 +63,7 @@ public class ServerLabelProvider extends LabelProvider {
 			IServer server = (IServer) element;
 			if (server.getServerType() != null) {
 				image = ImageResource.getImage(server.getServerType().getId());
-				// TODO Angel says: Need to discuss about it
+				// TODO Angel says: Need to fix this
 				// Because we are now grabbing the ServerState the type will not show. It might be best to create a new icon for the state
 				ImageDescriptor imgDescriptor = ServerDecorator.getServerStateImage(server);
 				if (image != null && imgDescriptor != null){

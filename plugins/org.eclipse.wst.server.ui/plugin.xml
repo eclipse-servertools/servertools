@@ -44,7 +44,8 @@
         class="org.eclipse.wst.server.ui.internal.cnf.ServersView2"
         icon="icons/cview16/servers_view.gif"
         id="org.eclipse.wst.server.ui.ServersView"
-        name="%viewServers"/>
+        name="%viewServers">
+  </view>
 </extension>
 <extension
       point="org.eclipse.ui.navigator.navigatorContent">
@@ -89,6 +90,13 @@
          </contentExtension>
       </includes>
    </viewerContentBinding>
+	<viewer viewerId="org.eclipse.wst.server.ui.ServersView">
+		<options>
+			<property name="org.eclipse.ui.navigator.hideLinkWithEditorAction"
+				value="true">
+			</property>
+		</options>
+	</viewer>
 </extension>
 
 <extension point="org.eclipse.ui.perspectiveExtensions">
