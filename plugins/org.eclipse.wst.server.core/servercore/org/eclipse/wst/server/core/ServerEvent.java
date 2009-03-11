@@ -220,4 +220,19 @@ public class ServerEvent {
 	public IServer getServer() {
 		return server;
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString(){
+		return "<Server-Event" 
+				+ " id="+this.hashCode()
+				+ " kind="+getKind() 
+				+ " server="+getServer() 
+				+ " module="+getModule()
+				+ " state="+getState()
+				+ " publishState="+getPublishState()
+				+ " restartState="+getRestartState()
+				+ ">";
+	}
 }
