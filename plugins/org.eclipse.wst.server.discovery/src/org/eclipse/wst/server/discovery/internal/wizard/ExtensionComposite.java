@@ -253,8 +253,11 @@ public class ExtensionComposite extends Composite {
 				
 				int yOffset = TEXT_MARGIN;
 				gc.setFont(font);
-				gc.drawText(name, event.x + iw, event.y + yOffset, true);
-				Point size = event.gc.textExtent(name);
+				Point size = new Point(0, 0);
+				if (name != null) {
+					gc.drawText(name, event.x + iw, event.y + yOffset, true);
+					size = event.gc.textExtent(name);
+				}
 				gc.setFont(null);
 				
 				yOffset += size.y + TEXT_MARGIN;

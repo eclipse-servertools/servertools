@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.equinox.internal.p2.core.helpers.ServiceHelper;
 import org.eclipse.equinox.internal.provisional.p2.core.Version;
 import org.eclipse.equinox.internal.provisional.p2.engine.IProfile;
 import org.eclipse.equinox.internal.provisional.p2.engine.IProfileRegistry;
@@ -31,6 +30,8 @@ import org.eclipse.equinox.internal.provisional.p2.query.Query;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.discovery.internal.model.Extension;
 import org.eclipse.wst.server.discovery.internal.model.ExtensionUpdateSite;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 public class ExtensionUtility {
 	private static ExtensionUpdateSite[] getExtensionUpdateSites(URL url) throws CoreException {
@@ -150,7 +151,7 @@ public class ExtensionUtility {
 	private static List<Extension> getExistingFeatures(IProgressMonitor monitor) throws CoreException {
 		monitor.beginTask(Messages.discoverLocalConfiguration, 100);
 		
-		IProfileRegistry profileRegistry = (IProfileRegistry) ServiceHelper.getService(Activator.getDefault().getBundle().getBundleContext(), IProfileRegistry.class.getName());
+		IProfileRegistry profileRegistry = (IProfileRegistry) getService(Activator.getDefault().getBundle().getBundleContext(), IProfileRegistry.class.getName());
 		IProfile profile = profileRegistry.getProfile(IProfileRegistry.SELF);
 		
 		Query query = new InstallableUnitQuery(null);
@@ -198,7 +199,7 @@ public class ExtensionUtility {
 				monitor.subTask(NLS.bind(Messages.discoverSearching, items[i].getUrl()));
 				final int ii = i;
 				final IProgressMonitor monitor2 = monitor;
-				threads[i] = new Thread("Extension Checker for" + items[i].getUrl()) {
+				threads[i] = new Thread("Extension Checker for " + items[i].getUrl()) {
 					public void run() {
 						try {
 							List<Extension> list2 = items[ii].getExtensions(ProgressUtil.getSubMonitorFor(monitor2, x));
@@ -232,5 +233,25 @@ public class ExtensionUtility {
 		list.toArray(ef);
 		monitor.done();
 		return ef;
+	}
+
+	/**
+	 * Returns the service described by the given arguments.  Note that this is a helper class
+	 * that <b>immediately</b> ungets the service reference.  This results in a window where the
+	 * system thinks the service is not in use but indeed the caller is about to use the returned 
+	 * service object.  
+	 * @param context
+	 * @param name
+	 * @return The requested service
+	 */
+	public static Object getService(BundleContext context, String name) {
+		if (context == null)
+			return null;
+		ServiceReference reference = context.getServiceReference(name);
+		if (reference == null)
+			return null;
+		Object result = context.getService(reference);
+		context.ungetService(reference);
+		return result;
 	}
 }

@@ -12,7 +12,6 @@ package org.eclipse.wst.server.discovery.internal.model;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.equinox.internal.p2.core.helpers.ServiceHelper;
 import org.eclipse.equinox.internal.provisional.p2.core.Version;
 import org.eclipse.equinox.internal.provisional.p2.director.IPlanner;
 import org.eclipse.equinox.internal.provisional.p2.director.ProfileChangeRequest;
@@ -27,6 +26,7 @@ import org.eclipse.equinox.internal.provisional.p2.ui.IUPropertyUtils;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.server.discovery.internal.Activator;
+import org.eclipse.wst.server.discovery.internal.ExtensionUtility;
 import org.osgi.framework.BundleContext;
 
 public class Extension {
@@ -80,10 +80,10 @@ public class Extension {
 		if (!plan.getStatus().isOK())
 			return plan.getStatus();
 		
-		IProfileRegistry profileRegistry = (IProfileRegistry) ServiceHelper.getService(bundleContext, IProfileRegistry.class.getName());
+		IProfileRegistry profileRegistry = (IProfileRegistry) ExtensionUtility.getService(bundleContext, IProfileRegistry.class.getName());
 		IProfile profile = profileRegistry.getProfile(IProfileRegistry.SELF);
 		
-		IEngine engine = (IEngine) ServiceHelper.getService(bundleContext, IEngine.SERVICE_NAME);
+		IEngine engine = (IEngine) ExtensionUtility.getService(bundleContext, IEngine.SERVICE_NAME);
 		return engine.perform(profile, new DefaultPhaseSet(), plan.getOperands(), provContext, monitor);
 	}
 
@@ -96,9 +96,9 @@ public class Extension {
 			return plan;
 		
 		BundleContext bundleContext = Activator.getDefault().getBundle().getBundleContext();
-		IPlanner planner = (IPlanner) ServiceHelper.getService(bundleContext, IPlanner.class.getName());
+		IPlanner planner = (IPlanner) ExtensionUtility.getService(bundleContext, IPlanner.class.getName());
 		
-		IProfileRegistry profileRegistry = (IProfileRegistry) ServiceHelper.getService(bundleContext, IProfileRegistry.class.getName());
+		IProfileRegistry profileRegistry = (IProfileRegistry) ExtensionUtility.getService(bundleContext, IProfileRegistry.class.getName());
 		IProfile profile = profileRegistry.getProfile(IProfileRegistry.SELF);
 		ProfileChangeRequest pcr = new ProfileChangeRequest(profile);
 		pcr.addInstallableUnits(new IInstallableUnit[] { iu } );
