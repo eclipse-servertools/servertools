@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,7 +42,6 @@ public class ImageResource {
 	private static final String URL_WIZBAN = "wizban/";
 
 	public static final String IMG_WIZ_RUNTIME_TYPE = "wiz_runtimeType";
-	public static final String IMG_WIZ_CACTUS_TEST = "wiz_cactus_test";
 
 	/**
 	 * Cannot construct an ImageResource. Use static methods only.
@@ -83,14 +82,13 @@ public class ImageResource {
 		imageDescriptors = new HashMap<String, ImageDescriptor>();
 		
 		registerImage(IMG_WIZ_RUNTIME_TYPE, URL_WIZBAN + "new_runtime_wiz.png");
-		registerImage(IMG_WIZ_CACTUS_TEST, URL_WIZBAN + "new_test_wiz.png");
 	}
 
 	/**
 	 * Register an image with the registry.
 	 *
-	 * @param key java.lang.String
-	 * @param partialURL java.lang.String
+	 * @param key the key
+	 * @param partialURL a partial URL
 	 */
 	private static void registerImage(String key, String partialURL) {
 		try {

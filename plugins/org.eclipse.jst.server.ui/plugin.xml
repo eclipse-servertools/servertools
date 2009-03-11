@@ -40,25 +40,6 @@
         class="org.eclipse.jst.server.ui.internal.GenericRuntimeWizardFragment"/>
   </extension>
 
-  <extension point="org.eclipse.wst.server.core.clients">
-     <client
-        id="org.eclipse.jst.server.cactus.client"
-        class="org.eclipse.jst.server.ui.internal.cactus.JUnitClientDelegate"
-        launchable="org.eclipse.jst.server.cactus.launchable"
-        name="%cactusJUnitClient"/>
-  </extension>
-
-  <extension point="org.eclipse.ui.newWizards">
-     <wizard
-        id="org.eclipse.jst.server.ui.internal.cactus.NewServletTestCaseWizard"
-        canFinishEarly="false"
-        category="org.eclipse.jdt.ui.java/org.eclipse.jdt.junit"
-        class="org.eclipse.jst.server.ui.internal.cactus.NewServletTestCaseWizard"
-        hasPages="true"
-        icon="icons/obj16/new_testcase.gif"
-        name="%cactusServletTestCase"/>
-  </extension>
-
   <extension point="org.eclipse.wst.common.project.facet.ui.images">
     <image runtime-component-type="org.eclipse.jst.server.core.runtimeType"
        path="icons/obj16/java_jar.gif"/>
@@ -80,11 +61,4 @@
     </adapter>
   </extension>
 
-  <extension point="org.eclipse.jdt.ui.quickFixProcessors">
-    <quickFixProcessor
-       name="%cactusQuickFixProcessor"
-       class="org.eclipse.jst.server.ui.internal.cactus.CactusQuickFixProcessor"
-       id="org.eclipse.jst.server.ui.internal.cactus.CactusQuickFixProcessor">
-    </quickFixProcessor>
-  </extension>
 </plugin>

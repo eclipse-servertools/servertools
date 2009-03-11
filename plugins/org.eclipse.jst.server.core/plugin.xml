@@ -55,37 +55,6 @@
       class="org.eclipse.jst.server.core.internal.GenericRuntimeClasspathProvider"/>
   </extension>
 
-  <extension point="org.eclipse.core.expressions.propertyTesters">
-    <propertyTester
-      namespace="org.eclipse.jst.cactus.expressions"
-      type="org.eclipse.core.runtime.IAdaptable"
-      class="org.eclipse.jst.server.core.internal.cactus.ServletTestCasePropertyTester"
-      properties="isServletTestCase"
-      id="org.eclipse.jst.server.cactus.expression"/>
-  </extension>
-
-  <extension point="org.eclipse.wst.server.core.moduleArtifactAdapters">
-    <moduleArtifactAdapter
-      id="org.eclipse.jst.server.cactus.moduleArtifactAdapter"
-      class="org.eclipse.jst.server.core.internal.cactus.CactusModuleArtifactAdapterDelegate"
-      priority="10">
-      <enablement>
-         <or>
-            <instanceof value="org.eclipse.jdt.core.IMethod"/>
-            <instanceof value="org.eclipse.jdt.core.ICompilationUnit"/>
-            <instanceof value="org.eclipse.jdt.core.IType"/>
-            <instanceof value="org.eclipse.core.resources.IFile"/>
-         </or>
-      </enablement>
-    </moduleArtifactAdapter>
-  </extension>
-
-  <extension point="org.eclipse.wst.server.core.launchableAdapters">
-    <launchableAdapter
-       id="org.eclipse.jst.server.cactus.launchableAdapter"
-       class="org.eclipse.jst.server.core.internal.cactus.CactusLaunchableAdapterDelegate"/>
-  </extension>
-
   <extension point="org.eclipse.wst.server.core.clients">
     <client
       id="org.eclipse.jst.server.jndi"
