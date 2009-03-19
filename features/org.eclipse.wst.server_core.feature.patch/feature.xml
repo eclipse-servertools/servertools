@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.server_core.feature.patch"
     label="%featureName"
-    version="3.0.4.qualifier"
+    version="2.0.2.qualifier"
     provider-name="%providerName">
 
     <description>%description</description>
@@ -12,11 +12,11 @@
     <license url="%licenseURL">%license</license>
 
    <requires>
-      <import feature="org.eclipse.wst.server_core.feature" version="3.0.4.v20090115-20Am8s733J3_4F1256" patch="true"/>
+      <import feature="org.eclipse.wst.server_core.feature" version="2.0.2.v200802150100-2-CN8s733H3_3Ic" patch="true"/>
    </requires>
 
    <plugin
-         id="org.eclipse.wst.internet.monitor.core"
+         id="org.eclipse.wst.server.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
