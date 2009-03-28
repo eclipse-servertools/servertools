@@ -15,7 +15,6 @@ package org.eclipse.jst.server.generic.core.internal;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -178,6 +177,8 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 		workingCopy.setAttribute(ExternalLaunchConfigurationDelegate.COMMANDLINE, external);
 		workingCopy.setAttribute(ExternalLaunchConfigurationDelegate.DEBUG_PORT, 
 					resolver.resolveProperties(serverDef.getStart().getDebugPort()));
+		workingCopy.setAttribute(ExternalLaunchConfigurationDelegate.HOST, getServer().getHost());
+		
 		// just use the commandline for now
 		workingCopy.setAttribute(ExternalLaunchConfigurationDelegate.EXECUTABLE_NAME, external);
         Map environVars = getEnvironmentVariables(getServerDefinition().getStart());

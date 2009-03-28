@@ -66,6 +66,10 @@ public class ExternalLaunchConfigurationDelegate extends AbstractJavaLaunchConfi
 	 * Name of the launch configuration attribute that holds the debug port.
 	 */
 	public static final String DEBUG_PORT = CorePlugin.PLUGIN_ID + ".DEBUG_PORT"; //$NON-NLS-1$
+	/**
+	 * Name of the launch configuration attribute that holds the host for remote debugging.
+	 */
+	public static final String HOST = CorePlugin.PLUGIN_ID + ".HOST"; //$NON-NLS-1$
 	
 	/**
 	 * Default value for the descriptive name for the external executable.
@@ -95,7 +99,7 @@ public class ExternalLaunchConfigurationDelegate extends AbstractJavaLaunchConfi
 		// initialize the server, check the ports and start the PingThread that will check 
 		// server state
 		serverBehavior.setupLaunch(launch, mode, monitor);
-		
+
 		// get the "external" command
 		String commandline = configuration.getAttribute(COMMANDLINE, (String) null);
 		if (commandline == null || commandline.length() == 0) {
@@ -147,12 +151,13 @@ public class ExternalLaunchConfigurationDelegate extends AbstractJavaLaunchConfi
 	private ILaunchConfigurationWorkingCopy createDebuggingConfig(ILaunchConfiguration configuration) 
 	throws CoreException {
         ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
-        setDebugArgument(wc, IJavaLaunchConfigurationConstants.ATTR_CONNECT_MAP, "hostname", "localhost");  //$NON-NLS-1$//$NON-NLS-2$
         String port = configuration.getAttribute(DEBUG_PORT, (String) null);
         if (port==null || port.length()==0) {
         	abort(GenericServerCoreMessages.debugPortUnspecified, null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
         }
         setDebugArgument(wc, IJavaLaunchConfigurationConstants.ATTR_CONNECT_MAP, "port", port); //$NON-NLS-1$
+        setDebugArgument(wc, IJavaLaunchConfigurationConstants.ATTR_CONNECT_MAP, "hostname",  //$NON-NLS-1$
+        		configuration.getAttribute(HOST, "localhost"));  //$NON-NLS-1$
         return wc;
 	}
 	
