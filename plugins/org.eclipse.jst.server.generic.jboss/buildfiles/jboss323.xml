@@ -3,7 +3,7 @@
 	<property name="pause.undeploy" value="5"/>
 
 	<target name="deploy.j2ee.web">
-		<jar destfile="${project.working.dir}/${module.name}.war"> 
+		<jar compress="false" destfile="${project.working.dir}/${module.name}.war"> 
 			<zipfileset dir="${module.dir}">
 	        	<include name="**/*.*"/>
 				<exclude name="**/*.war"/>
@@ -14,7 +14,7 @@
 	</target>
 	
 	<target name="deploy.j2ee.ejb">
-		<jar destfile="${project.working.dir}/${module.name}.jar"> 
+		<jar compress="false" destfile="${project.working.dir}/${module.name}.jar"> 
 			<zipfileset dir="${module.dir}">
 	        	<include name="**/*.*"/>
 	       		<exclude name="**/*.java"/>
@@ -24,7 +24,7 @@
 		<sleep seconds="${pause.deploy}"/>
 	</target>
 	<target name="deploy.j2ee.ear">
-		<jar destfile="${project.working.dir}/${module.name}.ear"> 
+		<jar compress="false" destfile="${project.working.dir}/${module.name}.ear"> 
 			<zipfileset dir="${module.dir}">
 	        	<include name="**/*.*"/>
 	       		<exclude name="**/*.java"/>
