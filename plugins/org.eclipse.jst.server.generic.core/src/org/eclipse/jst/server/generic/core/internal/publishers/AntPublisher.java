@@ -1,5 +1,5 @@
 /***************************************************************************************************
- * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * Copyright (c) 2005, 2009 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
@@ -44,6 +44,7 @@ import org.eclipse.jst.server.generic.core.internal.CorePlugin;
 import org.eclipse.jst.server.generic.core.internal.GenericPublisher;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
 import org.eclipse.jst.server.generic.core.internal.GenericServerCoreMessages;
+import org.eclipse.jst.server.generic.core.internal.Trace;
 import org.eclipse.jst.server.generic.internal.core.util.FileUtil;
 import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.PublisherData;
@@ -110,8 +111,7 @@ public class AntPublisher extends GenericPublisher {
 		if (getModule().length > 1)// only respond to root module calls.
 			return null;
 		try {
-			if (monitor.isCanceled())
-				return null;
+			if (monitor.isCanceled()) return null;		
 			assembleModule(monitor);
 			File file = getCustomBuildFile();
 			if ( file == null){// no user selected build file use the adapter default.
@@ -127,8 +127,10 @@ public class AntPublisher extends GenericPublisher {
 	}
 
 	protected void assembleModule(IProgressMonitor monitor) throws CoreException {
+		long time = System.currentTimeMillis();
 		AbstractModuleAssembler assembler = AbstractModuleAssembler.Factory.getModuleAssembler(getModule()[0], getServer());
 		assembler.assemble(monitor);
+		Trace.trace(Trace.PERFORMANCE, "AntPublisher.assembleModule(): <" + (System.currentTimeMillis()-time) + "> module: "+getModule()[0] ); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -143,7 +145,7 @@ public class AntPublisher extends GenericPublisher {
 			File file = new File(filename);
 			if ( !file.exists() ){
 				throw new CoreException(new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,
-						"Selected build file does not exist."));
+						"Selected build file does not exist.")); //$NON-NLS-1$
 			}
 			return file;
 		}
@@ -308,6 +310,7 @@ public class AntPublisher extends GenericPublisher {
 	}
 
 	private void runAnt(String buildFile, String targets, Map properties, IProgressMonitor monitor) throws CoreException {
+		long time = System.currentTimeMillis();
 		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
 		ILaunchConfigurationType type = launchManager
 				.getLaunchConfigurationType(IAntLaunchConfigurationConstants.ID_ANT_LAUNCH_CONFIGURATION_TYPE);
@@ -340,9 +343,12 @@ public class AntPublisher extends GenericPublisher {
 
         if ( !monitor.isCanceled() )
         {
-            ILaunchConfiguration launchConfig = wc.doSave();          
+            ILaunchConfiguration launchConfig = wc.doSave();
             launchConfig.launch(ILaunchManager.RUN_MODE, monitor, false, true);
-        }    
+            Trace.trace(Trace.PERFORMANCE, "AntPublisher.runAnt():<" + (System.currentTimeMillis()-time) + "> module: "+getModule()[0] ); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        
+        
 	}
 
 	/**
