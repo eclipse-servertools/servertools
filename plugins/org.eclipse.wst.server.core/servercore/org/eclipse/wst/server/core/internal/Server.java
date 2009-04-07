@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -2334,9 +2334,10 @@ public class Server extends Base implements IServer {
 					if (totalTimeout < 0)
 						totalTimeout = 1;
 					boolean userCancelled = false;
-					int retryPeriod = 1000;
+					int retryPeriod = 1;
 					while (!notified[0] && totalTimeout > 0 && !userCancelled && !timer.alreadyDone) {
-						Thread.sleep(retryPeriod);
+						// The operationTimeout is in seconds.  Therefore, each retry period have to wait for 1 sec.
+						Thread.sleep(retryPeriod * 1000);
 						if (operationTimeout > 0)
 							totalTimeout -= retryPeriod;
 						if (!notified[0] && !timer.alreadyDone && monitor2.isCanceled()) {
@@ -2403,7 +2404,6 @@ public class Server extends Base implements IServer {
 		removeServerListener(listener);
 		
 		if (timer.timeout) {
-			stop(false);
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 1, NLS.bind(Messages.errorStartTimeout, new String[] { getName(), (operationTimeout / 1000) + "" }), null);
 		}
 		
