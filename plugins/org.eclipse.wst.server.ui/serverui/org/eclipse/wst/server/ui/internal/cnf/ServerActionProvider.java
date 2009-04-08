@@ -1,45 +1,28 @@
 /*******************************************************************************
- * Copyright (c) 2008,2009 IBM Corporation and others.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
- *     IBM Corporation - Initial API and implementation
+ *     IBM Corporation - Base Code
+ *     Red Hat - Refactor for CNF
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.cnf;
 
 import java.util.Iterator;
 
 import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IContributionManager;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.*;
 import org.eclipse.jface.bindings.TriggerSequence;
-import org.eclipse.jface.viewers.IOpenListener;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.OpenEvent;
-import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.keys.IBindingService;
-import org.eclipse.ui.navigator.CommonActionProvider;
-import org.eclipse.ui.navigator.CommonViewer;
-import org.eclipse.ui.navigator.ICommonActionExtensionSite;
-import org.eclipse.ui.navigator.ICommonViewerSite;
-import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
+import org.eclipse.ui.navigator.*;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerPort;
@@ -50,13 +33,20 @@ import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.actions.NewServerWizardAction;
 import org.eclipse.wst.server.ui.internal.view.servers.*;
 
-/**
- * TODO Angel says: Not currently besing used this code was moved up to the ServersView to get similar support
- * to the old view. If we have an action provider when the ServersView firsts open the ActionProvider has not been 
- * initilized yet.
- *
- */
 public class ServerActionProvider extends CommonActionProvider {
+	public static final String NEW_MENU_ID = "org.eclipse.wst.server.ui.internal.cnf.newMenuId";
+	public static final String SHOW_IN_MENU_ID = "org.eclipse.ui.navigate.showInQuickMenu";
+	public static final String TOP_SECTION_START_SEPARATOR = "org.eclipse.wst.server.ui.internal.cnf.topSectionStart";
+	public static final String TOP_SECTION_END_SEPARATOR = "org.eclipse.wst.server.ui.internal.cnf.topSectionEnd";
+	public static final String EDIT_SECTION_START_SEPARATOR = "org.eclipse.wst.server.ui.internal.cnfeditSectionStart";
+	public static final String EDIT_SECTION_END_SEPARATOR = "org.eclipse.wst.server.ui.internal.cnf.editSectionEnd";
+	public static final String CONTROL_SERVER_SECTION_START_SEPARATOR = "org.eclipse.wst.server.ui.internal.cnf.controlServerSectionStart";
+	public static final String CONTROL_SERVER_SECTION_END_SEPARATOR = "org.eclipse.wst.server.ui.internal.cnf.controlServerSectionEnd";
+	public static final String SERVER_ETC_SECTION_START_SEPARATOR = "org.eclipse.wst.server.ui.internal.cnf.serverEtcSectionStart";
+	public static final String SERVER_ETC_SECTION_END_SEPARATOR = "org.eclipse.wst.server.ui.internal.cnf.serverEtcSectionEnd";
+	public static final String CONTROL_MODULE_SECTION_START_SEPARATOR = "org.eclipse.wst.server.ui.internal.cnf.controlModuleSectionStart";
+	public static final String CONTROL_MODULE_SECTION_END_SEPARATOR = "org.eclipse.wst.server.ui.internal.cnf.controlModuleSectionEnd";
+	
 	private ICommonActionExtensionSite actionSite;
 	private Clipboard clipboard;
 	public ServerActionProvider() {
@@ -125,7 +115,7 @@ public class ServerActionProvider extends CommonActionProvider {
 		// create the open action
 		openAction = new OpenAction(provider);
 
-//		// create copy, paste, and delete actions
+		// create copy, paste, and delete actions
 		pasteAction = new PasteAction(shell, provider, clipboard);
 		copyAction = new CopyAction(provider, clipboard, pasteAction);
 		deleteAction = new DeleteAction(shell, provider);
@@ -161,13 +151,10 @@ public class ServerActionProvider extends CommonActionProvider {
 			cm.add(actions[i]);
 	}
 	
-	private static void fillNewContextMenu(Shell shell, ISelection selection, IMenuManager menu) {
-		IAction newServerAction = new NewServerWizardAction();
-		newServerAction.setText(Messages.actionNewServer);
-		menu.add(newServerAction);
-	}
-
 	public void fillContextMenu(IMenuManager menu) {
+		// This is a temp workaround to clean up the default group that are provided by CNF		
+		menu.removeAll();
+		
 		ICommonViewerSite site = actionSite.getViewSite();
 		IStructuredSelection selection = null;
 		Shell shell = actionSite.getViewSite().getShell();
@@ -193,10 +180,57 @@ public class ServerActionProvider extends CommonActionProvider {
 				module = null;
 			}
 		}
-		
-		// new action
-		MenuManager newMenu = new MenuManager(Messages.actionNew);
-		fillNewContextMenu(null, selection, newMenu);
+
+		menu.add(invisibleSeparator(TOP_SECTION_START_SEPARATOR));
+		addTopSection(menu, server, module);
+		menu.add(invisibleSeparator(TOP_SECTION_END_SEPARATOR));
+		menu.add(new Separator());
+
+		if (server != null && module == null) {
+			menu.add(invisibleSeparator(EDIT_SECTION_START_SEPARATOR));
+			menu.add(copyAction);
+			menu.add(pasteAction);
+			menu.add(deleteAction);
+			menu.add(renameAction);
+			menu.add(invisibleSeparator(EDIT_SECTION_END_SEPARATOR));
+
+			menu.add(new Separator());
+			
+			menu.add(invisibleSeparator(CONTROL_SERVER_SECTION_START_SEPARATOR));
+			for (int i = 0; i < actions.length; i++)
+				menu.add(actions[i]);
+			menu.add(invisibleSeparator(CONTROL_SERVER_SECTION_END_SEPARATOR));
+			
+			menu.add(new Separator());
+			
+			menu.add(invisibleSeparator(SERVER_ETC_SECTION_START_SEPARATOR));
+			menu.add(actionModifyModules);
+			addMonitor(server, menu, shell);
+			menu.add(invisibleSeparator(SERVER_ETC_SECTION_END_SEPARATOR));
+			menu.add(new Separator());
+			
+		} else if (server != null && module != null) {
+			
+			menu.add(invisibleSeparator(CONTROL_MODULE_SECTION_START_SEPARATOR));
+			menu.add(new StartModuleAction(server, module));
+			menu.add(new StopModuleAction(server, module));			
+			menu.add(new RestartModuleAction(server, module));
+			if(module.length == 1) {
+				menu.add(new RemoveModuleAction(shell, server, module[0]));
+			}
+			menu.add(invisibleSeparator(CONTROL_MODULE_SECTION_END_SEPARATOR));
+		}
+	
+		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS+"-end"));
+		menu.add(propertiesAction);
+	}
+
+	protected void addTopSection(IMenuManager menu, IServer server, IModule[] module) {
+		MenuManager newMenu = new MenuManager(Messages.actionNew, NEW_MENU_ID);
+		IAction newServerAction = new NewServerWizardAction();
+		newServerAction.setText(Messages.actionNewServer);
+		newMenu.add(newServerAction);
 		menu.add(newMenu);
 		
 		// open action
@@ -208,88 +242,58 @@ public class ServerActionProvider extends CommonActionProvider {
 			final IBindingService bindingService = (IBindingService) workbench
 					.getAdapter(IBindingService.class);
 			final TriggerSequence[] activeBindings = bindingService
-					.getActiveBindingsFor("org.eclipse.ui.navigate.showInQuickMenu");
+					.getActiveBindingsFor(SHOW_IN_MENU_ID);
 			if (activeBindings.length > 0) {
 				text += "\t" + activeBindings[0].format();
 			}
 			
-			MenuManager showInMenu = new MenuManager(text);
+			MenuManager showInMenu = new MenuManager(text, SHOW_IN_MENU_ID);
 			showInMenu.add(showInConsoleAction);
 			showInMenu.add(showInDebugAction);
-			//IActionBars actionBars = getViewSite().getActionBars();
-			//actionBars.setGlobalActionHandler("group.show", showInMenu);
 			menu.add(showInMenu);
-			menu.add(new Separator());
-		} else
-			menu.add(new Separator());
-		
-		if (server != null) {
-			if (module == null) {
-				menu.add(copyAction);
-				menu.add(pasteAction);
-				menu.add(deleteAction);
-				menu.add(renameAction);
-			} else if (module.length == 1)
-				menu.add(new RemoveModuleAction(shell, server, module[0]));
-			menu.add(new Separator());
 		}
-		
-		if (server != null && module == null) {
-			// server actions
-			for (int i = 0; i < actions.length; i++)
-				menu.add(actions[i]);
+	}
+	
+	protected void addMonitor(IServer server, IMenuManager menu, Shell shell) {
+
+		if (server.getServerType() != null) {
+			final MenuManager menuManager = new MenuManager(Messages.actionMonitor);
 			
-			menu.add(new Separator());
-			menu.add(actionModifyModules);
-			
-			// monitor
-			if (server.getServerType() != null) {
-				final MenuManager menuManager = new MenuManager(Messages.actionMonitor);
-				
-				final IServer server2 = server;
-				final Shell shell2 = shell;
-				menuManager.addMenuListener(new IMenuListener() {
-					public void menuAboutToShow(IMenuManager manager) {
-						menuManager.removeAll();
-						if (server2.getAdapter(ServerDelegate.class) != null) {
-							ServerPort[] ports = server2.getServerPorts(null);
-							if (ports != null) {
-								int size = ports.length;
-								for (int i = 0; i < size; i++) {
-									if (!ports[i].isAdvanced())
-										menuManager.add(new MonitorServerPortAction(shell2, server2, ports[i]));
-								}
+			final IServer server2 = server;
+			final Shell shell2 = shell;
+			menuManager.addMenuListener(new IMenuListener() {
+				public void menuAboutToShow(IMenuManager manager) {
+					menuManager.removeAll();
+					if (server2.getAdapter(ServerDelegate.class) != null) {
+						ServerPort[] ports = server2.getServerPorts(null);
+						if (ports != null) {
+							int size = ports.length;
+							for (int i = 0; i < size; i++) {
+								if (!ports[i].isAdvanced())
+									menuManager.add(new MonitorServerPortAction(shell2, server2, ports[i]));
 							}
 						}
-						
-						if (menuManager.isEmpty())
-							menuManager.add(noneAction);
-						
-						menuManager.add(new Separator());
-						menuManager.add(monitorPropertiesAction);
 					}
-				});
-				
-				// add an initial menu item so that the menu appears correctly
-				noneAction.setEnabled(false);
-				menuManager.add(noneAction);
-				menu.add(menuManager);
-			}
+					
+					if (menuManager.isEmpty())
+						menuManager.add(noneAction);
+					
+					menuManager.add(new Separator());
+					menuManager.add(monitorPropertiesAction);
+				}
+			});
+			
+			// add an initial menu item so that the menu appears correctly
+			noneAction.setEnabled(false);
+			menuManager.add(noneAction);
+			menu.add(menuManager);
 		}
-		
-		if (server != null && module != null) {
-			menu.add(new Separator());
-			menu.add(new StartModuleAction(server, module));
-			menu.add(new StopModuleAction(server, module));			
-			menu.add(new RestartModuleAction(server, module));
-		}
-		
-		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS+"-end"));
-		
-		if (server != null) {
-			menu.add(new Separator());
-			menu.add(propertiesAction);
-		}
+	}
+	
+	
+	private Separator invisibleSeparator(String s) {
+		Separator sep = new Separator(s);
+		sep.setVisible(false);
+		return sep;
 	}
 }
