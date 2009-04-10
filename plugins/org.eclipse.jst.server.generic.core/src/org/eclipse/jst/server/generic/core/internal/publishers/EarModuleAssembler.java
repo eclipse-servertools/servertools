@@ -1,5 +1,5 @@
 /***************************************************************************************************
- * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * Copyright (c) 2009 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
@@ -21,10 +21,10 @@ import org.eclipse.jst.server.core.IEnterpriseApplication;
 import org.eclipse.jst.server.core.IJ2EEModule;
 import org.eclipse.jst.server.generic.core.internal.CorePlugin;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
+import org.eclipse.jst.server.generic.core.internal.Trace;
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.internal.Server;
+import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.IModuleResource;
-import org.eclipse.wst.server.core.model.IModuleResourceDelta;
 import org.eclipse.wst.server.core.util.ProjectModule;
 
 /**
@@ -63,14 +63,15 @@ public class EarModuleAssembler extends AbstractModuleAssembler {
 		return parent;
 	}
 	/**
-     * Checks if there has been a change in the published resources.
+     * Checks if the publish state of the child module has changed.
      * @param module
      * @return module changed
 	 */
 	private boolean shouldRepack( IModule module ) {
-        final Server server = (Server) fServer.getServer();
-        final IModule[] modules ={module}; 
-        return server.hasPublishedResourceDelta( modules );
+        final IModule[] modules ={fModule, module};
+        boolean repack = (IServer.PUBLISH_STATE_NONE != fServer.getServer().getModulePublishState(modules));
+        Trace.trace(Trace.FINEST, "EarModuleAssembler should repack returns "+ Boolean.toString(repack)+ " for module "+module);  //$NON-NLS-1$//$NON-NLS-2$
+        return repack;
         
     }
 
@@ -84,7 +85,6 @@ public class EarModuleAssembler extends AbstractModuleAssembler {
 			try {
 				packager =new ModulePackager(realDestination,false);
 				packager.pack(webAppPath.toFile(),webAppPath.toOSString());
-			
 			} catch (IOException e) {
 				IStatus status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0,
 						"unable to assemble module", e); //$NON-NLS-1$
@@ -92,8 +92,7 @@ public class EarModuleAssembler extends AbstractModuleAssembler {
 			}
 			finally{
 				if(packager!=null)
-				{
-					
+				{		
 					try {
 						packager.finished();
 					} catch (IOException e) {
@@ -102,8 +101,6 @@ public class EarModuleAssembler extends AbstractModuleAssembler {
 				}
 				
 			}
-			
-			
 		}
 		else
 		{

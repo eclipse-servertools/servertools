@@ -140,7 +140,7 @@ public class AntPublisher extends GenericPublisher {
 		long time = System.currentTimeMillis();
 		AbstractModuleAssembler assembler = AbstractModuleAssembler.Factory.getModuleAssembler(getModule()[0], getServer());
 		assembler.assemble(monitor);
-		Trace.trace(Trace.PERFORMANCE, "AntPublisher.assembleModule(): <" + (System.currentTimeMillis()-time) + "> module: "+getModule()[0] ); //$NON-NLS-1$ //$NON-NLS-2$
+		Trace.trace(Trace.PERFORMANCE, "AntPublisher.assembleModule(): <" + (System.currentTimeMillis()-time) + "ms> module: "+getModule()[0] ); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -356,7 +356,7 @@ public class AntPublisher extends GenericPublisher {
         {
             ILaunchConfiguration launchConfig = wc.doSave();
             launchConfig.launch(ILaunchManager.RUN_MODE, monitor, false, true);
-            Trace.trace(Trace.PERFORMANCE, "AntPublisher.runAnt():<" + (System.currentTimeMillis()-time) + "> module: "+getModule()[0] ); //$NON-NLS-1$ //$NON-NLS-2$
+            Trace.trace(Trace.PERFORMANCE, "AntPublisher.runAnt():<" + (System.currentTimeMillis()-time) + "ms> module: "+getModule()[0] ); //$NON-NLS-1$ //$NON-NLS-2$
         }
         
         
