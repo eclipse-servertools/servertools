@@ -1,5 +1,5 @@
 /***************************************************************************************************
- * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * Copyright (c) 2005, 2009 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
@@ -21,11 +21,12 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.generic.core.internal.CorePlugin;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
+import org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.model.IModuleFolder;
 import org.eclipse.wst.server.core.model.IModuleResource;
+import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.eclipse.wst.server.core.util.ProjectModule;
 import org.eclipse.wst.server.core.util.PublishHelper;
 
@@ -49,7 +50,7 @@ public abstract class AbstractModuleAssembler {
 		fServer=server;
 		fAssembleRoot = assembleRoot;
 		//TODO: Verify the temporary directory location.
-		publishHelper = new PublishHelper(CorePlugin.getDefault().getStateLocation().append("tmp").toFile());
+		publishHelper = new PublishHelper(CorePlugin.getDefault().getStateLocation().append("tmp").toFile()); //$NON-NLS-1$
 	}
 	
 	/**
@@ -70,7 +71,13 @@ public abstract class AbstractModuleAssembler {
 		
 		public static IPath getDefaultAssembleRoot(IModule module, GenericServer server) {
 			ProjectModule pm =(ProjectModule)module.loadAdapter(ProjectModule.class, new NullProgressMonitor());
-			return ServerPlugin.getInstance().getTempDirectory(server.getServer().getId()).append(pm.getId());
+			GenericServerBehaviour genericServer = (GenericServerBehaviour) server.getServer().loadAdapter(ServerBehaviourDelegate.class, new NullProgressMonitor());
+			if ( genericServer == null ) {
+				CorePlugin.getDefault().getLog().log(new Status(IStatus.INFO, 
+						CorePlugin.PLUGIN_ID, "GenericServerBehavior was not loaded when determining assembly root. Falling back to state location"));  //$NON-NLS-1$
+				return CorePlugin.getDefault().getStateLocation().append(pm.getId());	
+			}
+			return genericServer.getTempDirectory().append(pm.getId());
 		}
 		
 		/**

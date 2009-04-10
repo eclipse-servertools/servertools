@@ -30,7 +30,6 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerPort;
-import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.util.SocketUtil;
 
 /**
@@ -255,7 +254,7 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 				IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
 				resolver.resolveProperties(serverDef.getStop().getProgramArgumentsAsString()));
 		wc.setAttribute(ExternalLaunchConfigurationDelegate.EXECUTABLE_NAME, external); 	
-		wc.setAttribute(Server.ATTR_SERVER_ID, getServer().getId());
+		wc.setAttribute(ATTR_SERVER_ID, getServer().getId());
 	}
 	
 	/**

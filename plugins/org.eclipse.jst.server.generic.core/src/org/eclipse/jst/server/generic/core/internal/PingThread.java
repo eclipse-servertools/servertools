@@ -14,7 +14,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.util.SocketUtil;
 
 /**
@@ -61,7 +60,7 @@ public class PingThread {
 	private int guessMaxPings(GenericServerBehaviour server)
     {
     	int maxpings=-1;
-    	int startTimeout = ((Server)server.getServer()).getStartTimeout() * 1000;
+    	int startTimeout = server.getServer().getStartTimeout() * 1000;
     	if(startTimeout>0)
     		maxpings=startTimeout/PING_INTERVAL;
     	return maxpings;

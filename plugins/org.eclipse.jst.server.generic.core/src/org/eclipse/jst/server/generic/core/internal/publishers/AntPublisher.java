@@ -20,13 +20,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import org.eclipse.ant.internal.ui.IAntUIConstants;
 import org.eclipse.ant.ui.launching.IAntLaunchConfigurationConstants;
-//import org.eclipse.ant.internal.ui.launchConfigurations.IAntLaunchConfigurationConstants;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.variables.VariablesPlugin;
@@ -43,15 +42,15 @@ import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.generic.core.internal.CorePlugin;
 import org.eclipse.jst.server.generic.core.internal.GenericPublisher;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
+import org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour;
 import org.eclipse.jst.server.generic.core.internal.GenericServerCoreMessages;
 import org.eclipse.jst.server.generic.core.internal.Trace;
 import org.eclipse.jst.server.generic.internal.core.util.FileUtil;
 import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.PublisherData;
-import org.eclipse.ui.externaltools.internal.model.IExternalToolConstants;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
-import org.eclipse.wst.server.core.internal.ServerPlugin;
+import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.osgi.framework.Bundle;
 
 /**
@@ -72,6 +71,17 @@ import org.osgi.framework.Bundle;
  */
 
 public class AntPublisher extends GenericPublisher {
+	
+	/**
+	 * Copy of IExternalToolConstants.ATTR_LOCATION 
+	 */
+	private static final String ATTR_LOCATION = "org.eclipse.ui.externaltools.ATTR_LOCATION"; //$NON-NLS-1$
+	/**
+	 *  Copy of the IAntUIConstants.REMOTE_ANT_PROCESS_FACTORY_ID 
+	 */
+	private static final String REMOTE_ANT_PROCESS_FACTORY_ID= "org.eclipse.ant.ui.remoteAntProcessFactory"; //$NON-NLS-1$
+	
+	
 	private static final String JAR_PROTOCOL_PREFIX = "jar"; //$NON-NLS-1$
 
 	/**
@@ -91,7 +101,7 @@ public class AntPublisher extends GenericPublisher {
 
 	protected static final String PROP_PROJECT_NAME = "project.name";//$NON-NLS-1$
 	
-	protected static final String PROP_PROJECT_LOCATION = "project.location";
+	protected static final String PROP_PROJECT_LOCATION = "project.location"; //$NON-NLS-1$
 
 	protected static final String MODULE_PUBLISH_TARGET_PREFIX = "target.publish."; //$NON-NLS-1$
 
@@ -278,7 +288,8 @@ public class AntPublisher extends GenericPublisher {
 	}
 
 	private IPath getProjectWorkingLocation() {
-		return ServerPlugin.getInstance().getTempDirectory(getServer().getServer().getId());
+		GenericServerBehaviour genericServer = (GenericServerBehaviour) getServer().getServer().loadAdapter(ServerBehaviourDelegate.class, new NullProgressMonitor());
+		return genericServer.getTempDirectory();
 	}
 
 	private String guessModuleName(IModule module) {
@@ -320,7 +331,7 @@ public class AntPublisher extends GenericPublisher {
 		}
 		ILaunchConfigurationWorkingCopy wc = type.newInstance(null, properties.get(PROP_MODULE_NAME) + " module publisher"); //$NON-NLS-1$
 		wc.setContainer(null);
-		wc.setAttribute(IExternalToolConstants.ATTR_LOCATION, buildFile);
+		wc.setAttribute(ATTR_LOCATION, buildFile);
 		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH_PROVIDER, "org.eclipse.ant.ui.AntClasspathProvider"); //$NON-NLS-1$
 		wc.setAttribute(IAntLaunchConfigurationConstants.ATTR_ANT_TARGETS, targets);
 		wc.setAttribute(IAntLaunchConfigurationConstants.ATTR_ANT_PROPERTIES, properties);
@@ -337,7 +348,7 @@ public class AntPublisher extends GenericPublisher {
 
 		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
 				"org.eclipse.ant.internal.ui.antsupport.InternalAntRunner"); //$NON-NLS-1$
-		wc.setAttribute(DebugPlugin.ATTR_PROCESS_FACTORY_ID, IAntUIConstants.REMOTE_ANT_PROCESS_FACTORY_ID);
+		wc.setAttribute(DebugPlugin.ATTR_PROCESS_FACTORY_ID, REMOTE_ANT_PROCESS_FACTORY_ID);
 
 		setupAntLaunchConfiguration(wc);
 

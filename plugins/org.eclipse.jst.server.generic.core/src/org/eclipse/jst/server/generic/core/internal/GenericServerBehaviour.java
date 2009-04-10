@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -40,7 +41,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerPort;
-import org.eclipse.wst.server.core.internal.DeletedModule;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.eclipse.wst.server.core.model.ServerDelegate;
 import org.eclipse.wst.server.core.util.SocketUtil;
@@ -109,7 +109,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     private void checkClosed(IModule[] module) throws CoreException
     {
     	for( int i=0; i < module.length; i++ ){
-    		if( module[i] instanceof DeletedModule ){	
+    		if( !module[i].exists() ){	
                 IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0, NLS.bind(GenericServerCoreMessages.canNotPublishDeletedModule,module[i].getName()),null);
                 throw new CoreException(status);
     		}
@@ -515,5 +515,9 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     
  	protected void setServerStarted() {
  		setServerState(IServer.STATE_STARTED);
+ 	}
+ 	
+ 	public IPath getTempDirectory(){
+ 		return super.getTempDirectory();
  	}
 }

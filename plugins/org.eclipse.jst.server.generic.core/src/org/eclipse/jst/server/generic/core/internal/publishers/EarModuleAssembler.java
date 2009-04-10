@@ -70,8 +70,8 @@ public class EarModuleAssembler extends AbstractModuleAssembler {
 	private boolean shouldRepack( IModule module ) {
         final Server server = (Server) fServer.getServer();
         final IModule[] modules ={module}; 
-        IModuleResourceDelta[] deltas = server.getPublishedResourceDelta( modules );
-        return deltas.length > 0;
+        return server.hasPublishedResourceDelta( modules );
+        
     }
 
     protected void packModule(IModule module, String deploymentUnitName, IPath destination) throws CoreException {
