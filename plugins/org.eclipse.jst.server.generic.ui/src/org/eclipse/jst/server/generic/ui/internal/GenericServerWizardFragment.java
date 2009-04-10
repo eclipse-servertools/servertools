@@ -19,9 +19,7 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 
@@ -100,31 +98,6 @@ public class GenericServerWizardFragment extends
         IServerWorkingCopy server = (IServerWorkingCopy) getTaskModel()
                 .getObject( TaskModel.TASK_SERVER );
         return server;
-    }
-
-    private boolean isNameInUse( String name ) {
-        IServer[] servers = ServerCore.getServers();
-        for( int i = 0; i < servers.length; i++ )
-        {
-            if( !servers[i].equals( getServer().getOriginal() )
-                    && (servers[i].getName().equals( name )) )
-                return true;
-        }
-        return false;
-    }
-
-    private String createName() {
-        String name = NLS.bind(
-                GenericServerUIMessages.serverName, getServerTypeDefinitionFor(
-                        getServer() ).getName() );
-        int suffix = 1;
-        String suffixName = name;
-        while( isNameInUse( suffixName ) )
-        {
-            suffixName = name + ' ' + suffix;
-            suffix++;
-        }
-        return suffixName;
     }
 
     public void enter() {
