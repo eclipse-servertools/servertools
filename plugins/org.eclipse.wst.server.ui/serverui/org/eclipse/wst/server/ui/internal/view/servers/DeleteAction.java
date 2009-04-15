@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,14 +15,12 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.ui.internal.DeleteServerDialog;
-import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.*;
+import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
+import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.ui.internal.*;
+import org.eclipse.wst.server.ui.internal.editor.ServerEditor;
 /**
  * Action for deleting server resources.
  */
@@ -81,7 +79,28 @@ public class DeleteAction extends AbstractServerAction {
 	}
 
 	public void perform(IServer server) {
-		DeleteServerDialog dsd = new DeleteServerDialog(shell, servers, configs);
-		dsd.open();
+		boolean deleteUnsaved = false;
+		ServerEditor serverEditor = null;
+		IWorkbenchPage page = null;
+				
+		// Find the editor and prompt if it is dirty
+		IWorkbenchWindow workbench = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (workbench != null){
+			page = workbench.getActivePage();
+			IEditorPart editor = page.getActiveEditor();
+			if (editor != null && editor instanceof ServerEditor) {
+				serverEditor = (ServerEditor) editor;
+				IServerWorkingCopy server2 = serverEditor.getServerWorkingCopy();
+				deleteUnsaved = ServerUIPlugin.promptIfDirty(shell,(IServer)server2);			
+			}
+		}
+		
+		// delete and close the editor
+		if (deleteUnsaved){ 
+			DeleteServerDialog dsd = new DeleteServerDialog(shell, servers, configs);
+			dsd.open();
+			if (serverEditor != null && page != null)
+				page.closeEditor(serverEditor, false);
+		}
 	}
 }
