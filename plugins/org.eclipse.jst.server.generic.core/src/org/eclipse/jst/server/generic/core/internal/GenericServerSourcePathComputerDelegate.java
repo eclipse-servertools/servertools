@@ -51,7 +51,7 @@ public class GenericServerSourcePathComputerDelegate implements ISourcePathCompu
 
 		IRuntimeClasspathEntry[] projectEntries = new IRuntimeClasspathEntry[javaProjectList.size()];
 		for (int i = 0; i < javaProjectList.size(); i++) {
-			projectEntries[i] = JavaRuntime.newProjectRuntimeClasspathEntry((IJavaProject)javaProjectList.get(i)); 
+			projectEntries[i] = JavaRuntime.newDefaultProjectClasspathEntry((IJavaProject)javaProjectList.get(i)); 
 		}
 		IRuntimeClasspathEntry[] entries =  new IRuntimeClasspathEntry[projectEntries.length+unresolvedEntries.length]; 
 		System.arraycopy(unresolvedEntries,0,entries,0,unresolvedEntries.length);
