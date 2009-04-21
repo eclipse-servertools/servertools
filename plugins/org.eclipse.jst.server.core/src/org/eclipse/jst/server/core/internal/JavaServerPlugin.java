@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -358,6 +358,28 @@ public class JavaServerPlugin extends Plugin {
 		if (sp == null || sp.length == 0)
 			throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, Messages.errorNoProfiler, null));
 		
-		sp[0].process(launch, vmInstall, vmConfig, monitor);
+		String id = ProfilerPreferences.getInstance().getServerProfilerId();
+		if ( id != null ) {
+			for ( int i = 0; i < sp.length; i++ ) {
+				if ( sp[i].getId().equals(id) ) {
+					sp[i].process(launch, vmInstall, vmConfig, monitor);
+					return;
+				}
+			}
+		} else {
+			if ( sp.length == 1 ) {
+				/* The user has not selected a profiler preference, but there is only one
+				 * registered so we can just call that 
+				 */
+				sp[0].process(launch, vmInstall, vmConfig, monitor);				
+			} else {
+				/* We have more than one profiler registered, but the user has not yet 
+				 * configured their preference so we don't know which one to call. Throw 
+				 * an exception and notify the user must configure the profiler 
+				 * before continuing. */
+				throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, 
+						Messages.noProfilersSelected, null));
+			}
+		}
 	}
 }

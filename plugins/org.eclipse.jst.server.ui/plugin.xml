@@ -60,5 +60,15 @@
       <type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
     </adapter>
   </extension>
+  
+  <extension point="org.eclipse.ui.preferencePages">
+  <page
+    id="org.eclipse.jst.profile.preferencePage"
+    category="org.eclipse.wst.server.ui.preferencePage"
+    name="%profilingPreferenceTitle"
+    class="org.eclipse.jst.server.ui.internal.ProfilePreferencePage">
+      
+  </page>
+</extension>
 
 </plugin>
