@@ -34,13 +34,13 @@ public class ProfilePreferencePage extends PreferencePage implements
 	
 	private Combo comboBox;
 	/* List to hold the names of the profilers */
-	private ArrayList nameList;
+	private ArrayList<String> nameList;
 	/* List to hold the id's of the profilers */
-	private ArrayList idList;
+	private ArrayList<String> idList;
 	
 	public void init(IWorkbench arg0) {
-		nameList = new ArrayList();
-		idList = new ArrayList();
+		nameList = new ArrayList<String>();
+		idList = new ArrayList<String>();
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class ProfilePreferencePage extends PreferencePage implements
 			data.grabExcessHorizontalSpace = true;
 			comboBox.setLayoutData(data2);
 
-			String[] strList = (String[])nameList.toArray( new String[0] );
+			String[] strList = nameList.toArray(new String[0]);
 			comboBox.setItems( strList );
 			int index = findIndexOfSelectedProfiler();
 			if ( index != -1 ) 
@@ -112,7 +112,7 @@ public class ProfilePreferencePage extends PreferencePage implements
 		if ( preference == null ) return -1;
 		
 		for ( int i = 0; i < idList.size(); i++ ) {
-			if ( ((String)idList.get(i)).equals(preference) ) 
+			if ( (idList.get(i)).equals(preference) ) 
 				return i;			
 		}
 		return -1;
@@ -138,7 +138,7 @@ public class ProfilePreferencePage extends PreferencePage implements
 		
 		if ( comboBox != null ) {
 			/* Get the selected profiler and save it to the preferences */
-			String selectedId = (String)idList.get( comboBox.getSelectionIndex() );
+			String selectedId = idList.get( comboBox.getSelectionIndex() );
 			ProfilerPreferences.getInstance().setServerProfilerId( selectedId );
 		}
 		return super.performOk();
