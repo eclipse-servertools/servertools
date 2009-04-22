@@ -10,7 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.cnf;
 
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -18,6 +19,7 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
 /**
  * Server table label provider.
@@ -50,8 +52,13 @@ public class ServerLabelProvider extends LabelProvider {
 		if( element == ServerContentProvider.INITIALIZING)
 			return Messages.viewInitializing;
 
+		if (element instanceof IWorkspaceRoot){
+			return Platform.getResourceString(ServerUIPlugin.getInstance().getBundle(), "%viewServers");
+		}
+		
 		return "-";
 	}
+		
 	public Image getImage(Object element) {
 		Image image = null;
 		if (element instanceof ModuleServer) {
@@ -62,12 +69,13 @@ public class ServerLabelProvider extends LabelProvider {
 		} else if( element instanceof IServer ) {
 			IServer server = (IServer) element;
 			if (server.getServerType() != null) {
-				image = ImageResource.getImage(server.getServerType().getId());
 				// TODO Angel says: Need to fix this
-				// Because we are now grabbing the ServerState the type will not show. It might be best to create a new icon for the state
-				ImageDescriptor imgDescriptor = ServerDecorator.getServerStateImage(server);
-				if (image != null && imgDescriptor != null){
-					image = imgDescriptor.createImage();
+				// Because we are now grabbing the ServerState the type will not show. 
+				// It might be best to create a new icon for the state, perhaps just the
+				// play/stop images, without the server
+				image = ServerDecorator.getServerStateImage(server);
+				if (image == null){
+					image = ImageResource.getImage(server.getServerType().getId());
 				}
 			}
 		}
@@ -87,5 +95,5 @@ public class ServerLabelProvider extends LabelProvider {
 			}
 		}
 		return true;
-	}
+	}	
 }

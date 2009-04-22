@@ -11,7 +11,6 @@
  package org.eclipse.wst.server.ui.internal.cnf;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
@@ -133,14 +132,14 @@ public class ServerDecorator extends LabelProvider implements ILightweightLabelD
 		return syncState[i];
 	}
 
-	public static ImageDescriptor getServerStateImage(IServer server) {
+	public static Image getServerStateImage(IServer server) {
 		return server == null ? null : 
 			getStateImage(server.getServerType(), server.getServerState(), server.getMode());
 	}
-
-	public static ImageDescriptor getStateImage(IServerType serverType, int state, String mode) {
+	
+	public static Image getStateImage(IServerType serverType, int state, String mode) {
 		return serverType == null ? null : 
-			UIDecoratorManager.getCNFUIDecorator(serverType).getStateImageDescriptor(state, mode, getCount());
+			UIDecoratorManager.getCNFUIDecorator(serverType).getStateImage(state, mode, getCount());
 	}
 	
 	public static String getModuleText(ModuleServer ms ) { 
