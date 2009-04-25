@@ -615,7 +615,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			int ind2 = vmArgs[i].indexOf("=");
 			if (ind >= 0 && (ind2 == -1 || ind < ind2)) { // -a bc style
 				int index = originalArg.indexOf(vmArgs[i].substring(0, ind + 1));
-				if (index == 0 || (index > 0 && originalArg.charAt(index - 1) == ' ')) {
+				if (index == 0 || (index > 0 && Character.isWhitespace(originalArg.charAt(index - 1)))) {
 					// replace
 					String s = originalArg.substring(0, index);
 					int index2 = getNextToken(originalArg, index + ind + 1);
@@ -627,7 +627,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 				}
 			} else if (ind2 >= 0) { // a=b style
 				int index = originalArg.indexOf(vmArgs[i].substring(0, ind2 + 1));
-				if (index == 0 || (index > 0 && originalArg.charAt(index - 1) == ' ')) {
+				if (index == 0 || (index > 0 && Character.isWhitespace(originalArg.charAt(index - 1)))) {
 					// replace
 					String s = originalArg.substring(0, index);
 					int index2 = getNextToken(originalArg, index);
@@ -639,7 +639,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 				}
 			} else { // abc style
 				int index = originalArg.indexOf(vmArgs[i]);
-				if (index == 0 || (index > 0 && originalArg.charAt(index-1) == ' ')) {
+				if (index == 0 || (index > 0 && Character.isWhitespace(originalArg.charAt(index - 1)))) {
 					// replace
 					String s = originalArg.substring(0, index);
 					int index2 = getNextToken(originalArg, index);
@@ -669,13 +669,13 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 				int ind2 = excludeArgs[i].indexOf("=");
 				if (ind >= 0 && (ind2 == -1 || ind < ind2)) { // -a bc style
 					int index = originalArg.indexOf(excludeArgs[i].substring(0, ind + 1));
-					if (index == 0 || (index > 0 && originalArg.charAt(index - 1) == ' ')) {
+					if (index == 0 || (index > 0 && Character.isWhitespace(originalArg.charAt(index - 1)))) {
 						// remove
 						String s = originalArg.substring(0, index);
 						int index2 = getNextToken(originalArg, index + ind + 1);
 						if (index2 >= 0) {
 							// If remainder will become the first argument, remove leading blanks
-							while (index2 < originalArg.length() && originalArg.charAt(index2) == ' ')
+							while (index2 < originalArg.length() && Character.isWhitespace(originalArg.charAt(index2)))
 								index2 += 1;
 							originalArg = s + originalArg.substring(index2);
 						}
@@ -684,13 +684,13 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 					}
 				} else if (ind2 >= 0) { // a=b style
 					int index = originalArg.indexOf(excludeArgs[i].substring(0, ind2 + 1));
-					if (index == 0 || (index > 0 && originalArg.charAt(index - 1) == ' ')) {
+					if (index == 0 || (index > 0 && Character.isWhitespace(originalArg.charAt(index - 1)))) {
 						// remove
 						String s = originalArg.substring(0, index);
 						int index2 = getNextToken(originalArg, index);
 						if (index2 >= 0) {
 							// If remainder will become the first argument, remove leading blanks
-							while (index2 < originalArg.length() && originalArg.charAt(index2) == ' ')
+							while (index2 < originalArg.length() && Character.isWhitespace(originalArg.charAt(index2)))
 								index2 += 1;
 							originalArg = s + originalArg.substring(index2);
 						}
@@ -699,13 +699,13 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 					}
 				} else { // abc style
 					int index = originalArg.indexOf(excludeArgs[i]);
-					if (index == 0 || (index > 0 && originalArg.charAt(index-1) == ' ')) {
+					if (index == 0 || (index > 0 && Character.isWhitespace(originalArg.charAt(index - 1)))) {
 						// remove
 						String s = originalArg.substring(0, index);
 						int index2 = getNextToken(originalArg, index);
 						if (index2 >= 0) {
 							// Remove leading blanks
-							while (index2 < originalArg.length() && originalArg.charAt(index2) == ' ')
+							while (index2 < originalArg.length() && Character.isWhitespace(originalArg.charAt(index2)))
 								index2 += 1;
 							originalArg = s + originalArg.substring(index2);
 						}
