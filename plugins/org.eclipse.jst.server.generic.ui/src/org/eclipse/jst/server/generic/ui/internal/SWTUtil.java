@@ -1,5 +1,5 @@
 /***************************************************************************************************
- * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * Copyright (c) 2005, 2009 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
@@ -30,7 +30,7 @@ import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
- * SWT Utilities.
+ * SWT Utilities. Used for creating the UI elements for generic server UIs.
  * 
  * @author Gorkem Ercan
  */
@@ -120,7 +120,7 @@ public class SWTUtil {
 	}
 
 	/**
-	 * Creates a label, text and a button to open a directoty dialog. This
+	 * Creates a label, text and a button to open a directory dialog. This
 	 * method creates Forum UI compatible widgets.
 	 * 
 	 * @param title
@@ -135,7 +135,7 @@ public class SWTUtil {
 		Button button = null;
 
 		if (toolkit == null) {
-            label = new Label(parent, SWT.WRAP);
+            label = new Label(parent, SWT.NONE);
             label.setText(title);
 			cText = new Text(parent, SWT.SHADOW_IN | SWT.BORDER);
 			button = SWTUtil.createButton(parent,
@@ -148,7 +148,7 @@ public class SWTUtil {
 					SWT.PUSH);
 		}
 
-		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+		GridData gridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
 		gridData.horizontalSpan = 1;
 
 		final Text text = cText;
@@ -201,7 +201,7 @@ public class SWTUtil {
 		Text cText;
 		Button button;
 		if (toolkit == null) {
-			label = new Label(parent, SWT.WRAP);
+			label = new Label(parent, SWT.NONE);
 			label.setText(title);
 			cText = new Text(parent, SWT.SHADOW_IN | SWT.BORDER);
 			button = SWTUtil.createButton(parent,
@@ -214,8 +214,7 @@ public class SWTUtil {
 					SWT.PUSH);
 		}
 		final Text text = cText;
-		GridData gridData = new GridData(GridData.FILL_HORIZONTAL
-				| GridData.GRAB_HORIZONTAL);
+		GridData gridData = new GridData(SWT.FILL,SWT.BEGINNING,true,false);
 		gridData.horizontalSpan = 1;
 		text.setLayoutData(gridData);
 		text.setText(value);
@@ -265,7 +264,7 @@ public class SWTUtil {
 		Label label;
 		Text text;
 		if (toolkit == null) {
-			label = new Label(parent, SWT.WRAP);
+			label = new Label(parent, SWT.NONE);
 			label.setText(title);
 			text = new Text(parent, SWT.SHADOW_IN | SWT.BORDER);
 		} else {
@@ -273,8 +272,7 @@ public class SWTUtil {
 			text = toolkit.createText(parent, value);
 		}
 
-		GridData gridData = new GridData(GridData.FILL_HORIZONTAL
-				| GridData.GRAB_HORIZONTAL);
+		GridData gridData = new GridData(SWT.FILL,SWT.BEGINNING,true,false);
 		gridData.horizontalSpan = 2;
 		text.setLayoutData(gridData);
 		text.setText(value);
@@ -307,7 +305,7 @@ public class SWTUtil {
 		Label label;
 		Button button;
 		if (toolkit == null) {
-			label = new Label(parent, SWT.WRAP);
+			label = new Label(parent, SWT.NONE);
 			label.setText(title);
 			button = new Button(parent, SWT.CHECK);
 		} else {
@@ -315,8 +313,7 @@ public class SWTUtil {
 			button = toolkit.createButton(parent, null, SWT.CHECK);
 		}
 
-		GridData gridData = new GridData(GridData.FILL_HORIZONTAL
-				| GridData.GRAB_HORIZONTAL);
+		GridData gridData = new GridData(SWT.FILL,SWT.BEGINNING,true,false);
 		gridData.horizontalSpan = 2;
 		button.setLayoutData(gridData);
 		button.setSelection(value);
@@ -349,7 +346,7 @@ public class SWTUtil {
 		Label label;
 
 		if (toolkit == null) {
-			label = new Label(parent, SWT.WRAP);
+			label = new Label(parent, SWT.NONE);
 			label.setText(title);
 		} else {
 			createFormLabel(title, parent, toolkit);
@@ -359,8 +356,7 @@ public class SWTUtil {
 			toolkit.adapt(combo, true, true);
 		}
 
-		GridData gridData = new GridData(GridData.FILL_HORIZONTAL
-				| GridData.GRAB_HORIZONTAL);
+		GridData gridData = new GridData(SWT.FILL,SWT.BEGINNING,true,false);
 		gridData.horizontalSpan = 2;
 		combo.setLayoutData(gridData);
 
@@ -398,7 +394,7 @@ public class SWTUtil {
 		Label label;
 
 		if (toolkit == null) {
-			label = new Label(parent, SWT.WRAP);
+			label = new Label(parent, SWT.NONE);
 			label.setText(title);
 		} else {
 			createFormLabel(title, parent, toolkit);
@@ -408,8 +404,7 @@ public class SWTUtil {
 			toolkit.adapt(combo, true, true);
 		}
 
-		GridData gridData = new GridData(GridData.FILL_HORIZONTAL
-				| GridData.GRAB_HORIZONTAL);
+		GridData gridData = new GridData(SWT.FILL,SWT.BEGINNING,true,false);
 		gridData.horizontalSpan = 2;
 		combo.setLayoutData(gridData);
 
