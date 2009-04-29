@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.server.discovery.internal.model;
 
+import java.net.URI;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.equinox.internal.provisional.p2.core.Version;
@@ -32,16 +34,14 @@ import org.osgi.framework.BundleContext;
 public class Extension {
 	private ImageDescriptor imageDescriptor;
 	private IInstallableUnit iu;
+	private URI uri;
 
 	private ProvisioningContext provContext;
 	private ProvisioningPlan plan;
 
-	public Extension() {
-		// do nothing
-	}
-
-	public Extension(IInstallableUnit iu) {
+	public Extension(IInstallableUnit iu, URI uri) {
 		this.iu = iu;
+		this.uri = uri;
 	}
 
 	public String getName() {
@@ -76,7 +76,7 @@ public class Extension {
 	public IStatus install(IProgressMonitor monitor) {
 		BundleContext bundleContext = Activator.getDefault().getBundle().getBundleContext();
 		
-		ProvisioningPlan plan = getProvisioningPlan(monitor);
+		ProvisioningPlan plan = getProvisioningPlan(true, monitor);
 		if (!plan.getStatus().isOK())
 			return plan.getStatus();
 		
@@ -91,10 +91,11 @@ public class Extension {
 		return new IInstallableUnit[] { iu };
 	}
 
-	public ProvisioningPlan getProvisioningPlan(IProgressMonitor monitor) {
+	public ProvisioningPlan getProvisioningPlan(boolean explain, IProgressMonitor monitor) {
 		if (plan != null)
 			return plan;
 		
+		//long time = System.currentTimeMillis();
 		BundleContext bundleContext = Activator.getDefault().getBundle().getBundleContext();
 		IPlanner planner = (IPlanner) ExtensionUtility.getService(bundleContext, IPlanner.class.getName());
 		
@@ -102,8 +103,12 @@ public class Extension {
 		IProfile profile = profileRegistry.getProfile(IProfileRegistry.SELF);
 		ProfileChangeRequest pcr = new ProfileChangeRequest(profile);
 		pcr.addInstallableUnits(new IInstallableUnit[] { iu } );
-		provContext = new ProvisioningContext();
+		provContext = new ProvisioningContext(new URI[] { uri });
+		if (!explain)
+			provContext.setProperty("org.eclipse.equinox.p2.director.explain", "false");
+		//provContext = new ProvisioningContext();
 		plan = planner.getProvisioningPlan(pcr, provContext, monitor);
+		//System.out.println("Time: " + (System.currentTimeMillis() - time)); // TODO
 		return plan;
 	}
 }

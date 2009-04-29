@@ -166,7 +166,7 @@ public class ExtensionUtility {
 		while (iter.hasNext()) {
 			IInstallableUnit iu = (IInstallableUnit) iter.next();
 			if (!list.contains(iu))
-				list.add(new Extension(iu));
+				list.add(new Extension(iu, null));
 		}
 		
 		monitor.done();

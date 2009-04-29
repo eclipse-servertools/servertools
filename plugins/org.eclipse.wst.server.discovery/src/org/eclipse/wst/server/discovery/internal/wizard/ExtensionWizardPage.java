@@ -88,7 +88,7 @@ public class ExtensionWizardPage extends WizardPage {
 			try {
 				getContainer().run(true, true, new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-						final ProvisioningPlan plan = extension.getProvisioningPlan(monitor);
+						final ProvisioningPlan plan = extension.getProvisioningPlan(true, monitor);
 						if (plan != null && plan.getStatus().isOK()) {
 							getShell().getDisplay().asyncExec(new Runnable() {
 								public void run() {
@@ -110,7 +110,7 @@ public class ExtensionWizardPage extends WizardPage {
 				});
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Error verifying license", e);
-			} 
+			}
 		}
 		setPageComplete(extension != null);
 	}

@@ -25,6 +25,7 @@ import org.eclipse.equinox.internal.provisional.p2.metadata.query.InstallableUni
 import org.eclipse.equinox.internal.provisional.p2.metadata.repository.IMetadataRepository;
 import org.eclipse.equinox.internal.provisional.p2.query.Collector;
 import org.eclipse.equinox.internal.provisional.p2.query.Query;
+import org.eclipse.wst.server.discovery.internal.PatternInstallableUnitQuery;
 import org.eclipse.wst.server.discovery.internal.Trace;
 /*
 * From Kosta:
@@ -69,7 +70,12 @@ public class ExtensionUpdateSite {
 			UpdateSiteMetadataRepositoryFactory mrf = new UpdateSiteMetadataRepositoryFactory();
 			URI url2 = new URI(url);
 			IMetadataRepository repo = mrf.load(url2, IRepositoryManager.REPOSITORIES_ALL, monitor);
-			Query query = new InstallableUnitQuery("org.eclipse.wst.server.core.serverAdapter");
+			//Query query = new InstallableUnitQuery("org.eclipse.wst.server.core.serverAdapter");
+			//Query query = CompoundQuery.createCompoundQuery(new Query[] {new
+			//		IUPropertyQuery(IInstallableUnit.PROP_TYPE_CATEGORY, Boolean.toString(true)),
+			//		new IUPropertyQuery(IInstallableUnit.PROP_NAME,"org.eclipse.wst.server.core.serverAdapter")}, true);
+			Query query = new PatternInstallableUnitQuery("org.eclipse.wst.server.core.serverAdapter");
+			
 			Collector collector = new Collector(); 
 			repo.query(query, collector, monitor);
 			
@@ -88,7 +94,7 @@ public class ExtensionUpdateSite {
 						while (iter2.hasNext()) {
 							IInstallableUnit iu2 = (IInstallableUnit) iter2.next();
 							if (!list.contains(iu2)) {
-								Extension ext = new Extension(iu2);
+								Extension ext = new Extension(iu2, url2);
 								list.add(ext);
 							}
 						}
