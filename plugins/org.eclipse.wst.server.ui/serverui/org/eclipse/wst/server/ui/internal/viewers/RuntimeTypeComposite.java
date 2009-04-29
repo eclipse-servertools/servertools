@@ -15,9 +15,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
 import org.eclipse.wst.server.core.IRuntimeType;
+import org.eclipse.wst.server.discovery.Discovery;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-import org.eclipse.wst.server.ui.internal.extension.ExtensionUtility;
 /**
  * 
  */
@@ -125,7 +125,7 @@ public class RuntimeTypeComposite extends AbstractTreeComposite {
 	}
 
 	protected void detailsSelected() {
-		if (ExtensionUtility.launchExtensionWizard(getShell(), Messages.wizNewInstallableServerTitle,
+		if (Discovery.launchExtensionWizard(getShell(), Messages.wizNewInstallableServerTitle,
 				Messages.wizNewInstallableServerDescription)) {
 			//refresh();
 			closeWizard(this);

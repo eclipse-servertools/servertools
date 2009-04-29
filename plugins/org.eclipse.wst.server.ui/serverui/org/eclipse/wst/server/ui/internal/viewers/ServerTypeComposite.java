@@ -27,9 +27,9 @@ import org.eclipse.swt.widgets.Shell;
 
 import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.IServerType;
+import org.eclipse.wst.server.discovery.Discovery;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-import org.eclipse.wst.server.ui.internal.extension.ExtensionUtility;
 /**
  * 
  */
@@ -75,7 +75,7 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 		});
 		treeViewer.setLabelProvider(labelProvider);
 		treeViewer.setInput(AbstractTreeContentProvider.ROOT);
-
+		
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				Object obj = getSelection(event.getSelection());
@@ -178,7 +178,7 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 	}
 
 	protected void detailsSelected() {
-		if (ExtensionUtility.launchExtensionWizard(getShell(), Messages.wizNewInstallableServerTitle,
+		if (Discovery.launchExtensionWizard(getShell(), Messages.wizNewInstallableServerTitle,
 				Messages.wizNewInstallableServerDescription)) {
 			//refresh();
 			closeWizard(this);

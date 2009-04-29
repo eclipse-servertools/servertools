@@ -21,7 +21,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.IServerAttributes;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
@@ -68,9 +67,6 @@ public class ServerPlugin extends Plugin {
 
 	// cached copy of all module artifact adapters
 	private static List<ModuleArtifactAdapter> moduleArtifactAdapters;
-
-	//	cached copy of all installable servers
-	private static List<IInstallableServer> installableServers;
 
 	//	cached copy of all installable runtimes
 	private static List<IInstallableRuntime> installableRuntimes;
@@ -1052,38 +1048,6 @@ public class ServerPlugin extends Plugin {
 	}
 
 	/**
-	 * Returns an array of all known installable servers.
-	 * <p>
-	 * A new array is returned on each call, so clients may store or modify the result.
-	 * </p>
-	 * 
-	 * @return the array of installable servers {@link IInstallableServer}
-	 */
-	public static IInstallableServer[] getInstallableServers() {
-		if (installableServers == null)
-			loadInstallableServers();
-		
-		List<IInstallableServer> availableServers = new ArrayList<IInstallableServer>();
-		Iterator iterator = installableServers.iterator();
-		IRuntimeType[] runtimeTypes = ServerCore.getRuntimeTypes();
-		int size = runtimeTypes.length;
-		while (iterator.hasNext()) {
-			IInstallableServer server = (IInstallableServer) iterator.next();
-			boolean found = false;
-			for (int i = 0; i < size; i++) {
-				if (server.getId().equals(runtimeTypes[i].getId()))
-					found = true;
-			}
-			if (!found)
-				availableServers.add(server);
-		}
-		
-		IInstallableServer[] is = new IInstallableServer[availableServers.size()];
-		availableServers.toArray(is);
-		return is;
-	}
-
-	/**
 	 * Returns an array of all known installable runtimes.
 	 * <p>
 	 * A new array is returned on each call, so clients may store or modify the result.
@@ -1127,32 +1091,6 @@ public class ServerPlugin extends Plugin {
 		}
 		
 		return null;
-	}
-
-	/**
-	 * Load the installable servers.
-	 */
-	private static synchronized void loadInstallableServers() {
-		if (installableServers != null)
-			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .installableServers extension point ->-");
-		
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "installableServers");
-		
-		int size = cf.length;
-		List<IInstallableServer> list = new ArrayList<IInstallableServer>(size);
-		for (int i = 0; i < size; i++) {
-			try {
-				list.add(new InstallableServer(cf[i]));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded installableServer: " + cf[i].getAttribute("id"));
-			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load installableServer: " + cf[i].getAttribute("id"), t);
-			}
-		}
-		installableServers = list;
-		
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .installableServers extension point -<-");
 	}
 
 	/**
