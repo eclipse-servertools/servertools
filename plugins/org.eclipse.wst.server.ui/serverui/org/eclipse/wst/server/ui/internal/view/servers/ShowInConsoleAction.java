@@ -90,6 +90,7 @@ public class ShowInConsoleAction extends AbstractServerAction {
 					}
 				}
 				if (part != null) {
+					page.activate(part);
 					IConsoleView view = (IConsoleView) part.getAdapter(IConsoleView.class);
 					if (view != null) {
 						view.setFocus();
