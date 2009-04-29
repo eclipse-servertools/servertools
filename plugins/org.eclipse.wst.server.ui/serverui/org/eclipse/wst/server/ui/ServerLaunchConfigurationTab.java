@@ -226,10 +226,14 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	 */
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		serverCombo.setEnabled(true);
-		//remove error message that other instances may have set
+		// remove error message that other instances may have set
 		setErrorMessage(null);
 		
 		try {
+			// bug 137822 - set the ILaunchConfigurationWorkingCopy wc variable before calling the method handleServerSelection()
+			//if (configuration instanceof ILaunchConfigurationWorkingCopy)
+			//	wc = (ILaunchConfigurationWorkingCopy)configuration;
+			
 			String serverId = configuration.getAttribute(Server.ATTR_SERVER_ID, "");
 			if (serverId != null && !serverId.equals("")) {
 				server = ServerCore.findServer(serverId);
