@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,8 @@
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.server.http.core.internal;
+
+import java.io.File;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -20,9 +22,9 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.IModuleResource;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.eclipse.wst.server.core.util.IStaticWeb;
-import org.eclipse.wst.server.core.util.PublishUtil;
+import org.eclipse.wst.server.core.util.PublishHelper;
 /**
- * Generic Http server.
+ * Generic HTTP server implementation.
  */
 public class HttpServerBehaviour extends ServerBehaviourDelegate {
 	// the thread used to ping the server to check for startup
@@ -77,11 +79,21 @@ public class HttpServerBehaviour extends ServerBehaviourDelegate {
 			contextRoot = module.getName();
 		
 		IPath to = getServer().getRuntime().getLocation();
+		File temp = null;
+		try {
+			if (to.removeLastSegments(1).toFile().exists())
+				temp = to.removeLastSegments(1).append("temp").toFile();
+		} catch (Exception e) {
+			// ignore - use null temp folder
+		}
 		if (contextRoot != null && !contextRoot.equals(""))
 			to = to.append(contextRoot);
 		
 		IModuleResource[] res = getResources(moduleTree);
-		IStatus[] status = PublishUtil.publishSmart(res, to, monitor);
+		PublishHelper pubHelper = new PublishHelper(temp);
+		IStatus[] status = pubHelper.publishSmart(res, to, monitor);
+		if (temp.exists())
+			temp.delete();
 		throwException(status);
 		
 		setModulePublishState(moduleTree, IServer.PUBLISH_STATE_NONE);
