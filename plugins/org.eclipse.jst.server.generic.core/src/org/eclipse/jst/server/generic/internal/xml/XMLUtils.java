@@ -72,7 +72,7 @@ public class XMLUtils {
                 ServerRuntime runtime = readFile(definitionFile);
                 if (runtime != null) {
                     runtime.setId(element.getAttribute("id")); //$NON-NLS-1$
-                    runtime.setConfigurationElementNamespace(element.getNamespace());
+                    runtime.setConfigurationElementNamespace(element.getNamespaceIdentifier());
                     serverDefinitions.add(runtime);
                 }
             }
@@ -93,7 +93,7 @@ public class XMLUtils {
                 ServerRuntime runtime = readFile(definitionFile);
                 if (runtime != null) {
                     runtime.setId(element.getAttribute("id")); //$NON-NLS-1$
-                    runtime.setConfigurationElementNamespace(element.getNamespace());
+                    runtime.setConfigurationElementNamespace(element.getNamespaceIdentifier());
                     runtimeDefinitions.add(runtime);
                 }
             }
@@ -102,7 +102,7 @@ public class XMLUtils {
 
     private java.net.URI getDefinitionFile(IConfigurationElement element) {
         
-        Bundle bundle = Platform.getBundle(element.getNamespace());
+        Bundle bundle = Platform.getBundle(element.getNamespaceIdentifier());
         String definitionFile = element.getAttribute("definitionfile"); //$NON-NLS-1$
         Trace.trace(Trace.FINEST,"Loading serverdef file "+definitionFile+" from bundle "+bundle.getSymbolicName()); //$NON-NLS-1$ //$NON-NLS-2$
         
