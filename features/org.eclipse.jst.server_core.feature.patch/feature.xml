@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.jst.server_core.feature.patch"
+      label="%featureName"
+      version="1.5.5.qualifier"
+      provider-name="%providerName">
+
+   <description>
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <requires>
+      <import feature="org.eclipse.jst.server_core.feature" version="1.5.4.v200704150241--2PD88Q8PCH7787" patch="true"/>
+   </requires>
+
+   <plugin
+         id="org.eclipse.jst.server.generic.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
