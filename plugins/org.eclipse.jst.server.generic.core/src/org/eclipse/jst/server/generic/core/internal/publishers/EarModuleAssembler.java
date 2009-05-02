@@ -1,5 +1,5 @@
 /***************************************************************************************************
- * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * Copyright (c) 2005, 2009 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
@@ -18,9 +18,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.core.IEnterpriseApplication;
+import org.eclipse.jst.server.core.IJ2EEModule;
+import org.eclipse.jst.server.core.PublishUtil;
 import org.eclipse.jst.server.generic.core.internal.CorePlugin;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
 import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.internal.Server;
+import org.eclipse.wst.server.core.model.IModuleResource;
+import org.eclipse.wst.server.core.model.IModuleResourceDelta;
+import org.eclipse.wst.server.core.util.ProjectModule;
 
 /**
  * Utility for EAR module assembly.
@@ -33,23 +39,43 @@ public class EarModuleAssembler extends AbstractModuleAssembler {
 	}
 
 	public IPath assemble(IProgressMonitor monitor) throws CoreException{
+		//copy ear root to the temporary assembly directory
 		IPath parent =copyModule(fModule,monitor);
 		IEnterpriseApplication earModule = (IEnterpriseApplication)fModule.loadAdapter(IEnterpriseApplication.class, monitor);
 		IModule[] childModules = earModule.getModules();
 		for (int i = 0; i < childModules.length; i++) {
 			IModule module = childModules[i];
 			String uri = earModule.getURI(module);
-			if(uri==null){
+			if(uri==null){ //The bad memories of WTP 1.0
 				IStatus status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0,	"unable to assemble module null uri",null ); //$NON-NLS-1$
 				throw new CoreException(status);
 			}
-				
-			packModule(module,uri, parent);
+			IJ2EEModule jeeModule = (IJ2EEModule) module.loadAdapter(IJ2EEModule.class,monitor);
+			if( jeeModule != null && jeeModule.isBinary() ){//Binary module just copy
+				ProjectModule pm = (ProjectModule) module.loadAdapter(ProjectModule.class, null);
+				IModuleResource[] resources = pm.members();
+				PublishUtil.publishFull(resources, parent, monitor);
+				continue;//done! no need to go further
+			}
+			if( shouldRepack( module ) ){	
+			    packModule(module,uri, parent);
+			}
 		}
 		return parent;
 	}
-	
-	protected void packModule(IModule module, String deploymentUnitName, IPath destination) throws CoreException {
+	/**
+     * Checks if there has been a change in the published resources.
+     * @param module
+     * @return module changed
+	 */
+	private boolean shouldRepack( IModule module ) {
+        final Server server = (Server) fServer.getServer();
+        final IModule[] modules ={module}; 
+        IModuleResourceDelta[] deltas = server.getPublishedResourceDelta( modules );
+        return deltas.length > 0;
+    }
+
+    protected void packModule(IModule module, String deploymentUnitName, IPath destination) throws CoreException {
 		if(module.getModuleType().getId().equals("jst.web")) //$NON-NLS-1$
 		{
 			AbstractModuleAssembler assembler= AbstractModuleAssembler.Factory.getModuleAssembler(module, fServer);
