@@ -38,6 +38,7 @@ import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.jst.server.core.IEnterpriseApplication;
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.generic.core.internal.CorePlugin;
 import org.eclipse.jst.server.generic.core.internal.GenericPublisher;
@@ -50,6 +51,7 @@ import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.PublisherData;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
+import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.osgi.framework.Bundle;
 
@@ -118,10 +120,11 @@ public class AntPublisher extends GenericPublisher {
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public IStatus[] publish(IModuleArtifact[] resource, IProgressMonitor monitor) {
-		if (getModule().length > 1)// only respond to root module calls.
-			return null;
-		try {
-			if (monitor.isCanceled()) return null;		
+		
+		if (getModule().length > 1 || // only respond to root module calls.
+				!publishNeeded() ||
+				monitor.isCanceled()) return null; 	
+		try {	
 			assembleModule(monitor);
 			File file = getCustomBuildFile();
 			if ( file == null){// no user selected build file use the adapter default.
@@ -134,6 +137,28 @@ public class AntPublisher extends GenericPublisher {
 			return new IStatus[] { s };
 		}
 		return null;
+	}
+	/**
+	 * Checks if the Ant publisher actually needs to publish. 
+	 * For ear modules it also checks if any of the children modules requires publishing.
+	 * @return true if ant publisher needs to publish.
+	 */
+	private boolean publishNeeded() {
+		if ( getKind() != IServer.PUBLISH_INCREMENTAL && getKind() != IServer.PUBLISH_AUTO )
+			return true;
+		if (getDeltaKind() != ServerBehaviourDelegate.NO_CHANGE )
+			return true;
+		if ( isModuleType(getModule()[0], "jst.ear") ){ //$NON-NLS-1$
+			IEnterpriseApplication earModule = (IEnterpriseApplication)getModule()[0].loadAdapter(IEnterpriseApplication.class, new NullProgressMonitor());
+			IModule[] childModules = earModule.getModules();
+			for (int i = 0; i < childModules.length; i++) {
+				IModule module = childModules[i];
+			    IModule[] modules ={getModule()[0], module};
+			    if (IServer.PUBLISH_STATE_NONE != this.getServer().getServer().getModulePublishState(modules))
+			    	return true;
+			}
+		}
+		return false;	
 	}
 
 	protected void assembleModule(IProgressMonitor monitor) throws CoreException {
