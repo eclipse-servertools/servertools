@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2009 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -95,9 +95,8 @@ public class ServerEditor extends MultiPageEditorPart {
 			// do nothing
 		}
 		public void serverRemoved(IServer oldServer) {
-			if (!isClosed() &&  oldServer.equals(server.getOriginal())){
-				closeEditor(false);
-			}
+			if (oldServer.equals(server) && !isDirty())
+				closeEditor();
 		}
 	}
 
@@ -171,10 +170,10 @@ public class ServerEditor extends MultiPageEditorPart {
 	/**
 	 * Close the editor correctly.
 	 */
-	protected void closeEditor(final boolean save) {
+	protected void closeEditor() {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				getEditorSite().getPage().closeEditor(ServerEditor.this, save);
+				getEditorSite().getPage().closeEditor(ServerEditor.this, false);
 			}
 		});
 	}
@@ -931,7 +930,7 @@ public class ServerEditor extends MultiPageEditorPart {
 			if (dialog.open() == 0)
 				doSave(new NullProgressMonitor());
 			else
-				closeEditor(false);
+				closeEditor();
 			return;
 		}
 		resourceDeleted = false;
@@ -977,13 +976,5 @@ public class ServerEditor extends MultiPageEditorPart {
 
 	public int getOrientation() {
 		return Window.getDefaultOrientation();
-	}
-	
-	protected boolean isClosed(){
-		return getContainer().isDisposed();
-	}
-	
-	public IServerWorkingCopy getServerWorkingCopy(){
-		return server;
 	}
 }
