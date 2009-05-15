@@ -31,12 +31,6 @@
     id="org.eclipse.wst.server.ui"
     name="%category"/>
 
-  <view
-    id="org.eclipse.wst.server.ui.ServersView2"
-    name="%viewServers_old"
-    category="org.eclipse.wst.server.ui"
-    class="org.eclipse.wst.server.ui.internal.view.servers.ServersView"
-    icon="icons/cview16/servers_view.gif"/>
 
   <view
         allowMultiple="false"
@@ -144,7 +138,7 @@
     <view
       relative="org.eclipse.debug.ui.DebugView"
       relationship="stack"
-      id="org.eclipse.wst.server.ui.ServersView2">
+      id="org.eclipse.wst.server.ui.ServersView">
     </view>
   </perspectiveExtension>
 </extension>
