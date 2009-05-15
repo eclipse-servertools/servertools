@@ -1765,7 +1765,7 @@ public class Server extends Base implements IServer {
 		}
 
 		StartJob startJob = new StartJob(mode2);
-		if (opListener != null && pub == StartJob.PUBLISH_BEFORE) {
+		if (opListener != null && pub != StartJob.PUBLISH_AFTER) {
 			startJob.addJobChangeListener(new JobChangeAdapter() {
 				public void done(IJobChangeEvent event) {
 					opListener.done(event.getResult());
