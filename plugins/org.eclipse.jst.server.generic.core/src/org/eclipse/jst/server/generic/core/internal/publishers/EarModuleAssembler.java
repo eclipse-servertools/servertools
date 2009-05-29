@@ -53,7 +53,8 @@ public class EarModuleAssembler extends AbstractModuleAssembler {
 			if( jeeModule != null && jeeModule.isBinary() ){//Binary module just copy
 				ProjectModule pm = (ProjectModule) module.loadAdapter(ProjectModule.class, null);
 				IModuleResource[] resources = pm.members();
-				publishHelper.publishFull(resources, parent, monitor);
+				// It's assumed here that the URI at least includes the name, and so removing 1 segment is safe
+				publishHelper.publishFull(resources, parent.append(uri).removeLastSegments(1), monitor);
 				continue;//done! no need to go further
 			}
 			if( shouldRepack( module ) ){	
