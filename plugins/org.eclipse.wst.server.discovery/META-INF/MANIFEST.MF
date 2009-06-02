@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Plug-in Discovery Plug-in
-Bundle-Vendor: Eclipse.org
+Bundle-Name: %bundleName
+Bundle-Vendor: %bundleVendor
 Bundle-SymbolicName: org.eclipse.wst.server.discovery
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.wst.server.discovery.internal.Activator
