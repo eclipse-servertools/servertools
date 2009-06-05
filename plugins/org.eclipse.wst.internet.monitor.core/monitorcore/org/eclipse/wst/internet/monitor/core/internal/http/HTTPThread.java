@@ -220,7 +220,7 @@ Host: localhost:8081
 						b2Index += n;
 					}
 					out.write(readBuffer, 0, n);					
-					Trace.trace(Trace.PARSING,  "[Request] bytes read: "+ n + " bytesLeft: "+ bytesLeft);
+					Trace.trace(Trace.PARSING, "[Request] bytes read: "+ n + " bytesLeft: "+ bytesLeft);
 				}
 				
 				// restore the byte array for display
@@ -356,6 +356,7 @@ Host: localhost:8081
 			byte[] b = readLine();
 	
 			String s = new String(b);
+			Trace.trace(Trace.PARSING, "Chunk-length: "+s);
 			int index = s.indexOf(" ");
 			int length = -1;
 			try {
@@ -620,7 +621,7 @@ Host: localhost:8081
 			if (port != 80)
 				t += ":" + port;
 			return convert(t.getBytes());
-		} else if (s.startsWith("Content-Length: ")) {
+		} else if (s.toLowerCase().startsWith("content-length: ")) {
 			try {
 				contentLength = Integer.parseInt(s.substring(16).trim());
 				Trace.trace(Trace.PARSING, "Content length: " + this + " " + contentLength);
