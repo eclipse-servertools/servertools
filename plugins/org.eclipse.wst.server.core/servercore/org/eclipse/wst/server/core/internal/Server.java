@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -52,6 +52,12 @@ public class Server extends Base implements IServer {
 	public static final int AUTO_PUBLISH_DISABLE = 1;
 	public static final int AUTO_PUBLISH_ENABLE = 2;
 
+	private static String PUBLISH_AUTO_STRING = "auto";
+	private static String PUBLISH_CLEAN_STRING = "clean";
+	private static String PUBLISH_FULL_STRING = "full";
+	private static String PUBLISH_INCREMENTAL_STRING = "incremental";
+	private static String PUBLISH_UNKOWN = "unkown";
+	
 	protected static final String PROP_HOSTNAME = "hostname";
 	protected static final String SERVER_ID = "server-id";
 	protected static final String RUNTIME_ID = "runtime-id";
@@ -239,12 +245,6 @@ public class Server extends Base implements IServer {
 			this.modules4 = modules4;
 			this.start = start;
 			this.info = info;
-			
-			// 102227 - lock entire workspace during publish
-			ISchedulingRule rule = MultiRule.combine(new ISchedulingRule[] {
-				ResourcesPlugin.getWorkspace().getRoot(), Server.this
-			});
-			setRule(rule);
 		}
 
 		public boolean belongsTo(Object family) {
@@ -253,12 +253,30 @@ public class Server extends Base implements IServer {
 
 		protected IStatus run(IProgressMonitor monitor) {
 			if (start) {
-				IStatus status = startImpl(ILaunchManager.RUN_MODE, monitor);
-				if (status != null && status.getSeverity() == IStatus.ERROR)
-					return status;
+				try{
+					// 237222 - Apply the rules only when the job has started
+					Job.getJobManager().beginRule(Server.this, monitor);
+					IStatus status = startImpl(ILaunchManager.RUN_MODE, monitor);
+					if (status != null && status.getSeverity() == IStatus.ERROR)
+						return status;
+				}
+				finally{
+					Job.getJobManager().endRule(Server.this);
+				}
 			}
 			
-			return publishImpl(kind, modules4, info, monitor);
+			// 102227 - lock entire workspace during publish
+			ISchedulingRule publishRule = MultiRule.combine(new ISchedulingRule[] {
+				ResourcesPlugin.getWorkspace().getRoot(), Server.this
+			});
+			
+			try{
+				// 237222 - Apply the rules only when the job has started
+				Job.getJobManager().beginRule(publishRule, monitor);	
+				return publishImpl(kind, modules4, info, monitor);
+			} finally {
+				Job.getJobManager().endRule(publishRule);
+			}
 		}
 	}
 
@@ -268,24 +286,12 @@ public class Server extends Base implements IServer {
 		protected static final byte PUBLISH_AFTER = 2;
 
 		protected String launchMode;
-		protected byte publish;
 
-		public StartJob(String launchMode, byte publish) {
+		public StartJob(String launchMode) {
 			super(NLS.bind(Messages.jobStartingServer, Server.this.getName()));
 			this.launchMode = launchMode;
-			this.publish = publish;
 			
-			if (publish != PUBLISH_NONE) {
-				IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
-				
-				// 102227 - lock entire workspace during publish		
-				ISchedulingRule[] rules = new ISchedulingRule[2];
-				rules[0] = ruleFactory.createRule(ResourcesPlugin.getWorkspace().getRoot());
-				rules[1] = Server.this;
-				
-				setRule(MultiRule.combine(rules));
-			} else
-				setRule(Server.this);
+			setRule(Server.this);
 		}
 
 		public boolean belongsTo(Object family) {
@@ -297,21 +303,7 @@ public class Server extends Base implements IServer {
 		}
 
 		protected IStatus run(IProgressMonitor monitor) {
-			if (publish == PUBLISH_BEFORE) {
-				IStatus status = publishImpl(IServer.PUBLISH_INCREMENTAL, null, null, monitor);
-				if (status != null && status.getSeverity() == IStatus.ERROR)
-					return status;
-			}
-			
 			IStatus stat = startImpl(launchMode, monitor);
-			
-			if ( IStatus.ERROR != stat.getSeverity() ) {
-				if (publish == PUBLISH_AFTER) {
-					IStatus status = publishImpl(IServer.PUBLISH_INCREMENTAL, null, null, monitor);
-					if (status != null && status.getSeverity() == IStatus.ERROR)
-						return status;
-				}
-			}
 			return stat;
 		}
 	}
@@ -449,10 +441,11 @@ public class Server extends Base implements IServer {
 				try {
 					long time = System.currentTimeMillis();
 					delegate = ((ServerType) serverType).createServerDelegate();
-					InternalInitializer.initializeServerDelegate(delegate, Server.this, monitor);
+					if (delegate != null)
+						InternalInitializer.initializeServerDelegate(delegate, Server.this, monitor);
 					Trace.trace(Trace.PERFORMANCE, "Server.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
 				} catch (Throwable t) {
-					Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
+					ServerPlugin.logExtensionFailure(toString(), t);
 				}
 			}
 		}
@@ -468,13 +461,14 @@ public class Server extends Base implements IServer {
 				try {
 					long time = System.currentTimeMillis();
 					behaviourDelegate = ((ServerType) serverType).createServerBehaviourDelegate();
-					InternalInitializer.initializeServerBehaviourDelegate(behaviourDelegate, Server.this, monitor);
+					if (behaviourDelegate != null)
+						InternalInitializer.initializeServerBehaviourDelegate(behaviourDelegate, Server.this, monitor);
 					Trace.trace(Trace.PERFORMANCE, "Server.getBehaviourDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
 					
 					if (getServerState() == IServer.STATE_STARTED)
 						autoPublish();
 				} catch (Throwable t) {
-					Trace.trace(Trace.SEVERE, "Could not create behaviour delegate " + toString(), t);
+					ServerPlugin.logExtensionFailure(toString(), t);
 				}
 			}
 		}
@@ -579,7 +573,11 @@ public class Server extends Base implements IServer {
 	public void setServerState(int state) {
 		if (state == serverState)
 			return;
-
+		
+		// ensure that any server monitors are started
+		if (state == IServer.STATE_STARTED)
+			ServerMonitorManager.getInstance();
+		
 		this.serverState = state;
 		fireServerStateChangeEvent();
 	}
@@ -767,6 +765,10 @@ public class Server extends Base implements IServer {
 	protected void handleModuleProjectChange(IModule module) {
 		Trace.trace(Trace.FINEST, "> handleDeployableProjectChange() " + this + " " + module);
 		
+		if (!isModuleDeployed(module)){
+			return;
+		}
+		
 		// check for duplicate jobs already waiting and don't create a new one
 		Job[] jobs = Job.getJobManager().find(ServerUtil.SERVER_JOB_FAMILY);
 		if (jobs != null) {
@@ -786,6 +788,30 @@ public class Server extends Base implements IServer {
 		job.schedule();
 		
 		Trace.trace(Trace.FINEST, "< handleDeployableProjectChange()");
+	}
+	
+	protected boolean isModuleDeployed(final IModule requestedModule){
+		Trace.trace(Trace.FINEST, "> isModuleDeployed()");
+
+		// no modules are deployed
+		if (modules.isEmpty())
+			return false;
+		
+		// shallow search: check for root modules first
+		boolean rv = modules.contains(requestedModule);
+		
+		// deep search: look into all the child modules
+		rv = !visitModule(modules.toArray(new IModule[0]), new IModuleVisitor(){
+				public boolean visit(IModule[] modules2) {
+					for (int i =0;i<=modules2.length-1;i++){
+						if (modules2[i].equals(requestedModule))
+							return false;
+					}
+					return !modules2.equals(requestedModule);
+			}}, null);
+		
+		Trace.trace(Trace.FINEST, "< isModuleDeployed() rv="+rv);
+		return rv;
 	}
 
 	protected void stopAutoPublish() {
@@ -1099,9 +1125,9 @@ public class Server extends Base implements IServer {
 
 	/*
 	 * Publish the given modules to the server.
-	 * TODO: Implementation!
 	 */
 	public void publish(final int kind, final List<IModule[]> modules2, final IAdaptable info, final IOperationListener opListener) {
+		Trace.trace(Trace.FINEST, "-->-- publish() kind: <"+getPublishKindString(kind)+"> modules=" + modules2 + " -->--");
 		if (getServerType() == null) {
 			if (opListener != null)
 				opListener.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorMissingAdapter, null));
@@ -1515,29 +1541,6 @@ public class Server extends Base implements IServer {
 	}
 
 	/**
-	 * @see IServer#start(String, IProgressMonitor)
-	 */
-	public void start(String mode2, IProgressMonitor monitor) throws CoreException {
-		Trace.trace(Trace.FINEST, "Starting server: " + toString() + ", launchMode: " + mode2);
-		if (getServerType() == null)
-			return;
-		
-		// make sure that the delegate is loaded and the server state is correct
-		loadAdapter(ServerBehaviourDelegate.class, null);
-		
-		byte pub = StartJob.PUBLISH_NONE;
-		if (ServerCore.isAutoPublishing() && shouldPublish()) {
-			if (((ServerType)getServerType()).startBeforePublish())
-				pub = StartJob.PUBLISH_AFTER;
-			else
-				pub = StartJob.PUBLISH_BEFORE;
-		}
-		
-		StartJob startJob = new StartJob(mode2, pub);
-		startJob.schedule();
-	}
-
-	/**
 	 * Clean up any metadata associated with the server, typically in preparation for
 	 * deletion.
 	 */
@@ -1670,19 +1673,135 @@ public class Server extends Base implements IServer {
 		job.schedule();
 	}
 
+	protected IStatus publishBeforeStart(IProgressMonitor monitor, boolean synchronous){
+
+		// check if we need to publish
+		byte pub = StartJob.PUBLISH_NONE;
+		if (ServerCore.isAutoPublishing() && shouldPublish()) {
+			if (((ServerType)getServerType()).startBeforePublish())
+				return Status.OK_STATUS;
+			pub = StartJob.PUBLISH_BEFORE;
+		}
+		
+		final IStatus [] pubStatus = new IStatus[]{Status.OK_STATUS};
+		
+		// publish before start
+		byte publish = pub;
+		if (publish == StartJob.PUBLISH_BEFORE) {
+			PublishJob pubJob = new PublishJob(IServer.PUBLISH_INCREMENTAL, null,false, null);
+			pubJob.addJobChangeListener(new JobChangeAdapter(){
+				public void done(IJobChangeEvent event) {
+					IStatus status = event.getResult();
+					if (status != null && status.getSeverity() == IStatus.ERROR)
+						pubStatus[0] = status; 
+				}
+				
+			});
+			
+			pubJob.schedule();
+			
+			try{
+				if (synchronous)
+					pubJob.join();
+					
+			}
+			catch (InterruptedException ie){
+				return Status.CANCEL_STATUS;
+			}
+		}
+		return pubStatus[0];
+	}
+	
+	protected IStatus publishAfterStart(IProgressMonitor monitor, boolean synchronous, final IOperationListener op){
+		
+		// check if we need to publish
+		byte pub = StartJob.PUBLISH_NONE;
+		if (ServerCore.isAutoPublishing() && shouldPublish()) {
+			if (((ServerType)getServerType()).startBeforePublish())
+				pub = StartJob.PUBLISH_AFTER;
+			else
+				return Status.OK_STATUS;
+		}
+		
+		final IStatus [] pubStatus = new IStatus[]{Status.OK_STATUS};
+		
+		// publish after start
+		byte publish = pub;
+		if (publish == StartJob.PUBLISH_AFTER) {
+			PublishJob pubJob = new PublishJob(IServer.PUBLISH_INCREMENTAL, null,false, null);
+			pubJob.addJobChangeListener(new JobChangeAdapter(){
+				public void done(IJobChangeEvent event) {
+					IStatus status = event.getResult();
+					if (status != null && status.getSeverity() == IStatus.ERROR)
+						pubStatus[0] = status; 
+					if (op != null){
+						op.done(status);
+					}
+				}
+				
+			});
+			
+			pubJob.schedule();
+			
+			try{
+				if (synchronous)
+					pubJob.join();
+			}
+			catch (InterruptedException ie){
+				return Status.CANCEL_STATUS;
+			}
+		}
+		return pubStatus[0];
+	}
+	
+	/**
+	 * @see IServer#start(String, IProgressMonitor)
+	 */
+	public void start(String mode2, IProgressMonitor monitor) throws CoreException {
+		Trace.trace(Trace.FINEST, "Starting server: " + toString() + ", launchMode: " + mode2);
+		
+		// make sure that the delegate is loaded and the server state is correct
+		loadAdapter(ServerBehaviourDelegate.class, null);
+		
+		if (getServerType() == null)
+			return;
+		
+		IStatus status = publishBeforeStart(monitor,false);
+		
+		if (status != null && status.getSeverity() == IStatus.ERROR){
+			Trace.trace(Trace.FINEST,"Failed publish job during start routine");
+			return;
+		}
+		
+		StartJob startJob = new StartJob(mode2);
+		startJob.schedule();
+		
+		publishAfterStart(monitor,false,null);
+
+	}
+	
 	/**
 	 * @see IServer#start(String, IOperationListener)
 	 */
 	public void start(String mode2, final IOperationListener opListener) {
+		
+		// make sure that the delegate is loaded and the server state is correct
+		loadAdapter(ServerBehaviourDelegate.class, null);
+		
 		if (getServerType() == null) {
 			if (opListener != null)
 				opListener.done(Status.OK_STATUS);
 			return;
 		}
 		
-		// make sure that the delegate is loaded and the server state is correct
-		loadAdapter(ServerBehaviourDelegate.class, null);
+		IStatus status = publishBeforeStart(null,false);
 		
+		if (status != null && status.getSeverity() == IStatus.ERROR){
+			Trace.trace(Trace.FINEST,"Failed publish job during start routine");
+			return;
+		}
+
+		// check the publish flag (again) to determine when to call opListener.done 
 		byte pub = StartJob.PUBLISH_NONE;
 		if (ServerCore.isAutoPublishing() && shouldPublish()) {
 			if (((ServerType)getServerType()).startBeforePublish())
@@ -1690,9 +1809,9 @@ public class Server extends Base implements IServer {
 			else
 				pub = StartJob.PUBLISH_BEFORE;
 		}
-		
-		StartJob startJob = new StartJob(mode2, pub);
-		if (opListener != null) {
+
+		StartJob startJob = new StartJob(mode2);
+		if (opListener != null && pub != StartJob.PUBLISH_AFTER) {
 			startJob.addJobChangeListener(new JobChangeAdapter() {
 				public void done(IJobChangeEvent event) {
 					opListener.done(event.getResult());
@@ -1700,24 +1819,26 @@ public class Server extends Base implements IServer {
 			});
 		}
 		startJob.schedule();
+		
+		publishAfterStart(null,false, opListener);
 	}
 
 	public void synchronousStart(String mode2, IProgressMonitor monitor) throws CoreException {
+		
+		// make sure that the delegate is loaded and the server state is correct
+		loadAdapter(ServerBehaviourDelegate.class, null);
+		
 		if (getServerType() == null)
 			return;
 		
-		// make sure that the delegate is loaded and the server state is correct
-		loadAdapter(ServerBehaviourDelegate.class, monitor);
+		IStatus status = publishBeforeStart(monitor,true);
 		
-		byte pub = StartJob.PUBLISH_NONE;
-		if (ServerCore.isAutoPublishing() && shouldPublish()) {
-			if (((ServerType)getServerType()).startBeforePublish())
-				pub = StartJob.PUBLISH_AFTER;
-			else
-				pub = StartJob.PUBLISH_BEFORE;
+		if (status != null && status.getSeverity() == IStatus.ERROR){
+			Trace.trace(Trace.FINEST,"Failed publish job during start routine");
+			return;
 		}
 		
-		StartJob startJob = new StartJob(mode2, pub);
+		StartJob startJob = new StartJob(mode2);
 		startJob.schedule();
 		
 		try {
@@ -1725,6 +1846,8 @@ public class Server extends Base implements IServer {
 		} catch (InterruptedException e) {
 			Trace.trace(Trace.WARNING, "Error waiting for job", e);
 		}
+		
+		publishAfterStart(monitor,true,null);
 	}
 
 	/*
@@ -2024,7 +2147,7 @@ public class Server extends Base implements IServer {
 		try {
 			return getDelegate(monitor).canModifyModules(add, remove);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate canModifyModules() " + toString(), e);
+			ServerPlugin.logExtensionFailure(toString(), e);
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, e.getMessage(), e);
 		}
 	}
@@ -2138,7 +2261,7 @@ public class Server extends Base implements IServer {
 				return null;
 			return children;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate getChildModules() " + toString(), e);
+			ServerPlugin.logExtensionFailure(toString(), e);
 			return null;
 		}
 	}
@@ -2155,7 +2278,7 @@ public class Server extends Base implements IServer {
 			//Trace.trace(Trace.FINER, "CoreException calling delegate getParentModules() " + toString(), se);
 			throw se;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate getParentModules() " + toString(), e);
+			ServerPlugin.logExtensionFailure(toString(), e);
 			return null;
 		}
 	}
@@ -2179,7 +2302,7 @@ public class Server extends Base implements IServer {
 			if (b)
 				return Status.OK_STATUS;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate canRestartRuntime() " + toString(), e);
+			ServerPlugin.logExtensionFailure(toString(), e);
 		}
 		return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorRestartModule, null);
 	}
@@ -2214,7 +2337,7 @@ public class Server extends Base implements IServer {
 		try {
 			getBehaviourDelegate(null).startModule(module, null);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate restartModule() " + toString(), e);
+			Trace.trace(Trace.SEVERE, "Error calling delegate startModule() " + toString(), e);
 		}
 	}
 
@@ -2227,7 +2350,7 @@ public class Server extends Base implements IServer {
 		try {
 			getBehaviourDelegate(null).stopModule(module, null);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate restartModule() " + toString(), e);
+			Trace.trace(Trace.SEVERE, "Error calling delegate stopModule() " + toString(), e);
 		}
 	}
 
@@ -2254,7 +2377,7 @@ public class Server extends Base implements IServer {
 		try {
 			return getDelegate(monitor).getServerPorts();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate getServerPorts() " + toString(), e);
+			ServerPlugin.logExtensionFailure(toString(), e);
 			return null;
 		}
 	}
@@ -2391,6 +2514,7 @@ public class Server extends Base implements IServer {
 
 	protected IStatus publishImpl(int kind, List<IModule[]> modules4, IAdaptable info, IProgressMonitor monitor) {
 		Trace.trace(Trace.FINEST, "-->-- Publishing to server: " + Server.this.toString() + " -->--");
+		Trace.trace(Trace.FINEST, "Server.publishImpl(): kind=<"+getPublishKindString(kind)+"> modules=" + modules4);
 		
 		stopAutoPublish();
 		
@@ -2423,7 +2547,7 @@ public class Server extends Base implements IServer {
 			getServerPublishInfo().save();
 			
 			firePublishFinished(Status.OK_STATUS);
-			Trace.trace(Trace.PERFORMANCE, "Server.publish(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
+			Trace.trace(Trace.PERFORMANCE, "Server.publishImpl(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
 			return status;
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate publish() " + Server.this.toString(), e);
@@ -2623,12 +2747,10 @@ public class Server extends Base implements IServer {
 		
 		if (timer.timeout) {
 			stop(false);
-			// TODO this message should be changed to restart time out
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorRestartFailed, new String[] { getName(), (restartTimeout / 1000) + "" }), null);
 		}
 		
 		if (getServerState() == IServer.STATE_STOPPED)
-			// TODO this message should be changed to restart time out
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorRestartFailed, getName()), null);
 		
 		Trace.trace(Trace.FINEST, "synchronousRestart 4");
@@ -2679,7 +2801,7 @@ public class Server extends Base implements IServer {
 					if (totalTimeout < 0)
 						totalTimeout = 1;
 					boolean userCancelled = false;
-					int retryPeriod = 2500;
+					int retryPeriod = 1000;
 					while (!notified[0] && totalTimeout > 0 && !userCancelled && !timer.alreadyDone) {
 						Thread.sleep(retryPeriod);
 						if (serverTimeout > 0)
@@ -2687,7 +2809,8 @@ public class Server extends Base implements IServer {
 						if (!notified[0] && !timer.alreadyDone && monitor2.isCanceled()) {
 							// user canceled - set the server state to stopped
 							userCancelled = true;
-							setServerState(IServer.STATE_STOPPED);
+							if (launch != null && !launch.isTerminated())
+								launch.terminate();
 							// notify waiter
 							synchronized (notified) {
 								Trace.trace(Trace.FINEST, "synchronousStart user cancelled");
@@ -2751,7 +2874,7 @@ public class Server extends Base implements IServer {
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartTimeout, new String[] { getName(), (serverTimeout / 1000) + "" }), null);
 		}
 		
-		if (getServerState() == IServer.STATE_STOPPED)
+		if (!monitor.isCanceled() && getServerState() == IServer.STATE_STOPPED)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartFailed, getName()), null);
 		
 		Trace.trace(Trace.FINEST, "synchronousStart 4");
@@ -2893,4 +3016,20 @@ public class Server extends Base implements IServer {
 	public String toString() {
 		return getName();
 	}
-}
+	
+	private String getPublishKindString(int kind){
+		if (kind == IServer.PUBLISH_AUTO){
+			return PUBLISH_AUTO_STRING;
+		}
+		else if (kind == IServer.PUBLISH_CLEAN){
+			return PUBLISH_CLEAN_STRING;
+		}
+		else if (kind == IServer.PUBLISH_FULL){
+			return PUBLISH_FULL_STRING;
+		}
+		else if (kind == IServer.PUBLISH_INCREMENTAL){
+			return PUBLISH_INCREMENTAL_STRING;
+		}
+		return PUBLISH_UNKOWN;
+	}
+} 

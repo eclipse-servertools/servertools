@@ -331,6 +331,20 @@ public class ServerPlugin extends Plugin {
 		context.removeBundleListener(bundleListener);
 	}
 
+	/**
+	 * Logs an error message caused by a missing or failed extension
+	 * (server adapters, runtime, class-path provider, etc.). A single
+	 * error is output to the .log (once per session) and the full
+	 * exception is output to tracing.
+	 * 
+	 * @param id the id of the missing/failed extension
+	 * @param t a throwable or exception
+	 */
+	public static void logExtensionFailure(String id, Throwable t) {
+		Trace.trace(Trace.SEVERE, "Missing or failed server extension: " + id + ". Enable tracing for more information");
+		Trace.trace(Trace.WARNING, "Exception in server delegate", t);
+	}
+
 	private static void addAll(List<Object> list, Object[] obj) {
 		if (obj == null)
 			return;

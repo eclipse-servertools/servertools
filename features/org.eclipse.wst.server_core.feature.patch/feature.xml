@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.wst.server_core.feature.patch"
-      label="Patch Feature for Server Core"
-      version="1.0.0.qualifier"
-      provider-name="Eclipse.org">
+    label="%featureName"
+    version="3.0.5.qualifier"
+    provider-name="%providerName">
 
-   <description>
-      %description
-   </description>
+    <description>%description</description>
 
-   <copyright>
-      %copyright
-   </copyright>
+    <copyright>%copyright</copyright>
 
-   <license url="%licenseURL">
-      %license
-   </license>
+    <license url="%licenseURL">%license</license>
 
    <requires>
-      <import feature="org.eclipse.wst.server_core.feature" version="1.5.4.v200704150133-----1G955H5G5Ep" patch="true"/>
+      <import feature="org.eclipse.wst.server_core.feature" version="3.0.5.v20090430-20Ao8s733K3_6A1226" patch="true"/>
    </requires>
 
    <plugin
          id="org.eclipse.wst.server.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.wst.internet.monitor.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
