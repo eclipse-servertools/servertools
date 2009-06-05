@@ -220,7 +220,7 @@ Host: localhost:8081
 						b2Index += n;
 					}
 					out.write(readBuffer, 0, n);					
-					Trace.trace(Trace.PARSING,  "[Request] bytes read: "+ n + " bytesLeft: "+ bytesLeft);
+					Trace.trace(Trace.PARSING, "[Request] bytes read: "+ n + " bytesLeft: "+ bytesLeft);
 				}
 				
 				// restore the byte array for display
@@ -356,6 +356,7 @@ Host: localhost:8081
 			byte[] b = readLine();
 	
 			String s = new String(b);
+			Trace.trace(Trace.PARSING, "Chunk-length: "+s);
 			int index = s.indexOf(" ");
 			int length = -1;
 			try {
@@ -615,19 +616,19 @@ Host: localhost:8081
 	protected byte[] translateHeaderLine(byte[] b) {
 		String s = new String(b);
 	
-		if (isRequest && s.startsWith("Host: ")) {
+		if (isRequest && s.toLowerCase().startsWith("host: ")) {
 			String t = "Host: " + host;
 			if (port != 80)
 				t += ":" + port;
 			return convert(t.getBytes());
-		} else if (s.startsWith("Content-Length: ")) {
+		} else if (s.toLowerCase().startsWith("content-length: ")) {
 			try {
 				contentLength = Integer.parseInt(s.substring(16).trim());
 				Trace.trace(Trace.PARSING, "Content length: " + this + " " + contentLength);
 			} catch (Exception e) {
 				Trace.trace(Trace.PARSING, "Content length error", e);
 			}
-		} else if (s.startsWith("Connection: ")) {
+		} else if (s.toLowerCase().startsWith("connection: ")) {
 			try {
 				String t = s.substring(11).trim();
 				if (t.equalsIgnoreCase("Keep-Alive"))
@@ -644,7 +645,7 @@ Host: localhost:8081
 			} catch (Exception e) {
 				Trace.trace(Trace.PARSING, "Error getting Connection: from header", e);
 			}
-		} else if (s.startsWith("Transfer-Encoding: ")) {
+		} else if (s.toLowerCase().startsWith("transfer-encoding: ")) {
 			String t = s.substring(19).trim();
 			int size = ENCODING_STRING.length;
 			for (int i = 0; i < size; i++) {
