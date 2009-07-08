@@ -382,7 +382,8 @@ public class ServerPlugin extends Plugin {
 		Iterator iterator = list.iterator();
 		while (iterator.hasNext()) {
 			Object obj = iterator.next();
-			if (obj instanceof IServerAttributes && name.equalsIgnoreCase(((IServerAttributes)obj).getName()))
+			if (obj instanceof IServerAttributes && 
+					(name.equalsIgnoreCase(((IServerAttributes)obj).getName()) || name.equalsIgnoreCase(((IServerAttributes)obj).getId()))) 
 				return true;
 			if (obj instanceof IRuntime && name.equalsIgnoreCase(((IRuntime)obj).getName()))
 				return true;
