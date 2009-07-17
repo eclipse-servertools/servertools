@@ -798,20 +798,26 @@ public class Server extends Base implements IServer {
 			return false;
 		
 		// shallow search: check for root modules first
-		boolean rv = modules.contains(requestedModule);
+		boolean deployed = modules.contains(requestedModule);
 		
-		// deep search: look into all the child modules
-		rv = !visitModule(modules.toArray(new IModule[0]), new IModuleVisitor(){
-				public boolean visit(IModule[] modules2) {
-					for (int i =0;i<=modules2.length-1;i++){
-						if (modules2[i].equals(requestedModule))
-							return false;
-					}
-					return !modules2.equals(requestedModule);
-			}}, null);
+		if( !deployed){
+			// deep search: look into all the child modules
+			Iterator<IModule> itr = modules.iterator();
+			while(itr.hasNext() && !deployed){
+				IModule[] m = new IModule[] {itr.next()};
+				deployed = !visitModule(m, new IModuleVisitor(){
+					public boolean visit(IModule[] modules2) {
+						for (int i =0;i<=modules2.length-1;i++){
+							if (modules2[i].equals(requestedModule))
+								return false;
+						}
+						return !modules2.equals(requestedModule);
+				}}, null);
+			}
+		}
 		
-		Trace.trace(Trace.FINEST, "< isModuleDeployed() rv="+rv);
-		return rv;
+		Trace.trace(Trace.FINEST, "< isModuleDeployed() deployed="+deployed);
+		return deployed;
 	}
 
 	protected void stopAutoPublish() {
