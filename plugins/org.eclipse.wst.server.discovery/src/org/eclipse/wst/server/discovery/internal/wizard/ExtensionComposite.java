@@ -453,8 +453,9 @@ public class ExtensionComposite extends Composite {
 	public void deferredInitialize(final List<Object> list, IProgressMonitor monitor) {
 		final List<String> failedSites = new ArrayList<String>();
 		ExtensionUtility.ExtensionListener listener2 = new ExtensionUtility.ExtensionListener() {
-			public void extensionFound(Extension feature) {
-				list.add(feature);
+			public void extensionFound(Extension extension) {
+				list.add(extension);
+				
 				if (progress != null)
 					list.set(0, progress);
 			}

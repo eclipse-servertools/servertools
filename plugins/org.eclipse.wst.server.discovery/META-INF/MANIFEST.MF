@@ -5,16 +5,16 @@ Bundle-Vendor: %bundleVendor
 Bundle-SymbolicName: org.eclipse.wst.server.discovery
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.wst.server.discovery.internal.Activator
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.ui,
- org.eclipse.equinox.p2.core,
- org.eclipse.equinox.p2.metadata.repository,
- org.eclipse.equinox.p2.engine,
- org.eclipse.equinox.p2.metadata,
- org.eclipse.equinox.p2.director,
- org.eclipse.equinox.p2.updatesite,
- org.eclipse.equinox.p2.ui,
- org.eclipse.equinox.p2.repository;bundle-version="1.0.0"
+Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.5.0, 4.0)",
+ org.eclipse.ui;bundle-version="[3.5.0, 4.0)",
+ org.eclipse.equinox.p2.core;bundle-version="[1.0.100, 2.0)",
+ org.eclipse.equinox.p2.metadata.repository;bundle-version="[1.0.100, 2.0)",
+ org.eclipse.equinox.p2.engine;bundle-version="[1.0.100, 2.0)",
+ org.eclipse.equinox.p2.metadata;bundle-version="[1.0.0, 2.0)",
+ org.eclipse.equinox.p2.director;bundle-version="[1.0.100, 2.0)",
+ org.eclipse.equinox.p2.updatesite;bundle-version="[1.0.100, 2.0)",
+ org.eclipse.equinox.p2.ui;bundle-version="[1.0.100, 2.0)",
+ org.eclipse.equinox.p2.repository;bundle-version="[1.0.0, 2.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.wst.server.discovery,

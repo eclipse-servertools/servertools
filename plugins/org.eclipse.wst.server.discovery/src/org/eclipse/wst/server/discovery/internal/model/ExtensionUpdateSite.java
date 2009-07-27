@@ -37,8 +37,6 @@ public class ExtensionUpdateSite {
 
 	private String url;
 	private String featureId;
-	private String homepage;
-	private String supportUrl;
 	private List<String> categories;
 
 	public ExtensionUpdateSite() {
