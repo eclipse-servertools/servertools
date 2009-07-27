@@ -64,8 +64,8 @@ public class SocketUtil {
 				Iterator iter2 = currentAddresses.iterator();
 				while (iter2.hasNext()) {
 					InetAddress addr = (InetAddress) iter2.next();
-					String hostname = addr.getHostName();
-					String hostname2 = addr.getCanonicalHostName();
+					String hostname = addr.getHostName().toLowerCase();
+					String hostname2 = addr.getCanonicalHostName().toLowerCase();
 					synchronized (lock) {
 						if (hostname != null && !addressList.contains(hostname))
 							addressList.add(hostname);
@@ -80,8 +80,8 @@ public class SocketUtil {
 				int length = addrs.length;
 				for (int j = 0; j < length; j++) {
 					InetAddress addr = addrs[0];
-					String hostname = addr.getHostName();
-					String hostname2 = addr.getCanonicalHostName();
+					String hostname = addr.getHostName().toLowerCase();
+					String hostname2 = addr.getCanonicalHostName().toLowerCase();
 					synchronized (lock) {
 						if (addr.isLoopbackAddress()) {
 							if (hostname != null && !addressList.contains(hostname))
@@ -272,19 +272,20 @@ public class SocketUtil {
 	 * @return <code>true</code> if the given host is localhost, and
 	 *    <code>false</code> otherwise
 	 */
-	public static boolean isLocalhost(final String host) {
+	public static boolean isLocalhost(String host) {
 		if (host == null || host.equals(""))
 			return false;
 		
+		host = host.toLowerCase();
 		if ("localhost".equals(host) || "127.0.0.1".equals(host) || "::1".equals(host))
 			return true;
 		
 		// check simple cases
 		try {
 			InetAddress localHostaddr = InetAddress.getLocalHost();
-			if (localHostaddr.getHostName().equals(host)
-					|| host.equals(localHostaddr.getCanonicalHostName())
-					|| localHostaddr.getHostAddress().equals(host))
+			if (host.equals(localHostaddr.getHostName().toLowerCase())
+					|| host.equals(localHostaddr.getCanonicalHostName().toLowerCase())
+					|| host.equals(localHostaddr.getHostAddress().toLowerCase()))
 				return true;
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Localhost caching failure", e);
@@ -332,7 +333,7 @@ public class SocketUtil {
 					Iterator iter = currentAddresses.iterator();
 					while (iter.hasNext()) {
 						InetAddress addr = (InetAddress) iter.next();
-						String a = addr.getHostAddress();
+						String a = addr.getHostAddress().toLowerCase();
 						if (a != null && !localHostCache.contains(a))
 							localHostCache.add(a);
 					}
