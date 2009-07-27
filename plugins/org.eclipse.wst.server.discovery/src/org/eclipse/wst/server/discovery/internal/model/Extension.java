@@ -102,6 +102,7 @@ public class Extension {
 		ProfileChangeRequest pcr = new ProfileChangeRequest(profile);
 		pcr.addInstallableUnits(new IInstallableUnit[] { iu } );
 		provContext = new ProvisioningContext(new URI[] { uri });
+		provContext.setArtifactRepositories(new URI[] { uri });
 		if (!explain)
 			provContext.setProperty("org.eclipse.equinox.p2.director.explain", "false");
 		//provContext = new ProvisioningContext();
