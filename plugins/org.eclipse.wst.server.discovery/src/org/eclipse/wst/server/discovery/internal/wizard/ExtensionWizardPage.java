@@ -49,20 +49,20 @@ public class ExtensionWizardPage extends WizardPage {
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
 		Composite composite = new Composite(parent, SWT.NULL);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
+		GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
+		composite.setLayoutData(data);
 		
 		GridLayout layout = new GridLayout();
 		layout.horizontalSpacing = convertHorizontalDLUsToPixels(4);
 		layout.verticalSpacing = convertVerticalDLUsToPixels(4);
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
-		layout.numColumns = 3;
 		composite.setLayout(layout);
 		//WorkbenchHelp.setHelp(this, ContextIds.SELECT_CLIENT_WIZARD);
 		
 		Label label = new Label(composite, SWT.WRAP);
-		GridData data = new GridData(SWT.FILL, SWT.BEGINNING, false, false);
-		data.horizontalSpan = 3;
+		data = new GridData(SWT.FILL, SWT.BEGINNING, false, false);
+		data.widthHint = 350;
 		label.setLayoutData(data);
 		label.setText(Messages.wizExtensionMessage);
 		
@@ -71,9 +71,8 @@ public class ExtensionWizardPage extends WizardPage {
 				handleSelection(sel);
 			}
 		});
-		data = new GridData(SWT.FILL, SWT.FILL, true, false);
-		data.widthHint = 200;
-		data.heightHint = 400;
+		data = new GridData(SWT.FILL, SWT.FILL, true, true);
+		data.heightHint = 375;
 		comp.setLayoutData(data);
 		
 		Dialog.applyDialogFont(composite);
@@ -106,6 +105,7 @@ public class ExtensionWizardPage extends WizardPage {
 							nextPage = errorPage;
 							((ExtensionWizard)getWizard()).setSecondPage(nextPage);
 						}
+						monitor.done();
 					}
 				});
 			} catch (Exception e) {
