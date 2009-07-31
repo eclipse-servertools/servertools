@@ -800,7 +800,7 @@ public class Server extends Base implements IServer {
 		// shallow search: check for root modules first
 		boolean deployed = modules.contains(requestedModule);
 		
-		if( !deployed){
+		if(!deployed){
 			// deep search: look into all the child modules
 			Iterator<IModule> itr = modules.iterator();
 			while(itr.hasNext() && !deployed){
@@ -811,7 +811,7 @@ public class Server extends Base implements IServer {
 							if (modules2[i].equals(requestedModule))
 								return false;
 						}
-						return !modules2.equals(requestedModule);
+						return true;
 				}}, null);
 			}
 		}
