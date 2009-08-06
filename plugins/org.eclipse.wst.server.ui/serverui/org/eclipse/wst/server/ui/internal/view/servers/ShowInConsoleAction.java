@@ -46,7 +46,7 @@ public class ShowInConsoleAction extends AbstractServerAction {
 	}
 
 	public boolean accept(IServer server) {
-		return (server.getServerType() != null && server.getServerState() != IServer.STATE_STOPPED);
+		return (server.getServerType() != null && server.getServerState() != IServer.STATE_STOPPED) && server.getLaunch() != null;
 	}
 
 	public void perform(IServer server) {
