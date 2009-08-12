@@ -28,7 +28,6 @@ public class Messages extends NLS {
 
 	public static String installConfirm;
 	public static String installJobName;
-	public static String installPromptRestart;
 
 	static {
 		NLS.initializeMessages(Activator.PLUGIN_ID + ".internal.Messages", Messages.class);
