@@ -21,7 +21,6 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.discovery.internal.ImageResource;
 import org.eclipse.wst.server.discovery.internal.Messages;
 import org.eclipse.wst.server.discovery.internal.model.Extension;
@@ -121,44 +120,11 @@ public class ExtensionWizard extends Wizard {
 		String name = NLS.bind(Messages.installJobName, extension.getName());
 		Job job = new Job(name) {
 			public IStatus run(IProgressMonitor monitor) {
-				IStatus status = extension.install(monitor);
-				if (status.isOK() && !monitor.isCanceled())
-					promptRestart();
-				return status;
+				return extension.install(monitor);
 			}
 		};
 		job.setUser(true);
 		job.schedule();
 		return true;
-	}
-
-	/**
-	 * Prompt the user to restart.
-	 */
-	protected static void promptRestart() {
-		final Display display = Display.getDefault();
-		display.asyncExec(new Runnable() {
-			public void run() {
-				if (MessageDialog.openQuestion(display.getActiveShell(),
-						Messages.dialogTitle, Messages.installPromptRestart)) {
-					Thread t = new Thread("Restart thread") {
-						public void run() {
-							try {
-								sleep(1000);
-							} catch (Exception e) {
-								// ignore
-							}
-							display.asyncExec(new Runnable() {
-								public void run() {
-									PlatformUI.getWorkbench().restart();
-								}
-							});
-						}
-					};
-					t.setDaemon(true);
-					t.start();
-				}
-			}
-		});
 	}
 }
