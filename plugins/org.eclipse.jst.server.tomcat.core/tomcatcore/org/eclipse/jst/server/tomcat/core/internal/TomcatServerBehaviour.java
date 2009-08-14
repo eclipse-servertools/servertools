@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -479,7 +479,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		
 		// ping server to check for startup
 		try {
-			String url = "http://localhost";
+			String url = "http://" + getServer().getHost();
 			int port = configuration.getMainPort().getPort();
 			if (port != 80)
 				url += ":" + port;
