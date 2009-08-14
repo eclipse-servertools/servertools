@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -98,7 +98,8 @@ public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 			runner.run(runConfig, launch, monitor);
 			tomcatServer.addProcessListener(launch.getProcesses()[0]);
 		} catch (Exception e) {
-			// ignore - process failed
+			// Ensure we don't continue to think the server is starting
+			tomcatServer.stopImpl();
 		}
 	}
 }
