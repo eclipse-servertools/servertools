@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,7 +46,7 @@ public class ShowInConsoleAction extends AbstractServerAction {
 	}
 
 	public boolean accept(IServer server) {
-		return (server.getServerType() != null && server.getServerState() != IServer.STATE_STOPPED);
+		return (server.getServerType() != null && server.getServerState() != IServer.STATE_STOPPED) && server.getLaunch() != null;
 	}
 
 	public void perform(IServer server) {

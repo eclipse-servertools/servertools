@@ -37,10 +37,14 @@ public class EarModuleAssembler extends AbstractModuleAssembler {
 		super(module, server, assembleRoot);
 	}
 
-	public IPath assemble(IProgressMonitor monitor) throws CoreException{
-		//copy ear root to the temporary assembly directory
-		IPath parent =copyModule(fModule,monitor);
-		IEnterpriseApplication earModule = (IEnterpriseApplication)fModule.loadAdapter(IEnterpriseApplication.class, monitor);
+	public IPath assemble(IProgressMonitor monitor) throws CoreException {
+		// copy ear root to the temporary assembly directory
+		IPath parent = fAssembleRoot;
+		final IModule[] rootMod = { fModule };
+		boolean shouldCopy = (IServer.PUBLISH_STATE_NONE != fServer.getServer().getModulePublishState(rootMod));
+		if (shouldCopy)
+			copyModule(fModule, monitor);
+		IEnterpriseApplication earModule = (IEnterpriseApplication) fModule.loadAdapter(IEnterpriseApplication.class, monitor);
 		IModule[] childModules = earModule.getModules();
 		for (int i = 0; i < childModules.length; i++) {
 			IModule module = childModules[i];
@@ -69,8 +73,10 @@ public class EarModuleAssembler extends AbstractModuleAssembler {
      * @return module changed
 	 */
 	private boolean shouldRepack( IModule module ) {
+        final IModule[] rootMod = { fModule };
         final IModule[] modules ={fModule, module};
         boolean repack = (IServer.PUBLISH_STATE_NONE != fServer.getServer().getModulePublishState(modules));
+        repack |= (IServer.PUBLISH_STATE_NONE != fServer.getServer().getModulePublishState(rootMod));
         Trace.trace(Trace.FINEST, "EarModuleAssembler should repack returns "+ Boolean.toString(repack)+ " for module "+module);  //$NON-NLS-1$//$NON-NLS-2$
         return repack;
         
