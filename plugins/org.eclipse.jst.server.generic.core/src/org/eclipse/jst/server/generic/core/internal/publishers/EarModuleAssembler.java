@@ -32,8 +32,7 @@ import org.eclipse.wst.server.core.util.ProjectModule;
  */
 public class EarModuleAssembler extends AbstractModuleAssembler {
 
-	protected EarModuleAssembler(IModule module, GenericServer server, IPath assembleRoot)
-	{
+	protected EarModuleAssembler(IModule module, GenericServer server, IPath assembleRoot) {
 		super(module, server, assembleRoot);
 	}
 
@@ -49,68 +48,66 @@ public class EarModuleAssembler extends AbstractModuleAssembler {
 		for (int i = 0; i < childModules.length; i++) {
 			IModule module = childModules[i];
 			String uri = earModule.getURI(module);
-			if(uri==null){ //The bad memories of WTP 1.0
-				IStatus status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0,	"unable to assemble module null uri",null ); //$NON-NLS-1$
+			if (uri == null) { // The bad memories of WTP 1.0
+				IStatus status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, "unable to assemble module null uri", null); //$NON-NLS-1$
 				throw new CoreException(status);
 			}
-			IJ2EEModule jeeModule = (IJ2EEModule) module.loadAdapter(IJ2EEModule.class,monitor);
-			if( jeeModule != null && jeeModule.isBinary() ){//Binary module just copy
+			IJ2EEModule jeeModule = (IJ2EEModule) module.loadAdapter(IJ2EEModule.class, monitor);
+			if (jeeModule != null && jeeModule.isBinary()) {// Binary module
+															// just copy
 				ProjectModule pm = (ProjectModule) module.loadAdapter(ProjectModule.class, null);
 				IModuleResource[] resources = pm.members();
-				// It's assumed here that the URI at least includes the name, and so removing 1 segment is safe
+				// It's assumed here that the URI at least includes the name,
+				// and so removing 1 segment is safe
 				publishHelper.publishFull(resources, parent.append(uri).removeLastSegments(1), monitor);
-				continue;//done! no need to go further
+				continue;// done! no need to go further
 			}
-			if( shouldRepack( module ) ){	
-			    packModule(module,uri, parent);
-            }
+			if (shouldRepack(module)) {
+				packModule(module, uri, parent);
+			}
 		}
 		return parent;
 	}
-	/**
-     * Checks if the publish state of the child module has changed.
-     * @param module
-     * @return module changed
-	 */
-	private boolean shouldRepack( IModule module ) {
-        final IModule[] rootMod = { fModule };
-        final IModule[] modules ={fModule, module};
-        boolean repack = (IServer.PUBLISH_STATE_NONE != fServer.getServer().getModulePublishState(modules));
-        repack |= (IServer.PUBLISH_STATE_NONE != fServer.getServer().getModulePublishState(rootMod));
-        Trace.trace(Trace.FINEST, "EarModuleAssembler should repack returns "+ Boolean.toString(repack)+ " for module "+module);  //$NON-NLS-1$//$NON-NLS-2$
-        return repack;
-        
-    }
 
-    protected void packModule(IModule module, String deploymentUnitName, IPath destination) throws CoreException {
-		if(module.getModuleType().getId().equals("jst.web")) //$NON-NLS-1$
+	/**
+	 * Checks if the publish state of the child module has changed.
+	 * 
+	 * @param module
+	 * @return module changed
+	 */
+	private boolean shouldRepack(IModule module) {
+		final IModule[] rootMod = { fModule };
+		final IModule[] modules = { fModule, module };
+		boolean repack = (IServer.PUBLISH_STATE_NONE != fServer.getServer().getModulePublishState(modules));
+		repack |= (IServer.PUBLISH_STATE_NONE != fServer.getServer().getModulePublishState(rootMod));
+		Trace.trace(Trace.FINEST, "EarModuleAssembler should repack returns " + Boolean.toString(repack) + " for module " + module); //$NON-NLS-1$//$NON-NLS-2$
+		return repack;
+	}
+
+	protected void packModule(IModule module, String deploymentUnitName, IPath destination) throws CoreException {
+		if (module.getModuleType().getId().equals("jst.web")) //$NON-NLS-1$
 		{
-			AbstractModuleAssembler assembler= AbstractModuleAssembler.Factory.getModuleAssembler(module, fServer);
+			AbstractModuleAssembler assembler = AbstractModuleAssembler.Factory.getModuleAssembler(module, fServer);
 			IPath webAppPath = assembler.assemble(new NullProgressMonitor());
 			String realDestination = destination.append(deploymentUnitName).toString();
-			ModulePackager packager=null;
+			ModulePackager packager = null;
 			try {
-				packager =new ModulePackager(realDestination,false);
-				packager.pack(webAppPath.toFile(),webAppPath.toOSString());
+				packager = new ModulePackager(realDestination, false);
+				packager.pack(webAppPath.toFile(), webAppPath.toOSString());
 			} catch (IOException e) {
-				IStatus status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0,
-						"unable to assemble module", e); //$NON-NLS-1$
+				IStatus status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, "unable to assemble module", e); //$NON-NLS-1$
 				throw new CoreException(status);
-			}
-			finally{
-				if(packager!=null)
-				{		
+			} finally {
+				if (packager != null) {
 					try {
 						packager.finished();
 					} catch (IOException e) {
 						// Unhandled
 					}
 				}
-				
+
 			}
-		}
-		else
-		{
+		} else {
 			super.packModule(module, deploymentUnitName, destination);
 		}
 	}
