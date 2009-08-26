@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -468,7 +468,9 @@ public interface IServer extends IServerAttributes, ISchedulingRule {
 	/**
 	 * Synchronously restarts this server. This operation does
 	 * nothing if this server cannot be stopped ({@link #canRestart(String)}
-	 * returns <code>false</code>.
+	 * returns <code>false</code>. Restarting the server may cause a publish 
+	 * during the start if necessary and according to the server definition.
+	 * 
 	 * This method cannot be used to start the server from a stopped state.
 	 * <p>
 	 * If the caller wants to listen for failure or success of the
@@ -489,7 +491,8 @@ public interface IServer extends IServerAttributes, ISchedulingRule {
 	/**
 	 * Asynchronously restarts this server. This operation does
 	 * nothing if this server cannot be stopped ({@link #canRestart(String)}
-	 * returns <code>false</code>.
+	 * returns <code>false</code>. Restarting the server may cause a publish 
+	 * during the start if necessary and according to the server definition.
 	 * This method cannot be used to start the server from a stopped state.
 	 * <p>
 	 * The operation listener can be used to add a listener for notification
