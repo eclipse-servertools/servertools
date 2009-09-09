@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,6 +29,7 @@ import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.IClient;
 import org.eclipse.wst.server.core.internal.ILaunchableAdapter;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
+import org.eclipse.wst.server.core.internal.ServerType;
 import org.eclipse.wst.server.core.model.ModuleArtifactDelegate;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 import org.eclipse.wst.server.ui.internal.LaunchClientJob;
@@ -217,19 +218,30 @@ public class RunOnServerLaunchConfigurationDelegate extends LaunchConfigurationD
 			
 			final LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
 			if (restart) {
+				final String launchMode2 = launchMode;
 				final IServer server2 = server;
-				server.restart(launchMode, new IServer.IOperationListener() {
-					public void done(IStatus result) {
-						// Only publish if the server requires publish before launching the client.
-						if (server2.shouldPublish()) {
-							server2.publish(IServer.PUBLISH_INCREMENTAL, null, info, new IServer.IOperationListener() {
-								public void done(IStatus result2) {
-									if (result2.isOK())
-										clientJob.schedule();
-								}
-							});
-						} else {
-							clientJob.schedule();
+				// If the server requires publish before starting and before launching the client, publish
+				// before the restart (see bug# 288008)
+				final boolean startBeforePublish = ((ServerType)server2.getServerType()).startBeforePublish();
+				if (server2.shouldPublish() && !startBeforePublish ) {
+					server2.publish(IServer.PUBLISH_INCREMENTAL, null, info,null);
+				}
+
+				server2.restart(launchMode2, new IServer.IOperationListener() {
+					public void done(IStatus result2) {
+						if (result2.isOK()) {
+							// If the server requires publish but the serverDefinition says to publish after start,
+							// publish after the restart
+							if (server2.shouldPublish() && startBeforePublish) {
+								server2.publish(IServer.PUBLISH_INCREMENTAL, null, info, new IServer.IOperationListener() {
+									public void done(IStatus result3) {
+										if (result3.isOK()) {
+											clientJob.schedule();
+										}
+									}
+								});
+							} else
+								clientJob.schedule();
 						}
 					}
 				});
@@ -248,18 +260,6 @@ public class RunOnServerLaunchConfigurationDelegate extends LaunchConfigurationD
 			}
 		} else if (state != IServer.STATE_STOPPING) {
 			final LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
-			
-			/*ChainedJob myJob = new ChainedJob("test", server) {
-				protected IStatus run(IProgressMonitor monitor2) {
-					try {
-						LaunchConfigurationManager lcm = DebugUIPlugin.getDefault().getLaunchConfigurationManager();
-						lcm.setRecentLaunch(launch2);
-					} catch (Throwable t) {
-						Trace.trace(Trace.WARNING, "Could not tweak debug launch history");
-					}
-					return Status.OK_STATUS;
-				}
-			};*/
 			
 			server.start(launchMode, new IServer.IOperationListener() {
 				public void done(IStatus result) {
