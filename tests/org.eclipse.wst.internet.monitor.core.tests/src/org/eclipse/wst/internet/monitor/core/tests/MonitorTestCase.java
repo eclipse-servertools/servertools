@@ -95,7 +95,7 @@ public class MonitorTestCase extends TestCase {
 		assertTrue(!monitor.isRunning());
 	}
 	
-	public void test09RestartMonitor() throws Exception {
+	public void _test09RestartMonitor() throws Exception {
 		assertTrue(!monitor.isRunning());
 		monitor.start();
 		assertTrue(monitor.isRunning());
