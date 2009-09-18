@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -135,8 +135,20 @@ public class PublishServerJob extends ChainedJob {
 			// don't run if we're autopublishing and there is no need for a publish.
 			// can't execute this code in shouldRun() because it will cancel the job
 			// instead of returning immediately
-			if (!ServerPreferences.getInstance().isAutoPublishing() || !((Server)getServer()).shouldPublish())
-				return Status.OK_STATUS;
+
+			// This was introduced because the option ServerPreferences.getInstance().isAutoPublishing(),
+			// should affect only "Publishing when the server starts" and not any other cases
+			if (ServerPreferences.getInstance().isPublishImmediately()){
+				// #ref1 (for further details please refer to the text with ref#1)
+				if (!((Server)getServer()).shouldPublish()){
+					return Status.OK_STATUS;
+				}
+			}
+			else{
+				// If any changes are done to the below if, the same changes need to apply to the if in #ref1
+				if (!ServerPreferences.getInstance().isAutoPublishing() || !((Server)getServer()).shouldPublish())
+					return Status.OK_STATUS;
+			}
 		}
 		
 		return getServer().publish(kind, monitor);
