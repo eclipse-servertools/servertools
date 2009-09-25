@@ -123,7 +123,9 @@
          </contentExtension>
       </includes>
    </viewerContentBinding>
-	<viewer viewerId="org.eclipse.wst.server.ui.ServersView">
+	<viewer
+       helpContext="org.eclipse.wst.server.ui.svcp0000"
+       viewerId="org.eclipse.wst.server.ui.ServersView">
 		<options>
 			<property name="org.eclipse.ui.navigator.hideLinkWithEditorAction"
 				value="true">
