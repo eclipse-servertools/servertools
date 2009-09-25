@@ -2720,70 +2720,23 @@ public class Server extends Base implements IServer {
 	protected IStatus restartImpl(String launchMode, IProgressMonitor monitor) {
 		Trace.trace(Trace.FINEST, "Restarting server: " + getName());
 		
-		//final IStatus[] status2 = new IStatus[1];
-		
 		try {
-			IServerListener curListener = new IServerListener() {
-				public void serverChanged(ServerEvent event) {
-					int eventKind = event.getKind();
-					IServer server = event.getServer();
-					if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
-						if (server.getServerState() == STATE_STARTED) {
-							server.removeServerListener(this);
-							//status2[0] = Status.OK_STATUS;
-						}
-					}
-				}
-			};
-			
 			try {
-				addServerListener(curListener);
-				
 				// synchronous restart
 				restartImpl2(launchMode, monitor);
 				
 				return Status.OK_STATUS;
 			} catch (CoreException ce) {
-				removeServerListener(curListener);
 				if (ce.getStatus().getCode() != -1) {
 					Trace.trace(Trace.SEVERE, "Error calling delegate restart() " + Server.this.toString());
 					return ce.getStatus();
 				}
 			}
-			
-			final String mode3 = launchMode;
-			// add listener to start it as soon as it is stopped
-			addServerListener(new IServerListener() {
-				public void serverChanged(ServerEvent event) {
-					int eventKind = event.getKind();
-					IServer server = event.getServer();
-					if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
-						if (server.getServerState() == STATE_STOPPED) {
-							server.removeServerListener(this);
-							
-							// restart in a quarter second (give other listeners a chance
-							// to hear the stopped message)
-							Thread t = new Thread("Server Restart") {
-								public void run() {
-									try {
-										Thread.sleep(250);
-									} catch (Exception e) {
-										// ignore
-									}
-									
-									Server.this.start(mode3, (IOperationListener)null);
-								}
-							};
-							t.setDaemon(true);
-							t.setPriority(Thread.NORM_PRIORITY - 2);
-							t.start();
-						}
-					}
-				}
-			});
-			
-			// stop the server
+			// if restart is not implemented by the server adopter
+			// lets provide a default implementation
 			stop(false);
+			start(launchMode, monitor);
+
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error restarting server", e);
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartFailed, getName()), e);
