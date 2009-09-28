@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -33,6 +34,10 @@ import org.eclipse.wst.server.core.internal.tar.TarInputStream;
 public class InstallableRuntime2 implements IInstallableRuntime {
 	private IConfigurationElement element;
 	private byte[] BUFFER = null;
+
+	// Default sizes (infinite logarithmic progress will be used when default is employed)
+	private int DEFAULT_DOWNLOAD_SIZE = 10000000;
+	private int DEFAULT_FILE_COUNT = 1000;
 
 	public InstallableRuntime2(IConfigurationElement element) {
 		super();
@@ -73,6 +78,26 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 		return null;
 	}
 
+	public int getArchiveSize() {
+		try {
+			String size = element.getAttribute("archiveSize");
+			return Integer.parseInt(size);
+		} catch (Exception e) {
+			// ignore
+		}
+		return -1;
+	}
+
+	public int getFileCount() {
+		try {
+			String size = element.getAttribute("fileCount");
+			return Integer.parseInt(size);
+		} catch (Exception e) {
+			// ignore
+		}
+		return -1;
+	}
+
 	public String getLicenseURL() {
 		try {
 			return element.getAttribute("licenseUrl");
@@ -96,7 +121,7 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 			url = new URL(licenseURL);
 			InputStream in = url.openStream();
 			out = new ByteArrayOutputStream();
-			copy(in, out);
+			copyWithSize(in, out, null, 0);
 			return new String(out.toByteArray());
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Error loading license", e);
@@ -135,12 +160,43 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 		installRuntimeJob.schedule();
 	}
 
-	private void copy(InputStream in, OutputStream out) throws IOException {
+	private void copyWithSize(InputStream in, OutputStream out, IProgressMonitor monitor, int size) throws IOException {
 		if (BUFFER == null)
 			BUFFER = new byte[8192];
+		SubMonitor progress = SubMonitor.convert(monitor, size);
 		int r = in.read(BUFFER);
 		while (r >= 0) {
 			out.write(BUFFER, 0, r);
+			progress.worked(r);
+			r = in.read(BUFFER);
+		}
+	}
+
+	private void download(InputStream in, OutputStream out, IProgressMonitor monitor, String name, int size) throws IOException {
+		if (BUFFER == null)
+			BUFFER = new byte[8192];
+		
+		String msg = NLS.bind((size > 0) ? Messages.taskDownloadSizeKnown : Messages.taskDownloadSizeUnknown,
+				new Object [] { name, "{0}", Integer.toString(size / 1024) });
+		SubMonitor progress = SubMonitor.convert(monitor, NLS.bind(msg, "0"), (size > 0) ? size : DEFAULT_DOWNLOAD_SIZE);
+		
+		int r = in.read(BUFFER);
+		int total = 0;
+		int lastTotal = 0;
+		while (r >= 0) {
+			out.write(BUFFER, 0, r);
+			total += r;
+			if (total >= lastTotal + 8192) {
+				lastTotal = total;
+				progress.subTask(NLS.bind(msg, Integer.toString(lastTotal / 1024)));
+			}
+			progress.worked(r);
+			// if size is not known, use infinite logarithmic progress
+			if (size <= 0)
+				progress.setWorkRemaining(DEFAULT_DOWNLOAD_SIZE);
+			
+			if (progress.isCanceled())
+				break;
 			r = in.read(BUFFER);
 		}
 	}
@@ -149,6 +205,7 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 	 * @see IInstallableRuntime#install(IPath, IProgressMonitor)
 	 */
 	public void install(IPath path, IProgressMonitor monitor) throws CoreException {
+		SubMonitor progress = SubMonitor.convert(monitor, 1000);
 		URL url = null;
 		File temp = null;
 		try {
@@ -156,19 +213,29 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 			temp = File.createTempFile("runtime", "");
 			temp.deleteOnExit();
 		} catch (IOException e) {
+			if (monitor != null)
+				monitor.done();
 			Trace.trace(Trace.WARNING, "Error creating url and temp file", e);
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
 				NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
 		}
 		String name = url.getPath();
+		int slashIdx = name.lastIndexOf('/');
+		if (slashIdx >= 0)
+			name = name.substring(slashIdx + 1);
+		
+		int archiveSize = getArchiveSize();
 		
 		// download
 		FileOutputStream fout = null;
 		try {
 			InputStream in = url.openStream();
 			fout = new FileOutputStream(temp);
-			copy(in, fout);
+			download(in, fout, progress.newChild(500), name, archiveSize);
+			progress.setWorkRemaining(500);
 		} catch (Exception e) {
+			if (monitor != null)
+				monitor.done();
 			Trace.trace(Trace.WARNING, "Error downloading runtime", e);
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
 				NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
@@ -180,14 +247,35 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 				// ignore
 			}
 		}
+		if (progress.isCanceled())
+			throw new CoreException(Status.CANCEL_STATUS);
 		
 		FileInputStream in = null;
 		try {
 			in = new FileInputStream(temp);
 			if (name.endsWith("zip"))
-				unzip(in, path, monitor);
+				unzip(in, path, progress.newChild(500));
 			else if (name.endsWith("tar"))
-				untar(in, path, monitor);
+				untar(in, path, progress.newChild(500));
+			else if (name.endsWith("tar.gz")) {
+				File tarFile = File.createTempFile("runtime", ".tar");
+				tarFile.deleteOnExit();
+				String tarName = name;
+				if (slashIdx >= 0)
+					tarName = name.substring(0, name.length() - 3);
+				
+				progress.subTask(NLS.bind(Messages.taskUncompressing, tarName));
+				int tempSize = Integer.MAX_VALUE;
+				if (temp.length() < Integer.MAX_VALUE)
+					tempSize = (int)temp.length();
+				
+				ungzip(in, tarFile, progress.newChild(250), tempSize);
+				progress.setWorkRemaining(250);
+				if (!progress.isCanceled()) {
+					in = new FileInputStream(tarFile);
+					untar(in, path, progress.newChild(250));
+				}
+			}
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error uncompressing runtime", e);
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
@@ -199,6 +287,7 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 			} catch (IOException e) {
 				// ignore
 			}
+			progress.done();
 		}
 	}
 
@@ -211,13 +300,15 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 	 * @throws IOException
 	 */
 	private void unzip(InputStream in, IPath path, IProgressMonitor monitor) throws IOException {
+		int fileCnt = getFileCount();
+		SubMonitor progress = SubMonitor.convert(monitor, (fileCnt > 0) ? fileCnt : DEFAULT_FILE_COUNT);
 		String archivePath = getArchivePath();
 		BufferedInputStream bin = new BufferedInputStream(in);
 		ZipInputStream zin = new ZipInputStream(bin);
 		ZipEntry entry = zin.getNextEntry();
 		while (entry != null) {
 			String name = entry.getName();
-			monitor.setTaskName("Unzipping: " + name);
+			progress.subTask(NLS.bind(Messages.taskUncompressing, name));
 			if (archivePath != null && name.startsWith(archivePath)) {
 				name = name.substring(archivePath.length());
 				if (name.length() > 1)
@@ -229,8 +320,11 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 					path.append(name).toFile().mkdirs();
 				else {
 					FileOutputStream fout = new FileOutputStream(path.append(name).toFile());
-					copy(zin, fout);
+					copyWithSize(zin, fout, progress.newChild(1), (int)entry.getSize());
 					fout.close();
+					// if count is not known, use infinite logarithmic progress
+					if (fileCnt <= 0)
+						progress.setWorkRemaining(DEFAULT_FILE_COUNT);
 				}
 			}
 			zin.closeEntry();
@@ -248,13 +342,15 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 	 * @throws IOException
 	 */
 	protected void untar(InputStream in, IPath path, IProgressMonitor monitor) throws IOException {
+		int fileCnt = getFileCount();
+		SubMonitor progress = SubMonitor.convert(monitor, (fileCnt > 0) ? fileCnt : 500);
 		String archivePath = getArchivePath();
 		BufferedInputStream bin = new BufferedInputStream(in);
 		TarInputStream zin = new TarInputStream(bin);
 		TarEntry entry = zin.getNextEntry();
 		while (entry != null) {
 			String name = entry.getName();
-			monitor.setTaskName("Untarring: " + name);
+			progress.subTask(NLS.bind(Messages.taskUncompressing, name));
 			if (archivePath != null && name.startsWith(archivePath)) {
 				name = name.substring(archivePath.length());
 				if (name.length() > 1)
@@ -265,15 +361,45 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 				if (entry.getFileType() == TarEntry.DIRECTORY)
 					path.append(name).toFile().mkdirs();
 				else {
+					File dir = path.append(name).removeLastSegments(1).toFile();
+					if (!dir.exists())
+						dir.mkdirs();
+					
 					FileOutputStream fout = new FileOutputStream(path.append(name).toFile());
-					copy(zin, fout);
+					copyWithSize(zin, fout, progress.newChild(1), (int)entry.getSize());
 					fout.close();
+					if (fileCnt <= 0)
+						progress.setWorkRemaining(500);
 				}
 			}
-			zin.close();
 			entry = zin.getNextEntry();
 		}
 		zin.close();
+	}
+
+	protected void ungzip(InputStream in, File tarFile, IProgressMonitor monitor, int size) throws IOException {
+		GZIPInputStream gzin = null;
+		FileOutputStream fout = null;
+		try {
+			gzin = new GZIPInputStream(in);
+			fout = new FileOutputStream(tarFile);
+			copyWithSize(gzin, fout, monitor, size);
+		} finally {
+			if (gzin != null) {
+				try {
+					gzin.close();
+				} catch (IOException e) {
+					// ignore
+				}
+				if (fout != null) {
+					try {
+						fout.close();
+					} catch (IOException e) {
+						// ignore
+					}
+				}
+			}
+		}
 	}
 
 	public String toString() {

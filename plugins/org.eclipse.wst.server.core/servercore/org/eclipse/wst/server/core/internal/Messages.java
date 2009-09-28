@@ -24,7 +24,6 @@ public class Messages extends NLS {
 	public static String defaultVendor;
 	public static String defaultVersion;
 	public static String savingTask;
-	public static String taskPerforming;
 	public static String deletingTask;
 	public static String defaultServerProjectName;
 	public static String defaultRuntimeName;
@@ -33,7 +32,6 @@ public class Messages extends NLS {
 	public static String defaultServerName2;
 	public static String defaultServerName3;
 	public static String defaultServerName4;
-	public static String taskModifyModules;
 	public static String errorWorkingCopyTimestamp;
 	public static String errorPublishStarting;
 	public static String errorPublishNoRuntime;
@@ -78,6 +76,12 @@ public class Messages extends NLS {
 
 	public static String errorNoRuntime;
 	public static String errorFacet;
+
+	public static String taskModifyModules;
+	public static String taskPerforming;
+	public static String taskUncompressing;
+	public static String taskDownloadSizeKnown;
+	public static String taskDownloadSizeUnknown;
 
 	static {
 		NLS.initializeMessages(ServerPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);

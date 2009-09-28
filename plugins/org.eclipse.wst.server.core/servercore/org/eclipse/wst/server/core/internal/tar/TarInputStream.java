@@ -295,7 +295,7 @@ public class TarInputStream extends FilterInputStream {
 			byte[] longNameData = new byte[(int) entry.getSize()];
 			int bytesread2 = 0;
 			while (bytesread2 < longNameData.length) {
-				int cur = read(longNameData, bytesread2, longNameData.length - bytesread);
+				int cur = read(longNameData, bytesread2, longNameData.length - bytesread2);
 				if (cur < 0) {
 					throw new IOException("early end of stream"); //$NON-NLS-1$
 				}

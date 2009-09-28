@@ -138,6 +138,20 @@ New users should use the &apos;runtime&apos; element (which allows you to point 
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="archiveSize" type="string">
+            <annotation>
+               <documentation>
+                  anticipated size of the archive in bytes for progress monitor use
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="fileCount" type="string">
+            <annotation>
+               <documentation>
+                  anticipated number of files in the archive for progress monitor use
+               </documentation>
+            </annotation>
+         </attribute>
          <attribute name="licenseUrl" type="string">
             <annotation>
                <documentation>
