@@ -28,6 +28,7 @@ public class ServerPreferences {
 	private ServerPreferences() {
 		super();
 		preferences = ServerPlugin.getInstance().getPluginPreferences();
+		setDefaults();
 	}
 
 	/**
@@ -93,7 +94,7 @@ public class ServerPreferences {
 	/**
 	 * Set the default values.
 	 */
-	public void setDefaults() {
+	private void setDefaults() {
 		preferences.setDefault(PREF_AUTO_PUBLISH, isDefaultAutoPublishing());
 			
 		preferences.setDefault(PREF_MODULE_START_TIMEOUT, 300001);

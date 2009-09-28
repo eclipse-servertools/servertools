@@ -61,7 +61,7 @@ public class ResourceManager {
 	private static boolean initialized;
 	private static boolean initializing;
 
-	protected static List<String> serverProjects = new ArrayList<String>();
+	protected static List<String> serverProjects = new ArrayList<String>(2);
 
 	/**
 	 * Server resource change listener.

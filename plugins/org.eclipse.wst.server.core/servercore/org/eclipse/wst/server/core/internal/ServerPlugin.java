@@ -87,7 +87,7 @@ public class ServerPlugin extends Plugin {
 	}
 
 	// temp directories - String key to TempDir
-	protected Map<String, TempDir> tempDirHash;
+	private Map<String, TempDir> tempDirHash;
 
 	/**
 	 * server core plugin id
@@ -137,7 +137,7 @@ public class ServerPlugin extends Plugin {
 		// first, look through hash of current directories
 		IPath statePath = ServerPlugin.getInstance().getStateLocation();
 		try {
-			TempDir dir = tempDirHash.get(key);
+			TempDir dir = getTempDirs().get(key);
 			if (dir != null) {
 				dir.age = 0;
 				return statePath.append(dir.path);
@@ -162,7 +162,7 @@ public class ServerPlugin extends Plugin {
 	
 		TempDir d = new TempDir();
 		d.path = path;
-		tempDirHash.put(key, d);
+		getTempDirs().put(key, d);
 		saveTempDirInfo();
 		return statePath.append(path);
 	}
@@ -177,15 +177,21 @@ public class ServerPlugin extends Plugin {
 		
 		IPath statePath = ServerPlugin.getInstance().getStateLocation();
 		try {
-			TempDir dir = tempDirHash.get(key);
+			TempDir dir = getTempDirs().get(key);
 			if (dir != null) {
-				tempDirHash.remove(key);
+				getTempDirs().remove(key);
 				saveTempDirInfo();
 				deleteDirectory(statePath.append(dir.path).toFile(), null);
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Could not remove temp directory", e);
 		}
+	}
+
+	private Map<String, TempDir> getTempDirs() {
+		if (tempDirHash == null)
+			loadTempDirInfo();
+		return tempDirHash;
 	}
 
 	/**
@@ -220,7 +226,7 @@ public class ServerPlugin extends Plugin {
 	/**
 	 * Convenience method for logging.
 	 *
-	 * @param status org.eclipse.core.runtime.IStatus
+	 * @param status an error status
 	 */
 	public static void log(IStatus status) {
 		getInstance().getLog().log(status);
@@ -233,14 +239,14 @@ public class ServerPlugin extends Plugin {
 		// save remaining directories
 		IPath statePath = ServerPlugin.getInstance().getStateLocation();
 		String filename = statePath.append(TEMP_DATA_FILE).toOSString();
-	
+		
 		try {
 			XMLMemento memento = XMLMemento.createWriteRoot("temp-directories");
 	
-			Iterator iterator = tempDirHash.keySet().iterator();
+			Iterator iterator = getTempDirs().keySet().iterator();
 			while (iterator.hasNext()) {
 				String key = (String) iterator.next();
-				TempDir d = tempDirHash.get(key);
+				TempDir d = getTempDirs().get(key);
 	
 				if (d.age < 5) {
 					IMemento child = memento.createChild("temp-directory");
@@ -264,11 +270,6 @@ public class ServerPlugin extends Plugin {
 		Trace.trace(Trace.CONFIG, "----->----- Server Core plugin startup ----->-----");
 		super.start(context);
 		bundleContext = context;
-		
-		ServerPreferences.getInstance().setDefaults();
-
-		// load temp directory information
-		loadTempDirInfo();
 		
 		bundleListener = new BundleListener() {
 			public void bundleChanged(BundleEvent event) {

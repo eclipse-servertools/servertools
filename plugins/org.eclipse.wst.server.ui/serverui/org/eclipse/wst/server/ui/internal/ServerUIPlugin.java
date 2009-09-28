@@ -208,7 +208,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	 * @return ServerUIPreferences
 	 */
 	public static ServerUIPreferences getPreferences() {
-		return new ServerUIPreferences();
+		return ServerUIPreferences.getInstance();
 	}
 
 	/**
@@ -217,9 +217,6 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		Trace.trace(Trace.CONFIG, "----->----- Server UI plugin start ----->-----");
 		super.start(context);
-		
-		ServerUIPreferences prefs = getPreferences();
-		prefs.setDefaults();
 		
 		ServerCore.addServerLifecycleListener(serverLifecycleListener);
 		

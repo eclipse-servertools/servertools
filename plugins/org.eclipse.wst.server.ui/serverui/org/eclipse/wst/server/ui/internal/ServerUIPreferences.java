@@ -56,15 +56,24 @@ public class ServerUIPreferences {
 
 	private Preferences preferences;
 
+	private static ServerUIPreferences instance;
+
 	/**
 	 * ServerUIPreference constructor comment.
 	 */
-	public ServerUIPreferences() {
+	private ServerUIPreferences() {
 		super();
 		preferences = ServerUIPlugin.getInstance().getPluginPreferences();
+		setDefaults();
 	}
 
-	public void setDefaults() {
+	public static ServerUIPreferences getInstance() {
+		if (instance == null)
+			instance = new ServerUIPreferences();
+		return instance;
+	}
+
+	private void setDefaults() {
 		preferences.setDefault(PREF_LAUNCH_MODE, getDefaultLaunchMode());
 		preferences.setDefault(PREF_LAUNCH_MODE2, getDefaultLaunchMode2());
 		preferences.setDefault(PREF_ENABLE_BREAKPOINTS, getDefaultEnableBreakpoints());
