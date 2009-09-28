@@ -13,8 +13,6 @@ package org.eclipse.wst.server.ui.internal.viewers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.Runtime;
@@ -30,7 +28,7 @@ public class RuntimeContentProvider extends BaseContentProvider {
 	}
 
 	/**
-	 * @see IStructuredContentProvider#getElements(Object)
+	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(Object)
 	 */
 	public Object[] getElements(Object inputElement) {
 		List<IRuntime> list = new ArrayList<IRuntime>();
