@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.internet.monitor.core.tests;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.internet.monitor.core.internal.provisional.*;
 import junit.framework.TestCase;
 /**
@@ -21,20 +22,23 @@ public class MonitorTestCase extends TestCase {
 	public MonitorTestCase() {
 		super();
 	}
-	
+
 	public void test00GetMonitors() throws Exception {
 		assertNotNull(MonitorCore.getMonitors());
+		assertEquals(0, MonitorCore.getMonitors().length);
 	}
 
 	public void test01CreateMonitor() throws Exception {
 		IMonitorWorkingCopy wc = MonitorCore.createMonitor();
-		wc.setLocalPort(22150);
+		int port = SocketUtil.findUnusedPort(22100, 22200);
+		assertTrue("Could not find free local port", port != -1);
+		wc.setLocalPort(port);
 		wc.setRemoteHost("www.eclipse.org");
 		wc.setRemotePort(80);
 		monitor = wc.save();
 		
 		assertTrue(monitor != null);
-		assertTrue(MonitorCore.getMonitors().length == 1);
+		assertEquals(1, MonitorCore.getMonitors().length);
 		assertTrue(!monitor.isRunning());
 		assertTrue(!monitor.isWorkingCopy());
 	}
@@ -46,7 +50,7 @@ public class MonitorTestCase extends TestCase {
 			if (monitor.equals(m))
 				count++;
 		}
-		assertTrue(count == 1);
+		assertEquals(1, count);
 	}
 	
 	public void test03StartMonitor() throws Exception {
@@ -88,21 +92,27 @@ public class MonitorTestCase extends TestCase {
 		monitor.stop();
 		assertTrue(!monitor.isRunning());
 	}
-	
+
 	public void test08StopMonitor() throws Exception {
 		assertTrue(!monitor.isRunning());
 		monitor.stop();
 		assertTrue(!monitor.isRunning());
 	}
-	
-	public void _test09RestartMonitor() throws Exception {
+
+	public void test09RestartMonitor() throws Exception {
 		assertTrue(!monitor.isRunning());
-		monitor.start();
+		try {
+			monitor.start();
+		} catch (CoreException ce) {
+			// wait 5 seconds and try again
+			Thread.sleep(5000);
+			monitor.start();
+		}
 		assertTrue(monitor.isRunning());
 		monitor.stop();
 		assertTrue(!monitor.isRunning());
 	}
-	
+
 	public void test10StopMonitor() throws Exception {
 		try {
 			IMonitorWorkingCopy wc = MonitorCore.createMonitor();
@@ -112,7 +122,7 @@ public class MonitorTestCase extends TestCase {
 			// ignore
 		}
 	}
-	
+
 	public void test11StopMonitor() throws Exception {
 		try {
 			IMonitorWorkingCopy wc = MonitorCore.createMonitor();
@@ -124,7 +134,7 @@ public class MonitorTestCase extends TestCase {
 			// ignore
 		}
 	}
-	
+
 	public void test12ValidateMonitor() throws Exception {
 		assertTrue(monitor.validate().isOK());
 	}
@@ -136,17 +146,17 @@ public class MonitorTestCase extends TestCase {
 		wc.setRemotePort(2);
 		IMonitor monitor2 = wc.save();
 		
-		assertTrue(monitor2 == monitor);
-		assertTrue(monitor.getLocalPort() == 1);
-		assertTrue(monitor.getRemoteHost().equals("a"));
-		assertTrue(monitor.getRemotePort() == 2);
+		assertEquals(monitor2, monitor);
+		assertEquals(1, monitor.getLocalPort());
+		assertEquals("a", monitor.getRemoteHost());
+		assertEquals(2, monitor.getRemotePort());
 	}
-	
+
 	public void test14DeleteMonitor() throws Exception {
 		monitor.delete();
-		assertTrue(MonitorCore.getMonitors().length == 0);
+		assertEquals(0, MonitorCore.getMonitors().length);
 	}
-	
+
 	public void test15DeleteMonitor() throws Exception {
 		monitor.delete();
 	}
@@ -163,13 +173,13 @@ public class MonitorTestCase extends TestCase {
 			if (monitor.equals(m))
 				count++;
 		}
-		assertTrue(count == 0);
+		assertEquals(0, count);
 	}
 
 	public void test18CreateMonitor() throws Exception {
 		int num = MonitorCore.getMonitors().length;
 		MonitorCore.createMonitor();
-		assertTrue(MonitorCore.getMonitors().length == num);
+		assertEquals(num, MonitorCore.getMonitors().length);
 	}
 	
 	public void test19CreateMonitor() {
@@ -185,7 +195,7 @@ public class MonitorTestCase extends TestCase {
 		wc.setRemotePort(80);
 		assertTrue(!wc.validate().isOK());
 	}
-	
+
 	public void test21ValidateMonitor() throws Exception {
 		IMonitorWorkingCopy wc = monitor.createWorkingCopy();
 		wc.setLocalPort(80);
