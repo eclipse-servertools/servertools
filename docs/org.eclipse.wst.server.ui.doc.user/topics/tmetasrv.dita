@@ -23,17 +23,17 @@ a variety of information about the server such as:<ul>
 <li>The location where the server configuration files are stored on the workbench.</li>
 <li>The fully qualified DNS name or IP address of the host machine where the
 server is running.</li>
-<li>The name assign to the server.</li>
+<li>The name assigned to the server.</li>
 <li>The name of the installed server runtime environment which defines the
 runtime environment of an application server for compiling your application.</li>
 </ul></p><p id="tmetasrv_wst_p2">By default, the workbench hides the metadata
 of the server to keep the development workspace clean. Displaying the metadata
-of the server on the workbench, allows you to persists the data of the server
-in a <i>serverName</i>.server file, where <i>serverName</i> is the name assigned
-to the server. The <i>serverName</i>.server file is useful when you are working
-in a team development environment and you are required to maintain the metadata
-of the server in a source control repository.</p>To display or hide the metadata
-of the server:</context>
+of the server on the workbench, allows you to persist<?Pub Caret?> the data
+of the server in a <i>serverName</i>.server file, where <i>serverName</i> is
+the name assigned to the server. The <i>serverName</i>.server file is useful
+when you are working in a team development environment and you are required
+to maintain the metadata of the server in a source control repository.</p>To
+display or hide the metadata of the server:</context>
 <steps id="tmetasrv_wst_steps">
 <step id="tmetasrv_step1"><cmd>In the Servers view, right-click the server
 you want to display or hide the metadata and select <b>Properties</b>.</cmd>
@@ -58,3 +58,4 @@ file to edit the data in the server editor.</cmd></step>
 </steps>
 </taskbody>
 </task>
+<?Pub *0000003897?>

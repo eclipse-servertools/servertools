@@ -1,15 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2006, v.4002-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2008, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
+<?Pub Inc?>
 <task id="twcrtins_wst" xml:lang="en-us">
 <title id="title">Creating a server</title>
-<shortdesc><ph id="shortdesc">You can create a server to identify the runtime
-environment that you want to use for testing your project resources. The term <i>creating
-a server</i> defines creating a pointer from the workbench to an existing
-installation of an application server</ph>.</shortdesc>
+<shortdesc><ph id="shortdesc">You can create a server to identify
+the runtime environment that you want to use for testing your project
+resources. The term <i>creating a server</i> defines creating a pointer
+from the workbench to an existing installation of an application server</ph>.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm keyref="twcrtins|1|serverscreating" status="new">servers<indexterm>creating</indexterm></indexterm>
+<keywords id="index"><indexterm keyref="twcrtins|1|serverscreating"
+status="new">servers<indexterm>creating</indexterm></indexterm>
 <indexterm keyref="twcrtins|2|serverscreatingapointer" status="new">servers<indexterm>creating
 a pointer</indexterm></indexterm></keywords>
 </metadata></prolog>
@@ -18,32 +20,35 @@ a pointer</indexterm></indexterm></keywords>
 <steps id="steps">
 <step id="step1"><cmd>Select any of the following options:</cmd>
 <choices>
-<choice>In the Servers view (<menucascade><uicontrol>Window</uicontrol><uicontrol>Show
-View</uicontrol><uicontrol>Servers</uicontrol></menucascade>), right-click
-and select <menucascade><uicontrol>New</uicontrol><uicontrol>Server</uicontrol>
-</menucascade>.</choice>
+<choice>In the Servers view (<menucascade><uicontrol>Window</uicontrol>
+<uicontrol>Show View</uicontrol><uicontrol>Servers</uicontrol>
+</menucascade>),  right-click and select <menucascade><uicontrol>New</uicontrol>
+<uicontrol>Server</uicontrol></menucascade>.</choice>
 <choice>In the menu bar, click <uicontrol>File > New > Other</uicontrol>.
-Expand the <uicontrol>Server</uicontrol> folder and then select  <uicontrol>Server</uicontrol>.</choice>
+Expand the <uicontrol>Server</uicontrol> folder, select <uicontrol>Server</uicontrol> and
+click <uicontrol>Next</uicontrol>.</choice>
 </choices>
 </step>
-<step id="step2"><cmd>Click  <uicontrol>Next</uicontrol>.</cmd><info>The New
-Server wizard opens. This wizard defines a new server, that contains information
-required to point to a specific runtime environment for local or remote testing,
-or for publishing to an application server.</info></step>
+<step id="step2"><cmd>The New Server wizard opens. This wizard defines
+a new server, that contains information required to point to a specific
+runtime environment for local or remote testing, or for publishing
+to an application server.</cmd></step><?Pub Caret1?>
 <step id="step3"><cmd>In the <uicontrol>Server's host name</uicontrol> field,
-you can provide the fully qualified DNS name or IP address of the host machine
-that where the server is running. By default, this field is pre-filled with
-the default address: <userinput>localhost</userinput></cmd></step>
-<step><cmd>In the <uicontrol>Select the server type</uicontrol> list, select
-the type of server or test environment where you want to publish or test your
-resources.</cmd>
+you can provide the fully qualified DNS name or IP address of the
+host machine that where the server is running. By default, this field
+is pre-filled with the default address: <userinput>localhost</userinput></cmd>
+</step>
+<step><cmd>In the <uicontrol>Select the server type</uicontrol> list,
+select the type of server or test environment where you want to publish
+or test your resources.</cmd>
 <substeps>
 <substep><cmd>(Optional) Refer to the <uicontrol>Description</uicontrol> section
 for brief details about the server you have selected.</cmd></substep>
-<substep><cmd>(Optional) In the text field under the <uicontrol>Select the
-server type</uicontrol> label, you can replace the text <userinput>type filter
-text</userinput> with keywords to filter the list of available application
-servers.</cmd><info>The following are examples of filter keywords:<dl><dlentry>
+<substep><cmd>(Optional) In the text field under the <uicontrol>Select
+the server type</uicontrol> label, you can replace the text <userinput>type
+filter text</userinput> with keywords to filter the list of available
+application servers.</cmd><info>The following are examples of filter
+keywords:<dl><dlentry>
 <dt><userinput>Apache</userinput></dt>
 <dd>Filters the list of available servers where the vendor is Apache</dd>
 </dlentry><dlentry>
@@ -57,8 +62,8 @@ servers.</cmd><info>The following are examples of filter keywords:<dl><dlentry>
 <dd>Filters the list of available servers that support Web modules</dd>
 </dlentry><dlentry>
 <dt><userinput>5.0</userinput></dt>
-<dd>Filters the list of available servers that are at version, 5.0 or supports
-JEE 5 specification level.</dd>
+<dd>Filters the list of available servers that are at version, 5.0
+or supports JEE 5 specification level.</dd>
 </dlentry><dlentry>
 <dt><userinput>1.2</userinput></dt>
 <dd>Filters the list of available servers that supports J2EE 1.2 specification
@@ -66,12 +71,13 @@ level or any servers that may have a version-level of 1.2.</dd>
 </dlentry></dl></info></substep>
 </substeps>
 </step>
-<step><cmd>Click <uicontrol>Next</uicontrol> and follow the instructions in
-the wizard to specify the details of the server that you want to create.</cmd>
-</step>
-<step><cmd>Click  <uicontrol>Finish</uicontrol>.</cmd><info>The new server
-appears in the Servers view under the  <uicontrol>Server</uicontrol> column.</info>
+<step><cmd>Click <uicontrol>Next</uicontrol> and follow the instructions
+in the wizard to specify the details of the server that you want to
+create.</cmd></step>
+<step><cmd>Click  <uicontrol>Finish</uicontrol>.</cmd><info>The new
+server appears in the Servers view under the  <uicontrol>Server</uicontrol> column.</info>
 </step>
 </steps>
 </taskbody>
 </task>
+<?Pub *0000004019?>
