@@ -11,7 +11,7 @@
 package org.eclipse.wst.server.discovery.internal;
 
 import org.eclipse.equinox.internal.provisional.p2.metadata.IInstallableUnit;
-import org.eclipse.equinox.internal.provisional.p2.query.MatchQuery;
+import org.eclipse.equinox.internal.provisional.p2.metadata.query.MatchQuery;
 
 public class PatternInstallableUnitQuery extends MatchQuery {
 	private String categoryId;

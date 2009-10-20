@@ -13,7 +13,7 @@ package org.eclipse.wst.server.discovery.internal;
 import java.util.List;
 
 import org.eclipse.equinox.internal.provisional.p2.metadata.IInstallableUnit;
-import org.eclipse.equinox.internal.provisional.p2.query.MatchQuery;
+import org.eclipse.equinox.internal.provisional.p2.metadata.query.MatchQuery;
 
 public class ExtensionInstallableUnitQuery extends MatchQuery {
 	private List<String> list;

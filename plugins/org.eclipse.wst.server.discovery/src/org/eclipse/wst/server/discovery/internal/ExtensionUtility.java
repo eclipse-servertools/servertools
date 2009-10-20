@@ -20,13 +20,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.equinox.internal.provisional.p2.core.Version;
 import org.eclipse.equinox.internal.provisional.p2.engine.IProfile;
 import org.eclipse.equinox.internal.provisional.p2.engine.IProfileRegistry;
 import org.eclipse.equinox.internal.provisional.p2.metadata.IInstallableUnit;
+import org.eclipse.equinox.internal.provisional.p2.metadata.Version;
+import org.eclipse.equinox.internal.provisional.p2.metadata.query.Collector;
 import org.eclipse.equinox.internal.provisional.p2.metadata.query.InstallableUnitQuery;
-import org.eclipse.equinox.internal.provisional.p2.query.Collector;
-import org.eclipse.equinox.internal.provisional.p2.query.Query;
+import org.eclipse.equinox.internal.provisional.p2.metadata.query.Query;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.discovery.internal.model.Extension;
 import org.eclipse.wst.server.discovery.internal.model.ExtensionUpdateSite;
@@ -154,7 +154,7 @@ public class ExtensionUtility {
 		IProfileRegistry profileRegistry = (IProfileRegistry) getService(Activator.getDefault().getBundle().getBundleContext(), IProfileRegistry.class.getName());
 		IProfile profile = profileRegistry.getProfile(IProfileRegistry.SELF);
 		
-		Query query = new InstallableUnitQuery(null);
+		Query query = InstallableUnitQuery.ANY;
 		//Query query = new InstallableUnitQuery("org.eclipse.wst.server.core.serverAdapter");
 		//List<String> list2 = new ArrayList();
 		//Query query = new ExtensionInstallableUnitQuery(list2);
