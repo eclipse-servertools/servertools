@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -87,9 +87,16 @@ public class XMLViewer extends ContentViewer {
 				messageLabel.setText(Messages.xmlViewInvalid);
 				return;
 			}
-			if (xmlTagMissing && finalMsg.toLowerCase().startsWith("<?xml version=\"1.0\" encoding=\"utf-8\"?>")) {
-				int x = finalMsg.indexOf("\n") + 1;
+			if (xmlTagMissing && (finalMsg.toLowerCase().startsWith("<?xml version=\"1.0\" encoding=\"utf-8\"?>")
+							|| finalMsg.toLowerCase().startsWith("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>") 
+							|| finalMsg.toLowerCase().startsWith("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>"))) {
+				int x = finalMsg.indexOf(">") + 1;
+				//remove <?xml version="1.0" encoding="UTF-8"?>
 				String Msg = finalMsg.substring(x);
+				//remove starting newlines
+				while (Msg.substring(0, ls).indexOf(lineSeparator) >= 0){
+					Msg = Msg.substring(ls, Msg.length());
+				}
 				finalMsg = Msg;
 				
 				messageText.setText(finalMsg);
@@ -211,6 +218,7 @@ public class XMLViewer extends ContentViewer {
 			Transformer transformer = tf.newTransformer();
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
 			transformer.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
+			transformer.setOutputProperty(OutputKeys.STANDALONE, "no"); //$NON-NLS-1$
 			transformer.transform(source, result);
 		} catch (TransformerConfigurationException e) {
 			throw (IOException) (new IOException().initCause(e));
