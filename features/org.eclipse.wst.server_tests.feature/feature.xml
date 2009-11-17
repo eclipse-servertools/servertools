@@ -40,19 +40,7 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.wst.server.tests.performance"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.eclipse.wst.server.ui.tests"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.wst.server.http.core.tests"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
