@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -106,7 +106,14 @@ public class ModuleProperties {
 		if (serverId == null || serverId.length() == 0)
 			return null;
 		
-		return ServerCore.findServer(serverId);
+		IServer server = ServerCore.findServer(serverId);
+		
+		// in the case that the preferred server doesn't exists in the wrks reset the attribute
+		if (server == null){
+			modules.remove(module.getId());
+		}
+		
+		return server; 
 	}
 
 	/*
