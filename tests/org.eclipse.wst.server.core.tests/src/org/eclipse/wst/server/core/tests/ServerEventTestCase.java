@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package org.eclipse.wst.server.core.tests;
 
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
@@ -204,6 +205,23 @@ public class ServerEventTestCase extends TestCase {
 			}
 			public boolean isConflicting(ISchedulingRule rule) {
 				return false;
+			}
+			public int getAttribute(String attributeName, int defaultValue) {
+				return 0;
+			}
+			public boolean getAttribute(String attributeName,
+					boolean defaultValue) {
+				return false;
+			}
+			public String getAttribute(String attributeName, String defaultValue) {
+				return null;
+			}
+			public List<String> getAttribute(String attributeName,
+					List<String> defaultValue) {
+				return null;
+			}
+			public Map getAttribute(String attributeName, Map defaultValue) {
+				return null;
 			}
 		};
 	}
