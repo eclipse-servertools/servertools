@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,9 @@
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.server.core;
+
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.*;
@@ -296,6 +299,46 @@ public interface IServerAttributes extends IAdaptable {
 	 * look feasible, and <code>false</code> otherwise
 	 */
 	public IStatus canModifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor);
+
+	/**
+	 * Get the server attribute value that is stored in this server attribute object.
+	 * @param attributeName name of the attribute that is being queried.
+	 * @param defaultValue the default value if the given attribute is not defined.
+	 * @return the value of the given attribute.
+	 */
+	public int getAttribute(String attributeName, int defaultValue);
+
+	/**
+	 * Get the server attribute value that is stored in this server attribute object.
+	 * @param attributeName name of the attribute that is being queried.
+	 * @param defaultValue the default value if the given attribute is not defined.
+	 * @return the value of the given attribute.
+	 */
+	public boolean getAttribute(String attributeName, boolean defaultValue);
+
+	/**
+	 * Get the server attribute value that is stored in this server attribute object.
+	 * @param attributeName name of the attribute that is being queried.
+	 * @param defaultValue the default value if the given attribute is not defined.
+	 * @return the value of the given attribute.
+	 */
+	public String getAttribute(String attributeName, String defaultValue);
+
+	/**
+	 * Get the server attribute value that is stored in this server attribute object.
+	 * @param attributeName name of the attribute that is being queried.
+	 * @param defaultValue the default value if the given attribute is not defined.
+	 * @return the value of the given attribute.
+	 */
+	public List<String> getAttribute(String attributeName, List<String> defaultValue);
+
+	/**
+	 * Get the server attribute value that is stored in this server attribute object.
+	 * @param attributeName name of the attribute that is being queried.
+	 * @param defaultValue the default value if the given attribute is not defined.
+	 * @return the value of the given attribute.
+	 */
+	public Map getAttribute(String attributeName, Map defaultValue);
 
 	/**
 	 * Returns the child module(s) of this module. If this

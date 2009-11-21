@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -175,22 +175,27 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	}
 
 	public void setAttribute(String attributeName, int value) {
+		canModifyAttribute(attributeName);		
 		wch.setAttribute(attributeName, value);
 	}
 
 	public void setAttribute(String attributeName, boolean value) {
+		canModifyAttribute(attributeName);
 		wch.setAttribute(attributeName, value);
 	}
 
 	public void setAttribute(String attributeName, String value) {
+		canModifyAttribute(attributeName);
 		wch.setAttribute(attributeName, value);
 	}
 
 	public void setAttribute(String attributeName, List<String> value) {
+		canModifyAttribute(attributeName);
 		wch.setAttribute(attributeName, value);
 	}
 
 	public void setAttribute(String attributeName, Map value) {
+		canModifyAttribute(attributeName);
 		wch.setAttribute(attributeName, value);
 	}
 
@@ -807,6 +812,16 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			setAttribute(PROP_LOCKED, false);
 		if (getAttribute(PROP_ID_SET, false))
 			setAttribute(PROP_ID_SET, false);
+	}
+	
+	/**
+	 * Checks if a given attribute can be modified, throws an IllegalArgumentException if otherwise 
+	 * @param attributeName
+	 */
+	protected void canModifyAttribute(String attributeName){
+		if (attributeName != null && 
+				PROP_TIMESTAMP.equalsIgnoreCase(attributeName))			
+			throw new IllegalArgumentException("Unmodifiable attribute: "+ attributeName);
 	}
 
 	public String toString() {

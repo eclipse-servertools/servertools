@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,9 @@
 package org.eclipse.wst.server.core;
 
 import java.beans.PropertyChangeListener;
+import java.util.List;
+import java.util.Map;
+
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -224,6 +227,46 @@ public interface IServerWorkingCopy extends IServerAttributes {
 	 * @param runtime the runtime, or <code>null</code> if none
 	 */
 	public void setRuntime(IRuntime runtime);
+
+	/**
+	 * Set the server attribute value that is stored in the server working copy. Throws 
+	 * {@link IllegalArgumentException} if the attribute can't be modified
+	 * @param attributeName name of the attribute that needs to be modified.
+	 * @param value the new value of the given attribute.
+	 */
+	public void setAttribute(String attributeName, int value);
+
+	/**
+	 * Set the server attribute value that is stored in the server working copy. Throws 
+	 * {@link IllegalArgumentException} if the attribute can't be modified
+	 * @param attributeName name of the attribute that needs to be modified.
+	 * @param value the new value of the given attribute.
+	 */
+	public void setAttribute(String attributeName, boolean value);
+
+	/**
+	 * Set the server attribute value that is stored in the server working copy. Throws 
+	 * {@link IllegalArgumentException} if the attribute can't be modified
+	 * @param attributeName name of the attribute that needs to be modified.
+	 * @param value the new value of the given attribute.
+	 */
+	public void setAttribute(String attributeName, String value);
+
+	/**
+	 * Set the server attribute value that is stored in the server working copy. Throws 
+	 * {@link IllegalArgumentException} if the attribute can't be modified
+	 * @param attributeName name of the attribute that needs to be modified.
+	 * @param value the new value of the given attribute.
+	 */
+	public void setAttribute(String attributeName, List<String> value);
+
+	/**
+	 * Set the server attribute value that is stored in the server working copy. Throws 
+	 * {@link IllegalArgumentException} if the attribute can't be modified
+	 * @param attributeName name of the attribute that needs to be modified.
+	 * @param value the new value of the given attribute.
+	 */
+	public void setAttribute(String attributeName, Map value);
 
 	/**
 	 * Changes the host for the server.
