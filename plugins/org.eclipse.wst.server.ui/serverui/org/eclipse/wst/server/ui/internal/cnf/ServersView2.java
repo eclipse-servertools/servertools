@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
@@ -41,6 +42,7 @@ import org.eclipse.wst.server.ui.internal.Trace;
  * A view of servers, their modules, and status.
  */
 public class ServersView2 extends CommonNavigator {
+	private static final String SERVERS_VIEW_CONTEXT = "org.eclipse.ui.serverViewScope";
 	
 	protected CommonViewer tableViewer;
 	
@@ -64,6 +66,10 @@ public class ServersView2 extends CommonNavigator {
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
+
+		IContextService contextSupport = (IContextService)getSite().getService(IContextService.class);
+		contextSupport.activateContext(SERVERS_VIEW_CONTEXT);
+
 		deferInitialization();
 	}
 
