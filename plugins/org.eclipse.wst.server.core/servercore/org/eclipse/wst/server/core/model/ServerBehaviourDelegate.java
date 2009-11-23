@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -805,7 +805,7 @@ public abstract class ServerBehaviourDelegate {
 	 * @return the publish status
 	 */
 	public IStatus publish(int kind, IProgressMonitor monitor) {
-		Trace.trace(Trace.FINEST, "-->-- Publishing to server: " + toString() + " -->--");
+		Trace.trace(Trace.FINEST, "-->-- Publishing to server: " + getServer().toString() + " -->--");
 		
 		if (getServer().getServerType().hasRuntime() && getServer().getRuntime() == null)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishNoRuntime, null);
@@ -938,10 +938,11 @@ public abstract class ServerBehaviourDelegate {
 	 * @return the status
 	 */
 	protected IStatus publishModule(int kind, IModule[] module, int deltaKind, IProgressMonitor monitor) {
-		Trace.trace(Trace.FINEST, "Publishing module: " + module);
+		Trace.trace(Trace.FINEST, "-->-- Publishing module");
 		
 		int size = module.length;
 		IModule m = module[size - 1];
+		Trace.trace(Trace.FINEST, "Module: "+m);
 		monitor.beginTask(NLS.bind(Messages.publishingModule, m.getName()), 1000);
 		
 		try {
@@ -953,7 +954,7 @@ public abstract class ServerBehaviourDelegate {
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e);
 		} finally {
 			monitor.done();
-			Trace.trace(Trace.FINEST, "Done publishing: " + module);
+			Trace.trace(Trace.FINEST, "--<-- Done publishing module");
 		}
 	}
 
