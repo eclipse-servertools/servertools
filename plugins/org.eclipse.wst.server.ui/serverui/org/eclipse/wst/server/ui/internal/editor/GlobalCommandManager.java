@@ -705,6 +705,8 @@ public class GlobalCommandManager {
 		if (info == null)
 			return false;
 		IFile[] files = getServerResourceFiles(id);
+		if (files == null)
+			return false;
 		int size = files.length;
 		
 		int count = 0;
