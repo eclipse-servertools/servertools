@@ -21,17 +21,14 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.fieldassist.*;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -50,7 +47,9 @@ import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.viewers.ServerTypeComposite;
 import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
+import org.eclipse.wst.server.ui.internal.wizard.page.HostnameComposite.IHostnameSelectionListener;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
+
 /**
  * Wizard page used to create a server and configuration at the same time.
  */
@@ -92,6 +91,12 @@ public class NewManualServerComposite extends Composite {
 	protected IModule module;
 	protected String serverTypeId;
 	protected boolean includeIncompatible;
+	
+	protected String lastHostname;
+	protected HostnameComposite manualHostComp;
+	IHostnameSelectionListener hostnameListener;
+	protected Text hostname;
+	protected ControlDecoration hostnameDecoration;
 
 	protected ServerCreationCache cache = new ServerCreationCache();
 
@@ -150,6 +155,47 @@ public class NewManualServerComposite extends Composite {
 		data.horizontalSpan = 3;
 		serverTypeComposite.setLayoutData(data);
 		whs.setHelp(serverTypeComposite, ContextIds.NEW_SERVER_TYPE);
+		
+		hostnameListener = 	new IHostnameSelectionListener() {
+			public void hostnameSelected(String selectedHostname) {
+				lastHostname = selectedHostname;
+				setHost(selectedHostname);
+			}
+	    };		
+		Label hostnameLabel = new Label(this, SWT.NONE);
+		hostnameLabel.setText(Messages.hostname);
+		hostname = new Text(this, SWT.SINGLE | SWT.BORDER | SWT.CANCEL);
+		hostname.setText(HostnameComposite.LOCALHOST);
+		hostnameDecoration = new ControlDecoration(hostname, SWT.TOP | SWT.LEAD);
+		
+		GridData data2 = new GridData(GridData.HORIZONTAL_ALIGN_FILL );
+		hostname.setLayoutData(data2);
+		new Label(this, SWT.NONE);
+		
+		hostname.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				hostnameChanged(hostname.getText());
+			}
+		});
+		
+		FieldDecorationRegistry registry = FieldDecorationRegistry.getDefault();
+		FieldDecoration fd = registry.getFieldDecoration(FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
+		hostnameDecoration.setImage(fd.getImage());
+		hostnameDecoration.setDescriptionText(fd.getDescription());
+		
+		hostname.addFocusListener(new FocusListener() {
+			public void focusGained(FocusEvent e) {
+				hostnameDecoration.show();
+			}
+
+			public void focusLost(FocusEvent e) {
+				hostnameDecoration.hide();
+			}
+		});
+		
+		List<String> hosts = ServerUIPlugin.getPreferences().getHostnames();
+		String[] hosts2 = hosts.toArray(new String[hosts.size()]);
+		new AutoCompleteField(hostname, new TextContentAdapter(), hosts2);
 		
 		Label serverNameLabel = new Label(this, SWT.NONE);
 		serverNameLabel.setText(Messages.serverName);
@@ -600,5 +646,15 @@ public class NewManualServerComposite extends Composite {
 
 	public IServerWorkingCopy getServer() {
 		return server;
+	}
+
+	protected void hostnameChanged(String newHost) {
+		if (newHost == null)
+			return;
+		if (newHost.equals(host))
+			return;
+
+		host = newHost;
+		hostnameListener.hostnameSelected(host);
 	}
 }
