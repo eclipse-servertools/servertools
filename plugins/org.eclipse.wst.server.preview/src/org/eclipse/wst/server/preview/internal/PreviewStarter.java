@@ -33,15 +33,15 @@ public class PreviewStarter {
 		try {
 			System.setProperty("org.mortbay.log.class", "org.eclipse.wst.server.preview.internal.WTPLogger");
 			ServerConfig config = new ServerConfig(configPath);
-			Trace.trace(Trace.FINEST, "Starting preview server on port " + config.getPort());
-			Trace.trace(Trace.FINEST, " ");
+			System.out.println("Starting preview server on port " + config.getPort());
+			System.out.println();
 			Module[] m = config.getModules();
 			int size = m.length;
 			if (size > 0) {
-				Trace.trace(Trace.FINEST, "Modules:");
+				System.out.println("Modules:");
 				for (Module mm : m)
-					Trace.trace(Trace.FINEST, "  " + mm.getName() + " (" + mm.getContext() + ")");
-				Trace.trace(Trace.FINEST, " ");
+					System.out.println("  " + mm.getName() + " (" + mm.getContext() + ")");
+				System.out.println();
 			}
 			
 			server = new Server(config.getPort());
@@ -80,7 +80,7 @@ public class PreviewStarter {
 
 	public void stop() {
 		try {
-			Trace.trace(Trace.FINEST, "Stop!");
+			System.out.println("Stop!");
 			server.stop();
 		} catch (Exception e) {
 			e.printStackTrace();
