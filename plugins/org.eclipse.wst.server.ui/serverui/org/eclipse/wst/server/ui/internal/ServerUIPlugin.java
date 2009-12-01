@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,6 +43,7 @@ import org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFra
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewRuntimeWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewServerWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
+import org.eclipse.wst.server.ui.wizard.ServerCreationWizardPageExtension;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 
 import org.eclipse.osgi.util.NLS;
@@ -87,6 +88,9 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 
 	// cached copy of all runtime wizards
 	private static Map<String, WizardFragmentData> wizardFragments;
+	
+	// Cached copy of all server wizard UI modifier
+	private static List<ServerCreationWizardPageExtension> serverCreationWizardPageExtensions;
 
 	// cached initial selection provider
 	private static InitialSelectionProvider selectionProvider;
@@ -713,6 +717,47 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 			loadInitialSelectionProvider();
 		
 		return selectionProvider;
+	}
+
+	/**
+	 * Returns the list of server creation wizard modifier.
+	 *
+	 * @return the list of server creation wizard modifier, or an empty list if none could be found
+	 */
+	public static List<ServerCreationWizardPageExtension> getServerCreationWizardPageExtensions() {
+		if (serverCreationWizardPageExtensions == null) {
+			loadServerCreationWizardPageExtensions();
+		}
+		return serverCreationWizardPageExtensions;
+	}
+
+	/**
+	 * Load the Server creation wizard page modifiers.
+	 */
+	private static synchronized void loadServerCreationWizardPageExtensions() {
+		if (serverCreationWizardPageExtensions != null)
+			return;
+		
+		Trace.trace(Trace.CONFIG, "->- Loading .serverCreationWizardPageExtension extension point ->-");
+		serverCreationWizardPageExtensions = new ArrayList<ServerCreationWizardPageExtension>();
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "serverCreationWizardPageExtension");
+		
+		for (IConfigurationElement curConfigElement: cf) {
+			try {
+				// Create the class here already since the usage of the server wizard page will need to use all the extensions
+				// in all the calls.  Therefore, there is no need for lazy loading here.
+				ServerCreationWizardPageExtension curExtension = (ServerCreationWizardPageExtension)curConfigElement.createExecutableExtension("class");
+				Trace.trace(Trace.CONFIG, "  Loaded serverCreationWizardPageExtension: " + cf[0].getAttribute("id") + ", loaded class=" + curExtension);
+				if (curExtension != null)
+					serverCreationWizardPageExtensions.add(curExtension);
+
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "  Could not load serverCreationWizardPageExtension: " + cf[0].getAttribute("id"), t);
+			}
+		}
+		
+		Trace.trace(Trace.CONFIG, "-<- Done loading .serverCreationWizardPageExtension extension point -<-");
 	}
 
 	/**

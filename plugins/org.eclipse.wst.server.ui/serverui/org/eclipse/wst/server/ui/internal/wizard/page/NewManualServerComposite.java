@@ -10,9 +10,11 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.wizard.page;
 
+import java.beans.PropertyChangeEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -43,17 +45,21 @@ import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
 import org.eclipse.wst.server.core.util.SocketUtil;
+import org.eclipse.wst.server.ui.*;
 import org.eclipse.wst.server.ui.internal.*;
+import org.eclipse.wst.server.ui.AbstractUIControl.IUIControlListener;
+import org.eclipse.wst.server.ui.AbstractUIControl.UIControlEntry;
 import org.eclipse.wst.server.ui.internal.viewers.ServerTypeComposite;
 import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
 import org.eclipse.wst.server.ui.internal.wizard.page.HostnameComposite.IHostnameSelectionListener;
+import org.eclipse.wst.server.ui.wizard.ServerCreationWizardPageExtension;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 
 /**
  * Wizard page used to create a server and configuration at the same time.
  */
-public class NewManualServerComposite extends Composite {
+public class NewManualServerComposite extends Composite implements IUIControlListener {
 	public interface ServerSelectionListener {
 		public void serverSelected(IServerAttributes server);
 		public void runtimeSelected(IRuntime runtime);
@@ -95,10 +101,13 @@ public class NewManualServerComposite extends Composite {
 	protected String lastHostname;
 	protected HostnameComposite manualHostComp;
 	IHostnameSelectionListener hostnameListener;
+	protected Label hostnameLabel;
 	protected Text hostname;
 	protected ControlDecoration hostnameDecoration;
 
 	protected ServerCreationCache cache = new ServerCreationCache();
+	
+	private IServerType oldServerType;
 
 	/**
 	 * Creates a new server and server configuration.  If the initial
@@ -144,6 +153,13 @@ public class NewManualServerComposite extends Composite {
 		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
 		whs.setHelp(this, ContextIds.NEW_SERVER_WIZARD);
 		
+		List<ServerCreationWizardPageExtension> pageExtensionLst = ServerUIPlugin.getServerCreationWizardPageExtensions();
+		// Add the page modifier top section UI. 
+		for (ServerCreationWizardPageExtension curPageExtension : pageExtensionLst) {
+			curPageExtension.createControl(ServerCreationWizardPageExtension.UI_POSITION.TOP, this);
+			curPageExtension.setUIControlListener(this);
+		}
+		
 		serverTypeComposite = new ServerTypeComposite(this, moduleType, serverTypeId, new ServerTypeComposite.ServerTypeSelectionListener() {
 			public void serverTypeSelected(IServerType type2) {
 				handleTypeSelection(type2);
@@ -156,13 +172,18 @@ public class NewManualServerComposite extends Composite {
 		serverTypeComposite.setLayoutData(data);
 		whs.setHelp(serverTypeComposite, ContextIds.NEW_SERVER_TYPE);
 		
+		// Add the page modifier middle section UI. 
+		for (ServerCreationWizardPageExtension curPageExtension : pageExtensionLst) {
+			curPageExtension.createControl(ServerCreationWizardPageExtension.UI_POSITION.MIDDLE, this);
+		}
+		
 		hostnameListener = 	new IHostnameSelectionListener() {
 			public void hostnameSelected(String selectedHostname) {
 				lastHostname = selectedHostname;
 				setHost(selectedHostname);
 			}
 	    };		
-		Label hostnameLabel = new Label(this, SWT.NONE);
+		hostnameLabel = new Label(this, SWT.NONE);
 		hostnameLabel.setText(Messages.hostname);
 		hostname = new Text(this, SWT.SINGLE | SWT.BORDER | SWT.CANCEL);
 		hostname.setText(HostnameComposite.LOCALHOST);
@@ -298,6 +319,12 @@ public class NewManualServerComposite extends Composite {
 				}
 			}
 		});
+		
+		// Add the page modifier bottom section UI. 
+		for (ServerCreationWizardPageExtension curPageExtension : pageExtensionLst) {
+			curPageExtension.createControl(ServerCreationWizardPageExtension.UI_POSITION.TOP, this);
+		}
+		
 		Dialog.applyDialogFont(this);
 	}
 
@@ -344,6 +371,13 @@ public class NewManualServerComposite extends Composite {
 		return returnValue;
 	}
 
+	public String getControlStringValue(String controlId) {
+		if (controlId != null && AbstractUIControl.PROP_HOSTNAME.equals(controlId)) {
+			return host;
+		}	
+		return null;
+	}
+	
 	public void setHost(String host) {
 		this.host = host;
 		if (serverTypeComposite == null)
@@ -387,6 +421,7 @@ public class NewManualServerComposite extends Composite {
 			((ServerWorkingCopy)server).setDefaults(null);
 			runtime = server.getRuntime();
 			listener.runtimeSelected(runtime);
+			fireServerWorkingCopyChanged();
 			return;
 		}
 		
@@ -412,6 +447,7 @@ public class NewManualServerComposite extends Composite {
 				}
 				
 				((ServerWorkingCopy)server).setDefaults(null);
+				fireServerWorkingCopyChanged();
 			}
 		} catch (CoreException ce) {
 			Trace.trace(Trace.SEVERE, "Error creating server", ce);
@@ -419,7 +455,7 @@ public class NewManualServerComposite extends Composite {
 			runtime = null;
 			wizard.setMessage(ce.getLocalizedMessage(), IMessageProvider.ERROR);
 		}
-		
+			
 		if (server == null)
 			wizard.setMessage(Messages.wizErrorServerCreationError, IMessageProvider.ERROR);
 	}
@@ -550,6 +586,14 @@ public class NewManualServerComposite extends Composite {
 		}
 		listener.runtimeSelected(runtime);
 	}
+	
+	protected void fireServerWorkingCopyChanged() {
+		List<ServerCreationWizardPageExtension> pageExtensionLst = ServerUIPlugin.getServerCreationWizardPageExtensions();
+		// Add the page modifier top section UI. 
+		for (ServerCreationWizardPageExtension curPageExtension : pageExtensionLst) {
+			curPageExtension.setServerWorkingCopy(getServer());
+		}
+	}
 
 	/**
 	 * Handle the server type selection.
@@ -610,6 +654,13 @@ public class NewManualServerComposite extends Composite {
 			}
 		}
 		listener.serverSelected(server);
+		// Fire the property change event. 
+		List<ServerCreationWizardPageExtension> pageExtensionLst = ServerUIPlugin.getServerCreationWizardPageExtensions();
+		for (ServerCreationWizardPageExtension curPageExtension : pageExtensionLst) {
+			curPageExtension.handlePropertyChanged(new PropertyChangeEvent(this, AbstractUIControl.PROP_SERVER_TYPE, oldServerType, serverType));
+		}
+		// Update the old server type value.
+		oldServerType = serverType;
 		wizard.update();
 	}
 
@@ -656,5 +707,26 @@ public class NewManualServerComposite extends Composite {
 
 		host = newHost;
 		hostnameListener.hostnameSelected(host);
+	}
+
+	public void handleUIControlMapChanged(Map<String, UIControlEntry> controlMap) {
+		if (controlMap == null) {
+			return;
+		}
+		
+		for (String curControlId : controlMap.keySet()) {
+			if (AbstractUIControl.PROP_HOSTNAME.equals(curControlId)) {
+				UIControlEntry curControlEntry = controlMap.get(curControlId);
+				if (hostnameLabel != null)
+					hostnameLabel.setEnabled(curControlEntry.isEnabled());
+				
+				if (hostname != null){
+					if (curControlEntry.getNewTextValue() != null)
+						hostname.setText(curControlEntry.getNewTextValue());
+					
+					hostname.setEnabled(curControlEntry.isEnabled());
+				}
+			}
+		}
 	}
 }

@@ -10,6 +10,7 @@
   <extension-point id="initialSelectionProvider" name="%extensionPointInitialSelectionProvider" schema="schema/initialSelectionProvider.exsd"/>
   <extension-point id="audio" name="%extensionPointAudio" schema="schema/audio.exsd"/>
   <extension-point id="serverToolTip" name="%extensionPointServerToolTip" schema="schema/serverToolTip.exsd"/>
+  <extension-point id="serverCreationWizardPageExtension" name="%extensionPointServerCreationWizardPageExtension" schema="schema/serverCreationWizardPageExtension.exsd"/>
 
 <extension point="org.eclipse.ui.newWizards">
   <category
