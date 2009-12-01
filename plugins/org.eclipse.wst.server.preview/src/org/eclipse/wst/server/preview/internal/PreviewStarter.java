@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,15 +33,15 @@ public class PreviewStarter {
 		try {
 			System.setProperty("org.mortbay.log.class", "org.eclipse.wst.server.preview.internal.WTPLogger");
 			ServerConfig config = new ServerConfig(configPath);
-			System.out.println("Starting preview server on port " + config.getPort());
-			System.out.println();
+			Trace.trace(Trace.FINEST, "Starting preview server on port " + config.getPort());
+			Trace.trace(Trace.FINEST, " ");
 			Module[] m = config.getModules();
 			int size = m.length;
 			if (size > 0) {
-				System.out.println("Modules:");
+				Trace.trace(Trace.FINEST, "Modules:");
 				for (Module mm : m)
-					System.out.println("  " + mm.getName() + " (" + mm.getContext() + ")");
-				System.out.println();
+					Trace.trace(Trace.FINEST, "  " + mm.getName() + " (" + mm.getContext() + ")");
+				Trace.trace(Trace.FINEST, " ");
 			}
 			
 			server = new Server(config.getPort());
@@ -80,7 +80,7 @@ public class PreviewStarter {
 
 	public void stop() {
 		try {
-			System.out.println("Stop!");
+			Trace.trace(Trace.FINEST, "Stop!");
 			server.stop();
 		} catch (Exception e) {
 			e.printStackTrace();
