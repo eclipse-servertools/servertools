@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,8 +23,10 @@ import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
 import org.eclipse.wst.server.ui.internal.wizard.page.NewServerComposite;
+import org.eclipse.wst.server.ui.internal.wizard.page.NewManualServerComposite;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
+import org.eclipse.wst.server.core.util.SocketUtil;
 /**
  * 
  */
@@ -36,6 +38,7 @@ public class NewServerWizardFragment extends WizardFragment {
 	protected IModule module;
 	protected IModuleType moduleType;
 	protected String serverTypeId;
+	protected NewServerComposite comp;
 
 	protected Map<String, WizardFragment> fragmentMap = new HashMap<String, WizardFragment>();
 	protected IPath runtimeLocation = null;
@@ -66,7 +69,7 @@ public class NewServerWizardFragment extends WizardFragment {
 	 */
 	public Composite createComposite(Composite parent, IWizardHandle wizard) {
 		String launchMode = (String) getTaskModel().getObject(TaskModel.TASK_LAUNCH_MODE);
-		NewServerComposite comp = null;
+
 		if (moduleType != null || serverTypeId != null)
 			comp = new NewServerComposite(parent, wizard, moduleType, serverTypeId, launchMode);
 		else
@@ -139,8 +142,34 @@ public class NewServerWizardFragment extends WizardFragment {
 	}
 
 	public boolean isComplete() {
-		return getServer() != null; 
+		if(getServer() == null)
+			return false;
+		
+		if(getServer().getServerType() == null)
+			return false;
+		
+		return checkHostAndServerType();
 	}
+	
+	private boolean checkHostAndServerType(){
+		boolean isComplete = false;
+
+		boolean supportsRemote = getServer().getServerType().supportsRemoteHosts();
+		
+		if(comp != null){
+			Composite composite = comp.getNewManualServerComposite();
+			if(composite != null && composite instanceof NewManualServerComposite){
+				NewManualServerComposite manualComp = (NewManualServerComposite)composite;
+
+				if(!supportsRemote && !SocketUtil.isLocalhost(manualComp.getCurrentHostname())){
+					isComplete = false;
+				}
+				else
+					isComplete = true;
+			}
+		}
+		return isComplete;
+	}	
 
 	private IServerWorkingCopy getServer() {
 		try {

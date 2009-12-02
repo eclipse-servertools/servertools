@@ -486,7 +486,11 @@ public class NewServerComposite extends Composite {
 		data.heightHint = 325;
 		manualComp.setLayoutData(data);
 	}
-
+	
+	public NewManualServerComposite getNewManualServerComposite (){
+		return manualComp;
+	}
+	
 	protected void updateTaskModel() {
 		if (taskModel != null) {
 			IServerWorkingCopy server = getServer();

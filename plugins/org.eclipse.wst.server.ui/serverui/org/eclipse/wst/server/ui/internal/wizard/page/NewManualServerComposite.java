@@ -382,14 +382,9 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		this.host = host;
 		if (serverTypeComposite == null)
 			return;
-		
-		boolean changed = false;
-		if (host == null) {
-			changed = serverTypeComposite.setHost(true);
-		} else if (SocketUtil.isLocalhost(host))
-			changed = serverTypeComposite.setHost(true);
-		else
-			changed = serverTypeComposite.setHost(false);
+				
+		checkHostAndServerType();
+		boolean changed = serverTypeComposite.setHost(true);
 		
 		if (changed)
 			handleTypeSelection(serverTypeComposite.getSelectedServerType());
@@ -404,6 +399,22 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		}
 	}
 
+	/** 	
+	 * Checks for non-localhost host name values with unsupported types for remote hosts
+	 * which provides a condition for disabling further movement through wizard.
+	 */
+	public void checkHostAndServerType(){
+		IServerType selectedServerType = serverTypeComposite.getSelectedServerType();		
+		
+		if(selectedServerType != null){
+			boolean supportsRemote = selectedServerType.supportsRemoteHosts();
+			if(!supportsRemote && !SocketUtil.isLocalhost(hostname.getText()))
+				wizard.setMessage(NLS.bind(Messages.wizCheckRemoteSupport, new Object[0]), IMessageProvider.ERROR);
+			else 
+				wizard.setMessage(null, IMessageProvider.NONE);
+		}
+	}
+	
 	/**
 	 * Load a server of the given type.
 	 */
@@ -661,6 +672,8 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		}
 		// Update the old server type value.
 		oldServerType = serverType;
+		// check for non-localhost names with unsupported types for remote hosts
+		checkHostAndServerType();
 		wizard.update();
 	}
 
@@ -729,4 +742,10 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			}
 		}
 	}
+	
+	public String getCurrentHostname(){
+		if(hostname != null)
+			return hostname.getText();
+		return null;
+	}	
 }
