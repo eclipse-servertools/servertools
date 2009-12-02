@@ -73,7 +73,7 @@ public class ServerActionProvider extends CommonActionProvider {
 	protected Action[] actions;
 	protected Action actionModifyModules;
 	protected Action openAction, showInConsoleAction, showInDebugAction, propertiesAction, monitorPropertiesAction;
-	protected Action copyAction, pasteAction, deleteAction, renameAction;
+	protected Action copyAction, pasteAction, globalDeleteAction, renameAction;
 	protected Action noneAction = new Action(Messages.dialogMonitorNone) {
 		// dummy action
 	};
@@ -118,7 +118,7 @@ public class ServerActionProvider extends CommonActionProvider {
 		// create copy, paste, and delete actions
 		pasteAction = new PasteAction(shell, provider, clipboard);
 		copyAction = new CopyAction(provider, clipboard, pasteAction);
-		deleteAction = new DeleteAction(shell, provider);
+		globalDeleteAction = new GlobalDeleteAction(shell, provider);
 		renameAction = new RenameAction(shell, tableViewer, provider);
 		
 		// create the other actions
@@ -141,7 +141,7 @@ public class ServerActionProvider extends CommonActionProvider {
 		actionBars.updateActionBars();
 		actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), copyAction);
 		actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), pasteAction);
-		actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), deleteAction);
+		actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), globalDeleteAction);
 		actionBars.setGlobalActionHandler(ActionFactory.RENAME.getId(), renameAction);
 		
 		IContributionManager cm = actionBars.getToolBarManager();
@@ -190,7 +190,7 @@ public class ServerActionProvider extends CommonActionProvider {
 			menu.add(invisibleSeparator(EDIT_SECTION_START_SEPARATOR));
 			menu.add(copyAction);
 			menu.add(pasteAction);
-			menu.add(deleteAction);
+			menu.add(globalDeleteAction);
 			menu.add(renameAction);
 			menu.add(invisibleSeparator(EDIT_SECTION_END_SEPARATOR));
 

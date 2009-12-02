@@ -454,6 +454,10 @@ public class ServerTableViewer extends TreeViewer {
 		}
 	}
 
+	/**
+	 * @param server
+	 * @deprecated With the introduction of the CNF this method shouldn't be called
+	 */
 	protected void refreshServer(final IServer server) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
