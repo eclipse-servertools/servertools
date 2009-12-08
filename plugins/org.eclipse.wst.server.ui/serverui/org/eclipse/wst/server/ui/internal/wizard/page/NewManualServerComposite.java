@@ -739,6 +739,13 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 					
 					hostname.setEnabled(curControlEntry.isEnabled());
 				}
+				
+				if (hostnameDecoration != null){
+					if(curControlEntry.isEnabled())
+						hostnameDecoration.show();
+					else
+						hostnameDecoration.hide();
+				}
 			}
 		}
 	}
