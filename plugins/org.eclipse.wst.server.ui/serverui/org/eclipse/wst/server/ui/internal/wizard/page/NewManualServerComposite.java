@@ -382,30 +382,39 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		this.host = host;
 		if (serverTypeComposite == null)
 			return;
-				
-		checkHostAndServerType();
-		boolean changed = serverTypeComposite.setHost(true);
 		
-		if (changed)
-			handleTypeSelection(serverTypeComposite.getSelectedServerType());
-		else if (server != null) {
-			server.setHost(host);
-			if (!serverNameModified) {
-				updatingServerName = true;
-				((ServerWorkingCopy)server).setDefaults(null);
+		IServerType selectedServerType = serverTypeComposite.getSelectedServerType();
+		handleHostnameChange(selectedServerType);
+	}
+	
+	protected void handleHostnameChange(IServerType serverType) {
+
+		wizard.setMessage(null, IMessageProvider.NONE);
+		checkHostAndServerType(serverType);
+		loadServerImpl(serverType);
+		
+		if (serverName != null && !serverNameModified) {
+			updatingServerName = true;
+			if (server == null)
+				serverName.setText("");
+			else
 				serverName.setText(server.getName());
-				updatingServerName = false;
+			updatingServerName = false;
+		}
+		
+		updateRuntimeCombo(serverType);
+		if (serverName != null) {
+			if (server == null) {
+				serverName.setEditable(false);
+				serverNameToolBar.getControl().setVisible(false);
+			} else {
+				serverName.setEditable(true);
+				serverNameToolBar.getControl().setVisible(serverNameModified);
 			}
 		}
 	}
 
-	/** 	
-	 * Checks for non-localhost host name values with unsupported types for remote hosts
-	 * which provides a condition for disabling further movement through wizard.
-	 */
-	public void checkHostAndServerType(){
-		IServerType selectedServerType = serverTypeComposite.getSelectedServerType();		
-		
+	protected void checkHostAndServerType(IServerType selectedServerType){
 		if(selectedServerType != null){
 			boolean supportsRemote = selectedServerType.supportsRemoteHosts();
 			if(!supportsRemote && !SocketUtil.isLocalhost(hostname.getText()))
@@ -672,8 +681,8 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		}
 		// Update the old server type value.
 		oldServerType = serverType;
-		// check for non-localhost names with unsupported types for remote hosts
-		checkHostAndServerType();
+
+		checkHostAndServerType(serverType);
 		wizard.update();
 	}
 
