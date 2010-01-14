@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008,2009 IBM Corporation and others.
+ * Copyright (c) 2008,2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,30 +26,47 @@ public class CNFManagedUIDecorator extends UIDecorator {
 		Messages.viewStatusStopping4,
 		Messages.viewStatusStopped2};
 	
-	private static final Image[] startingImages = new Image[] {
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_1),
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_2),
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_3)
-	};
+	private static Image[] startingImages;
+	private static ImageDescriptor[] startingImagesDescriptor;	
+	private static Image[] stoppingImages;
+	private static ImageDescriptor[] stoppingImagesDescriptor;
 	
-	private static final ImageDescriptor[] startingImagesDescriptor = new ImageDescriptor[] {
-		ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STARTING_1),
-		ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STARTING_2),
-		ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STARTING_3)
-	};
+	/**
+	 * Initialize the variables for this class
+	 */
+	public void init(){
+		loadImages();
+	}
 	
-	private static final Image[] stoppingImages = new Image[] {
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_1),
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_2),
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_2)
-	};
-	
-	private static final ImageDescriptor[] stoppingImagesDescriptor = new ImageDescriptor[] {
-		ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STOPPING_1),
-		ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STOPPING_2),
-		ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STOPPING_3)
-	};
-	
+	/**
+	 * Load the Server starting images. 
+	 * NOTE: This is done so that we don't initialize the images when a label is being requested
+	 */
+	public void loadImages(){
+		startingImages = new Image[] {
+			ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_1),
+			ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_2),
+			ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_3)
+		};
+		
+		startingImagesDescriptor = new ImageDescriptor[] {
+			ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STARTING_1),
+			ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STARTING_2),
+			ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STARTING_3)
+		};
+		
+		stoppingImages = new Image[] {
+			ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_1),
+			ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_2),
+			ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_2)
+		};
+		
+		stoppingImagesDescriptor = new ImageDescriptor[] {
+			ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STOPPING_1),
+			ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STOPPING_2),
+			ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STOPPING_3)
+		};
+	}
 
 	/**
 	 * @see UIDecorator#getStateLabel(int, String, int)
@@ -73,11 +90,14 @@ public class CNFManagedUIDecorator extends UIDecorator {
 		
 		return serverStateUnmanaged[state];
 	}
-
-	/**
-	 * @see UIDecorator#getStateImage(int, String, int)
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.server.ui.internal.provisional.UIDecorator#getStateImage(int, java.lang.String, int)
 	 */
 	public Image getStateImage(int state, String mode, int count) {
+		// Only initialize the images when an image is required
+		init();
+		
 		if (state == IServer.STATE_UNKNOWN)
 			return null;
 		else if (state == IServer.STATE_STARTING)
@@ -97,10 +117,11 @@ public class CNFManagedUIDecorator extends UIDecorator {
 		}
 	}
 	
-	/**
-	 * @see UIDecorator#getStateImage(int, String, int)
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.server.ui.internal.provisional.UIDecorator#getStateImageDescriptor(int, java.lang.String, int)
 	 */
 	public ImageDescriptor getStateImageDescriptor(int state, String mode, int count) {
+		// Only initialize the images when an image is required
 		if (state == IServer.STATE_UNKNOWN)
 			return null;
 		else if (state == IServer.STATE_STARTING)
@@ -120,8 +141,6 @@ public class CNFManagedUIDecorator extends UIDecorator {
 		}
 	}
 	
-	
-
 	public String getModuleName() {
 		return "module";
 	}

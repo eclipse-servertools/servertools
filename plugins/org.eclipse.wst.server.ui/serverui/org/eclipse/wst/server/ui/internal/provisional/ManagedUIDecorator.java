@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,18 +34,33 @@ public class ManagedUIDecorator extends UIDecorator {
 		Messages.viewStatusStopping2,
 		Messages.viewStatusStopping3};
 	
-	private static final Image[] startingImages = new Image[] {
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_1),
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_2),
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_3)
-	};
+	private static Image[] startingImages;
+	private static Image[] stoppingImages;
 	
-	private static final Image[] stoppingImages = new Image[] {
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_1),
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_2),
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_2)
-	};
-
+	/**
+	 * Initialize the variables for this class
+	 */
+	public void init(){
+		loadImages();
+	}
+	
+	/**
+	 * Load the Server starting images. 
+	 * NOTE: This is done so that we don't initialize the images when a label is being requested
+	 */
+	public void loadImages(){
+		startingImages = new Image[] {
+			ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_1),
+			ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_2),
+			ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_3)
+		};
+		stoppingImages = new Image[] {
+				ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_1),
+				ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_2),
+				ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_2)
+		};
+	}
+		
 	/**
 	 * @see UIDecorator#getStateLabel(int, String, int)
 	 */
@@ -72,7 +87,10 @@ public class ManagedUIDecorator extends UIDecorator {
 	/**
 	 * @see UIDecorator#getStateImage(int, String, int)
 	 */
-	public Image getStateImage(int state, String mode, int count) {
+	public Image getStateImage(int state, String mode, int count) { 
+		// Only initialize the images when an image is required
+		init();
+		
 		if (state == IServer.STATE_UNKNOWN)
 			return null;
 		else if (state == IServer.STATE_STARTING)

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -254,23 +254,6 @@ public class ServerTableLabelProvider extends BaseCellLabelProvider {
 	 */
 	protected Image getStateImage(IServerType serverType, int state, String mode) {
 		return UIDecoratorManager.getUIDecorator(serverType).getStateImage(state, mode, count);
-		/*if (state == IServer.STATE_UNKNOWN)
-			return null;
-		else if (state == IServer.STATE_STARTING)
-			return startingImages[count];
-		else if (state == IServer.STATE_STOPPING)
-			return stoppingImages[count];
-		else if (state == IServer.STATE_STOPPED)
-			return ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPED);
-		else { //if (state == IServer.STATE_STARTED) {
-			//String mode = server.getMode();
-			if (ILaunchManager.DEBUG_MODE.equals(mode))
-				return ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTED_DEBUG);
-			else if (ILaunchManager.PROFILE_MODE.equals(mode))
-				return ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTED_PROFILE);
-			else
-				return ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTED);
-		}*/
 	}
 	
 	/**
@@ -290,28 +273,6 @@ public class ServerTableLabelProvider extends BaseCellLabelProvider {
 	 */
 	protected String getStateLabel(IServerType serverType, int state, String mode) {
 		return UIDecoratorManager.getUIDecorator(serverType).getStateLabel(state, mode, count);
-		/*if (stateSet == IServerType.SERVER_STATE_SET_PUBLISHED)
-			return "";
-		
-		if (stateSet == IServerType.SERVER_STATE_SET_MANAGED) {
-			if (state == IServer.STATE_UNKNOWN)
-				return "";
-			else if (state == IServer.STATE_STARTING)
-				return startingText[count];
-			else if (state == IServer.STATE_STOPPING)
-				return stoppingText[count];
-			else if (state == IServer.STATE_STARTED) {
-				if (ILaunchManager.DEBUG_MODE.equals(mode))
-					return Messages.viewStatusStartedDebug");
-				else if (ILaunchManager.PROFILE_MODE.equals(mode))
-					return Messages.viewStatusStartedProfile");
-				else
-					return Messages.viewStatusStarted");
-			} else if (state == IServer.STATE_STOPPED)
-				return Messages.viewStatusStopped");
-		}
-		
-		return serverStateUnmanaged[state];*/
 	}
 	
 	protected void animate() {
