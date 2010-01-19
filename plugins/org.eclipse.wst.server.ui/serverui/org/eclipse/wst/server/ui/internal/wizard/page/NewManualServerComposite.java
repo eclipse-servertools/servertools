@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2009 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -322,7 +322,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		
 		// Add the page modifier bottom section UI. 
 		for (ServerCreationWizardPageExtension curPageExtension : pageExtensionLst) {
-			curPageExtension.createControl(ServerCreationWizardPageExtension.UI_POSITION.TOP, this);
+			curPageExtension.createControl(ServerCreationWizardPageExtension.UI_POSITION.BOTTOM, this);
 		}
 		
 		Dialog.applyDialogFont(this);
