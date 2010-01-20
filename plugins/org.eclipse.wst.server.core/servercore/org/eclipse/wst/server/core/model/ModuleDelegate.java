@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -101,6 +101,15 @@ public abstract class ModuleDelegate {
 	 * @return a possibly empty array of child modules
 	 */
 	public abstract IModule[] getChildModules();
+	
+	/**
+	 * Returns the path relative to its parent of the given module contained within this application
+	 * 
+	 * @param m a module within this application
+	 * @return the path of the given module with respect to the parent, or <code>null</code> if the path could
+	 *    not be found
+	 */	
+	public abstract String getPath(IModule m);
 	
 	/**
 	 * Returns the current array of module artifacts.
