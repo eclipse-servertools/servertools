@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2009 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,6 +31,7 @@ import org.eclipse.wst.server.core.internal.*;
 import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.model.LaunchableAdapterDelegate;
 import org.eclipse.wst.server.core.util.PublishAdapter;
+import org.eclipse.wst.server.ui.editor.ServerEditorOverviewPageModifier;
 import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
 import org.eclipse.wst.server.ui.internal.editor.IServerEditorInput;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorCore;
@@ -91,6 +92,9 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	
 	// Cached copy of all server wizard UI modifier
 	private static List<ServerCreationWizardPageExtension> serverCreationWizardPageExtensions;
+	
+	// Cached copy of all server editor UI modifiers
+	private static List<ServerEditorOverviewPageModifier> serverEditorOverviewPageModifier;
 
 	// cached initial selection provider
 	private static InitialSelectionProvider selectionProvider;
@@ -725,12 +729,23 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	 * @return the list of server creation wizard modifier, or an empty list if none could be found
 	 */
 	public static List<ServerCreationWizardPageExtension> getServerCreationWizardPageExtensions() {
-		if (serverCreationWizardPageExtensions == null) {
+		if (serverCreationWizardPageExtensions == null)
 			loadServerCreationWizardPageExtensions();
-		}
+
 		return serverCreationWizardPageExtensions;
 	}
 
+ 	/**
+	 * Returns the list of server editor modifiers.
+	 *
+	 * @return the list of server editor modifiers, or an empty list if none could be found
+	 */
+	public static List<ServerEditorOverviewPageModifier> getServerEditorOverviewPageModifiers() {
+		if (serverEditorOverviewPageModifier == null)
+			loadServerEditorOverviewPageModifiers();
+		return serverEditorOverviewPageModifier;
+	}
+	
 	/**
 	 * Load the Server creation wizard page modifiers.
 	 */
@@ -748,18 +763,46 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 				// Create the class here already since the usage of the server wizard page will need to use all the extensions
 				// in all the calls.  Therefore, there is no need for lazy loading here.
 				ServerCreationWizardPageExtension curExtension = (ServerCreationWizardPageExtension)curConfigElement.createExecutableExtension("class");
-				Trace.trace(Trace.CONFIG, "  Loaded serverCreationWizardPageExtension: " + cf[0].getAttribute("id") + ", loaded class=" + curExtension);
+				Trace.trace(Trace.CONFIG, "  Loaded .serverCreationWizardPageExtension: " + cf[0].getAttribute("id") + ", loaded class=" + curExtension);
 				if (curExtension != null)
 					serverCreationWizardPageExtensions.add(curExtension);
 
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load serverCreationWizardPageExtension: " + cf[0].getAttribute("id"), t);
+				Trace.trace(Trace.SEVERE, "  Could not load .serverCreationWizardPageExtension: " + cf[0].getAttribute("id"), t);
 			}
 		}
 		
 		Trace.trace(Trace.CONFIG, "-<- Done loading .serverCreationWizardPageExtension extension point -<-");
 	}
 
+	/**
+	 * Load the Server editor page modifiers.
+	 */
+	private static synchronized void loadServerEditorOverviewPageModifiers() {
+		if (serverEditorOverviewPageModifier != null)
+			return;
+		
+		Trace.trace(Trace.CONFIG, "->- Loading .serverEditorOverviewPageModifier extension point ->-");
+		serverEditorOverviewPageModifier = new ArrayList<ServerEditorOverviewPageModifier>();
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "serverEditorOverviewPageModifier");
+		
+		for (IConfigurationElement curConfigElement: cf) {
+			try {
+				ServerEditorOverviewPageModifier curExtension = (ServerEditorOverviewPageModifier)curConfigElement.createExecutableExtension("class");
+				Trace.trace(Trace.CONFIG, "  Loaded .serverEditorOverviewPageModifier: " + cf[0].getAttribute("id") + ", loaded class=" + curExtension);
+				if (curExtension != null)
+					serverEditorOverviewPageModifier.add(curExtension);
+
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "  Could not load .serverEditorOverviewPageModifier: " + cf[0].getAttribute("id"), t);
+			}
+		}
+		
+		Trace.trace(Trace.CONFIG, "-<- Done loading .serverEditorOverviewPageModifier extension point -<-");
+	}
+	
+	
 	/**
 	 * Load the initial selection provider.
 	 */

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -70,7 +71,10 @@ import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.internal.ServerType;
 import org.eclipse.wst.server.core.util.SocketUtil;
+import org.eclipse.wst.server.ui.AbstractUIControl;
+import org.eclipse.wst.server.ui.AbstractUIControl.UIControlEntry;
 import org.eclipse.wst.server.ui.editor.*;
+import org.eclipse.wst.server.ui.AbstractUIControl.IUIControlListener;
 import org.eclipse.wst.server.ui.internal.ContextIds;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
@@ -83,13 +87,17 @@ import org.eclipse.wst.server.ui.internal.viewers.BaseLabelProvider;
 import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
+
+
 /**
  * Server general editor page.
  */
-public class OverviewEditorPart extends ServerEditorPart {
+public class OverviewEditorPart extends ServerEditorPart implements IUIControlListener {
 	protected Text serverName;
 	protected Text serverConfiguration;
 	protected Text hostname;
+	protected Label hostnameLabel;
+	protected ControlDecoration hostnameDecoration;
 	protected Combo runtimeCombo;
 	protected Button browse;
 	protected Button autoPublishDisable;
@@ -109,6 +117,8 @@ public class OverviewEditorPart extends ServerEditorPart {
 
 	protected IRuntimeLifecycleListener runtimeListener;
 
+	private IServerType oldServerType;
+	
 	class PublisherContentProvider extends BaseContentProvider {
 		protected Publisher[] pubs;
 		public PublisherContentProvider(Publisher[] pubs) {
@@ -350,10 +360,10 @@ public class OverviewEditorPart extends ServerEditorPart {
 			whs.setHelp(serverName, ContextIds.EDITOR_SERVER);
 			
 			// hostname
-			createLabel(toolkit, composite, Messages.serverEditorOverviewServerHostname);
+			hostnameLabel = createLabel(toolkit, composite, Messages.serverEditorOverviewServerHostname);
 			
 			hostname = toolkit.createText(composite, server.getHost());
-			final ControlDecoration hostnameDecoration = new ControlDecoration(hostname, SWT.TOP | SWT.LEAD);
+			hostnameDecoration = new ControlDecoration(hostname, SWT.TOP | SWT.LEAD);
 			data = new GridData(GridData.FILL_HORIZONTAL);
 			data.horizontalSpan = 2;
 			data.horizontalIndent = decorationWidth;
@@ -582,6 +592,16 @@ public class OverviewEditorPart extends ServerEditorPart {
 						}
 					});
 				}
+			}
+		}
+		
+		// Insertion of extension widgets. If the page modifier createControl is not implemented still 
+		// add the modifier to the listeners list.
+		List<ServerEditorOverviewPageModifier> pageModifiersLst = ServerUIPlugin.getServerEditorOverviewPageModifiers();
+		for (ServerEditorOverviewPageModifier curPageModifier : pageModifiersLst) {
+			if(server != null && server.getServerType() != null){
+				curPageModifier.createControl(ServerEditorOverviewPageModifier.UI_LOCATION.OVERVIEW, composite);
+				curPageModifier.setUIControlListener(this);
 			}
 		}
 	}
@@ -964,6 +984,12 @@ public class OverviewEditorPart extends ServerEditorPart {
 				autoPublishEnable.setEnabled(true);
 				autoPublishTime.setEnabled(publishSetting == Server.AUTO_PUBLISH_ENABLE);
 			}
+			
+			List<ServerEditorOverviewPageModifier> pageModifiersLst = ServerUIPlugin.getServerEditorOverviewPageModifiers();
+			for (ServerEditorOverviewPageModifier curPageModifier : pageModifiersLst) {
+				if(server != null && server.getServerType() != null)
+					curPageModifier.handlePropertyChanged(new PropertyChangeEvent(this, AbstractUIControl.PROP_SERVER_TYPE, oldServerType, server.getServerType()));
+			}
 		}
 		
 		updating = false;
@@ -1033,5 +1059,45 @@ public class OverviewEditorPart extends ServerEditorPart {
 			serverName.setFocus();
 		else if (serverConfiguration != null)
 			serverConfiguration.setFocus();
+	}
+
+	public String getControlStringValue(String controlId) {
+		if (controlId != null && AbstractUIControl.PROP_HOSTNAME.equals(controlId))
+			return hostname.getText();
+		return null;
+	}
+
+	public void handleUIControlMapChanged(Map<String, UIControlEntry> controlMap) {
+		if (controlMap == null)
+			return;
+		
+		for (String curControlId : controlMap.keySet()) {
+			if (AbstractUIControl.PROP_HOSTNAME.equals(curControlId)) {
+				UIControlEntry curControlEntry = controlMap.get(curControlId);
+				if (hostnameLabel != null)
+					hostnameLabel.setEnabled(curControlEntry.isEnabled());
+				
+				if (hostname != null){
+					if (curControlEntry.getNewTextValue() != null)
+						hostname.setText(curControlEntry.getNewTextValue());
+					
+					hostname.setEnabled(curControlEntry.isEnabled());
+				}
+				
+				if (hostnameDecoration != null){
+					if(curControlEntry.isEnabled())
+						hostnameDecoration.show();
+					else
+						hostnameDecoration.hide();
+				}
+			}
+		}
+	}
+	
+	protected void fireServerWorkingCopyChanged() {
+		List<ServerEditorOverviewPageModifier> pageModifiersLst = ServerUIPlugin.getServerEditorOverviewPageModifiers();
+		for (ServerEditorOverviewPageModifier curPageModifier : pageModifiersLst) {
+			curPageModifier.setServerWorkingCopy(getServer());
+		}
 	}
 }
