@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2009 IBM Corporation and others.
+ * Copyright (c) 2008, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,20 +11,12 @@
 package org.eclipse.wst.server.discovery.internal.model;
 
 import java.net.URI;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.equinox.internal.provisional.p2.director.IPlanner;
 import org.eclipse.equinox.internal.provisional.p2.director.ProfileChangeRequest;
-import org.eclipse.equinox.internal.provisional.p2.director.ProvisioningPlan;
-import org.eclipse.equinox.internal.provisional.p2.engine.DefaultPhaseSet;
-import org.eclipse.equinox.internal.provisional.p2.engine.IEngine;
-import org.eclipse.equinox.internal.provisional.p2.engine.IProfile;
-import org.eclipse.equinox.internal.provisional.p2.engine.IProfileRegistry;
-import org.eclipse.equinox.internal.provisional.p2.engine.ProvisioningContext;
-import org.eclipse.equinox.internal.provisional.p2.metadata.IInstallableUnit;
-import org.eclipse.equinox.internal.provisional.p2.metadata.Version;
-import org.eclipse.equinox.internal.provisional.p2.ui.IUPropertyUtils;
+import org.eclipse.equinox.p2.engine.*;
+import org.eclipse.equinox.p2.metadata.*;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.server.discovery.internal.Activator;
 import org.eclipse.wst.server.discovery.internal.ExtensionUtility;
@@ -35,7 +27,7 @@ public class Extension {
 	private URI uri;
 
 	private ProvisioningContext provContext;
-	private ProvisioningPlan plan;
+	private IProvisioningPlan plan;
 
 	public Extension(IInstallableUnit iu, URI uri) {
 		this.iu = iu;
@@ -43,11 +35,11 @@ public class Extension {
 	}
 
 	public String getName() {
-		return IUPropertyUtils.getIUProperty(iu, IInstallableUnit.PROP_NAME);
+		return iu.getProperty(IInstallableUnit.PROP_NAME, null);
 	}
 
 	public String getDescription() {
-		return IUPropertyUtils.getIUProperty(iu, IInstallableUnit.PROP_DESCRIPTION);
+		return iu.getProperty(IInstallableUnit.PROP_DESCRIPTION, null);
 	}
 
 	public Image getImage() {
@@ -56,11 +48,15 @@ public class Extension {
 	}
 
 	public String getLicense() {
-		return iu.getLicense().getBody();
+		ILicense[] licenses = iu.getLicenses(null);
+		if (licenses == null || licenses.length == 0)
+			return "";
+		//TODO support multiple licenses
+		return licenses[0].getBody();
 	}
 
 	public String getProvider() {
-		return IUPropertyUtils.getIUProperty(iu, IInstallableUnit.PROP_PROVIDER);
+		return iu.getProperty(IInstallableUnit.PROP_PROVIDER, null);
 	}
 
 	public String getId() {
@@ -74,30 +70,27 @@ public class Extension {
 	public IStatus install(IProgressMonitor monitor) {
 		BundleContext bundleContext = Activator.getDefault().getBundle().getBundleContext();
 		
-		ProvisioningPlan plan = getProvisioningPlan(true, monitor);
+		IProvisioningPlan plan = getProvisioningPlan(true, monitor);
 		if (!plan.getStatus().isOK())
 			return plan.getStatus();
 		
-		IProfileRegistry profileRegistry = (IProfileRegistry) ExtensionUtility.getService(bundleContext, IProfileRegistry.class.getName());
-		IProfile profile = profileRegistry.getProfile(IProfileRegistry.SELF);
-		
 		IEngine engine = (IEngine) ExtensionUtility.getService(bundleContext, IEngine.SERVICE_NAME);
-		return engine.perform(profile, new DefaultPhaseSet(), plan.getOperands(), provContext, monitor);
+		return engine.perform(plan, new DefaultPhaseSet(), monitor);
 	}
 
 	public IInstallableUnit[] getIUs() {
 		return new IInstallableUnit[] { iu };
 	}
 
-	public ProvisioningPlan getProvisioningPlan(boolean explain, IProgressMonitor monitor) {
+	public IProvisioningPlan getProvisioningPlan(boolean explain, IProgressMonitor monitor) {
 		if (plan != null)
 			return plan;
 		
 		//long time = System.currentTimeMillis();
 		BundleContext bundleContext = Activator.getDefault().getBundle().getBundleContext();
-		IPlanner planner = (IPlanner) ExtensionUtility.getService(bundleContext, IPlanner.class.getName());
+		IPlanner planner = (IPlanner) ExtensionUtility.getService(bundleContext, IPlanner.SERVICE_NAME);
 		
-		IProfileRegistry profileRegistry = (IProfileRegistry) ExtensionUtility.getService(bundleContext, IProfileRegistry.class.getName());
+		IProfileRegistry profileRegistry = (IProfileRegistry) ExtensionUtility.getService(bundleContext, IProfileRegistry.SERVICE_NAME);
 		IProfile profile = profileRegistry.getProfile(IProfileRegistry.SELF);
 		ProfileChangeRequest pcr = new ProfileChangeRequest(profile);
 		pcr.addInstallableUnits(new IInstallableUnit[] { iu } );

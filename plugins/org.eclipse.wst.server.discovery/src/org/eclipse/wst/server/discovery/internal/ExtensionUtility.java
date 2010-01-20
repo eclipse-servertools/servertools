@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,21 +12,15 @@ package org.eclipse.wst.server.discovery.internal;
 
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.equinox.internal.provisional.p2.engine.IProfile;
-import org.eclipse.equinox.internal.provisional.p2.engine.IProfileRegistry;
-import org.eclipse.equinox.internal.provisional.p2.metadata.IInstallableUnit;
-import org.eclipse.equinox.internal.provisional.p2.metadata.Version;
-import org.eclipse.equinox.internal.provisional.p2.metadata.query.Collector;
-import org.eclipse.equinox.internal.provisional.p2.metadata.query.InstallableUnitQuery;
-import org.eclipse.equinox.internal.provisional.p2.metadata.query.Query;
+import java.util.*;
+import org.eclipse.core.runtime.*;
+import org.eclipse.equinox.p2.engine.IProfile;
+import org.eclipse.equinox.p2.engine.IProfileRegistry;
+import org.eclipse.equinox.p2.metadata.IInstallableUnit;
+import org.eclipse.equinox.p2.metadata.Version;
+import org.eclipse.equinox.p2.metadata.query.InstallableUnitQuery;
+import org.eclipse.equinox.p2.query.IQuery;
+import org.eclipse.equinox.p2.query.IQueryResult;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.discovery.internal.model.Extension;
 import org.eclipse.wst.server.discovery.internal.model.ExtensionUpdateSite;
@@ -154,17 +148,16 @@ public class ExtensionUtility {
 		IProfileRegistry profileRegistry = (IProfileRegistry) getService(Activator.getDefault().getBundle().getBundleContext(), IProfileRegistry.class.getName());
 		IProfile profile = profileRegistry.getProfile(IProfileRegistry.SELF);
 		
-		Query query = InstallableUnitQuery.ANY;
+		IQuery<IInstallableUnit> query = InstallableUnitQuery.ANY;
 		//Query query = new InstallableUnitQuery("org.eclipse.wst.server.core.serverAdapter");
 		//List<String> list2 = new ArrayList();
 		//Query query = new ExtensionInstallableUnitQuery(list2);
-		Collector collector = new Collector();
-		profile.query(query, collector, monitor);
+		IQueryResult<IInstallableUnit> collector = profile.query(query, monitor);
 		
 		List<Extension> list = new ArrayList<Extension>();
-		Iterator iter = collector.iterator();
+		Iterator<IInstallableUnit> iter = collector.iterator();
 		while (iter.hasNext()) {
-			IInstallableUnit iu = (IInstallableUnit) iter.next();
+			IInstallableUnit iu = iter.next();
 			if (!list.contains(iu))
 				list.add(new Extension(iu, null));
 		}

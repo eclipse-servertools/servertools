@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2009 IBM Corporation and others.
+ * Copyright (c) 2008, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,9 +13,9 @@ package org.eclipse.wst.server.discovery;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.equinox.internal.provisional.p2.ui.policy.Policy;
-import org.eclipse.equinox.internal.provisional.p2.metadata.IInstallableUnit;
-import org.eclipse.equinox.internal.provisional.p2.ui.dialogs.AcceptLicensesWizardPage;
+import org.eclipse.equinox.p2.metadata.IInstallableUnit;
+import org.eclipse.equinox.p2.ui.AcceptLicensesWizardPage;
+import org.eclipse.equinox.p2.ui.ProvisioningUI;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -43,8 +43,8 @@ public class ExtensionWizard extends Wizard {
 
 	public void addPages() {
 		super.addPages();
-		Policy policy = new Policy();
-		licensePage = new AcceptLicensesWizardPage(policy, new IInstallableUnit[0], null);
+		ProvisioningUI ui = ProvisioningUI.getDefaultUI();
+		licensePage = new AcceptLicensesWizardPage(ui.getLicenseManager(), new IInstallableUnit[0], null);
 		licensePage.setWizard(this);
 		errorPage = new ErrorWizardPage();
 		errorPage.setWizard(this);

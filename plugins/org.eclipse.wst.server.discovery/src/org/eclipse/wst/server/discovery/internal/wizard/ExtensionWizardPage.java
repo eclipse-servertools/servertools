@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2009 IBM Corporation and others.
+ * Copyright (c) 2008, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,11 +11,10 @@
 package org.eclipse.wst.server.discovery.internal.wizard;
 
 import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.equinox.internal.provisional.p2.ui.dialogs.AcceptLicensesWizardPage;
-import org.eclipse.equinox.internal.provisional.p2.director.ProvisioningPlan;
-import org.eclipse.equinox.internal.provisional.p2.metadata.IInstallableUnit;
+import org.eclipse.equinox.p2.engine.IProvisioningPlan;
+import org.eclipse.equinox.p2.metadata.IInstallableUnit;
+import org.eclipse.equinox.p2.ui.AcceptLicensesWizardPage;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -82,16 +81,16 @@ public class ExtensionWizardPage extends WizardPage {
 	protected void handleSelection(Extension sel) {
 		extension = sel;
 		if (extension == null)
-			licensePage.update(new IInstallableUnit[0], null);
+			licensePage.updateForPlan(new IInstallableUnit[0], null);
 		else {
 			try {
 				getContainer().run(true, true, new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-						final ProvisioningPlan plan = extension.getProvisioningPlan(true, monitor);
+						final IProvisioningPlan plan = extension.getProvisioningPlan(true, monitor);
 						if (plan != null && plan.getStatus().isOK()) {
 							getShell().getDisplay().asyncExec(new Runnable() {
 								public void run() {
-									licensePage.update(extension.getIUs(), plan);
+									licensePage.updateForPlan(extension.getIUs(), plan);
 									nextPage = licensePage;
 									((ExtensionWizard)getWizard()).setSecondPage(nextPage);
 								}
