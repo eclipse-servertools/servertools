@@ -73,8 +73,8 @@ import org.eclipse.wst.server.core.internal.ServerType;
 import org.eclipse.wst.server.core.util.SocketUtil;
 import org.eclipse.wst.server.ui.AbstractUIControl;
 import org.eclipse.wst.server.ui.AbstractUIControl.UIControlEntry;
-import org.eclipse.wst.server.ui.editor.*;
 import org.eclipse.wst.server.ui.AbstractUIControl.IUIControlListener;
+import org.eclipse.wst.server.ui.editor.*;
 import org.eclipse.wst.server.ui.internal.ContextIds;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
@@ -87,8 +87,6 @@ import org.eclipse.wst.server.ui.internal.viewers.BaseLabelProvider;
 import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
-
-
 /**
  * Server general editor page.
  */
@@ -101,7 +99,8 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 	protected Combo runtimeCombo;
 	protected Button browse;
 	protected Button autoPublishDisable;
-	protected Button autoPublishEnable;
+	protected Button autoPublishEnableResource;
+	protected Button autoPublishEnableBuild;
 	protected Spinner autoPublishTime;
 	protected Table publishersTable;
 	protected CheckboxTableViewer publishersViewer;
@@ -215,9 +214,10 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 				} else if (event.getPropertyName().equals(Server.PROP_AUTO_PUBLISH_SETTING)) {
 					Integer autoPublishSetting = (Integer)event.getNewValue();
 					int setting = autoPublishSetting.intValue();
-					autoPublishEnable.setSelection(setting == Server.AUTO_PUBLISH_ENABLE);
+					autoPublishEnableResource.setSelection(setting == Server.AUTO_PUBLISH_RESOURCE);
+					autoPublishEnableBuild.setSelection(setting == Server.AUTO_PUBLISH_BUILD);
 					autoPublishDisable.setSelection(setting == Server.AUTO_PUBLISH_DISABLE);
-					autoPublishTime.setEnabled(setting == Server.AUTO_PUBLISH_ENABLE);
+					autoPublishTime.setEnabled(setting != Server.AUTO_PUBLISH_DISABLE);
 					validate();
 				} else if (event.getPropertyName().equals(Server.PROP_START_TIMEOUT)) {
 					Integer time = (Integer)event.getNewValue();
@@ -639,18 +639,25 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 			autoPublishDisable.setSelection(publishSetting == Server.AUTO_PUBLISH_DISABLE);
 			whs.setHelp(autoPublishDisable, ContextIds.EDITOR_AUTOPUBLISH_DISABLE);
 			
-			autoPublishEnable = toolkit.createButton(composite, Messages.serverEditorOverviewAutoPublishEnabled, SWT.RADIO);
-			autoPublishEnable.setSelection(publishSetting == Server.AUTO_PUBLISH_ENABLE);
+			autoPublishEnableResource = toolkit.createButton(composite, Messages.serverEditorOverviewAutoPublishEnabledResource, SWT.RADIO);
+			autoPublishEnableResource.setSelection(publishSetting == Server.AUTO_PUBLISH_RESOURCE);
 			data = new GridData(GridData.FILL_HORIZONTAL);
 			data.horizontalSpan = 2;
-			autoPublishEnable.setLayoutData(data);
-			whs.setHelp(autoPublishEnable, ContextIds.EDITOR_AUTOPUBLISH_ENABLE);
+			autoPublishEnableResource.setLayoutData(data);
+			whs.setHelp(autoPublishEnableResource, ContextIds.EDITOR_AUTOPUBLISH_ENABLE);
+			
+			autoPublishEnableBuild = toolkit.createButton(composite, Messages.serverEditorOverviewAutoPublishEnabledBuild, SWT.RADIO);
+			autoPublishEnableBuild.setSelection(publishSetting == Server.AUTO_PUBLISH_BUILD);
+			data = new GridData(GridData.FILL_HORIZONTAL);
+			data.horizontalSpan = 2;
+			autoPublishEnableBuild.setLayoutData(data);
+			whs.setHelp(autoPublishEnableBuild, ContextIds.EDITOR_AUTOPUBLISH_BUILD);
 			
 			final Label autoPublishTimeLabel = createLabel(toolkit,composite, Messages.serverEditorOverviewAutoPublishEnabledInterval);
 			data = new GridData();
 			data.horizontalIndent = 20;
 			autoPublishTimeLabel.setLayoutData(data);
-			autoPublishTimeLabel.setEnabled(autoPublishEnable.getSelection());
+			autoPublishTimeLabel.setEnabled(!autoPublishDisable.getSelection());
 			
 			autoPublishTime = new Spinner(composite, SWT.BORDER);
 			autoPublishTime.setMinimum(0);
@@ -660,23 +667,36 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 			data = new GridData(GridData.HORIZONTAL_ALIGN_END);
 			data.widthHint = 30;
 			autoPublishTime.setLayoutData(data);
-			autoPublishTime.setEnabled(autoPublishEnable.getSelection());
+			autoPublishTime.setEnabled(!autoPublishDisable.getSelection());
 			SWTUtil.setSpinnerTooltip(autoPublishTime);
 			whs.setHelp(autoPublishTime, ContextIds.EDITOR_AUTOPUBLISH_ENABLE);
 			
-			autoPublishEnable.addSelectionListener(new SelectionAdapter() {
+			autoPublishEnableResource.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
-					if (updating || !autoPublishEnable.getSelection())
+					if (updating || !autoPublishEnableResource.getSelection())
 						return;
 					updating = true;
-					execute(new SetServerAutoPublishDefaultCommand(getServer(), Server.AUTO_PUBLISH_ENABLE));
+					execute(new SetServerAutoPublishDefaultCommand(getServer(), Server.AUTO_PUBLISH_RESOURCE));
 					updating = false;
-					autoPublishTimeLabel.setEnabled(autoPublishEnable.getSelection());
-					autoPublishTime.setEnabled(autoPublishEnable.getSelection());
+					autoPublishTimeLabel.setEnabled(!autoPublishDisable.getSelection());
+					autoPublishTime.setEnabled(!autoPublishDisable.getSelection());
 					validate();
 				}
 			});
-						
+
+			autoPublishEnableBuild.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent e) {
+					if (updating || !autoPublishEnableBuild.getSelection())
+						return;
+					updating = true;
+					execute(new SetServerAutoPublishDefaultCommand(getServer(), Server.AUTO_PUBLISH_BUILD));
+					updating = false;
+					autoPublishTimeLabel.setEnabled(!autoPublishDisable.getSelection());
+					autoPublishTime.setEnabled(!autoPublishDisable.getSelection());
+					validate();
+				}
+			});
+			
 			autoPublishDisable.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					if (updating || !autoPublishDisable.getSelection())
@@ -684,8 +704,8 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 					updating = true;
 					execute(new SetServerAutoPublishDefaultCommand(getServer(), Server.AUTO_PUBLISH_DISABLE));
 					updating = false;
-					autoPublishTimeLabel.setEnabled(autoPublishEnable.getSelection());
-					autoPublishTime.setEnabled(autoPublishEnable.getSelection());
+					autoPublishTimeLabel.setEnabled(!autoPublishDisable.getSelection());
+					autoPublishTime.setEnabled(!autoPublishDisable.getSelection());
 					validate();
 				}
 			});
@@ -972,17 +992,20 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 			Server svr = (Server) server;
 			int publishSetting = svr.getAutoPublishSetting();
 			autoPublishDisable.setSelection(publishSetting == Server.AUTO_PUBLISH_DISABLE);
-			autoPublishEnable.setSelection(publishSetting == Server.AUTO_PUBLISH_ENABLE);
+			autoPublishEnableResource.setSelection(publishSetting == Server.AUTO_PUBLISH_RESOURCE);
+			autoPublishEnableBuild.setSelection(publishSetting == Server.AUTO_PUBLISH_BUILD);
 			autoPublishTime.setSelection(svr.getAutoPublishTime());
 			
 			if (readOnly) {
 				autoPublishDisable.setEnabled(false);
-				autoPublishEnable.setEnabled(false);
+				autoPublishEnableResource.setEnabled(false);
+				autoPublishEnableBuild.setEnabled(false);
 				autoPublishTime.setEnabled(false);
 			} else {
 				autoPublishDisable.setEnabled(true);
-				autoPublishEnable.setEnabled(true);
-				autoPublishTime.setEnabled(publishSetting == Server.AUTO_PUBLISH_ENABLE);
+				autoPublishEnableResource.setEnabled(true);
+				autoPublishEnableBuild.setEnabled(true);
+				autoPublishTime.setEnabled(publishSetting != Server.AUTO_PUBLISH_DISABLE);
 			}
 			
 			List<ServerEditorOverviewPageModifier> pageModifiersLst = ServerUIPlugin.getServerEditorOverviewPageModifiers();

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2009 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,7 +50,8 @@ public class Server extends Base implements IServer {
 	public static final String FILE_EXTENSION = "server";
 
 	public static final int AUTO_PUBLISH_DISABLE = 1;
-	public static final int AUTO_PUBLISH_ENABLE = 2;
+	public static final int AUTO_PUBLISH_RESOURCE = 2;
+	public static final int AUTO_PUBLISH_BUILD = 3;
 
 	protected static final String PROP_HOSTNAME = "hostname";
 	protected static final String SERVER_ID = "server-id";
@@ -159,10 +160,16 @@ public class Server extends Base implements IServer {
 
 	public class ResourceChangeJob extends ServerJob {
 		private IModule module;
+		private IResourceChangeEvent event;
 
 		public ResourceChangeJob(IModule module) {
+			this(module, null);
+		}
+		
+		public ResourceChangeJob(IModule module, IResourceChangeEvent event) {
 			super(NLS.bind(Messages.jobUpdateServer, Server.this.getName()));
 			this.module = module;
+			this.event = event;
 			
 			if (module.getProject() == null)
 				setRule(Server.this);
@@ -214,7 +221,7 @@ public class Server extends Base implements IServer {
 				behaviourDelegate.handleResourceChange();
 			
 			if (getServerState() == IServer.STATE_STARTED)
-				autoPublish();
+				autoPublish(event);
 			
 			return Status.OK_STATUS;
 		}
@@ -475,7 +482,7 @@ public class Server extends Base implements IServer {
 	}
 
 	public int getAutoPublishSetting() {
-		return getAttribute(PROP_AUTO_PUBLISH_SETTING, AUTO_PUBLISH_ENABLE);
+		return getAttribute(PROP_AUTO_PUBLISH_SETTING, AUTO_PUBLISH_RESOURCE);
 	}
 
 	public int getStartTimeout() {
@@ -743,6 +750,10 @@ public class Server extends Base implements IServer {
  	}
 
 	protected void handleModuleProjectChange(IModule module) {
+		handleModuleProjectChange(module, null);
+	}
+
+	protected void handleModuleProjectChange(IModule module, IResourceChangeEvent buildEvent) {
 		Trace.trace(Trace.FINEST, "> handleDeployableProjectChange() " + this + " " + module);
 		
 		// check for duplicate jobs already waiting and don't create a new one
@@ -758,7 +769,7 @@ public class Server extends Base implements IServer {
 			}
 		}
 		
-		ResourceChangeJob job = new ResourceChangeJob(module);
+		ResourceChangeJob job = new ResourceChangeJob(module, buildEvent);
 		job.setSystem(true);
 		job.setPriority(Job.BUILD);
 		job.schedule();
@@ -780,9 +791,19 @@ public class Server extends Base implements IServer {
 	 * thread if automatic publishing is currently enabled.
 	 */
 	protected void autoPublish() {
+		autoPublish(null);
+	}
+	
+	protected void autoPublish(IResourceChangeEvent event) {
 		stopAutoPublish();
+		boolean buildOccurred = didBuildOccur(event);
+		boolean projectClosedOrDeleted = isProjectCloseOrDeleteEvent(event);
 		
 		if (getAutoPublishSetting() == AUTO_PUBLISH_DISABLE)
+			return;
+		
+		if( (getAutoPublishSetting() == AUTO_PUBLISH_BUILD) && 
+				!buildOccurred && !projectClosedOrDeleted)
 			return;
 		
 		int time = getAutoPublishTime();
@@ -793,6 +814,24 @@ public class Server extends Base implements IServer {
 			autoPublishThread.setDaemon(true);
 			autoPublishThread.start();
 		}
+	}
+	
+	private boolean isProjectCloseOrDeleteEvent(IResourceChangeEvent event) {
+		int kind = event.getType();
+		if( (kind & IResourceChangeEvent.PRE_CLOSE) > 0 || 
+				(kind & IResourceChangeEvent.PRE_DELETE) > 0)
+			return true;
+		return false;
+	}
+	
+	private boolean didBuildOccur(IResourceChangeEvent event) {
+		int kind = event.getBuildKind();
+		final boolean eventOccurred = 
+			   (kind == IncrementalProjectBuilder.INCREMENTAL_BUILD) || 
+			   (kind == IncrementalProjectBuilder.FULL_BUILD) || 
+			   ((kind == IncrementalProjectBuilder.AUTO_BUILD && 
+					ResourcesPlugin.getWorkspace().isAutoBuilding()));
+		return eventOccurred;
 	}
 
 	/**
@@ -2018,9 +2057,9 @@ public class Server extends Base implements IServer {
 			configuration = ResourcesPlugin.getWorkspace().getRoot().getFolder(new Path(configPath));
 
 		// for migration from WTP 2.0 -> WTP 3.0
-		int autoPubSetting = getAttribute(PROP_AUTO_PUBLISH_SETTING, AUTO_PUBLISH_ENABLE);
+		int autoPubSetting = getAttribute(PROP_AUTO_PUBLISH_SETTING, AUTO_PUBLISH_RESOURCE);
 		if (autoPubSetting == 0)
-			map.put(PROP_AUTO_PUBLISH_SETTING, AUTO_PUBLISH_ENABLE);
+			map.put(PROP_AUTO_PUBLISH_SETTING, AUTO_PUBLISH_RESOURCE);
 	}
 
 	protected void setInternal(ServerWorkingCopy wc) {

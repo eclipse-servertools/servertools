@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -90,7 +90,7 @@ public class ResourceManager {
 		 * 
 		 * @param event a resource change event
 		 */
-		public void resourceChanged(IResourceChangeEvent event) {
+		public void resourceChanged(final IResourceChangeEvent event) {
 			IResourceDelta delta = event.getDelta();
 			if (delta == null)
 				return;
@@ -119,7 +119,7 @@ public class ResourceManager {
 
 						// only respond to project changes
 						if (resource != null && resource instanceof IProject) {
-							publishHandleProjectChange(visitorDelta);
+							publishHandleProjectChange(visitorDelta, event);
 							return false;
 						}
 						return true;
@@ -950,6 +950,17 @@ public class ResourceManager {
 	 * @param delta org.eclipse.core.resources.IResourceDelta
 	 */
 	protected void publishHandleProjectChange(IResourceDelta delta) {
+		publishHandleProjectChange(delta, null);
+	}
+	
+	/**
+	 * A project has changed. If this is an add or remove, check
+	 * to see if it is part of a current server configuration.
+	 *
+	 * @param delta org.eclipse.core.resources.IResourceDelta
+	 * @param buildEvent whether this event was a build event
+	 */
+	protected void publishHandleProjectChange(IResourceDelta delta, IResourceChangeEvent event) {
 		Trace.trace(Trace.FINEST, "> publishHandleProjectChange " + delta.getResource());
 		IProject project = (IProject) delta.getResource();
 		
@@ -974,7 +985,7 @@ public class ResourceManager {
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size2; j++) {
 				if (servers2[j].getAdapter(ServerDelegate.class) != null)
-					((Server) servers2[j]).handleModuleProjectChange(modules[i]);
+					((Server) servers2[j]).handleModuleProjectChange(modules[i], event);
 			}
 		}
 		Trace.trace(Trace.FINEST, "< publishHandleProjectChange");
