@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jst.server.core.tests.j2ee;
 
-import java.io.IOException;
-import java.net.URL;
-
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
@@ -21,6 +18,8 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.core.util.ProjectModule;
+import java.io.IOException;
+import java.net.URL;
 
 public class ModuleHelper {
 	protected static IPath getLocalPath(IPath path) {
@@ -129,7 +128,7 @@ public class ModuleHelper {
 	}
 
 	public static int countFiles(IModule module) throws CoreException {
-		ProjectModule pm = (ProjectModule) module.loadAdapter(ProjectModule.class, null);
+		ModuleDelegate pm = (ModuleDelegate)module.loadAdapter(ModuleDelegate.class, null);
 		IModuleResource[] mr = pm.members();
 		
 		int count = 0;
@@ -160,7 +159,7 @@ public class ModuleHelper {
 	}
 
 	public static int countFolders(IModule module) throws CoreException {
-		ProjectModule pm = (ProjectModule) module.loadAdapter(ProjectModule.class, null);
+		ModuleDelegate pm = (ModuleDelegate) module.loadAdapter(ModuleDelegate.class, null);
 		IModuleResource[] mr = pm.members();
 		
 		int count = 0;

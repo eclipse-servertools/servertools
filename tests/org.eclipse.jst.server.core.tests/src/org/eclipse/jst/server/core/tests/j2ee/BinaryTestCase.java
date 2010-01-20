@@ -121,7 +121,9 @@ public class BinaryTestCase extends TestCase {
 		};
 		
 		for (String ss : s) {
-			if (!list.contains("lib/PublishTestEAR/EarContent/" + ss))
+			// New versions of the modules will not include the full path as the getName() / display purposes
+			//if (!list.contains("lib/PublishTestEAR/EarContent/" + ss))
+			if( !list.contains(ss))
 				fail("EAR does not contain " + ss);
 		}
 	}
@@ -135,8 +137,10 @@ public class BinaryTestCase extends TestCase {
 	}
 
 	public void test081EJB() throws Exception {
+		/* PublishTestEJB should be exposed as a child module, NOT as a resource 
 		if (!ModuleHelper.fileExists(module, "PublishTestEJB.jar"))
 			fail();
+		 */
 	}
 
 	public void test084EJB() throws Exception {

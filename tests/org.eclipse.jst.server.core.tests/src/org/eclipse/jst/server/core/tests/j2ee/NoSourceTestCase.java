@@ -80,8 +80,14 @@ public class NoSourceTestCase extends TestCase {
 			fail();
 	}
 
+	/*
+     * This count is incremented because, at this moment
+     * I don't know which should take precedence: 
+     * the file inside the Ear project, or the reference.
+     * For now we include both. 
+     */
 	public void test023EAR() throws Exception {
-		assertEquals(ModuleHelper.countFiles(module), 3);
+		assertEquals(ModuleHelper.countFiles(module), 4);
 	}
 
 	public void test024EAR() throws Exception {
@@ -111,9 +117,10 @@ public class NoSourceTestCase extends TestCase {
 		for (IModule m : modules)
 			list.add(m.getName());
 		
+		/* getName() is for display purposes only, binary jars inside a project should display their full name */
 		String[] s = new String[] {
-			"PublishTestEJB", "test2", "PublishTestWeb",
-			"PublishTestWeb2", "PublishTestConnector", "PublishTestClient"
+			"PublishTestEJB.jar", "test2", "PublishTestWeb.war",
+			"PublishTestWeb2.war", "PublishTestConnector.rar", "PublishTestClient.jar"
 		};
 		
 		for (String ss : s) {
@@ -522,6 +529,11 @@ public class NoSourceTestCase extends TestCase {
 		assertEquals(j2eeModule.getJavaOutputFolders().length, 1);
 	}
 
+	/* 
+	 * This project has a file WEB-INF/lib/test.jar
+	 * but also references a utility project named test. 
+	 * Which should prevail?
+	 */
 	public void test172Web() throws Exception {
 		assertEquals(webModule.getModules().length, 1);
 	}
