@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008,2009 IBM Corporation and others.
+ * Copyright (c) 2008,2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
  package org.eclipse.wst.server.ui.internal.cnf;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
@@ -47,14 +48,17 @@ public class ServerDecorator extends LabelProvider implements ILightweightLabelD
 		Messages.viewSyncPublish};
 
 	private static ServerDecorator instance;
+	
 	public static ServerDecorator getDefault() {
 		return instance;
 	}
 
 	private static int count = 0;
+	
 	public static void animate() {
 		count = (count + 1)%3;
 	}
+	
 	public static int getCount() {
 		return count;
 	}
@@ -100,7 +104,7 @@ public class ServerDecorator extends LabelProvider implements ILightweightLabelD
 
 	public static String getStateLabel(IServerType serverType, int state, String mode) {
 		return serverType == null ? null : 
-			UIDecoratorManager.getCNFUIDecorator(serverType).getStateLabel(state, mode, count);
+			UIDecoratorManager.getCNFUIDecorator().getStateLabel(state, mode, count);
 	}
 	
 	public static String getServerStatusLabel(IServer server) {
@@ -139,7 +143,7 @@ public class ServerDecorator extends LabelProvider implements ILightweightLabelD
 	
 	public static Image getStateImage(IServerType serverType, int state, String mode) {
 		return serverType == null ? null : 
-			UIDecoratorManager.getCNFUIDecorator(serverType).getStateImage(state, mode, getCount());
+			UIDecoratorManager.getCNFUIDecorator().getStateImage(state, mode, getCount());
 	}
 	
 	public static String getModuleText(ModuleServer ms ) { 
@@ -160,7 +164,16 @@ public class ServerDecorator extends LabelProvider implements ILightweightLabelD
 	}
 	
 	public static String getModuleStateText(ModuleServer ms) {
-		return "";
+		if (ms == null || ms.module == null) 
+			return null;
+		
+		Server curServer = (Server) ms.getServer();
+		if (curServer == null || curServer.getServerType() == null) 
+			return null;
+		
+		// For module state, we always use run mode since the state of the module will only be showing
+		// Started state even for debug and profile mode.
+		return getStateLabel(curServer.getServerType(), curServer.getModuleState(ms.module), ILaunchManager.RUN_MODE);
 	}
 	
 	public static String getModuleStatusText(ModuleServer ms) {
