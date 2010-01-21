@@ -109,7 +109,9 @@ public abstract class ModuleDelegate {
 	 * @return the path of the given module with respect to the parent, or <code>null</code> if the path could
 	 *    not be found
 	 */	
-	public abstract String getPath(IModule m);
+	public String getPath(IModule m){
+		return null;
+	}
 	
 	/**
 	 * Returns the current array of module artifacts.
