@@ -66,7 +66,6 @@ public class AllTests {
 		suite.addTestSuite(IModuleTestCase.class);
 		suite.addTestSuite(IModuleArtifactTestCase.class);
 		suite.addTestSuite(IModuleTypeTestCase.class);
-		suite.addTestSuite(ParentModuleWithChildTestCase.class);
 		suite.addTestSuite(PublishOperationTestCase.class);
 		suite.addTestSuite(TaskModelTestCase.class);
 		
