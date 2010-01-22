@@ -796,8 +796,8 @@ public class Server extends Base implements IServer {
 	
 	protected void autoPublish(IResourceChangeEvent event) {
 		stopAutoPublish();
-		boolean buildOccurred = didBuildOccur(event);
-		boolean projectClosedOrDeleted = isProjectCloseOrDeleteEvent(event);
+		boolean buildOccurred = event != null && didBuildOccur(event);
+		boolean projectClosedOrDeleted = event != null && isProjectCloseOrDeleteEvent(event);
 		
 		if (getAutoPublishSetting() == AUTO_PUBLISH_DISABLE)
 			return;
