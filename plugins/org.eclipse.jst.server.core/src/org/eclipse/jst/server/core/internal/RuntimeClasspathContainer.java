@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import org.eclipse.osgi.util.NLS;
 
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
+import org.eclipse.wst.server.core.ServerCore;
 /**
  * 
  */
@@ -69,8 +70,11 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 	 */
 	public IClasspathEntry[] getClasspathEntries() {
 		IClasspathEntry[] entries = null;
-		if (delegate != null && runtime != null)
-			entries = delegate.resolveClasspathContainerImpl(project, runtime);
+		
+		IRuntime curRuntime = getRuntime();
+		
+		if (delegate != null && curRuntime != null)
+			entries = delegate.resolveClasspathContainerImpl(project, curRuntime);
 		
 		if (entries == null)
 			return new IClasspathEntry[0];
@@ -78,14 +82,24 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 		return entries;
 	}
 
+	private IRuntime getRuntime(){
+		if (runtime == null && runtimeId != null) {
+			// Make sure the runtime object is initialized.
+			runtime = ServerCore.findRuntime(runtimeId);
+		}
+		return runtime;
+	}
+	
 	/** (non-Javadoc)
 	 * @see org.eclipse.jdt.core.IClasspathContainer#getDescription()
 	 */
 	public String getDescription() {
-		if (runtime != null) {
-			IRuntimeType runtimeType = runtime.getRuntimeType();
+		IRuntime curRuntime = getRuntime();
+
+		if (curRuntime != null) {
+			IRuntimeType runtimeType = curRuntime.getRuntimeType();
 			if (runtimeType != null)
-				return NLS.bind(Messages.classpathContainer, runtimeType.getName(), runtime.getName());
+				return NLS.bind(Messages.classpathContainer, runtimeType.getName(), curRuntime.getName());
 		}
 		return NLS.bind(Messages.classpathContainerUnbound, Messages.classpathContainerDescription, runtimeId);
 	}

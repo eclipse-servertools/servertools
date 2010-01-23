@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,17 +11,12 @@
 package org.eclipse.jst.server.core;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.core.IAccessRule;
 import org.eclipse.jdt.core.IClasspathAttribute;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
@@ -151,7 +146,8 @@ public abstract class RuntimeClasspathProviderDelegate {
 			for (int j = 0; j < size2; j++) {
 				SourceAttachmentUpdate sau = sourceAttachments.get(j);
 				if (sau.runtimeId.equals(runtime.getId()) && sau.entry.equals(entries[i].getPath())) {
-					entries[i] = JavaCore.newLibraryEntry(entries[i].getPath(), sau.sourceAttachmentPath, sau.sourceAttachmentRootPath, new IAccessRule[0], sau.attributes, false);
+					IClasspathAttribute[] consolidatedClasspathAttributes = consolidateClasspathAttributes(sau.attributes, entries[i].getExtraAttributes());
+					entries[i] = JavaCore.newLibraryEntry(entries[i].getPath(), sau.sourceAttachmentPath, sau.sourceAttachmentRootPath, entries[i].getAccessRules(), consolidatedClasspathAttributes, false);
 				}
 			}
 		}
@@ -352,5 +348,24 @@ public abstract class RuntimeClasspathProviderDelegate {
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error saving source path info", e);
 		}
+	}
+	
+	public IClasspathAttribute[] consolidateClasspathAttributes(IClasspathAttribute[] sourceAttachmentAttributes, IClasspathAttribute[] classpathEntryAttributes) {
+		List classpathAttributeList = new ArrayList();
+		classpathAttributeList.addAll(Arrays.asList(sourceAttachmentAttributes));
+		for (int i = 0; i < classpathEntryAttributes.length; i++) {
+			boolean attributeCollision = false;
+			for (int j = 0; j < sourceAttachmentAttributes.length; j++) {
+				String name = classpathEntryAttributes[i].getName();
+				if(name != null && name.equals(sourceAttachmentAttributes[j].getName())) {
+					attributeCollision = true;
+					break;
+				}
+			}
+			if(!attributeCollision) {
+				classpathAttributeList.add(classpathEntryAttributes[i]);
+			}
+		}
+		return (IClasspathAttribute[]) classpathAttributeList.toArray(new IClasspathAttribute[classpathAttributeList.size()]);
 	}
 }
