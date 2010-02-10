@@ -119,8 +119,8 @@ public class NoSourceTestCase extends TestCase {
 		
 		/* getName() is for display purposes only, binary jars inside a project should display their full name */
 		String[] s = new String[] {
-			"PublishTestEJB.jar", "test2", "PublishTestWeb.war",
-			"PublishTestWeb2.war", "PublishTestConnector.rar", "PublishTestClient.jar"
+			"PublishTestEJB", "test2", "PublishTestWeb",
+			"PublishTestWeb2", "PublishTestConnector", "PublishTestClient"
 		};
 		
 		for (String ss : s) {
