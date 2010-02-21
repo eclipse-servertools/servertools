@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *    Fabrizio Giustina - Initial API and implementation
+ *    Matteo TURRA - Support for multiple web resource paths
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.core.internal.xml.server40;
 
@@ -47,5 +48,24 @@ public class Resources extends XMLElement {
 	 */
 	public void setVirtualClasspath(String virtualClasspath) {
 		setAttributeValue("virtualClasspath", virtualClasspath);
+	}
+
+	/**
+	 * Get extraResourcePaths attribute.  These are resource
+	 * paths in addition to the path specified by docBase.
+	 * @return extraResourcePaths attribute value
+	 */
+	public String getExtraResourcePaths() {
+		return getAttributeValue("extraResourcePaths");
+	}
+
+	/**
+	 * Set extraResourcePaths attribute.
+	 * @param extraResourcePaths A semicolon separated list
+	 * of absolute resource paths not including the path
+	 * specified by docBase.
+	 */
+	public void setExtraResourcePaths(String extraResourcePaths) {
+		setAttributeValue("extraResourcePaths", extraResourcePaths);
 	}
 }

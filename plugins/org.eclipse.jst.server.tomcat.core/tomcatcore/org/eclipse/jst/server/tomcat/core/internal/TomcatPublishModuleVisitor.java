@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,18 +7,24 @@
  * 
  * Contributors:
  *    Igor Fedorenko & Fabrizio Giustina - Initial API and implementation
+ *    Matteo TURRA - Support for multiple web resource paths
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.core.internal;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -31,6 +37,7 @@ import org.eclipse.jst.server.tomcat.core.internal.xml.server40.ServerInstance;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.componentcore.resources.IVirtualFile;
+import org.eclipse.wst.common.componentcore.resources.IVirtualResource;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
 
@@ -227,38 +234,221 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
         // http://issues.apache.org/bugzilla/show_bug.cgi?id=39704
         loader.setUseSystemClassLoaderAsParent(Boolean.FALSE.toString());
 
-        // write down the virtual classPath
-        StringBuffer buffer = new StringBuffer();
-        for (Iterator iterator = virtualClassClasspathElements.iterator();
-        		iterator.hasNext();) {
-            buffer.append(iterator.next());
-            if (iterator.hasNext()) {
-                buffer.append(";");
-            }
+        // Build the virtual classPath setting
+        StringBuffer vcBuffer = new StringBuffer();
+		// Build list of additional resource paths and check for additional jars
+		StringBuffer rpBuffer = new StringBuffer();
+
+		// Add WEB-INF/classes elements to both settings
+		for (Iterator iterator = virtualClassClasspathElements.iterator();
+				iterator.hasNext();) {
+			Object element = iterator.next();
+			if (vcBuffer.length() > 0) {
+				vcBuffer.append(";");
+				rpBuffer.append(";");
+			}
+			vcBuffer.append(element);
+			// Add to resource paths too, so resource artifacts can be found
+			rpBuffer.append("/WEB-INF/classes").append("|").append(element);
         }
-        if (buffer.length() > 0 && virtualJarClasspathElements.size() > 0) {
-        	buffer.append(";");
+        if (vcBuffer.length() > 0 && virtualJarClasspathElements.size() > 0) {
+        	vcBuffer.append(";");
         }
         for (Iterator iterator = virtualJarClasspathElements.iterator();
         		iterator.hasNext();) {
-        	buffer.append(iterator.next());
+        	vcBuffer.append(iterator.next());
         	if (iterator.hasNext()) {
-        		buffer.append(";");
+        		vcBuffer.append(";");
         	}
         }
         virtualClassClasspathElements.clear();
         virtualJarClasspathElements.clear();
 
-        String vcp = buffer.toString();
+		Set rtPathsProcessed = new HashSet();
+		Set locationsIncluded = new HashSet();
+		locationsIncluded.add(docBase);
+		Map retryLocations = new HashMap();
+		IVirtualResource [] virtualResources = component.getRootFolder().getResources("");
+		// Loop over the module's resources
+		for (int i = 0; i < virtualResources.length; i++) {
+			String rtPath = virtualResources[i].getRuntimePath().toString();
+			// Note: The virtual resources returned only know their runtime path.
+			// Asking for the project path for this resource performs a lookup
+			// that will only return the path for the first mapping for the
+			// runtime path.  Thus use of getUnderlyingResources() is necessary.
+			// However, this returns matching resources from all mappings so
+			// we have to try to keep only those that are mapped directly
+			// to the runtime path in the .components file.
 
+			// If this runtime path has not yet been processed
+			if (!rtPathsProcessed.contains(rtPath)) {
+				// If not a Java related resource
+				if (!"/WEB-INF/classes".equals(rtPath)) {
+					// Get all resources for this runtime path
+					IResource[] underlyingResources = virtualResources[i].getUnderlyingResources();
+					// If resource is mapped to "/", then we know it corresponds directly
+					// to a mapping in the .components file
+					if ("/".equals(rtPath)) {
+						for (int j = 0; j < underlyingResources.length; j++) {
+							IPath resLoc = underlyingResources[j].getLocation();
+							String location = resLoc.toOSString();
+							if (!location.equals(docBase)) {
+								if (rpBuffer.length() != 0) {
+									rpBuffer.append(";");
+								}
+								// Add this location to extra paths setting
+								rpBuffer.append(location);
+								// Add to the set of locations included
+								locationsIncluded.add(location);
+								// Check if this extra content location contains jars
+								File webInfLib = resLoc.append("WEB-INF/lib").toFile();
+								// If this "WEB-INF/lib" exists and is a directory, add
+								// its jars to the virtual classpath
+								if (webInfLib.exists() && webInfLib.isDirectory()) {
+									String [] jars = webInfLib.list(new FilenameFilter() {
+											public boolean accept(File dir, String name) {
+												File f = new File(dir, name);
+												return f.isFile() && name.endsWith(".jar");
+											}
+										});
+									for (int k = 0; k < jars.length; k++) {
+										if (vcBuffer.length() != 0) {
+											vcBuffer.append(";");
+										}
+										vcBuffer.append(webInfLib.getPath() + File.separator + jars[k]);
+									}
+								}
+							}
+						}
+					}
+					// Else this runtime path is something other than "/"
+					else {
+						int idx = rtPath.lastIndexOf('/');
+						// If a "normal" runtime path
+						if (idx >= 0) {
+							// Get the name of the last segment in the runtime path
+							String lastSegment = rtPath.substring(idx + 1);
+							// Check the underlying resources to determine which correspond to mappings
+							for (int j = 0; j < underlyingResources.length; j++) {
+								IPath resLoc = underlyingResources[j].getLocation();
+								String location = resLoc.toOSString();
+								// If the last segment of the runtime path doesn't match the
+								// the last segment of the location, then we have a direct mapping
+								// from the .contents file.
+								if (!lastSegment.equals(resLoc.lastSegment())) {
+									if (rpBuffer.length() != 0) {
+										rpBuffer.append(";");
+									}
+									// Add this location to extra paths setting
+									rpBuffer.append(rtPath).append("|").append(location);
+									// Add to the set of locations included
+									locationsIncluded.add(location);
+									// Check if this extra content location contains jars
+									File webInfLib = null;
+									if ("/WEB-INF".equals(rtPath)) {
+										webInfLib = resLoc.append("lib").toFile();
+									}
+									else if ("/WEB-INF/lib".equals(rtPath)) {
+										webInfLib = resLoc.toFile();
+									}
+									// If this "WEB-INF/lib" exists and is a directory, add
+									// its jars to the virtual classpath
+									if (webInfLib != null && webInfLib.exists() && webInfLib.isDirectory()) {
+										String [] jars = webInfLib.list(new FilenameFilter() {
+												public boolean accept(File dir, String name) {
+													File f = new File(dir, name);
+													return f.isFile() && name.endsWith(".jar");
+												}
+											});
+										for (int k = 0; k < jars.length; k++) {
+											if (vcBuffer.length() != 0) {
+												vcBuffer.append(";");
+											}
+											vcBuffer.append(webInfLib.getPath() + File.separator + jars[k]);
+										}
+									}
+								}
+								// Else last segment of runtime path did match the last segment
+								// of the location.  We likely have a subfolder of a mapping
+								// that matches a portion of the runtime path.
+								else {
+									// Since we can't be sure, save so it can be check again later
+									retryLocations.put(location, rtPath);
+								}
+							}
+						}
+					}
+				}
+				// Add the runtime path to those already processed
+				rtPathsProcessed.add(rtPath);
+			}
+		}
+		// If there are locations to retry, add any not yet included in extra paths setting
+		if (!retryLocations.isEmpty()) {
+			// Remove retry locations already included in the extra paths
+			for (Iterator iterator = retryLocations.keySet().iterator(); iterator.hasNext();) {
+				String location = (String)iterator.next();
+				for (Iterator iterator2 = locationsIncluded.iterator(); iterator2.hasNext();) {
+					String includedLocation = (String)iterator2.next();
+					if (location.equals(includedLocation) || location.startsWith(includedLocation + File.separator)) {
+						iterator.remove();
+						break;
+					}
+				}
+			}
+			// If any entries are left, include them in the extra paths
+			if (!retryLocations.isEmpty()) {
+				for (Iterator iterator = retryLocations.entrySet().iterator(); iterator.hasNext();) {
+					Map.Entry entry = (Map.Entry)iterator.next();
+					String location = (String)entry.getKey();
+					String rtPath = (String)entry.getValue();
+					if (rpBuffer.length() != 0) {
+						rpBuffer.append(";");
+					}
+					rpBuffer.append(rtPath).append("|").append(location);
+					// Check if this extra content location contains jars
+					File webInfLib = null;
+					if ("/WEB-INF".equals(rtPath)) {
+						webInfLib = new File(location, "lib");
+					}
+					else if ("/WEB-INF/lib".equals(rtPath)) {
+						webInfLib = new File(location);
+					}
+					// If this "WEB-INF/lib" exists and is a directory, add
+					// its jars to the virtual classpath
+					if (webInfLib != null && webInfLib.exists() && webInfLib.isDirectory()) {
+						String [] jars = webInfLib.list(new FilenameFilter() {
+								public boolean accept(File dir, String name) {
+									File f = new File(dir, name);
+									return f.isFile() && name.endsWith(".jar");
+								}
+							});
+						for (int k = 0; k < jars.length; k++) {
+							if (vcBuffer.length() != 0) {
+								vcBuffer.append(";");
+							}
+							vcBuffer.append(webInfLib.getPath() + File.separator + jars[k]);
+						}
+					}
+				}
+			}
+		}
+
+        String vcp = vcBuffer.toString();
         String oldVcp = loader.getVirtualClasspath();
-
         if (!vcp.equals(oldVcp)) {
             // save only if needed
             dirty = true;
             loader.setVirtualClasspath(vcp);
             context.getResources().setVirtualClasspath(vcp);
         }
+
+		String resPaths = rpBuffer.toString();
+		String oldResPaths = context.getResources().getExtraResourcePaths();
+		if (!resPaths.equals(oldResPaths)) {
+			dirty = true;
+			context.getResources().setExtraResourcePaths(resPaths);
+		}
 
         if (dirty) {
         	//TODO If writing to separate context XML files, save "dirty" status for later use
