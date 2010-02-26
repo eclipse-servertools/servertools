@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 import org.eclipse.core.runtime.*;
+import org.eclipse.equinox.p2.core.IProvisioningAgent;
 import org.eclipse.equinox.p2.engine.IProfile;
 import org.eclipse.equinox.p2.engine.IProfileRegistry;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
@@ -240,11 +241,16 @@ public class ExtensionUtility {
 	public static Object getService(BundleContext context, String name) {
 		if (context == null)
 			return null;
-		ServiceReference reference = context.getServiceReference(name);
+		ServiceReference reference = context.getServiceReference(IProvisioningAgent.SERVICE_NAME);
 		if (reference == null)
 			return null;
-		Object result = context.getService(reference);
-		context.ungetService(reference);
-		return result;
+		IProvisioningAgent result = (IProvisioningAgent) context.getService(reference);
+		if (result == null)
+			return null;
+		try {
+			return result.getService(name);
+		} finally {
+			context.ungetService(reference);
+		}
 	}
 }

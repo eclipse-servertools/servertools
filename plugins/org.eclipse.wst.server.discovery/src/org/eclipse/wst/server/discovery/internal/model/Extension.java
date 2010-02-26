@@ -13,10 +13,10 @@ package org.eclipse.wst.server.discovery.internal.model;
 import java.net.URI;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.equinox.internal.provisional.p2.director.IPlanner;
-import org.eclipse.equinox.internal.provisional.p2.director.ProfileChangeRequest;
 import org.eclipse.equinox.p2.engine.*;
 import org.eclipse.equinox.p2.metadata.*;
+import org.eclipse.equinox.p2.planner.IPlanner;
+import org.eclipse.equinox.p2.planner.IProfileChangeRequest;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.server.discovery.internal.Activator;
 import org.eclipse.wst.server.discovery.internal.ExtensionUtility;
@@ -92,8 +92,8 @@ public class Extension {
 		
 		IProfileRegistry profileRegistry = (IProfileRegistry) ExtensionUtility.getService(bundleContext, IProfileRegistry.SERVICE_NAME);
 		IProfile profile = profileRegistry.getProfile(IProfileRegistry.SELF);
-		ProfileChangeRequest pcr = new ProfileChangeRequest(profile);
-		pcr.addInstallableUnits(new IInstallableUnit[] { iu } );
+		IProfileChangeRequest pcr = planner.createChangeRequest(profile);
+		pcr.add(iu);
 		provContext = new ProvisioningContext(new URI[] { uri });
 		provContext.setArtifactRepositories(new URI[] { uri });
 		if (!explain)
