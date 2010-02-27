@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,142 +14,150 @@ import junit.framework.TestCase;
 
 import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
 
+/* Note: These tests may be executed in any order.  Because null is used as most
+ * arguments, the order doesn't currently matter.  If non-null arguments are used,
+ * it may be necessary to rewrite the tests to make them truly order independent.
+ */
+
 public class TaskWizardTestCase extends TestCase {
 	protected static TaskWizard wizard;
 
-	public void test00Create() {
-		wizard = new TaskWizard("title", null, null);
+	protected TaskWizard getTaskWizard() {
+		if (wizard == null) {
+			wizard = new TaskWizard("title", null);
+			// Ensure pages are not null
+			wizard.addPages();
+		}
+		return wizard;
+	}
+	public void testCreate() {
+		new TaskWizard("title", null, null);
 	}
 
-	public void test02Create() {
-		wizard = new TaskWizard("title", null);
-	}
-
-	public void test04GetContainer() {
-		wizard.getContainer();
+	public void testGetContainer() {
+		getTaskWizard().getContainer();
 	}
 	
-	public void test05SetRootFragment() {
-		wizard.setRootFragment(null);
+	public void testSetRootFragment() {
+		getTaskWizard().setRootFragment(null);
 	}
 	
-	public void test06GetRootFragment() {
-		wizard.getRootFragment();
+	public void testGetRootFragment() {
+		getTaskWizard().getRootFragment();
 	}
 	
-	public void test07PerformCancel() {
+	public void testPerformCancel() {
 		try {
-			wizard.performCancel();
+			getTaskWizard().performCancel();
 		} catch (Exception e) {
 			// ignore
 		}
 	}
 	
-	public void test08PerformFinish() {
+	public void testPerformFinish() {
 		try {
-			wizard.performFinish();
+			getTaskWizard().performFinish();
 		} catch (Exception e) {
 			// ignore
 		}
 	}
 	
-	public void test09AddPage() {
+	public void testAddPage() {
 		try {
-			wizard.addPage(null);
+			getTaskWizard().addPage(null);
 		} catch (Exception e) {
 			// ignore
 		}
+		// Reset wizard since it now has a null page
+		wizard = null;
 	}
 	
-	public void test10AddPages() {
-		wizard.addPages();
+	public void testCanFinish() {
+		getTaskWizard().canFinish();
 	}
 	
-	public void test11CanFinish() {
-		wizard.canFinish();
+	public void testCreatePageControls() {
+		getTaskWizard().createPageControls(null);
 	}
 	
-	public void test12CreatePageControls() {
-		wizard.createPageControls(null);
+	public void testDispose() {
+		getTaskWizard().dispose();
+		wizard = null;
 	}
 	
-	public void test13Dispose() {
-		wizard.dispose();
+	public void testGetDefaultPageImage() {
+		getTaskWizard().getDefaultPageImage();
 	}
 	
-	public void test14GetDefaultPageImage() {
-		wizard.getDefaultPageImage();
+	public void testGetDialogSettings() {
+		getTaskWizard().getDialogSettings();
 	}
 	
-	public void test15GetDialogSettings() {
-		wizard.getDialogSettings();
+	public void testGetNextPage() {
+		getTaskWizard().getNextPage(null);
 	}
 	
-	public void test16GetNextPage() {
-		wizard.getNextPage(null);
-	}
-	
-	public void test17GetPage() {
-		wizard.getPage(null);
+	public void testGetPage() {
+		getTaskWizard().getPage(null);
 	}
 	
 	public void test18GetPageCount() {
-		wizard.getPageCount();
+		getTaskWizard().getPageCount();
 	}
 	
-	public void test19GetPages() {
-		wizard.getPages();
+	public void testGetPages() {
+		getTaskWizard().getPages();
 	}
 	
-	public void test20GetPreviousPage() {
-		wizard.getPreviousPage(null);
+	public void testGetPreviousPage() {
+		getTaskWizard().getPreviousPage(null);
 	}
 	
-	public void test21GetStartingPage() {
-		wizard.getStartingPage();
+	public void testGetStartingPage() {
+		getTaskWizard().getStartingPage();
 	}
 	
-	public void test22GetTitleBarColor() {
-		wizard.getTitleBarColor();
+	public void testGetTitleBarColor() {
+		getTaskWizard().getTitleBarColor();
 	}
 	
-	public void test23GetWindowTitle() {
-		wizard.getWindowTitle();
+	public void testGetWindowTitle() {
+		getTaskWizard().getWindowTitle();
 	}
 	
-	public void test24IsHelpAvailable() {
-		wizard.isHelpAvailable();
+	public void testIsHelpAvailable() {
+		getTaskWizard().isHelpAvailable();
 	}
 	
-	public void test25NeedsPreviousAndNextButtons() {
-		wizard.needsPreviousAndNextButtons();
+	public void testNeedsPreviousAndNextButtons() {
+		getTaskWizard().needsPreviousAndNextButtons();
 	}
 	
-	public void test26NeedsProgressMonitor() {
-		wizard.needsProgressMonitor();
+	public void testNeedsProgressMonitor() {
+		getTaskWizard().needsProgressMonitor();
 	}
 	
-	public void test27SetContainer() {
-		wizard.setContainer(null);
+	public void testSetContainer() {
+		getTaskWizard().setContainer(null);
 	}
 	
-	public void test28SetDialogSettings() {
-		wizard.setDialogSettings(null);
+	public void testSetDialogSettings() {
+		getTaskWizard().setDialogSettings(null);
 	}
 	
-	public void test29SetNeedsProgressMonitor() {
-		wizard.setNeedsProgressMonitor(false);
+	public void testSetNeedsProgressMonitor() {
+		getTaskWizard().setNeedsProgressMonitor(false);
 	}
 	
-	public void test30SetForcePreviousAndNextButtons() {
-		wizard.setForcePreviousAndNextButtons(false);
+	public void testSetForcePreviousAndNextButtons() {
+		getTaskWizard().setForcePreviousAndNextButtons(false);
 	}
 	
-	public void test31SetWindowTitle() {
-		wizard.setWindowTitle("title");
+	public void testSetWindowTitle() {
+		getTaskWizard().setWindowTitle("title");
 	}
 	
-	public void test32TestProtected() {
+	public void testTestProtected() {
 		class MyTaskWizard extends TaskWizard {
 			public MyTaskWizard() {
 				super(null, null, null);

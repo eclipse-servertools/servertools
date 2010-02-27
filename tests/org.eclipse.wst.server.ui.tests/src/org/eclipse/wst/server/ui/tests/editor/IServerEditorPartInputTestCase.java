@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,39 +18,42 @@ import org.eclipse.wst.server.ui.tests.impl.TestServerEditorPartInput;
 public class IServerEditorPartInputTestCase extends TestCase {
 	protected static IServerEditorPartInput input;
 
-	public void test00Create() {
-		input = new TestServerEditorPartInput();
+	protected IServerEditorPartInput getServerEditorPartInput() {
+		if (input == null) {
+			input = new TestServerEditorPartInput();
+		}
+		return input;
 	}
 
-	public void test01GetServer() {
-		input.getServer();
+	public void testGetServer() {
+		getServerEditorPartInput().getServer();
 	}
 
-	public void test02IsServerReadOnly() {
-		input.isServerReadOnly();
+	public void testIsServerReadOnly() {
+		getServerEditorPartInput().isServerReadOnly();
 	}
 
-	public void test04Exists() {
-		input.exists();
+	public void testExists() {
+		getServerEditorPartInput().exists();
 	}
 
-	public void test05GetImageDescriptor() {
-		input.getImageDescriptor();
+	public void testGetImageDescriptor() {
+		getServerEditorPartInput().getImageDescriptor();
 	}
 
-	public void test06GetName() {
-		input.getName();
+	public void testGetName() {
+		getServerEditorPartInput().getName();
 	}
 
-	public void test07GetPersistable() {
-		input.getPersistable();
+	public void testGetPersistable() {
+		getServerEditorPartInput().getPersistable();
 	}
 
-	public void test08GetToolTipText() {
-		input.getToolTipText();
+	public void testGetToolTipText() {
+		getServerEditorPartInput().getToolTipText();
 	}
 
-	public void test09GetAdapter() {
-		input.getAdapter(null);
+	public void testGetAdapter() {
+		getServerEditorPartInput().getAdapter(null);
 	}
 }

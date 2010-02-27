@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,68 +14,76 @@ import junit.framework.TestCase;
 
 import org.eclipse.wst.server.ui.ServerLaunchConfigurationTab;
 
+/* Note: These tests may be executed in any order.  Because null is used as most
+ * arguments, the order doesn't currently matter.  If non-null arguments are used,
+ * it may be necessary to rewrite the tests to make them truly order independent.
+ */
+
 public class ServerLaunchConfigurationTabTestCase extends TestCase {
 	protected static ServerLaunchConfigurationTab tab;
 
-	public void test00CreateTab() {
-		tab = new ServerLaunchConfigurationTab();
+	protected ServerLaunchConfigurationTab getServerLaunchConfigurationTab() {
+		if (tab == null) {
+			tab = new ServerLaunchConfigurationTab(new String[]{"test"});
+		}
+		return tab;
+	}
+	
+	public void testCreateTabAllTypes() {
+		new ServerLaunchConfigurationTab();
 	}
 
-	public void test01CreateTab() {
-		tab = new ServerLaunchConfigurationTab(new String[]{"test"});
-	}
-
-	public void test02CreateControl() {
+	public void testCreateControl() {
 		try {
-			tab.createControl(null);
+			getServerLaunchConfigurationTab().createControl(null);
 		}
 		catch (Exception e) {
 			// ignore
 		}
 	}
 
-	public void test03SetDefaults() {
+	public void testSetDefaults() {
 		try {
-			tab.setDefaults(null);
+			getServerLaunchConfigurationTab().setDefaults(null);
 		}
 		catch (Exception e) {
 			// ignore
 		}
 	}
 
-	public void test04InitializeFrom() {
+	public void testInitializeFrom() {
 		try {
-			tab.initializeFrom(null);
+			getServerLaunchConfigurationTab().initializeFrom(null);
 		}
 		catch (Exception e) {
 			// ignore
 		}
 	}
 
-	public void test05PerformApply() {
+	public void testPerformApply() {
 		try {
-			tab.performApply(null);
+			getServerLaunchConfigurationTab().performApply(null);
 		}
 		catch (Exception e) {
 			// ignore
 		}
 	}
 
-	public void test06IsValid() {
+	public void testIsValid() {
 		try {
-			tab.isValid(null);
+			getServerLaunchConfigurationTab().isValid(null);
 		}
 		catch (Exception e) {
 			// ignore
 		}
 	}
 
-	public void test07GetImage() {
-		tab.getImage();
+	public void testGetImage() {
+		getServerLaunchConfigurationTab().getImage();
 	}
 
-	public void test08GetName() {
-		tab.getName();
+	public void testGetName() {
+		getServerLaunchConfigurationTab().getName();
 	}
 
 	public void test09TestProtectedMethods() {

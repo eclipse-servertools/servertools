@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,48 +14,54 @@ import junit.framework.TestCase;
 
 import org.eclipse.wst.server.ui.editor.ServerEditorSection;
 
+/* Note: These tests may be executed in any order.  Because null is used as most
+ * arguments, the order doesn't currently matter.  If non-null arguments are used,
+ * it may be necessary to rewrite the tests to make them truly order independent.
+ */
+
 public class ServerEditorSectionTestCase extends TestCase {
 	protected static ServerEditorSection section;
 
-	public void test00Create() {
-		section = new ServerEditorSection() {
-			// do nothing
-		};
+	protected ServerEditorSection getServerEditorSection() {
+		if (section == null) {
+			section = new ServerEditorSection() {
+				// do nothing
+			};
+			// Ensure initialized called, though this is effectively a no-op
+			section.init(null, null);
+		}
+		return section;
 	}
 
-	public void test01Init() {
-		section.init(null, null);
+	public void testCreateSection() {
+		getServerEditorSection().createSection(null);
 	}
 	
-	public void test02CreateSection() {
-		section.createSection(null);
+	public void testDispose() {
+		getServerEditorSection().dispose();
 	}
 	
-	public void test03Dispose() {
-		section.dispose();
+	public void testGetErrorMessage() {
+		getServerEditorSection().getErrorMessage();
 	}
 	
-	public void test04GetErrorMessage() {
-		section.getErrorMessage();
+	public void testGetSaveStatus() {
+		getServerEditorSection().getSaveStatus();
 	}
 	
-	public void test05GetSaveStatus() {
-		section.getSaveStatus();
-	}
-	
-	public void test06GetShell() {
+	public void testGetShell() {
 		try {
-			section.getShell();
+			getServerEditorSection().getShell();
 		} catch (Exception e) {
 			// ignore
 		}
 	}
 	
-	public void test07SetServerEditorPart() {
-		section.setServerEditorPart(null);
+	public void testSetServerEditorPart() {
+		getServerEditorSection().setServerEditorPart(null);
 	}
 	
-	public void test08SetErrorMessage() {
-		section.setErrorMessage(null);
+	public void testSetErrorMessage() {
+		getServerEditorSection().setErrorMessage(null);
 	}
 }

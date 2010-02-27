@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,48 +14,56 @@ import junit.framework.TestCase;
 
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 
+/* Note: These tests may be executed in any order.  Because null is used as most
+ * arguments, the order doesn't currently matter.  If non-null arguments are used,
+ * it may be necessary to rewrite the tests to make them truly order independent.
+ */
+
 public class WizardFragmentTestCase extends TestCase {
 	protected static WizardFragment fragment;
 
-	public void test00CreateFragment() {
-		fragment = new WizardFragment() {
-			// do nothing
-		};
+	protected WizardFragment getWizardFragment() {
+		if (fragment == null) {
+			fragment = new WizardFragment() {
+				// do nothing
+			};
+		}
+		return fragment;
 	}
 	
-	public void test01HasComposite()  {
-		fragment.hasComposite();
+	public void testHasComposite()  {
+		getWizardFragment().hasComposite();
 	}
 	
-	public void test02CreateComposite()  {
-		fragment.createComposite(null, null); 
+	public void testCreateComposite()  {
+		getWizardFragment().createComposite(null, null); 
 	}
 	
-	public void test03SetTaskModel()  {
-		fragment.setTaskModel(null);
+	public void testSetTaskModel()  {
+		getWizardFragment().setTaskModel(null);
 	}
 	
-	public void test04GetTaskModel()  {
-		fragment.getTaskModel();
+	public void testGetTaskModel()  {
+		getWizardFragment().getTaskModel();
 	}
 	
-	public void test05Enter()  {
-		fragment.enter();
+	public void testEnter()  {
+		getWizardFragment().enter();
 	}
 	
-	public void test06Exit()  {
-		fragment.exit();
+	public void testExit()  {
+		getWizardFragment().exit();
 	}
 	
-	public void test09GetChildFragments()  {
-		fragment.getChildFragments();
+	public void testGetChildFragments()  {
+		getWizardFragment().getChildFragments();
 	}
 	
-	public void test10IsComplete()  {
-		fragment.isComplete();
+	public void testIsComplete()  {
+		getWizardFragment().isComplete();
 	}
 	
-	public void test11TestProtected()  {
+	public void testTestProtected()  {
 		class MyWizardFragment extends WizardFragment {
 			 public void testProtected() {
 				 updateChildFragments();

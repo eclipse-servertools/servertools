@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,78 +15,107 @@ import junit.framework.TestCase;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.ui.editor.ServerEditorPart;
 
+/* Note: These tests may be executed in any order.  Because null is used as most
+ * arguments, the order doesn't currently matter.  If non-null arguments are used,
+ * it may be necessary to rewrite the tests to make them truly order independent.
+ */
+
 public class ServerEditorPartTestCase extends TestCase {
 	protected static ServerEditorPart editor;
+	protected static ServerEditorPart initEditor;
 
-	public void test00CreateEditor() {
-		editor = new ServerEditorPart() {
-			public void createPartControl(Composite parent) {
-				// do nothing
+	protected ServerEditorPart getServerEditorPart() {
+		if (editor == null) {
+			editor = new ServerEditorPart() {
+				public void createPartControl(Composite parent) {
+					// do nothing
+				}
+
+				public void setFocus() {
+					// do nothing
+				}
+			};
+		}
+		return editor;
+	}
+
+	protected ServerEditorPart getInitializedServerEditorPart() {
+		if (initEditor == null) {
+			initEditor = new ServerEditorPart() {
+				public void createPartControl(Composite parent) {
+					// do nothing
+				}
+
+				public void setFocus() {
+					// do nothing
+				}
+			};
+			try {
+				initEditor.init(null, null);
 			}
-
-			public void setFocus() {
-				// do nothing
+			catch (Exception e) {
+				// ignore
 			}
-		};
+			// Ensure getSections() called
+			try {
+				initEditor.getErrorMessage();
+			} catch (Exception e) {
+				// ignore
+			}
+		}
+		return initEditor;
 	}
 
-	public void test02DoSave() {
-		editor.doSave(null);
+	public void testDoSave() {
+		getServerEditorPart().doSave(null);
 	}
 	
-	public void test03SaveAs() {
-		editor.doSaveAs();
+	public void testSaveAs() {
+		getServerEditorPart().doSaveAs();
 	}
 	
-	public void test04IsDirty() {
-		editor.isDirty();
+	public void testIsDirty() {
+		getServerEditorPart().isDirty();
 	}
 	
-	public void test05IsSaveAsAllowed() {
-		editor.isSaveAsAllowed();
+	public void testIsSaveAsAllowed() {
+		getServerEditorPart().isSaveAsAllowed();
 	}
 	
-	public void test06SetErrorMessage() {
-		editor.setErrorMessage(null);
+	public void testSetErrorMessage() {
+		getServerEditorPart().setErrorMessage(null);
 	}
 	
-	public void test07UpdateErrorMessage() {
-		editor.updateErrorMessage();
+	public void testUpdateErrorMessage() {
+		getServerEditorPart().updateErrorMessage();
 	}
 	
-	public void test08GetErrorMessage() {
+	public void testGetErrorMessage() {
 		try {
-			editor.getErrorMessage();
+			getServerEditorPart().getErrorMessage();
 		} catch (Exception e) {
 			// ignore
 		}
 	}
 	
-	public void test09GetSaveStatus() {
-		editor.getSaveStatus();
+	public void testGetSaveStatus() {
+		getServerEditorPart().getSaveStatus();
 	}
 	
-	public void test10Init() {
-		try {
-			editor.init(null, null);
-		} catch (Exception e) {
-			// ignore
-		}
+	public void testGetServer() {
+		getInitializedServerEditorPart().getServer();
 	}
 	
-	public void test11GetServer() {
-		editor.getServer();
-	}
-	
-	public void test12InsertSections() {
-		editor.insertSections(null, null);
+	public void testInsertSections() {
+		getInitializedServerEditorPart().insertSections(null, null);
 	}
 
-	public void test12Dispose() {
-		editor.dispose();
+	public void testDispose() {
+		getInitializedServerEditorPart().dispose();
+		initEditor = null;
 	}
 
-	public void test13TestProtectedMethods() {
+	public void testTestProtectedMethods() {
 		class MyServerEditorPart extends ServerEditorPart {
 			public void testProtected() {
 				try {

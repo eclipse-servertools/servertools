@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,6 +29,17 @@ public class ServerTooltipTestCase extends TestCase {
 	protected static ServerToolTip tooltip;
 	protected static IServerToolTip exTooltip;
 
+	protected ServerToolTip getServerToolTip() {
+		if (tooltip == null) {
+			Tree tree = new Tree(new Shell(),SWT.SINGLE);
+			TreeItem tItem = new TreeItem(tree,SWT.NONE);
+			tItem.setText("Item 1");
+			tree.setTopItem(tItem);
+			tooltip = new ServerToolTip(tree);
+		}
+		return tooltip;
+	}
+
 	public void test00CreateExtensionToolTip(){
 		exTooltip = new IServerToolTip(){
 			public void createContent(Composite parent, IServer server) {
@@ -38,15 +49,10 @@ public class ServerTooltipTestCase extends TestCase {
 	}
 	
 	public void test01ActivateToolTip(){
-		Tree tree = new Tree(new Shell(),SWT.SINGLE);
-		TreeItem tItem = new TreeItem(tree,SWT.NONE);
-		tItem.setText("Item 1");
-		tree.setTopItem(tItem);
-		tooltip = new ServerToolTip(tree);
-		tooltip.activate();		
+		getServerToolTip().activate();		
 	}
 	
 	public void test02DeactivateToolTip(){
-		tooltip.deactivate();
+		getServerToolTip().deactivate();
 	}	
 }
