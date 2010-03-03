@@ -11,6 +11,8 @@
 package org.eclipse.wst.server.discovery.internal.model;
 
 import java.net.URI;
+import java.util.Collection;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.equinox.p2.engine.*;
@@ -48,11 +50,11 @@ public class Extension {
 	}
 
 	public String getLicense() {
-		ILicense[] licenses = iu.getLicenses(null);
-		if (licenses == null || licenses.length == 0)
+		Collection<ILicense> licenses = iu.getLicenses(null);
+		if (licenses == null || licenses.isEmpty())
 			return "";
-		//TODO support multiple licenses
-		return licenses[0].getBody();
+		// TODO support multiple licenses
+		return licenses.iterator().next().getBody();
 	}
 
 	public String getProvider() {

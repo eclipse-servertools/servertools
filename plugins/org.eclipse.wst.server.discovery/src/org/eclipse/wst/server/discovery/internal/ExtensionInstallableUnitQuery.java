@@ -11,8 +11,9 @@
 package org.eclipse.wst.server.discovery.internal;
 
 import java.util.List;
+
+import org.eclipse.equinox.internal.p2.metadata.query.MatchQuery;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
-import org.eclipse.equinox.p2.query.MatchQuery;
 
 public class ExtensionInstallableUnitQuery extends MatchQuery<IInstallableUnit> {
 	private List<String> list;

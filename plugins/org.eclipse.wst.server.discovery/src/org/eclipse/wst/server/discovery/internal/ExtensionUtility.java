@@ -19,9 +19,9 @@ import org.eclipse.equinox.p2.engine.IProfile;
 import org.eclipse.equinox.p2.engine.IProfileRegistry;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.metadata.Version;
-import org.eclipse.equinox.p2.metadata.query.InstallableUnitQuery;
 import org.eclipse.equinox.p2.query.IQuery;
 import org.eclipse.equinox.p2.query.IQueryResult;
+import org.eclipse.equinox.p2.query.QueryUtil;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.discovery.internal.model.Extension;
 import org.eclipse.wst.server.discovery.internal.model.ExtensionUpdateSite;
@@ -147,9 +147,10 @@ public class ExtensionUtility {
 		monitor.beginTask(Messages.discoverLocalConfiguration, 100);
 		
 		IProfileRegistry profileRegistry = (IProfileRegistry) getService(Activator.getDefault().getBundle().getBundleContext(), IProfileRegistry.class.getName());
+		IProfile[] profiles = profileRegistry.getProfiles();
 		IProfile profile = profileRegistry.getProfile(IProfileRegistry.SELF);
 		
-		IQuery<IInstallableUnit> query = InstallableUnitQuery.ANY;
+		IQuery<IInstallableUnit> query = QueryUtil.createIUAnyQuery();
 		//Query query = new InstallableUnitQuery("org.eclipse.wst.server.core.serverAdapter");
 		//List<String> list2 = new ArrayList();
 		//Query query = new ExtensionInstallableUnitQuery(list2);

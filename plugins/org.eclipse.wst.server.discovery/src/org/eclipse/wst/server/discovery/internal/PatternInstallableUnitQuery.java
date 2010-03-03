@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.server.discovery.internal;
 
+import org.eclipse.equinox.internal.p2.metadata.query.MatchQuery;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
-import org.eclipse.equinox.p2.query.MatchQuery;
 
 public class PatternInstallableUnitQuery extends MatchQuery<IInstallableUnit> {
 	private String categoryId;

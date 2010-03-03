@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.equinox.internal.p2.updatesite.metadata.UpdateSiteMetadataRepositoryFactory;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.metadata.IRequirement;
-import org.eclipse.equinox.p2.metadata.query.ExpressionQuery;
+import org.eclipse.equinox.p2.query.ExpressionQuery;
 import org.eclipse.equinox.p2.query.IQuery;
 import org.eclipse.equinox.p2.query.IQueryResult;
 import org.eclipse.equinox.p2.repository.IRepositoryManager;
@@ -73,8 +73,8 @@ public class ExtensionUpdateSite {
 			
 			IQueryResult<IInstallableUnit> collector = repo.query(query, monitor);
 			List<Extension> list = new ArrayList<Extension>();
-			for (IInstallableUnit iu: collector.unmodifiableSet()) {
-				Collection<IRequirement> req = iu.getRequiredCapabilities();
+			for (IInstallableUnit iu: collector.toUnmodifiableSet()) {
+				Collection<IRequirement> req = iu.getRequirements();
 				if (req != null) {
 					for (IRequirement requirement : req) {
 					    query = new ExpressionQuery<IInstallableUnit>(IInstallableUnit.class, requirement.getMatches());
