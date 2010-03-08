@@ -223,6 +223,16 @@ public class ServerEventTestCase extends TestCase {
 			public Map getAttribute(String attributeName, Map defaultValue) {
 				return null;
 			}
+			public IStatus canRestartModule(IModule[] module,
+					IProgressMonitor monitor) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			public IStatus canPublishModule(IModule[] module,
+					IProgressMonitor monitor) {
+				// TODO Auto-generated method stub
+				return null;
+			}
 		};
 	}
 
