@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,9 +12,7 @@ package org.eclipse.wst.server.core.internal;
 
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.*;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 /**
@@ -119,7 +117,7 @@ public class RuntimeType implements IRuntimeType {
 	public IModuleType[] getModuleTypes() {
 		try {
 			if (moduleTypes == null)
-				moduleTypes = ServerPlugin.getModuleTypes(element.getChildren("moduleType"));
+				loadModuleTypes();
 	
 			IModuleType[] mt = new IModuleType[moduleTypes.size()];
 			moduleTypes.toArray(mt);
@@ -127,6 +125,28 @@ public class RuntimeType implements IRuntimeType {
 		} catch (Exception e) {
 			return new IModuleType[0];
 		}
+	}
+	
+	protected void loadModuleTypes(){
+		moduleTypes = ServerPlugin.getModuleTypes(element.getChildren("moduleType"));
+		ServerPlugin.loadRuntimeModuleTypes(this);
+	}
+	
+	/**
+	 * Adds a Loose ModuleType to this runtime  
+	 * @param moduleType
+	 * @throws CoreException if the moduleType is null or if already added
+	 */
+	public void addModuleType(IConfigurationElement cfe) throws CoreException{
+		if (cfe == null)
+			throw new CoreException(new Status(IStatus.ERROR,ServerPlugin.PLUGIN_ID,"<null> moduleType"));
+		
+		IConfigurationElement [] childs = cfe.getChildren("moduleType");
+		if (childs.length < 1)
+			throw new CoreException(new Status(IStatus.ERROR,ServerPlugin.PLUGIN_ID,"No moduleType found for runtime"));
+		
+		List<IModuleType> extraModuleTypes = ServerPlugin.getModuleTypes(childs);
+		moduleTypes.addAll(extraModuleTypes);
 	}
 
 	public boolean canCreate() {

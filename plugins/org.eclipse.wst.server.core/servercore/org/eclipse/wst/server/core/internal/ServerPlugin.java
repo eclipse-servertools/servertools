@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2009 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,13 +18,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.wst.server.core.IModuleArtifact;
-import org.eclipse.wst.server.core.IModuleType;
-import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
-import org.eclipse.wst.server.core.IServerAttributes;
-import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.*;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleListener;
@@ -34,6 +28,7 @@ import org.osgi.framework.BundleListener;
 public class ServerPlugin extends Plugin {
 	public static final String PROJECT_PREF_FILE = ".serverPreference";
 	public static final String EXCLUDE_SERVER_ADAPTERS = "excludeServerAdapters";
+	private static final String EXTENSION_RUNTIME_MODULE_TYPE = "runtimeModuleType";
 
 	private static final String SHUTDOWN_JOB_FAMILY = "org.eclipse.wst.server.core.family";
 	//public static final String REGISTRY_JOB_FAMILY = "org.eclipse.wst.server.registry.family";
@@ -418,6 +413,30 @@ public class ServerPlugin extends Plugin {
 		return s;
 	}
 
+	/**
+	 * Load the Loose Module Types.
+	 */
+	protected static synchronized void loadRuntimeModuleTypes(IRuntimeType runtimeType) {	
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, EXTENSION_RUNTIME_MODULE_TYPE);
+		for (IConfigurationElement ce : cf) {
+			try {
+				String [] looseModuleRuntimeIds = ServerPlugin.tokenize(ce.getAttribute("runtimeTypes"), ",");				
+				if (looseModuleRuntimeIds.length < 0){
+					Trace.trace(Trace.EXTENSION_POINT, "  runtimeTypes on extension point definition is empty");
+					return;
+				}
+				
+				if (ServerPlugin.contains(looseModuleRuntimeIds, runtimeType.getId())){
+					((RuntimeType)runtimeType).addModuleType(ce);					
+					Trace.trace(Trace.EXTENSION_POINT, "  Loaded Runtime supported ModuleType: " + ce.getAttribute("id"));
+				}
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "  Could not load Runtime supported ModuleType: " + ce.getAttribute("id"), t);
+			}
+		}
+	}
+	
 	protected static List<org.eclipse.wst.server.core.IModuleType> getModuleTypes(IConfigurationElement[] elements) {
 		List<IModuleType> list = new ArrayList<IModuleType>();
 		if (elements == null)
