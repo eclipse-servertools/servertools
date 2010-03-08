@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1158,7 +1158,6 @@ public class ServerPlugin extends Plugin {
 			|| (b.endsWith(".*") && a.startsWith(b.substring(0, b.length() - 1))))
 			return true;
 		if (a.startsWith(b) || b.startsWith(a)) {
-			ServerPlugin.log(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, "Invalid matching rules used: " + a + "/" + b));
 			Trace.trace(Trace.WARNING, "Invalid matching rules used: " + a + "/" + b);
 			return true;
 		}

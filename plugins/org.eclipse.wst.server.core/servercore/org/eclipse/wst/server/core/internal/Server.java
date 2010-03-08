@@ -53,6 +53,12 @@ public class Server extends Base implements IServer {
 	public static final int AUTO_PUBLISH_RESOURCE = 2;
 	public static final int AUTO_PUBLISH_BUILD = 3;
 
+	private static String PUBLISH_AUTO_STRING = "auto";
+	private static String PUBLISH_CLEAN_STRING = "clean";
+	private static String PUBLISH_FULL_STRING = "full";
+	private static String PUBLISH_INCREMENTAL_STRING = "incremental";
+	private static String PUBLISH_UNKOWN = "unkown";
+	
 	protected static final String PROP_HOSTNAME = "hostname";
 	protected static final String SERVER_ID = "server-id";
 	protected static final String RUNTIME_ID = "runtime-id";
@@ -756,6 +762,10 @@ public class Server extends Base implements IServer {
 	protected void handleModuleProjectChange(IModule module, IResourceChangeEvent buildEvent) {
 		Trace.trace(Trace.FINEST, "> handleDeployableProjectChange() " + this + " " + module);
 		
+		if (!isModuleDeployed(module)){
+			return;
+		}
+		
 		// check for duplicate jobs already waiting and don't create a new one
 		Job[] jobs = Job.getJobManager().find(ServerUtil.SERVER_JOB_FAMILY);
 		if (jobs != null) {
@@ -775,6 +785,36 @@ public class Server extends Base implements IServer {
 		job.schedule();
 		
 		Trace.trace(Trace.FINEST, "< handleDeployableProjectChange()");
+	}
+	
+	protected boolean isModuleDeployed(final IModule requestedModule){
+		Trace.trace(Trace.FINEST, "> isModuleDeployed()");
+
+		// no modules are deployed
+		if (getModules().length < 0)
+			return false;
+		
+		// shallow search: check for root modules first
+		boolean deployed = modules.contains(requestedModule);
+		
+		if(!deployed){
+			// deep search: look into all the child modules
+			Iterator<IModule> itr = modules.iterator();
+			while(itr.hasNext() && !deployed){
+				IModule[] m = new IModule[] {itr.next()};
+				deployed = !visitModule(m, new IModuleVisitor(){
+					public boolean visit(IModule[] modules2) {
+						for (int i =0;i<=modules2.length-1;i++){
+							if (modules2[i].equals(requestedModule))
+								return false;
+						}
+						return true;
+				}}, null);
+			}
+		}
+		
+		Trace.trace(Trace.FINEST, "< isModuleDeployed() deployed="+deployed);
+		return deployed;
 	}
 
 	protected void stopAutoPublish() {
@@ -2716,6 +2756,7 @@ public class Server extends Base implements IServer {
 
 	protected IStatus publishImpl(int kind, List<IModule[]> modules4, IAdaptable info, IProgressMonitor monitor) {
 		Trace.trace(Trace.FINEST, "-->-- Publishing to server: " + Server.this.toString() + " -->--");
+		Trace.trace(Trace.FINEST, "Server.publishImpl(): kind=<"+getPublishKindString(kind)+"> modules=" + modules4);
 		
 		stopAutoPublish();
 		
@@ -2748,7 +2789,7 @@ public class Server extends Base implements IServer {
 			getServerPublishInfo().save();
 			
 			firePublishFinished(Status.OK_STATUS);
-			Trace.trace(Trace.PERFORMANCE, "Server.publish(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
+			Trace.trace(Trace.PERFORMANCE, "Server.publishImpl(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
 			return status;
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate publish() " + Server.this.toString(), e);
@@ -3171,4 +3212,20 @@ public class Server extends Base implements IServer {
 	public String toString() {
 		return getName();
 	}
-}
+	
+	private String getPublishKindString(int kind){
+		if (kind == IServer.PUBLISH_AUTO){
+			return PUBLISH_AUTO_STRING;
+		}
+		else if (kind == IServer.PUBLISH_CLEAN){
+			return PUBLISH_CLEAN_STRING;
+		}
+		else if (kind == IServer.PUBLISH_FULL){
+			return PUBLISH_FULL_STRING;
+		}
+		else if (kind == IServer.PUBLISH_INCREMENTAL){
+			return PUBLISH_INCREMENTAL_STRING;
+		}
+		return PUBLISH_UNKOWN;
+	}
+} 
