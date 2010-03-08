@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -610,8 +610,39 @@ public interface IServer extends IServerAttributes, ISchedulingRule {
 	 *    reporting and cancellation are not desired
 	 * @return a status object with code <code>IStatus.OK</code> if the module can
 	 *    be restarted, otherwise a status object indicating why it can't
+	 * @deprecated
 	 */
 	public IStatus canControlModule(IModule[] module, IProgressMonitor monitor);
+
+	/**
+	 * Returns whether the given module can be restarted.
+	 * <p>
+	 * This method has a progress monitor because it may involve plugin
+	 * and class loading. No communication to the server will occur.
+	 * </p>
+	 * 
+	 * @param module the module
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return a status object with code <code>IStatus.OK</code> if the module can
+	 *    be restarted, otherwise a status object indicating why it can't
+	 */
+	public IStatus canRestartModule(IModule[] module, IProgressMonitor monitor);
+	
+	/**
+	 * Returns whether the given module can be published.
+	 * <p>
+	 * This method has a progress monitor because it may involve plugin
+	 * and class loading. No communication to the server will occur.
+	 * </p>
+	 * 
+	 * @param module the module
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return a status object with code <code>IStatus.OK</code> if the module can
+	 *    be published, otherwise a status object indicating why it can't
+	 */
+	public IStatus canPublishModule(IModule[] module, IProgressMonitor monitor);
 
 	/**
 	 * Asynchronously starts this server in the given launch mode.

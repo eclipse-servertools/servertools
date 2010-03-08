@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -407,9 +407,47 @@ public abstract class ServerBehaviourDelegate {
 	 * 
 	 * @param module the module
 	 * @return <code>true</code> if the given module can be
-	 *    restarted, and <code>false</code> otherwise 
+	 *    restarted, and <code>false</code> otherwise
+	 *    
+	 * @deprecated instead use canRestartModule, canPublishModule   
 	 */
 	public boolean canControlModule(IModule[] module) {
+		return false;
+	}
+	
+	/**
+	 * Returns whether the given module can be restarted.
+	 * <p>
+	 * This call should complete reasonably fast and not require communication
+	 * with the (potentially remote) server. If communication is required it
+	 * should be done asynchronously and this method should either fail until
+	 * that is complete or succeed and handle failure in the xxModule methods.
+	 * </p>
+	 * 
+	 * @param module the module
+	 * @return <code>true</code> if the given module can be
+	 *    restarted, and <code>false</code> otherwise
+	 *    
+	 */
+	public boolean canRestartModule(IModule[] module){
+		return false;
+	}
+	
+	/**
+	 * Returns whether the given module can be published.
+	 * <p>
+	 * This call should complete reasonably fast and not require communication
+	 * with the (potentially remote) server. If communication is required it
+	 * should be done asynchronously and this method should either fail until
+	 * that is complete or succeed and handle failure in the xxModule methods.
+	 * </p>
+	 * 
+	 * @param module the module
+	 * @return <code>true</code> if the given module can be
+	 *    published, and <code>false</code> otherwise
+	 *    
+	 */
+	public boolean canPublishModule(IModule[] module){
 		return false;
 	}
 

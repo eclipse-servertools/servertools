@@ -2133,17 +2133,9 @@ public class Server extends Base implements IServer {
 		else
 			memento.putString(RUNTIME_ID, null);
 	}
-
-	/*public void updateConfiguration() {
-		try {
-			getDelegate(null).updateConfiguration();
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate updateConfiguration() " + toString(), e);
-		}
-	}*/
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.core.IServerConfiguration#canModifyModule(org.eclipse.wst.server.core.model.IModule)
+	 * @see org.eclipse.wst.server.core.IServer#canModifyModule(org.eclipse.wst.server.core.model.IModule)
 	 */
 	public IStatus canModifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) {
 		if ((add == null || add.length == 0) && (remove == null || remove.length == 0))
@@ -2321,21 +2313,48 @@ public class Server extends Base implements IServer {
 	 * @param monitor
 	 * @return <code>true</code> if the given module can be
 	 *    restarted, and <code>false</code> otherwise
+	 * @deprecated use canRestartModule or canPublishModule
 	 */
-	public IStatus canControlModule(IModule[] module, IProgressMonitor monitor) {
+	public IStatus canControlModule(IModule[] module, IProgressMonitor monitor) {		
+		return canRestartModule(module,monitor);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.server.core.IServer#canRestartModule(org.eclipse.wst.server.core.IModule[], org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	public IStatus canRestartModule(IModule[] module, IProgressMonitor monitor) {
 		if (module == null || module.length == 0)
 			throw new IllegalArgumentException("Module cannot be null or empty");
 		try {
 			ServerBehaviourDelegate bd = getBehaviourDelegate(monitor);
 			if (bd == null)
 				return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorRestartModule, null);
-			boolean b = bd.canControlModule(module);
+			boolean b = bd.canRestartModule(module);
 			if (b)
 				return Status.OK_STATUS;
 		} catch (Exception e) {
 			ServerPlugin.logExtensionFailure(toString(), e);
 		}
 		return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorRestartModule, null);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.server.core.IServer#canPublishModule(org.eclipse.wst.server.core.IModule[], org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	public IStatus canPublishModule(IModule[] module, IProgressMonitor monitor) {
+		if (module == null || module.length == 0)
+			throw new IllegalArgumentException("Module cannot be null or empty");
+		try {
+			ServerBehaviourDelegate bd = getBehaviourDelegate(monitor);
+			if (bd == null)
+				return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishModule, null);
+			boolean b = bd.canPublishModule(module);
+			if (b)
+				return Status.OK_STATUS;
+		} catch (Exception e) {
+			ServerPlugin.logExtensionFailure(toString(), e);
+		}
+		return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishModule, null);
 	}
 
 	/**
