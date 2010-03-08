@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,16 +13,8 @@ package org.eclipse.wst.server.ui.internal.view.servers;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.console.ConsolePlugin;
-import org.eclipse.ui.console.IConsole;
-import org.eclipse.ui.console.IConsoleConstants;
-import org.eclipse.ui.console.IConsoleManager;
-import org.eclipse.ui.console.IConsoleView;
+import org.eclipse.ui.*;
+import org.eclipse.ui.console.*;
 import org.eclipse.ui.views.IViewDescriptor;
 import org.eclipse.ui.views.IViewRegistry;
 import org.eclipse.wst.server.core.IServer;
@@ -46,7 +38,11 @@ public class ShowInConsoleAction extends AbstractServerAction {
 	}
 
 	public boolean accept(IServer server) {
-		return (server.getServerType() != null && server.getServerState() != IServer.STATE_STOPPED) && server.getLaunch() != null;
+		return (server.getServerType() != null 
+				&& server.getServerState() != IServer.STATE_STOPPED
+				&& server.getLaunch() != null 
+				&& server.getLaunch().getProcesses() != null
+				&& server.getLaunch().getProcesses().length >= 1);
 	}
 
 	public void perform(IServer server) {
