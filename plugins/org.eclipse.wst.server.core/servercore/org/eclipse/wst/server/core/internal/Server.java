@@ -274,10 +274,18 @@ public class Server extends Base implements IServer {
 				}
 			}
 			
-			// 102227 - lock entire workspace during publish
-			ISchedulingRule publishRule = MultiRule.combine(new ISchedulingRule[] {
-				ResourcesPlugin.getWorkspace().getRoot(), Server.this
-			});
+			// Find out all the projects that contains modules added to this server for workspace lock.
+			List<IProject> curProjectLockList = getPublishedProject(monitor);
+			
+			ISchedulingRule[] publishScheduleRules = new ISchedulingRule[curProjectLockList.size()+1];
+			publishScheduleRules[0] = Server.this;
+			int i=1;
+			for (IProject curProj : curProjectLockList) {
+				publishScheduleRules[i++] = curProj;
+			}
+			                    
+			// 288863 - lock only affected projects during publish
+			ISchedulingRule publishRule = MultiRule.combine(publishScheduleRules);
 			
 			try{
 				// 237222 - Apply the rules only when the job has started
@@ -286,6 +294,32 @@ public class Server extends Base implements IServer {
 			} finally {
 				Job.getJobManager().endRule(publishRule);
 			}
+		}
+		
+		/**
+		 * Finds all projects contained by the server
+		 * @return List<IProject> the list of projects
+		 */
+		List<IProject> getPublishedProject(IProgressMonitor monitor) {
+			final List<IProject> projectList = new ArrayList<IProject>();
+			
+			IModule[] curModules = getModules();
+			// Check empty module list since the visitModule does not handle that properly.
+			if (curModules != null && curModules.length > 0) {
+				// Get all the affected projects during the publish.
+				visitModule(getModules(), new IModuleVisitor(){
+					public boolean visit(IModule[] modules2) {
+						for (IModule curModule : modules2) {
+							IProject curProject = curModule.getProject();
+							if (curProject != null) {
+								if (!projectList.contains(curProject))
+									projectList.add(curProject);
+							}
+						}
+						return true;
+				}}, monitor);
+			}
+			return projectList;
 		}
 	}
 
@@ -2670,7 +2704,7 @@ public class Server extends Base implements IServer {
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 */
-	private boolean visitModule(IModule[] module, IModuleVisitor visitor, IProgressMonitor monitor) {
+	protected boolean visitModule(IModule[] module, IModuleVisitor visitor, IProgressMonitor monitor) {
 		if (module == null)
 			return true;
 		
