@@ -77,7 +77,7 @@ public class Extension {
 			return plan.getStatus();
 		
 		IEngine engine = (IEngine) ExtensionUtility.getService(bundleContext, IEngine.SERVICE_NAME);
-		return engine.perform(plan, new DefaultPhaseSet(), monitor);
+		return engine.perform(plan, PhaseSetFactory.createDefaultPhaseSet(), monitor);
 	}
 
 	public IInstallableUnit[] getIUs() {
