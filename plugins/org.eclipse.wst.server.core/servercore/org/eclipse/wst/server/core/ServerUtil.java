@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -376,15 +376,37 @@ public class ServerUtil {
 	 * @param runtime a runtime
 	 */
 	public static void setRuntimeDefaultName(IRuntimeWorkingCopy runtime) {
+		setRuntimeDefaultName(runtime, -1);
+	}
+
+	/**
+	 * Sets a default name on the given runtime.
+	 * 
+	 * @param runtime
+	 *          a runtime
+	 * @param suffix
+	 *          the numbering to start at for the suffix, if suffix is -1, then the no suffix name will be tried first.
+	 * @return the suffix it found no name conflicts at and is using as part of
+	 *         the default name
+	 */
+	public static int setRuntimeDefaultName(IRuntimeWorkingCopy runtime, int suffix) {
 		String typeName = runtime.getRuntimeType().getName();
-		
-		String name = NLS.bind(Messages.defaultRuntimeName, typeName);
-		int i = 2;
+
+		String name = null;
+		if (suffix == -1) {
+			name = NLS.bind(Messages.defaultRuntimeName, typeName);
+			// Start next suffix from 2 to preserve the original behaviour before this change.
+			suffix = 2;
+		} else {
+			name = NLS.bind(Messages.defaultRuntimeName2, new String[] { typeName, suffix + "" });
+		}
+
 		while (ServerPlugin.isNameInUse(runtime.getOriginal(), name)) {
-			name = NLS.bind(Messages.defaultRuntimeName2, new String[] {typeName, i + ""});
-			i++;
+			suffix++;
+			name = NLS.bind(Messages.defaultRuntimeName2, new String[] { typeName, suffix + "" });
 		}
 		runtime.setName(name);
+		return suffix;
 	}
 
 	/**
