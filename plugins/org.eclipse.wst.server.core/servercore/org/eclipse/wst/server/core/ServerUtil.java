@@ -88,7 +88,7 @@ public class ServerUtil {
 			throw new IllegalArgumentException();
 		
 		// use a set for better contains() performance
-		Set<IModule> set = new HashSet<IModule>();
+		List<IModule> list = new ArrayList<IModule>();
 		
 		ModuleFactory[] factories = ServerPlugin.getModuleFactories();
 		if (factories != null) {
@@ -96,15 +96,13 @@ public class ServerUtil {
 				IModule[] modules = factory.getModules(project, null);
 				if (modules != null) {
 					for (IModule module : modules) {
-						if (!set.contains(module))
-							set.add(module);
+						if (!list.contains(module))
+							list.add(module);
 					}
 				}
 			}
 		}
-		IModule[] modules = new IModule[set.size()];
-		set.toArray(modules);
-		return modules;
+		return list.toArray(new IModule[list.size()]);
 	}
 
 	/**
