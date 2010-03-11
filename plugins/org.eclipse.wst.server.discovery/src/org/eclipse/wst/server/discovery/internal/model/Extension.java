@@ -12,9 +12,9 @@ package org.eclipse.wst.server.discovery.internal.model;
 
 import java.net.URI;
 import java.util.Collection;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.equinox.p2.core.IProvisioningAgent;
 import org.eclipse.equinox.p2.engine.*;
 import org.eclipse.equinox.p2.metadata.*;
 import org.eclipse.equinox.p2.planner.IPlanner;
@@ -71,33 +71,39 @@ public class Extension {
 
 	public IStatus install(IProgressMonitor monitor) {
 		BundleContext bundleContext = Activator.getDefault().getBundle().getBundleContext();
-		
+
 		IProvisioningPlan plan = getProvisioningPlan(true, monitor);
 		if (!plan.getStatus().isOK())
 			return plan.getStatus();
-		
+
 		IEngine engine = (IEngine) ExtensionUtility.getService(bundleContext, IEngine.SERVICE_NAME);
 		return engine.perform(plan, PhaseSetFactory.createDefaultPhaseSet(), monitor);
 	}
 
 	public IInstallableUnit[] getIUs() {
-		return new IInstallableUnit[] { iu };
+		return new IInstallableUnit[] {iu};
 	}
 
 	public IProvisioningPlan getProvisioningPlan(boolean explain, IProgressMonitor monitor) {
 		if (plan != null)
 			return plan;
-		
+
 		//long time = System.currentTimeMillis();
 		BundleContext bundleContext = Activator.getDefault().getBundle().getBundleContext();
 		IPlanner planner = (IPlanner) ExtensionUtility.getService(bundleContext, IPlanner.SERVICE_NAME);
-		
+
 		IProfileRegistry profileRegistry = (IProfileRegistry) ExtensionUtility.getService(bundleContext, IProfileRegistry.SERVICE_NAME);
 		IProfile profile = profileRegistry.getProfile(IProfileRegistry.SELF);
 		IProfileChangeRequest pcr = planner.createChangeRequest(profile);
 		pcr.add(iu);
-		provContext = new ProvisioningContext(new URI[] { uri });
-		provContext.setArtifactRepositories(new URI[] { uri });
+		IProvisioningAgent agent = ExtensionUtility.getAgent(bundleContext);
+		if (agent == null) {
+			// TODO eek!
+			return null;
+		}
+		provContext = new ProvisioningContext(agent);
+		provContext.setMetadataRepositories(new URI[] {uri});
+		provContext.setArtifactRepositories(new URI[] {uri});
 		if (!explain)
 			provContext.setProperty("org.eclipse.equinox.p2.director.explain", "false");
 		//provContext = new ProvisioningContext();

@@ -19,9 +19,7 @@ import org.eclipse.equinox.p2.engine.IProfile;
 import org.eclipse.equinox.p2.engine.IProfileRegistry;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.metadata.Version;
-import org.eclipse.equinox.p2.query.IQuery;
-import org.eclipse.equinox.p2.query.IQueryResult;
-import org.eclipse.equinox.p2.query.QueryUtil;
+import org.eclipse.equinox.p2.query.*;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.discovery.internal.model.Extension;
 import org.eclipse.wst.server.discovery.internal.model.ExtensionUpdateSite;
@@ -36,10 +34,10 @@ public class ExtensionUtility {
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not load URL " + url);
 		}
-		
+
 		if (in == null)
 			throw new CoreException(new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, "Could not load extensions", null));
-		
+
 		try {
 			IMemento memento = XMLMemento.loadMemento(in);
 			IMemento children[] = memento.getChildren("site");
@@ -50,7 +48,7 @@ public class ExtensionUtility {
 				ExtensionUpdateSite item = new ExtensionUpdateSite(url2, null, null);
 				list.add(item);
 			}
-			
+
 			ExtensionUpdateSite[] items = new ExtensionUpdateSite[list.size()];
 			list.toArray(items);
 			return items;
@@ -69,7 +67,7 @@ public class ExtensionUtility {
 	 */
 	private static ExtensionUpdateSite[] getExtensionUpdateSites() {
 		URL url = Activator.getDefault().getBundle().getEntry("serverAdapterSites.xml");
-		
+
 		try {
 			return getExtensionUpdateSites(url);
 		} catch (CoreException ce) {
@@ -88,9 +86,9 @@ public class ExtensionUtility {
 	private static boolean alreadyExists(List<Extension> existing, Extension newFeature) {
 		if (existing.contains(newFeature))
 			return true;
-		
+
 		Version newV = newFeature.getVersion();
-		
+
 		Iterator<Extension> iterator = existing.iterator();
 		while (iterator.hasNext()) {
 			Extension feature = iterator.next();
@@ -99,25 +97,26 @@ public class ExtensionUtility {
 					return true;
 			}
 		}
-		
+
 		return false;
 	}
 
 	private static void addExtension(List<Extension> list, List<Extension> existing, Extension newFeature, ExtensionListener listener) {
 		if (alreadyExists(existing, newFeature))
 			return;
-		
+
 		synchronized (list) {
 			Version newV = newFeature.getVersion();
 			Extension remove = null;
-			
+
 			Iterator<Extension> iterator = list.iterator();
 			while (iterator.hasNext()) {
-				Extension feature = iterator.next(); 
+				Extension feature = iterator.next();
 				if (feature.getId().equals(newFeature.getId())) {
 					if (feature.getVersion().compareTo(newV) < 0) {
 						remove = feature;
-					} else // new feature is older
+					} else
+						// new feature is older
 						return;
 				}
 			}
@@ -125,7 +124,7 @@ public class ExtensionUtility {
 				list.remove(remove);
 				listener.extensionRemoved(remove);
 			}
-			
+
 			list.add(newFeature);
 		}
 		listener.extensionFound(newFeature);
@@ -139,23 +138,25 @@ public class ExtensionUtility {
 
 	public interface ExtensionListener {
 		public void extensionFound(Extension extension);
+
 		public void extensionRemoved(Extension feature);
+
 		public void siteFailure(String host);
 	}
 
 	private static List<Extension> getExistingFeatures(IProgressMonitor monitor) throws CoreException {
 		monitor.beginTask(Messages.discoverLocalConfiguration, 100);
-		
+
 		IProfileRegistry profileRegistry = (IProfileRegistry) getService(Activator.getDefault().getBundle().getBundleContext(), IProfileRegistry.class.getName());
 		IProfile[] profiles = profileRegistry.getProfiles();
 		IProfile profile = profileRegistry.getProfile(IProfileRegistry.SELF);
-		
+
 		IQuery<IInstallableUnit> query = QueryUtil.createIUAnyQuery();
 		//Query query = new InstallableUnitQuery("org.eclipse.wst.server.core.serverAdapter");
 		//List<String> list2 = new ArrayList();
 		//Query query = new ExtensionInstallableUnitQuery(list2);
 		IQueryResult<IInstallableUnit> collector = profile.query(query, monitor);
-		
+
 		List<Extension> list = new ArrayList<Extension>();
 		Iterator<IInstallableUnit> iter = collector.iterator();
 		while (iter.hasNext()) {
@@ -163,34 +164,34 @@ public class ExtensionUtility {
 			if (!list.contains(iu))
 				list.add(new Extension(iu, null));
 		}
-		
+
 		monitor.done();
-		
+
 		return list;
 	}
 
 	public static Extension[] getAllExtensions(final String id, final ExtensionListener listener, IProgressMonitor monitor) throws CoreException {
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.beginTask("", 1100);
-		
+
 		monitor.subTask(Messages.discoverLocalConfiguration);
 		final List<Extension> existing = getExistingFeatures(ProgressUtil.getSubMonitorFor(monitor, 100));
-		
+
 		final ExtensionUpdateSite[] items = getExtensionUpdateSites();
 		if (items == null || items.length == 0)
 			return new Extension[0];
 		final int x = 1000 / items.length;
-		
+
 		monitor.worked(50);
 		final List<Extension> list = new ArrayList<Extension>();
 		int size = items.length;
-		
+
 		Thread[] threads = new Thread[size];
 		for (int i = 0; i < size; i++) {
 			try {
 				if (monitor.isCanceled())
 					return null;
-				
+
 				monitor.subTask(NLS.bind(Messages.discoverSearching, items[i].getUrl()));
 				final int ii = i;
 				final IProgressMonitor monitor2 = monitor;
@@ -211,19 +212,19 @@ public class ExtensionUtility {
 				Trace.trace(Trace.WARNING, "Error downloading extension info 2", e);
 			}
 		}
-		
+
 		for (int i = 0; i < size; i++) {
 			try {
 				if (monitor.isCanceled())
 					return null;
-				
+
 				if (threads[i].isAlive())
 					threads[i].join();
 			} catch (Exception e) {
 				Trace.trace(Trace.WARNING, "Error downloading extension info 3", e);
 			}
 		}
-		
+
 		Extension[] ef = new Extension[list.size()];
 		list.toArray(ef);
 		monitor.done();
@@ -240,16 +241,27 @@ public class ExtensionUtility {
 	 * @return The requested service
 	 */
 	public static Object getService(BundleContext context, String name) {
+		IProvisioningAgent agent = getAgent(context);
+		return agent == null ? null : agent.getService(name);
+	}
+
+	/**
+	 * Returns the provisioning agent if available or <code>null</code> otherwise.  Note that this 
+	 * is a helper class that <b>immediately</b> ungets the agent service reference.  This results 
+	 * in a window where the system thinks the agent service is not in use but indeed the caller is about to 
+	 * use the returned agent object.
+	 *   
+	 * @param context the bundle context
+	 * @return the agent or <code>null</code>
+	 */
+	public static IProvisioningAgent getAgent(BundleContext context) {
 		if (context == null)
 			return null;
 		ServiceReference reference = context.getServiceReference(IProvisioningAgent.SERVICE_NAME);
 		if (reference == null)
 			return null;
-		IProvisioningAgent result = (IProvisioningAgent) context.getService(reference);
-		if (result == null)
-			return null;
 		try {
-			return result.getService(name);
+			return (IProvisioningAgent) context.getService(reference);
 		} finally {
 			context.ungetService(reference);
 		}
