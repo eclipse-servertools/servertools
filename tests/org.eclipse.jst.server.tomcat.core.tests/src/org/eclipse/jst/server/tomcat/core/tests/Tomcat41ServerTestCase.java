@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,8 @@
  *    IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.jst.server.tomcat.core.tests;
+
+import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
@@ -23,6 +25,10 @@ import org.eclipse.wst.server.core.IModule;
 public class Tomcat41ServerTestCase extends AbstractTomcatServerTestCase {
 	protected String getServerTypeId() {
 		return "org.eclipse.jst.server.tomcat.41";
+	}
+
+	public static void addOrderedTests(TestSuite suite) {
+		AbstractTomcatServerTestCase.addOrderedTests(Tomcat41ServerTestCase.class, suite);
 	}
 
 	protected void verifyPublishedModule(IPath baseDir, IModule module)

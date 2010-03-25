@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,15 +17,22 @@ import junit.framework.TestCase;
 public class ServerOperationTestCase extends TestCase {
 	protected static IServer.IOperationListener listener;
 
-	public void test00Create() throws Exception {
-		listener = new IServer.IOperationListener() {
-			public void done(IStatus result) {
-				// ignore
-			}
-		};
+	protected IServer.IOperationListener getListener() {
+		if (listener == null) {
+			listener = new IServer.IOperationListener() {
+				public void done(IStatus result) {
+					// ignore
+				}
+			};
+		}
+		return listener;
+	}
+	
+	public void testCreate() throws Exception {
+		getListener();
 	}
 
-	public void test01Done() throws Exception {
-		listener.done(null);
+	public void testDone() throws Exception {
+		getListener().done(null);
 	}
 }

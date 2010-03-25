@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -64,11 +65,43 @@ public abstract class AbstractServerTestCase extends TestCase {
 		return server;
 	}
 
+	protected IServerAttributes getServerAttributes() throws Exception {
+		if (serverAttr == null) {
+			serverAttr = getServer();
+		}
+		return serverAttr;
+	}
+
+	protected IServerWorkingCopy getServerWorkingCopy() throws Exception {
+		if (serverWC == null) {
+			serverWC = getServer().createWorkingCopy();
+		}
+		return serverWC;
+	}
+
 	public abstract IServer createServer() throws Exception;
 	
 	public abstract void deleteServer(IServer server2) throws Exception;
 
-	public void test0000GetProperties() throws Exception {
+	public static void addOrderedTests(Class<? extends TestCase> testClass, TestSuite suite) {
+		suite.addTest(TestSuite.createTest(testClass, "serverPublish"));
+		suite.addTest(TestSuite.createTest(testClass, "serverCanRun"));
+		suite.addTest(TestSuite.createTest(testClass, "serverRun"));
+		suite.addTest(TestSuite.createTest(testClass, "serverCanStop"));
+		suite.addTest(TestSuite.createTest(testClass, "serverStop"));
+		suite.addTest(TestSuite.createTest(testClass, "serverCanDebug"));
+		suite.addTest(TestSuite.createTest(testClass, "serverDebug"));
+		suite.addTest(TestSuite.createTest(testClass, "serverCanStop2"));
+		suite.addTest(TestSuite.createTest(testClass, "serverStop2"));
+		suite.addTest(TestSuite.createTest(testClass, "deleteProject"));
+	}
+
+	public static void addFinalTests(Class<? extends TestCase> testClass,TestSuite suite) {
+		suite.addTest(TestSuite.createTest(testClass, "clearWorkingCopy"));
+		suite.addTest(TestSuite.createTest(testClass, "deleteServer"));
+	}
+
+	public void testGetProperties() throws Exception {
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject("test");
 		if (project != null && !project.exists()) {
 			project.create(null);
@@ -77,68 +110,69 @@ public abstract class AbstractServerTestCase extends TestCase {
 		props = ServerPlugin.getProjectProperties(project);
 	}
 
-	public void test0004End() throws Exception {
-		project.delete(true, true, null);
+	public void deleteProject() throws Exception {
+		if (project != null) {
+			project.delete(true, true, null);
+		}
 	}
 
-	public void test0005Delegate() throws Exception {
+	public void testServerGetDelegate() throws Exception {
 		getServer().getAdapter(ServerDelegate.class);
 	}
 
-	public void test0005bDelegate() throws Exception {
+	public void testServerLoadDelegate() throws Exception {
 		getServer().loadAdapter(ServerDelegate.class, null);
 	}
 
-	public void test0005cDelegate() throws Exception {
-		serverAttr = server;
-		serverAttr.getAdapter(ServerDelegate.class);
+	public void testServerAttributesGetDelegate() throws Exception {
+		getServerAttributes().getAdapter(ServerDelegate.class);
 	}
 
-	public void test0005dDelegate() throws Exception {
-		serverAttr.loadAdapter(ServerDelegate.class, null);
+	public void testServerAttributesLoadDelegate() throws Exception {
+		getServerAttributes().loadAdapter(ServerDelegate.class, null);
 	}
 
-	public void test0006Delegate() throws Exception {
+	public void testServerGetBehaviourDelegate() throws Exception {
 		getServer().getAdapter(ServerBehaviourDelegate.class);
 	}
 
-	public void test0007Publish() throws Exception {
+	public void serverPublish() throws Exception {
 		getServer().publish(IServer.PUBLISH_FULL, null);
 	}
 
-	public void test0008CanRun() throws Exception {
+	public void serverCanRun() throws Exception {
 		assertTrue(getServer().canStart(ILaunchManager.RUN_MODE).isOK());
 	}
 
-	public void test0009Run() throws Exception {
+	public void serverRun() throws Exception {
 		getServer().synchronousStart(ILaunchManager.RUN_MODE, null);
 	}
 
-	public void test0010CanStop() throws Exception {
+	public void serverCanStop() throws Exception {
 		assertTrue(getServer().canStop().isOK());
 	}
 
-	public void test0011Stop() throws Exception {
+	public void serverStop() throws Exception {
 		getServer().synchronousStop(false);
 	}
 
-	public void test0012CanDebug() throws Exception {
+	public void serverCanDebug() throws Exception {
 		assertTrue(getServer().canStart(ILaunchManager.DEBUG_MODE).isOK());
 	}
 
-	public void test0013Debug() throws Exception {
-		server.synchronousStart(ILaunchManager.DEBUG_MODE, null);
+	public void serverDebug() throws Exception {
+		getServer().synchronousStart(ILaunchManager.DEBUG_MODE, null);
 	}
 
-	public void test0014CanStop() {
-		assertTrue(server.canStop().isOK());
+	public void serverCanStop2() throws Exception {
+		assertTrue(getServer().canStop().isOK());
 	}
 
-	public void test0015Stop() {
-		server.synchronousStop(false);
+	public void serverStop2() throws Exception {
+		getServer().synchronousStop(false);
 	}
 
-	public void test0016GetServerPorts() {
+	public void testGetServerPorts() {
 		ServerPort[] ports = server.getServerPorts(null);
 		if (ports != null) {
 			for (ServerPort port : ports) {
@@ -155,209 +189,199 @@ public abstract class AbstractServerTestCase extends TestCase {
 		}
 	}
 
-	public void test0017GetServerState() {
-		server.getServerState();
+	public void testGetServerState() throws Exception {
+		getServer().getServerState();
 	}
 
-	public void test0018GetServerPublishState() {
-		server.getServerPublishState();
+	public void testGetServerPublishState() throws Exception {
+		getServer().getServerPublishState();
 	}
 
-	public void test0019GetServerRestartState() {
-		server.getServerRestartState();
+	public void testGetServerRestartState() throws Exception {
+		getServer().getServerRestartState();
 	}
 
-	public void test0020GetModuleState() {
+	public void testGetModuleState() {
 		try {
-			server.getModuleState(null);
+			getServer().getModuleState(null);
 		} catch (Exception e) {
 			// ignore
 		}
 	}
 
-	public void test0021GetModulePublishState() {
+	public void testGetModulePublishState() {
 		try {
-			server.getModulePublishState(null);
+			getServer().getModulePublishState(null);
 		} catch (Exception e) {
 			// ignore
 		}
 	}
 
-	public void test0022GetModuleRestartState() {
+	public void testGetModuleRestartState() {
 		try {
-			server.getModuleRestartState(null);
+			getServer().getModuleRestartState(null);
 		} catch (Exception e) {
 			// ignore
 		}
 	}
 
-	public void test0023GetMode() {
-		server.getMode();
+	public void testGetMode() throws Exception {
+		getServer().getMode();
 	}
 
-	public void test0024CanPublish() {
-		server.canPublish();
+	public void testCanPublish() throws Exception {
+		getServer().canPublish();
 	}
 	
-	public void test0025CanRestart() {
-		server.canRestart("run");
+	public void testCanRestart() throws Exception {
+		getServer().canRestart("run");
 	}
 	
-	public void test0026CanControlModule() {
+	public void testCanControlModule() {
 		try {
-			server.canControlModule(null, null);
+			getServer().canControlModule(null, null);
 		} catch (Exception e) {
 			// ignore
 		}
 	}
 
-	public void test0027AddServerListener() {
-		server.addServerListener(sl);
+	public void testAddServerListener() throws Exception {
+		getServer().addServerListener(sl);
 	}
 
-	public void test0028AddServerListener() {
-		server.addServerListener(sl, 0);
+	public void testAddServerListener2() throws Exception {
+		getServer().addServerListener(sl, 0);
 	}
 
-	public void test0029RemoveServerListener() {
-		server.removeServerListener(sl);
+	public void testRemoveServerListener() throws Exception {
+		getServer().removeServerListener(sl);
 	}
 
-	public void test0030GetServerAttributes() {
-		serverAttr = server;
+	public void testGetName() throws Exception {
+		getServerAttributes().getName();
 	}
 	
-	public void test0031GetName() {
-		serverAttr.getName();
+	public void testGetId() throws Exception {
+		getServerAttributes().getId();
 	}
 	
-	public void test0032GetId() {
-		serverAttr.getId();
+	public void testIsReadOnly() throws Exception {
+		getServerAttributes().isReadOnly();
 	}
 	
-	public void test0033IsReadOnly() {
-		serverAttr.isReadOnly();
+	public void testIsWorkingCopy() throws Exception {
+		getServerAttributes().isWorkingCopy();
 	}
 	
-	public void test0034IsWorkingCopy() {
-		serverAttr.isWorkingCopy();
+	public void testGetHost() throws Exception {
+		getServerAttributes().getHost();
 	}
 	
-	public void test0035GetHost() {
-		serverAttr.getHost();
+	public void testGetRuntime() throws Exception {
+		getServerAttributes().getRuntime();
 	}
 	
-	public void test0036GetRuntime() {
-		serverAttr.getRuntime();
-	}
-	
-	public void test0037GetServerType() {
-		serverAttr.getServerType();
+	public void testGetServerType() throws Exception {
+		getServerAttributes().getServerType();
 	}
 
-	public void test0038GetServerConfiguration() {
-		serverAttr.getServerConfiguration();
+	public void testGetServerConfiguration() throws Exception {
+		getServerAttributes().getServerConfiguration();
 	}
 
-	public void test0039CreateWorkingCopy() {
-		serverAttr.createWorkingCopy();
+	public void testCreateWorkingCopy() throws Exception {
+		getServerAttributes().createWorkingCopy();
 	}
 
-	public void test0040GetModules() {
-		serverAttr.getModules();
+	public void testGetModules() throws Exception {
+		getServerAttributes().getModules();
 	}
 
-	public void test0041CanModifyModules() {
+	public void testCanModifyModules() {
 		try {
-			serverAttr.canModifyModules(null, null, null);
+			getServerAttributes().canModifyModules(null, null, null);
 		} catch (Exception e) {
 			// ignore
 		}
 	}
 
-	public void test0042GetChildModules() {
+	public void testGetChildModules() {
 		try {
-			serverAttr.getChildModules(null, null);
+			getServerAttributes().getChildModules(null, null);
 		} catch (Exception e) {
 			// ignore
 		}
 	}
 
-	public void test0043GetRootModules() {
+	public void testGetRootModules() {
 		try {
-			serverAttr.getRootModules(null, null);
+			getServerAttributes().getRootModules(null, null);
 		} catch (Exception e) {
 			// ignore
 		}
 	}
 	
-	public void test0044GetServerPorts() {
-		serverAttr.getServerPorts(null);
+	public void testGetServerPorts2() throws Exception {
+		getServerAttributes().getServerPorts(null);
 	}
 	
-	public void test0045Delete() {
+	public void testServerAttributesDelete() {
 		try {
-			IServerAttributes sa = serverAttr.createWorkingCopy();
+			IServerAttributes sa = getServerAttributes().createWorkingCopy();
 			sa.delete();
 		} catch (Exception e) {
 			// ignore
 		}
 	}
 	
-	public void test0046CreateWorkingCopy() {
-		serverWC = server.createWorkingCopy();
+	public void testIsDirty() throws Exception {
+		assertFalse(getServerWorkingCopy().isDirty());
 	}
 	
-	public void test0047IsDirty() {
-		assertFalse(serverWC.isDirty());
+	public void testSetName() throws Exception {
+		getServerWorkingCopy().setName("test");
 	}
 	
-	public void test0048SetName() {
-		serverWC.setName("test");
+	public void testSetHost() throws Exception {
+		getServerWorkingCopy().setHost("www.eclipse.org");
 	}
 	
-	public void test0049SetHost() {
-		serverWC.setHost("www.eclipse.org");
+	public void testSetReadOnly() throws Exception {
+		getServerWorkingCopy().setReadOnly(true);
 	}
 	
-	public void test0050SetReadOnly() {
-		serverWC.setReadOnly(true);
+	public void testServerWCIsDirty() throws Exception {
+		assertTrue(getServerWorkingCopy().isDirty());
 	}
 	
-	public void test0051IsDirty() {
-		assertTrue(serverWC.isDirty());
+	public void testPropertyChangeListener() throws Exception {
+		getServerWorkingCopy().addPropertyChangeListener(pcl);
+
+		getServerWorkingCopy().removePropertyChangeListener(pcl);
 	}
 	
-	public void test0052AddPropertyChangeListener() {
-		serverWC.addPropertyChangeListener(pcl);
-	}
-	
-	public void test0053RemovePropertyChangeListener() {
-		serverWC.removePropertyChangeListener(pcl);
-	}
-	
-	public void test0054GetOriginal() {
-		serverWC.getOriginal();
+	public void testGetOriginal() throws Exception{
+		getServerWorkingCopy().getOriginal();
 	}
 
-	public void test0055SetServerConfiguration() {
-		serverWC.setServerConfiguration(null);
+	public void testSetServerConfiguration() throws Exception {
+		getServerWorkingCopy().setServerConfiguration(null);
 	}
 	
-	public void test0056ModifyModules() {
+	public void testModifyModules() {
 		try {
-			serverWC.modifyModules(null, null, null);
+			getServerWorkingCopy().modifyModules(null, null, null);
 		} catch (Exception e) {
 			// ignore
 		}
 	}
 	
-	public void test0057Clear() {
+	public void clearWorkingCopy() {
 		serverAttr = null;
 		serverWC = null;
 	}
 
-	public void test1001Delete() throws Exception {
+	public void deleteServer() throws Exception {
 		deleteServer(getServer());
 		server = null;
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,19 +19,22 @@ import org.eclipse.wst.server.core.util.ModuleFile;
 public class ModuleFileTestCase extends TestCase {
 	protected static IModuleFile delegate;
 
-	public void test00CreateDelegate() throws Exception {
-		delegate = new ModuleFile((IFile)null, "name", null);
+	protected IModuleFile getModuleFile() {
+		if (delegate == null) {
+			delegate = new ModuleFile((IFile)null, "name", null);
+		}
+		return delegate;
 	}
 
-	public void test01Name() throws Exception {
-		assertEquals(delegate.getName(), "name");
+	public void testName() throws Exception {
+		assertEquals(getModuleFile().getName(), "name");
 	}
 
-	public void test02Path() throws Exception {
-		assertNull(delegate.getModuleRelativePath());
+	public void testPath() throws Exception {
+		assertNull(getModuleFile().getModuleRelativePath());
 	}
 
-	public void test03Stamp() throws Exception {
-		assertEquals(delegate.getModificationStamp(), -1);
+	public void testStamp() throws Exception {
+		assertEquals(getModuleFile().getModificationStamp(), -1);
 	}
 }

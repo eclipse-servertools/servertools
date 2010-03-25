@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,59 +18,62 @@ import org.eclipse.wst.server.core.tests.impl.TestServerDelegate;
 public class ServerDelegateTestCase extends TestCase {
 	protected static ServerDelegate delegate;
 
-	public void test00CreateDelegate() throws Exception {
-		delegate = new TestServerDelegate();
+	protected ServerDelegate getServerDelegate() {
+		if (delegate == null) {
+			delegate = new TestServerDelegate();
+		}
+		return delegate;
 	}
 
-	public void test03GetServer() throws Exception {
-		delegate.getServer();
+	public void testGetServer() throws Exception {
+		getServerDelegate().getServer();
 	}
 
-	public void test04GetServerWorkingCopy() throws Exception {
-		delegate.getServerWorkingCopy();
+	public void testGetServerWorkingCopy() throws Exception {
+		getServerDelegate().getServerWorkingCopy();
 	}
 
-	public void test11Dispose() throws Exception {
-		delegate.dispose();
+	public void testDispose() throws Exception {
+		getServerDelegate().dispose();
 	}
 
-	public void test12SetDefaults() throws Exception {
-		delegate.setDefaults(null);
+	public void testSetDefaults() throws Exception {
+		getServerDelegate().setDefaults(null);
 	}
 
-	public void test18CanModifyModules() throws Exception {
-		delegate.canModifyModules(null, null);
+	public void testCanModifyModules() throws Exception {
+		getServerDelegate().canModifyModules(null, null);
 	}
 
-	public void test19GetChildModules() throws Exception {
-		delegate.getChildModules(null);
+	public void testGetChildModules() throws Exception {
+		getServerDelegate().getChildModules(null);
 	}
 
-	public void test20GetRootModules() throws Exception {
-		delegate.getRootModules(null);
+	public void testGetRootModules() throws Exception {
+		getServerDelegate().getRootModules(null);
 	}
 
-	public void test21GetServerPorts() throws Exception {
-		delegate.getServerPorts();
+	public void testGetServerPorts() throws Exception {
+		getServerDelegate().getServerPorts();
 	}
 
-	public void test22ModifyModules() throws Exception {
-		delegate.modifyModules(null, null, null);
+	public void testModifyModules() throws Exception {
+		getServerDelegate().modifyModules(null, null, null);
 	}
 
-	public void test23ImportConfiguration() throws Exception {
-		delegate.importRuntimeConfiguration(null, null);
+	public void testImportConfiguration() throws Exception {
+		getServerDelegate().importRuntimeConfiguration(null, null);
 	}
 
-	public void test24ImportConfiguration() throws Exception {
-		delegate.saveConfiguration(null);
+	public void testImportConfiguration2() throws Exception {
+		getServerDelegate().saveConfiguration(null);
 	}
 
-	public void test25ConfigurationChanged() throws Exception {
-		delegate.configurationChanged();
+	public void testConfigurationChanged() throws Exception {
+		getServerDelegate().configurationChanged();
 	}
 
-	public void test26TestProtected() {
-		((TestServerDelegate)delegate).testProtected();
+	public void testTestProtected() {
+		((TestServerDelegate)getServerDelegate()).testProtected();
 	}
 }

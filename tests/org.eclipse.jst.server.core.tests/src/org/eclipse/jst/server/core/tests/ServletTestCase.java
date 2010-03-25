@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,23 +16,30 @@ import junit.framework.TestCase;
 public class ServletTestCase extends TestCase {
 	protected static Servlet servlet;
 
-	public void test00Create() {
-		servlet = new Servlet(null, "class", "alias");
-	}
-	
-	public void test01GetModule() {
-		assertNull(servlet.getModule());
-	}
-	
-	public void test02GetClassName() {
-		assertEquals(servlet.getServletClassName(), "class");
+	protected Servlet getServlet() {
+		if (servlet == null) {
+			servlet = new Servlet(null, "class", "alias");
+		}
+		return servlet;
 	}
 
-	public void test02GetAlias() {
-		assertEquals(servlet.getAlias(), "alias");
+	public void testCreate() {
+		getServlet();
 	}
 	
-	public void test03ToString() {
-		servlet.toString();
+	public void testGetModule() {
+		assertNull(getServlet().getModule());
+	}
+	
+	public void testGetClassName() {
+		assertEquals(getServlet().getServletClassName(), "class");
+	}
+
+	public void testGetAlias() {
+		assertEquals(getServlet().getAlias(), "alias");
+	}
+	
+	public void testToString() {
+		getServlet().toString();
 	}
 }

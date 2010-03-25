@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,15 +18,18 @@ import org.eclipse.wst.server.core.tests.impl.TestModuleResource;
 public class ModuleResourceTestCase extends TestCase {
 	protected static IModuleResource resource;
 
-	public void test00CreateDelegate() throws Exception {
-		resource = new TestModuleResource();
+	protected IModuleResource getModuleResource() {
+		if (resource == null) {
+			resource = new TestModuleResource();
+		}
+		return resource;
+	}
+
+	public void testName() throws Exception {
+		assertNull(getModuleResource().getName());
 	}
 	
-	public void test01Name() throws Exception {
-		assertNull(resource.getName());
-	}
-	
-	public void test02Path() throws Exception {
-		assertNull(resource.getModuleRelativePath());
+	public void testPath() throws Exception {
+		assertNull(getModuleResource().getModuleRelativePath());
 	}
 }

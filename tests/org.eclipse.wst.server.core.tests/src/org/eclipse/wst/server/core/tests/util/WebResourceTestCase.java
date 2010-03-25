@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,19 +16,22 @@ import org.eclipse.wst.server.core.util.WebResource;
 public class WebResourceTestCase extends TestCase {
 	protected static WebResource web;
 
-	public void test00Create() {
-		web = new WebResource(null, null);
+	protected WebResource getWebResource() {
+		if (web == null) {
+			web = new WebResource(null, null);
+		}
+		return web;
+	}
+
+	public void testGetModule() {
+		assertNull(getWebResource().getModule());
 	}
 	
-	public void test01GetModule() {
-		assertNull(web.getModule());
+	public void testGetPath() {
+		assertNull(getWebResource().getPath());
 	}
 	
-	public void test02GetPath() {
-		assertNull(web.getPath());
-	}
-	
-	public void test03ToString() {
-		web.toString();
+	public void testToString() {
+		getWebResource().toString();
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,19 +17,22 @@ import org.eclipse.wst.server.core.util.ProjectModuleFactoryDelegate;
 public class ProjectModuleFactoryDelegateTestCase extends TestCase {
 	protected static ProjectModuleFactoryDelegate delegate;
 
-	public void test00Create() {
-		delegate = new TestProjectModuleFactoryDelegate();
+	protected ProjectModuleFactoryDelegate getProjectModuleFactoryDelegate() {
+		if (delegate == null) {
+			delegate = new TestProjectModuleFactoryDelegate();
+		}
+		return delegate;
 	}
 
-	public void test03GetModuleDelegate() {
-		delegate.getModuleDelegate(null);
+	public void testGetModuleDelegate() {
+		getProjectModuleFactoryDelegate().getModuleDelegate(null);
 	}
 
-	public void test04GetModules() {
-		delegate.getModules();
+	public void testGetModules() {
+		getProjectModuleFactoryDelegate().getModules();
 	}
 
-	public void test06TestProtected() throws Exception {
-		((TestProjectModuleFactoryDelegate)delegate).testProtected();
+	public void testTestProtected() throws Exception {
+		((TestProjectModuleFactoryDelegate)getProjectModuleFactoryDelegate()).testProtected();
 	}
 }

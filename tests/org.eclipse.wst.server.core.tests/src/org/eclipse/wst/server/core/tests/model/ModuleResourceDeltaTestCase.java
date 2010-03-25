@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,23 +18,26 @@ import org.eclipse.wst.server.core.tests.impl.TestModuleResourceDelta;
 public class ModuleResourceDeltaTestCase extends TestCase {
 	protected static IModuleResourceDelta delta;
 
-	public void test00CreateDelegate() {
-		delta = new TestModuleResourceDelta();
+	protected IModuleResourceDelta getModuleResourceDelta() {
+		if (delta == null) {
+			delta = new TestModuleResourceDelta();
+		}
+		return delta;
+	}
+
+	public void testGetModuleResource() {
+		assertNull(getModuleResourceDelta().getModuleResource());
 	}
 	
-	public void test01GetModuleResource() {
-		assertNull(delta.getModuleResource());
+	public void testGetAffectedChildren() {
+		assertNull(getModuleResourceDelta().getAffectedChildren());
 	}
 	
-	public void test02GetAffectedChildren() {
-		assertNull(delta.getAffectedChildren());
+	public void testGetModuleRelativePath() {
+		assertNull(getModuleResourceDelta().getModuleRelativePath());
 	}
 	
-	public void test03GetModuleRelativePath() {
-		assertNull(delta.getModuleRelativePath());
-	}
-	
-	public void test04GetKind() {
-		delta.getKind();
+	public void testGetKind() {
+		getModuleResourceDelta().getKind();
 	}
 }

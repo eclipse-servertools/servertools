@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,8 @@
  *    IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.jst.server.tomcat.core.tests;
+
+import junit.framework.TestSuite;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.server.core.*;
@@ -36,5 +38,10 @@ public abstract class AbstractTomcatRuntimeTestCase extends AbstractRuntimeTestC
 		IRuntimeWorkingCopy wc = rt.createRuntime(null, null);
 		wc.setLocation(new Path(RuntimeLocation.runtimeLocation));
 		return wc;
+	}
+
+	public static void addOrderedTests(Class testClass,TestSuite suite) {
+		AbstractRuntimeTestCase.addOrderedTests(testClass, suite);
+		AbstractRuntimeTestCase.addFinalTests(testClass, suite);
 	}
 }

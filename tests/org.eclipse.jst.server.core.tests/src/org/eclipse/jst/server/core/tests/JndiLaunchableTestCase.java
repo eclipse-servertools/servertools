@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,15 +16,22 @@ import junit.framework.TestCase;
 public class JndiLaunchableTestCase extends TestCase {
 	protected static JndiLaunchable launch;
 
-	public void test00Create() {
-		launch = new JndiLaunchable(null, "test");
+	protected JndiLaunchable getJndiLaunchable() {
+		if (launch == null) {
+			launch = new JndiLaunchable(null, "test");
+		}
+		return launch;
+	}
+
+	public void testCreate() {
+		getJndiLaunchable();
 	}
 	
-	public void test01GetProperties() {
-		assertNull(launch.getProperties());
+	public void testGetProperties() {
+		assertNull(getJndiLaunchable().getProperties());
 	}
 	
-	public void test02GetJNDIName() {
-		assertEquals(launch.getJNDIName(), "test");
+	public void testGetJNDIName() {
+		assertEquals(getJndiLaunchable().getJNDIName(), "test");
 	}
 }

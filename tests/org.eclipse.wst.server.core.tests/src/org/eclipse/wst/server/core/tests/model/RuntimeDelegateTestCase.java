@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,36 +17,39 @@ import org.eclipse.wst.server.core.tests.impl.TestRuntimeDelegate;
 
 public class RuntimeDelegateTestCase extends TestCase {
 	protected static RuntimeDelegate delegate;
-
-	public void test00CreateDelegate() throws Exception {
-		delegate = new TestRuntimeDelegate();
+	
+	protected RuntimeDelegate getRuntimeDelegate() {
+		if (delegate == null) {
+			delegate = new TestRuntimeDelegate();
+		}
+		return delegate;
 	}
 
-	public void test03GetRuntime() throws Exception {
-		delegate.getRuntime();
+	public void testGetRuntime() throws Exception {
+		getRuntimeDelegate().getRuntime();
 	}
 	
-	public void test04GetRuntimeWorkingCopy() throws Exception {
-		delegate.getRuntimeWorkingCopy();
+	public void testGetRuntimeWorkingCopy() throws Exception {
+		getRuntimeDelegate().getRuntimeWorkingCopy();
 	}
 	
-	public void test05Validate() {
+	public void testValidate() {
 		try {
-			delegate.validate();
+			getRuntimeDelegate().validate();
 		} catch (Exception e) {
 			// ignore
 		}
 	}
 	
-	public void test11Dispose() throws Exception {
-		delegate.dispose();
+	public void testDispose() throws Exception {
+		getRuntimeDelegate().dispose();
 	}
 	
-	public void test12SetDefaults() throws Exception {
-		delegate.setDefaults(null);
+	public void testSetDefaults() throws Exception {
+		getRuntimeDelegate().setDefaults(null);
 	}
 	
-	public void test13Protected() throws Exception {
-		((TestRuntimeDelegate)delegate).testProtected();
+	public void testProtected() throws Exception {
+		((TestRuntimeDelegate)getRuntimeDelegate()).testProtected();
 	}
 }

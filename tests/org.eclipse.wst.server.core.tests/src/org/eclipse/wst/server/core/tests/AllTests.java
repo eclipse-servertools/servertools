@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2009 Eteration Bilisim A.S. and others
+* Copyright (c) 2004, 2010 Eteration Bilisim A.S. and others
 * All rights reserved. ? This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License v1.0
 * which accompanies this distribution, and is available at
@@ -58,9 +58,11 @@ public class AllTests {
 		
 		suite.addTestSuite(ServerCoreTestCase.class);
 		suite.addTestSuite(ServerUtilTestCase.class);
-		suite.addTest(new OrderedTestSuite(ProjectPropertiesTestCase.class));
-		suite.addTest(new OrderedTestSuite(ServerPreferencesTestCase.class));
-		suite.addTest(new OrderedTestSuite(ServerPortTestCase.class));
+		TestSuite subSuite = new TestSuite(ProjectPropertiesTestCase.class);
+		ProjectPropertiesTestCase.addOrderedTests(subSuite);
+		suite.addTest(subSuite);
+		suite.addTestSuite(ServerPreferencesTestCase.class);
+		suite.addTestSuite(ServerPortTestCase.class);
 		suite.addTestSuite(ServerOperationTestCase.class);
 		
 		suite.addTestSuite(IModuleTestCase.class);
@@ -73,34 +75,34 @@ public class AllTests {
 		suite.addTestSuite(ServerLifecycleListenerTestCase.class);
 		suite.addTestSuite(PublishListenerTestCase.class);
 		suite.addTestSuite(ServerListenerTestCase.class);
-		suite.addTest(new OrderedTestSuite(ServerEventTestCase.class));
+		suite.addTestSuite(ServerEventTestCase.class);
 		
-		suite.addTest(new OrderedTestSuite(ClientDelegateTestCase.class));
-		suite.addTest(new OrderedTestSuite(RuntimeLocatorDelegateTestCase.class));
-		suite.addTest(new OrderedTestSuite(ModuleDelegateTestCase.class));
-		suite.addTest(new OrderedTestSuite(RuntimeDelegateTestCase.class));
-		suite.addTest(new OrderedTestSuite(ServerDelegateTestCase.class));
-		suite.addTest(new OrderedTestSuite(ServerBehaviourDelegateTestCase.class));
-		suite.addTest(new OrderedTestSuite(ServerTaskDelegateTestCase.class));
-		suite.addTest(new OrderedTestSuite(ServerLocatorDelegateTestCase.class));
-		suite.addTest(new OrderedTestSuite(ModuleFileTestCase.class));
-		suite.addTest(new OrderedTestSuite(ModuleFolderTestCase.class));
-		suite.addTest(new OrderedTestSuite(ModuleResourceTestCase.class));
-		suite.addTest(new OrderedTestSuite(ModuleResourceDeltaTestCase.class));
-		suite.addTest(new OrderedTestSuite(ModuleArtifactAdapterDelegateTestCase.class));
-		suite.addTest(new OrderedTestSuite(LaunchableAdapterDelegateTestCase.class));
-		suite.addTest(new OrderedTestSuite(ModuleFactoryDelegateTestCase.class));
+		suite.addTestSuite(ClientDelegateTestCase.class);
+		suite.addTestSuite(RuntimeLocatorDelegateTestCase.class);
+		suite.addTestSuite(ModuleDelegateTestCase.class);
+		suite.addTestSuite(RuntimeDelegateTestCase.class);
+		suite.addTestSuite(ServerDelegateTestCase.class);
+		suite.addTestSuite(ServerBehaviourDelegateTestCase.class);
+		suite.addTestSuite(ServerTaskDelegateTestCase.class);
+		suite.addTestSuite(ServerLocatorDelegateTestCase.class);
+		suite.addTestSuite(ModuleFileTestCase.class);
+		suite.addTestSuite(ModuleFolderTestCase.class);
+		suite.addTestSuite(ModuleResourceTestCase.class);
+		suite.addTestSuite(ModuleResourceDeltaTestCase.class);
+		suite.addTestSuite(ModuleArtifactAdapterDelegateTestCase.class);
+		suite.addTestSuite(LaunchableAdapterDelegateTestCase.class);
+		suite.addTestSuite(ModuleFactoryDelegateTestCase.class);
 		
-		suite.addTest(new OrderedTestSuite(ProjectModuleTestCase.class));
-		suite.addTest(new OrderedTestSuite(ProjectModuleFactoryDelegateTestCase.class));
+		suite.addTestSuite(ProjectModuleTestCase.class);
+		suite.addTestSuite(ProjectModuleFactoryDelegateTestCase.class);
 		
-		suite.addTest(new OrderedTestSuite(HTTPLaunchableTestCase.class));
-		suite.addTest(new OrderedTestSuite(StaticWebTestCase.class));
-		suite.addTest(new OrderedTestSuite(WebResourceTestCase.class));
+		suite.addTestSuite(HTTPLaunchableTestCase.class);
+		suite.addTestSuite(StaticWebTestCase.class);
+		suite.addTestSuite(WebResourceTestCase.class);
 		// Disable for now.  java.io.File.renameTo() isn't able to move a file on the build system, 
 		// likely because the location of "temp" directory and workspace are on different drives
 		//suite.addTest(new OrderedTestSuite(PublishUtilTestCase.class));
-		suite.addTest(new OrderedTestSuite(NullModuleArtifactTestCase.class));
+		suite.addTestSuite(NullModuleArtifactTestCase.class);
 		suite.addTestSuite(SocketUtilTestCase.class);
 		suite.addTestSuite(RuntimeLifecycleAdapterTestCase.class);
 		suite.addTestSuite(ServerLifecycleAdapterTestCase.class);

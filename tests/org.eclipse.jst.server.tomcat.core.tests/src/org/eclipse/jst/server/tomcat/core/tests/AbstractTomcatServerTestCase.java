@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,8 @@ package org.eclipse.jst.server.tomcat.core.tests;
 import java.io.File;
 import java.util.List;
 
+import junit.framework.TestSuite;
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -21,7 +23,14 @@ import org.eclipse.jst.server.tomcat.core.internal.ITomcatServerWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServerBehaviour;
 import org.eclipse.jst.server.tomcat.core.tests.module.ModuleTestCase;
-import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerType;
+import org.eclipse.wst.server.core.IServerWorkingCopy;
+import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.model.IModuleFolder;
 import org.eclipse.wst.server.core.model.IModuleResource;
@@ -75,15 +84,32 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 		return (TomcatServerBehaviour)getServer().loadAdapter(TomcatServerBehaviour.class, null);
 	}
 
-	public void test0100CanAddModule() {
+	public static void addOrderedTests(Class testClass,TestSuite suite) {
+		AbstractServerTestCase.addOrderedTests(testClass, suite);
+		suite.addTest(TestSuite.createTest(testClass, "canAddModule"));
+		suite.addTest(TestSuite.createTest(testClass, "hasModule"));
+		suite.addTest(TestSuite.createTest(testClass, "addModule"));
+		suite.addTest(TestSuite.createTest(testClass, "hasModule2"));
+		suite.addTest(TestSuite.createTest(testClass, "removeModule"));
+		suite.addTest(TestSuite.createTest(testClass, "hasModule3"));
+		suite.addTest(TestSuite.createTest(testClass, "verifyDefaultDeployConfig"));
+		suite.addTest(TestSuite.createTest(testClass, "verifyDefaultAddPublish"));
+		suite.addTest(TestSuite.createTest(testClass, "verifyDefaultRemovePublish"));
+		suite.addTest(TestSuite.createTest(testClass, "verifyLegacyDeployConfig"));
+		suite.addTest(TestSuite.createTest(testClass, "verifyLegacyAddPublish"));
+		suite.addTest(TestSuite.createTest(testClass, "verifyLegacyRemovePublish"));
+		AbstractServerTestCase.addFinalTests(testClass, suite);
+	}
+
+	public void canAddModule() throws Exception {
 		IModule webModule = ModuleTestCase.webModule;
-		IStatus status = server.canModifyModules(new IModule[] { webModule }, null, null);
+		IStatus status = getServer().canModifyModules(new IModule[] { webModule }, null, null);
 		assertTrue(status.isOK());
 	}
 
-	public void test0101HasModule() {
+	public void hasModule() throws Exception {
 		IModule webModule = ModuleTestCase.webModule;
-		IModule[] modules = server.getModules();
+		IModule[] modules = getServer().getModules();
 		int size = modules.length;
 		boolean found = false;
 		for (int i = 0; i < size; i++) {
@@ -94,16 +120,16 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 			assertTrue(false);
 	}
 
-	public void test0102AddModule() throws Exception {
+	public void addModule() throws Exception {
 		IModule webModule = ModuleTestCase.webModule;
-		IServerWorkingCopy wc = server.createWorkingCopy();
+		IServerWorkingCopy wc = getServer().createWorkingCopy();
 		wc.modifyModules(new IModule[] { webModule }, null, null);
 		wc.save(true, null);
 	}
 
-	public void test0103HasModule() {
+	public void hasModule2() throws Exception {
 		IModule webModule = ModuleTestCase.webModule;
-		IModule[] modules = server.getModules();
+		IModule[] modules = getServer().getModules();
 		int size = modules.length;
 		boolean found = false;
 		for (int i = 0; i < size; i++) {
@@ -114,16 +140,16 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 			assertTrue(false);
 	}
 
-	public void test0104RemoveModule() throws Exception {
+	public void removeModule() throws Exception {
 		IModule webModule = ModuleTestCase.webModule;
-		IServerWorkingCopy wc = server.createWorkingCopy();
+		IServerWorkingCopy wc = getServer().createWorkingCopy();
 		wc.modifyModules(null, new IModule[] { webModule }, null);
 		wc.save(true, null);
 	}
 
-	public void test0105HasModule() {
+	public void hasModule3() throws Exception {
 		IModule webModule = ModuleTestCase.webModule;
-		IModule[] modules = server.getModules();
+		IModule[] modules = getServer().getModules();
 		int size = modules.length;
 		boolean found = false;
 		for (int i = 0; i < size; i++) {
@@ -141,7 +167,7 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 	/**
 	 * @throws Exception
 	 */
-	public void test200VerifyDefaultDeployConfig() throws Exception {
+	public void verifyDefaultDeployConfig() throws Exception {
 		TomcatServer ts = getTomcatServer();
 		assertNotNull(ts);
 		TomcatServerBehaviour tsb = getTomcatServerBehaviour();
@@ -189,7 +215,7 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 	/**
 	 * @throws Exception
 	 */
-	public void test201VerifyDefaultAddPublish() throws Exception {
+	public void verifyDefaultAddPublish() throws Exception {
 		IModule webModule = ModuleTestCase.webModule;
 		IServerWorkingCopy wc = getServer().createWorkingCopy();
 		wc.modifyModules(new IModule[] { webModule }, null, null);
@@ -206,9 +232,9 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 	/**
 	 * @throws Exception
 	 */
-	public void test202VerifyDefaultRemovePublish() throws Exception {
+	public void verifyDefaultRemovePublish() throws Exception {
 		IModule webModule = ModuleTestCase.webModule;
-		IServerWorkingCopy wc = server.createWorkingCopy();
+		IServerWorkingCopy wc = getServer().createWorkingCopy();
 		wc.modifyModules(null, new IModule[] { webModule }, null);
 		wc.save(true, null);
 		getServer().publish(IServer.PUBLISH_FULL, null);
@@ -224,7 +250,7 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 	 * Deployment directory should default to "webapps".
 	 * @throws Exception
 	 */
-	public void test203VerifyLegacyDeployConfig() throws Exception {
+	public void verifyLegacyDeployConfig() throws Exception {
 		TomcatServer ts = getTomcatServer();
 		assertNotNull(ts);
 		ts.setDeployDirectory("webapps");
@@ -247,7 +273,7 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 	/**
 	 * @throws Exception
 	 */
-	public void test204VerifyLegacyAddPublish() throws Exception {
+	public void verifyLegacyAddPublish() throws Exception {
 		IModule webModule = ModuleTestCase.webModule;
 		IServerWorkingCopy wc = getServer().createWorkingCopy();
 		// Unset the deployment directory
@@ -266,9 +292,9 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 	/**
 	 * @throws Exception
 	 */
-	public void test205VerifyLegacyRemovePublish() throws Exception {
+	public void verifyLegacyRemovePublish() throws Exception {
 		IModule webModule = ModuleTestCase.webModule;
-		IServerWorkingCopy wc = server.createWorkingCopy();
+		IServerWorkingCopy wc = getServer().createWorkingCopy();
 		// Unset the deployment directory
 		((TomcatServer)wc.loadAdapter(TomcatServer.class, null)).setDeployDirectory(null);
 		wc.modifyModules(null, new IModule[] { webModule }, null);

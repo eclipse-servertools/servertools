@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,67 +18,84 @@ import org.eclipse.jst.server.core.internal.IGenericRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.*;
 
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
+/* Note: These tests may be executed in any order.  Because null is used as most
+ * arguments, the order doesn't currently matter.  If non-null arguments are used,
+ * it may be necessary to rewrite the tests to make them truly order independent.
+ */
 
 public class GenericRuntimeTestCase extends TestCase {
 	private static final String RUNTIME_TYPE_ID = "org.eclipse.jst.server.core.runtimeType";
 
 	protected static IRuntime runtime;
-	protected static IRuntime runtimeWC;
-	protected static IGenericRuntime genericRuntime;
-	protected static IGenericRuntimeWorkingCopy genericRuntimeWC;
 
-	public void test00CreateRuntime() throws Exception {
-		IRuntimeType rt = ServerCore.findRuntimeType(RUNTIME_TYPE_ID);
-		IRuntimeWorkingCopy wc = rt.createRuntime("a", null);
-		wc.setLocation(new Path("c://test"));
-		runtime = wc.save(false, null);
-		
-		assertTrue(!runtime.isWorkingCopy());
+	protected IRuntime getRuntime() throws Exception {
+		if (runtime == null) {
+			IRuntimeType rt = ServerCore.findRuntimeType(RUNTIME_TYPE_ID);
+			IRuntimeWorkingCopy wc = rt.createRuntime("a", null);
+			wc.setLocation(new Path("c://test"));
+			runtime = wc.save(false, null);
+		}
+		return runtime;
 	}
 
-	public void test01ValidateRuntime() throws Exception {
-		IStatus status = runtime.validate(null);
+	protected IGenericRuntime getGenericRuntime() throws Exception {
+		return (IGenericRuntime)getRuntime().getAdapter(IGenericRuntime.class);
+	}
+
+	protected IRuntime getRuntimeWC() throws Exception {
+		return getRuntime().createWorkingCopy();
+	}
+
+	protected IGenericRuntimeWorkingCopy getGenericRuntimeWC() throws Exception {
+		return (IGenericRuntimeWorkingCopy)getRuntimeWC().loadAdapter(IGenericRuntimeWorkingCopy.class, null);
+	}
+
+	public static void addOrderedTests(TestSuite suite) {
+		suite.addTest(TestSuite.createTest(GenericRuntimeTestCase.class, "deleteRuntime"));
+	}
+
+	public void testCreateRuntime() throws Exception {
+		assertTrue(!getRuntime().isWorkingCopy());
+	}
+
+	public void testValidateRuntime() throws Exception {
+		IStatus status = getRuntime().validate(null);
 		assertTrue(!status.isOK());
 	}
 	
-	public void test02Util() throws Exception {
-		assertTrue(GenericRuntimeUtil.isGenericJ2EERuntime(runtime));
+	public void testUtil() throws Exception {
+		assertTrue(GenericRuntimeUtil.isGenericJ2EERuntime(getRuntime()));
 	}
 	
-	public void test03Adapt() throws Exception {
-		genericRuntime = (IGenericRuntime) runtime.getAdapter(IGenericRuntime.class);
-		assertNotNull(genericRuntime);
+	public void testAdapt() throws Exception {
+		assertNotNull(getGenericRuntime());
 	}
 	
-	public void test04Adapt() throws Exception {
-		assertNotNull(runtime.getAdapter(IGenericRuntimeWorkingCopy.class));
+	public void testAdaptWorkingCopy() throws Exception {
+		assertNotNull(getRuntime().getAdapter(IGenericRuntimeWorkingCopy.class));
 	}
 	
-	public void test05GetJVM() throws Exception {
-		assertNotNull(genericRuntime.getVMInstall());
+	public void testGetJVM() throws Exception {
+		assertNotNull(getGenericRuntime().getVMInstall());
 	}
 	
-	public void test06Adapt() throws Exception {
-		runtimeWC = runtime.createWorkingCopy();
-		genericRuntimeWC = (IGenericRuntimeWorkingCopy) runtimeWC.loadAdapter(IGenericRuntimeWorkingCopy.class, null);
-		assertNotNull(genericRuntimeWC);
+	public void testAdapt2() throws Exception {
+		assertNotNull(getGenericRuntimeWC());
 	}
 	
-	public void test07Adapt() throws Exception {
-		assertNotNull(runtimeWC.loadAdapter(IGenericRuntime.class, null));
+	public void testAdapt3() throws Exception {
+		assertNotNull(getRuntimeWC().loadAdapter(IGenericRuntime.class, null));
 	}
 	
-	public void test08SetJVM() throws Exception {
-		assertNotNull(genericRuntimeWC.getVMInstall());
-		genericRuntimeWC.setVMInstall(null);
-		assertNotNull(genericRuntimeWC.getVMInstall());
+	public void testSetJVM() throws Exception {
+		assertNotNull(getGenericRuntimeWC().getVMInstall());
+		assertNotNull(getGenericRuntimeWC().getVMInstall());
 	}
 
-	public void test09DeleteRuntime() throws Exception {
-		runtime.delete();
+	public void deleteRuntime() throws Exception {
+		getRuntime().delete();
 		runtime = null;
-		runtimeWC = null;
-		genericRuntime = null;
-		genericRuntimeWC = null;
 	}
 }

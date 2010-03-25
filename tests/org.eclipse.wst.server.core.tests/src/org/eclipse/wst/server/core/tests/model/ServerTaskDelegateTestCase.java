@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,11 +18,14 @@ import org.eclipse.wst.server.core.tests.impl.TestServerTaskDelegate;
 public class ServerTaskDelegateTestCase extends TestCase {
 	protected static PublishTaskDelegate delegate;
 
-	public void test00CreateDelegate() throws Exception {
-		delegate = new TestServerTaskDelegate();
+	protected PublishTaskDelegate getPublishTaskDelegate() {
+		if (delegate == null) {
+			delegate = new TestServerTaskDelegate();
+		}
+		return delegate;
 	}
-	
-	public void test01GetTasks() throws Exception {
-		delegate.getTasks(null, null);
+
+	public void testGetTasks() throws Exception {
+		getPublishTaskDelegate().getTasks(null, null);
 	}
 }

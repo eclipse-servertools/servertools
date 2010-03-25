@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,30 +28,32 @@ public class AllTests {
 		System.setProperty("wtp.autotest.noninteractive", "true");
 		
 		suite.addTestSuite(ExistenceTest.class);
-		suite.addTest(new OrderedTestSuite(GenericRuntimeTestCase.class));
+		TestSuite subSuite = new TestSuite(GenericRuntimeTestCase.class);
+		GenericRuntimeTestCase.addOrderedTests(subSuite);
+		suite.addTest(subSuite);
 		
-		suite.addTest(new OrderedTestSuite(J2EEModuleTestCase.class));
-		suite.addTest(new OrderedTestSuite(ApplicationClientTestCase.class));
-		suite.addTest(new OrderedTestSuite(ConnectorModuleTestCase.class));
-		suite.addTest(new OrderedTestSuite(EJBModuleTestCase.class));
-		suite.addTest(new OrderedTestSuite(WebModuleTestCase.class));
-		suite.addTest(new OrderedTestSuite(EnterpriseApplicationTestCase.class));
+		suite.addTestSuite(J2EEModuleTestCase.class);
+		suite.addTestSuite(ApplicationClientTestCase.class);
+		suite.addTestSuite(ConnectorModuleTestCase.class);
+		suite.addTestSuite(EJBModuleTestCase.class);
+		suite.addTestSuite(WebModuleTestCase.class);
+		suite.addTestSuite(EnterpriseApplicationTestCase.class);
 		
-		suite.addTest(new OrderedTestSuite(EJBBeanTestCase.class));
-		suite.addTest(new OrderedTestSuite(ServletTestCase.class));
-		suite.addTest(new OrderedTestSuite(JndiObjectTestCase.class));
-		suite.addTest(new OrderedTestSuite(JndiLaunchableTestCase.class));
+		suite.addTestSuite(EJBBeanTestCase.class);
+		suite.addTestSuite(ServletTestCase.class);
+		suite.addTestSuite(JndiObjectTestCase.class);
+		suite.addTestSuite(JndiLaunchableTestCase.class);
 		
-		suite.addTest(new OrderedTestSuite(RuntimeClasspathProviderDelegateTestCase.class));
+		suite.addTestSuite(RuntimeClasspathProviderDelegateTestCase.class);
 		
-		String s = System.getProperty("org.eclipse.jst.server.tomcat.32");
+		String s = System.getProperty("org.eclipse.jst.server.tomcat.60");
 		//s = "D:\\Tools\\tomcat\\jakarta-tomcat-3.2.4";
 		if (s != null && s.length() > 0) {
 			if (!s.endsWith(File.separator))
 				s += File.separator;
 			runtimeLocation = new Path(s + "lib");
 		}
-		//s = System.getProperty("org.eclipse.jst.server.tomcat.40");
+		//s = System.getProperty("org.eclipse.jst.server.tomcat.55");
 		if (s != null && s.length() > 0) {
 			if (!s.endsWith(File.separator))
 				s += File.separator;
@@ -60,11 +62,18 @@ public class AllTests {
 		
 		// bug 160848
 		
-		if (runtimeLocation != null)
-			suite.addTest(new OrderedTestSuite(ModuleTestCase.class));
+		if (runtimeLocation != null) {
+			subSuite = new TestSuite(ModuleTestCase.class);
+			ModuleTestCase.addOrderedTests(subSuite);
+			suite.addTest(subSuite);
+		}
 		
-		suite.addTest(new OrderedTestSuite(NoSourceTestCase.class));
-		suite.addTest(new OrderedTestSuite(BinaryTestCase.class));
+		subSuite = new TestSuite(NoSourceTestCase.class);
+		NoSourceTestCase.addOrderedTests(subSuite);
+		suite.addTest(subSuite);
+		subSuite = new TestSuite(BinaryTestCase.class);
+		BinaryTestCase.addOrderedTests(subSuite);
+		suite.addTest(subSuite);
 		
 		//$JUnit-END$
 		return suite;

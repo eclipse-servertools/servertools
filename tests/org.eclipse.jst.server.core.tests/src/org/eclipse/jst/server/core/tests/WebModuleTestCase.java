@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,11 +17,18 @@ import junit.framework.TestCase;
 public class WebModuleTestCase extends TestCase {
 	protected static IWebModule module;
 
-	public void test00Create() {
-		module = new TestWebModule();
+	protected IWebModule getWebModule() {
+		if (module == null) {
+			module = new TestWebModule();
+		}
+		return module;
 	}
 
-	public void test06ContextRoot() {
-		module.getContextRoot();
+	public void testCreate() {
+		getWebModule();
+	}
+
+	public void testContextRoot() {
+		getWebModule().getContextRoot();
 	}
 }

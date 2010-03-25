@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,15 +19,18 @@ import org.eclipse.wst.server.core.tests.impl.TestRuntimeLocatorDelegate;
 public class RuntimeLocatorDelegateTestCase extends TestCase {
 	protected static RuntimeLocatorDelegate delegate;
 
-	public void test00CreateDelegate() throws Exception {
-		delegate = new TestRuntimeLocatorDelegate();
+	protected RuntimeLocatorDelegate getRuntimeLocatorDelegate() {
+		if (delegate == null) {
+			delegate = new TestRuntimeLocatorDelegate();
+		}
+		return delegate;
 	}
 	
-	public void test01Search() throws Exception {
-		delegate.searchForRuntimes(null, null, null);
+	public void testSearch() throws Exception {
+		getRuntimeLocatorDelegate().searchForRuntimes(null, null, null);
 	}
 	
-	public void test02Listener() {
+	public void testListener() {
 		RuntimeLocatorDelegate.IRuntimeSearchListener listener = new RuntimeLocatorDelegate.IRuntimeSearchListener() {
 			public void runtimeFound(IRuntimeWorkingCopy runtime) {
 				// ignore

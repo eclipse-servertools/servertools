@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.jst.server.tomcat.core.tests
 Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core.tests
-Bundle-Version: 1.0.300.qualifier
+Bundle-Version: 1.1.000.qualifier
 Bundle-ClassPath: tests.jar
 Bundle-Activator: org.eclipse.jst.server.tomcat.core.tests.TestsPlugin
 Bundle-Vendor: Eclipse.org
@@ -11,7 +11,7 @@ Export-Package: org.eclipse.jst.server.tomcat.core.tests,
  org.eclipse.jst.server.tomcat.core.tests.module
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.commands,
- org.junit;bundle-version="[3.8.0,4.0.0)",
+ org.junit;bundle-version="3.8.0",
  org.eclipse.wst.server.core,
  org.eclipse.jst.server.tomcat.core,
  org.eclipse.wst.server.core.tests,

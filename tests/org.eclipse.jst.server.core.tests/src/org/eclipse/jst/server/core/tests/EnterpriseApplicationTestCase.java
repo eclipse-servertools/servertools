@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,15 +18,22 @@ import junit.framework.TestCase;
 public class EnterpriseApplicationTestCase extends TestCase {
 	protected static IEnterpriseApplication app;
 
-	public void test00Create() {
-		app = new TestEnterpriseApplication();
+	protected IEnterpriseApplication getEnterpriseApplication() {
+		if (app == null) {
+			app = new TestEnterpriseApplication();
+		}
+		return app;
 	}
 
-	public void test03Modules() {
-		app.getModules();
+	public void testCreate() {
+		getEnterpriseApplication();
 	}
 
-	public void test04URI() {
-		app.getURI(null);
+	public void testModules() {
+		getEnterpriseApplication().getModules();
+	}
+
+	public void testURI() {
+		getEnterpriseApplication().getURI(null);
 	}
 }

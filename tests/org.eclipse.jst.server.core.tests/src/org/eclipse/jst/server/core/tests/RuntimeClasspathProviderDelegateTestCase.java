@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,35 +17,42 @@ import junit.framework.TestCase;
 public class RuntimeClasspathProviderDelegateTestCase extends TestCase {
 	protected static RuntimeClasspathProviderDelegate handler;
 
-	public void test00Create() {
-		handler = new TestRuntimeClasspathProviderDelegate();
+	protected RuntimeClasspathProviderDelegate getHander() {
+		if (handler == null) {
+			handler = new TestRuntimeClasspathProviderDelegate();
+		}
+		return handler;
 	}
 
-	public void test01ResolveClasspathContainer() {
-		handler.resolveClasspathContainer(null);
+	public void testCreate() {
+		getHander();
 	}
 
-	public void test02ResolveClasspathContainer() {
-		handler.resolveClasspathContainer(null, null);
+	public void testResolveClasspathContainer() {
+		getHander().resolveClasspathContainer(null);
 	}
 
-	public void test03ResolveClasspathContainerImpl() {
-		handler.resolveClasspathContainerImpl(null);
+	public void testResolveClasspathContainer2() {
+		getHander().resolveClasspathContainer(null, null);
 	}
 
-	public void test04ResolveClasspathContainerImpl() {
-		handler.resolveClasspathContainerImpl(null, null);
+	public void testResolveClasspathContainerImpl() {
+		getHander().resolveClasspathContainerImpl(null);
 	}
 
-	public void test05TestAddMethods() {
-		((TestRuntimeClasspathProviderDelegate) handler).testAddMethods();
+	public void testResolveClasspathContainerImpl2() {
+		getHander().resolveClasspathContainerImpl(null, null);
 	}
 
-	public void test06RequestClasspathContainerUpdate() {
-		handler.requestClasspathContainerUpdate(null, null);
+	public void testTestAddMethods() {
+		((TestRuntimeClasspathProviderDelegate) getHander()).testAddMethods();
 	}
 
-	public void test07HasRuntimeClasspathChanged() {
-		handler.hasRuntimeClasspathChanged(null);
+	public void testRequestClasspathContainerUpdate() {
+		getHander().requestClasspathContainerUpdate(null, null);
+	}
+
+	public void testHasRuntimeClasspathChanged() {
+		getHander().hasRuntimeClasspathChanged(null);
 	}
 }

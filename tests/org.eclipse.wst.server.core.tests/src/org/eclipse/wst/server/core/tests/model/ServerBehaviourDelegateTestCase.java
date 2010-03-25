@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,35 +18,38 @@ import org.eclipse.wst.server.core.tests.impl.TestServerBehaviourDelegate;
 public class ServerBehaviourDelegateTestCase extends TestCase {
 	protected static ServerBehaviourDelegate delegate;
 
-	public void test00CreateDelegate() throws Exception {
-		delegate = new TestServerBehaviourDelegate();
+	protected ServerBehaviourDelegate getServerBehaviourDelegate() {
+		if (delegate == null) {
+			delegate = new TestServerBehaviourDelegate();
+		}
+		return delegate;
 	}
 
-	public void test03GetServer() throws Exception {
-		delegate.getServer();
+	public void testGetServer() throws Exception {
+		getServerBehaviourDelegate().getServer();
 	}
 	
-	public void test04Dispose() throws Exception {
-		delegate.dispose();
+	public void testDispose() throws Exception {
+		getServerBehaviourDelegate().dispose();
 	}
 	
-	public void test17SetupLaunchConfiguration() throws Exception {
-		delegate.setupLaunchConfiguration(null, null);
+	public void testSetupLaunchConfiguration() throws Exception {
+		getServerBehaviourDelegate().setupLaunchConfiguration(null, null);
 	}
 	
-	public void test18Restart() throws Exception {
+	public void testRestart() throws Exception {
 		try {
-			delegate.restart(null);
+			getServerBehaviourDelegate().restart(null);
 		} catch (Exception e) {
 			// ignore
 		}
 	}
 
-	public void test21Stop() {
-		delegate.stop(false);
+	public void testStop() {
+		getServerBehaviourDelegate().stop(false);
 	}
 	
-	public void test27TestProtected() {
+	public void testTestProtected() {
 		((TestServerBehaviourDelegate)delegate).testProtected();
 	}
 }

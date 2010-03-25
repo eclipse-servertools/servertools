@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,31 +18,33 @@ import org.eclipse.wst.server.core.tests.impl.TestModuleDelegate;
 public class ModuleDelegateTestCase extends TestCase {
 	protected static ModuleDelegate delegate;
 
-	public void test00CreateDelegate() throws Exception {
-		delegate = new TestModuleDelegate();
+	protected ModuleDelegate getModuleDelegate() {
+		if (delegate == null) {
+			delegate = new TestModuleDelegate();
+		}
+		return delegate;
+	}
+	public void testInitialize() throws Exception {
+		getModuleDelegate().initialize();
 	}
 	
-	public void test01Initialize() throws Exception {
-		delegate.initialize();
+	public void testInitialize2() throws Exception {
+		getModuleDelegate().initialize(null);
 	}
 	
-	public void test02Initialize() throws Exception {
-		delegate.initialize(null);
+	public void testGetChildModules() throws Exception {
+		getModuleDelegate().getChildModules();
 	}
 	
-	public void test03GetChildModules() throws Exception {
-		delegate.getChildModules();
+	public void testGetModule() throws Exception {
+		getModuleDelegate().getModule();
 	}
 	
-	public void test04GetModule() throws Exception {
-		delegate.getModule();
+	public void testValidate() throws Exception {
+		getModuleDelegate().validate();
 	}
 	
-	public void test05Validate() throws Exception {
-		delegate.validate();
-	}
-	
-	public void test06Members() throws Exception {
-		delegate.members();
+	public void testMembers() throws Exception {
+		getModuleDelegate().members();
 	}
 }

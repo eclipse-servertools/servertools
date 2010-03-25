@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,55 +17,58 @@ import org.eclipse.wst.server.core.util.ProjectModule;
 public class ProjectModuleTestCase extends TestCase {
 	protected static ProjectModule pm;
 
-	public void test00Create() {
-		pm = new TestProjectModule();
+	protected ProjectModule getProjectModule() {
+		if (pm == null) {
+			pm = new TestProjectModule(null);
+		}
+		return pm;
 	}
 
-	public void test01Create() {
-		pm = new TestProjectModule(null);
+	public void testCreate() {
+		new TestProjectModule();
 	}
 
-	public void test02GetProject() {
-		pm.getProject();
+	public void testGetProject() {
+		getProjectModule().getProject();
 	}
 
-	public void test04GetId() {
+	public void testGetId() {
 		try {
-			pm.getId();
+			getProjectModule().getId();
 		} catch (Exception e) {
 			// ignore
 		}
 	}
 
-	public void test05Validate() {
-		pm.validate();
+	public void testValidate() {
+		getProjectModule().validate();
 	}
 
-	public void test06Members() {
+	public void testMembers() {
 		try {
-			pm.members();
+			getProjectModule().members();
 		} catch (Exception e) {
 			// ignore
 		}
 	}
 
-	public void test07GetName() {
+	public void testGetName() {
 		try {
-			pm.getName();
+			getProjectModule().getName();
 		} catch (Exception e) {
 			// ignore
 		}
 	}
 
-	public void test08Exists() {
-		pm.exists();
+	public void testExists() {
+		getProjectModule().exists();
 	}
 
-	public void test09Equals() {
-		pm.equals(null);
+	public void testEquals() {
+		getProjectModule().equals(null);
 	}
 
-	public void test10() {
-		pm.getChildModules();
+	public void testChildModules() {
+		getProjectModule().getChildModules();
 	}
 }

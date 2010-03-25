@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,15 +16,22 @@ import junit.framework.TestCase;
 public class JndiObjectTestCase extends TestCase {
 	protected static JndiObject obj;
 
-	public void test00Create() {
-		obj = new JndiObject(null, "test");
+	protected JndiObject getJndiObject() {
+		if (obj == null) {
+			obj = new JndiObject(null, "test");
+		}
+		return obj;
+	}
+
+	public void testCreate() {
+		getJndiObject();
 	}
 	
-	public void test01GetModule() {
-		assertNull(obj.getModule());
+	public void testGetModule() {
+		assertNull(getJndiObject().getModule());
 	}
 	
-	public void test02GetJNDIName() {
-		assertEquals(obj.getJndiName(), "test");
+	public void testGetJNDIName() {
+		assertEquals(getJndiObject().getJndiName(), "test");
 	}
 }

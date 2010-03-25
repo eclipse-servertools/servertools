@@ -19,6 +19,7 @@ import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.wst.server.core.*;
 
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 public class BinaryTestCase extends TestCase {
 	private static final String[] PROJECT_NAMES = new String[] {
@@ -26,90 +27,134 @@ public class BinaryTestCase extends TestCase {
 		"PublishTestWeb", "PublishTestWeb2", "PublishTestConnector", "PublishTestClient"
 	};
 
-	protected static IRuntime runtime;
-	protected static IModule module;
-	protected static IEnterpriseApplication ent;
-	protected static IWebModule webModule;
-	protected static IJ2EEModule j2eeModule;
+	private static final String EJB_PATH = "lib/PublishTestEAR/EarContent/PublishTestEJB.jar";
+	private static final String CONN_PATH = "lib/PublishTestEAR/EarContent/PublishTestConnector.rar";
+	private static final String CLIENT_PATH = "lib/PublishTestEAR/EarContent/PublishTestClient.jar";
+	private static final String WEBAPP_PATH = "lib/PublishTestEAR/EarContent/PublishTestWeb.war";
+	private static final String WEBAPP2_PATH = "lib/PublishTestEAR/EarContent/PublishTestWeb2.war";
 
-	public void test001ImportModules() throws Exception {
-		ModuleHelper.importProject("PublishTestBinary.zip", new String[] { PROJECT_NAMES[0] } );
+	private static boolean projectsCreated;
+
+	@Override
+	protected void setUp() throws Exception {
+		if (!projectsCreated) {
+			ModuleHelper.importProject("PublishTestBinary.zip", new String[] { PROJECT_NAMES[0] } );
+			ModuleHelper.buildIncremental();
+			projectsCreated = true;
+		}
 	}
 
-	public void test002IncrementalBuild() throws Exception {
-		ModuleHelper.buildIncremental();
+	protected IModule getEARModule(String project) throws Exception {
+		return ModuleHelper.getModule("jst.ear", project);
 	}
 
-	public void test003NumModules() throws Exception {
+	protected IEnterpriseApplication getEnterpriseApp(String project) throws Exception {
+		return (IEnterpriseApplication) getEARModule(project).loadAdapter(IEnterpriseApplication.class, null);
+	}
+
+	protected IModule getEJBModule(String ejb) throws Exception {
+		return ModuleHelper.getModule("jst.ejb", ejb);
+	}
+
+	protected IJ2EEModule getJ2EEEJBModule(String ejb) throws Exception {
+		return (IJ2EEModule) getEJBModule(ejb).loadAdapter(IJ2EEModule.class, null);
+	}
+
+	protected IModule getConnectorModule(String conn) throws Exception {
+		return ModuleHelper.getModule("jst.connector", conn);
+	}
+
+	protected IJ2EEModule getJ2EEConnectorModule(String conn) throws Exception {
+		return (IJ2EEModule) getConnectorModule(conn).loadAdapter(IJ2EEModule.class, null);
+	}
+
+	protected IModule getAppClientModule(String client) throws Exception {
+		return ModuleHelper.getModule("jst.appclient", client);
+	}
+
+	protected IJ2EEModule getJ2EEAppClientModule(String client) throws Exception {
+		return (IJ2EEModule) getAppClientModule(client).loadAdapter(IJ2EEModule.class, null);
+	}
+
+	protected IModule getWebModule(String webapp) throws Exception {
+		return ModuleHelper.getModule("jst.web", webapp);
+	}
+
+	protected IWebModule getJ2EEWebModule(String webapp) throws Exception {
+		return (IWebModule) getWebModule(webapp).loadAdapter(IWebModule.class, null);
+	}
+
+	public static void addOrderedTests(TestSuite suite) {
+		suite.addTest(TestSuite.createTest(BinaryTestCase.class, "deleteProjects"));
+	}
+
+	public void testNumEarModules() throws Exception {
 		assertEquals(ServerUtil.getModules("jst.ear").length, 1);
 	}
 
-	public void test004NumModules() throws Exception {
+	public void testNumWebModules() throws Exception {
 		assertEquals(ServerUtil.getModules("jst.web").length, 2);
 	}
 
-	public void test005NumModules() throws Exception {
+	public void testNumEjbModules() throws Exception {
 		assertEquals(ServerUtil.getModules("jst.ejb").length, 1);
 	}
 
-	public void test006NumModules() throws Exception {
+	public void testNumUtilityModules() throws Exception {
 		assertEquals(ServerUtil.getModules("jst.utility").length, 0);
 	}
 
-	public void test007NumModules() throws Exception {
+	public void testNumClientModules() throws Exception {
 		assertEquals(ServerUtil.getModules("jst.appclient").length, 1);
 	}
 
-	public void test008NumModules() throws Exception {
+	public void testNumConnectorModules() throws Exception {
 		assertEquals(ServerUtil.getModules("jst.connector").length, 1);
 	}
 
 
 	// ---------- EAR tests ----------
 
-	public void test020EAR() throws Exception {
-		//module = ModuleHelper.getModuleFromProject("PublishTestEAR");
-		module = ModuleHelper.getModule("jst.ear", "PublishTestEAR");
-		assertNotNull(module);
+	public void testEARModule() throws Exception {
+		assertNotNull(getEARModule("PublishTestEAR"));
 	}
 
-	public void test021EAR() throws Exception {
-		if (!ModuleHelper.fileExists(module, "META-INF/application.xml"))
+	public void testEARFileExists() throws Exception {
+		if (!ModuleHelper.fileExists(getEARModule("PublishTestEAR"), "META-INF/application.xml"))
 			fail();
 	}
 
-	public void test022EAR() throws Exception {
-		if (!ModuleHelper.fileExists(module, "PublishTestUtil2.jar"))
+	public void test0EARJarExists() throws Exception {
+		if (!ModuleHelper.fileExists(getEARModule("PublishTestEAR"), "PublishTestUtil2.jar"))
 			fail();
 	}
 
-	public void test023EAR() throws Exception {
-		assertEquals(ModuleHelper.countFiles(module), 4);
+	public void testEARFileCount() throws Exception {
+		assertEquals(ModuleHelper.countFiles(getEARModule("PublishTestEAR")), 4);
 	}
 
-	public void test024EAR() throws Exception {
-		assertEquals(ModuleHelper.countFolders(module), 1);
+	public void testEARFolderCount() throws Exception {
+		assertEquals(ModuleHelper.countFolders(getEARModule("PublishTestEAR")), 1);
 	}
 
-	public void test025EAR() throws Exception {
-		assertEquals(module.getModuleType().getId(), "jst.ear");
+	public void testEARModuleType() throws Exception {
+		assertEquals(getEARModule("PublishTestEAR").getModuleType().getId(), "jst.ear");
 	}
 
-	public void test026EAR() throws Exception {
-		ent = (IEnterpriseApplication) module.loadAdapter(IEnterpriseApplication.class, null);
-		assertNotNull(ent);
+	public void testEARGetApp() throws Exception {
+		assertNotNull(getEnterpriseApp("PublishTestEAR"));
 	}
 
-	public void test027EAR() throws Exception {
-		assertEquals(ent.getResourceFolders().length, 1);
+	public void testEARResourceFolderCount() throws Exception {
+		assertEquals(getEnterpriseApp("PublishTestEAR").getResourceFolders().length, 1);
 	}
 
-	public void test028EAR() throws Exception {
-		assertEquals(ent.getModules().length, 5);
+	public void testEARModuleCount() throws Exception {
+		assertEquals(getEnterpriseApp("PublishTestEAR").getModules().length, 5);
 	}
 
-	public void test029EAR() throws Exception {
-		IModule[] modules = ent.getModules();
+	public void testEARModuleNames() throws Exception {
+		IModule[] modules = getEnterpriseApp("PublishTestEAR").getModules();
 		int size = modules.length;
 		List<String> list = new ArrayList<String>(size);
 		for (IModule m : modules)
@@ -131,235 +176,222 @@ public class BinaryTestCase extends TestCase {
 
 	// ---------- EJB tests ----------
 
-	public void test080EJB() throws Exception {
-		module = ModuleHelper.getModule("jst.ejb", "lib/PublishTestEAR/EarContent/PublishTestEJB.jar");
-		assertNotNull(module);
+	public void testEJBModule() throws Exception {
+		assertNotNull(getEJBModule(EJB_PATH));
 	}
 
-	public void test081EJB() throws Exception {
+	public void testEJBFileExists() throws Exception {
 		/* PublishTestEJB should be exposed as a child module, NOT as a resource 
 		if (!ModuleHelper.fileExists(module, "PublishTestEJB.jar"))
 			fail();
 		 */
 	}
 
-	public void test084EJB() throws Exception {
-		assertEquals(ModuleHelper.countFiles(module), 1);
+	public void testEJBFileCount() throws Exception {
+		assertEquals(ModuleHelper.countFiles(getEJBModule(EJB_PATH)), 1);
 	}
 
 	public void test085EJB() throws Exception {
-		assertEquals(ModuleHelper.countFolders(module), 0);
+		assertEquals(ModuleHelper.countFolders(getEJBModule(EJB_PATH)), 0);
 	}
 
-	public void test086EJB() throws Exception {
-		assertEquals(module.getModuleType().getId(), "jst.ejb");
+	public void testEJBModuleType() throws Exception {
+		assertEquals(getEJBModule(EJB_PATH).getModuleType().getId(), "jst.ejb");
 	}
 
-	public void test087EJB() throws Exception {
-		j2eeModule = (IJ2EEModule) module.loadAdapter(IJ2EEModule.class, null);
-		assertNotNull(j2eeModule);
+	public void testEJBJ2EEModule() throws Exception {
+		assertNotNull(getJ2EEEJBModule(EJB_PATH));
 	}
 
-	public void test088EJB() throws Exception {
-		assertEquals(j2eeModule.getResourceFolders().length, 1);
+	public void testEJBResourceFolderCount() throws Exception {
+		assertEquals(getJ2EEEJBModule(EJB_PATH).getResourceFolders().length, 1);
 	}
 
-	public void test089EJB() throws Exception {
-		assertEquals(j2eeModule.getJavaOutputFolders().length, 0);
+	public void testEJBJavaOutputFolderCount() throws Exception {
+		assertEquals(getJ2EEEJBModule(EJB_PATH).getJavaOutputFolders().length, 0);
 	}
 
-	public void test090EJB() throws Exception {
-		assertTrue(j2eeModule.isBinary());
+	public void testEJBIsBinary() throws Exception {
+		assertTrue(getJ2EEEJBModule(EJB_PATH).isBinary());
 	}
 
 
 	// ---------- Connector tests ----------
 
-	public void test100Connector() throws Exception {
-		module = ModuleHelper.getModule("jst.connector", "lib/PublishTestEAR/EarContent/PublishTestConnector.rar");
-		assertNotNull(module);
+	public void testConnectorModule() throws Exception {
+		assertNotNull(getConnectorModule(CONN_PATH));
 	}
 
-	public void test101Connector() throws Exception {
-		if (!ModuleHelper.fileExists(module, "PublishTestConnector.rar"))
+	public void testConnectorFileExists() throws Exception {
+		if (!ModuleHelper.fileExists(getConnectorModule(CONN_PATH), "PublishTestConnector.rar"))
 			fail();
 	}
 
-	public void test104Connector() throws Exception {
-		assertEquals(ModuleHelper.countFiles(module), 1);
+	public void testConnectorFileCount() throws Exception {
+		assertEquals(ModuleHelper.countFiles(getConnectorModule(CONN_PATH)), 1);
 	}
 
-	public void test105Connector() throws Exception {
-		assertEquals(ModuleHelper.countFolders(module), 0);
+	public void testConnectorFolderCount() throws Exception {
+		assertEquals(ModuleHelper.countFolders(getConnectorModule(CONN_PATH)), 0);
 	}
 
-	public void test106Connector() throws Exception {
-		assertEquals(module.getModuleType().getId(), "jst.connector");
+	public void testConnectorModuleType() throws Exception {
+		assertEquals(getConnectorModule(CONN_PATH).getModuleType().getId(), "jst.connector");
 	}
 
-	public void test107Connector() throws Exception {
-		j2eeModule = (IJ2EEModule) module.loadAdapter(IJ2EEModule.class, null);
-		assertNotNull(j2eeModule);
+	public void testConnectorJ2EEModule() throws Exception {
+		assertNotNull(getJ2EEConnectorModule(CONN_PATH));
 	}
 
-	public void test108Connector() throws Exception {
-		assertEquals(j2eeModule.getResourceFolders().length, 1);
+	public void testConnectorResourceFolderCount() throws Exception {
+		assertEquals(getJ2EEConnectorModule(CONN_PATH).getResourceFolders().length, 1);
 	}
 
-	public void test109Connector() throws Exception {
-		assertEquals(j2eeModule.getJavaOutputFolders().length, 0);
+	public void testConnectorJavaOutputFolderCount() throws Exception {
+		assertEquals(getJ2EEConnectorModule(CONN_PATH).getJavaOutputFolders().length, 0);
 	}
 
-	public void test110Connector() throws Exception {
-		assertTrue(j2eeModule.isBinary());
+	public void testConnectorIsBinary() throws Exception {
+		assertTrue(getJ2EEConnectorModule(CONN_PATH).isBinary());
 	}
 
 
 	// ---------- Client tests ----------
 
-	public void test120Client() throws Exception {
-		module = ModuleHelper.getModule("jst.appclient", "lib/PublishTestEAR/EarContent/PublishTestClient.jar");
-		assertNotNull(module);
+	public void testClientModule() throws Exception {
+		assertNotNull(getAppClientModule(CLIENT_PATH));
 	}
 
-	public void test121Client() throws Exception {
-		if (!ModuleHelper.fileExists(module, "PublishTestClient.jar"))
+	public void testClientFileExists() throws Exception {
+		if (!ModuleHelper.fileExists(getAppClientModule(CLIENT_PATH), "PublishTestClient.jar"))
 			fail();
 	}
 
-	public void test125Client() throws Exception {
-		assertEquals(ModuleHelper.countFiles(module), 1);
+	public void testClientFileCount() throws Exception {
+		assertEquals(ModuleHelper.countFiles(getAppClientModule(CLIENT_PATH)), 1);
 	}
 
-	public void test126Client() throws Exception {
-		assertEquals(ModuleHelper.countFolders(module), 0);
+	public void testClientFolderCount() throws Exception {
+		assertEquals(ModuleHelper.countFolders(getAppClientModule(CLIENT_PATH)), 0);
 	}
 
-	public void test127Client() throws Exception {
-		assertEquals(module.getModuleType().getId(), "jst.appclient");
+	public void testClientModuleTime() throws Exception {
+		assertEquals(getAppClientModule(CLIENT_PATH).getModuleType().getId(), "jst.appclient");
 	}
 
-	public void test128Client() throws Exception {
-		j2eeModule = (IJ2EEModule) module.loadAdapter(IJ2EEModule.class, null);
-		assertNotNull(j2eeModule);
+	public void testClientJ2EEModule() throws Exception {
+		assertNotNull(getJ2EEAppClientModule(CLIENT_PATH));
 	}
 
-	public void test129Client() throws Exception {
-		assertEquals(j2eeModule.getResourceFolders().length, 1);
+	public void testClientResourceFolderCount() throws Exception {
+		assertEquals(getJ2EEAppClientModule(CLIENT_PATH).getResourceFolders().length, 1);
 	}
 
-	public void test130Client() throws Exception {
-		assertEquals(j2eeModule.getJavaOutputFolders().length, 0);
+	public void testClientJavaOutputFolderCount() throws Exception {
+		assertEquals(getJ2EEAppClientModule(CLIENT_PATH).getJavaOutputFolders().length, 0);
 	}
 
-	public void test131Client() throws Exception {
-		assertTrue(j2eeModule.isBinary());
+	public void testClientIsBinary() throws Exception {
+		assertTrue(getJ2EEAppClientModule(CLIENT_PATH).isBinary());
 	}
 
 
 	// ---------- Web 1 tests ----------
 
-	public void test140Web() throws Exception {
-		module = ModuleHelper.getModule("jst.web", "lib/PublishTestEAR/EarContent/PublishTestWeb.war");
-		assertNotNull(module);
+	public void testWebModule() throws Exception {
+		assertNotNull(getWebModule(WEBAPP_PATH));
 	}
 
-	public void test141Web() throws Exception {
-		if (!ModuleHelper.fileExists(module, "PublishTestWeb.war"))
+	public void testWebFileExists() throws Exception {
+		if (!ModuleHelper.fileExists(getWebModule(WEBAPP_PATH), "PublishTestWeb.war"))
 			fail();
 	}
 
-	public void test147Web() throws Exception {
-		assertEquals(ModuleHelper.countFiles(module), 1);
+	public void testWebFileCount() throws Exception {
+		assertEquals(ModuleHelper.countFiles(getWebModule(WEBAPP_PATH)), 1);
 	}
 
-	public void test148Web() throws Exception {
-		assertEquals(ModuleHelper.countFolders(module), 0);
+	public void testWebFolderCount() throws Exception {
+		assertEquals(ModuleHelper.countFolders(getWebModule(WEBAPP_PATH)), 0);
 	}
 
-	public void test149Web() throws Exception {
-		assertEquals(module.getModuleType().getId(), "jst.web");
+	public void testWebModuleType() throws Exception {
+		assertEquals(getWebModule(WEBAPP_PATH).getModuleType().getId(), "jst.web");
 	}
 
-	public void test150Web() throws Exception {
-		webModule = (IWebModule) module.loadAdapter(IWebModule.class, null);
-		j2eeModule = webModule;
-		assertNotNull(j2eeModule);
+	public void testWebJ2EEModule() throws Exception {
+		assertNotNull(getJ2EEWebModule(WEBAPP_PATH));
 	}
 
-	public void test151Web() throws Exception {
-		assertEquals(j2eeModule.getResourceFolders().length, 1);
+	public void testWebResourceFolderCount() throws Exception {
+		assertEquals(getJ2EEWebModule(WEBAPP_PATH).getResourceFolders().length, 1);
 	}
 
-	public void test152Web() throws Exception {
-		assertEquals(j2eeModule.getJavaOutputFolders().length, 0);
+	public void testWebJavaOutputFolderCount() throws Exception {
+		assertEquals(getJ2EEWebModule(WEBAPP_PATH).getJavaOutputFolders().length, 0);
 	}
 
-	public void test153Web() throws Exception {
-		assertEquals(webModule.getModules().length, 0);
+	public void testWebModuleCount() throws Exception {
+		assertEquals(getJ2EEWebModule(WEBAPP_PATH).getModules().length, 0);
 	}
 
-	public void _test154Web() throws Exception {
-		assertEquals(webModule.getContextRoot(), "PublishTestWeb");
+	public void _testWebContextRoot() throws Exception {
+		assertEquals(getJ2EEWebModule(WEBAPP_PATH).getContextRoot(), "PublishTestWeb");
 	}
 
-	public void test155Web() throws Exception {
-		assertTrue(webModule.isBinary());
+	public void testWebIsBinaary() throws Exception {
+		assertTrue(getJ2EEWebModule(WEBAPP_PATH).isBinary());
 	}
 
 
 	// ---------- Web 2 tests ----------
 
-	public void test160Web() throws Exception {
-		module = ModuleHelper.getModule("jst.web", "lib/PublishTestEAR/EarContent/PublishTestWeb2.war");
-		assertNotNull(module);
+	public void testWeb2Module() throws Exception {
+		assertNotNull(getWebModule(WEBAPP2_PATH));
 	}
 
-	public void test161Web() throws Exception {
-		if (!ModuleHelper.fileExists(module, "PublishTestWeb2.war"))
+	public void testWeb2FileExists() throws Exception {
+		if (!ModuleHelper.fileExists(getWebModule(WEBAPP2_PATH), "PublishTestWeb2.war"))
 			fail();
 	}
 
-	public void test166Web() throws Exception {
-		assertEquals(ModuleHelper.countFiles(module), 1);
+	public void testWeb2FileCount() throws Exception {
+		assertEquals(ModuleHelper.countFiles(getWebModule(WEBAPP2_PATH)), 1);
 	}
 
-	public void test167Web() throws Exception {
-		assertEquals(ModuleHelper.countFolders(module), 0);
+	public void testWeb2FolderCount() throws Exception {
+		assertEquals(ModuleHelper.countFolders(getWebModule(WEBAPP2_PATH)), 0);
 	}
 
-	public void test168Web() throws Exception {
-		assertEquals(module.getModuleType().getId(), "jst.web");
+	public void testWeb2ModuleType() throws Exception {
+		assertEquals(getWebModule(WEBAPP2_PATH).getModuleType().getId(), "jst.web");
 	}
 
-	public void test169Web() throws Exception {
-		webModule = (IWebModule) module.loadAdapter(IWebModule.class, null);
-		j2eeModule = webModule;
-		assertNotNull(j2eeModule);
+	public void testWeb2J2EEModule() throws Exception {
+		assertNotNull(getJ2EEWebModule(WEBAPP2_PATH));
 	}
 
-	public void test170Web() throws Exception {
-		assertEquals(j2eeModule.getResourceFolders().length, 1);
+	public void testWeb2ResourceFolderCount() throws Exception {
+		assertEquals(getJ2EEWebModule(WEBAPP2_PATH).getResourceFolders().length, 1);
 	}
 
-	public void test171Web() throws Exception {
-		assertEquals(j2eeModule.getJavaOutputFolders().length, 0);
+	public void testWeb2JavaOutputFolderCount() throws Exception {
+		assertEquals(getJ2EEWebModule(WEBAPP2_PATH).getJavaOutputFolders().length, 0);
 	}
 
-	public void test172Web() throws Exception {
-		assertEquals(webModule.getModules().length, 0);
+	public void testWeb2ModuleCount() throws Exception {
+		assertEquals(getJ2EEWebModule(WEBAPP2_PATH).getModules().length, 0);
 	}
 
-	public void _test173Web() throws Exception {
-		assertEquals(webModule.getContextRoot(), "PublishTestWeb2");
+	public void _testWeb2ContextRoot() throws Exception {
+		assertEquals(getJ2EEWebModule(WEBAPP2_PATH).getContextRoot(), "PublishTestWeb2");
 	}
 
-	public void test174Client() throws Exception {
-		assertTrue(webModule.isBinary());
+	public void testWeb2IsBinary() throws Exception {
+		assertTrue(getJ2EEWebModule(WEBAPP2_PATH).isBinary());
 	}
 
-
-	public void test199Cleanup() throws Exception {
+	public void deleteProjects() throws Exception {
 		ModuleHelper.deleteProject(PROJECT_NAMES[0]);
 	}
 }

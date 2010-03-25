@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,8 @@ import org.eclipse.wst.server.core.*;
 import junit.framework.TestCase;
 
 public class ServerEventTestCase extends TestCase {
-	private static ServerEvent event;
+	private static ServerEvent serverEvent;
+	private static ServerEvent moduleEvent;
 	
 	private static int SAMPLE_KIND = ServerEvent.STATE_CHANGE;
 	private static IServer SAMPLE_SERVER = createSampleServer(); 
@@ -236,67 +237,66 @@ public class ServerEventTestCase extends TestCase {
 		};
 	}
 
-	public static ServerEvent createSampleServerEvent() {
-		return new ServerEvent(SAMPLE_KIND, SAMPLE_SERVER, SAMPLE_STATE, SAMPLE_PUBLISHING_STATE, SAMPLE_RESTART_STATE);
-	}
-
-	public void test010CreateServerEvent() {
-		event = ServerEventTestCase.createSampleServerEvent();
-	}
-
-	public void test011ServerGetKind() {
-		assertTrue((event.getKind() & (ServerEvent.SERVER_CHANGE | SAMPLE_KIND)) != 0);
-	}
-
-	public void test013ServerGetPublishingState() {
-		assertEquals(SAMPLE_PUBLISHING_STATE, event.getPublishState());
-	}
-
-	public void test014ServerGetRestartState() {
-		assertEquals(SAMPLE_RESTART_STATE, event.getRestartState());
-	}
-
-	public void test015ServerGetServer() {
-		assertEquals(SAMPLE_SERVER, event.getServer());
-	}
-
-	public void test016ServerGetState() {
-		assertEquals(SAMPLE_STATE,event.getState());
-	}
-
-	public void test110CreateModuleEvent() {
-		try {
-			event = new ServerEvent(SAMPLE_KIND, SAMPLE_SERVER, SAMPLE_MODULE_TREE, SAMPLE_STATE, SAMPLE_PUBLISHING_STATE, SAMPLE_RESTART_STATE);
-		} catch (Exception e) {
-			// ignore
+	protected ServerEvent getSampleServerEvent() {
+		if (serverEvent == null) {
+			serverEvent = new ServerEvent(SAMPLE_KIND, SAMPLE_SERVER, SAMPLE_STATE, SAMPLE_PUBLISHING_STATE, SAMPLE_RESTART_STATE);
 		}
+		return serverEvent;
 	}
 
-	public void test111ModuleGetKind() {
-		assertTrue((event.getKind() & (ServerEvent.MODULE_CHANGE | SAMPLE_KIND)) != 0);
+	protected ServerEvent getSampleModuleEvent() {
+		if (moduleEvent == null) {
+			moduleEvent = new ServerEvent(SAMPLE_KIND, SAMPLE_SERVER, SAMPLE_MODULE_TREE, SAMPLE_STATE, SAMPLE_PUBLISHING_STATE, SAMPLE_RESTART_STATE);
+		}
+		return moduleEvent;
 	}
 
-	public void test112ModuleGetModuleTree() {
+
+	public void testServerGetKind() {
+		assertTrue((getSampleServerEvent().getKind() & (ServerEvent.SERVER_CHANGE | SAMPLE_KIND)) != 0);
+	}
+
+	public void testServerGetPublishingState() {
+		assertEquals(SAMPLE_PUBLISHING_STATE, getSampleServerEvent().getPublishState());
+	}
+
+	public void testServerGetRestartState() {
+		assertEquals(SAMPLE_RESTART_STATE, getSampleServerEvent().getRestartState());
+	}
+
+	public void testServerGetServer() {
+		assertEquals(SAMPLE_SERVER, getSampleServerEvent().getServer());
+	}
+
+	public void testServerGetState() {
+		assertEquals(SAMPLE_STATE,getSampleServerEvent().getState());
+	}
+
+	public void testModuleGetKind() {
+		assertTrue((getSampleModuleEvent().getKind() & (ServerEvent.MODULE_CHANGE | SAMPLE_KIND)) != 0);
+	}
+
+	public void testModuleGetModuleTree() {
 		try {
-			assertEquals(SAMPLE_MODULE_TREE, event.getModule());
+			assertEquals(SAMPLE_MODULE_TREE, getSampleModuleEvent().getModule());
 		} catch (Exception e) {
 			// allow failure for now - will need to fix this test
 		}
 	}
 
-	public void test113ModuleGetPublishingState() {
-		assertEquals(SAMPLE_PUBLISHING_STATE, event.getPublishState());
+	public void testModuleGetPublishingState() {
+		assertEquals(SAMPLE_PUBLISHING_STATE, getSampleModuleEvent().getPublishState());
 	}
 
-	public void test114ModuleGetRestartState() {
-		assertEquals(SAMPLE_RESTART_STATE, event.getRestartState());
+	public void testModuleGetRestartState() {
+		assertEquals(SAMPLE_RESTART_STATE, getSampleModuleEvent().getRestartState());
 	}
 
-	public void test115ModuleGetServer() {
-		assertEquals(SAMPLE_SERVER, event.getServer());
+	public void testModuleGetServer() {
+		assertEquals(SAMPLE_SERVER, getSampleModuleEvent().getServer());
 	}
 
-	public void test116ModuleGetState() {
-		assertEquals(SAMPLE_STATE,event.getState());
+	public void testModuleGetState() {
+		assertEquals(SAMPLE_STATE,getSampleModuleEvent().getState());
 	}
 }
