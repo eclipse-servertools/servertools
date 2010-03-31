@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,10 +20,16 @@ public class AllTests {
 		//$JUnit-BEGIN$
 		suite.addTestSuite(ExistenceTest.class);
 		suite.addTestSuite(ContentFiltersTestCase.class);
-		suite.addTest(new OrderedTestSuite(MonitorTestCase.class));
-		suite.addTest(new OrderedTestSuite(MonitorListenerTestCase.class));
-		suite.addTest(new OrderedTestSuite(RequestTestCase.class));
-		suite.addTest(new OrderedTestSuite(ContentFilterTestCase.class));
+		TestSuite subSuite = new TestSuite(MonitorTestCase.class);
+		MonitorTestCase.addOrderedTests(subSuite);
+		suite.addTest(subSuite);
+		subSuite = new TestSuite(MonitorListenerTestCase.class);
+		MonitorListenerTestCase.addOrderedTests(subSuite);
+		suite.addTest(subSuite);
+		subSuite = new TestSuite(RequestTestCase.class);
+		RequestTestCase.addOrderedTests(subSuite);
+		suite.addTest(subSuite);
+		suite.addTestSuite(ContentFilterTestCase.class);
 		//$JUnit-END$
 		return suite;
 	}

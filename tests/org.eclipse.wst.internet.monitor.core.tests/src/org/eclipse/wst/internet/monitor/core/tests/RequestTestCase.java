@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005,2006 IBM Corporation and others.
+ * Copyright (c) 2005,2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,11 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.internet.monitor.core.internal.provisional.*;
+
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 /**
  * Note: use ports between 22100-22200 to ensure they are free on the build machine.
  */
@@ -48,38 +51,81 @@ public class RequestTestCase extends TestCase {
 		super();
 	}
 
-	public void test00GetMonitors() throws Exception {
+	protected IMonitor getMonitor() throws CoreException {
+		if (monitor == null) {
+			IMonitorWorkingCopy wc = MonitorCore.createMonitor();
+			wc.setLocalPort(22152);
+			wc.setRemoteHost("www.eclipse.org");
+			wc.setRemotePort(80);
+			monitor = wc.save();
+		}
+		return monitor;
+	}
+
+	public static void addOrderedTests(TestSuite suite) {
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "deleteMonitors"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "getMonitors"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "createMonitor"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "addListener"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "addListener2"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "startMonitor"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "pingMonitor"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "checkListener"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "verifyMonitor"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "verifyProtocol"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "verifyTime"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "verifyLocalPort"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "verifyRemoteHost"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "verifyRemotePort"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "verifyRequest"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "verifyResponse"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "verifyResponseTime"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "checkRequest"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "checkRequest2"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "addToRequest"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "addToResponse"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "setProperty"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "getAdapter"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "stopMonitor"));
+		suite.addTest(TestSuite.createTest(RequestTestCase.class, "removeListener"));
+	}
+
+	public void deleteMonitors() {
+		IMonitor [] monitors = MonitorCore.getMonitors();
+		for (int i = 0; i < monitors.length; i++) {
+			monitors[i].delete();
+		}
+		monitor = null;
+	}
+
+	public void getMonitors() throws Exception {
 		assertNotNull(MonitorCore.getMonitors());
 	}
 
-	public void test01CreateMonitor() throws Exception {
-		IMonitorWorkingCopy wc = MonitorCore.createMonitor();
-		wc.setLocalPort(22152);
-		wc.setRemoteHost("www.eclipse.org");
-		wc.setRemotePort(80);
-		monitor = wc.save();
-		
+	public void createMonitor() throws Exception {
+		getMonitor();
+
 		assertTrue(monitor != null);
 		assertTrue(MonitorCore.getMonitors().length == 1);
 		assertTrue(!monitor.isRunning());
 		assertTrue(!monitor.isWorkingCopy());
 	}
 
-	public void test03AddListener() throws Exception {
+	public void addListener() throws Exception {
 		monitor.addRequestListener(listener);
 	}
 
-	public void test04AddListener() throws Exception {
+	public void addListener2() throws Exception {
 		monitor.addRequestListener(listener);
 	}
 
-	public void test05StartMonitor() throws Exception {
+	public void startMonitor() throws Exception {
 		assertTrue(!monitor.isRunning());
 		monitor.start();
 		assertTrue(monitor.isRunning());
 	}
 
-	public void test06Ping() throws Exception {
+	public void pingMonitor() throws Exception {
 		String connectTimeout = System.getProperty(CONNECT_TIMEOUT);
 		String readTimeout = System.getProperty(READ_TIMEOUT);
 		
@@ -112,54 +158,54 @@ public class RequestTestCase extends TestCase {
 		}
 	}
 
-	public void test07CheckListener() throws Exception {
-		assertEquals(addCount, 1);
+	public void checkListener() throws Exception {
+		assertEquals(1, addCount);
 		assertEquals(monitorEvent, monitor);
 		assertNotNull(requestEvent);
 	}
 
-	public void test08VerifyMonitor() throws Exception {
+	public void verifyMonitor() throws Exception {
 		assertEquals(requestEvent.getMonitor(), monitor);
 	}
 
-	public void test09VerifyProtocol() throws Exception {
+	public void verifyProtocol() throws Exception {
 		assertEquals(requestEvent.getProtocol(), "HTTP");
 	}
 
-	public void test10VerifyTime() throws Exception {
+	public void verifyTime() throws Exception {
 		// within a minute
 		assertTrue(Math.abs(requestEvent.getDate().getTime() - System.currentTimeMillis()) < 1000 * 60);
 	}
 	
-	public void test11VerifyLocalPort() throws Exception {
+	public void verifyLocalPort() throws Exception {
 		assertEquals(requestEvent.getLocalPort(), 22152);
 	}
 	
-	public void test12VerifyRemoteHost() throws Exception {
+	public void verifyRemoteHost() throws Exception {
 		assertEquals(requestEvent.getRemoteHost(), "www.eclipse.org");
 	}
 	
-	public void test13VerifyRemotePort() throws Exception {
+	public void verifyRemotePort() throws Exception {
 		assertEquals(requestEvent.getRemotePort(), 80);
 	}
 	
-	public void test14VerifyRequest() throws Exception {
+	public void verifyRequest() throws Exception {
 		assertNotNull(requestEvent.getRequest(Request.ALL));
 	}
 	
-	public void test15VerifyResponse() throws Exception {
+	public void verifyResponse() throws Exception {
 		assertNotNull(requestEvent.getResponse(Request.ALL));
 	}
 	
-	public void test16VerifyResponseTime() throws Exception {
+	public void verifyResponseTime() throws Exception {
 		assertTrue(requestEvent.getResponseTime() > 0);
 	}
 	
-	public void test17CheckRequest() throws Exception {
+	public void checkRequest() throws Exception {
 		assertNotNull(requestEvent.getName());
 	}
 	
-	public void test18CheckRequest() throws Exception {
+	public void checkRequest2() throws Exception {
 		assertNull(requestEvent.getProperty("test"));
 	}
 
@@ -167,37 +213,37 @@ public class RequestTestCase extends TestCase {
 		assert(requestEvent.getProperty(""));
 	}*/
 	
-	public void test19AddToRequest() throws Exception {
+	public void addToRequest() throws Exception {
 		requestEvent.addToRequest(new byte[0]);
 	}
 	
-	public void test20AddToResponse() throws Exception {
+	public void addToResponse() throws Exception {
 		requestEvent.addToResponse(new byte[0]);
 	}
 	
-	public void test21SetProperty() throws Exception {
+	public void setProperty() throws Exception {
 		requestEvent.setProperty("test", null);
 	}
 	
-	public void test22GetAdapter() throws Exception {
+	public void getAdapter() throws Exception {
 		assertNull(requestEvent.getAdapter(String.class));
 	}
 
-	public void test23StopMonitor() throws Exception {
+	public void stopMonitor() throws Exception {
 		assertTrue(monitor.isRunning());
 		monitor.stop();
 		assertTrue(!monitor.isRunning());
 	}
 	
-	public void test24RemoveListener() throws Exception {
+	public void removeListener() throws Exception {
 		monitor.removeRequestListener(listener);
 	}
 	
-	public void test25Create() {
+	public void testCreateRequest() {
 		new Request(null, null, 0, null, 0);
 	}
 	
-	public void test26TestProtectedMethods() {
+	public void testTestProtectedMethods() {
 		Request mr = new Request(null, null, 0, null, 0) {			
 			public Object getAdapter(Class c) {
 				setName("test");
