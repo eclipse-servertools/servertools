@@ -12,18 +12,21 @@ package org.eclipse.wst.server.discovery.internal.model;
 
 import java.net.URI;
 import java.util.*;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.equinox.internal.p2.updatesite.metadata.UpdateSiteMetadataRepositoryFactory;
+import org.eclipse.equinox.p2.engine.IProfile;
+import org.eclipse.equinox.p2.engine.IProfileRegistry;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.metadata.IRequirement;
-import org.eclipse.equinox.p2.query.ExpressionQuery;
-import org.eclipse.equinox.p2.query.IQuery;
-import org.eclipse.equinox.p2.query.IQueryResult;
+import org.eclipse.equinox.p2.metadata.expression.IMatchExpression;
+import org.eclipse.equinox.p2.query.*;
 import org.eclipse.equinox.p2.repository.IRepositoryManager;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepository;
-import org.eclipse.wst.server.discovery.internal.PatternInstallableUnitQuery;
+import org.eclipse.wst.server.discovery.internal.ExtensionUtility;
 import org.eclipse.wst.server.discovery.internal.Trace;
+import org.osgi.framework.BundleContext;
 /*
 * From Kosta:
 *   feature version (optional)
@@ -63,21 +66,46 @@ public class ExtensionUpdateSite {
 	public List<Extension> getExtensions(IProgressMonitor monitor) throws CoreException {
 		try {
 			UpdateSiteMetadataRepositoryFactory mrf = new UpdateSiteMetadataRepositoryFactory();
+
+			BundleContext bd = org.eclipse.wst.server.discovery.internal.Activator.getDefault().getBundle().getBundleContext();			
+			mrf.setAgent(ExtensionUtility.getAgent(bd));
+			
 			URI url2 = new URI(url);
 			IMetadataRepository repo = mrf.load(url2, IRepositoryManager.REPOSITORIES_ALL, monitor);
 			//Query query = new InstallableUnitQuery("org.eclipse.wst.server.core.serverAdapter");
 			//Query query = CompoundQuery.createCompoundQuery(new Query[] {new
 			//		IUPropertyQuery(IInstallableUnit.PROP_TYPE_CATEGORY, Boolean.toString(true)),
 			//		new IUPropertyQuery(IInstallableUnit.PROP_NAME,"org.eclipse.wst.server.core.serverAdapter")}, true);
-			IQuery<IInstallableUnit> query = new PatternInstallableUnitQuery("org.eclipse.wst.server.core.serverAdapter");
 			
+//---->>>>
+			IProfileRegistry profileRegistry = (IProfileRegistry) ExtensionUtility.getService(bd, IProfileRegistry.class.getName());
+			IProfile[] profiles = profileRegistry.getProfiles();
+			IProfile profile = profileRegistry.getProfile(IProfileRegistry.SELF);
+			
+			//IQuery<IInstallableUnit> query = QueryUtil.createIUAnyQuery();
+			//			IQuery<IInstallableUnit> query = QueryUtil.createIUQuery("org.eclipse.wst.server.core.serverAdapter");
+			//Query query = new InstallableUnitQuery("org.eclipse.wst.server.core.serverAdapter");
+			//List<String> list2 = new ArrayList();
+			//Query query = new ExtensionInstallableUnitQuery(list2);
+			//IQueryResult<IInstallableUnit> collector = profile.query(query, monitor);
+//<-------	
+			
+			//IQuery<IInstallableUnit> query = QueryUtil.createIUCategoryQuery();
+			IQuery<IInstallableUnit> query = QueryUtil.createMatchQuery("id ~=/*org.eclipse.wst.server.core.serverAdapter/");
+
 			IQueryResult<IInstallableUnit> collector = repo.query(query, monitor);
+			
 			List<Extension> list = new ArrayList<Extension>();
 			for (IInstallableUnit iu: collector.toUnmodifiableSet()) {
 				Collection<IRequirement> req = iu.getRequirements();
 				if (req != null) {
 					for (IRequirement requirement : req) {
-					    query = new ExpressionQuery<IInstallableUnit>(IInstallableUnit.class, requirement.getMatches());
+						
+						//IMatchExpression<IInstallableUnit> matches = requirement.getMatches();
+						//query = QueryUtil.createQuery(matches);
+						IMatchExpression<IInstallableUnit> matches = requirement.getMatches();
+						query = new ExpressionMatchQuery<IInstallableUnit>(IInstallableUnit.class, matches);
+
 					    IQueryResult<IInstallableUnit> collector2 = repo.query(query, monitor);						
 						Iterator<IInstallableUnit> iter2 = collector2.iterator();
 						while (iter2.hasNext()) {

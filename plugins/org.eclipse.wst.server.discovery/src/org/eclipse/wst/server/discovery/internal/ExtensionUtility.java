@@ -241,29 +241,27 @@ public class ExtensionUtility {
 	 * @return The requested service
 	 */
 	public static Object getService(BundleContext context, String name) {
-		IProvisioningAgent agent = getAgent(context);
-		return agent == null ? null : agent.getService(name);
-	}
 
-	/**
-	 * Returns the provisioning agent if available or <code>null</code> otherwise.  Note that this 
-	 * is a helper class that <b>immediately</b> ungets the agent service reference.  This results 
-	 * in a window where the system thinks the agent service is not in use but indeed the caller is about to 
-	 * use the returned agent object.
-	 *   
-	 * @param context the bundle context
-	 * @return the agent or <code>null</code>
-	 */
-	public static IProvisioningAgent getAgent(BundleContext context) {
-		if (context == null)
-			return null;
 		ServiceReference reference = context.getServiceReference(IProvisioningAgent.SERVICE_NAME);
 		if (reference == null)
 			return null;
+		
+		IProvisioningAgent result = getAgent(context);
+		if (result == null)
+			return null;
 		try {
-			return (IProvisioningAgent) context.getService(reference);
+			return result.getService(name);
 		} finally {
 			context.ungetService(reference);
 		}
+	}
+
+	public static IProvisioningAgent getAgent(BundleContext context) {
+		ServiceReference reference = context.getServiceReference(IProvisioningAgent.SERVICE_NAME);
+		if (reference == null)
+			return null;
+		IProvisioningAgent result = (IProvisioningAgent) context.getService(reference);
+		
+		return result;
 	}
 }
