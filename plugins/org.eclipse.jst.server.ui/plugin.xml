@@ -12,6 +12,10 @@
         typeIds="jst.web"
         icon="icons/obj16/web_module.gif"/>
      <image
+        id="org.eclipse.jst.server.webfragment"
+        typeIds="jst.webfragment"
+        icon="icons/obj16/java_jar.gif"/>      
+     <image
         id="org.eclipse.jst.server.ejb"
         typeIds="jst.ejb"
         icon="icons/obj16/ejb_module.gif"/>
