@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,9 +14,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.IJobChangeListener;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMInstallType;
 import org.eclipse.jdt.launching.JavaRuntime;
@@ -40,6 +47,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
@@ -67,6 +75,8 @@ public class TomcatRuntimeComposite extends Composite {
 	protected List installedJREs;
 	protected String[] jreNames;
 	protected IInstallableRuntime ir;
+	protected Job installRuntimeJob;
+	protected IJobChangeListener jobListener;
 	protected Label installLabel;
 	protected Button install;
 
@@ -110,6 +120,13 @@ public class TomcatRuntimeComposite extends Composite {
 		
 		init();
 		validate();
+	}
+
+	public void dispose() {
+		super.dispose();
+		if (installRuntimeJob != null) {
+			installRuntimeJob.removeJobChangeListener(jobListener);
+		}
 	}
 
 	/**
@@ -198,8 +215,40 @@ public class TomcatRuntimeComposite extends Composite {
 				dialog.setFilterPath(installDir.getText());
 				String selectedDirectory = dialog.open();
 				if (selectedDirectory != null) {
-					ir.install(new Path(selectedDirectory));
+//					ir.install(new Path(selectedDirectory));
+					final IPath installPath = new Path(selectedDirectory);
+					installRuntimeJob = new Job("Installing server runtime environment") {
+						public boolean belongsTo(Object family) {
+							return ServerPlugin.PLUGIN_ID.equals(family);
+						}
+						
+						protected IStatus run(IProgressMonitor monitor) {
+							try {
+								ir.install(installPath, monitor);
+							} catch (CoreException ce) {
+								return ce.getStatus();
+							}
+							
+							return Status.OK_STATUS;
+						}
+					};
+					
 					installDir.setText(selectedDirectory);
+					jobListener = new JobChangeAdapter() {
+						public void done(IJobChangeEvent event) {
+							installRuntimeJob.removeJobChangeListener(this);
+							installRuntimeJob = null;
+							Display.getDefault().asyncExec(new Runnable() {
+								public void run() {
+									if (!isDisposed()) {
+										validate();
+									}
+								}
+					        });
+						}
+					};
+					installRuntimeJob.addJobChangeListener(jobListener);
+					installRuntimeJob.schedule();
 				}
 			}
 		});
