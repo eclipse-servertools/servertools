@@ -430,7 +430,7 @@ public abstract class ServerBehaviourDelegate {
 	 *    
 	 */
 	public boolean canRestartModule(IModule[] module){
-		return false;
+		return canControlModule(module);
 	}
 	
 	/**
@@ -448,7 +448,7 @@ public abstract class ServerBehaviourDelegate {
 	 *    
 	 */
 	public boolean canPublishModule(IModule[] module){
-		return false;
+		return canControlModule(module);
 	}
 
 	/**
