@@ -376,7 +376,6 @@ public class ServerPublishInfo {
 	}
 
 	protected static IModuleResourceDelta[] getDelta(IModuleResource[] original, IModuleResource[] current) {
-		Trace.trace(Trace.RESOURCES,"-->-- Calculate Delta -->--");
 		if (original == null || current == null)
 			return new IModuleResourceDelta[0];
 		
@@ -387,7 +386,6 @@ public class ServerPublishInfo {
 		Map<IModuleResource, IModuleResource> originalMap = new HashMap<IModuleResource, IModuleResource>(size);
 		for (int i = 0; i < size; i++){
 			originalMap.put(original[i], original[i]);
-			Trace.trace(Trace.RESOURCES,"ORIGINAL: "+original[i].getName() +"   TYPE:["+original[i].getClass().getName()+"]");
 		}
 		
 		// added and changed resources
@@ -399,7 +397,6 @@ public class ServerPublishInfo {
 					IModuleFolder currentFolder = (IModuleFolder) current[i]; 
 					delta.setChildren(getDeltaTree(currentFolder.members(), IModuleResourceDelta.ADDED));
 				}
-				Trace.trace(Trace.RESOURCES," [ADDED] "+current[i].getName());
 				list.add(delta);
 			} else {
 				if (current[i] instanceof IModuleFile) {
@@ -407,7 +404,6 @@ public class ServerPublishInfo {
 					IModuleFile mf1 = (IModuleFile) old;
 					IModuleFile mf2 = (IModuleFile) current[i];
 					if (mf1.getModificationStamp() != mf2.getModificationStamp()) {
-						Trace.trace(Trace.RESOURCES," [CHANGED] "+current[i].getName());
 						list.add(new ModuleResourceDelta(current[i], IModuleResourceDelta.CHANGED));
 					}
 				} else {
@@ -418,7 +414,6 @@ public class ServerPublishInfo {
 					if (mrdc.length > 0) {
 						ModuleResourceDelta mrd = new ModuleResourceDelta(current[i], IModuleResourceDelta.NO_CHANGE);
 						mrd.setChildren(mrdc);
-						Trace.trace(Trace.RESOURCES," [NO_CHANGE] "+current[i].getName());
 						list.add(mrd);
 					}
 				}
@@ -433,11 +428,9 @@ public class ServerPublishInfo {
 					IModuleFolder removedFolder = (IModuleFolder) original[i]; 
 					delta.setChildren(getDeltaTree(removedFolder.members(), IModuleResourceDelta.REMOVED));
 				}
-				Trace.trace(Trace.RESOURCES," [REMOVED] "+current[i].getName());
 				list.add(delta);
 			}
 		}
-		Trace.trace(Trace.RESOURCES,"--<-- Calculate Delta --<--");
 		return list.toArray(new IModuleResourceDelta[list.size()]);
 	}
 
