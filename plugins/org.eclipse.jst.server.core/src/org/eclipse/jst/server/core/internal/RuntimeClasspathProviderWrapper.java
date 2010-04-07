@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,7 +25,7 @@ import org.eclipse.wst.server.core.internal.ServerPlugin;
  */
 public class RuntimeClasspathProviderWrapper {
 	private IConfigurationElement element;
-	private RuntimeClasspathProviderDelegate delegate;
+	private volatile RuntimeClasspathProviderDelegate delegate;
 
 	/**
 	 * Create a new runtime target handler.
@@ -127,8 +127,15 @@ public class RuntimeClasspathProviderWrapper {
 	public RuntimeClasspathProviderDelegate getDelegate() {
 		if (delegate == null) {
 			try {
-				delegate = (RuntimeClasspathProviderDelegate) element.createExecutableExtension("class");
-				delegate.initialize(getId());
+				// Create delegate unsynchronized to avoid possible deadlocks
+				RuntimeClasspathProviderDelegate tempDelegate = (RuntimeClasspathProviderDelegate) element.createExecutableExtension("class");
+				tempDelegate.initialize(getId());
+				// If delegate is not already set, use this delegate
+				synchronized (this) {
+					if (delegate == null) {
+						delegate = tempDelegate;
+					}
+				}
 			} catch (Throwable t) {
 				ServerPlugin.logExtensionFailure(toString(), t);
 			}

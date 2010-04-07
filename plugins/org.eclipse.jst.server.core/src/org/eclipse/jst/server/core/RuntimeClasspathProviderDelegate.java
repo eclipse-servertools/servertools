@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2009 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,13 +54,13 @@ public abstract class RuntimeClasspathProviderDelegate {
 		IClasspathAttribute[] attributes;
 	}
 
-	private List<SourceAttachmentUpdate> sourceAttachments;
+	private volatile List<SourceAttachmentUpdate> sourceAttachments;
 
 	private String extensionId;
 
-	private Map<String, IPath> runtimePathMap = new HashMap<String, IPath>();
+	private Map<String, IPath> runtimePathMap = Collections.synchronizedMap(new HashMap<String, IPath>());
 
-	private Map<String, Integer> previousClasspath = new HashMap<String, Integer>();
+	private Map<String, Integer> previousClasspath = Collections.synchronizedMap(new HashMap<String, Integer>());
 
 	public RuntimeClasspathProviderDelegate() {
 		// default constructor
@@ -137,17 +137,23 @@ public abstract class RuntimeClasspathProviderDelegate {
 		if (entries == null)
 			entries = new IClasspathEntry[0];
 		
-		if (sourceAttachments == null)
-			load();
-		
-		int size = entries.length;
-		int size2 = sourceAttachments.size();
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size2; j++) {
-				SourceAttachmentUpdate sau = sourceAttachments.get(j);
-				if (sau.runtimeId.equals(runtime.getId()) && sau.entry.equals(entries[i].getPath())) {
-					IClasspathAttribute[] consolidatedClasspathAttributes = consolidateClasspathAttributes(sau.attributes, entries[i].getExtraAttributes());
-					entries[i] = JavaCore.newLibraryEntry(entries[i].getPath(), sau.sourceAttachmentPath, sau.sourceAttachmentRootPath, entries[i].getAccessRules(), consolidatedClasspathAttributes, false);
+		synchronized (this) {
+			if (sourceAttachments == null)
+				load();
+		}
+		List<SourceAttachmentUpdate> srcAttachments = sourceAttachments;
+
+		if (srcAttachments != null) {
+			int size = entries.length;
+			int size2 = srcAttachments.size();
+			for (int i = 0; i < size; i++) {
+				for (int j = 0; j < size2; j++) {
+					SourceAttachmentUpdate sau = srcAttachments.get(j);
+					if (sau.runtimeId.equals(runtime.getId()) && sau.entry.equals(entries[i].getPath())) {
+						IClasspathAttribute[] consolidatedClasspathAttributes = consolidateClasspathAttributes(sau.attributes, entries[i].getExtraAttributes());
+						entries[i] = JavaCore.newLibraryEntry(entries[i].getPath(), sau.sourceAttachmentPath, sau.sourceAttachmentRootPath, entries[i].getAccessRules(), consolidatedClasspathAttributes, false);
+						break;
+					}
 				}
 			}
 		}
@@ -249,19 +255,20 @@ public abstract class RuntimeClasspathProviderDelegate {
 			return;
 		
 		// find the source attachments
-		sourceAttachments = new ArrayList<SourceAttachmentUpdate>();
+		List<SourceAttachmentUpdate> srcAttachments = new ArrayList<SourceAttachmentUpdate>();
 		
 		for (IClasspathEntry entry : entries) {
-			if (entry.getSourceAttachmentPath() != null || entry.getExtraAttributes() != null) {
+			if (entry.getSourceAttachmentPath() != null || (entry.getExtraAttributes() != null && entry.getExtraAttributes().length > 0)) {
 				SourceAttachmentUpdate sau = new SourceAttachmentUpdate();
 				sau.runtimeId = runtime.getId();
 				sau.entry = entry.getPath();
 				sau.sourceAttachmentPath = entry.getSourceAttachmentPath();
 				sau.sourceAttachmentRootPath = entry.getSourceAttachmentRootPath();
 				sau.attributes = entry.getExtraAttributes();
-				sourceAttachments.add(sau);
+				srcAttachments.add(sau);
 			}
 		}
+		sourceAttachments = srcAttachments;
 		save();
 	}
 
@@ -269,7 +276,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 	 * Load source attachment info.
 	 */
 	private void load() {
-		sourceAttachments = new ArrayList<SourceAttachmentUpdate>();
+		List<SourceAttachmentUpdate> srcAttachments = new ArrayList<SourceAttachmentUpdate>();
 		
 		String id = extensionId;
 		String filename = JavaServerPlugin.getInstance().getStateLocation().append(id + ".xml").toOSString();
@@ -303,7 +310,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 							sau.attributes[j] = JavaCore.newClasspathAttribute(name, value);
 						}
 					}
-					sourceAttachments.add(sau);
+					srcAttachments.add(sau);
 				} catch (Exception e) {
 					Trace.trace(Trace.WARNING, "Could not load source attachment: " + e);
 				}
@@ -311,20 +318,22 @@ public abstract class RuntimeClasspathProviderDelegate {
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Could not load source path info", e);
 		}
+		sourceAttachments = srcAttachments;
 	}
 
 	/**
 	 * Save source attachment info.
 	 */
-	private void save() {
-		if (sourceAttachments == null)
+	private synchronized void save() {
+		List<SourceAttachmentUpdate> srcAttachments = sourceAttachments;
+		if (srcAttachments == null)
 			return;
 		String id = extensionId;
 		String filename = JavaServerPlugin.getInstance().getStateLocation().append(id + ".xml").toOSString();
 		try {
 			XMLMemento memento = XMLMemento.createWriteRoot("classpath");
 
-			Iterator iterator = sourceAttachments.iterator();
+			Iterator iterator = srcAttachments.iterator();
 			while (iterator.hasNext()) {
 				SourceAttachmentUpdate sau = (SourceAttachmentUpdate) iterator.next();
 				IMemento child = memento.createChild("source-attachment");
