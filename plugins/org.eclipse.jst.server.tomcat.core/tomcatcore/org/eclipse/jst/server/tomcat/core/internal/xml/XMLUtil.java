@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import java.util.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.jst.server.tomcat.core.internal.Trace;
 import org.w3c.dom.*;
@@ -41,6 +42,13 @@ public class XMLUtil {
 				factory.setValidating(false);
 				factory.setNamespaceAware(false);
 				factory.setExpandEntityReferences(false);
+				// In case we happen to have a Xerces parser, try to set the feature that allows Java encodings to be used
+				try {
+					factory.setFeature("http://apache.org/xml/features/allow-java-encodings", true);
+				}
+				catch (ParserConfigurationException e) {
+					// Ignore if feature isn't supported
+				}
 				//factory.setAttribute("http://apache.org/xml/features/nonvalidating/load-external-dtd", new Boolean(false));
 				documentBuilder = factory.newDocumentBuilder();
 				documentBuilder.setEntityResolver(new EntityResolver() {
