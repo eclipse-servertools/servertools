@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2009 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,12 +20,6 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.bindings.TriggerSequence;
 import org.eclipse.jface.viewers.*;
-import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.internal.Server;
-import org.eclipse.wst.server.core.internal.UpdateServerJob;
-import org.eclipse.wst.server.core.model.ServerDelegate;
-import org.eclipse.wst.server.ui.internal.*;
-import org.eclipse.wst.server.ui.internal.actions.NewServerWizardAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
@@ -35,13 +29,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeColumn;
-import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.contexts.IContextService;
@@ -49,6 +37,11 @@ import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
+import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.Server;
+import org.eclipse.wst.server.core.model.ServerDelegate;
+import org.eclipse.wst.server.ui.internal.*;
+import org.eclipse.wst.server.ui.internal.actions.NewServerWizardAction;
 /**
  * A view of servers, their modules, and status.
  */
@@ -222,8 +215,8 @@ public class ServersView extends ViewPart {
 				for (int i = 0; i < size; i++) {
 					IServer server = servers[i];
 					if (server.getServerType() != null && server.getServerState() == IServer.STATE_UNKNOWN) {
-						UpdateServerJob job = new UpdateServerJob(server);
-						job.schedule();
+//						UpdateServerJob job = new UpdateServerJob(server);
+// 						job.schedule();
 					}
 				}
 			}

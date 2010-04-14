@@ -16,22 +16,19 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.ui.contexts.IContextService;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IDecoratorManager;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
-import org.eclipse.wst.server.core.IPublishListener;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerLifecycleListener;
-import org.eclipse.wst.server.core.IServerListener;
-import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.ServerEvent;
+import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.internal.UpdateServerJob;
 import org.eclipse.wst.server.core.util.PublishAdapter;
@@ -85,17 +82,7 @@ public class ServersView2 extends CommonNavigator {
 				for (int i = 0; i < size; i++) {
 					((Server)servers[i]).getAllModules().iterator();
 				}
-				
-
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						try {
-							deferredInitialize();
-						} catch (Exception e) {
-							// ignore - view has already been closed
-						}
-					}
-				});
+				deferredInitialize();
 				return Status.OK_STATUS;
 			}
 		};
@@ -107,42 +94,41 @@ public class ServersView2 extends CommonNavigator {
 	
 	protected void deferredInitialize() {
 		addListener();
-		tableViewer = getCommonViewer();
-		getSite().setSelectionProvider(tableViewer);
 		
-		// init the tooltip
-		ServerToolTip toolTip = new ServerToolTip(tableViewer.getTree());
-		toolTip.setShift(new Point(10, 3));
-		toolTip.setPopupDelay(400); // in ms
-		toolTip.setHideOnMouseDown(true);
-		toolTip.activate();
-		
-		if (tableViewer.getTree().getItemCount() > 0) {
-			Object obj = tableViewer.getTree().getItem(0).getData();
-			tableViewer.setSelection(new StructuredSelection(obj));
-		}
-		
-		Thread thread = new Thread() {
+		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				try {
-					Thread.sleep(5000);
+					tableViewer = getCommonViewer();
+					getSite().setSelectionProvider(tableViewer);
+					
+					// init the tooltip
+					ServerToolTip toolTip = new ServerToolTip(tableViewer.getTree());
+					toolTip.setShift(new Point(10, 3));
+					toolTip.setPopupDelay(400); // in ms
+					toolTip.setHideOnMouseDown(true);
+					toolTip.activate();
+					
 				} catch (Exception e) {
-					// ignore
-				}
-				IServer[] servers = ServerCore.getServers();
-				int size = servers.length;
-				for (int i = 0; i < size; i++) {
-					IServer server = servers[i];
-					if (server.getServerType() != null && server.getServerState() == IServer.STATE_UNKNOWN) {
-						UpdateServerJob job = new UpdateServerJob(server);
-						job.schedule();
-					}
+					// ignore - view has already been closed
 				}
 			}
-		};
-		thread.setDaemon(true);
-		thread.setPriority(Thread.MIN_PRIORITY + 1);
-		thread.start();
+		});
+		
+		UpdateServerJob job = new UpdateServerJob(ServerCore.getServers());
+		job.addJobChangeListener(new JobChangeAdapter() {
+			@Override
+			public void done(IJobChangeEvent event) {
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						if (tableViewer.getTree().getItemCount() > 0) {
+							Object obj = tableViewer.getTree().getItem(0).getData();
+							tableViewer.setSelection(new StructuredSelection(obj));
+						}
+					}
+				});
+			}
+		});
+		job.schedule();
 	}
 	
 	protected void handlePublishChange(IServer server, boolean isPublishing) {
