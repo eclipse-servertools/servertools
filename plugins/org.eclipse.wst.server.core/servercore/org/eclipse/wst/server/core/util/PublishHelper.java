@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,7 +34,7 @@ import org.eclipse.wst.server.core.model.IModuleResourceDelta;
  *
  * @since 1.1
  */
-public final class PublishHelper {
+public class PublishHelper {
 	// size of the buffer
 	private static final int BUFFER = 65536;
 
@@ -478,6 +478,10 @@ public final class PublishHelper {
 	private void copyFile(IModuleFile mf, IPath path) throws CoreException {
 		Trace.trace(Trace.PUBLISHING, "Copying: " + mf.getName() + " to " + path.toString());
 		
+		if(!isCopyFile(mf, path)){
+			return;
+		}
+		
 		IFile file = (IFile) mf.getAdapter(IFile.class);
 		if (file != null)
 			copyFile(file.getContents(), path, file.getLocalTimeStamp(), mf);
@@ -491,6 +495,16 @@ public final class PublishHelper {
 			}
 			copyFile(in, path, file2.lastModified(), mf);
 		}
+	}
+	
+	/**
+	 * Returns <code>true<code/> if the module file should be copied to the destination, <code>false</codre> otherwise.
+	 * @param moduleFile the module file
+	 * @param toPath destination.
+	 * @return <code>true<code/>, if the module file should be copied
+	 */
+	protected boolean isCopyFile(IModuleFile moduleFile, IPath toPath){
+		return true;
 	}
 
 	/**
