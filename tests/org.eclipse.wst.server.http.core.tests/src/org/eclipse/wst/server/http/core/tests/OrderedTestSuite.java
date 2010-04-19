@@ -12,6 +12,8 @@ package org.eclipse.wst.server.http.core.tests;
 
 import java.util.Enumeration;
 import java.util.Vector;
+
+import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
@@ -22,11 +24,11 @@ public class OrderedTestSuite extends TestSuite {
 
 	@SuppressWarnings("unchecked")
 	public Enumeration tests() {
-		Enumeration<TestCase> enum2 = super.tests();
+		Enumeration<Test> enum2 = super.tests();
 		
 		Vector<TestCase> list = new Vector<TestCase>();
 		while (enum2.hasMoreElements()) {
-			list.add(enum2.nextElement());
+			list.add((TestCase) enum2.nextElement());
 		}
 		
 		int size = list.size();
