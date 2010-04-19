@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,7 +37,7 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 		if (runtimeId.indexOf("32") > 0) {
 			IPath path = installPath.append("lib");
 			addLibraryEntries(list, path.toFile(), true);
-		} else if (runtimeId.indexOf("60") > 0) {
+		} else if (runtimeId.indexOf("60") > 0 || runtimeId.indexOf("70") > 0) {
 			// TODO May need some flexibility in case the installation has been configured differently
 			// This lib "simplification" may cause issues for some.
 			// Not known yet whether packaged Linux installs will go along.

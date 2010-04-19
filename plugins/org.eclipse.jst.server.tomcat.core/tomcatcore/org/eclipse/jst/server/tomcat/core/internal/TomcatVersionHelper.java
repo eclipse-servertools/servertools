@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2007, 2008 SAS Institute, Inc and others.
+ * Copyright (c) 2007, 2010 SAS Institute, Inc and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,13 +19,17 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 
@@ -90,6 +94,19 @@ public class TomcatVersionHelper {
 		"<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n" +
 		"<web-app xmlns=\"http://java.sun.com/xml/ns/j2ee\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_5.xsd\" version=\"2.5\">\n" +
 		"</web-app>";
+
+	/**
+	 * Map of server type ID to expected version string fragment for version checking.
+	 */
+	private static final Map versionStringMap = new HashMap();
+	
+	static {
+		versionStringMap.put(TomcatPlugin.TOMCAT_41, "4.1.");
+		versionStringMap.put(TomcatPlugin.TOMCAT_50, "5.0.");
+		versionStringMap.put(TomcatPlugin.TOMCAT_55, "5.5.");
+		versionStringMap.put(TomcatPlugin.TOMCAT_60, "6.0.");
+		versionStringMap.put(TomcatPlugin.TOMCAT_70, "7.0.");
+	}
 
 	/**
 	 * Reads the from the specified InputStream and returns
@@ -1000,5 +1017,123 @@ public class TomcatVersionHelper {
 			}
 		}
 		return context;
+	}
+
+	private static Map catalinaJarVersion = new ConcurrentHashMap();
+	private static Map catalinaJarLastModified = new HashMap();
+	private static volatile long lastCheck = 0;
+
+	/**
+	 * Checks if the version of Tomcat installed at the specified location matches
+	 * the specified server type.  The return status indicates if the version matches
+	 * or not, or can't be determined.
+	 * 
+	 * Because this can get called repeatedly for certain operations, some caching
+	 * is provided.  The first check for an installPath in the current Eclipse
+	 * session will query the catalina.jar for its version.  Any additional
+	 * checks will compare the catalina.jar's time stamp and will use the previously
+	 * cached version if it didn't change.  Additional checks that occur within
+	 * 2 seconds of the last check, regardless of Tomcat version, don't bother with
+	 * checking the jar time stamp and just use the cached values.
+	 * 
+	 * @param installPath Path to Tomcat installation
+	 * @param serverType The server type ID for the desired version of Tomcat
+	 * @return Returns Status.OK_Status if check succeeds, or an error status
+	 * if the check fails.  If the check can't determine if the version matches,
+	 * Status.CANCEL_STATUS is returned.
+	 */
+	public static IStatus checkCatalinaVersion(IPath installPath, String serverType) {
+		String versionSubString = null;
+		IPath catalinaJarPath = null;
+		File jarFile = null;
+		
+		if (TomcatPlugin.TOMCAT_60.equals(serverType) || TomcatPlugin.TOMCAT_70.equals(serverType)) {
+			catalinaJarPath = installPath.append("lib").append("catalina.jar");
+			jarFile = catalinaJarPath.toFile();
+			// If jar is not at expected location, try alternate location
+			if (!jarFile.exists()) {
+				catalinaJarPath = installPath.append("server/lib").append("catalina.jar");
+				jarFile = catalinaJarPath.toFile();
+				// If not here either, discard path
+				if (!jarFile.exists()) {
+					catalinaJarPath = null;
+				}
+			}
+		}
+		else if (TomcatPlugin.TOMCAT_50.equals(serverType) || TomcatPlugin.TOMCAT_55.equals(serverType)
+				 || TomcatPlugin.TOMCAT_41.equals(serverType)) {
+			catalinaJarPath = installPath.append("server/lib").append("catalina.jar");
+			jarFile = catalinaJarPath.toFile();
+			// If jar is not at expected location, try alternate location
+			if (!jarFile.exists()) {
+				catalinaJarPath = installPath.append("lib").append("catalina.jar");
+				jarFile = catalinaJarPath.toFile();
+				// If not here either, discard path
+				if (!jarFile.exists()) {
+					catalinaJarPath = null;
+				}
+			}
+		}
+		if (catalinaJarPath != null) {
+			versionSubString = (String)catalinaJarVersion.get(catalinaJarPath);
+			long checkTime = System.currentTimeMillis();
+			// Use some logic to try to determine if a cached value is stale
+			// If last check was more than a couple of seconds ago, check the jar time stamp 
+			if (versionSubString != null && (checkTime - lastCheck > 2000)) {
+				long curLastModified = jarFile.lastModified();
+				Long oldLastModified = (Long)catalinaJarLastModified.get(catalinaJarPath);
+				// If jar time stamps differ, discard the cached version string
+				if (oldLastModified == null || curLastModified != oldLastModified.longValue()) {
+					versionSubString = null;
+				}
+			}
+			lastCheck = checkTime;
+			// If a version string needs to be acquired
+			if (versionSubString == null) {
+				try {
+					// Read version string from catalina.jar
+					URL catalinaJarURL = jarFile.toURI().toURL();
+					URLClassLoader cl = new URLClassLoader(new URL [] { catalinaJarURL }, null);
+					InputStream is = cl.getResourceAsStream("org/apache/catalina/util/ServerInfo.properties");
+					if (is != null) {
+						Properties props = new Properties();
+						props.load(is);
+						String serverVersion = props.getProperty("server.info");
+						if (serverVersion != null) {
+							int index = serverVersion.indexOf("/");
+							if (index > 0) {
+								versionSubString = serverVersion.substring(index + 1);
+								catalinaJarVersion.put(catalinaJarPath, versionSubString);
+								catalinaJarLastModified.put(catalinaJarPath, new Long(jarFile.lastModified()));
+							}
+							else {
+								return Status.CANCEL_STATUS;
+							}
+						}
+					}
+					else {
+						return Status.CANCEL_STATUS;
+					}
+				} catch (MalformedURLException e) {
+					return Status.CANCEL_STATUS;
+				} catch (IOException e) {
+					return Status.CANCEL_STATUS;
+				}
+			}
+			if (versionSubString != null) {
+				String versionTest = (String)versionStringMap.get(serverType);
+				if (versionTest != null && !versionSubString.startsWith(versionTest)) {
+					return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID,
+							NLS.bind(Messages.errorInstallDirWrongVersion2,
+									versionSubString, versionTest.substring(0, versionTest.length() -1)));
+				}
+			}
+		}
+		// Else server type is not supported or jar doesn't exist
+		else {
+			return Status.CANCEL_STATUS;
+		}
+		
+		return Status.OK_STATUS;
 	}
 }

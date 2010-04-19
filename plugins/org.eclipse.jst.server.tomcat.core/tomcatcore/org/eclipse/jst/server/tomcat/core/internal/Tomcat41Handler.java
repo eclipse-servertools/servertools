@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,12 @@ public class Tomcat41Handler implements ITomcatVersionHandler {
 	 * @see ITomcatVersionHandler#verifyInstallPath(IPath)
 	 */
 	public IStatus verifyInstallPath(IPath installPath) {
-		return TomcatPlugin.verifyInstallPathWithFolderCheck(installPath, TomcatPlugin.TOMCAT_41);
+		IStatus result = TomcatVersionHelper.checkCatalinaVersion(installPath, TomcatPlugin.TOMCAT_41);
+		// If check was canceled, use folder check
+		if (result.getSeverity() == IStatus.CANCEL) {
+			result = TomcatPlugin.verifyInstallPathWithFolderCheck(installPath, TomcatPlugin.TOMCAT_41);
+		}
+		return result;
 	}
 	
 	/**
@@ -37,9 +42,9 @@ public class Tomcat41Handler implements ITomcatVersionHandler {
 	}
 	
 	/**
-	 * @see ITomcatVersionHandler#getRuntimeClasspath(IPath)
+	 * @see ITomcatVersionHandler#getRuntimeClasspath(IPath, IPath)
 	 */
-	public List getRuntimeClasspath(IPath installPath) {
+	public List getRuntimeClasspath(IPath installPath, IPath configPath) {
 		List cp = new ArrayList();
 		
 		// 4.1 - add bootstrap.jar from the Tomcat bin directory

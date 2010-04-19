@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -79,7 +80,7 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 		return null;
 	}
 
-	public List getRuntimeClasspath() {
+	public List getRuntimeClasspath(IPath configPath) {
 		IPath installPath = getRuntime().getLocation();
 		// If installPath is relative, convert to canonical path and hope for the best
 		if (!installPath.isAbsolute()) {
@@ -90,7 +91,7 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 				// Ignore if there is a problem
 			}
 		}
-		return getVersionHandler().getRuntimeClasspath(installPath);
+		return getVersionHandler().getRuntimeClasspath(installPath, configPath);
 	}
 
 	/**
@@ -164,12 +165,22 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 			IVMInstall vmInstall = getVMInstall();
 			if (vmInstall instanceof IVMInstall2) {
 				String javaVersion = ((IVMInstall2)vmInstall).getJavaVersion();
-				if (javaVersion != null && javaVersion.compareTo("1.5") < 0) {
+				if (javaVersion != null && !isVMMinimumVersion(javaVersion, 105)) {
 					return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorJRETomcat60, null);
 				}
 			}
 		}
-		
+		// Else for Tomcat 7.0, ensure we have J2SE 6.0
+		else if (id != null && id.indexOf("70") > 0) {
+			IVMInstall vmInstall = getVMInstall();
+			if (vmInstall instanceof IVMInstall2) {
+				String javaVersion = ((IVMInstall2)vmInstall).getJavaVersion();
+				if (javaVersion != null && !isVMMinimumVersion(javaVersion, 106)) {
+					return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorJRETomcat70, null);
+				}
+			}
+		}
+
 		return Status.OK_STATUS;
 	}
 
@@ -269,5 +280,34 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 		// log error that we were unable to check for the compiler
 		TomcatPlugin.log(MessageFormat.format("Failed compiler check for {0}", new String[] { javaHome.getAbsolutePath() }));
 		return false;
+	}
+
+	private static Map javaVersionMap = new ConcurrentHashMap();
+
+	private boolean isVMMinimumVersion(String javaVersion, int minimumVersion) {
+		Integer version = (Integer)javaVersionMap.get(javaVersion);
+		if (version == null) {
+			int index = javaVersion.indexOf('.');
+			if (index > 0) {
+				try {
+					int major = Integer.parseInt(javaVersion.substring(0, index)) * 100;
+					index++;
+					int index2 = javaVersion.indexOf('.', index);
+					if (index2 > 0) {
+						int minor = Integer.parseInt(javaVersion.substring(index, index2));
+						version = new Integer(major + minor);
+						javaVersionMap.put(javaVersion, version);
+					}
+				}
+				catch (NumberFormatException e) {
+					// Ignore
+				}
+			}
+		}
+		// If we have a version, and it's less than the minimum, fail the check
+		if (version != null && version.intValue() < minimumVersion) {
+			return false;
+		}
+		return true;
 	}
 }

@@ -1,13 +1,13 @@
-/*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+/**********************************************************************
+ * Copyright (c) 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *    IBM Corporation - Initial API and implementation
- *******************************************************************************/
+ **********************************************************************/
 package org.eclipse.jst.server.tomcat.core.internal;
 
 import java.util.ArrayList;
@@ -19,17 +19,17 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.wst.server.core.IModule;
 /**
- * Tomcat 50 handler.
+ * Tomcat 70 handler.
  */
-public class Tomcat50Handler implements ITomcatVersionHandler {
+public class Tomcat70Handler implements ITomcatVersionHandler {
 	/**
 	 * @see ITomcatVersionHandler#verifyInstallPath(IPath)
 	 */
 	public IStatus verifyInstallPath(IPath installPath) {
-		IStatus result = TomcatVersionHelper.checkCatalinaVersion(installPath, TomcatPlugin.TOMCAT_50);
+		IStatus result = TomcatVersionHelper.checkCatalinaVersion(installPath, TomcatPlugin.TOMCAT_70);
 		// If check was canceled, use folder check
 		if (result.getSeverity() == IStatus.CANCEL) {
-			result = TomcatPlugin.verifyInstallPathWithFolderCheck(installPath, TomcatPlugin.TOMCAT_50);
+			result = TomcatPlugin.verifyInstallPathWithFolderCheck(installPath, TomcatPlugin.TOMCAT_70);
 		}
 		return result;
 	}
@@ -47,11 +47,23 @@ public class Tomcat50Handler implements ITomcatVersionHandler {
 	public List getRuntimeClasspath(IPath installPath, IPath configPath) {
 		List cp = new ArrayList();
 		
-		// 5.0 - add bootstrap.jar from the Tomcat bin directory
+		// 7.0 - add bootstrap.jar and tomcat-juli.jar from the Tomcat bin directory
 		IPath binPath = installPath.append("bin");
 		if (binPath.toFile().exists()) {
 			IPath path = binPath.append("bootstrap.jar");
 			cp.add(JavaRuntime.newArchiveRuntimeClasspathEntry(path));
+			// Add tomcat-juli.jar if it exists
+			path = binPath.append("tomcat-juli.jar");
+			if (path.toFile().exists()) {
+				cp.add(JavaRuntime.newArchiveRuntimeClasspathEntry(path));
+			}
+			// If tomcat-juli.jar is not found in the install, check the config directory
+			else if (configPath != null){
+				path = configPath.append("bin/tomcat-juli.jar");
+				if (path.toFile().exists()) {
+					cp.add(JavaRuntime.newArchiveRuntimeClasspathEntry(path));
+				}
+			}
 		}
 		
 		return cp;
@@ -62,10 +74,7 @@ public class Tomcat50Handler implements ITomcatVersionHandler {
 	 */
 	public String[] getRuntimeProgramArguments(IPath configPath, boolean debug, boolean starting) {
 		List list = new ArrayList();
-		
-		if (debug)
-			list.add("-debug");
-		
+
 		if (starting)
 			list.add("start");
 		else
@@ -80,9 +89,6 @@ public class Tomcat50Handler implements ITomcatVersionHandler {
 	 * @see ITomcatVersionHandler#getExcludedRuntimeProgramArguments(boolean, boolean)
 	 */
 	public String[] getExcludedRuntimeProgramArguments(boolean debug, boolean starting) {
-		if (!debug) {
-			return new String [] { "-debug" };
-		}
 		return null;
 	}
 	
@@ -105,10 +111,11 @@ public class Tomcat50Handler implements ITomcatVersionHandler {
 	 */
 	public IStatus canAddModule(IModule module) {
 		String version = module.getModuleType().getVersion();
-		if ("2.2".equals(version) || "2.3".equals(version) || "2.4".equals(version))
+		if ("2.2".equals(version) || "2.3".equals(version) || "2.4".equals(version) || "2.5".equals(version)
+				|| "3.0".equals(version))
 			return Status.OK_STATUS;
 		
-		return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorSpec50, null);
+		return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorSpec70, null);
 	}
 
 	/**
@@ -130,45 +137,45 @@ public class Tomcat50Handler implements ITomcatVersionHandler {
 	 */
 	public IStatus prepareDeployDirectory(IPath deployPath) {
 		return TomcatVersionHelper.createDeploymentDirectory(deployPath,
-				TomcatVersionHelper.DEFAULT_WEBXML_SERVLET24);
+				TomcatVersionHelper.DEFAULT_WEBXML_SERVLET25);
 	}
-	
+
 	/**
 	 * @see ITomcatVersionHandler#prepareForServingDirectly(IPath, TomcatServer)
 	 */
 	public IStatus prepareForServingDirectly(IPath baseDir, TomcatServer server) {
 		IStatus status;
 		// If serving modules without publishing, loader jar is needed
+		// TODO Need to examine catalina.properties to ensure loader jar and catalina.properties are handled appropriately
 		if (server.isServeModulesWithoutPublish()) {
 			status = TomcatVersionHelper.copyLoaderJar(
-					getRuntimeBaseDirectory(server).append("server/lib"),
+					getRuntimeBaseDirectory(server).append("lib"),
 					server.getServer().getRuntime().getRuntimeType().getId());
 			// If copy successful and running a separate server instance, modify catalina.properties
 			if (status.isOK() && server.isTestEnvironment()) {
-				status = TomcatVersionHelper.updatePropertiesToServeDirectly(baseDir, "server/lib", "server");
+				status = TomcatVersionHelper.updatePropertiesToServeDirectly(baseDir, "lib", "common");
 			}
 		}
 		// Else ensure jar is removed
 		else {
 			TomcatVersionHelper.removeLoaderJar(
-					getRuntimeBaseDirectory(server).append("server/lib"),
+					getRuntimeBaseDirectory(server).append("lib"),
 					server.getServer().getRuntime().getRuntimeType().getId());
 			// TODO Decide what to do with removal warning, maybe nothing
 			status = Status.OK_STATUS;
 		}
 		return status;
 	}
-	
+
 	/**
 	 * @see ITomcatVersionHandler#getSharedLoader(IPath)
 	 */
 	public String getSharedLoader(IPath baseDir) {
-		// Use shared loader
-		return "shared";
+		return "common";
 	}
 	
 	/**
-	 * Returns true since Tomcat 5.x supports this feature.
+	 * Returns true since Tomcat 6.x supports this feature.
 	 * 
 	 * @return true since feature is supported
 	 */
@@ -194,6 +201,6 @@ public class Tomcat50Handler implements ITomcatVersionHandler {
 	 * @see ITomcatVersionHandler#getEndorsedDirectories(IPath)
 	 */
 	public String getEndorsedDirectories(IPath installPath) {
-		return installPath.append("common").append("endorsed").toOSString();
+		return installPath.append("endorsed").toOSString();
 	}	
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,6 +37,7 @@ public class TomcatPlugin extends Plugin {
 	public static final String TOMCAT_50 = "org.eclipse.jst.server.tomcat.50";
 	public static final String TOMCAT_55 = "org.eclipse.jst.server.tomcat.55";
 	public static final String TOMCAT_60 = "org.eclipse.jst.server.tomcat.60";
+	public static final String TOMCAT_70 = "org.eclipse.jst.server.tomcat.70";
 
 	protected static final String VERIFY_INSTALL_FILE = "verifyInstall.properties";
 	protected static VerifyResourceSpec[] verify32;
@@ -45,6 +46,7 @@ public class TomcatPlugin extends Plugin {
 	protected static VerifyResourceSpec[] verify50;
 	protected static VerifyResourceSpec[] verify55;
 	protected static VerifyResourceSpec[] verify60;
+	protected static VerifyResourceSpec[] verify70;
 	
 	protected static final IStatus emptyInstallDirStatus = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorInstallDirEmpty, null);
 	protected static final IStatus wrongDirVersionStatus = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorInstallDirWrongVersion, null);
@@ -130,6 +132,8 @@ public class TomcatPlugin extends Plugin {
 			return new Tomcat55Handler();
 		else if (TOMCAT_60.equals(id))
 			return new Tomcat60Handler();
+		else if (TOMCAT_70.equals(id))
+			return new Tomcat70Handler();
 		else
 			return null;
 	}
@@ -148,6 +152,7 @@ public class TomcatPlugin extends Plugin {
 		verify50 = new VerifyResourceSpec[0];
 		verify55 = new VerifyResourceSpec[0];
 		verify60 = new VerifyResourceSpec[0];
+		verify70 = new VerifyResourceSpec[0];
 		
 		try {
 			URL url = getInstance().getBundle().getEntry(VERIFY_INSTALL_FILE);
@@ -249,6 +254,22 @@ public class TomcatPlugin extends Plugin {
 			Trace.trace(Trace.FINEST, "Verify60: " + list.toString());
 			verify60 = new VerifyResourceSpec[list.size()];
 			list.toArray(verify60);
+
+			// v7.0
+			// Check backdoor system property, use internal spec if not found
+			verify = System.getProperty(PLUGIN_ID + ".verify70install");
+			if (verify == null) {
+				verify = p.getProperty("verify70install");
+			}
+			verify.replace('/', File.separatorChar);
+
+			st = new StringTokenizer(verify, ",");
+			list = new ArrayList();
+			while (st.hasMoreTokens())
+				list.add(new VerifyResourceSpec(st.nextToken()));
+			Trace.trace(Trace.FINEST, "Verify70: " + list.toString());
+			verify70 = new VerifyResourceSpec[list.size()];
+			list.toArray(verify70);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not load installation verification properties", e);
 		}

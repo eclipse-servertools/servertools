@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2009 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -835,7 +835,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		for (int i = 0; i < size; i++)
 			oldCp.add(originalClasspath[i]);
 		
-		List cp2 = runtime.getRuntimeClasspath();
+		List cp2 = runtime.getRuntimeClasspath(getRuntimeBaseDirectory());
 		Iterator iterator = cp2.iterator();
 		while (iterator.hasNext()) {
 			IRuntimeClasspathEntry entry = (IRuntimeClasspathEntry) iterator.next();
