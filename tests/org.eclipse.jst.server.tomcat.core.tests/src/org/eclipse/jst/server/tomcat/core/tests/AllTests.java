@@ -108,6 +108,20 @@ public class AllTests {
 			System.err.println("Warning: Tomcat 6.0 not found - tests skipped");
 		}
 
+		// Note that Tomcat 7.0 requires Java SE 6
+		s = System.getProperty("org.eclipse.jst.server.tomcat.70");
+		if (s != null && s.length() > 0) {
+			RuntimeLocation.runtimeLocation = s;
+			TestSuite subSuite = new TestSuite(Tomcat70RuntimeTestCase.class);
+			Tomcat70RuntimeTestCase.addOrderedTests(subSuite);
+			suite.addTest(subSuite);
+			subSuite = new TestSuite(Tomcat70ServerTestCase.class);
+			Tomcat70ServerTestCase.addOrderedTests(subSuite);
+			suite.addTest(subSuite);
+		} else {
+			System.err.println("Warning: Tomcat 7.0 not found - tests skipped");
+		}
+
 		suite.addTestSuite(UtilTestCase.class);
 		suite.addTestSuite(XmlTestCase.class);
 		
