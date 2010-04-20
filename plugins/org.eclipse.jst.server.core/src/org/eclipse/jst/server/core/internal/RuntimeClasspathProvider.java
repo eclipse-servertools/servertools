@@ -34,6 +34,7 @@ public class RuntimeClasspathProvider implements IClasspathProvider {
 	private static final IProjectFacet UTILITY_FACET = ProjectFacetsManager.getProjectFacet("jst.utility");
 	private static final IProjectFacet CONNECTOR_FACET = ProjectFacetsManager.getProjectFacet("jst.connector");
 	private static final IProjectFacet APP_CLIENT_FACET = ProjectFacetsManager.getProjectFacet("jst.appclient");
+	private static final IProjectFacet WEBFRAGMENT_FACET = ProjectFacetsManager.getProjectFacet("jst.webfragment");
 
 	private IRuntimeComponent rc;
 
@@ -47,7 +48,8 @@ public class RuntimeClasspathProvider implements IClasspathProvider {
 			return null;
 		
 		if (pf.equals(WEB_FACET) || pf.equals(EJB_FACET) || pf.equals(EAR_FACET) ||
-				pf.equals(UTILITY_FACET) || pf.equals(CONNECTOR_FACET) || pf.equals(APP_CLIENT_FACET)) {
+				pf.equals(UTILITY_FACET) || pf.equals(CONNECTOR_FACET) || pf.equals(APP_CLIENT_FACET) ||
+				pf.equals(WEBFRAGMENT_FACET)) {
 			String runtimeTypeId = rc.getProperty("type-id");
 			String runtimeId = rc.getProperty("id");
 			if (runtimeTypeId == null || runtimeId == null)
