@@ -27,6 +27,8 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.jst.server.core.IJ2EEModule;
+import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.osgi.util.NLS;
 
 import org.eclipse.wst.server.core.*;
@@ -275,10 +277,32 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		}
 		
 		PublishHelper helper = new PublishHelper(getRuntimeBaseDirectory().append("temp").toFile());
-		if (moduleTree.length == 1) // web module
+		// If parent web module
+		if (moduleTree.length == 1) {
 			publishDir(deltaKind, p, moduleTree, helper, monitor);
-		else // utility jar
-			publishJar(kind, deltaKind, p, moduleTree, helper, monitor);
+		}
+		// Else a child module
+		else {
+			// Try to determine the URI for the child module
+			IWebModule webModule = (IWebModule)moduleTree[0].loadAdapter(IWebModule.class, monitor);
+			String childURI = null;
+			if (webModule != null) {
+				childURI = webModule.getURI(moduleTree[1]);
+			}
+			// Try to determine if child is binary
+			IJ2EEModule childModule = (IJ2EEModule)moduleTree[1].loadAdapter(IJ2EEModule.class, monitor);
+			boolean isBinary = false;
+			if (childModule != null) {
+				isBinary = childModule.isBinary();
+			}
+
+			if (isBinary) {
+				publishArchiveModule(childURI, kind, deltaKind, p, moduleTree, helper, monitor);
+			}
+			else {
+				publishJar(childURI, kind, deltaKind, p, moduleTree, helper, monitor);
+			}
+		}
 		
 		setModulePublishState(moduleTree, IServer.PUBLISH_STATE_NONE);
 		
@@ -320,11 +344,23 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			IPath path = getModuleDeployDirectory(module[0]);
 			IModuleResource[] mr = getResources(module);
 			IPath [] jarPaths = null;
+			IWebModule webModule = (IWebModule)module[0].loadAdapter(IWebModule.class, monitor);
 			IModule [] childModules = getServer().getChildModules(module, monitor);
 			if (childModules != null && childModules.length > 0) {
 				jarPaths = new IPath[childModules.length];
 				for (int i = 0; i < childModules.length; i++) {
-					jarPaths[i] = new Path("WEB-INF/lib").append(childModules[i].getName() + ".jar");
+					if (webModule != null) {
+						jarPaths[i] = new Path(webModule.getURI(childModules[i]));
+					}
+					else {
+						IJ2EEModule childModule = (IJ2EEModule)childModules[i].loadAdapter(IJ2EEModule.class, monitor);
+						if (childModule != null && childModule.isBinary()) {
+							jarPaths[i] = new Path("WEB-INF/lib").append(childModules[i].getName());
+						}
+						else {
+							jarPaths[i] = new Path("WEB-INF/lib").append(childModules[i].getName() + ".jar");
+						}
+					}
 				}
 			}
 			IStatus[] stat = helper.publishSmart(mr, path, jarPaths, monitor);
@@ -343,7 +379,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 * @param monitor
 	 * @throws CoreException
 	 */
-	private void publishJar(int kind, int deltaKind, Properties p, IModule[] module, PublishHelper helper, IProgressMonitor monitor) throws CoreException {
+	private void publishJar(String jarURI, int kind, int deltaKind, Properties p, IModule[] module, PublishHelper helper, IProgressMonitor monitor) throws CoreException {
 		// Remove if requested or if previously published and are now serving without publishing
 		if (deltaKind == REMOVED || getTomcatServer().isServeModulesWithoutPublish()) {
 			try {
@@ -357,8 +393,11 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			}
 		} else {
 			IPath path = getModuleDeployDirectory(module[0]);
-			path = path.append("WEB-INF").append("lib");
-			IPath jarPath = path.append(module[1].getName() + ".jar");
+			if (jarURI == null) {
+				jarURI = "WEB-INF/lib" + module[1].getName() + ".jar";
+			}
+			IPath jarPath = path.append(jarURI);
+			path = jarPath.removeLastSegments(1);
 			if (!path.toFile().exists()) {
 				path.toFile().mkdirs();
 			} else {
@@ -374,6 +413,46 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			IModuleResource[] mr = getResources(module);
 			IStatus[] stat = helper.publishZip(mr, jarPath, monitor);
 			List status = new ArrayList();
+			PublishOperation2.addArrayToList(status, stat);
+			PublishOperation2.throwException(status);
+			p.put(module[1].getId(), jarPath.toOSString());
+		}
+	}
+
+	private void publishArchiveModule(String jarURI, int kind, int deltaKind, Properties p, IModule[] module, PublishHelper helper, IProgressMonitor monitor) throws CoreException {
+		// Remove if requested or if previously published and are now serving without publishing
+		if (deltaKind == REMOVED || getTomcatServer().isServeModulesWithoutPublish()) {
+			try {
+				String publishPath = (String) p.get(module[1].getId());
+				if (publishPath != null) {
+					new File(publishPath).delete();
+					p.remove(module[1].getId());
+				}
+			} catch (Exception e) {
+				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, "Could not remove archive module", e));
+			}
+		} else {
+			List status = new ArrayList();
+			IPath path = getModuleDeployDirectory(module[0]);
+			if (jarURI == null) {
+				jarURI = "WEB-INF/lib" + module[1].getName();
+			}
+			IPath jarPath = path.append(jarURI);
+			path = jarPath.removeLastSegments(1);
+			if (!path.toFile().exists()) {
+				path.toFile().mkdirs();
+			} else {
+				// If file still exists and we are not forcing a new one to be built
+				if (jarPath.toFile().exists() && kind != IServer.PUBLISH_CLEAN && kind != IServer.PUBLISH_FULL) {
+					// avoid changes if no changes to module since last publish
+					IModuleResourceDelta[] delta = getPublishedResourceDelta(module);
+					if (delta == null || delta.length == 0)
+						return;
+				}
+			}
+			
+			IModuleResource[] mr = getResources(module);
+			IStatus[] stat = helper.publishFull(mr, path, monitor);
 			PublishOperation2.addArrayToList(status, stat);
 			PublishOperation2.throwException(status);
 			p.put(module[1].getId(), jarPath.toOSString());

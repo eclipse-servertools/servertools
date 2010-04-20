@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.*;
+import org.eclipse.jst.server.core.IJ2EEModule;
+import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.*;
@@ -74,10 +76,31 @@ public class PublishOperation2 extends PublishOperation {
 	 */
 	public void execute(IProgressMonitor monitor, IAdaptable info) throws CoreException {
 		List status = new ArrayList();
-		if (module.length == 1) { // web module
+		// If parent web module
+		if (module.length == 1) {
 			publishDir(module[0], status, monitor);
-		} else { // utility module
-			publishJar(status, monitor);
+		}
+		// Else a child module
+		else {
+			// Try to determine the URI for the child module
+			IWebModule webModule = (IWebModule)module[0].loadAdapter(IWebModule.class, monitor);
+			String childURI = null;
+			if (webModule != null) {
+				childURI = webModule.getURI(module[1]);
+			}
+			// Try to determine if child is binary
+			IJ2EEModule childModule = (IJ2EEModule)module[1].loadAdapter(IJ2EEModule.class, monitor);
+			boolean isBinary = false;
+			if (childModule != null) {
+				isBinary = childModule.isBinary();
+			}
+
+			if (isBinary) {
+				publishArchiveModule(childURI, status, monitor);
+			}
+			else {
+				publishJar(childURI, status, monitor);
+			}
 		}
 		throwException(status);
 		server.setModulePublishState2(module, IServer.PUBLISH_STATE_NONE);
@@ -116,16 +139,20 @@ public class PublishOperation2 extends PublishOperation {
 		}
 	}
 
-	private void publishJar(List status, IProgressMonitor monitor) throws CoreException {
+	private void publishJar(String jarURI, List status, IProgressMonitor monitor) throws CoreException {
 		IPath path = server.getModuleDeployDirectory(module[0]);
-		path = path.append("WEB-INF").append("lib");
-		IPath jarPath = path.append(module[1].getName() + ".jar");
+		if (jarURI == null) {
+			jarURI = "WEB-INF/lib/" + module[1].getName() + ".jar";
+		}
+		IPath jarPath = path.append(jarURI);
+		path = jarPath.removeLastSegments(1);
 		
 		// Remove if requested or if previously published and are now serving without publishing
 		if (kind == IServer.PUBLISH_CLEAN || deltaKind == ServerBehaviourDelegate.REMOVED
 				|| server.getTomcatServer().isServeModulesWithoutPublish()) {
-			if (jarPath.toFile().exists())
-				jarPath.toFile().delete();
+			File file = jarPath.toFile();
+			if (file.exists())
+				file.delete();
 			
 			if (deltaKind == ServerBehaviourDelegate.REMOVED
 					|| server.getTomcatServer().isServeModulesWithoutPublish())
@@ -141,10 +168,47 @@ public class PublishOperation2 extends PublishOperation {
 		// make directory if it doesn't exist
 		if (!path.toFile().exists())
 			path.toFile().mkdirs();
-		
+
 		IModuleResource[] mr = server.getResources(module);
 		IStatus[] stat = helper.publishZip(mr, jarPath, monitor);
 		addArrayToList(status, stat);
+	}
+
+	private void publishArchiveModule(String jarURI, List status, IProgressMonitor monitor) {
+		IPath path = server.getModuleDeployDirectory(module[0]);
+		if (jarURI == null) {
+			jarURI = "WEB-INF/lib/" + module[1].getName();
+		}
+		IPath jarPath = path.append(jarURI);
+		path = jarPath.removeLastSegments(1);
+
+		// Remove if requested or if previously published and are now serving without publishing
+		if (kind == IServer.PUBLISH_CLEAN || deltaKind == ServerBehaviourDelegate.REMOVED
+				|| server.getTomcatServer().isServeModulesWithoutPublish()) {
+			File file = jarPath.toFile();
+			if (file.exists()) {
+				file.delete();
+			}
+			
+			if (deltaKind == ServerBehaviourDelegate.REMOVED
+					|| server.getTomcatServer().isServeModulesWithoutPublish())
+				return;
+		}
+		
+		if (kind == IServer.PUBLISH_CLEAN || kind == IServer.PUBLISH_FULL) {
+			IModuleResource[] mr = server.getResources(module);
+			IStatus[] stat = helper.publishFull(mr, path, monitor);
+			addArrayToList(status, stat);
+			return;
+		}
+		
+		IModuleResourceDelta[] delta = server.getPublishedResourceDelta(module);
+		
+		int size = delta.length;
+		for (int i = 0; i < size; i++) {
+			IStatus[] stat = helper.publishDelta(delta[i], path, monitor);
+			addArrayToList(status, stat);
+		}
 	}
 
 	/**
