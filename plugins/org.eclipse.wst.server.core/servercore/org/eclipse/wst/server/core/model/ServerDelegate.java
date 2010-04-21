@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -77,6 +77,15 @@ public abstract class ServerDelegate {
 		if (newServer instanceof ServerWorkingCopy)
 			serverWC = (ServerWorkingCopy) newServer;
 		initialize();
+	}
+	
+	/**
+	 * Specify the locking rule to be used during a publish.
+	 * @return true if only affected projects are locked during a publish. false if the entire workspace
+	 * needs to be locked during a publish. 
+	 */
+	public boolean isUseProjectSpecificSchedulingRuleOnPublish() {
+		return false;
 	}
 
 	/**

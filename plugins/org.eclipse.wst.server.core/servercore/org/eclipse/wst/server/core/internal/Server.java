@@ -259,6 +259,35 @@ public class Server extends Base implements IServer {
 			this.start = start;
 			this.info = info;
 		}
+		
+		/**
+		 * Find out all the projects are contained by the server as the list of project that requires to be locked
+		 * during a publish.
+		 * @return the list of projects to be locked during a publish operation.
+		 */
+		@SuppressWarnings("synthetic-access")
+    List<IProject> getProjectPublishLockList(IProgressMonitor monitor) {
+			final List<IProject> projectPublishLockList = new ArrayList<IProject>();
+			
+			IModule[] curModules = getModules();
+			// Check empty module list since the visitModule does not handle that properly.
+			if (curModules != null && curModules.length > 0) {
+				// Get all the affected projects during the publish.
+				visitModule(getModules(), new IModuleVisitor(){
+					public boolean visit(IModule[] modules2) {
+						for (IModule curModule : modules2) {
+							IProject curProject = curModule.getProject();
+							if (curProject != null) {
+								if (!projectPublishLockList.contains(curProject)) {
+									projectPublishLockList.add(curProject);
+								}
+							}
+						}
+						return true;
+				}}, monitor);
+			}
+			return projectPublishLockList;
+		}
 
 		protected IStatus run(IProgressMonitor monitor) {
 			if (start) {
@@ -273,11 +302,28 @@ public class Server extends Base implements IServer {
 					Job.getJobManager().endRule(Server.this);
 				}
 			}
-			
-			// 102227 - lock entire workspace during publish
-			ISchedulingRule publishRule = MultiRule.combine(new ISchedulingRule[] {
-				ResourcesPlugin.getWorkspace().getRoot(), Server.this
-			});
+
+			ServerDelegate curDelegate = getDelegate(monitor);
+			ISchedulingRule[] publishScheduleRules = null;
+			if (curDelegate != null && curDelegate.isUseProjectSpecificSchedulingRuleOnPublish()) {
+				// 288863 - lock only affected projects during publish
+				// Find out all the projects that contains modules added to this server for workspace lock.
+				List<IProject> curProjectPublishLockList = getProjectPublishLockList(monitor);
+				
+				publishScheduleRules = new ISchedulingRule[curProjectPublishLockList.size()+1];
+	      IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
+				publishScheduleRules[0] = Server.this;
+				int i=1;
+				for (IProject curProj : curProjectPublishLockList) {
+					publishScheduleRules[i++] = ruleFactory.modifyRule(curProj);
+				}
+			} else {
+				// 102227 - lock entire workspace during publish
+				publishScheduleRules = new ISchedulingRule[] {
+						ResourcesPlugin.getWorkspace().getRoot(), Server.this
+				};
+			}
+			ISchedulingRule publishRule = MultiRule.combine(publishScheduleRules);
 			
 			try{
 				// 237222 - Apply the rules only when the job has started
