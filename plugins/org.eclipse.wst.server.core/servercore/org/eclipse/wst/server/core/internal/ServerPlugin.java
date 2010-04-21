@@ -50,6 +50,9 @@ public class ServerPlugin extends Plugin {
 
 	// cached copy of all publish tasks
 	private static List<IPublishTask> publishTasks;
+	
+	// cached copy of all publish tasks
+	private static List<PublishController> publishControllers;
 
 	// cached copy of all publishers
 	private static List<Publisher> publishers;
@@ -275,6 +278,10 @@ public class ServerPlugin extends Plugin {
 			}
 		};
 		context.addBundleListener(bundleListener);
+
+		// Load the PublishController during plugin startup since this will be used
+		// during the a workspace delta (changes to the workspace)
+		getPublishController();
 	}
 
 	protected void stopBundle(final String bundleId) {
@@ -732,6 +739,48 @@ public class ServerPlugin extends Plugin {
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .publishers extension point -<-");
 	}
+	
+	/**
+	 * Returns an array of all known publishers.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @return a possibly-empty array of publisher instances {@link Publisher}
+	 */
+	public static PublishController[] getPublishController() {
+		if (publishers == null)
+			loadPublishControllers();
+		PublishController[] controllers = new PublishController[publishControllers.size()];
+		publishControllers.toArray(controllers);
+		return controllers;
+	}
+	
+	/**
+	 * Load the publishController extension point.
+	 */
+	private static synchronized void loadPublishControllers() {
+		if (publishControllers != null)
+			return;
+		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .publishController extension point ->-");
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "publishController");
+		
+		int size = cf.length;
+		List<PublishController> list = new ArrayList<PublishController>(size);
+		for (int i = 0; i < size; i++) {
+			try {
+				list.add(new PublishController(cf[i]));
+				Trace.trace(Trace.EXTENSION_POINT, "  Loaded .publishController: " + cf[i].getAttribute("id"));
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "  Could not load .publishController: " + cf[i].getAttribute("id"), t);
+			}
+		}
+		publishControllers = list;
+		
+		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .publishController extension point -<-");
+	}
+	
 
 	/**
 	 * Returns an array of all known module module factories.

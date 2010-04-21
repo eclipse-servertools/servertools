@@ -99,6 +99,7 @@ public class ResourceManager {
 			if (event.getBuildKind() == IncrementalProjectBuilder.CLEAN_BUILD)
 				return;
 			
+			// search for changes related to Server projects  
 			Trace.trace(Trace.RESOURCES, "->- ServerResourceChangeListener responding to resource change: " + event.getType() + " ->-");
 			IResourceDelta[] children = delta.getAffectedChildren();
 			if (children != null) {
@@ -967,8 +968,7 @@ public class ResourceManager {
 		if (project == null)
 			return;
 		
-		if (!deltaContainsChangedFiles(delta))
-			return;
+		IServer[] servers2 = getPublishRequiredServers(delta);
 		
 		// process module changes
 		ProjectModuleFactoryDelegate.handleGlobalProjectChange(project, delta);
@@ -978,8 +978,7 @@ public class ResourceManager {
 			return;
 		
 		Trace.trace(Trace.FINEST, "- publishHandleProjectChange");
-		
-		IServer[] servers2 = getServers();
+
 		int size = modules.length;
 		int size2 = servers2.length;
 		for (int i = 0; i < size; i++) {
@@ -991,6 +990,55 @@ public class ResourceManager {
 		Trace.trace(Trace.FINEST, "< publishHandleProjectChange");
 	}
 
+	private IServer[] getPublishRequiredServers(IResourceDelta delta){		
+		// The list of servers that will require publish
+		final List<IServer> servers2 = new ArrayList<IServer>();
+
+		// wrksServers = Workspaces Servers
+		final IServer[] wrksServers =  getServers();
+
+		try {
+			delta.accept(new IResourceDeltaVisitor() {
+				public boolean visit(IResourceDelta delta2) throws CoreException {
+					// servers2 is the same size as the list of servers in the workspace, all servers require 
+					// publishing. Exit the visitor
+					if (servers2.size() == wrksServers.length)
+						return false;
+					// has this deltaResource been changed?
+					if (delta2.getKind() == IResourceDelta.NO_CHANGE)
+						return false;
+					
+					if (delta2.getResource() instanceof IFile) {
+						if (delta2.getKind() == IResourceDelta.CHANGED
+							&& (delta2.getFlags() & IResourceDelta.CONTENT) == 0
+							&& (delta2.getFlags() & IResourceDelta.REPLACED) == 0
+							&& (delta2.getFlags() & IResourceDelta.SYNC) == 0){
+							// this resource is effectively a no change
+							return true;
+						}
+						// This is a changed file. 
+						// Iterate through all servers for each changed resource, if the server needs publishing 
+						// for one single resource and the server is not on the list(servers2) then add it, as it 
+						// will require publishing
+						for (IServer server:wrksServers){
+							if (ServerCore.isPublishRequired(server,delta2)){
+								if (!servers2.contains(server))
+									servers2.add(server);
+							}
+						}
+						return false;
+					}
+					// This is a changed folder, so visit the child elements.
+					return true;
+				}
+			});
+		} catch (Exception e) {
+			// ignore
+		}
+		//Trace.trace(Trace.FINEST, "Delta contains change: " + t.b);
+		return servers2.toArray(new IServer[0]);
+	}
+	
 	/**
 	 * Returns <code>true</code> if at least one file in the delta is changed,
 	 * and <code>false</code> otherwise.

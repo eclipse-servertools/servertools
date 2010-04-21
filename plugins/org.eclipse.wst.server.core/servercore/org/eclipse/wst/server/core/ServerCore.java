@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.wst.server.core;
 import java.util.*;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.*;
 import org.eclipse.wst.server.core.internal.*;
 /**
@@ -462,5 +463,16 @@ public final class ServerCore {
 	 */
 	public static boolean isAutoPublishing() {
 		return ServerPreferences.getInstance().isAutoPublishing();
+	}
+
+	public static boolean isPublishRequired(IServer server, IResourceDelta delta2) {
+		PublishController[] controllers = ServerPlugin.getPublishController();
+		if (controllers.length > 0){
+			for (PublishController controller : controllers){
+				if (controller.supportsType(server.getServerType().getId()))
+					return controller.isPublishRequired(server, delta2);
+			}
+		}
+		return true;
 	}
 }

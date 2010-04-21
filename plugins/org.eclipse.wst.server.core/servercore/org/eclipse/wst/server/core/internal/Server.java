@@ -196,6 +196,7 @@ public class Server extends Base implements IServer {
 			final boolean[] changed = new boolean[1];
 			final List<IModule[]> modules2 = new ArrayList<IModule[]>();
 			
+			// create the visitor that will reset the module publish state flag
 			IModuleVisitor visitor = new IModuleVisitor() {
 				public boolean visit(IModule[] module2) {
 					modules2.add(module2);
@@ -215,6 +216,7 @@ public class Server extends Base implements IServer {
 				}
 			};
 			
+			// run the visitor
 			visit(visitor, null);
 			
 			if (getServerPublishInfo().hasStructureChanged(modules2))
