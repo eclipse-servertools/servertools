@@ -260,21 +260,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		if (getTomcatServer().isTestEnvironment())
 			return;
 
-		IPath path = getTempDirectory().append("publish.txt");
-		Properties p = new Properties();
-		FileInputStream fin = null;
-		try {
-			fin = new FileInputStream(path.toFile());
-			p.load(fin);
-		} catch (Exception e) {
-			// ignore
-		} finally {
-			try {
-				fin.close();
-			} catch (Exception ex) {
-				// ignore
-			}
-		}
+		Properties p = loadModulePublishLocations();
 		
 		PublishHelper helper = new PublishHelper(getRuntimeBaseDirectory().append("temp").toFile());
 		// If parent web module
@@ -306,11 +292,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		
 		setModulePublishState(moduleTree, IServer.PUBLISH_STATE_NONE);
 		
-		try {
-			p.store(new FileOutputStream(path.toFile()), "Tomcat publish data");
-		} catch (Exception e) {
-			// ignore
-		}
+		saveModulePublishLocations(p);
 	}
 
 	/**
@@ -452,6 +434,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			}
 			
 			IModuleResource[] mr = getResources(module);
+			// XXX This doesn't honor the name of the jar in the URI if it differs
 			IStatus[] stat = helper.publishFull(mr, path, monitor);
 			PublishOperation2.addArrayToList(status, stat);
 			PublishOperation2.throwException(status);
@@ -1150,5 +1133,42 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 
 	public void setModulePublishState2(IModule[] module, int state) {
 		setModulePublishState(module, state);
+	}
+	
+	public Properties loadModulePublishLocations() {
+		Properties p = new Properties();
+		IPath path = getTempDirectory().append("publish.txt");
+		FileInputStream fin = null;
+		try {
+			fin = new FileInputStream(path.toFile());
+			p.load(fin);
+		} catch (Exception e) {
+			// ignore
+		} finally {
+			try {
+				fin.close();
+			} catch (Exception ex) {
+				// ignore
+			}
+		}
+		return p;
+	}
+	
+	public void saveModulePublishLocations(Properties p) {
+		IPath path = getTempDirectory().append("publish.txt");
+		FileOutputStream fout = null;
+		try {
+			fout = new FileOutputStream(path.toFile());
+			p.store(fout, "Tomcat publish data");
+		} catch (Exception e) {
+			// ignore
+		}
+		finally {
+			try {
+				fout.close();
+			} catch (Exception ex) {
+				// ignore
+			}
+		}
 	}
 }

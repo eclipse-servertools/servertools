@@ -13,6 +13,7 @@ package org.eclipse.jst.server.tomcat.core.internal;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.jst.server.core.IJ2EEModule;
@@ -82,6 +83,8 @@ public class PublishOperation2 extends PublishOperation {
 		}
 		// Else a child module
 		else {
+			Properties p = server.loadModulePublishLocations();
+
 			// Try to determine the URI for the child module
 			IWebModule webModule = (IWebModule)module[0].loadAdapter(IWebModule.class, monitor);
 			String childURI = null;
@@ -96,11 +99,12 @@ public class PublishOperation2 extends PublishOperation {
 			}
 
 			if (isBinary) {
-				publishArchiveModule(childURI, status, monitor);
+				publishArchiveModule(childURI, p, status, monitor);
 			}
 			else {
-				publishJar(childURI, status, monitor);
+				publishJar(childURI, p, status, monitor);
 			}
+			server.saveModulePublishLocations(p);
 		}
 		throwException(status);
 		server.setModulePublishState2(module, IServer.PUBLISH_STATE_NONE);
@@ -139,26 +143,43 @@ public class PublishOperation2 extends PublishOperation {
 		}
 	}
 
-	private void publishJar(String jarURI, List status, IProgressMonitor monitor) throws CoreException {
+	private void publishJar(String jarURI, Properties p, List status, IProgressMonitor monitor) throws CoreException {
 		IPath path = server.getModuleDeployDirectory(module[0]);
+		boolean moving = false;
+		// Get URI used for previous publish, if known
+		String oldURI = (String)p.get(module[1].getId());
+		if (oldURI != null) {
+			// If old URI found, detect if jar is moving or changing its name
+			if (jarURI != null) {
+				moving = !oldURI.equals(jarURI);
+			}
+		}
+		// If we don't have a jar URI, make a guess so we have one if we need it
 		if (jarURI == null) {
 			jarURI = "WEB-INF/lib/" + module[1].getName() + ".jar";
 		}
 		IPath jarPath = path.append(jarURI);
+		// Make our best determination of the path to the old jar
+		IPath oldJarPath = jarPath;
+		if (oldURI != null) {
+			oldJarPath = path.append(oldURI);
+		}
+		// Establish the destination directory
 		path = jarPath.removeLastSegments(1);
 		
 		// Remove if requested or if previously published and are now serving without publishing
-		if (kind == IServer.PUBLISH_CLEAN || deltaKind == ServerBehaviourDelegate.REMOVED
+		if (moving || kind == IServer.PUBLISH_CLEAN || deltaKind == ServerBehaviourDelegate.REMOVED
 				|| server.getTomcatServer().isServeModulesWithoutPublish()) {
-			File file = jarPath.toFile();
+			File file = oldJarPath.toFile();
 			if (file.exists())
 				file.delete();
-			
+			p.remove(module[1].getId());
+
 			if (deltaKind == ServerBehaviourDelegate.REMOVED
 					|| server.getTomcatServer().isServeModulesWithoutPublish())
 				return;
 		}
-		if (kind != IServer.PUBLISH_CLEAN && kind != IServer.PUBLISH_FULL) {
+		if (!moving && kind != IServer.PUBLISH_CLEAN && kind != IServer.PUBLISH_FULL) {
 			// avoid changes if no changes to module since last publish
 			IModuleResourceDelta[] delta = server.getPublishedResourceDelta(module);
 			if (delta == null || delta.length == 0)
@@ -172,43 +193,62 @@ public class PublishOperation2 extends PublishOperation {
 		IModuleResource[] mr = server.getResources(module);
 		IStatus[] stat = helper.publishZip(mr, jarPath, monitor);
 		addArrayToList(status, stat);
+		p.put(module[1].getId(), jarURI);
 	}
 
-	private void publishArchiveModule(String jarURI, List status, IProgressMonitor monitor) {
+	private void publishArchiveModule(String jarURI, Properties p, List status, IProgressMonitor monitor) {
 		IPath path = server.getModuleDeployDirectory(module[0]);
+		boolean moving = false;
+		// Get URI used for previous publish, if known
+		String oldURI = (String)p.get(module[1].getId());
+		if (oldURI != null) {
+			// If old URI found, detect if jar is moving or changing its name
+			if (jarURI != null) {
+				moving = !oldURI.equals(jarURI);
+			}
+		}
+		// If we don't have a jar URI, make a guess so we have one if we need it
 		if (jarURI == null) {
 			jarURI = "WEB-INF/lib/" + module[1].getName();
 		}
 		IPath jarPath = path.append(jarURI);
+		// Make our best determination of the path to the old jar
+		IPath oldJarPath = jarPath;
+		if (oldURI != null) {
+			oldJarPath = path.append(oldURI);
+		}
+		// Establish the destination directory
 		path = jarPath.removeLastSegments(1);
 
 		// Remove if requested or if previously published and are now serving without publishing
-		if (kind == IServer.PUBLISH_CLEAN || deltaKind == ServerBehaviourDelegate.REMOVED
+		if (moving || kind == IServer.PUBLISH_CLEAN || deltaKind == ServerBehaviourDelegate.REMOVED
 				|| server.getTomcatServer().isServeModulesWithoutPublish()) {
-			File file = jarPath.toFile();
+			File file = oldJarPath.toFile();
 			if (file.exists()) {
 				file.delete();
 			}
+			p.remove(module[1].getId());
 			
 			if (deltaKind == ServerBehaviourDelegate.REMOVED
 					|| server.getTomcatServer().isServeModulesWithoutPublish())
 				return;
 		}
-		
-		if (kind == IServer.PUBLISH_CLEAN || kind == IServer.PUBLISH_FULL) {
-			IModuleResource[] mr = server.getResources(module);
-			IStatus[] stat = helper.publishFull(mr, path, monitor);
-			addArrayToList(status, stat);
-			return;
+		if (!moving && kind != IServer.PUBLISH_CLEAN && kind != IServer.PUBLISH_FULL) {
+			// avoid changes if no changes to module since last publish
+			IModuleResourceDelta[] delta = server.getPublishedResourceDelta(module);
+			if (delta == null || delta.length == 0)
+				return;
 		}
-		
-		IModuleResourceDelta[] delta = server.getPublishedResourceDelta(module);
-		
-		int size = delta.length;
-		for (int i = 0; i < size; i++) {
-			IStatus[] stat = helper.publishDelta(delta[i], path, monitor);
-			addArrayToList(status, stat);
-		}
+
+		// make directory if it doesn't exist
+		if (!path.toFile().exists())
+			path.toFile().mkdirs();
+
+		IModuleResource[] mr = server.getResources(module);
+		// XXX This doesn't honor the name of the jar in the URI if it differs
+		IStatus[] stat = helper.publishFull(mr, path, monitor);
+		addArrayToList(status, stat);
+		p.put(module[1].getId(), jarURI);
 	}
 
 	/**
