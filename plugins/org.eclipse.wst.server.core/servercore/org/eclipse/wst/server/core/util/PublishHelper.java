@@ -673,6 +673,43 @@ public class PublishHelper {
 	}
 
 	/**
+	 * Accepts an IModuleResource array which is expected to contain a single
+	 * IModuleFile resource and copies it to the specified path, which should
+	 * include the name of the file to write.  If the array contains more than
+	 * a single resource or the resource is not an IModuleFile resource, the
+	 * file is not created.  Currently no error is returned, but error handling
+	 * is recommended since that is expected to change in the future.
+	 * 
+	 * @param resources an array containing a single IModuleFile resource
+	 * @param path the path, including file name, where the file should be created
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return a possibly-empty array of error and warning status
+	 */
+	public IStatus[] publishToPath(IModuleResource[] resources, IPath path, IProgressMonitor monitor) {
+		if (resources == null || resources.length == 0) {
+			// should also check if resources consists of all empty directories
+			File file = path.toFile();
+			if (file.exists())
+				file.delete();
+			return EMPTY_STATUS;
+		}
+		
+		monitor = ProgressUtil.getMonitorFor(monitor);
+
+		if (resources.length == 1 && resources[0] instanceof IModuleFile) {
+			try {
+				copyFile((IModuleFile) resources[0], path);
+			}
+			catch (CoreException e) {
+				return new IStatus[] { e.getStatus() };
+			}
+		}
+
+		return EMPTY_STATUS;
+	}
+
+	/**
 	 * Utility method to move a temp file into position by deleting the original and
 	 * swapping in a new copy.
 	 *  
