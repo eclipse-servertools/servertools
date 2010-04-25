@@ -434,8 +434,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			}
 			
 			IModuleResource[] mr = getResources(module);
-			// XXX This doesn't honor the name of the jar in the URI if it differs
-			IStatus[] stat = helper.publishFull(mr, path, monitor);
+			IStatus[] stat = helper.publishToPath(mr, jarPath, monitor);
 			PublishOperation2.addArrayToList(status, stat);
 			PublishOperation2.throwException(status);
 			p.put(module[1].getId(), jarPath.toOSString());

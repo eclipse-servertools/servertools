@@ -245,8 +245,7 @@ public class PublishOperation2 extends PublishOperation {
 			path.toFile().mkdirs();
 
 		IModuleResource[] mr = server.getResources(module);
-		// XXX This doesn't honor the name of the jar in the URI if it differs
-		IStatus[] stat = helper.publishFull(mr, path, monitor);
+		IStatus[] stat = helper.publishToPath(mr, jarPath, monitor);
 		addArrayToList(status, stat);
 		p.put(module[1].getId(), jarURI);
 	}
