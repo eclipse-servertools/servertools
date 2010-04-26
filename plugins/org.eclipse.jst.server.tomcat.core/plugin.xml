@@ -461,17 +461,21 @@
       archivePath="jakarta-tomcat-4.0.6"
       os="linux"/>
     <runtime
-      id="org.eclipse.jst.server.tomcat.runtime.41"
-      licenseUrl="http://www.apache.org/licenses/LICENSE-2.0.txt"
-      archiveUrl="http://archive.apache.org/dist/tomcat/tomcat-4/v4.1.36/bin/apache-tomcat-4.1.36.zip"
-      archivePath="apache-tomcat-4.1.36"
-      os="win32"/>
+        id="org.eclipse.jst.server.tomcat.runtime.41"
+        licenseUrl="http://www.apache.org/licenses/LICENSE-2.0.txt"
+        archiveUrl="http://archive.apache.org/dist/tomcat/tomcat-4/v4.1.40/bin/apache-tomcat-4.1.40.zip"
+        archivePath="apache-tomcat-4.1.40"
+        archiveSize="11210581"
+        fileCount="1425"
+        os="win32"/>
     <runtime
-      id="org.eclipse.jst.server.tomcat.runtime.41"
-      licenseUrl="http://www.apache.org/licenses/LICENSE-2.0.txt"
-      archiveUrl="http://archive.apache.org/dist/tomcat/tomcat-4/v4.1.36/bin/apache-tomcat-4.1.36.tar.gz"
-      archivePath="apache-tomcat-4.1.36"
-      os="linux"/>
+        id="org.eclipse.jst.server.tomcat.runtime.41"
+        licenseUrl="http://www.apache.org/licenses/LICENSE-2.0.txt"
+        archiveUrl="http://archive.apache.org/dist/tomcat/tomcat-4/v4.1.40/bin/apache-tomcat-4.1.40.tar.gz"
+        archivePath="apache-tomcat-4.1.40"
+        archiveSize="9358737"
+        fileCount="1425"
+        os="linux"/>
     <runtime
       id="org.eclipse.jst.server.tomcat.runtime.50"
       licenseUrl="http://www.apache.org/licenses/LICENSE-2.0.txt"
@@ -485,28 +489,36 @@
       archivePath="jakarta-tomcat-5.0.28"
       os="linux"/>
     <runtime
-      id="org.eclipse.jst.server.tomcat.runtime.55"
-      licenseUrl="http://www.apache.org/licenses/LICENSE-2.0.txt"
-      archiveUrl="http://archive.apache.org/dist/tomcat/tomcat-5/v5.5.25/bin/apache-tomcat-5.5.25.zip"
-      archivePath="apache-tomcat-5.5.25"
-      os="win32"/>
+        id="org.eclipse.jst.server.tomcat.runtime.55"
+        licenseUrl="http://www.apache.org/licenses/LICENSE-2.0.txt"
+        archiveUrl="http://archive.apache.org/dist/tomcat/tomcat-5/v5.5.29/bin/apache-tomcat-5.5.29.zip"
+        archivePath="apache-tomcat-5.5.29"
+        archiveSize="8858181"
+        fileCount="840"
+        os="win32"/>
     <runtime
-      id="org.eclipse.jst.server.tomcat.runtime.55"
-      licenseUrl="http://www.apache.org/licenses/LICENSE-2.0.txt"
-      archiveUrl="http://archive.apache.org/dist/tomcat/tomcat-5/v5.5.25/bin/apache-tomcat-5.5.25.tar.gz"
-      archivePath="apache-tomcat-5.5.25"
-      os="linux"/>
+        id="org.eclipse.jst.server.tomcat.runtime.55"
+        licenseUrl="http://www.apache.org/licenses/LICENSE-2.0.txt"
+        archiveUrl="http://archive.apache.org/dist/tomcat/tomcat-5/v5.5.29/bin/apache-tomcat-5.5.29.tar.gz"
+        archivePath="apache-tomcat-5.5.29"
+        archiveSize="8001862"
+        fileCount="840"
+        os="linux"/>
     <runtime
-      id="org.eclipse.jst.server.tomcat.runtime.60"
-      licenseUrl="http://www.apache.org/licenses/LICENSE-2.0.txt"
-      archiveUrl="http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.14/bin/apache-tomcat-6.0.14.zip"
-      archivePath="apache-tomcat-6.0.14"
-      os="win32"/>
+        id="org.eclipse.jst.server.tomcat.runtime.60"
+        licenseUrl="http://www.apache.org/licenses/LICENSE-2.0.txt"
+        archiveUrl="http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.26/bin/apache-tomcat-6.0.26-windows-x86.zip"
+        archivePath="apache-tomcat-6.0.26"
+        archiveSize="6974459"
+        fileCount="486"
+        os="win32"/>
     <runtime
-      id="org.eclipse.jst.server.tomcat.runtime.60"
-      licenseUrl="http://www.apache.org/licenses/LICENSE-2.0.txt"
-      archiveUrl="http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.14/bin/apache-tomcat-6.0.14.tar.gz"
-      archivePath="apache-tomcat-6.0.14"
-      os="linux"/>
+        id="org.eclipse.jst.server.tomcat.runtime.60"
+        licenseUrl="http://www.apache.org/licenses/LICENSE-2.0.txt"
+        archiveUrl="http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.26/bin/apache-tomcat-6.0.26.tar.gz"
+        archivePath="apache-tomcat-6.0.26"
+        archiveSize="6123410"
+        fileCount="482"
+        os="linux"/>
   </extension>
 </plugin>
