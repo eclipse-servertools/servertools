@@ -19,9 +19,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -30,6 +28,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import javax.xml.parsers.DocumentBuilder;
 
@@ -1090,34 +1090,45 @@ public class TomcatVersionHelper {
 			lastCheck = checkTime;
 			// If a version string needs to be acquired
 			if (versionSubString == null) {
+				InputStream is = null;
 				try {
 					// Read version string from catalina.jar
-					URL catalinaJarURL = jarFile.toURI().toURL();
-					URLClassLoader cl = new URLClassLoader(new URL [] { catalinaJarURL }, null);
-					InputStream is = cl.getResourceAsStream("org/apache/catalina/util/ServerInfo.properties");
-					if (is != null) {
-						Properties props = new Properties();
-						props.load(is);
-						String serverVersion = props.getProperty("server.info");
-						if (serverVersion != null) {
-							int index = serverVersion.indexOf("/");
-							if (index > 0) {
-								versionSubString = serverVersion.substring(index + 1);
-								catalinaJarVersion.put(catalinaJarPath, versionSubString);
-								catalinaJarLastModified.put(catalinaJarPath, new Long(jarFile.lastModified()));
-							}
-							else {
-								return Status.CANCEL_STATUS;
+					JarFile jar = new JarFile(jarFile);
+					JarEntry entry = jar.getJarEntry("org/apache/catalina/util/ServerInfo.properties");
+					if (entry != null) {
+						is = jar.getInputStream(entry);
+						if (is != null) {
+							Properties props = new Properties();
+							props.load(is);
+							String serverVersion = props.getProperty("server.info");
+							if (serverVersion != null) {
+								int index = serverVersion.indexOf("/");
+								if (index > 0) {
+									versionSubString = serverVersion.substring(index + 1);
+									catalinaJarVersion.put(catalinaJarPath, versionSubString);
+									catalinaJarLastModified.put(catalinaJarPath, new Long(jarFile.lastModified()));
+								}
+								else {
+									return Status.CANCEL_STATUS;
+								}
 							}
 						}
 					}
 					else {
 						return Status.CANCEL_STATUS;
 					}
-				} catch (MalformedURLException e) {
-					return Status.CANCEL_STATUS;
 				} catch (IOException e) {
 					return Status.CANCEL_STATUS;
+				}
+				finally {
+					if (is != null) {
+						try {
+							is.close();
+						}
+						catch (IOException e) {
+							// Ignore
+						}
+					}
 				}
 			}
 			if (versionSubString != null) {
