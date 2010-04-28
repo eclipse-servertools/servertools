@@ -209,7 +209,8 @@ public class Server extends Base implements IServer {
 					if (getModule().equals(m)) {
 						if (hasPublishedResourceDelta(module2)) {
 							changed[0] = true;
-							setModulePublishState(module2, IServer.PUBLISH_STATE_INCREMENTAL);
+							int newState = getModulePublishState(module2) == IServer.PUBLISH_STATE_FULL ? IServer.PUBLISH_STATE_FULL : IServer.PUBLISH_STATE_INCREMENTAL;
+							setModulePublishState(module2, newState);
 						}
 					}
 					return true;
@@ -219,8 +220,10 @@ public class Server extends Base implements IServer {
 			// run the visitor
 			visit(visitor, null);
 			
-			if (getServerPublishInfo().hasStructureChanged(modules2))
-				setServerPublishState(IServer.PUBLISH_STATE_INCREMENTAL);
+			if (getServerPublishInfo().hasStructureChanged(modules2)) {
+				int newState = getServerPublishState() == IServer.PUBLISH_STATE_FULL ? IServer.PUBLISH_STATE_FULL : IServer.PUBLISH_STATE_INCREMENTAL;
+				setServerPublishState(newState);
+			}
 			
 			if (!changed[0])
 				return Status.OK_STATUS;
