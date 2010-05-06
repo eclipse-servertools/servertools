@@ -2112,6 +2112,10 @@ public class Server extends Base implements IServer {
 		return ServerPlugin.getInstance().getTempDirectory(getId());
 	}
 
+	public IPath getTempDirectory(boolean recycle) {
+		return ServerPlugin.getInstance().getTempDirectory(getId(), recycle);
+	}
+
 	protected String getXMLRoot() {
 		return "server";
 	}

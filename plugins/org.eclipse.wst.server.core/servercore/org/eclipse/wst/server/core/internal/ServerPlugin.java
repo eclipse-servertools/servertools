@@ -82,6 +82,7 @@ public class ServerPlugin extends Plugin {
 	class TempDir {
 		String path;
 		int age;
+		boolean recycle = true;
 	}
 
 	// temp directories - String key to TempDir
@@ -111,7 +112,7 @@ public class ServerPlugin extends Plugin {
 
 	/**
 	 * Returns a temporary directory that the requestor can use
-	 * throughout it's lifecycle. This is primary to be used by
+	 * throughout it's lifecycle. This is primarily to be used by
 	 * server instances for working directories, instance specific
 	 * files, etc.
 	 *
@@ -129,6 +130,28 @@ public class ServerPlugin extends Plugin {
 	 * @return java.io.File
 	 */
 	public IPath getTempDirectory(String key) {
+		return getTempDirectory(key, true);
+	}
+	
+	/**
+	 * Returns a temporary directory that the requestor can use
+	 * throughout it's lifecycle. This is primarily to be used by
+	 * server instances for working directories, instance specific
+	 * files, etc.
+	 *
+	 * <p>As long as the same key is used to call this method on
+	 * each use of the workbench, this method directory will return
+	 * the same directory. If recycling is enabled and the directory
+	 * is not requested over a period of time, the directory may be
+	 * deleted and a new one will be assigned on the next request.
+	 * If this behavior is not desired, recycling should be disabled.</p>
+	 *
+	 * @param key
+	 * @param recycle true if directory may be deleted if not used
+	 * over a period of time
+	 * @return java.io.File
+	 */
+	public IPath getTempDirectory(String key, boolean recycle) {
 		if (key == null)
 			return null;
 	
@@ -138,6 +161,11 @@ public class ServerPlugin extends Plugin {
 			TempDir dir = getTempDirs().get(key);
 			if (dir != null) {
 				dir.age = 0;
+				// If recycle status needs changing, update
+				if (dir.recycle != recycle) {
+					dir.recycle = recycle;
+					saveTempDirInfo();
+				}
 				return statePath.append(dir.path);
 			}
 		} catch (Exception e) {
@@ -160,6 +188,7 @@ public class ServerPlugin extends Plugin {
 	
 		TempDir d = new TempDir();
 		d.path = path;
+		d.recycle = recycle;
 		getTempDirs().put(key, d);
 		saveTempDirInfo();
 		return statePath.append(path);
@@ -212,7 +241,14 @@ public class ServerPlugin extends Plugin {
 				TempDir d = new TempDir();
 				d.path = children[i].getString("path");
 				d.age = children[i].getInteger("age").intValue();
-				d.age++;
+				Boolean recycle = children[i].getBoolean("recycle");
+				if (recycle != null) {
+					d.recycle = recycle.booleanValue();
+				}
+				// Age only if recycling is enabled
+				if (d.recycle) {
+					d.age++;
+				}
 				
 				tempDirHash.put(key, d);
 			}
@@ -245,12 +281,14 @@ public class ServerPlugin extends Plugin {
 			while (iterator.hasNext()) {
 				String key = (String) iterator.next();
 				TempDir d = getTempDirs().get(key);
-	
-				if (d.age < 5) {
+
+				// If not recycling or not old enough, keep
+				if (!d.recycle || d.age < 5) {
 					IMemento child = memento.createChild("temp-directory");
 					child.putString("key", key);
 					child.putString("path", d.path);
 					child.putInteger("age", d.age);
+					child.putBoolean("recycle", d.recycle);
 				} else
 					deleteDirectory(statePath.append(d.path).toFile(), null);
 			}

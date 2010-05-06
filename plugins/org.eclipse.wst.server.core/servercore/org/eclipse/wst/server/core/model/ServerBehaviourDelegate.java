@@ -693,7 +693,7 @@ public abstract class ServerBehaviourDelegate {
 
 	/**
 	 * Returns a temporary directory that the requester can use
-	 * throughout it's lifecycle. This is primary to be used by
+	 * throughout it's lifecycle. This is primarily to be used by
 	 * servers for working directories, server specific
 	 * files, etc.
 	 * <p>
@@ -710,6 +710,27 @@ public abstract class ServerBehaviourDelegate {
 	 */
 	protected IPath getTempDirectory() {
 		return server.getTempDirectory();
+	}
+
+	/**
+	 * Returns a temporary directory that the requester can use
+	 * throughout it's lifecycle. This is primarily to be used by
+	 * servers for working directories, server specific
+	 * files, etc.
+	 * <p>
+	 * As long as the same key is used to call this method on
+	 * each use of the workbench, this method directory will return
+	 * the same directory. If recycling is enabled and the directory
+	 * is not requested over a period of time, the directory may be
+	 * deleted and a new one will be assigned on the next request.
+	 * If this behavior is not desired, recycling should be disabled.</p>
+	 *
+	 * @param recycle true if directory may be deleted if not used
+	 * over a period of time
+	 * @return a temporary directory
+	 */
+	protected IPath getTempDirectory(boolean recycle) {
+		return server.getTempDirectory(recycle);
 	}
 
 	/**
