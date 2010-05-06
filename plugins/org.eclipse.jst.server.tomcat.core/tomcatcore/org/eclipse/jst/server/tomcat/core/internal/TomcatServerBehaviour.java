@@ -616,7 +616,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	}
 
 	public IPath getTempDirectory() {
-		return super.getTempDirectory();
+		return super.getTempDirectory(false);
 	}
 
 	/**
