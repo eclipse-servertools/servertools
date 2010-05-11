@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009,2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -82,11 +82,11 @@ public class ProfilePreferencePage extends PreferencePage implements
 			/* Create the combo box */
 			comboBox = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
 
-			GridData data2 = new GridData(GridData.FILL_BOTH);
-			data.verticalAlignment = GridData.CENTER;
-			data.horizontalAlignment = GridData.FILL;
-			data.grabExcessHorizontalSpace = true;
-			comboBox.setLayoutData(data2);
+			GridData comboLayout = new GridData();
+			comboLayout.verticalAlignment = GridData.BEGINNING;
+			comboLayout.horizontalAlignment = GridData.FILL;
+			comboLayout.grabExcessHorizontalSpace = true;
+			comboBox.setLayoutData(comboLayout);
 
 			String[] strList = nameList.toArray(new String[0]);
 			comboBox.setItems( strList );
