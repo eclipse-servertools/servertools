@@ -1,5 +1,5 @@
 /***************************************************************************************************
- * Copyright (c) 2009 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * Copyright (c) 2009, 2010 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
@@ -57,9 +57,7 @@ public class EarModuleAssembler extends AbstractModuleAssembler {
 															// just copy
 				ProjectModule pm = (ProjectModule) module.loadAdapter(ProjectModule.class, null);
 				IModuleResource[] resources = pm.members();
-				// It's assumed here that the URI at least includes the name,
-				// and so removing 1 segment is safe
-				publishHelper.publishFull(resources, parent.append(uri).removeLastSegments(1), monitor);
+				publishHelper.publishToPath(resources, parent.append(uri), monitor);
 				continue;// done! no need to go further
 			}
 			if (shouldRepack(module)) {
