@@ -266,30 +266,31 @@ public class Server extends Base implements IServer {
 		}
 		
 		/**
-		 * Find out all the projects are contained by the server as the list of project that requires to be locked
-		 * during a publish.
-		 * @return the list of projects to be locked during a publish operation.
+		 * Returns the list of projects that requires to be locked during a publish.
+		 * @return the list of projects
 		 */
 		@SuppressWarnings("synthetic-access")
-    List<IProject> getProjectPublishLockList(IProgressMonitor monitor) {
+		List<IProject> getProjectPublishLockList(IProgressMonitor monitor) {
 			final List<IProject> projectPublishLockList = new ArrayList<IProject>();
 			
 			IModule[] curModules = getModules();
 			// Check empty module list since the visitModule does not handle that properly.
 			if (curModules != null && curModules.length > 0) {
-				// Get all the affected projects during the publish.
-				visitModule(getModules(), new IModuleVisitor(){
-					public boolean visit(IModule[] modules2) {
-						for (IModule curModule : modules2) {
-							IProject curProject = curModule.getProject();
-							if (curProject != null) {
-								if (!projectPublishLockList.contains(curProject)) {
-									projectPublishLockList.add(curProject);
+				for (IModule curModule: curModules) {
+					// Get all the affected projects during the publish.
+					visitModule(new IModule[] { curModule }, new IModuleVisitor(){
+						public boolean visit(IModule[] modules2) {
+							for (IModule curModule2 : modules2) {
+								IProject curProject = curModule2.getProject();
+								if (curProject != null) {
+									if (!projectPublishLockList.contains(curProject)) {
+										projectPublishLockList.add(curProject);
+									}
 								}
 							}
-						}
-						return true;
-				}}, monitor);
+							return true;
+					}}, monitor);
+				}
 			}
 			return projectPublishLockList;
 		}
@@ -316,7 +317,7 @@ public class Server extends Base implements IServer {
 				List<IProject> curProjectPublishLockList = getProjectPublishLockList(monitor);
 				
 				publishScheduleRules = new ISchedulingRule[curProjectPublishLockList.size()+1];
-	      IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
+				IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
 				publishScheduleRules[0] = Server.this;
 				int i=1;
 				for (IProject curProj : curProjectPublishLockList) {
