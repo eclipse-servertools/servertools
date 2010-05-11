@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2009 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -243,8 +243,6 @@ public class ModifyModulesComposite extends Composite {
 	}
 
 	public void setServer(IServerAttributes server) {
-		if (isVisible())
-			return;
 		
 		// see bug 185875, 205869
 		if (refreshModules == taskModel.getObject(TASK_REFRESH_MODULES) && server == this.server) {
@@ -290,7 +288,7 @@ public class ModifyModulesComposite extends Composite {
 		
 		// get currently deployed modules
 		IModule[] currentModules = server.getModules();
-		if (currentModules != null) {
+		if ((currentModules != null) && (currentModules.length > 0)) {
 			int size = currentModules.length;
 			for (int i = 0; i < size; i++) {
 				originalModules.add(currentModules[i]);
@@ -410,23 +408,31 @@ public class ModifyModulesComposite extends Composite {
 
 	public void setVisible(boolean b) {
 		if (b) {
-			Display.getDefault().syncExec(new Runnable() {
-				public void run() {
-					if (availableTreeViewer == null || availableTreeViewer.getControl().isDisposed())
-						return;
-					try { // update trees if we can
-						availableTreeViewer.refresh();
-						deployedTreeViewer.refresh();
-						setEnablement();
-					} catch (Exception e) {
-						// ignore
-					}
-				}
-			});
+			this.refresh();
 		}
 		super.setVisible(b);
 	}
 
+	/**
+	 * Refresh the composite
+	 */
+	public void refresh() {
+
+		Display.getDefault().syncExec(new Runnable() {
+			public void run() {
+				if (availableTreeViewer == null || availableTreeViewer.getControl().isDisposed())
+					return;
+				try { // update trees if we can
+					availableTreeViewer.refresh();
+					deployedTreeViewer.refresh();
+					setEnablement();
+				} catch (Exception e) {
+					// ignore
+				}
+			}
+		});
+	}
+	
 	public void setTaskModel(TaskModel model) {
 		this.taskModel = model;
 	}
