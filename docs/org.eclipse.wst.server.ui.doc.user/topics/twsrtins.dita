@@ -1,50 +1,54 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2009, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
+<?Pub Sty _display FontColor="red"?>
 <task id="twsrtins_wst" xml:lang="en-us">
 <title id="twsrtins_title">Starting a server</title>
-<shortdesc id="twsrtins_shortdesc">When you are ready to test your projects,
-you must start a server. In some situations, listed below, the server tools
-start a server for you automatically. For more information on which test server
-will start, refer to the list of related topics at the end of this topic.</shortdesc>
+<shortdesc id="twsrtins_shortdesc">When you are ready to test your
+projects, you must start a server. In some situations, listed below,
+the server tools start a server for you automatically. For more information
+on which test server will start, refer to the list of related topics
+at the end of this topic.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>applications<indexterm>starting servers for testing</indexterm></indexterm>
-<indexterm>projects<indexterm>starting servers for testing</indexterm></indexterm>
-<indexterm>servers<indexterm>starting for testing</indexterm></indexterm>
-</keywords>
+<keywords id="index"><indexterm>applications<indexterm>starting servers
+for testing</indexterm></indexterm><indexterm>projects<indexterm>starting
+servers for testing</indexterm></indexterm><indexterm>servers<indexterm>starting
+for testing</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <prereq><b id="twsrtins_prereq">Prerequisites:</b><ul>
 <li id="twsrtins_prereq_li1"><xref href="twcrtins.dita">Create a server.</xref></li>
 </ul></prereq>
-<context id="twrstins_context"><p>Once you have started the server you can
-test the projects that are associated with the server. You can stop and restart
-the server at any time. The status of the server is displayed in the  <uicontrol>Status</uicontrol> column
-of the Servers view.</p><p>To manually start a server:</p></context>
+<context id="twrstins_context"><p>Once you have started the server
+you can test the projects that are associated with the server. You
+can stop and restart the server at any time. The status of the server
+is displayed in the  <uicontrol>Status</uicontrol> column of the Servers
+view.</p><p>To manually start a server:</p></context>
 <steps id="twrtins_steps">
 <step><cmd>Switch to the Servers view.</cmd></step>
-<step><cmd>In the Servers view, right-click the server you want to start.</cmd>
-</step>
+<step><cmd>In the Servers view, right-click the server you want to
+start.</cmd></step>
 <step><cmd>Select  <uicontrol>Start</uicontrol>. </cmd><info>The following
 things happen:<ul>
-<li>If you have selected the  <uicontrol>Automatically publish when starting
-servers</uicontrol> check box on the Server preferences page (<menucascade>
-<uicontrol>Window</uicontrol><uicontrol> Preferences</uicontrol><uicontrol>Server</uicontrol>
-<uicontrol>Launching</uicontrol></menucascade> ), the workbench
-checks to see if your project and files on the server are synchronized prior
-to starting the server. If they are not, the project and the files are automatically
-updated on the remote server when it is started.</li>
-<li>A Console view opens in the workbench. It will take a minute to start
-the server. If the server fails to start, check for the reason that it failed
-in the Console.</li>
-<li>In the  <uicontrol>Status</uicontrol> column of the Servers view, the
-status of the server changes to  <systemoutput>Started</systemoutput>.</li>
+<li>If you have selected the  <uicontrol>Automatically publish when
+starting servers</uicontrol> check box on the Server preferences page
+(<menucascade><uicontrol>Window</uicontrol><uicontrol> Preferences</uicontrol>
+<uicontrol>Server</uicontrol><uicontrol>Launching</uicontrol>
+</menucascade> ), the workbench checks to see if your project and
+files on the server are synchronized prior to starting the server.
+If they are not, the project and the files are automatically updated
+on the remote server when it is started.</li>
+<li>A Console view opens in the workbench. It will take a minute to
+start the server. If the server fails to start, check for the reason
+that it failed in the Console.</li>
+<li>In the Servers view, the status of the server changes to  <systemoutput>Started</systemoutput>.</li><?Pub
+Caret 7?>
 </ul></info></step>
 </steps>
 <result id="twsrtins_result"><note type="tip">The server is automatically
-started when you right-click on a file and then select  <uicontrol>Run As
-> Run on Server</uicontrol>.</note></result>
+started when you right-click on a file and then select  <uicontrol>Run
+As > Run on Server</uicontrol>.</note></result>
 </taskbody>
 </task>
-<?Pub *0000002752?>
+<?Pub *0000002750?>

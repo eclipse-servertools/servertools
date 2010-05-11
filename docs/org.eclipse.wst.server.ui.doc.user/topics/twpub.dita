@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Arbortext, Inc., 1988-2008, v.4002-->
+<!--Arbortext, Inc., 1988-2009, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <task id="twpub_wst" xml:lang="en-us">
@@ -22,31 +22,37 @@ id="twpub_auto1">If the <uicontrol>Automatically publish when starting
 servers</uicontrol> check box on the Server preferences page (<menucascade>
 <uicontrol>Window</uicontrol><uicontrol>Preferences</uicontrol>
 <uicontrol>Server</uicontrol><uicontrol>Launching</uicontrol>
-</menucascade>) is selected, the server tools check to see if your
-project and files on the server are synchronized. If they are not,
-the project and the files are automatically updated when the server
-is either started or restarted.</p><p id="twpub_p2">To publish your
-application manually you can complete one of the following in the
-Servers view:</p><p id="twpub_auto2">In the workbench, you have several
-options to choose for the <i>Publishing</i> settings. You can set
-these <i>Publishing</i> settings by going into the Servers view, right-click
-the server and select <uicontrol>Open</uicontrol>. The Server editor
-opens. In the <i>Overview</i> page of the server editor, under the <uicontrol>Publishing</uicontrol> settings,
-you are going to find the following settings:<ul>
+</menucascade>) is selected, the workbench checks to see if your project
+and files on the server are synchronized. If they are not, the project
+and the files are automatically updated when the server is either
+started or restarted.</p><p id="twpub_p2">To publish your application
+manually you can complete one of the following in the Servers view:</p><p
+id="twpub_auto2">In the workbench, you have several options to choose
+for the <i>Publishing</i> settings. You can set these <i>Publishing</i> settings
+by going into the Servers view, right-click the server and select <uicontrol>Open</uicontrol>.
+The Server editor opens. In the <i>Overview</i> page of the server
+editor, under the <uicontrol>Publishing</uicontrol> settings, you
+are going to find the following settings:<ul>
 <li><uicontrol>Never publish automatically</uicontrol>: Specifies
 the workbench should never publish files to the server.</li>
 <li><uicontrol>Automatically publish when resources change</uicontrol>:
-Specifies that when a change is made to the files running on the server,
-the number of <i>seconds</i> specified in the <uicontrol>Publishing
-interval </uicontrol>control will need to pass before the workbench
+Specifies the workbench to issue a publish after changes on a file
+that is associated to the server are saved and a full time interval
+has passed in the <uicontrol>Publishing interval</uicontrol> setting.</li>
+<li><uicontrol>Automatically publish after a build event</uicontrol>:
+Specifies the workbench to issue a publish after changes on a file
+that requires a build and is associated to the server are saved, and
+a full time interval has passed in the <uicontrol>Publishing interval</uicontrol> setting.</li>
+<li><uicontrol>Publishing interval (in seconds)</uicontrol>: Specifies
+the number of <i>seconds</i> that needs to pass before the workbench
 calls a publish to happen on the server. However, if you make a subsequent
 change to the files before this time interval has completed, the publish
 is delayed as the timer is reset. The workbench makes a publish to
 the server only after the full time interval has passed.  If you set
-the publishing interval to 0 seconds, a change to the files running
-on the server should automatically request a publish command to occur.</li>
-</ul></p><?Pub Caret1?><p id="twpub_auto3">In the workbench, the default
-setting is the <b>Automatically publish when resources change</b> option
+the publishing interval to 0 seconds, an immediate publish should
+happen after changes on a file are saved.</li>
+</ul></p><?Pub Caret -1?><p id="twpub_auto3">In the workbench, the
+default setting is the <b>Automatically publish when resources change</b> option
 is enabled with a value set in the publishing interval.</p><b
 id="twpub_manualtitle">Manually publishing to a server</b><p
 id="twpub_manual1">If you do not want to wait for the automatic publishing
@@ -70,4 +76,4 @@ in these projects are transferred to the location that is defined
 by the server.</p></result>
 </taskbody>
 </task>
-<?Pub *0000004271?>
+<?Pub *0000004683?>

@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2006, v.4002-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2009, v.4002-->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
  "map.dtd">
-<map id="relationship">
+<?Pub Sty _display FontColor="red"?>
+<map id="relationship" xml:lang="en-us">
 <reltable>
 <relheader>
 <relcolspec type="concept"></relcolspec>
@@ -12,11 +13,12 @@
 </relheader>
 <relrow>
 <relcell>
-<topicref href="topics/cwflow.dita" navtitle="Which test server will start">
-</topicref>
+<topicref href="topics/cwflow.dita"
+navtitle="Which test server will start"></topicref>
 </relcell>
 <relcell>
-<topicref href="topics/twsrtins.dita" navtitle="Starting a server"></topicref>
+<topicref href="topics/twsrtins.dita" navtitle="Starting a server">
+</topicref>
 </relcell>
 <relcell></relcell>
 <relcell></relcell>
@@ -24,23 +26,25 @@
 <relrow>
 <relcell></relcell>
 <relcell>
-<topicref href="topics/twtcpprf.dita" navtitle="Defining the TCP/IP Monitor preference">
-</topicref>
+<topicref href="topics/twtcpprf.dita"
+navtitle="Defining the TCP/IP Monitor preference"></topicref>
 </relcell>
 <relcell>
-<topicref href="topics/rwtcpvw.dita" navtitle="TCP/IP Monitor view"></topicref>
+<topicref href="topics/rwtcpvw.dita" navtitle="TCP/IP Monitor view">
+</topicref>
 </relcell>
 <relcell></relcell>
 </relrow>
 <relrow>
 <relcell>
-<topicref href="topics/cwres.dita" navtitle="Resources used by the Server Tools">
-</topicref>
+<topicref href="topics/cwres.dita"
+navtitle="Resources used by the Server Tools"></topicref>
 </relcell>
 <relcell>
-<topicref href="topics/tmetasrv.dita" linking="targetonly" navtitle="Displaying or hiding the metadata of the server">
-</topicref>
-<topicref href="topics/twinstprf.dita" linking="targetonly" navtitle="Defining the server runtime environments preference"><?Pub Caret?>
+<topicref href="topics/tmetasrv.dita" linking="targetonly"
+navtitle="Displaying or hiding the metadata of the server"></topicref>
+<topicref href="topics/twinstprf.dita" linking="targetonly"
+navtitle="Defining the server runtime environments preference">
 </topicref>
 </relcell>
 <relcell></relcell>
@@ -49,8 +53,8 @@
 <relrow>
 <relcell></relcell>
 <relcell collection-type="family">
-<topicref href="topics/twsrvprf.dita" navtitle="Defining the server preferences">
-</topicref>
+<topicref href="topics/twsrvprf.dita"
+navtitle="Defining the server preferences"></topicref>
 <topicref href="topics/twpub.dita" navtitle="Publishing your application">
 </topicref>
 </relcell>
@@ -60,14 +64,27 @@
 <relrow>
 <relcell></relcell>
 <relcell>
-<topicref href="topics/twtcpprf.dita" navtitle="Defining the TCP/IP monitor preferences">
-</topicref>
+<topicref href="topics/twtcpprf.dita"
+navtitle="Defining the TCP/IP monitor preferences"></topicref>
 </relcell>
 <relcell>
-<topicref href="topics/rwtcpvw.dita" navtitle="TCP/IP monitor view"></topicref>
+<topicref href="topics/rwtcpvw.dita" navtitle="TCP/IP monitor view">
+</topicref>
 </relcell>
 <relcell></relcell>
 </relrow>
+<relrow>
+<relcell></relcell>
+<relcell collection-type="family">
+<topicref href="topics/twcrtins.dita" navtitle="Creating a server">
+</topicref>
+<topicref href="topics/twinstprf.dita" linking="targetonly"
+navtitle="Defining the server runtime environments preference">
+</topicref>
+</relcell>
+<relcell></relcell>
+<relcell></relcell>
+</relrow><?Pub Caret -2?>
 </reltable>
 </map>
-<?Pub *0000002042?>
+<?Pub *0000002400?>

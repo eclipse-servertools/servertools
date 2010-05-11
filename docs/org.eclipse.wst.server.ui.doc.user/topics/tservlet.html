@@ -26,56 +26,59 @@
 
 
 
-<div><p>The debugger enables you to detect and
-diagnose errors in your application. It allows you to control the execution
-of your program by setting breakpoints, suspending threads, stepping through
-the code, and examining the contents of the variables. You can debug a servlet
-on a server without losing the state of your application.</p>
+<div><p>The debugger enables you to detect
+and diagnose errors in your application. It allows you to control
+the execution of your program by setting breakpoints, suspending threads,
+stepping through the code, and examining the contents of the variables.
+You can debug a servlet on a server without losing the state of your
+application.</p>
 
 <div class="section" id="tservlet_wst__tservlet_context"><a name="tservlet_wst__tservlet_context"><!-- --></a>To debug a servlet on a server:</div>
 
 <ol>
-<li class="stepexpand" id="tservlet_wst__tservlet_step1"><a name="tservlet_wst__tservlet_step1"><!-- --></a><span>In the Project Explorer view, open your servlet.</span>
- In a Web project, servlets are located in the JavaSource folder. The
-servlet opens in an editor.</li>
+<li class="stepexpand" id="tservlet_wst__tservlet_step1"><a name="tservlet_wst__tservlet_step1"><!-- --></a><span>In the Project Explorer view, open
+your servlet.</span> In a Web project, servlets are located in
+the JavaSource folder. The servlet opens in an editor.</li>
 
-<li class="stepexpand" id="tservlet_wst__tservlet_step2"><a name="tservlet_wst__tservlet_step2"><!-- --></a><span>To set one or more breakpoints in the editor,
-double-click in the margin beside the line of code that you want to set as
-a breakpoint.</span></li>
+<li class="stepexpand" id="tservlet_wst__tservlet_step2"><a name="tservlet_wst__tservlet_step2"><!-- --></a><span>To set one or more breakpoints in the
+editor, double-click in the margin beside the line of code that you
+want to set as a breakpoint.</span></li>
 
-<li class="stepexpand" id="tservlet_wst__tservlet_step3"><a name="tservlet_wst__tservlet_step3"><!-- --></a><span>Ensure the project is associated to run on
-a server.</span></li>
+<li class="stepexpand" id="tservlet_wst__tservlet_step3"><a name="tservlet_wst__tservlet_step3"><!-- --></a><span>Ensure the project is associated to
+run on a server.</span></li>
 
-<li class="stepexpand" id="tservlet_wst__tservlet_step4"><a name="tservlet_wst__tservlet_step4"><!-- --></a><span>Select the servlet and from the servlet's context
-menu in the Project Explorer view, click  <span class="uicontrol">Debug As &gt; Debug on Server</span>.</span>
- Open the Servers view to see that the server is launched.</li>
+<li class="stepexpand" id="tservlet_wst__tservlet_step4"><a name="tservlet_wst__tservlet_step4"><!-- --></a><span>Select the servlet and from the servlet's
+context menu in the Project Explorer view, click  <span class="uicontrol">Debug
+As &gt; Debug on Server</span>.</span> Open the Servers view
+to see that the server is launched.</li>
 
-<li class="stepexpand" id="tservlet_wst__tservlet_step5"><a name="tservlet_wst__tservlet_step5"><!-- --></a><span>When the breakpoint is hit, the Debug view
-opens.</span> Step through the code, inspect and display variables, and
-make any necessary changes to the servlet. For detailed information on debugging,
-refer to the online help.</li>
+<li class="stepexpand" id="tservlet_wst__tservlet_step5"><a name="tservlet_wst__tservlet_step5"><!-- --></a><span>When the breakpoint is hit, the Debug
+view opens.</span> Step through the code, inspect and display
+variables, and make any necessary changes to the servlet. For detailed
+information on debugging, refer to the online help.</li>
 
-<li class="stepexpand" id="tservlet_wst__tservlet_step6"><a name="tservlet_wst__tservlet_step6"><!-- --></a><span>When you are finished debugging, remove the
-breakpoint and save the servlet.</span></li>
+<li class="stepexpand" id="tservlet_wst__tservlet_step6"><a name="tservlet_wst__tservlet_step6"><!-- --></a><span>When you are finished debugging, remove
+the breakpoint and save the servlet.</span></li>
 
 <li class="stepexpand" id="tservlet_wst__tservlet_step7"><a name="tservlet_wst__tservlet_step7"><!-- --></a><span>Click the  <span class="uicontrol">Resume</span> icon
 on the Debug toolbar to execute the servlet.</span></li>
 
-<li class="stepexpand" id="tservlet_wst__tservlet_step8"><a name="tservlet_wst__tservlet_step8"><!-- --></a><span>If you have hot method replace enabled, your
-changes are already in the running application.</span></li>
+<li class="stepexpand" id="tservlet_wst__tservlet_step8"><a name="tservlet_wst__tservlet_step8"><!-- --></a><span>If you have hot method replace enabled,
+your changes are already in the running application.</span></li>
 
-<li class="stepexpand" id="tservlet_wst__tservlet_step9"><a name="tservlet_wst__tservlet_step9"><!-- --></a><span>If you have automatic class reloading enabled,
-which is the default setting, click the  <span class="uicontrol">Refresh</span> icon
-in the Web Browser to update the changes.</span> You do not lose the state
-of your application.</li>
+<li class="stepexpand" id="tservlet_wst__tservlet_step9"><a name="tservlet_wst__tservlet_step9"><!-- --></a><span>If you have automatic class reloading
+enabled, which is the default setting, click the  <span class="uicontrol">Refresh</span> icon
+in the Web Browser to update the changes.</span> You do not lose
+the state of your application.</li>
 
-<li class="stepexpand"><span id="tservlet_wst__tservlet_cmd10"><a name="tservlet_wst__tservlet_cmd10"><!-- --></a>If you do not have automatic class reloading
-enabled, you lose the state of the application.</span> To
-update the changes, restart the server.</li>
+<li class="stepexpand"><span id="tservlet_wst__tservlet_cmd10"><a name="tservlet_wst__tservlet_cmd10"><!-- --></a>If you do not have automatic class
+reloading enabled, you lose the state of the application.</span> To update the changes, restart the server.
+</li>
 
 </ol>
 
-<div class="section" id="tservlet_wst__tservlet_result"><a name="tservlet_wst__tservlet_result"><!-- --></a><strong>Result:</strong><p>The server recognizes your changes.</p>
+<div class="section" id="tservlet_wst__tservlet_result"><a name="tservlet_wst__tservlet_result"><!-- --></a><p>The result is the server recognizes
+your changes.</p>
 </div>
 
 </div>

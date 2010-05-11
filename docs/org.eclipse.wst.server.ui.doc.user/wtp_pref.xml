@@ -7,7 +7,7 @@
 <topic label="Defining the server preferences" href="topics/twsrvprf.html"/>
 <topic label="Defining the audio preferences" href="topics/tprefaud.html"/>
 <topic label="Defining the launching preferences" href="topics/twlaunchpref.html"/>
-<topic label="Defining the installed server runtime environments preferences" href="topics/twinstprf.html">
+<topic label="Defining the server runtime environments preferences" href="topics/twinstprf.html">
 <link toc="../org.eclipse.jst.server.ui.doc.user/tomcat_pref.xml"/>
 </topic>
 <topic label="Defining the TCP/IP Monitor preferences" href="topics/twtcpprf.html">

@@ -13,7 +13,6 @@
 <meta name="description" content="Publishing involves copying files (projects, resource files, and server configurations) to the correct location for the server to find and use them. In the test environments, these files may already be in the correct location. In some cases, temporary copies of the server configurations may be created. You can either publish your application automatically or manually." />
 <meta content="applications, publishing to servers, servers, publishing applications" name="DC.subject" />
 <meta content="applications, publishing to servers, servers, publishing applications" name="keywords" />
-<meta scheme="URI" name="DC.Relation" content="../topics/twsrvprf.html" />
 <meta content="XHTML" name="DC.Format" />
 <meta content="twpub_wst" name="DC.Identifier" />
 <meta content="en-us" name="DC.Language" />
@@ -39,37 +38,44 @@ manually.</p>
 servers</span> check box on the Server preferences page (<span class="menucascade">
 <span class="uicontrol">Window</span> &gt; <span class="uicontrol">Preferences</span>
  &gt; <span class="uicontrol">Server</span> &gt; <span class="uicontrol">Launching</span>
-</span>) is selected, the server tools check to see if your
-project and files on the server are synchronized. If they are not,
-the project and the files are automatically updated when the server
-is either started or restarted.</p>
-<p id="twpub_wst__twpub_p2"><a name="twpub_wst__twpub_p2"><!-- --></a>To publish your
-application manually you can complete one of the following in the
-Servers view:</p>
-<div class="p" id="twpub_wst__twpub_auto2"><a name="twpub_wst__twpub_auto2"><!-- --></a>In the workbench, you have several
-options to choose for the <em>Publishing</em> settings. You can set
-these <em>Publishing</em> settings by going into the Servers view, right-click
-the server and select <span class="uicontrol">Open</span>. The Server editor
-opens. In the <em>Overview</em> page of the server editor, under the <span class="uicontrol">Publishing</span> settings,
-you are going to find the following settings:<ul>
+</span>) is selected, the workbench checks to see if your project
+and files on the server are synchronized. If they are not, the project
+and the files are automatically updated when the server is either
+started or restarted.</p>
+<p id="twpub_wst__twpub_p2"><a name="twpub_wst__twpub_p2"><!-- --></a>To publish your application
+manually you can complete one of the following in the Servers view:</p>
+<div class="p" id="twpub_wst__twpub_auto2"><a name="twpub_wst__twpub_auto2"><!-- --></a>In the workbench, you have several options to choose
+for the <em>Publishing</em> settings. You can set these <em>Publishing</em> settings
+by going into the Servers view, right-click the server and select <span class="uicontrol">Open</span>.
+The Server editor opens. In the <em>Overview</em> page of the server
+editor, under the <span class="uicontrol">Publishing</span> settings, you
+are going to find the following settings:<ul>
 <li><span class="uicontrol">Never publish automatically</span>: Specifies
 the workbench should never publish files to the server.</li>
 
 <li><span class="uicontrol">Automatically publish when resources change</span>:
-Specifies that when a change is made to the files running on the server,
-the number of <em>seconds</em> specified in the <span class="uicontrol">Publishing
-interval </span>control will need to pass before the workbench
+Specifies the workbench to issue a publish after changes on a file
+that is associated to the server are saved and a full time interval
+has passed in the <span class="uicontrol">Publishing interval</span> setting.</li>
+
+<li><span class="uicontrol">Automatically publish after a build event</span>:
+Specifies the workbench to issue a publish after changes on a file
+that requires a build and is associated to the server are saved, and
+a full time interval has passed in the <span class="uicontrol">Publishing interval</span> setting.</li>
+
+<li><span class="uicontrol">Publishing interval (in seconds)</span>: Specifies
+the number of <em>seconds</em> that needs to pass before the workbench
 calls a publish to happen on the server. However, if you make a subsequent
 change to the files before this time interval has completed, the publish
 is delayed as the timer is reset. The workbench makes a publish to
 the server only after the full time interval has passed.  If you set
-the publishing interval to 0 seconds, a change to the files running
-on the server should automatically request a publish command to occur.</li>
+the publishing interval to 0 seconds, an immediate publish should
+happen after changes on a file are saved.</li>
 
 </ul>
 </div>
-<p id="twpub_wst__twpub_auto3"><a name="twpub_wst__twpub_auto3"><!-- --></a>In the workbench, the default
-setting is the <strong>Automatically publish when resources change</strong> option
+<p id="twpub_wst__twpub_auto3"><a name="twpub_wst__twpub_auto3"><!-- --></a>In the workbench, the
+default setting is the <strong>Automatically publish when resources change</strong> option
 is enabled with a value set in the publishing interval.</p>
 <strong id="twpub_wst__twpub_manualtitle"><a name="twpub_wst__twpub_manualtitle"><!-- --></a>Manually publishing to a server</strong><p id="twpub_wst__twpub_manual1"><a name="twpub_wst__twpub_manual1"><!-- --></a>If you do not want to wait for the automatic publishing
 interval to pass, at anytime you can manually request the workbench
@@ -97,10 +103,7 @@ by the server.</p>
 
 </div>
 
-<div><div class="reltasks"><strong>Related tasks</strong><br />
-<div><a href="../topics/twsrvprf.html" title="Using the Preferences page, you can define attribute used for testing projects by the servers.">Defining the server preference</a></div>
-</div>
-</div>
+<div />
 
 </body>
 </html>

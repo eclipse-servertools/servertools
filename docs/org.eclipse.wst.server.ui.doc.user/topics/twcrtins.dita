@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Arbortext, Inc., 1988-2008, v.4002-->
+<!--Arbortext, Inc., 1988-2009, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
+<?Pub Sty _display FontColor="red"?>
 <?Pub Inc?>
 <task id="twcrtins_wst" xml:lang="en-us">
 <title id="title">Creating a server</title>
@@ -32,12 +33,7 @@ click <uicontrol>Next</uicontrol>.</choice>
 <step id="step2"><cmd>The New Server wizard opens. This wizard defines
 a new server, that contains information required to point to a specific
 runtime environment for local or remote testing, or for publishing
-to an application server.</cmd></step><?Pub Caret1?>
-<step id="step3"><cmd>In the <uicontrol>Server's host name</uicontrol> field,
-you can provide the fully qualified DNS name or IP address of the
-host machine that where the server is running. By default, this field
-is pre-filled with the default address: <userinput>localhost</userinput></cmd>
-</step>
+to an application server.</cmd></step>
 <step><cmd>In the <uicontrol>Select the server type</uicontrol> list,
 select the type of server or test environment where you want to publish
 or test your resources.</cmd>
@@ -71,13 +67,34 @@ level or any servers that may have a version-level of 1.2.</dd>
 </dlentry></dl></info></substep>
 </substeps>
 </step>
-<step><cmd>Click <uicontrol>Next</uicontrol> and follow the instructions
-in the wizard to specify the details of the server that you want to
-create.</cmd></step>
-<step><cmd>Click  <uicontrol>Finish</uicontrol>.</cmd><info>The new
-server appears in the Servers view under the  <uicontrol>Server</uicontrol> column.</info>
+<step id="step3"><cmd>In the <uicontrol>Server's host name</uicontrol> field,
+you can provide the fully qualified DNS name or IP address of the
+host machine that where the server is running. By default, this field
+is pre-filled with the default address: <userinput>localhost</userinput>.</cmd>
 </step>
+<step id="step5"><cmd>(Optional) In the <uicontrol>Server name</uicontrol> field,
+type a label to identify this server entry in the Servers view.</cmd>
+<info> By default, this field is completed with the following naming
+convention: <i>server type</i> at <i>host name</i>, for example <userinput>Tomcat
+v6.0 Server at localhost</userinput>.</info></step>
+<step id="step6"><cmd>In the <uicontrol>Server runtime environment</uicontrol> list,
+select a server runtime environment as defined in the Preferences
+page (<menucascade><uicontrol>Window</uicontrol><uicontrol>Preferences</uicontrol>
+<uicontrol>Server</uicontrol><uicontrol>Runtime Environments</uicontrol>
+</menucascade>). You can direct the workbench to use a specific runtime
+environment of an application server for compiling, testing, or running
+your application. To modify the server runtime environment, select
+the <uicontrol>Configure runtime environments</uicontrol> link. To
+add a new server runtime environment, select the <uicontrol>Add</uicontrol> link.</cmd>
+<info>For more details about runtime environments, see the <i>Defining
+the server runtime environments preferences</i> link at the bottom
+of this topic.</info></step><?Pub Caret 614?>
+<step id="step7"><cmd>Click <uicontrol>Next</uicontrol> and follow
+the instructions in the wizard to specify the details of the server
+that you want to create.</cmd></step>
+<step id="step8"><cmd>Click  <uicontrol>Finish</uicontrol>.</cmd><info>The
+new server appears in the Servers view.</info></step>
 </steps>
 </taskbody>
 </task>
-<?Pub *0000004019?>
+<?Pub *0000005228?>

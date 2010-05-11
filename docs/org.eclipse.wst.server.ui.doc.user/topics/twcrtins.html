@@ -54,12 +54,6 @@ a new server, that contains information required to point to a specific
 runtime environment for local or remote testing, or for publishing
 to an application server.</span></li>
 
-<li class="stepexpand" id="twcrtins_wst__step3"><a name="twcrtins_wst__step3"><!-- --></a><span>In the <span class="uicontrol">Server's host name</span> field,
-you can provide the fully qualified DNS name or IP address of the
-host machine that where the server is running. By default, this field
-is pre-filled with the default address: <kbd class="userinput">localhost</kbd></span>
-</li>
-
 <li class="stepexpand"><span>In the <span class="uicontrol">Select the server type</span> list,
 select the type of server or test environment where you want to publish
 or test your resources.</span>
@@ -110,18 +104,43 @@ level or any servers that may have a version-level of 1.2.</dd>
 
 </li>
 
-<li class="stepexpand"><span>Click <span class="uicontrol">Next</span> and follow the instructions
-in the wizard to specify the details of the server that you want to
-create.</span></li>
-
-<li class="stepexpand"><span>Click  <span class="uicontrol">Finish</span>.</span> The new
-server appears in the Servers view under the  <span class="uicontrol">Server</span> column.
+<li class="stepexpand" id="twcrtins_wst__step3"><a name="twcrtins_wst__step3"><!-- --></a><span>In the <span class="uicontrol">Server's host name</span> field,
+you can provide the fully qualified DNS name or IP address of the
+host machine that where the server is running. By default, this field
+is pre-filled with the default address: <kbd class="userinput">localhost</kbd>.</span>
 </li>
+
+<li class="stepexpand" id="twcrtins_wst__step5"><a name="twcrtins_wst__step5"><!-- --></a><span>(Optional) In the <span class="uicontrol">Server name</span> field,
+type a label to identify this server entry in the Servers view.</span>
+  By default, this field is completed with the following naming
+convention: <em>server type</em> at <em>host name</em>, for example <kbd class="userinput">Tomcat
+v6.0 Server at localhost</kbd>.</li>
+
+<li class="stepexpand" id="twcrtins_wst__step6"><a name="twcrtins_wst__step6"><!-- --></a><span>In the <span class="uicontrol">Server runtime environment</span> list,
+select a server runtime environment as defined in the Preferences
+page (<span class="menucascade"><span class="uicontrol">Window</span> &gt; <span class="uicontrol">Preferences</span>
+ &gt; <span class="uicontrol">Server</span> &gt; <span class="uicontrol">Runtime Environments</span>
+</span>). You can direct the workbench to use a specific runtime
+environment of an application server for compiling, testing, or running
+your application. To modify the server runtime environment, select
+the <span class="uicontrol">Configure runtime environments</span> link. To
+add a new server runtime environment, select the <span class="uicontrol">Add</span> link.</span>
+ For more details about runtime environments, see the <em>Defining
+the server runtime environments preferences</em> link at the bottom
+of this topic.</li>
+
+<li class="stepexpand" id="twcrtins_wst__step7"><a name="twcrtins_wst__step7"><!-- --></a><span>Click <span class="uicontrol">Next</span> and follow
+the instructions in the wizard to specify the details of the server
+that you want to create.</span></li>
+
+<li class="stepexpand" id="twcrtins_wst__step8"><a name="twcrtins_wst__step8"><!-- --></a><span>Click  <span class="uicontrol">Finish</span>.</span> The
+new server appears in the Servers view.</li>
 
 </ol>
 
 </div>
 
+<div />
 
 </body>
 </html>

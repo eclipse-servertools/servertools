@@ -1,22 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2006, v.4002-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2009, v.4002-->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
  "map.dtd">
-<map title="Server Preferences">
-<topicref href="topics/tpref.dita" id="pref_server" locktitle="yes" navtitle="Defining server preferences">
-<topicref href="topics/twsrvprf.dita" locktitle="yes" navtitle="Defining the server preferences">
-</topicref>
-<topicref href="topics/tprefaud.dita" locktitle="yes" navtitle="Defining the audio preferences">
-</topicref>
-<topicref href="topics/twlaunchpref.dita" locktitle="yes" navtitle="Defining the launching preferences">
-</topicref>
-<topicref href="topics/twinstprf.dita" locktitle="yes" navtitle="Defining the installed server runtime environments preferences">
-<navref mapref="../org.eclipse.jst.server.ui.doc.user/tomcat_pref.ditamap"/>
-</topicref>
-<topicref href="topics/twtcpprf.dita" locktitle="yes" navtitle="Defining the TCP/IP Monitor preferences">
+<?Pub Sty _display FontColor="red"?>
+<map title="Server Preferences" xml:lang="en-us">
+<topicref href="topics/tpref.dita" id="pref_server" locktitle="yes"
+navtitle="Defining server preferences">
+<topicref href="topics/twsrvprf.dita" locktitle="yes"
+navtitle="Defining the server preferences"></topicref>
+<topicref href="topics/tprefaud.dita" locktitle="yes"
+navtitle="Defining the audio preferences"></topicref>
+<topicref href="topics/twlaunchpref.dita" locktitle="yes"
+navtitle="Defining the launching preferences"></topicref>
+<topicref href="topics/twinstprf.dita" locktitle="yes"
+navtitle="Defining the server runtime environments preferences">
+<navref
+mapref="../org.eclipse.jst.server.ui.doc.user/tomcat_pref.ditamap"/><?Pub
+Caret -2?></topicref>
+<topicref href="topics/twtcpprf.dita" locktitle="yes"
+navtitle="Defining the TCP/IP Monitor preferences">
 <topicref href="topics/rwtcpvw.dita" linking="sourceonly" locktitle="yes"
-navtitle="TCP/IP Monitor view"><?Pub Caret?></topicref>
+navtitle="TCP/IP Monitor view"></topicref>
 </topicref>
 </topicref>
 </map>
-<?Pub *0000001126?>
+<?Pub *0000001169?>

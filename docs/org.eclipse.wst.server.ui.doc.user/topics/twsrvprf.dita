@@ -1,35 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2006, v.4002-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2009, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <?Pub Sty _display FontColor="red"?>
 <?Pub Inc?>
 <task id="twsrvprf_wst" xml:lang="en-us">
-<title id="title">Defining the server preference<!--Defining the server preferences--></title>
-<shortdesc id="shortdesc">Using the Preferences page, you can define attribute
-used for testing projects by the servers.</shortdesc>
+<title id="title">Defining the server preference</title>
+<shortdesc id="shortdesc">Using the Preferences page, you can define
+attribute used for testing projects by the servers.</shortdesc>
 <prolog><metadata>
 <keywords id="index"><indexterm>preferences<indexterm>servers<indexterm>testing</indexterm></indexterm></indexterm>
-<indexterm>servers<indexterm>preferences</indexterm></indexterm><indexterm>views<indexterm>server
-preferences</indexterm></indexterm></keywords>
+<indexterm>servers<indexterm>preferences</indexterm></indexterm>
+<indexterm>views<indexterm>server preferences</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
-<context>To define this preference<?Pub Caret?>, complete the following steps:<!--To define these preferences, complete the following steps:--></context>
+<context>To define this preference, complete the following steps:</context>
 <steps id="steps">
-<step><cmd>In the toolbar, select <menucascade><uicontrol>Window</uicontrol>
+<step id="step1"><cmd>In the toolbar, select <menucascade><uicontrol>Window</uicontrol>
 <uicontrol>Preferences</uicontrol></menucascade>.</cmd></step>
-<step><cmd>In the Preferences page, select  <uicontrol>Server</uicontrol>.</cmd>
+<step id="step2"><cmd>In the Preferences page, select  <uicontrol>Server</uicontrol>.</cmd>
 </step>
-<step><cmd>Specify the following setting by selecting the check box:<!--Specify one or more of the following settings by selecting the appropriate check box:--></cmd>
-<info><dl><dlentry>
-<dt>Show Servers view when server state changes</dt>
-<dd>The Servers view is displayed on the workbench when there are any activities
-in the Servers view. For more details about the server states refer to the <xref
-href="rwrcview.dita">Servers View</xref> topic.</dd>
-</dlentry></dl></info></step>
-<step><cmd>Click  <uicontrol>Apply</uicontrol> and then  <uicontrol>OK</uicontrol> to
-save your changes.</cmd></step>
+<step><cmd id="cmd3">Select the <uicontrol>Show Servers view when
+server state changes</uicontrol> check box, if you want the Servers
+view to display on the workbench when there are any activities in
+the Servers view.</cmd><info>For more details about the server states
+refer to the <xref href="rwrcview.dita">Servers View</xref> topic.</info>
+</step><?Pub Caret -1?>
+<step id="step4"><cmd>Click  <uicontrol>Apply</uicontrol> and then
+ <uicontrol>OK</uicontrol> to save your changes.</cmd></step>
 </steps>
 </taskbody>
 </task>
-<?Pub *0000001831?>
+<?Pub *0000001633?>

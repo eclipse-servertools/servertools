@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS type="org.eclipse.help.contexts"?>
 <!-- /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -215,7 +215,7 @@ Select the <b>OK</b> button to apply your delete options.
 </context>
 
 <context id="seop0002">
-<description>Specify the name assign to the server.  This name is displayed in the Servers view under the Server column.
+<description>Specify the name assign to the server.  This name is displayed in the Servers view.
 </description>
 </context>
 
@@ -243,12 +243,22 @@ To change the server runtime environment, select the <b>Runtime Environment</b> 
 </context>
 
 <context id="seop0012">
-<description>Specifies that all the files should automatically be published to the server at every <b>seconds</b> interval, where <b>seconds</b> is the number of seconds you have specified in the <b>Publishing interval</b> control.
-</description>
+<description>Specifies the workbench to issue a publish after changes on a file that is associated to the server are saved and a full time interval has passed in the <b>Publishing
+interval</b> setting.</description>
+</context>
+
+<context id="seop0014">
+<description>Specifies the workbench to issue a publish after changes on a file that requires a build and is associated to the server are saved, and a full time interval has passed in the <b>Publishing
+interval</b> setting.</description>
 </context>
 
 <context id="seop0016">
-<description>Specifies the tools should never publish files to the server.
+<description>Specifies the workbench should never publish files to the server.
+</description>
+</context>
+
+<context id="seop0018">
+<description>Specifies the number of <i>seconds</i> that needs to pass before the workbench calls a publish to happen on the server. However, if you make a subsequent change to the files before this time interval has completed, the publish is delayed as the timer is reset. The workbench makes a publish to the server only after the full time interval has passed.  If you set the publishing interval to 0 seconds, an immediate publish should happen after changes on a file are saved.
 </description>
 </context>
 

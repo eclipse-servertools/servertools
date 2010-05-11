@@ -11,8 +11,8 @@
 <meta name="DC.Title" content="Defining the launching preferences" />
 <meta name="abstract" content="Using the Preferences page, you can define the preferences that the servers use when starting or switching server modes. Switching server modes occurs when you use the Run on Server or Debug on Server commands." />
 <meta name="description" content="Using the Preferences page, you can define the preferences that the servers use when starting or switching server modes. Switching server modes occurs when you use the Run on Server or Debug on Server commands." />
-<meta content="preferences, servers, launching, launching preferences, workbench, launching preferences" name="DC.subject" />
-<meta content="preferences, servers, launching, launching preferences, workbench, launching preferences" name="keywords" />
+<meta content="preferences, servers, launching, launching preferences, workbench" name="DC.subject" />
+<meta content="preferences, servers, launching, launching preferences, workbench" name="keywords" />
 <meta content="XHTML" name="DC.Format" />
 <meta content="twlaunchpref_wst" name="DC.Identifier" />
 <meta content="en-us" name="DC.Language" />
@@ -26,10 +26,11 @@
 
 
 
-<div><p><span id="shortdesc_ph1"><a name="shortdesc_ph1"><!-- --></a>Using the Preferences page,
-you can define the preferences that the servers use when starting or switching
-server modes. Switching server modes occurs when you use the <span class="uicontrol">Run
-on Server</span></span><span id="shortdesc_ph2"><a name="shortdesc_ph2"><!-- --></a> or <span class="uicontrol">Debug on Server</span> commands.</span></p>
+<div><p><span id="shortdesc_ph1"><a name="shortdesc_ph1"><!-- --></a>Using the Preferences
+page, you can define the preferences that the servers use when starting
+or switching server modes. Switching server modes occurs when you
+use the <span class="uicontrol">Run on Server</span></span><span id="shortdesc_ph2"><a name="shortdesc_ph2"><!-- --></a> or <span class="uicontrol">Debug
+on Server</span> commands.</span></p>
 
 <div class="p" />
 
@@ -45,99 +46,100 @@ then select <span class="uicontrol">Launching</span>.</span></li>
 <li><span id="twlaunchpref_wst__step3"><a name="twlaunchpref_wst__step3"><!-- --></a>Specify one or more of the following settings:</span>
 
 <table class="choicetableborder" summary="" cellspacing="0" cellpadding="4" rules="rows" frame="hsides" border="1">
-<thead><tr><th valign="bottom" id="N100C0-option" align="left">Option</th>
-<th valign="bottom" id="N100C0-desc" align="left">Description</th></tr></thead>
+<thead><tr><th valign="bottom" id="N100C1-option" align="left">Option</th>
+<th valign="bottom" id="N100C1-desc" align="left">Description</th></tr></thead>
 <tbody>
-<tr><td valign="top" headers="N100C0-option" id="N100CB"><strong>Automatically publish when starting servers</strong></td>
+<tr><td valign="top" headers="N100C1-option" id="N100CC"><strong>Automatically publish when starting servers</strong></td>
 
-<td valign="top" headers="N100C0-desc N100CB">Specifies that all the files should automatically be published before
-starting the server.</td>
+<td valign="top" headers="N100C1-desc N100CC">Specifies that all the files should automatically be published
+before starting the server.</td>
 </tr>
 
-<tr><td valign="top" headers="N100C0-option" id="N100DC"><strong>Automatically restart servers when necessary</strong></td>
+<tr><td valign="top" headers="N100C1-option" id="N100DD"><strong>Save dirty editors before starting server</strong></td>
 
-<td valign="top" headers="N100C0-desc N100DC">Specifies that the server tools can automatically restart the server
-when it detects that the server must be restarted to handle resource changes
-in the workspace.</td>
-</tr>
+<td valign="top" headers="N100C1-desc N100DD">Specify the preference for saving the changes in any open
+server editors before starting the server by selecting one of the
+following options:<ul>
+<li>Always - specifies the workbench will automatically save any changes
+in an open server editor before starting the server</li>
 
-<tr><td valign="top" headers="N100C0-option" id="N100ED"><strong>Save dirty editors before starting server</strong></td>
+<li>Never - specifies the workbench will not save the changes in any
+open editors before starting the server</li>
 
-<td valign="top" headers="N100C0-desc N100ED">Specify the preference for saving the changes in any open server editors
-before starting the server by selecting one of the following options:<ul>
-<li>Always - specifies the workbench will automatically save any changes in
-an open server editor before starting the server</li>
-
-<li>Never - specifies the workbench will not save the changes in any open
-editors before starting the server</li>
-
-<li>Prompt - specifies the workbench to prompt you before saving any changes
-in an open server editor</li>
+<li>Prompt - specifies the workbench to prompt you before saving any
+changes in an open server editor</li>
 
 </ul>
 </td>
 </tr>
 
-<tr><td valign="top" headers="N100C0-option" id="choption1"><strong>When switching to a different server mode</strong></td>
-
-<td valign="top" headers="N100C0-desc choption1"><span id="twlaunchpref_wst__chdesc1_ph1"><a name="twlaunchpref_wst__chdesc1_ph1"><!-- --></a>When switching the server to run in a different
-mode, for example using the <span class="menucascade"><span class="uicontrol">Run As</span> &gt; <span class="uicontrol">Run
-on Server</span></span></span> <span id="twlaunchpref_wst__chdesc1_ph2"><a name="twlaunchpref_wst__chdesc1_ph2"><!-- --></a>or <span class="menucascade">
-<span class="uicontrol">Debug As</span> &gt; <span class="uicontrol">Debug on Server</span></span>,
-specify the next action of the server by selecting one of the following options:</span><a name="twlaunchpref_wst__chdesc1_ul1"><!-- --></a><ul id="twlaunchpref_wst__chdesc1_ul1">
+<tr><td valign="top" headers="N100C1-option" id="choption1"><strong>When switching to a different server
+mode</strong></td>
+<td valign="top" headers="N100C1-desc choption1"><span id="twlaunchpref_wst__chdesc1_ph1"><a name="twlaunchpref_wst__chdesc1_ph1"><!-- --></a>When
+switching the server to run in a different mode, for example using
+the <span class="menucascade"><span class="uicontrol">Run As</span> &gt; <span class="uicontrol">Run on Server</span>
+</span></span> <span id="twlaunchpref_wst__chdesc1_ph2"><a name="twlaunchpref_wst__chdesc1_ph2"><!-- --></a>or <span class="menucascade"><span class="uicontrol">Debug
+As</span> &gt; <span class="uicontrol">Debug on Server</span></span>,
+specify the next action of the server by selecting one of the following
+options:</span><a name="twlaunchpref_wst__chdesc1_ul1"><!-- --></a><ul id="twlaunchpref_wst__chdesc1_ul1">
 <li>Restart - specifies the workbench to stop and restart the server</li>
 
-<li>Continue - specifies to continue running the server in previous mode and
-ignore the change request of running in a different server mode</li>
+<li>Continue - specifies to continue running the server in previous
+mode and ignore the change request of running in a different server
+mode</li>
 
-<li>Prompt - specifies the workbench to prompt you for the next server action
-when you switch the server to run in a different mode</li>
+<li>Prompt - specifies the workbench to prompt you for the next server
+action when you switch the server to run in a different mode</li>
 
 </ul>
 </td>
 </tr>
 
-<tr><td valign="top" headers="N100C0-option" id="choption2"><strong>When switching the server out of debug mode</strong></td>
-
-<td valign="top" headers="N100C0-desc choption2"><span id="twlaunchpref_wst__chdesc2_ph1"><a name="twlaunchpref_wst__chdesc2_ph1"><!-- --></a>When you finish running the server in debug mode
-and switch out, for example using the <span class="menucascade"><span class="uicontrol">Run As</span>
- &gt; <span class="uicontrol">Run on Server</span></span></span><span id="twlaunchpref_wst__chdesc2_ph2"><a name="twlaunchpref_wst__chdesc2_ph2"><!-- --></a> command,
-specify the next action of the server by selecting one of the following options:</span><a name="twlaunchpref_wst__chdesc2_ul1"><!-- --></a><ul id="twlaunchpref_wst__chdesc2_ul1">
+<tr><td valign="top" headers="N100C1-option" id="choption2"><strong>When switching the server out of debug
+mode</strong></td>
+<td valign="top" headers="N100C1-desc choption2"><span id="twlaunchpref_wst__chdesc2_ph1"><a name="twlaunchpref_wst__chdesc2_ph1"><!-- --></a>When
+you finish running the server in debug mode and switch out, for example
+using the <span class="menucascade"><span class="uicontrol">Run As</span> &gt; <span class="uicontrol">Run
+on Server</span></span></span><span id="twlaunchpref_wst__chdesc2_ph2"><a name="twlaunchpref_wst__chdesc2_ph2"><!-- --></a> command,
+specify the next action of the server by selecting one of the following
+options:</span><a name="twlaunchpref_wst__chdesc2_ul1"><!-- --></a><ul id="twlaunchpref_wst__chdesc2_ul1">
 <li>Restart - specifies the workbench to stop and restart the server</li>
 
 <li>Disable breakpoints - specifies to clear all previously set breakpoints
-from the application and continue running the application in the newly selected
-server mode</li>
+from the application and continue running the application in the newly
+selected server mode</li>
 
-<li>Continue - specifies to continue running the server in debug mode and
-ignore the change request of running in a different server mode</li>
+<li>Continue - specifies to continue running the server in debug mode
+and ignore the change request of running in a different server mode</li>
 
-<li>Prompt - specifies the workbench to prompt you for the next server action
-when switching the server out of debug mode</li>
+<li>Prompt - specifies the workbench to prompt you for the next server
+action when switching the server out of debug mode</li>
 
 </ul>
 </td>
 </tr>
 
-<tr><td valign="top" headers="N100C0-option" id="N101B1"><strong>When switching the server into debug mode, re-enable
-breakpoints</strong></td>
-<td valign="top" headers="N100C0-desc N101B1">When you change
-the server mode into debug mode, for example using the <span class="menucascade"><span class="uicontrol">Debug
-As</span> &gt; <span class="uicontrol">Debug on Server</span></span> command,
-specify how to handle the breakpoints currently set in your application by
-selecting one of the following options:<ul>
-<li>Always - specifies to enable all the currently set breakpoints in your
-application and break at them</li>
+<tr><td valign="top" headers="N100C1-option" id="N1019E"><strong>When switching the server into debug
+mode, re-enable breakpoints</strong></td>
 
-<li>Never - specifies the workbench to ignore all the breakpoints previously
-set in your application and continue running the application on the server
-in debug mode. When the workbench ignores all the breakpoints in your application,
-the behavior of the server mode is similar to using the <strong>Run on Server</strong> command.
-However, because the server is running in debug mode, you have the opportunity
-to enable or re-enable breakpoints in your application.</li>
+<td valign="top" headers="N100C1-desc N1019E">When you change the server mode into debug mode, for example
+using the <span class="menucascade"><span class="uicontrol">Debug As</span> &gt; <span class="uicontrol">Debug
+on Server</span></span> command, specify how to handle
+the breakpoints currently set in your application by selecting one
+of the following options:<ul>
+<li>Always - specifies to enable all the currently set breakpoints
+in your application and break at them</li>
 
-<li>Prompt - specifies the workbench will prompt you on how to handle the
-breakpoints set in your applications</li>
+<li>Never - specifies the workbench to ignore all the breakpoints
+previously set in your application and continue running the application
+on the server in debug mode. When the workbench ignores all the breakpoints
+in your application, the behavior of the server mode is similar to
+using the <strong>Run on Server</strong> command. However, because the server
+is running in debug mode, you have the opportunity to enable or re-enable
+breakpoints in your application.</li>
+
+<li>Prompt - specifies the workbench will prompt you on how to handle
+the breakpoints set in your applications</li>
 
 </ul>
 </td>

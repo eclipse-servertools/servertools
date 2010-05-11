@@ -1,41 +1,46 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2009, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
+<?Pub Sty _display FontColor="red"?>
 <task id="twsrtdbg_wst" xml:lang="en-us">
 <title id="twsrtdbg_title">Starting a server in debug mode</title>
-<shortdesc id="twsrtdbg_shortdesc">If you want to debug your projects while
-a server runs, you can start a server in debug mode.</shortdesc>
+<shortdesc id="twsrtdbg_shortdesc">If you want to debug your projects
+while a server runs, you can start a server in debug mode.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>applications<indexterm>running on servers in debug mode</indexterm></indexterm>
-<indexterm>projects<indexterm>running on servers in debug mode</indexterm></indexterm>
-<indexterm>servers<indexterm>starting in debug mode</indexterm></indexterm>
-</keywords>
+<keywords id="index"><indexterm>applications<indexterm>running on
+servers in debug mode</indexterm></indexterm><indexterm>projects<indexterm>running
+on servers in debug mode</indexterm></indexterm><indexterm>servers<indexterm>starting
+in debug mode</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
-<prereq id="twsrtdbg_prereq"><b>Prerequisites:</b><ul>
-<li><xref href="twcrtins.dita">Create a server.</xref></li>
-<li><xref href="twaddprj.dita">Add a project to the server.</xref></li>
-<li>Edit the file you want to run and set breakpoints.</li>
-<li>Open the Debug perspective.</li>
-</ul></prereq>
-<context id="twsrtdbg_context"><p>Once you have started the server in debug
-mode you can run the projects that are associated with the server. You can
-stop and restart the server at any time. The status of the server is displayed
-in the <uicontrol> Status </uicontrol> column of the Servers view. The status
-of the breakpoints in your file is displayed in the Debug view.</p><p>To manually
-start the server in debug mode:</p><p> </p></context>
+<prereq><b>Prerequisites:</b><ol>
+<li id="twsrtdbg_li1"><xref href="twcrtins.dita">Create a server.</xref></li>
+<li id="twsrtdbg_li2"><xref href="twaddprj.dita">Add a project to
+the server.</xref></li>
+<li id="twsrtdbg_li3">Edit the file you want to run and set breakpoints.</li>
+<li id="twsrtdbg_li4">Open the Debug perspective.</li>
+</ol></prereq>
+<context id="twsrtdbg_context"><p>Once you have started the server
+in debug mode you can run the projects that are associated with the
+server. You can stop and restart the server at any time. The status
+of the server is displayed in the <uicontrol> Status </uicontrol> column
+of the Servers view. The status of the breakpoints in your file is
+displayed in the Debug view.</p><p>To manually start the server in
+debug mode:</p><p> </p></context>
 <steps>
-<step id="twsrtdbg_step1"><cmd>In the Servers view ( <menucascade><uicontrol>Window
-> Show View > Other > Server > Servers > OK</uicontrol></menucascade>), right-click
-the server you want to start in debug mode.</cmd></step>
+<step id="twsrtdbg_step1"><cmd>In the Servers view ( <menucascade>
+<uicontrol>Window > Show View > Other > Server > Servers > OK</uicontrol>
+</menucascade>), right-click the server you want to start in debug
+mode.</cmd></step>
 <step><cmd><ph id="twsrtdbg_steps_ph1">In the pop-up menu select <uicontrol>Debug </uicontrol> </ph> <image
-alt="This is an image of the Start in debug mode icon." href="../images/launch_debug.gif">
-<alt>This is an image of the Start in debug mode icon</alt></image> . </cmd>
-<info><ph id="twsrtdbg_steps_ph2">In the  <uicontrol>Status</uicontrol> column
-of the Servers view, the status of the server changes to <i>Debugging</i>,
-after the server is started in debug mode.</ph></info></step>
+alt="This is an image of the Start in debug mode icon."
+href="../images/launch_debug.gif"><alt>This is an image of the Start
+in debug mode icon</alt></image> . </cmd><info><ph
+id="twsrtdbg_steps_ph2">In the Servers view, the status of the server
+changes to <i>Debugging</i>, after the server is started in debug
+mode.</ph></info></step><?Pub Caret 104?>
 </steps>
 </taskbody>
 </task>
-<?Pub *0000002269?>
+<?Pub *0000002308?>
