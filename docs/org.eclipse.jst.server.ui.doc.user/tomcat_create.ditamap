@@ -1,12 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2009, v.4002-->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
-  "map.dtd">
-<map anchorref="../org.eclipse.wst.server.ui.doc.user/wtp_create.ditamap#tomcat_create"
-title="tomcat_tasks">
-<topicref href="topics/tomcat.dita" locktitle="yes" navtitle="...Apache Tomcat"><?Pub Caret?>
-<topicref href="topics/twtomprf.dita" navtitle="Adding the Apache Tomcat runtimes"
-toc="no"></topicref>
+ "map.dtd">
+<map
+anchorref="../org.eclipse.wst.server.ui.doc.user/wtp_create.ditamap#tomcat_create"
+title="tomcat_tasks" xml:lang="en-us">
+<topicref href="topics/tomcat.dita" locktitle="yes"
+navtitle="...Apache Tomcat">
+<topicref href="topics/twtomprf.dita"
+navtitle="Adding the Apache Tomcat runtimes" toc="no"></topicref>
 </topicref>
 </map>
-<?Pub *0000000496?>

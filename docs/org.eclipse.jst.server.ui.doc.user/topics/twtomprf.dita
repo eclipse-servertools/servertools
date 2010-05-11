@@ -1,21 +1,25 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2006, v.4002-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2009, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
+<?Pub Sty _display FontColor="red"?>
 <task id="twtomprf_jst" xml:lang="en-us">
 <title id="title">Adding the Apache Tomcat runtimes</title>
-<shortdesc id="shortdesc">Using the Preferences page, you can define the server
-runtime environment definitions for the Apache Tomcat server. To define these
-definitions, complete the following: </shortdesc>
+<shortdesc id="shortdesc">Using the Preferences page, you can define
+the server runtime environment definitions for the Apache Tomcat server.
+To define these definitions, complete the following: </shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm keyref="twtomprf|1|serversruntimeenvironmentsApacheTomcat"
-status="changed">servers<indexterm>Apache Tomcat</indexterm></indexterm><indexterm
-keyref="twtomprf|2|ApacheTomcatdefiningruntimeenvironment" status="new">Apache
-Tomcat<indexterm>defining runtime environment</indexterm></indexterm><indexterm
-keyref="twtomprf|3|runtimeenvironmentdefiningApacheTomcat" status="changed">runtime
-environments<indexterm>Apache Tomcat</indexterm></indexterm><indexterm keyref="twtomprf|4|workbenchdefiningserverruntimeenvironmentApacheTomcat"
-status="changed">workbench<indexterm>Apache Tomcat server runtime environment</indexterm></indexterm>
-</keywords>
+<keywords id="index"><indexterm
+keyref="twtomprf|1|serversruntimeenvironmentsApacheTomcat"
+status="changed">servers<indexterm>Apache Tomcat</indexterm></indexterm>
+<indexterm keyref="twtomprf|2|ApacheTomcatdefiningruntimeenvironment"
+status="new">Apache Tomcat<indexterm>defining runtime environment</indexterm></indexterm>
+<indexterm keyref="twtomprf|3|runtimeenvironmentdefiningApacheTomcat"
+status="changed">runtime environments<indexterm>Apache Tomcat</indexterm></indexterm>
+<indexterm
+keyref="twtomprf|4|workbenchdefiningserverruntimeenvironmentApacheTomcat"
+status="changed">workbench<indexterm>Apache Tomcat server runtime
+environment</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <steps id="steps">
@@ -35,28 +39,30 @@ then select  <uicontrol>Runtime Environments</uicontrol>.</cmd></step>
 <choice>Apache Tomcat v5.0</choice>
 <choice>Apache Tomcat v5.5</choice>
 <choice>Apache Tomcat v6.0</choice>
-</choices>
+<choice>Apache Tomcat v7.0</choice>
+</choices><?Pub Caret -1?>
 </step>
-<step><cmd>When you add a server runtime environment, by default a server
-is created and added as an entry in the Servers view. If you want to only
-add the server runtime environment and not create the server in the Servers
-view, clear the <uicontrol>Create a new local server</uicontrol> check box.</cmd>
-</step>
+<step><cmd>When you add a server runtime environment, by default a
+server is created and added as an entry in the Servers view. If you
+want to only add the server runtime environment and not create the
+server in the Servers view, clear the <uicontrol>Create a new local
+server</uicontrol> check box.</cmd></step>
 <step><cmd>The Tomcat Server page opens when you click  <uicontrol>Next</uicontrol>.</cmd>
 </step>
 <step><cmd>In the <uicontrol>Tomcat installation directory</uicontrol> field,
-type or browse to the directory where you extracted the installation files
-of Apache Tomcat.</cmd><info> For example, <varname>x</varname>:\apache-tomcat-6.0.13,
-where <varname>x</varname> is the installation directory of the Apache Tomcat
-server.</info></step>
+type or browse to the directory where you extracted the installation
+files of Apache Tomcat.</cmd><info> For example, <varname>x</varname>:\apache-tomcat-6.0.13,
+where <varname>x</varname> is the installation directory of the Apache
+Tomcat server.</info></step>
 <step><cmd>Click <uicontrol>Finish</uicontrol>.</cmd></step>
 </steps>
 </taskbody>
 <related-links id="relatedlinks">
-<link href="http://wiki.eclipse.org/WTP_Tomcat_FAQ" scope="external"><linktext>WTP
-Tomcat FAQ</linktext>
-<desc>See this link for additional information using the Apache Tomcat server
-with the workbench.</desc>
+<link href="http://wiki.eclipse.org/WTP_Tomcat_FAQ" scope="external">
+<linktext>WTP Tomcat FAQ</linktext>
+<desc>See this link for additional information using the Apache Tomcat
+server with the workbench.</desc>
 </link>
 </related-links>
 </task>
+<?Pub *0000003258?>
