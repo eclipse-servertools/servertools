@@ -1011,6 +1011,7 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 			List<ServerEditorOverviewPageModifier> pageModifiersLst = ServerUIPlugin.getServerEditorOverviewPageModifiers();
 			for (ServerEditorOverviewPageModifier curPageModifier : pageModifiersLst) {
 				if(server != null && server.getServerType() != null)
+					curPageModifier.setServerWorkingCopy(server);
 					curPageModifier.handlePropertyChanged(new PropertyChangeEvent(this, AbstractUIControl.PROP_SERVER_TYPE, oldServerType, server.getServerType()));
 			}
 		}
@@ -1114,13 +1115,6 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 						hostnameDecoration.hide();
 				}
 			}
-		}
-	}
-	
-	protected void fireServerWorkingCopyChanged() {
-		List<ServerEditorOverviewPageModifier> pageModifiersLst = ServerUIPlugin.getServerEditorOverviewPageModifiers();
-		for (ServerEditorOverviewPageModifier curPageModifier : pageModifiersLst) {
-			curPageModifier.setServerWorkingCopy(getServer());
 		}
 	}
 }
