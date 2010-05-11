@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,7 +30,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.internal.Trace;
+import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.IServerModule;
 import org.eclipse.wst.server.ui.internal.provisional.IServerToolTip;
 
@@ -261,13 +261,15 @@ public class ServerToolTip extends ToolTip {
 						
 						listOfProviders.add(exTooltip);
 						toolTipProviders.put(serverType.getId(), listOfProviders);
+						Trace.trace(Trace.EXTENSION_POINT, "  Loaded serverToolTip: " + exElement.getAttribute("id")
+								+ " for server type: " + serverType.getId());
 					}
 				}
 			} catch (CoreException e) {
-				Trace.trace(Trace.SEVERE, "Tooltip failed to load" + extensions[i].toString(), e);
+				Trace.trace(Trace.SEVERE, "Tooltip failed to load" + exElement.toString(), e);
 			}
-			Trace.trace(Trace.EXTENSION_POINT, "  Loaded serverToolTip: " + extensions[i].getAttribute("id"));
 		}
+		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading serverToolTip extension point -<-");
 	}
 
 //  read the createFocusedTooltip method for information on why this is commented out

@@ -28,7 +28,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.*;
-import org.eclipse.wst.server.core.internal.Trace;
+import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.core.model.LaunchableAdapterDelegate;
 import org.eclipse.wst.server.core.util.PublishAdapter;
 import org.eclipse.wst.server.ui.editor.ServerEditorOverviewPageModifier;

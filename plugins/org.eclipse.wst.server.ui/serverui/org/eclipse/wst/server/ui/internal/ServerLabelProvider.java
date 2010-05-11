@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,7 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.IClient;
-import org.eclipse.wst.server.core.internal.Trace;
+import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
 /**
  * A label provider for all server related objects.

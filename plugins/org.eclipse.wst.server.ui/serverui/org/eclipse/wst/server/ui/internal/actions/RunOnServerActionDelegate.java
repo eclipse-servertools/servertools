@@ -32,7 +32,7 @@ import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.IClient;
 import org.eclipse.wst.server.core.internal.ILaunchableAdapter;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
-import org.eclipse.wst.server.core.internal.Trace;
+import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.core.model.ModuleArtifactDelegate;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.viewers.ModuleArtifactComposite;
