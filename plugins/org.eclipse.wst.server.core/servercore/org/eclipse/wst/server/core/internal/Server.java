@@ -1525,6 +1525,11 @@ public class Server extends Base implements IServer {
 			return launch;
 		return null;
 	}
+	
+	public void setLaunch(ILaunch launch) {
+		Trace.trace(Trace.FINEST, "setLaunch() "+ launch);
+		this.launch = launch;
+	}
 
 	public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) {
 		try {
