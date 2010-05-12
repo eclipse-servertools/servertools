@@ -1,11 +1,9 @@
 <maplist version="3.6.2">
   <nav>
-    <map file="org.eclipse.jst.server.ui.doc.user_build_toc.ditamap"/>
     <map file="tomcat_pref.ditamap"/>
     <map file="tomcat_create.ditamap"/>
   </nav>
   <link>
-    <map file="org.eclipse.jst.server.ui.doc.user_build_toc.ditamap"/>
     <map file="jst_reltable.ditamap"/>
   </link>
 </maplist>

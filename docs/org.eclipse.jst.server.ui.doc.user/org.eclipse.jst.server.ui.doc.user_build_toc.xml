@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<?NLS TYPE="org.eclipse.help.toc"?>
-
-<toc label="For building purposes" topic="topics/tomcat.html">
-<topic label="Creating a Tomcat server" href="topics/tomcat.html"/>
-<topic label="Adding the Apache Tomcat runtimes" href="topics/twtomprf.html"/>
-</toc>

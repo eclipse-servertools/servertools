@@ -52,7 +52,7 @@
 			<property name="args.csspath" value="../org.eclipse.wst.doc.user" />
 			<property name="args.eclipse.provider" value="Eclipse.org" />
 			<property name="args.eclipse.version" value="3.6.0" />
-			<property name="args.input" location="org.eclipse.jst.server.ui.doc.user_build_toc.ditamap" /> 
+			<property name="args.input" location="jst_reltable.ditamap" /> 
 			<property name="clean.temp" value="true" />
 			<property name="dita.extname" value=".dita" />
 			<property name="dita.temp.dir" location="temp" />

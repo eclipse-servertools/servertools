@@ -3,17 +3,55 @@
 <?NLS TYPE="org.eclipse.help.toc"?>
 
 <toc label="Testing and publishing applications" topic="topics/cwover.html">
-<topic label="Application testing and publishing" href="topics/cwover.html">
+<topic label="Testing and publishing on your server" href="topics/cwover.html">
 <topic label="Servers view" href="topics/rwrcview.html">
 <topic label="Keyboard shortcuts for Server Tools" href="topics/raccessserver.html"/>
 </topic>
 <topic label="Resources used by the Server Tools" href="topics/cwres.html"/>
 <topic label="Which server will start" href="topics/cwflow.html"/>
-<link toc="wtp_test.xml"/>
-<link toc="wtp_debug.xml"/>
-<link toc="wtp_publish.xml"/>
-<link toc="wtp_create.xml"/>
-<link toc="wtp_manage.xml"/>
-<link toc="wtp_pref.xml"/>
+<topic label="Testing applications on a server" href="topics/tj2ee.html">
+<topic label="Testing artifacts on a server" href="topics/testing.html"/>
+<topic label="Testing on a HTTP Preview server" href="topics/thttppreview.html"/>
+<topic label="Testing on a J2EE Preview server" href="topics/tj2eepreview.html"/>
+</topic>
+<topic label="Debugging applications on a server" href="topics/tdebug.html">
+<topic label="Debugging a servlet on a server" href="topics/tservlet.html"/>
+<topic label="Debugging a JSP file on a server" href="topics/tdbgjsp.html"/>
+<topic label="Monitoring server ports" href="topics/tmonitorport.html"/>
+</topic>
+<topic label="Publishing applications to a server" href="topics/tpublish.html">
+<topic label="Publishing your application" href="topics/twpub.html"/>
+</topic>
+<topic label="Creating, editing and deleting servers" href="topics/tcreate.html">
+<topic label="Creating a server " href="topics/twcrtins.html">
+<link toc="../org.eclipse.jst.server.ui.doc.user/tomcat_create.xml"/>
+<topic label="...HTTP Preview server" href="topics/thttppreview.html"/>
+<topic label="...J2EE Preview server" href="topics/tj2eepreview.html"/>
+</topic>
+<topic label="Editing a server" href="topics/twedtins.html"/>
+<topic label="Deleting a server" href="topics/twdelins.html"/>
+</topic>
+<topic label="Managing servers " href="topics/twmanage.html">
+<topic label="Adding projects to a server " href="topics/twaddprj.html"/>
+<topic label="Removing a project from a server" href="topics/twremprj.html"/>
+<topic label="Starting a server" href="topics/twsrtins.html">
+<topic label="Starting a server in debug mode" href="topics/twsrtdbg.html"/>
+</topic>
+<topic label="Stopping a server" href="topics/twstpins.html"/>
+<topic label="Setting a default server" href="topics/twprefin.html"/>
+<topic label="Displaying or hiding the metadata of the server" href="topics/tmetasrv.html"/>
+<topic label="Cleaning projects published on the server" href="topics/tclean.html"/>
+</topic>
+<topic label="Defining server preferences" href="topics/tpref.html">
+<topic label="Defining the server preferences" href="topics/twsrvprf.html"/>
+<topic label="Defining the audio preferences" href="topics/tprefaud.html"/>
+<topic label="Defining the launching preferences" href="topics/twlaunchpref.html"/>
+<topic label="Defining the server runtime environments preferences" href="topics/twinstprf.html">
+<link toc="../org.eclipse.jst.server.ui.doc.user/tomcat_pref.xml"/>
+</topic>
+<topic label="Defining the TCP/IP Monitor preferences" href="topics/twtcpprf.html">
+<topic label="TCP/IP Monitor view" href="topics/rwtcpvw.html"/>
+</topic>
+</topic>
 </topic>
 </toc>

@@ -15,14 +15,7 @@
 <plugin>
 
 <extension point="org.eclipse.help.toc">
-	<toc file="org.eclipse.wst.server.ui.doc.user.xml" />
 	<toc file="wtp_main_toc.xml" /> 
-	<toc file="wtp_test.xml" /> 
-	<toc file="wtp_debug.xml" /> 
-	<toc file="wtp_publish.xml" /> 
-	<toc file="wtp_create.xml" /> 
-	<toc file="wtp_manage.xml" /> 
-	<toc file="wtp_pref.xml" />
        <index path="index/"/>
 </extension>
 <extension
