@@ -683,7 +683,7 @@ public class Tomcat70Configuration extends TomcatConfiguration {
 	 * @return result of operation
 	 */
 	protected IStatus updateContextsToServeDirectly(IPath baseDir, String loader, IProgressMonitor monitor) {
-		return TomcatVersionHelper.updateContextsToServeDirectly(baseDir, loader, monitor);
+		return TomcatVersionHelper.updateContextsToServeDirectly(baseDir, loader, true, monitor);
 	}
 
 	/**

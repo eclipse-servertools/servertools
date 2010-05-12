@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -683,7 +683,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 	 * @return result of operation
 	 */
 	protected IStatus updateContextsToServeDirectly(IPath baseDir, String loader, IProgressMonitor monitor) {
-		return TomcatVersionHelper.updateContextsToServeDirectly(baseDir, loader, monitor);
+		return TomcatVersionHelper.updateContextsToServeDirectly(baseDir, loader, false, monitor);
 	}
 
 	/**

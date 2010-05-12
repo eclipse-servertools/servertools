@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -282,12 +283,33 @@ public class ModuleTraverser {
         for (Iterator itorRes = res.iterator(); itorRes.hasNext();) {
             ComponentResource childComp = (ComponentResource) itorRes.next();
             IPath rtPath = childComp.getRuntimePath();
-            IClasspathEntry cpe = getClasspathEntry(project, childComp.getSourcePath());
-            if (cpe == null)
-                continue;
-            visitor.visitDependentComponent(runtimeFolder.append(rtPath)
-                    .append(name + ".jar"), getOSPath(dependentProject,
-                    project, cpe.getOutputLocation()));
+            IPath srcPath = childComp.getSourcePath();
+            IClasspathEntry cpe = getClasspathEntry(project, srcPath);
+            if (cpe != null) {
+                visitor.visitDependentComponent(runtimeFolder.append(rtPath)
+                        .append(name + ".jar"), getOSPath(dependentProject,
+                        project, cpe.getOutputLocation()));
+            }
+            // Handle META-INF/resources
+    		String path = rtPath.toString();
+    		IFolder resFolder = null;
+    		String targetPath = "";
+    		if ("/".equals(path)) {
+    			resFolder = dependentProject.getFolder(srcPath.append("META-INF/resources"));
+    		}
+    		else if ("/META-INF".equals(path)) {
+    			resFolder = dependentProject.getFolder(srcPath.append("resources"));
+    		}
+    		else if ("/META-INF/resources".equals(path)) {
+    			resFolder = dependentProject.getFolder(srcPath);
+    		}
+    		else if (path.startsWith("/META-INF/resources/")) {
+    			resFolder = dependentProject.getFolder(srcPath);
+    			targetPath = path.substring("/META-INF/resources".length());
+    		}
+    		if (resFolder != null && resFolder.exists()) {
+    			visitor.visitDependentContentResource(new Path(targetPath), resFolder.getLocation());
+    		}
         }
 
         // Include tagged classpath entries

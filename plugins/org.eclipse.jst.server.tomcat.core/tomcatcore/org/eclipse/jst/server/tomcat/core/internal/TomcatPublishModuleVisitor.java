@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +63,11 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
      * Catalina.properties loader to add global classpath entries
      */
     protected final String sharedLoader;
+
+    /**
+     * 
+     */
+    protected final boolean enableMetaInfResources;
     
     /**
      * Classpath entries added by ear configurations.
@@ -76,14 +82,20 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
     protected Set virtualJarClasspathElements = new LinkedHashSet();
 
     /**
+     * Map of resources found in "META-INF/resources" folder of dependent projects
+     */
+    protected Map virtualDependentResources = new LinkedHashMap();
+
+    /**
      * Instantiate a new TomcatPublishModuleVisitor
      * 
      * @param catalinaBase catalina base path
      */
-    TomcatPublishModuleVisitor(IPath catalinaBase, ServerInstance serverInstance, String sharedLoader) {
+    TomcatPublishModuleVisitor(IPath catalinaBase, ServerInstance serverInstance, String sharedLoader, boolean enableMetaInfResources) {
         this.baseDir = catalinaBase;
         this.serverInstance = serverInstance;
         this.sharedLoader = sharedLoader;
+        this.enableMetaInfResources = enableMetaInfResources;
     }
 
     /**
@@ -113,6 +125,16 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
      */
     public void visitWebResource(IPath runtimePath, IPath workspacePath) {
         addVirtualClassResource(runtimePath, workspacePath);
+    }
+
+    /**
+     * @see IModuleVisitor#visitDependentContentResource(IPath, IPath)
+     */
+    public void visitDependentContentResource(IPath runtimePath, IPath workspacePath) {
+    	// Currently, only handle "META-INF/resources" folders if supported
+    	if (enableMetaInfResources) {
+        	addContentResource(runtimePath, workspacePath);
+    	}
     }
 
     /**
@@ -433,6 +455,25 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
 				}
 			}
 		}
+		if (!virtualDependentResources.isEmpty()) {
+			for (Iterator iterator = virtualDependentResources.entrySet().iterator(); iterator.hasNext();) {
+				Map.Entry entry = (Map.Entry)iterator.next();
+				String rtPath = (String)entry.getKey();
+				List locations = (List)entry.getValue();
+				for (Iterator iterator2 = locations.iterator(); iterator2.hasNext();) {
+					String location = (String)iterator2.next();
+					if (rpBuffer.length() != 0) {
+						rpBuffer.append(";");
+					}
+					if (rtPath.length() > 0) {
+						rpBuffer.append(entry.getKey()).append("|").append(location);
+					}
+					else {
+						rpBuffer.append(location);
+					}
+				}
+			}			
+		}
 
         String vcp = vcBuffer.toString();
         String oldVcp = loader.getVirtualClasspath();
@@ -461,6 +502,16 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
 
     private void addVirtualJarResource(IPath runtimePath, IPath workspacePath) {
         virtualJarClasspathElements.add(workspacePath.toOSString());
+    }
+    
+    private void addContentResource(IPath runtimePath, IPath workspacePath) {
+    	String rtPath = runtimePath.toString(); 
+    	List locations = (List)virtualDependentResources.get(rtPath);
+    	if (locations == null) {
+    		locations = new ArrayList();
+    		virtualDependentResources.put(rtPath, locations);
+    	}
+    	locations.add(workspacePath.toOSString());
     }
     
     /**

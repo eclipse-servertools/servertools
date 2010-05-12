@@ -826,7 +826,7 @@ public class TomcatVersionHelper {
 	 * @param monitor a progress monitor
 	 * @return result of update operation
 	 */
-	public static IStatus updateContextsToServeDirectly(IPath baseDir, String loader, IProgressMonitor monitor) {
+	public static IStatus updateContextsToServeDirectly(IPath baseDir, String loader, boolean enableMetaInfResources, IProgressMonitor monitor) {
 
 		IPath confDir = baseDir.append("conf");
 		IPath serverXml = confDir.append("server.xml");
@@ -845,7 +845,7 @@ public class TomcatVersionHelper {
 
 			// care about top-level modules only
 			TomcatPublishModuleVisitor visitor = new TomcatPublishModuleVisitor(
-					baseDir, publishedInstance, loader);
+					baseDir, publishedInstance, loader, enableMetaInfResources);
 			Context [] contexts = publishedInstance.getContexts();
 			for (int i = 0; i < contexts.length; i++) {
 				String moduleId = contexts[i].getSource();
