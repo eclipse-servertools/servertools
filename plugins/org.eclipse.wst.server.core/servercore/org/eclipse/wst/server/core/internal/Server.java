@@ -2231,6 +2231,10 @@ public class Server extends Base implements IServer {
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, e.getMessage(), e);
 		}
 	}
+	
+	public void clearModuleCache() {
+		modules = null;
+	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.IServer#getModules()

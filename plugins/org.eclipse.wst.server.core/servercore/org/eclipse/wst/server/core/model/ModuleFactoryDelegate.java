@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,8 +16,11 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.Module;
 import org.eclipse.wst.server.core.internal.ModuleFactory;
+import org.eclipse.wst.server.core.internal.Server;
 /**
  * A module factory delegate provides a mechanism for discovering
  * modules. A module factory delegate is specified by the
@@ -214,5 +217,16 @@ public abstract class ModuleFactoryDelegate {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Alerts the server tools framework that this factory's list of modules
+	 * has changed, and caches may no longer be accurate 
+	 */
+	protected void modulesChanged() {
+		IServer[] allServers = ServerCore.getServers();
+		for( int i = 0; i < allServers.length; i++ ) {
+			((Server)allServers[i]).clearModuleCache();
+		}
 	}
 }
