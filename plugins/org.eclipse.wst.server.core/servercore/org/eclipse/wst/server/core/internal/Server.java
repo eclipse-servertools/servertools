@@ -1866,9 +1866,20 @@ public class Server extends Base implements IServer {
 		}
 		
 		StartJob startJob = new StartJob(mode2);
+		// 287442 - only do publish after start if the server start is successful.
+		final IProgressMonitor monitor2 = monitor; 
+		startJob.addJobChangeListener(new JobChangeAdapter() {
+			public void done(IJobChangeEvent event) {
+				IStatus resultStatus = event.getResult();
+				if (resultStatus != null && resultStatus.getSeverity() == IStatus.ERROR) { 
+					// Do not launch the publish.
+					Trace.trace(Trace.INFO,"Skipping auto publish after server start since the server start failed.");
+				} else {
+					publishAfterStart(monitor2,false,null);
+				}
+			}
+		});
 		startJob.schedule();
-		
-		publishAfterStart(monitor,false,null);
 	}
 	
 	/**
@@ -1908,9 +1919,21 @@ public class Server extends Base implements IServer {
 				}
 			});
 		}
+		// 287442 - only do publish after start if the server start is successful.
+		if (pub == StartJob.PUBLISH_AFTER) {
+			startJob.addJobChangeListener(new JobChangeAdapter() {
+				public void done(IJobChangeEvent event) {
+					IStatus resultStatus = event.getResult();
+					if (resultStatus != null && resultStatus.getSeverity() == IStatus.ERROR) { 
+						// Do not launch the publish.
+						Trace.trace(Trace.INFO,"Skipping auto publish after server start since the server start failed.");
+					} else {
+						publishAfterStart(null,false,opListener);
+					}
+				}
+			});
+		}
 		startJob.schedule();
-		
-		publishAfterStart(null,false, opListener);
 	}
 
 	public void synchronousStart(String mode2, IProgressMonitor monitor) throws CoreException {
@@ -1928,6 +1951,19 @@ public class Server extends Base implements IServer {
 		}
 		
 		StartJob startJob = new StartJob(mode2);
+		// 287442 - only do publish after start if the server start is successful.
+		final IProgressMonitor monitor2 = monitor; 
+		startJob.addJobChangeListener(new JobChangeAdapter() {
+			public void done(IJobChangeEvent event) {
+				IStatus resultStatus = event.getResult();
+				if (resultStatus != null && resultStatus.getSeverity() == IStatus.ERROR) { 
+					// Do not launch the publish.
+					Trace.trace(Trace.INFO,"Skipping auto publish after server start since the server start failed.");
+				} else {
+					publishAfterStart(monitor2,true,null);
+				}
+			}
+		});
 		startJob.schedule();
 		
 		try {
@@ -1935,8 +1971,6 @@ public class Server extends Base implements IServer {
 		} catch (InterruptedException e) {
 			Trace.trace(Trace.WARNING, "Error waiting for job", e);
 		}
-		
-		publishAfterStart(monitor,true,null);
 	}
 
 	/*
