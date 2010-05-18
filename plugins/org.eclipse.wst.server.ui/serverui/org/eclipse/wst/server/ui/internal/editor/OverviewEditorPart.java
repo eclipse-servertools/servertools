@@ -669,7 +669,7 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 			autoPublishTime.setLayoutData(data);
 			autoPublishTime.setEnabled(!autoPublishDisable.getSelection());
 			SWTUtil.setSpinnerTooltip(autoPublishTime);
-			whs.setHelp(autoPublishTime, ContextIds.EDITOR_AUTOPUBLISH_ENABLE);
+			whs.setHelp(autoPublishTime, ContextIds.EDITOR_AUTOPUBLISH_INTERVAL);
 			
 			autoPublishEnableResource.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {

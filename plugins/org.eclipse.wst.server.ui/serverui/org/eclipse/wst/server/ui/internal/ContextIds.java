@@ -65,8 +65,9 @@ public interface ContextIds {
 	public static final String EDITOR_AUTOPUBLISH_ENABLE = ServerUIPlugin.PLUGIN_ID + ".seop0012";
 	public static final String EDITOR_AUTOPUBLISH_BUILD = ServerUIPlugin.PLUGIN_ID + ".seop0014";
 	public static final String EDITOR_AUTOPUBLISH_DISABLE = ServerUIPlugin.PLUGIN_ID + ".seop0016";
+	public static final String EDITOR_AUTOPUBLISH_INTERVAL= ServerUIPlugin.PLUGIN_ID + ".seop0018";
+	public static final String EDITOR_PUBLISHTASKS_CONFIGURATION = ServerUIPlugin.PLUGIN_ID + ".seop0020";
 	
-	public static final String EDITOR_PUBLISHTASKS_CONFIGURATION = ServerUIPlugin.PLUGIN_ID + ".seop0018";
 	public static final String EDITOR_TIMEOUT_START = ServerUIPlugin.PLUGIN_ID + "spge0026";
 	public static final String EDITOR_TIMEOUT_STOP = ServerUIPlugin.PLUGIN_ID + "spge0027";
 
