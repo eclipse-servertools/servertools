@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -352,14 +352,22 @@ public class ServerEditor extends MultiPageEditorPart {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
 			int ticks = 2000;
+			int pages = serverPages == null ? 0 : serverPages.size(); 
+			int pagesTicks = ( pages * 100);
 			String name = "";
 			if (server != null)
 				name = server.getName();
-			monitor.beginTask(NLS.bind(Messages.savingTask, name), ticks);
+			monitor.beginTask(NLS.bind(Messages.savingTask, name), ticks + pagesTicks);
 			if (server != null)
 				ticks /= 2;
 			
 			if (server != null)  {
+				iterator = serverPages.iterator();
+				while(iterator.hasNext()) {
+					IEditorPart part = (IEditorPart) iterator.next();
+					part.doSave(ProgressUtil.getSubMonitorFor(monitor, 100));
+				}
+
 				server.save(false, ProgressUtil.getSubMonitorFor(monitor, ticks));
 				getCommandManager().resourceSaved(serverId);
 				commandManager.updateTimestamps(serverId);
