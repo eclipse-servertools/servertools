@@ -11,6 +11,7 @@
 <relcolspec type="reference"></relcolspec>
 <relcolspec></relcolspec>
 </relheader>
+<!--Related links at the bottom of each topic.-->
 <relrow>
 <relcell>
 <topicref href="topics/cwflow.dita"
@@ -88,7 +89,42 @@ navtitle="Defining the server runtime environments preference">
 <relrow>
 <relcell></relcell>
 <relcell>
+<topicref href="topics/tdecor.dita"
+navtitle="Enabling the server state decorator"></topicref>
+</relcell>
+<relcell>
+<topicref href="topics/rwrcview.dita" navtitle="Severs view"></topicref>
+</relcell>
+<relcell></relcell>
+</relrow>
+<relrow>
+<relcell></relcell>
+<relcell collection-type="family">
+<topicref href="topics/ttimeout.dita"
+navtitle="Setting timeout on the start or stop of the server">
+</topicref>
+<topicref href="topics/twstpins.dita" locktitle="yes"
+navtitle="Stopping a server"></topicref>
+</relcell>
+<relcell></relcell>
+<relcell></relcell>
+</relrow>
+<relrow>
+<relcell></relcell>
+<relcell collection-type="family">
+<topicref href="topics/ttimeout.dita"
+navtitle="Setting timeout on the start or stop of the server">
+</topicref>
+<topicref href="topics/twsrtins.dita" locktitle="yes"
+navtitle="Starting a server"></topicref>
+</relcell>
+<relcell></relcell>
+<relcell></relcell>
+</relrow>
 <!--Testing-->
+<relrow>
+<relcell></relcell>
+<relcell>
 <topicref href="topics/tj2ee.dita"
 navtitle="Testing applications on a server">
 <topicref href="topics/testing.dita"
@@ -133,7 +169,7 @@ navtitle="Debugging a servlet on a server"></topicref>
 <topicref href="topics/tdbgjsp.dita"
 navtitle="Debugging a JSP file on a server"></topicref>
 <topicref href="topics/tmonitorport.dita"
-navtitle="Monitoring server ports"></topicref><?Pub Caret -1?>
+navtitle="Monitoring server ports"></topicref>
 </topicref>
 </relcell>
 <relcell></relcell>
@@ -182,8 +218,11 @@ navtitle="Removing a project from a server"></topicref>
 navtitle="Starting a server"></topicref>
 <topicref href="topics/twstpins.dita" locktitle="yes"
 navtitle="Stopping a server"></topicref>
+<topicref href="topics/ttimeout.dita"
+navtitle="Setting timeout on the start or stop of the server">
+</topicref>
 <topicref href="topics/twprefin.dita" locktitle="yes"
-navtitle="Setting a default server"></topicref>
+navtitle="Setting a default server"></topicref><?Pub Caret -2?>
 <topicref href="topics/tmetasrv.dita" locktitle="yes"
 navtitle="Displaying or hiding the metadata of the server"></topicref>
 <topicref href="topics/tclean.dita" locktitle="yes"
@@ -205,8 +244,7 @@ navtitle="Defining the audio preferences"></topicref>
 <topicref href="topics/twlaunchpref.dita"
 navtitle="Defining the launching preferences"></topicref>
 <topicref href="topics/twinstprf.dita"
-navtitle="Defining the server runtime environments preferences"
-scope="peer">
+navtitle="Defining the server runtime environments preferences">
 <topicmeta>
 <shortdesc>Using the Preferences page, you can direct the workbench
 to use a specific runtime environment of an application server for
@@ -215,11 +253,27 @@ compiling, testing, or running your application.</shortdesc>
 </topicref>
 <topicref href="topics/twtcpprf.dita"
 navtitle="Defining the TCP/IP Monitor preferences"></topicref>
+<topicref href="topics/tdecor.dita"
+navtitle="Enabling server state decorator"></topicref>
 </topicref>
 </relcell>
 <relcell></relcell>
 <relcell></relcell>
 </relrow>
+<!--Local build purpose-->
+<relrow>
+<relcell>
+<topicref href="topics/cwover.dita" linking="none"></topicref>
+</relcell>
+<relcell>
+<topicref href="topics/twsrtdbg.dita" linking="none"></topicref>
+</relcell>
+<relcell>
+<topicref href="topics/raccessserver.dita" linking="none"></topicref>
+<topicref href="topics/rwrcview.dita" linking="none"></topicref>
+</relcell>
+<relcell></relcell>
+</relrow>
 </reltable>
 </map>
-<?Pub *0000007218?>
+<?Pub *0000008786?>

@@ -78,14 +78,14 @@ If a server runtime environment is referencing a stub directory of the server, y
 </context>
 
 <context id="spge0026">
-<description>This is the length of time the workbench is going to wait for the server to start.
-<b>Tip</b>:  If you have a fast processing machine, you can try specifying a shorter timeout interval.  If you have a slow processing machine, you can try specifying a longer timeout interval.
+<description>Specify the number of seconds allowed to elapse, before the workbench cancels the process to start the server. 
+<b>Tip</b>:  If you have a fast processing machine, you can try to set a short timeout interval. If you have a slow processing machine, you can try to set a long timeout interval.
 </description>
 </context>
 
 <context id="spge0027">
-<description>This is the length of time the workbench is going to wait for the stop signal from the server.
-<b>Tip</b>:  If you have a fast processing machine, you can try specifying a shorter timeout interval.  If you have a slow processing machine, you can try specifying a longer timeout interval.
+<description>Specify the number of seconds allowed to elapse, before the workbench prompts you for an action. The prompt requests from you to either click <b>OK</b> to end the server or click <b>Cancel</b> to continue waiting for the server to stop.   
+<b>Tip</b>:  If you have a fast processing machine, you can try to set a short timeout interval. If you have a slow processing machine, you can try to set a long timeout interval.
 </description>
 </context>
 
@@ -243,13 +243,11 @@ To change the server runtime environment, select the <b>Runtime Environment</b> 
 </context>
 
 <context id="seop0012">
-<description>Specifies the workbench to issue a publish after changes on a file that is associated to the server are saved and a full time interval has passed in the <b>Publishing
-interval</b> setting.</description>
+<description>Specifies the workbench to issue a publish after changes on a file that is associated to the server are saved and a full time interval has passed in the <b>Publishing interval</b> setting.</description>
 </context>
 
 <context id="seop0014">
-<description>Specifies the workbench to issue a publish after changes on a file that requires a build and is associated to the server are saved, and a full time interval has passed in the <b>Publishing
-interval</b> setting.</description>
+<description>Specifies the workbench to issue a publish after changes on a file that requires a build and is associated to the server are saved, and a full time interval has passed in the <b>Publishing interval</b> setting.</description>
 </context>
 
 <context id="seop0016">
@@ -258,7 +256,12 @@ interval</b> setting.</description>
 </context>
 
 <context id="seop0018">
-<description>Specifies the number of <i>seconds</i> that needs to pass before the workbench calls a publish to happen on the server. However, if you make a subsequent change to the files before this time interval has completed, the publish is delayed as the timer is reset. The workbench makes a publish to the server only after the full time interval has passed.  If you set the publishing interval to 0 seconds, an immediate publish should happen after changes on a file are saved.
+<description>Specifies the number of <b>seconds</b> that needs to pass before the workbench calls a publish to happen on the server. However, if you make a subsequent change to the files before this time interval has completed, the publish is delayed as the timer is reset. The workbench makes a publish to the server only after the full time interval has passed.  If you set the publishing interval to 0 seconds, an immediate publish should happen after changes on a file are saved.
+</description>
+</context>
+
+<context id="seop0020">
+<description>Select the tasks you want to run during publishing.
 </description>
 </context>
 

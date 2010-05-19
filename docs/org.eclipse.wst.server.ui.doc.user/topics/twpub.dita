@@ -51,9 +51,11 @@ is delayed as the timer is reset. The workbench makes a publish to
 the server only after the full time interval has passed.  If you set
 the publishing interval to 0 seconds, an immediate publish should
 happen after changes on a file are saved.</li>
-</ul></p><?Pub Caret -1?><p id="twpub_auto3">In the workbench, the
-default setting is the <b>Automatically publish when resources change</b> option
-is enabled with a value set in the publishing interval.</p><b
+</ul></p><p id="twpub_auto3">In the workbench, the default setting
+is the <b>Automatically publish when resources change</b> option is
+enabled with a value set in the publishing interval.</p><p>In addition,
+under the <uicontrol>Select publishing actions</uicontrol> list, select
+the tasks you want to run during publishing.</p><?Pub Caret -3?><b
 id="twpub_manualtitle">Manually publishing to a server</b><p
 id="twpub_manual1">If you do not want to wait for the automatic publishing
 interval to pass, at anytime you can manually request the workbench
@@ -76,4 +78,4 @@ in these projects are transferred to the location that is defined
 by the server.</p></result>
 </taskbody>
 </task>
-<?Pub *0000004683?>
+<?Pub *0000004819?>

@@ -4,17 +4,19 @@
  "map.dtd">
 <?Pub Sty _display FontColor="red"?>
 <map title="Testing and publishing applications" xml:lang="en-us">
+<!--Introduction-->
 <topicref href="topics/cwover.dita" linking="normal" locktitle="yes"
 navtitle="Testing and publishing on your server" scope="peer">
 <topicref href="topics/rwrcview.dita" locktitle="yes"
 navtitle="Servers view">
 <topicref href="topics/raccessserver.dita"
 navtitle="Keyboard shortcuts for Server Tools"></topicref>
-</topicref><?Pub Caret -2?>
+</topicref>
 <topicref href="topics/cwres.dita" locktitle="yes"
 navtitle="Resources used by the Server Tools"></topicref>
 <topicref href="topics/cwflow.dita" locktitle="yes"
 navtitle="Which server will start"></topicref>
+<!--Testing-->
 <topicref href="topics/tj2ee.dita" id="testing" linking="normal"
 locktitle="yes" navtitle="Testing applications on a server">
 <topicref href="topics/testing.dita" locktitle="yes"
@@ -24,6 +26,7 @@ navtitle="Testing on a HTTP Preview server"></topicref>
 <topicref href="topics/tj2eepreview.dita" locktitle="yes"
 navtitle="Testing on a J2EE Preview server"></topicref>
 </topicref>
+<!--Debugging-->
 <topicref href="topics/tdebug.dita" id="debug_server"
 navtitle="Debugging applications on a server">
 <topicref href="topics/tservlet.dita"
@@ -45,11 +48,13 @@ navtitle="Monitoring server ports">
 </topicmeta>
 </topicref>
 </topicref>
+<!--Publishing-->
 <topicref href="topics/tpublish.dita" id="publish_server" locktitle="yes"
 navtitle="Publishing applications to a server">
 <topicref href="topics/twpub.dita" locktitle="yes"
 navtitle="Publishing your application"></topicref>
 </topicref>
+<!--Creating-->
 <topicref href="topics/tcreate.dita" id="create_server" locktitle="yes"
 navtitle="Creating, editing and deleting servers">
 <topicref href="topics/twcrtins.dita" linking="none" locktitle="yes"
@@ -66,6 +71,7 @@ navtitle="Editing a server"></topicref>
 <topicref href="topics/twdelins.dita" locktitle="yes"
 navtitle="Deleting a server"></topicref>
 </topicref>
+<!--Managing-->
 <topicref href="topics/twmanage.dita" id="manage_server" locktitle="yes"
 navtitle="Managing servers ">
 <topicref href="topics/twaddprj.dita" locktitle="yes"
@@ -78,7 +84,10 @@ navtitle="Starting a server">
 navtitle="Starting a server in debug mode"></topicref>
 </topicref>
 <topicref href="topics/twstpins.dita" locktitle="yes"
-navtitle="Stopping a server"></topicref>
+navtitle="Stopping a server"></topicref><?Pub Caret -2?>
+<topicref href="topics/ttimeout.dita"
+navtitle="Setting timeout on the start or stop of the server">
+</topicref>
 <topicref href="topics/twprefin.dita" locktitle="yes"
 navtitle="Setting a default server"></topicref>
 <topicref href="topics/tmetasrv.dita" locktitle="yes"
@@ -86,6 +95,7 @@ navtitle="Displaying or hiding the metadata of the server"></topicref>
 <topicref href="topics/tclean.dita" locktitle="yes"
 navtitle="Cleaning projects published on the server"></topicref>
 </topicref>
+<!--Preferences-->
 <topicref href="topics/tpref.dita" id="pref_server" locktitle="yes"
 navtitle="Defining server preferences">
 <topicref href="topics/twsrvprf.dita" locktitle="yes"
@@ -104,7 +114,9 @@ navtitle="Defining the TCP/IP Monitor preferences">
 <topicref href="topics/rwtcpvw.dita" linking="sourceonly" locktitle="yes"
 navtitle="TCP/IP Monitor view"></topicref>
 </topicref>
+<topicref href="topics/tdecor.dita"
+navtitle="Showing the state and status in the Servers view"></topicref>
 </topicref>
 </topicref>
 </map>
-<?Pub *0000004676?>
+<?Pub *0000005018?>

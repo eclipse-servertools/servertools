@@ -30,7 +30,7 @@ view.</p><p>To manually start a server:</p></context>
 <step><cmd>In the Servers view, right-click the server you want to
 start.</cmd></step>
 <step><cmd>Select  <uicontrol>Start</uicontrol>. </cmd><info>The following
-things happen:<ul>
+events happen:<ul>
 <li>If you have selected the  <uicontrol>Automatically publish when
 starting servers</uicontrol> check box on the Server preferences page
 (<menucascade><uicontrol>Window</uicontrol><uicontrol> Preferences</uicontrol>
@@ -42,13 +42,12 @@ on the remote server when it is started.</li>
 <li>A Console view opens in the workbench. It will take a minute to
 start the server. If the server fails to start, check for the reason
 that it failed in the Console.</li>
-<li>In the Servers view, the status of the server changes to  <systemoutput>Started</systemoutput>.</li><?Pub
-Caret 7?>
-</ul></info></step>
+<li>In the Servers view, the status of the server changes to  <systemoutput>Started</systemoutput>.</li>
+</ul></info></step><?Pub Caret 34?>
 </steps>
 <result id="twsrtins_result"><note type="tip">The server is automatically
 started when you right-click on a file and then select  <uicontrol>Run
 As > Run on Server</uicontrol>.</note></result>
 </taskbody>
 </task>
-<?Pub *0000002750?>
+<?Pub *0000002751?>

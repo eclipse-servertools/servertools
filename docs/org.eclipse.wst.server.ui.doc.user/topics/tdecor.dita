@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2009, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="tdecor_wst" xml:lang="en-us">
+<title id="title">Showing the state and status in the Servers view</title>
+<shortdesc id="shortdesc">When the <uicontrol>Server State Decorator</uicontrol> is enabled, the workbench shows in the Servers view label decorations that indicate the state and status of the server and its projects. If the Servers view does not display a current state or status for the project, the workbench cannot retrieve this detail from the server, the server is stopped, or the server does not support this function.</shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm>servers<indexterm>decorator</indexterm></indexterm><indexterm>decorator<indexterm>server</indexterm></indexterm></keywords>
+</metadata></prolog>
+<taskbody>
+<context id="context"><ph id="ph1">For more detail about the state and status of the server and its project, refer to the <i>Servers view</i> topic, a link is provided at the bottom of this topic.</ph><table id="table"><title id="table_title">The following is the Servers view showing or hiding the Server State decorator: </title>
+<tgroup cols="2"><colspec colname="col1"/><colspec colname="col2"/>
+<thead>
+<row valign="bottom">
+<entry colname="col1" id="table_col1">Showing the Server State decorator</entry>
+<entry colname="col2" id="table_col2">Hiding the Server State decorator</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry colname="col1"><image href="../images/scpview.gif"><alt>This is an image of the Servers view showing the Server State decorator.</alt></image><p><ph id="ph2">When the <uicontrol>Server State Decorator</uicontrol> preference is enabled, the Servers view shows the label decorations that indicate the state and status of the server and its projects. </ph> In this example, the Servers view shows the state of the Tomcat server is started and the status is synchronized. In addition, the status of the HelloWorld project is synchronized with the server.</p></entry>
+<entry colname="col2"><image href="../images/scpview_no_decor.gif"><alt>This is an image of the Servers view hiding the Server State decorator.</alt></image><p><ph id="ph3">When the <uicontrol>Server State Decorator</uicontrol> preference is cleared, the state and status of the server and its projects does not display in the Servers view.</ph></p></entry>
+</row>
+</tbody>
+</tgroup>
+</table><ph id="ph4">To enable the server status decorator:</ph></context>
+<steps id="steps">
+<step><cmd>Open the Label Decorations preference page<ph id="steps_ph5">: Click <menucascade><uicontrol>Window</uicontrol><uicontrol>Preferences</uicontrol></menucascade>, expand <menucascade><uicontrol>General </uicontrol><uicontrol>Appearance</uicontrol></menucascade>, and click <uicontrol> Label Decorations</uicontrol>.</ph></cmd></step>
+<step><cmd id="steps_cmd2">To show or hide the state and status of the server from the Servers view, select or clear the <uicontrol>Server State Decorator</uicontrol> check box.</cmd><info id="step2_info"> By default, this check box is selected.</info></step>
+</steps>
+</taskbody>
+</task>

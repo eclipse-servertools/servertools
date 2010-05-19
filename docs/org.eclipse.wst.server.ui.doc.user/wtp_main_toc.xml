@@ -38,6 +38,7 @@
 <topic label="Starting a server in debug mode" href="topics/twsrtdbg.html"/>
 </topic>
 <topic label="Stopping a server" href="topics/twstpins.html"/>
+<topic label="Setting timeout on the start or stop of the server" href="topics/ttimeout.html"/>
 <topic label="Setting a default server" href="topics/twprefin.html"/>
 <topic label="Displaying or hiding the metadata of the server" href="topics/tmetasrv.html"/>
 <topic label="Cleaning projects published on the server" href="topics/tclean.html"/>
@@ -52,6 +53,7 @@
 <topic label="Defining the TCP/IP Monitor preferences" href="topics/twtcpprf.html">
 <topic label="TCP/IP Monitor view" href="topics/rwtcpvw.html"/>
 </topic>
+<topic label="Showing the state and status in the Servers view" href="topics/tdecor.html"/>
 </topic>
 </topic>
 </toc>
