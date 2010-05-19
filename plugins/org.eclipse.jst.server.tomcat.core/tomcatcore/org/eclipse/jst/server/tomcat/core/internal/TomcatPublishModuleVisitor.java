@@ -490,6 +490,10 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
 			dirty = true;
 			context.getResources().setExtraResourcePaths(resPaths);
 		}
+		
+		if (enableMetaInfResources) {
+			context.findElement("JarScanner").setAttributeValue("scanAllDirectories", "true");
+		}
 
         if (dirty) {
         	//TODO If writing to separate context XML files, save "dirty" status for later use
