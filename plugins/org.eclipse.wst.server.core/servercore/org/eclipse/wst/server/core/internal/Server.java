@@ -509,8 +509,9 @@ public class Server extends Base implements IServer {
 					if (behaviourDelegate != null)
 						InternalInitializer.initializeServerBehaviourDelegate(behaviourDelegate, Server.this, monitor);
 					Trace.trace(Trace.PERFORMANCE, "Server.getBehaviourDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
-					
-					if (getServerState() == IServer.STATE_STARTED)
+
+					// publish only if the server is started but respect Server > Launching > PREF_AUTO_PUBLISH
+					if (getServerState() == IServer.STATE_STARTED && ServerCore.isAutoPublishing())
 						autoPublish();
 				} catch (Throwable t) {
 					ServerPlugin.logExtensionFailure(toString(), t);
