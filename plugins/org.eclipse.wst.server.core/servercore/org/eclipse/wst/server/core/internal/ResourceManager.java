@@ -458,19 +458,19 @@ public class ResourceManager {
 		if (runtimeListeners.isEmpty())
 			return;
 		
-		synchronized (runtimeListeners) {
-			for (IRuntimeLifecycleListener srl : runtimeListeners) {
-				Trace.trace(Trace.LISTENERS, "  Firing runtime event to " + srl);
-				try {
-					if (b == EVENT_ADDED)
-						srl.runtimeAdded(runtime);
-					else if (b == EVENT_CHANGED)
-						srl.runtimeChanged(runtime);
-					else
-						srl.runtimeRemoved(runtime);
-				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "  Error firing runtime event to " + srl, e);
-				}
+		List<IRuntimeLifecycleListener> clone = new ArrayList<IRuntimeLifecycleListener>();
+		clone.addAll(runtimeListeners);
+		for (IRuntimeLifecycleListener srl : clone) {
+			Trace.trace(Trace.LISTENERS, "  Firing runtime event to " + srl);
+			try {
+				if (b == EVENT_ADDED)
+					srl.runtimeAdded(runtime);
+				else if (b == EVENT_CHANGED)
+					srl.runtimeChanged(runtime);
+				else
+					srl.runtimeRemoved(runtime);
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "  Error firing runtime event to " + srl, e);
 			}
 		}
 		Trace.trace(Trace.LISTENERS, "-<- Done firing runtime event -<-");
@@ -485,19 +485,19 @@ public class ResourceManager {
 		if (serverListeners.isEmpty())
 			return;
 		
-		synchronized (serverListeners) {
-			for (IServerLifecycleListener srl : serverListeners) {
-				Trace.trace(Trace.LISTENERS, "  Firing server event to " + srl);
-				try {
-					if (b == EVENT_ADDED)
-						srl.serverAdded(server);
-					else if (b == EVENT_CHANGED)
-						srl.serverChanged(server);
-					else
-						srl.serverRemoved(server);
-				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "  Error firing server event to " + srl, e);
-				}
+		List<IServerLifecycleListener> clone = new ArrayList<IServerLifecycleListener>();
+		clone.addAll(serverListeners);
+		for (IServerLifecycleListener srl : clone) {
+			Trace.trace(Trace.LISTENERS, "  Firing server event to " + srl);
+			try {
+				if (b == EVENT_ADDED)
+					srl.serverAdded(server);
+				else if (b == EVENT_CHANGED)
+					srl.serverChanged(server);
+				else
+					srl.serverRemoved(server);
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "  Error firing server event to " + srl, e);
 			}
 		}
 		Trace.trace(Trace.LISTENERS, "-<- Done firing server event -<-");
