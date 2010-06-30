@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Widget;
+import org.eclipse.swt.widgets.Display;
 /**
  *
  */
@@ -41,7 +42,10 @@ public class LockedTableViewer extends TableViewer {
 	}
 
 	protected void createColor(Control c) {
-		color = new Color(c.getDisplay(), 255, 255, 225);
+		if (Display.getDefault().getHighContrast())
+			color = new Color(c.getDisplay(), 0, 0, 0);
+		else
+			color = new Color(c.getDisplay(), 255, 255, 225);
 		c.addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
 				color.dispose();
