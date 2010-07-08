@@ -13,7 +13,9 @@ package org.eclipse.wst.server.discovery;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.equinox.internal.p2.ui.ProvisioningOperationRunner;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
+import org.eclipse.equinox.p2.operations.ProvisioningJob;
 import org.eclipse.equinox.p2.ui.AcceptLicensesWizardPage;
 import org.eclipse.equinox.p2.ui.ProvisioningUI;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -123,6 +125,11 @@ public class ExtensionWizard extends Wizard {
 				return extension.install(monitor);
 			}
 		};
+
+		// Request a restart when the installation is completed  (bugzilla# 314823)
+		ProvisioningOperationRunner por = new ProvisioningOperationRunner(ProvisioningUI.getDefaultUI());
+		por.manageJob(job, ProvisioningJob.RESTART_OR_APPLY);
+		
 		job.setUser(true);
 		job.schedule();
 		return true;
