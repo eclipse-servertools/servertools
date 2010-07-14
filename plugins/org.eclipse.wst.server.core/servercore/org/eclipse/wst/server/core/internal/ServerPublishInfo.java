@@ -540,4 +540,21 @@ public class ServerPublishInfo {
 			}
 		}
 	}
+
+	/**
+	 * Recreates the cache for the specified {@link IModule}.
+	 * 
+	 * @param module The {@link IModule}
+	 */
+	public void rebuildCache(IModule[] module) {
+
+		synchronized (modulePublishInfo) {
+			final String publishInfoKey = this.getKey(module);
+			ModulePublishInfo mpi = modulePublishInfo.get(publishInfoKey);
+			if(mpi != null) {
+				mpi.startCaching(); // clear out the resource list
+				mpi.fill(module); // rebuild the resource list
+			}
+		}
+	}
 }

@@ -863,6 +863,33 @@ public abstract class ServerBehaviourDelegate {
 			multi.addAll(tempMulti);
 	}*/
 
+	private List<Integer> computeDelta(final List<IModule[]> moduleList) {
+
+		final List<Integer> deltaKindList = new ArrayList<Integer>();
+		final Iterator<IModule[]> iterator = moduleList.iterator();
+		while (iterator.hasNext()) {
+			IModule[] module = iterator.next();
+			if (hasBeenPublished(module)) {
+				IModule m = module[module.length - 1];
+				if ((m.getProject() != null && !m.getProject().isAccessible())
+						|| getPublishedResourceDelta(module).length == 0) {
+					deltaKindList.add(new Integer(ServerBehaviourDelegate.NO_CHANGE));
+				}
+				else {
+					deltaKindList.add(new Integer(ServerBehaviourDelegate.CHANGED));
+				}
+			}
+			else {
+				deltaKindList.add(new Integer(ServerBehaviourDelegate.ADDED));
+			}
+		}
+		this.addRemovedModules(moduleList, null);
+		while (deltaKindList.size() < moduleList.size()) {
+			deltaKindList.add(new Integer(ServerBehaviourDelegate.REMOVED));
+		}
+		return deltaKindList;
+	}
+	
 	/**
 	 * Publish to the server.
 	 * 
@@ -878,25 +905,7 @@ public abstract class ServerBehaviourDelegate {
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishNoRuntime, null);
 		
 		final List<IModule[]> moduleList = getAllModules();
-		final List<Integer> deltaKindList = new ArrayList<Integer>();
-		
-		Iterator iterator = moduleList.iterator();
-		while (iterator.hasNext()) {
-			IModule[] module = (IModule[]) iterator.next();
-			if (hasBeenPublished(module)) {
-				IModule m = module[module.length - 1];
-				if ((m.getProject() != null && !m.getProject().isAccessible())
-						|| getPublishedResourceDelta(module).length == 0)
-					deltaKindList.add(new Integer(ServerBehaviourDelegate.NO_CHANGE));
-				else
-					deltaKindList.add(new Integer(ServerBehaviourDelegate.CHANGED));
-			} else
-				deltaKindList.add(new Integer(ServerBehaviourDelegate.ADDED));
-		}
-		
-		addRemovedModules(moduleList, null);
-		while (deltaKindList.size() < moduleList.size())
-			deltaKindList.add(new Integer(ServerBehaviourDelegate.REMOVED));
+		List<Integer> deltaKindList = this.computeDelta(moduleList);
 		
 		PublishOperation[] tasks = getTasks(kind, moduleList, deltaKindList);
 		int size = 2000 + 3500 * moduleList.size() + 500 * tasks.length;
@@ -1144,18 +1153,22 @@ public abstract class ServerBehaviourDelegate {
 	}
 
 	/**
-	 * Execute publishers.
+	 * Execute publishers. If a publisher modified the contents of the module (which is determined by the
+	 * {@link PublisherDelegate}) then the delta list is rebuild.
 	 * 
-	 * @param kind the publish kind
-	 * @param modules the list of modules
-	 * @param deltaKinds the list of delta kind that maps to the list of modules
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 * @param info the IAdaptable (or <code>null</code>) provided by the
-	 *    caller in order to supply UI information for prompting the
-	 *    user if necessary. When this parameter is not <code>null</code>,
-	 *    it should minimally contain an adapter for the
-	 *    org.eclipse.swt.widgets.Shell.class
+	 * @param kind
+	 *            the publish kind
+	 * @param modules
+	 *            the list of modules. The contents of this {@link List} may change if the publisher modifies code.
+	 * @param deltaKinds
+	 *            the list of delta kind that maps to the list of modules. The contents of this {@link List} may change
+	 *            if the publisher modifies code.
+	 * @param monitor
+	 *            a progress monitor, or <code>null</code> if progress reporting and cancellation are not desired
+	 * @param info
+	 *            the IAdaptable (or <code>null</code>) provided by the caller in order to supply UI information for
+	 *            prompting the user if necessary. When this parameter is not <code>null</code>, it should minimally
+	 *            contain an adapter for the org.eclipse.swt.widgets.Shell.class
 	 * @throws CoreException
 	 * @since 1.1
 	 */
@@ -1176,12 +1189,17 @@ public abstract class ServerBehaviourDelegate {
 			taskModel.putObject(TaskModel.TASK_DELTA_KINDS, deltaKinds);
 		}
 		
+		boolean publisherModifiedCode = false;
 		for (int i = 0; i < size; i++) {
 			Publisher pub = publishers[i];
 			monitor.subTask(NLS.bind(Messages.taskPerforming, pub.getName()));
 			try {
 				pub.setTaskModel(taskModel);
 				IStatus pubStatus = pub.execute(kind, ProgressUtil.getSubMonitorFor(monitor, 500), info);
+				if(!publisherModifiedCode) {
+					// If a publisher has modified modules then there is no reason to keep checking other publishers.
+					publisherModifiedCode = pub.isModifyModules();
+				}
 				multi.add(pubStatus);
 			} catch (CoreException ce) {
 				Trace.trace(Trace.SEVERE, "Publisher failed", ce);
@@ -1191,6 +1209,10 @@ public abstract class ServerBehaviourDelegate {
 			// return early if the monitor has been canceled
 			if (monitor.isCanceled())
 				return multi;
+		}
+		if (publisherModifiedCode) {
+			// re-create the delta list as at least one publisher has changed the contents of the published modules.
+			deltaKinds = this.computeDelta(modules);
 		}
 		return multi;
 	}

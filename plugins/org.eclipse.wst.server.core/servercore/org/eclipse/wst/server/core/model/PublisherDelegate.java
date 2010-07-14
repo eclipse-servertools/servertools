@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,10 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.model;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.server.core.TaskModel;
 /**
  * An operation that will be executed during publishing. 
@@ -91,4 +90,28 @@ public abstract class PublisherDelegate {
 	 * @throws CoreException if there was an error while executing the task
 	 */
 	public abstract IStatus execute(int kind, IProgressMonitor monitor, IAdaptable info) throws CoreException;
+
+	/**
+	 * Returns the scheduling rule that is required for executing the publisher delegate. The default is the current
+	 * rule defined on the publishing job.
+	 * 
+	 * @return A {@link ISchedulingRule} for the job that defines how this publisher can execute in the publishing job.
+	 *         A <code>null</code> value may be returned if the publishing job does not have any rule defined.
+	 * @since 3.2
+	 */
+	public ISchedulingRule getRule() {
+
+		return Job.getJobManager().currentRule();
+	}
+
+	/**
+	 * Accessor to find out if this publisher delegate modified any modules that are published on the server.
+	 * 
+	 * @return <code>true</code> if the publisher modified the contents of any modules that are published on the server.
+	 * @since 3.2
+	 */
+	public boolean isModifyModules() {
+
+		return false;
+	}
 }
