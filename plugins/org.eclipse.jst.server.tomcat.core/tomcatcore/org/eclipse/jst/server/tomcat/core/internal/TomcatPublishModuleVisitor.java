@@ -267,11 +267,8 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
 			Object element = iterator.next();
 			if (vcBuffer.length() > 0) {
 				vcBuffer.append(";");
-				rpBuffer.append(";");
 			}
 			vcBuffer.append(element);
-			// Add to resource paths too, so resource artifacts can be found
-			rpBuffer.append("/WEB-INF/classes").append("|").append(element);
         }
         if (vcBuffer.length() > 0 && virtualJarClasspathElements.size() > 0) {
         	vcBuffer.append(";");
