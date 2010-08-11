@@ -1161,6 +1161,10 @@ public class ServerPlugin extends Plugin {
 	 * A new array is returned on each call, so clients may store or modify the result.
 	 * </p>
 	 * 
+	 * @deprecated (since 3.3) 
+	 * The support for InstallableRuntime has been moved to org.eclipse.wst.server.discovery
+	 * and is now supported through the p2 repository lookup APIs
+	 * 
 	 * @return the array of installable runtimes {@link IInstallableRuntime}
 	 */
 	public static IInstallableRuntime[] getInstallableRuntimes() {
@@ -1175,6 +1179,10 @@ public class ServerPlugin extends Plugin {
 	/**
 	 * Returns the installable runtime for the given runtime type, or <code>null</code>
 	 * if none exists.
+	 * 
+	 * @deprecated (since 3.3) 
+	 * The support for InstallableRuntime has been moved to org.eclipse.wst.server.discovery
+	 * and is now supported through the p2 repository lookup APIs
 	 * 
 	 * @param runtimeTypeId a runtime type id
 	 * @return the installable runtime for the given runtime type, or <code>null</code>
@@ -1203,6 +1211,9 @@ public class ServerPlugin extends Plugin {
 
 	/**
 	 * Load the installable runtimes.
+	 * @deprecated (since 3.3) 
+	 * The support for InstallableRuntime has been moved to org.eclipse.wst.server.discovery
+	 * and is now supported through the p2 repository lookup APIs
 	 */
 	private static synchronized void loadInstallableRuntimes() {
 		//if (installableRuntimes != null)
