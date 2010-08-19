@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.jst.server_adapters.ext.feature"
       label="%featureName"
-      version="3.2.1.qualifier"
+      version="3.2.2.qualifier"
       provider-name="%providerName">
 
    <description>
@@ -16,7 +16,6 @@
    <license url="%licenseURL">
       %license
    </license>
-
 
    <plugin
          id="org.eclipse.jst.server.tomcat.core"
