@@ -47,18 +47,7 @@ public abstract class BaseCellLabelProvider extends ColumnLabelProvider {
 	public BaseCellLabelProvider(ILabelDecorator decorator) {
 		super();
 			
-		if (decorator == null){
-			decorator = PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator();
-			providerListener = new ILabelProviderListener() {
-				@SuppressWarnings("synthetic-access")
-				public void labelProviderChanged(LabelProviderChangedEvent event) {
-					fireLabelProviderChanged(event);
-				}
-			};
-			decorator.addListener(providerListener);
-		}
-	
-		this.decorator = decorator;
+		this.decorator = getDecorator();
 	} 
 
 	public Point getToolTipShift(Object object) {
@@ -78,6 +67,20 @@ public abstract class BaseCellLabelProvider extends ColumnLabelProvider {
 			decorator.removeListener(providerListener);
 		}
 		super.dispose();
+	}
+	
+	public ILabelDecorator getDecorator(){
+		if (decorator == null){
+			decorator = PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator();
+			providerListener = new ILabelProviderListener() {
+				@SuppressWarnings("synthetic-access")
+				public void labelProviderChanged(LabelProviderChangedEvent event) {
+					fireLabelProviderChanged(event);
+				}
+			};
+			decorator.addListener(providerListener);
+		}
+		return decorator;
 	}
 
 	/**

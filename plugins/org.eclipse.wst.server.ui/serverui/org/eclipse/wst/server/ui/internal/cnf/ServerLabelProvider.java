@@ -13,19 +13,17 @@ package org.eclipse.wst.server.ui.internal.cnf;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.ServerUICore;
-import org.eclipse.wst.server.ui.internal.ImageResource;
-import org.eclipse.wst.server.ui.internal.Messages;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
+import org.eclipse.wst.server.ui.internal.viewers.BaseCellLabelProvider;
 /**
  * Server table label provider.
  */
-public class ServerLabelProvider extends LabelProvider {
-
+public class ServerLabelProvider extends BaseCellLabelProvider{
+	
 	/**
 	 * ServerTableLabelProvider constructor comment.
 	 */
@@ -60,7 +58,9 @@ public class ServerLabelProvider extends LabelProvider {
 	}
 		
 	public Image getImage(Object element) {
+		
 		Image image = null;
+		
 		if (element instanceof ModuleServer) {
 			ModuleServer ms = (ModuleServer) element;
 			ILabelProvider labelProvider = ServerUICore.getLabelProvider();
@@ -68,15 +68,16 @@ public class ServerLabelProvider extends LabelProvider {
 			labelProvider.dispose();
 		} else if( element instanceof IServer ) {
 			IServer server = (IServer) element;
-			if (server.getServerType() != null) {
-				// TODO Angel says: Need to fix this
-				// Because we are now grabbing the ServerState the type will not show. 
-				// It might be best to create a new icon for the state, perhaps just the
-				// play/stop images, without the server
-				image = ServerDecorator.getServerStateImage(server);
-				if (image == null){
-					image = ImageResource.getImage(server.getServerType().getId());
-				}
+			if (server.getServerType() != null) {				
+				// Ideally we won't be doing the overlay of the state here, but rather in a decorator so that 
+				// users can turn it off and on. This works for now until we have more time to work and reorganize
+				// the code
+				Image serverTypeImg = ImageResource.getImage(server.getServerType().getId());
+				Image serverStatusImg = ServerDecorator.getServerStateImageOverlay(server);
+				
+				CompositeServerImageDescriptor dsid = new CompositeServerImageDescriptor(serverTypeImg,serverStatusImg);
+				
+				image = dsid.createImage();
 			}
 		}
 		return image;
@@ -95,5 +96,17 @@ public class ServerLabelProvider extends LabelProvider {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public Image getColumnImage(Object element, int index) {
+		// TODO Left blank since the CNF doesn't support this 
+		return null;
+	}
+
+	@Override
+	public String getColumnText(Object element, int index) {
+		// TODO Left blank since the CNF doesn't support this
+		return null;
 	}	
 }

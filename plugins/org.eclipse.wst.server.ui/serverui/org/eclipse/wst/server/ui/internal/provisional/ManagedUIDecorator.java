@@ -117,4 +117,10 @@ public class ManagedUIDecorator extends UIDecorator {
 	public boolean canRestart() {
 		return true;
 	}
+
+	@Override
+	public Image getStateImageOverlay(int state, String mode, int count) {
+		// TODO Intentionally left blank
+		return null;
+	}
 }

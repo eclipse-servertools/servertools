@@ -31,6 +31,10 @@ public class CNFManagedUIDecorator extends UIDecorator {
 	private static Image[] stoppingImages;
 	private static ImageDescriptor[] stoppingImagesDescriptor;
 	
+	private static Image[] startingImagesOverlay;	
+	private static Image[] stoppingImagesOverlay;
+
+	
 	/**
 	 * Initialize the variables for this class
 	 */
@@ -66,6 +70,19 @@ public class CNFManagedUIDecorator extends UIDecorator {
 			ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STOPPING_2),
 			ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_STATE_STOPPING_3)
 		};
+				
+		// overlay icons
+		startingImagesOverlay = new Image[] {
+				ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_1_OVERLAY),
+				ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_2_OVERLAY),
+				ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_3_OVERLAY)
+			};			
+			
+		stoppingImagesOverlay = new Image[] {
+				ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_1_OVERLAY),
+				ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_2_OVERLAY),
+				ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_2_OVERLAY)
+			};
 	}
 
 	/**
@@ -117,6 +134,32 @@ public class CNFManagedUIDecorator extends UIDecorator {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.server.ui.internal.provisional.UIDecorator#getStateImage(int, java.lang.String, int)
+	 */
+	public Image getStateImageOverlay(int state, String mode, int count) {
+		// Only initialize the images when an image is required
+		init();
+		
+		if (state == IServer.STATE_UNKNOWN)
+			return null;
+		else if (state == IServer.STATE_STARTING)
+			return startingImagesOverlay[count];
+		else if (state == IServer.STATE_STOPPING)
+			return stoppingImagesOverlay[count];
+		else if (state == IServer.STATE_STOPPED)
+			return ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPED_OVERLAY);
+		else { //if (state == IServer.STATE_STARTED) {
+			//String mode = server.getMode();
+			if (ILaunchManager.DEBUG_MODE.equals(mode))
+				return ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTED_DEBUG_OVERLAY);
+			else if (ILaunchManager.PROFILE_MODE.equals(mode))
+				return ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTED_PROFILE_OVERLAY);
+			else
+				return ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTED_OVERLAY);
+		}
+	}
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.ui.internal.provisional.UIDecorator#getStateImageDescriptor(int, java.lang.String, int)
 	 */

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -109,7 +109,21 @@ public class ImageResource {
 	public static final String IMG_SERVER_STATE_STOPPING_1 = "stateStopping1";
 	public static final String IMG_SERVER_STATE_STOPPING_2 = "stateStopping2";
 	public static final String IMG_SERVER_STATE_STOPPING_3 = "stateStopping3";
+	
+	public static final String IMG_SERVER_STATE_STARTED_OVERLAY = "stateStartedOverlay";
+	public static final String IMG_SERVER_STATE_STARTED_DEBUG_OVERLAY = "stateStartedDebugOverlay";
+	public static final String IMG_SERVER_STATE_STARTED_PROFILE_OVERLAY = "stateStartedProfileOverlay";
+	public static final String IMG_SERVER_STATE_STOPPED_OVERLAY = "stateStoppedOverlay";	
+	
+	public static final String IMG_SERVER_STATE_STARTING_1_OVERLAY = "stateStartingOverlay1";
+	public static final String IMG_SERVER_STATE_STARTING_2_OVERLAY = "stateStartingOverlay2";
+	public static final String IMG_SERVER_STATE_STARTING_3_OVERLAY = "stateStartingOverlay3";
+	
+	public static final String IMG_SERVER_STATE_STOPPING_1_OVERLAY = "stateStoppingOverlay1";
+	public static final String IMG_SERVER_STATE_STOPPING_2_OVERLAY = "stateStoppingOverlay2";
+	public static final String IMG_SERVER_STATE_STOPPING_3_OVERLAY = "stateStoppingOverlay3";
 
+	
 	// Server Client Images
 	public static final String IMG_CTOOL_RUN_ON_SERVER = "IMG_CTOOL_CLIENT";
 	public static final String IMG_CTOOL_DEBUG_ON_SERVER = "IMG_CTOOL_CLIENT2";
@@ -229,7 +243,7 @@ public class ImageResource {
 		registerImage(IMG_DTOOL_MODIFY_MODULES, URL_DTOOL + "wiz_modify_modules.gif");
 		registerImage(IMG_DTOOL_RESET_DEFAULT, URL_DTOOL + "clear.gif");
 	
-		// load server state images
+		// load server state images no overlay, still used in the Run On Server
 		registerImage(IMG_SERVER_STATE_STARTED, URL_OBJ + "server_started.gif");
 		registerImage(IMG_SERVER_STATE_STARTED_DEBUG, URL_OBJ + "server_started_debug.gif");
 		registerImage(IMG_SERVER_STATE_STARTED_PROFILE, URL_OBJ + "server_started_profile.gif");
@@ -246,6 +260,20 @@ public class ImageResource {
 		registerImage(IMG_SERVER_STATE_STOPPING_2, URL_OBJ + "server_stopping2.gif");
 		registerImage(IMG_SERVER_STATE_STOPPING_3, URL_OBJ + "server_stopping3.gif");
 	
+		// load server state images overlay
+		registerImage(IMG_SERVER_STATE_STARTED_OVERLAY, URL_OVR + "server_started_ovr.gif");
+		registerImage(IMG_SERVER_STATE_STARTED_DEBUG_OVERLAY, URL_OVR + "server_started_debug_ovr.gif");
+		registerImage(IMG_SERVER_STATE_STARTED_PROFILE_OVERLAY, URL_OVR + "server_started_profile_ovr.gif");
+		registerImage(IMG_SERVER_STATE_STOPPED_OVERLAY, URL_OVR + "server_stopped_ovr.gif");
+		
+		registerImage(IMG_SERVER_STATE_STARTING_1_OVERLAY, URL_OVR + "server_starting1_ovr.gif");
+		registerImage(IMG_SERVER_STATE_STARTING_2_OVERLAY, URL_OVR + "server_starting2_ovr.gif");
+		registerImage(IMG_SERVER_STATE_STARTING_3_OVERLAY, URL_OVR + "server_starting3_ovr.gif");
+		
+		registerImage(IMG_SERVER_STATE_STOPPING_1_OVERLAY, URL_OVR + "server_stopping1_ovr.gif");
+		registerImage(IMG_SERVER_STATE_STOPPING_2_OVERLAY, URL_OVR + "server_stopping2_ovr.gif");
+		registerImage(IMG_SERVER_STATE_STOPPING_3_OVERLAY, URL_OVR + "server_stopping3_ovr.gif");
+
 		// load action images
 		registerImage(IMG_ELCL_PUBLISH, URL_ELCL + "launch_publish.gif");
 		registerImage(IMG_ELCL_START, URL_ELCL + "launch_run.gif");

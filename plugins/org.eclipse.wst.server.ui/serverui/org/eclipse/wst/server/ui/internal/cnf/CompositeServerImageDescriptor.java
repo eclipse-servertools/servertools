@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,40 +8,57 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.ui.internal;
+package org.eclipse.wst.server.ui.internal.cnf;
 
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.ui.internal.ImageResource;
+import org.eclipse.wst.server.ui.internal.Trace;
+
 /**
- * A OverlayImageDescriptor consists of a main icon and one or more overlays.
- * The overlays are computed according to flags set on creation of the descriptor.
- * @deprecated since 3.2.2
+ * A CompositeServerImageDescriptor consists of a main icon and one overlay. The overlay will be
+ *  created at the bottom right of the base image
+ * 
  */
-public class DefaultServerImageDescriptor extends CompositeImageDescriptor {
+
+public class CompositeServerImageDescriptor extends CompositeImageDescriptor {
 	private Image fBaseImage;
 	private Point fSize;
 	private Image overlay;
 	
 	/**
-	 * Create a new OverlayImageDescriptor.
-	 * 
-	 * @param baseImage an image descriptor used as the base image
-	 */
-	public DefaultServerImageDescriptor(Image baseImage) {
-		this(baseImage, ImageResource.getImage(ImageResource.IMG_DEFAULT_SERVER_OVERLAY));
-	}
-
-	/**
+	 * Create a new CompositeServerImageDescriptor with the base icon being the ServerType image 
+	 * provided by the adopter
 	 * 
 	 * @param baseImage
 	 * @param overlay
 	 */
-	public DefaultServerImageDescriptor(Image baseImage, Image overlay) {
-		setBaseImage(baseImage);
+	public CompositeServerImageDescriptor(final IServer server, Image overlay) {
+		setBaseImage(ImageResource.getImage(server.getServerType().getId()));
+		if (overlay == null){
+			Trace.trace(Trace.FINEST, "Invalid overlay icon");
+		}
 		this.overlay = overlay;
 	}
+	
+	/**
+	 * Create a new CompositeServerImageDescriptor with the base icon being the ServerType image 
+	 * provided by the adopter
+	 * 
+	 * @param baseImage
+	 * @param overlay
+	 */
+	public CompositeServerImageDescriptor(final Image baseImage, Image overlay) {
+		setBaseImage(baseImage);
+		if (overlay == null){
+			Trace.trace(Trace.FINEST, "Invalid overlay icon");
+		}
+		this.overlay = overlay;
+	}
+	
 
 	/**
 	 * @see CompositeImageDescriptor#getSize()
@@ -58,10 +75,10 @@ public class DefaultServerImageDescriptor extends CompositeImageDescriptor {
 	 * @see Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object object) {
-		if (!(object instanceof DefaultServerImageDescriptor))
+		if (!(object instanceof CompositeServerImageDescriptor))
 			return false;
 			
-		DefaultServerImageDescriptor other = (DefaultServerImageDescriptor) object;
+		CompositeServerImageDescriptor other = (CompositeServerImageDescriptor) object;
 		return (getBaseImage().equals(other.getBaseImage()));
 	}
 	
@@ -84,13 +101,15 @@ public class DefaultServerImageDescriptor extends CompositeImageDescriptor {
 		drawOverlays();
 	}
 
-	/**
-	 * Add any overlays to the image as specified in the flags.
-	 */
 	protected void drawOverlays() {
+		if (overlay == null){
+			return;
+		}
+		
 		ImageData data = overlay.getImageData();
 		int x = getSize().x - data.width;
-		drawImage(data, x, 0);
+		int y = getSize().y - data.height;
+		drawImage(data, x, y);
 	}
 	
 	protected Image getBaseImage() {
