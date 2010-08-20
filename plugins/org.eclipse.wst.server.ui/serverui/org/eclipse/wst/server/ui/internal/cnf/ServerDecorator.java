@@ -146,6 +146,17 @@ public class ServerDecorator extends LabelProvider implements ILightweightLabelD
 			UIDecoratorManager.getCNFUIDecorator().getStateImage(state, mode, getCount());
 	}
 	
+	public static Image getServerStateImageOverlay(IServer server) {
+		return server == null ? null : 
+			getStateImageOverlay(server.getServerType(), server.getServerState(), server.getMode());
+	}
+	
+	public static Image getStateImageOverlay(IServerType serverType, int state, String mode) {
+		return serverType == null ? null : 
+			UIDecoratorManager.getCNFUIDecorator().getStateImageOverlay(state, mode, getCount());
+	}
+
+	
 	public static String getModuleText(ModuleServer ms ) { 
 		if (ms == null || ms.module == null)
 			return "";

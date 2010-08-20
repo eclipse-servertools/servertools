@@ -39,6 +39,8 @@ public abstract class UIDecorator {
 	 */
 	public abstract Image getStateImage(int state, String mode, int count);
 	
+	public abstract Image getStateImageOverlay(int state, String mode, int count);
+	
 	public ImageDescriptor getStateImageDescriptor(int state, String mode, int count){
 		return null;
 	}
