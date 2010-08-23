@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -225,7 +225,12 @@ public class TaskWizard implements IWizard {
 		} catch (InvocationTargetException te) {
 			Trace.trace(Trace.SEVERE, "Error finishing task wizard", te);
 			t = te.getCause();
-		} catch (Exception e) {
+		} catch(InterruptedException interruptedEx) {
+			// the dialog was canceled - do nothing.
+			Trace.trace(Trace.INFO, "The task wizard was cancelled.", interruptedEx);
+			return false; // return false since the request was canceled
+		}
+		catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error finishing task wizard 2", e);
 			t = e;
 		}
