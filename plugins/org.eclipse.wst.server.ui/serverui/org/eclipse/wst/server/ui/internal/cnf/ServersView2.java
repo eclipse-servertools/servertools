@@ -243,6 +243,7 @@ public class ServersView2 extends CommonNavigator {
 								stopThread();
 						}
 						refreshServerState(server);
+						refreshServerContent(server);
 					} 
 				} else if ((eventKind & ServerEvent.MODULE_CHANGE) != 0) {
 					// module change event
