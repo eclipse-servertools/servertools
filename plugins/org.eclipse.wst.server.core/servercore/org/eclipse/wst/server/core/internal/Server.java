@@ -238,11 +238,11 @@ public class Server extends Base implements IServer {
 		}
 	}
 
-	public class PublishJob extends ServerJob {
-		protected int kind;
-		protected List<IModule[]> modules4;
-		protected IAdaptable info;
-		protected boolean start;
+	public final class PublishJob extends ServerJob {
+		private final int kind;
+		private final List<IModule[]> modules4;
+		private final IAdaptable info;
+		private final boolean start;
 
 		/**
 		 * Create a new publishing job.
