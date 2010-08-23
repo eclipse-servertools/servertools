@@ -30,7 +30,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.IServerModule;
 import org.eclipse.wst.server.ui.internal.provisional.IServerToolTip;
 
@@ -154,11 +153,12 @@ public class ServerToolTip extends ToolTip {
 		FillLayout layout = (FillLayout)parent.getLayout();
 		layout.type = SWT.VERTICAL;
 		parent.setLayout(layout);
+		parent.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 		
 		// set the default text for the tooltip
 		StyledText sText = new StyledText(parent, SWT.NONE);
 		sText.setEditable(false);
-		sText.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+		sText.setBackground(parent.getBackground());
 		
 		if (module != null) {
 			IModule[] modules = module.getModule();
@@ -168,7 +168,7 @@ public class ServerToolTip extends ToolTip {
 			
 			StyledText sText2 = new StyledText(parent, SWT.NONE);
 			sText2.setEditable(false);
-			sText2.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+			sText2.setBackground(parent.getBackground());
 			sText2.setText(m.getModuleType().getName());
 		}
 		
@@ -179,13 +179,9 @@ public class ServerToolTip extends ToolTip {
 			if (server.getServerType() != null) {
 				ArrayList<IServerToolTip> listOfProviders = toolTipProviders.get(server.getServerType().getId());
 				
-				final Composite adoptersComposite = new Composite(parent,SWT.NONE);
-				adoptersComposite.setLayout(new FillLayout());
-				adoptersComposite.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-				
 				if (listOfProviders != null) {
 					for (IServerToolTip tipProvider : listOfProviders) {
-						tipProvider.createContent(adoptersComposite,server);
+						tipProvider.createContent(parent,server);
 					}
 				}
 			}
@@ -253,7 +249,7 @@ public class ServerToolTip extends ToolTip {
 				String exServerType = exElement.getAttribute("serverTypes");
 				
 				for (IServerType serverType : serverTypes) {
-					if ("*".equals(exServerType) || exServerType.startsWith(serverType.getId())) {
+					if ("*".equals(exServerType) || serverType.getId().matches(exServerType)) {
 						IServerToolTip exTooltip = (IServerToolTip) exElement.createExecutableExtension("class");
 						ArrayList<IServerToolTip> listOfProviders = new ArrayList<IServerToolTip>(); 
 						if (toolTipProviders.containsKey(serverType.getId()))
