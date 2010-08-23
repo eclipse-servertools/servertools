@@ -15,6 +15,7 @@ import java.util.*;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.internal.ModuleFactory;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
@@ -261,27 +262,30 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 */
 	public IModule findModule(String id) {
 		try {
-			// first assume that the id is a project name
-			IProject project = getWorkspaceRoot().getProject(id);
-			if (project != null) {
-				IModule[] m = cacheModules(project);
-				if (m != null) {
-					int size = m.length;
-					for (int i = 0; i < size; i++) {
-						String id2 = m[i].getId();
-						int index = id2.indexOf(":");
-						if (index >= 0)
-							id2 = id2.substring(index+1);
-						
-						if (id.equals(id2))
-							return m[i];
+			IPath pathToProject = new Path(null, id);
+			if (pathToProject.segmentCount() == 1) {
+				// only look for projects which means there should only be 1 segment in the path
+				IProject project = getWorkspaceRoot().getProject(id);
+				if (project != null) {
+					IModule[] m = cacheModules(project);
+					if (m != null) {
+						int size = m.length;
+						for (int i = 0; i < size; i++) {
+							String id2 = m[i].getId();
+							int index = id2.indexOf(":");
+							if (index >= 0)
+								id2 = id2.substring(index + 1);
+
+							if (id.equals(id2))
+								return m[i];
+						}
 					}
 				}
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.FINER, "Could not find " + id + ". Reverting to default behaviour", e);
 		}
-		
+
 		// otherwise default to searching all modules
 		return super.findModule(id);
 	}
