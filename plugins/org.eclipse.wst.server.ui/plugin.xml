@@ -12,6 +12,7 @@
   <extension-point id="serverToolTip" name="%extensionPointServerToolTip" schema="schema/serverToolTip.exsd"/>
   <extension-point id="serverCreationWizardPageExtension" name="%extensionPointServerCreationWizardPageExtension" schema="schema/serverCreationWizardPageExtension.exsd"/>
   <extension-point id="serverEditorOverviewPageModifier" name="%extensionPointServerEditorOverviewPageExtension" schema="schema/serverEditorOverviewPageModifier.exsd"/>
+  <extension-point id="serverLabelProvider" name="%serverLabelProvider" schema="schema/serverLabelProvider.exsd"/>
 
 <extension point="org.eclipse.ui.newWizards">
   <category
