@@ -125,11 +125,11 @@ public class Publisher {
 				IServerWorkingCopy workingCopy = (IServerWorkingCopy)server;
 				server = (Server) workingCopy.getOriginal();
 			}
-			final List moduleList = (List)getDelegate().getTaskModel().getObject(TaskModel.TASK_MODULES);
+			final List<IModule[]> moduleList = getDelegate().getModifiedModules();
 			if (moduleList != null) {
-				final Iterator moduleIterator = moduleList.iterator();
+				final Iterator<IModule[]> moduleIterator = moduleList.iterator();
 				while (moduleIterator.hasNext()) {
-					IModule[] module = (IModule[]) moduleIterator.next();
+					IModule[] module = moduleIterator.next();
 					if (module != null) {
 						Trace.trace(Trace.FINEST, "rebuilding cache for module: " + module[module.length - 1]);
 						server.getServerPublishInfo().rebuildCache(module);
@@ -165,7 +165,7 @@ public class Publisher {
 		}
 		catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
-			resultStatus = new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, "Error in delegate", e); // TODO
+			resultStatus = new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, "Error in delegate", e);
 		}
 		finally {
 			if (changeSchedulingRules) {

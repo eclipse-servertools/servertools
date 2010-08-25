@@ -10,9 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.model;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.TaskModel;
 /**
  * An operation that will be executed during publishing. 
@@ -113,5 +116,17 @@ public abstract class PublisherDelegate {
 	public boolean isModifyModules() {
 
 		return false;
+	}
+
+	/**
+	 * Accessor to acquire the list of {@link IModule} entries that were modified by the publisher.  By default, it will
+	 * return all modules published to the server
+	 * 
+	 * @return An array of {@link IModule} entries that were modified by the publisher
+	 * @since 3.2
+	 */
+	public List<IModule[]> getModifiedModules() {
+
+		return (List<IModule[]>) this.model.getObject(TaskModel.TASK_MODULES);
 	}
 }
