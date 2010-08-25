@@ -19,9 +19,8 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.ui.ServerUICore;
-import org.eclipse.wst.server.ui.internal.ImageResource;
-import org.eclipse.wst.server.ui.internal.Messages;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.*;
+import org.eclipse.wst.server.ui.internal.provisional.AbstractServerLabelProvider;
 import org.eclipse.wst.server.ui.internal.provisional.UIDecoratorManager;
 import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
 
@@ -96,10 +95,23 @@ public class ServerDecorator extends LabelProvider implements ILightweightLabelD
 				ImageResource.getImage(server.getServerType().getId());
 	}
 	
+	/**
+	 * Find the ServerLabelProvider for this server type and provide a label. If none are found
+	 * a default server label provider will be provided
+	 * 
+	 * @param server
+	 * @return
+	 */
 	public static String getServerStateLabel(IServer server) {
-		return server == null ? null : 
-			server.getServerType() == null ? null : 
-				getStateLabel(server.getServerType(), server.getServerState(), server.getMode());
+		if (server == null || server.getServerType() == null)
+			return null;
+				
+		String stateLabel;
+		
+		AbstractServerLabelProvider labelProvider= ServerUIPlugin.getServerLabelProvider(server.getServerType().getId());
+		stateLabel =  labelProvider.getServerStateLabel(server);
+		
+		return stateLabel;
 	}
 
 	public static String getStateLabel(IServerType serverType, int state, String mode) {

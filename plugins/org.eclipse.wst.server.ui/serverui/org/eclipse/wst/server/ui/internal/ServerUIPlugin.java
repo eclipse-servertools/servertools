@@ -10,12 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -25,10 +20,14 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
-
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.*;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.*;
-import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.core.model.LaunchableAdapterDelegate;
 import org.eclipse.wst.server.core.util.PublishAdapter;
 import org.eclipse.wst.server.ui.editor.ServerEditorOverviewPageModifier;
@@ -36,26 +35,14 @@ import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
 import org.eclipse.wst.server.ui.internal.editor.IServerEditorInput;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorCore;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorInput;
+import org.eclipse.wst.server.ui.internal.provisional.AbstractServerLabelProvider;
 import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
 import org.eclipse.wst.server.ui.internal.viewers.InitialSelectionProvider;
 import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
-import org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFragment;
-import org.eclipse.wst.server.ui.internal.wizard.fragment.NewRuntimeWizardFragment;
-import org.eclipse.wst.server.ui.internal.wizard.fragment.NewServerWizardFragment;
-import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
+import org.eclipse.wst.server.ui.internal.wizard.fragment.*;
 import org.eclipse.wst.server.ui.wizard.ServerCreationWizardPageExtension;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
-
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.osgi.framework.BundleContext;
 /**
  * The server UI plugin class.
@@ -95,7 +82,12 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	
 	// Cached copy of all server editor UI modifiers
 	private static List<ServerEditorOverviewPageModifier> serverEditorOverviewPageModifier;
-
+	
+	// Cached copy of server state label provider
+	private static HashMap<String,AbstractServerLabelProvider> serverLabelProviders;
+	// Create a default server state label provider
+	private static AbstractServerLabelProvider defaultServerLabelProvider = new AbstractServerLabelProvider();
+	
 	// cached initial selection provider
 	private static InitialSelectionProvider selectionProvider;
 
@@ -227,6 +219,9 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		super.start(context);
 		
 		ServerCore.addServerLifecycleListener(serverLifecycleListener);
+
+		// preload the server state label providers for faster UI response
+		loadServerLabelProvider();
 		
 		InitializeJob job = new InitializeJob();
 		job.schedule();
@@ -723,6 +718,26 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		return selectionProvider;
 	}
 
+ 	/**
+	 * Returns the server label provider. There is always a server label provider for a server type
+	 *
+	 * @return the server label provider, if one is provider by the adopter otherwise it returns a default one
+	 */
+	public static AbstractServerLabelProvider getServerLabelProvider(String serverTypeId) {
+		if (serverLabelProviders == null)
+			loadServerLabelProvider();
+		
+		AbstractServerLabelProvider serverLabelProvider = serverLabelProviders.get(serverTypeId);
+		
+		// If there isn't one defined by an adopter, then bound the defaultServerLabelProvider to the list
+		if (serverLabelProvider == null){
+			serverLabelProvider = defaultServerLabelProvider;
+			serverLabelProviders.put(serverTypeId, serverLabelProvider);
+		}
+		
+		return serverLabelProvider; 
+	}
+
 	/**
 	 * Returns the list of server creation wizard modifier.
 	 *
@@ -745,7 +760,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 			loadServerEditorOverviewPageModifiers();
 		return serverEditorOverviewPageModifier;
 	}
-	
+
 	/**
 	 * Load the Server creation wizard page modifiers.
 	 */
@@ -802,6 +817,42 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		Trace.trace(Trace.CONFIG, "-<- Done loading .serverEditorOverviewPageModifier extension point -<-");
 	}
 	
+	/**
+	 * Load the Server Label Providers. If there is two implemented for a ServerType the adopters ServerLabelProviders
+	 * will be ignored an a default will be returned
+	 */
+	private static synchronized void loadServerLabelProvider() {
+		if (serverLabelProviders != null)
+			return;
+		
+		Trace.trace(Trace.CONFIG, "->- Loading .serverLabelProvider extension point ->-");
+		serverLabelProviders = new HashMap<String,AbstractServerLabelProvider>();
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "serverLabelProvider");
+		
+		for (IConfigurationElement curConfigElement: cf) {
+			// load the extension in a safe enviroment. If there are NPEs or missconfigurations they will be caught by try/catch
+			String[] exServerTypes = ServerPlugin.tokenize(curConfigElement.getAttribute("serverTypes"), ",");
+			for (String exServerType : exServerTypes) {
+				try {
+					if (serverLabelProviders.containsKey(exServerType)){
+						// if a key is already bound for the same serverType, it means that more than one adopters is providing
+						// a ServerLabelProvider, since we don't know which one to use. We will default back to the WTP behaviour
+						Trace.trace(Trace.WARNING, "More that one .serverLabelProvider found - ignoring");
+						serverLabelProviders.put(exServerType, defaultServerLabelProvider);
+					}
+					else{
+						AbstractServerLabelProvider exClass = (AbstractServerLabelProvider)curConfigElement.createExecutableExtension("class");
+						Trace.trace(Trace.CONFIG, "  Loaded .serverLabelProvider: " + curConfigElement.getAttribute("id") + ", loaded class=" + exClass);
+						serverLabelProviders.put(exServerType, exClass); 
+					}
+				} catch (Throwable t) {
+					Trace.trace(Trace.SEVERE, "  Could not load .serverLabelProvider: " + curConfigElement.getAttribute("id"), t);
+				}
+			}
+		}		
+		Trace.trace(Trace.CONFIG, "-<- Done loading .serverLabelProvider extension point -<-");
+	}	
 	
 	/**
 	 * Load the initial selection provider.

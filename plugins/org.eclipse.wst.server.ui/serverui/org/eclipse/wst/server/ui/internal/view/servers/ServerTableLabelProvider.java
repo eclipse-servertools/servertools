@@ -12,6 +12,7 @@ package org.eclipse.wst.server.ui.internal.view.servers;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
@@ -21,10 +22,10 @@ import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.cnf.ServerDecorator;
 import org.eclipse.wst.server.ui.internal.provisional.UIDecoratorManager;
 import org.eclipse.wst.server.ui.internal.viewers.BaseCellLabelProvider;
 import org.eclipse.wst.server.ui.internal.viewers.ServerTreeContentProvider;
-import org.eclipse.swt.graphics.Image;
 /**
  * Server table label provider.
  */
@@ -263,13 +264,14 @@ public class ServerTableLabelProvider extends BaseCellLabelProvider {
 	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	protected String getServerStateLabel(IServer server) {
-		return getStateLabel(server.getServerType(), server.getServerState(), server.getMode());
+		return ServerDecorator.getServerStateLabel(server);
 	}
 
 	/**
 	 * Returns a string representing the given state.
 	 *
 	 * @return java.lang.String
+	 * @deprecated
 	 */
 	protected String getStateLabel(IServerType serverType, int state, String mode) {
 		return UIDecoratorManager.getUIDecorator(serverType).getStateLabel(state, mode, count);
