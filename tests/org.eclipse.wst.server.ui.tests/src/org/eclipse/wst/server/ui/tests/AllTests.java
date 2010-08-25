@@ -44,6 +44,7 @@ public class AllTests {
 		suite.addTestSuite(WizardFragmentTestCase.class);
 			
 		suite.addTestSuite(ServerTooltipTestCase.class);
+		suite.addTestSuite(AbstractServerLabelProviderTestCase.class);
 		//$JUnit-END$
 		return suite;
 	}
