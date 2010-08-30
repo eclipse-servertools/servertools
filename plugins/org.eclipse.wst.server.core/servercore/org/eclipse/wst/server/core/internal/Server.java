@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2009 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -794,7 +794,7 @@ public class Server extends Base implements IServer {
 		Trace.trace(Trace.FINEST, "> isModuleDeployed()");
 
 		// no modules are deployed
-		if (modules.isEmpty())
+		if (getModules().length < 0)
 			return false;
 		
 		// shallow search: check for root modules first
@@ -1442,6 +1442,11 @@ public class Server extends Base implements IServer {
 		if (launch != null && !launch.isTerminated())
 			return launch;
 		return null;
+	}
+	
+	public void setLaunch(ILaunch launch) {
+		Trace.trace(Trace.FINEST, "setLaunch() "+ launch);
+		this.launch = launch;
 	}
 
 	public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,14 +13,13 @@ package org.eclipse.wst.server.core.model;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.*;
+import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.core.TaskModel;
+import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.*;
 /**
  * A server delegate provides the implementation for various 
@@ -157,6 +156,15 @@ public abstract class ServerBehaviourDelegate {
 		server.setMode(mode);
 	}
 
+	/**
+	 * Sets the Launch on the server object. 
+	 *  
+	 * @param launch
+	 */
+	public final void setLaunch(ILaunch launch) {
+		server.setLaunch(launch);
+	}
+	
 	/**
 	 * Sets the server restart state.
 	 *
