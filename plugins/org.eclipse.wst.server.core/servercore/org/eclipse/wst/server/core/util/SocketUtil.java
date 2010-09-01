@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,7 +37,7 @@ public class SocketUtil {
 
 	protected static final Object lock = new Object();
 
-	private static Set<String> localHostCache;
+	private static Set<String> localHostCache = new HashSet<String>();
 	private static Set<String> notLocalHostCache = new HashSet<String>();
 	private static Map<String, CacheThread> threadMap = new HashMap<String, CacheThread>();
 
@@ -280,13 +280,26 @@ public class SocketUtil {
 		if ("localhost".equals(host) || "127.0.0.1".equals(host) || "::1".equals(host))
 			return true;
 		
+		// check existing caches to see if the host is there
+		synchronized (lock) {
+			if (localHostCache.contains(host))
+				return true;
+			if (notLocalHostCache.contains(host))
+				return false;
+		}
+		InetAddress localHostaddr = null;
+		
 		// check simple cases
 		try {
-			InetAddress localHostaddr = InetAddress.getLocalHost();
+			localHostaddr = InetAddress.getLocalHost();
 			if (host.equals(localHostaddr.getHostName().toLowerCase())
 					|| host.equals(localHostaddr.getCanonicalHostName().toLowerCase())
-					|| host.equals(localHostaddr.getHostAddress().toLowerCase()))
+					|| host.equals(localHostaddr.getHostAddress().toLowerCase())){
+				synchronized (lock) {
+					localHostCache.add(host);
+				}
 				return true;
+			}
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Localhost caching failure", e);
 		}
@@ -311,7 +324,10 @@ public class SocketUtil {
 		try {
 			// get network interfaces
 			final Set<InetAddress> currentAddresses = new HashSet<InetAddress>();
-			currentAddresses.add(InetAddress.getLocalHost());
+			
+			if(localHostaddr != null)
+				currentAddresses.add(localHostaddr);
+			
 			Enumeration nis = NetworkInterface.getNetworkInterfaces();
 			while (nis.hasMoreElements()) {
 				NetworkInterface inter = (NetworkInterface) nis.nextElement();
@@ -378,7 +394,11 @@ public class SocketUtil {
 				Trace.trace(Trace.WARNING, "Could not find localhost", e);
 			}
 		}
-		
+		synchronized (lock) {
+			if(!notLocalHostCache.contains(host)){
+				notLocalHostCache.add(host);
+			}
+		}
 		return false;
 	}
 }
