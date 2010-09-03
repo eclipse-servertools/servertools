@@ -49,16 +49,18 @@ public class ManagedUIDecorator extends UIDecorator {
 	 * NOTE: This is done so that we don't initialize the images when a label is being requested
 	 */
 	public void loadImages(){
-		startingImages = new Image[] {
-			ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_1),
-			ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_2),
-			ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_3)
-		};
-		stoppingImages = new Image[] {
-				ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_1),
-				ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_2),
-				ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_2)
-		};
+		if (startingImages == null){
+			startingImages = new Image[] {
+				ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_1),
+				ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_2),
+				ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_3)
+			};
+			stoppingImages = new Image[] {
+					ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_1),
+					ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_2),
+					ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_2)
+			};
+		}
 	}
 		
 	/**
