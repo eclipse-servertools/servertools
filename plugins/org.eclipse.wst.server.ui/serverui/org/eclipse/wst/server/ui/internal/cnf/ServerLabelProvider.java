@@ -10,13 +10,19 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.cnf;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.ServerUICore;
-import org.eclipse.wst.server.ui.internal.*;
+import org.eclipse.wst.server.ui.internal.ImageResource;
+import org.eclipse.wst.server.ui.internal.Messages;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
 import org.eclipse.wst.server.ui.internal.viewers.BaseCellLabelProvider;
 /**
@@ -29,6 +35,7 @@ public class ServerLabelProvider extends BaseCellLabelProvider{
 	 */
 	public ServerLabelProvider() {
 		super();
+		this.providerImageCache = new HashMap<String, Image>();
 		//TODO: Angel says: Look at bug# 258184
 	}
 
@@ -56,7 +63,20 @@ public class ServerLabelProvider extends BaseCellLabelProvider{
 		
 		return "";
 	}
-		
+
+	@Override
+	public void dispose() {
+
+		super.dispose();
+		if (this.providerImageCache != null) {
+			final Iterator<Image> providerImageCacheIterator = this.providerImageCache.values().iterator();
+			while (providerImageCacheIterator.hasNext()) {
+				providerImageCacheIterator.next().dispose();
+			}
+			this.providerImageCache.clear();
+		}
+	}
+
 	public Image getImage(Object element) {
 		
 		Image image = null;
@@ -74,13 +94,35 @@ public class ServerLabelProvider extends BaseCellLabelProvider{
 				// the code
 				Image serverTypeImg = ImageResource.getImage(server.getServerType().getId());
 				Image serverStatusImg = ServerDecorator.getServerStateImageOverlay(server);
-				
-				CompositeServerImageDescriptor dsid = new CompositeServerImageDescriptor(serverTypeImg,serverStatusImg);
-				
-				image = dsid.createImage();
+
+				// Images returned via the CompositeServerImageDescriptor#createImage() need to be cached since this API
+				// will always create a new Image and it is impossible to know when to dispose them except when the
+				// label provider is disposed.
+				final String key = this.getCacheKey(server, serverTypeImg, serverStatusImg);
+				image = this.providerImageCache.get(key);
+				if(image == null) {
+					CompositeServerImageDescriptor dsid = new CompositeServerImageDescriptor(serverTypeImg,serverStatusImg);
+					image = dsid.createImage();
+					this.providerImageCache.put(key, image);
+				}
 			}
 		}
 		return image;
+	}
+
+	private final String getCacheKey(final IServer server, final Image serverTypeImg, final Image serverStatusImg) {
+
+		StringBuffer key = new StringBuffer();
+		if(server != null) {
+			key.append(server.getName());
+		}
+		if(serverTypeImg != null) {
+			key.append(serverTypeImg.toString());
+		}
+		if(serverStatusImg != null) {
+			key.append(serverStatusImg.toString());
+		}
+		return key.toString();
 	}
 
 	protected String notNull(String s) {
@@ -109,4 +151,6 @@ public class ServerLabelProvider extends BaseCellLabelProvider{
 		// TODO Left blank since the CNF doesn't support this
 		return null;
 	}	
+
+	private final Map<String, Image> providerImageCache;
 }
