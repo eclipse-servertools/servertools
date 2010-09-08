@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007,2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,20 +11,10 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.internal.facets;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeBridge;
-import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponent;
-import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponentVersion;
-import org.eclipse.wst.common.project.facet.core.runtime.RuntimeManager;
+import org.eclipse.core.runtime.*;
+import org.eclipse.wst.common.project.facet.core.runtime.*;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.ServerCore;
@@ -105,27 +95,20 @@ public class RuntimeBridge implements IRuntimeBridge {
 	public IStub bridge(String name) throws CoreException {
 		if (name == null)
 			throw new IllegalArgumentException();
-		
-		IRuntime[] runtimes = ServerCore.getRuntimes();
-		int size = runtimes.length;
-		for (int i = 0; i < size; i++) {
-			if (runtimes[i].getId().equals(name))
-				return new Stub(runtimes[i]);
-			if (runtimes[i].getName().equals(name))
-				return new Stub(runtimes[i]);
-		}
-		return null;
+		return new Stub(name);
 	}
 
 	private static class Stub extends IRuntimeBridge.Stub {
-		private IRuntime runtime;
+		private String id;
 
-		public Stub(IRuntime runtime) {
-			this.runtime = runtime;
+		public Stub(String id) {
+			this.id = id;
 		}
 
 		public List<IRuntimeComponent> getRuntimeComponents() {
 			List<IRuntimeComponent> components = new ArrayList<IRuntimeComponent>(2);
+			final IRuntime runtime = findRuntime( this.id );
+			
 			if (runtime == null)
 				return components;
 			
@@ -159,6 +142,7 @@ public class RuntimeBridge implements IRuntimeBridge {
 
 		public Map<String, String> getProperties() {
 			final Map<String, String> props = new HashMap<String, String>();
+            final IRuntime runtime = findRuntime( this.id );
 			if (runtime != null) {
 				props.put("id", runtime.getId());
 				props.put("localized-name", runtime.getName());
@@ -170,7 +154,26 @@ public class RuntimeBridge implements IRuntimeBridge {
 		}
 		
 		public IStatus validate(final IProgressMonitor monitor) {
-		    return runtime.validate( monitor );
+            final IRuntime runtime = findRuntime( this.id );
+            if( runtime != null ) {
+                return runtime.validate( monitor );
+            }
+            return Status.OK_STATUS; 
 		}
+		
+		private static final IRuntime findRuntime( final String id )
+		{
+	        IRuntime[] runtimes = ServerCore.getRuntimes();
+	        int size = runtimes.length;
+
+	        for (int i = 0; i < size; i++) {
+	            if (runtimes[i].getId().equals(id))
+	                return runtimes[i];
+	            if (runtimes[i].getName().equals(id))
+	                return runtimes[i];
+
+	        }
+	        return null;
+	    }
 	}
 }
