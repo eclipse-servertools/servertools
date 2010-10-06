@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2009 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,7 @@ import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.IServerAttributes;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleListener;
@@ -74,6 +75,12 @@ public class ServerPlugin extends Plugin {
 
 	//	cached copy of all installable runtimes
 	private static List<IInstallableRuntime> installableRuntimes;
+
+	// cached copy of SaveEditorPrompter
+	private static SaveEditorPrompter saveEditorPrompter;
+	
+	// cached copy of isRunningInGUICache
+	public static boolean isRunningInGUICache = false;
 
 	// registry listener
 	private static IRegistryChangeListener registryListener;
@@ -1237,4 +1244,52 @@ public class ServerPlugin extends Plugin {
 			return Platform.getProduct().getProperty(key);
 		return value;
 	}
+	
+	public static boolean isRunningGUIMode(){
+		// check only when the the plugin is not Bundle.ACTIVE
+		if (isRunningInGUICache == true){
+			return isRunningInGUICache;
+		}
+
+		Bundle swtEclipseUIbndl = Platform.getBundle("org.eclipse.ui");  //running in GUI mode if it is active.
+		if(swtEclipseUIbndl != null){
+			isRunningInGUICache= (swtEclipseUIbndl.getState() == Bundle.ACTIVE);
+			return isRunningInGUICache; 
+		}			
+		return false;
+	}	
+
+
+	/**
+	 * Transfer the control to the UI and prompts to save all the editors
+	 */
+	public static SaveEditorPrompter getSaveEditorHelper() {
+		loadSaveEditorExtension();
+		return saveEditorPrompter;
+	}
+
+	private static void loadSaveEditorExtension() {
+		if (saveEditorPrompter != null)
+			return;
+		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .saveEditorPrompter extension point ->-");
+		
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "saveEditorPrompter");
+		
+		int size = cf.length;
+		try{
+			saveEditorPrompter = (SaveEditorPrompter)cf[0].createExecutableExtension("class");
+			Trace.trace(Trace.EXTENSION_POINT, "  Loaded saveEditorPrompter: " + cf[0].getAttribute("id"));
+		} catch (CoreException ce){
+			Trace.trace(Trace.SEVERE, "  Could not load saveEditorPrompter: " + cf[0].getAttribute("id"), ce);			
+		}
+		if (size < 1) {
+			Trace.trace(Trace.WARNING, "  More than one .saveEditorPrompter found, only one loaded =>"+ cf[0].getAttribute("id"));
+		}
+		
+		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .saveEditorPrompter extension point -<-");
+		
+	}
+	
+	
 }
