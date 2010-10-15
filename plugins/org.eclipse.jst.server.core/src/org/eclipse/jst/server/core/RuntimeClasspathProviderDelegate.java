@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2009 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -58,9 +58,9 @@ public abstract class RuntimeClasspathProviderDelegate {
 
 	private String extensionId;
 
-	private Map<String, IPath> runtimePathMap = new HashMap<String, IPath>();
+	private Map<String, IPath> runtimePathMap = Collections.synchronizedMap(new HashMap<String, IPath>());
 
-	private Map<String, Integer> previousClasspath = new HashMap<String, Integer>();
+	private Map<String, Integer> previousClasspath = Collections.synchronizedMap(new HashMap<String, Integer>());
 
 	public RuntimeClasspathProviderDelegate() {
 		// default constructor

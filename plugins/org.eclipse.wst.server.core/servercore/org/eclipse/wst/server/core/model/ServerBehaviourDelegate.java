@@ -862,7 +862,7 @@ public abstract class ServerBehaviourDelegate {
 				tempMulti.addAll(taskStatus);
 			
 			// execute publishers
-			taskStatus = executePublishers(kind, moduleList, monitor, info2);
+			taskStatus = executePublishers(kind, moduleList, deltaKindList, monitor, info2);
 			if (taskStatus != null && !taskStatus.isOK())
 				tempMulti.addAll(taskStatus);			
 			
@@ -1073,8 +1073,29 @@ public abstract class ServerBehaviourDelegate {
 	 *    it should minimally contain an adapter for the
 	 *    org.eclipse.swt.widgets.Shell.class
 	 * @throws CoreException
+	 * @Deprecated use ServerBehaviourDelegate.executePublishers(int kind, List<IModule[]> modules, List<Integer> deltaKinds, IProgressMonitor monitor, IAdaptable info)
 	 */
 	protected MultiStatus executePublishers(int kind, List<IModule[]> modules, IProgressMonitor monitor, IAdaptable info) throws CoreException {
+		return executePublishers(kind, modules, null, monitor, info);
+	}
+
+	/**
+	 * Execute publishers.
+	 * 
+	 * @param kind the publish kind
+	 * @param modules the list of modules
+	 * @param deltaKinds the list of delta kind that maps to the list of modules
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @param info the IAdaptable (or <code>null</code>) provided by the
+	 *    caller in order to supply UI information for prompting the
+	 *    user if necessary. When this parameter is not <code>null</code>,
+	 *    it should minimally contain an adapter for the
+	 *    org.eclipse.swt.widgets.Shell.class
+	 * @throws CoreException
+	 * @since 1.1
+	 */
+	protected MultiStatus executePublishers(int kind, List<IModule[]> modules, List<Integer> deltaKinds, IProgressMonitor monitor, IAdaptable info) throws CoreException {
 		Publisher[] publishers = ((Server)getServer()).getEnabledPublishers();
 		int size = publishers.length;
 		Trace.trace(Trace.FINEST, "Executing publishers: " + size);
@@ -1087,6 +1108,9 @@ public abstract class ServerBehaviourDelegate {
 		TaskModel taskModel = new TaskModel();
 		taskModel.putObject(TaskModel.TASK_SERVER, getServer());
 		taskModel.putObject(TaskModel.TASK_MODULES, modules);
+		if (deltaKinds != null) {
+			taskModel.putObject(TaskModel.TASK_DELTA_KINDS, deltaKinds);
+		}
 		
 		for (int i = 0; i < size; i++) {
 			Publisher pub = publishers[i];

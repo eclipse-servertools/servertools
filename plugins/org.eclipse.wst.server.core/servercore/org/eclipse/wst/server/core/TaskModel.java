@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,6 +49,15 @@ public class TaskModel {
 	 * @see TaskModel#putObject(String, Object)
 	 */
 	public static final String TASK_MODULES = "modules";
+
+	/**
+	 * Task model id for an array of delta kinds that maps to the modules in the TASK_MODULES.
+	 * The value is a List containing Integer for the delta kind id.
+	 * 
+	 * @see #getObject(String)
+	 * @see TaskModel#putObject(String, Object)
+	 */
+	public static final String TASK_DELTA_KINDS = "deltaKinds";
 
 	/**
 	 * Task model id for a launch mode.
