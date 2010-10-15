@@ -1,0 +1,246 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.wst.server.core" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.eclipse.wst.server.core" id="installableRuntimes" name="Installable Runtimes"/>
+      </appinfo>
+      <documentation>
+         This extension point is used to install new runtimes (i.e. server installations) from a remote server.
+
+New users should use the &apos;runtime&apos; element (which allows you to point to any zip file on any server) and not the original &apos;installableRuntime&apos; element (which requires a remote update manager site).
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <complexType>
+         <sequence>
+            <element ref="installableRuntime" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="runtime" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  a fully qualified identifier of the target extension point
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  an optional identifier of the extension instance
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  an optional name of the extension instance
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="installableRuntime">
+      <annotation>
+         <appinfo>
+            <meta.element labelAttribute="id" deprecated="true"/>
+         </appinfo>
+      </annotation>
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  specifies a unique identifier for this extension point
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="featureId" type="string" use="required">
+            <annotation>
+               <documentation>
+                  the id of the feature containing the runtime bundle
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="featureVersion" type="string" use="required">
+            <annotation>
+               <documentation>
+                  the version of the feature containing the runtime bundle
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="featureSite" type="string" use="required">
+            <annotation>
+               <documentation>
+                  the feature (update manager) site URL
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="bundleId" type="string">
+            <annotation>
+               <documentation>
+                  the id of the bundle in which the runtime zip is in
+               </documentation>
+               <appinfo>
+                  <meta.attribute deprecated="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="bundleVersion" type="string">
+            <annotation>
+               <documentation>
+                  the optional version of the bundle in which the runtime zip is in
+               </documentation>
+               <appinfo>
+                  <meta.attribute deprecated="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="path" type="string">
+            <annotation>
+               <documentation>
+                  if bundleId is specified then represents the relative path of the runtime zip inside the bundle, otherwise it assumes a relative path of the runtime archive inside the feature directory
+               </documentation>
+               <appinfo>
+                  <meta.attribute deprecated="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="runtime">
+      <annotation>
+         <appinfo>
+            <meta.element labelAttribute="id"/>
+         </appinfo>
+      </annotation>
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  specifies a unique identifier for this extension point
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="archiveUrl" type="string" use="required">
+            <annotation>
+               <documentation>
+                  a URL to the runtime archive download
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="archivePath" type="string">
+            <annotation>
+               <documentation>
+                  optional path within the archive to the root of the runtime
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="archiveSize" type="string">
+            <annotation>
+               <documentation>
+                  anticipated size of the archive in bytes for progress monitor use
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="fileCount" type="string">
+            <annotation>
+               <documentation>
+                  anticipated number of files in the archive for progress monitor use
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="licenseUrl" type="string">
+            <annotation>
+               <documentation>
+                  a URL to the runtime license
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="os" type="string">
+            <annotation>
+               <documentation>
+                  optional operating system specification. A comma-separated list of operating system designators defined by Eclipse (see Javadoc for org.eclipse.core.runtime.Platform). Indicates this installable runtime should only be used on one of the specified OS systems. If this attribute is not specified, the feature can be installed on all systems (portable implementation)
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         &lt;b&gt;This extension point is part of an interim API that is still under development and expected to change significantly before reaching stability. It is being made available at this early stage to solicit feedback from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken (repeatedly) as the API evolves.&lt;/b&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         The following is an example of an installable runtime extension point:
+
+&lt;pre&gt;
+   &lt;extension 
+         point=&quot;org.eclipse.wst.server.core.installableRuntimes&quot;&gt;
+      &lt;installableRuntime
+            id=&quot;com.myruntime.id&quot;
+            featureVersion=&quot;1.0.0&quot;
+            featureId=&quot;com.myfeature&quot;
+            featureSite=&quot;xyz&quot;
+            bundleId=&quot;com.ibm.mybundle&quot;
+            path=&quot;/zips/myRuntime.zip&quot;/&gt;
+   &lt;/extension&gt;
+&lt;/pre&gt;
+
+The following is an example of using the installable runtime extension point but having the runtime archive as a data archive in the feature.
+
+&lt;pre&gt;
+   &lt;extension 
+         point=&quot;org.eclipse.wst.server.core.installableRuntimes&quot;&gt;
+      &lt;installableRuntime
+            id=&quot;com.myruntime.id&quot;
+            featureVersion=&quot;1.0.0&quot;
+            featureId=&quot;com.myfeature&quot;
+            featureSite=&quot;xyz&quot;
+            path=&quot;myRuntime-1.0.zip&quot;/&gt;
+   &lt;/extension&gt;
+&lt;/pre&gt;
+
+In the feature manifest and data entry should be entered for the runtime archive as well as an installhandler. The default install handler can be used which will install the data archive inside the feature.
+
+&lt;data
+    id=&quot;myRuntime-1.0.zip&quot;
+    download-size=&quot;0&quot;
+    install-size=&quot;0&quot;/&gt;
+
+&lt;install-handler handler=&quot;org.eclipse.update.core.DefaultInstallHandler&quot;/&gt;
+
+If the runtime archive is not packaged within the feature, then you need to map the archive path to a relative or absolute url to the site.xml
+
+&lt;archive path=&quot;features/com.myfeature_1.0.0/myRuntime-1.0.zip&quot; url=&quot;../../1.0/myRuntime-1.0.zip&quot;/&gt;
+      </documentation>
+   </annotation>
+
+
+
+
+   <annotation>
+      <appinfo>
+         <meta.section type="copyright"/>
+      </appinfo>
+      <documentation>
+         Copyright (c) 2005 IBM Corporation and others.&lt;br&gt;
+All rights reserved. This program and the accompanying materials are made 
+available under the terms of the Eclipse Public License v1.0 which accompanies 
+this distribution, and is available at 
+&lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
+      </documentation>
+   </annotation>
+
+</schema>

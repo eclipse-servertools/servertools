@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<plugin>
+  <extension-point id="moduleTypes" name="%extensionPointModuleTypes" schema="schema/moduleTypes.exsd"/>
+  <extension-point id="runtimeTypes" name="%extensionPointRuntimeTypes" schema="schema/runtimeTypes.exsd"/>
+  <extension-point id="runtimeTargetHandlers" name="%extensionPointRuntimeTargetHandlers" schema="schema/runtimeTargetHandlers.exsd"/>
+  <extension-point id="runtimeLocators" name="%extensionPointRuntimeLocators" schema="schema/runtimeLocators.exsd"/>
+  <extension-point id="serverTypes" name="%extensionPointServerTypes" schema="schema/serverTypes.exsd"/>
+  <extension-point id="serverLocators" name="%extensionPointServerLocators" schema="schema/serverLocators.exsd"/>
+  <extension-point id="moduleFactories" name="%extensionPointModuleFactories" schema="schema/moduleFactories.exsd"/>
+  <extension-point id="moduleArtifactAdapters" name="%extensionPointModuleArtifactAdapters" schema="schema/moduleArtifactAdapters.exsd"/>
+  <extension-point id="launchableAdapters" name="%extensionPointLaunchableAdapters" schema="schema/launchableAdapters.exsd"/>
+  <extension-point id="clients" name="%extensionPointClients" schema="schema/clients.exsd"/>
+  <extension-point id="publishTasks" name="%extensionPointPublishTasks" schema="schema/publishTasks.exsd"/>
+  <extension-point id="publishers" name="%extensionPointPublishers" schema="schema/publishers.exsd"/>
+  <extension-point id="publishController" name="%extensionPointPublishController" schema="schema/publishController.exsd"/>
+  <extension-point id="internalServerMonitors" name="%extensionPointServerMonitors" schema="schema/serverMonitors.exsd"/>
+  <extension-point id="internalStartup" name="%extensionPointServerStartup" schema="schema/startup.exsd"/>
+  <extension-point id="installableRuntimes" name="%extensionPointInstallableRuntimes" schema="schema/installableRuntimes.exsd"/>
+  <extension-point id="runtimeFacetComponentProviders" name="%extensionPointRuntimeFacetComponentProviders" schema="schema/runtimeFacetComponentProviders.exsd"/>
+  <extension-point id="runtimeModuleType" name="%runtimeModuleType" schema="schema/runtimeModuleType.exsd"/>
+
+  <extension point="org.eclipse.wst.server.core.moduleTypes">
+    <moduleType
+       id="*"
+       name="%moduleTypeUnknown"/>
+    <moduleType
+       id="wst.web"
+       name="%moduleTypeStaticWebName"/>
+  </extension>
+
+  <extension point="org.eclipse.wst.common.project.facet.core.runtimeBridges">
+    <bridge
+      id="org.eclipse.wst.server.core.default"
+      class="org.eclipse.wst.server.core.internal.facets.RuntimeBridge"/>
+  </extension>
+  <extension
+        point="org.eclipse.core.runtime.preferences">
+     <modifier
+           class="org.eclipse.wst.server.core.internal.ServerPreferenceModifyListener">
+     </modifier>
+  </extension>
+</plugin>
