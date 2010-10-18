@@ -131,7 +131,7 @@ public class ServerDecorator extends LabelProvider implements ILightweightLabelD
 			return "";
 		
 		String serverId = server.getId();
-		if (ServerContentProvider.publishing.contains(serverId))
+		if (ServersView2.publishing.contains(serverId))
 			return ServerDecorator.syncState[4];
 		
 		// republish
