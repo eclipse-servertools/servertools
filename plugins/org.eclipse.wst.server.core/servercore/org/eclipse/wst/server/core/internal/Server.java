@@ -1911,7 +1911,11 @@ public class Server extends Base implements IServer {
 			else
 				pub = StartJob.PUBLISH_BEFORE;
 		}
-
+		
+		if (ServerPlugin.isRunningGUIMode()){
+			ServerPlugin.getSaveEditorHelper().saveAllEditors();
+		}
+		
 		StartJob startJob = new StartJob(mode2);
 		if (opListener != null && pub != StartJob.PUBLISH_AFTER) {
 			startJob.addJobChangeListener(new JobChangeAdapter() {
@@ -3198,15 +3202,23 @@ public class Server extends Base implements IServer {
 
 	protected void startImpl2(String mode2, IProgressMonitor monitor) throws CoreException {
 		Trace.trace(Trace.FINEST, "Starting server: " + Server.this.toString() + ", launchMode: " + mode2);
-		
+		SaveEditorPrompter editorHelper = (ServerPlugin.isRunningGUIMode()) ? ServerPlugin.getSaveEditorHelper() : null;
 		// make sure that the delegate is loaded and the server state is correct
 		loadAdapter(ServerBehaviourDelegate.class, monitor);
 		
 		try {
 			ILaunchConfiguration launchConfig = getLaunchConfiguration(true, monitor);
-			//if (launchConfig == null)
-			//	throw new CoreException();
+			
+			if (editorHelper != null){
+				editorHelper.setDebugNeverSave();
+			}
+			
 			launch = launchConfig.launch(mode2, monitor); // , true); - causes workspace lock
+			
+			if (editorHelper != null){
+				editorHelper.setDebugOriginalValue();
+			}
+			
 			Trace.trace(Trace.FINEST, "Launch: " + launch);
 		} catch (CoreException e) {
 			Trace.trace(Trace.SEVERE, "Error starting server " + Server.this.toString(), e);
