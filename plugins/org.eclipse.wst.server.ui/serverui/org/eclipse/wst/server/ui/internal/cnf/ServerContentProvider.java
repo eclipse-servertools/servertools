@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008,2009 IBM Corporation and others.
+ * Copyright (c) 2008,2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,10 +24,6 @@ public class ServerContentProvider extends BaseContentProvider implements ITreeC
 	// TODO Angel Says: Need to review if this is needed
 	public static Object INITIALIZING = new Object();
 
-	// TODO Angel Says: Need to review how to port this function into CNF
-	// servers that are currently publishing and starting
-	protected static Set<String> publishing = new HashSet<String>(4);
-		
 	public Object[] getElements(Object element) {
 		List<IServer> list = new ArrayList<IServer>();
 		IServer[] servers = ServerCore.getServers();
