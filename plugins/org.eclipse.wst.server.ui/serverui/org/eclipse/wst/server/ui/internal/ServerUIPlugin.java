@@ -503,8 +503,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 								view2.getSite().getAdapter(IWorkbenchSiteProgressService.class);
 							wsps.warnOfContentChange();
 						}
-					} else
-						page.showView(VIEW_ID);
+					}
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "Error opening Servers view", e);
 				}
