@@ -95,7 +95,7 @@ public class ServerEditor extends MultiPageEditorPart {
 			// do nothing
 		}
 		public void serverRemoved(IServer oldServer) {
-			if (oldServer.equals(server.getOriginal()))
+			if (oldServer.equals(server.getOriginal()) && !isDirty())
 				closeEditor();
 		}
 	}
