@@ -18,8 +18,11 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.common.core.util.UIContextDetermination;
 import org.eclipse.wst.server.core.*;
-import org.osgi.framework.*;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleEvent;
+import org.osgi.framework.BundleListener;
 /**
  * The main server plugin class.
  */
@@ -71,7 +74,7 @@ public class ServerPlugin extends Plugin {
 	private static SaveEditorPrompter saveEditorPrompter;
 	
 	// cached copy of isRunningInGUICache
-	public static boolean isRunningInGUICache = false;
+	public static Boolean isRunningInGUICache = null;
 
 	// registry listener
 	private static IRegistryChangeListener registryListener;
@@ -1298,20 +1301,22 @@ public class ServerPlugin extends Plugin {
 		return value;
 	}
 	
-	public static boolean isRunningGUIMode(){
-		// check only when the the plugin is not Bundle.ACTIVE
-		if (isRunningInGUICache == true){
-			return isRunningInGUICache;
+	public static boolean isRunningGUIMode() {
+
+		if (isRunningInGUICache == null) {
+			boolean isGui = false;
+			switch (UIContextDetermination.getCurrentContext()) {
+			case UIContextDetermination.UI_CONTEXT:
+				isGui = true;
+				break;
+			case UIContextDetermination.HEADLESS_CONTEXT:
+			default:
+				isGui = false;
+			}
+			isRunningInGUICache = new Boolean(isGui);
 		}
-
-		Bundle swtEclipseUIbndl = Platform.getBundle("org.eclipse.ui");  //running in GUI mode if it is active.
-		if(swtEclipseUIbndl != null){
-			isRunningInGUICache= (swtEclipseUIbndl.getState() == Bundle.ACTIVE);
-			return isRunningInGUICache; 
-		}			
-		return false;
-	}	
-
+		return isRunningInGUICache.booleanValue();
+	}
 
 	/**
 	 * Transfer the control to the UI and prompts to save all the editors
