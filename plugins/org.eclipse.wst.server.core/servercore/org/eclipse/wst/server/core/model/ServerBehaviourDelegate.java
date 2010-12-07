@@ -910,7 +910,8 @@ public abstract class ServerBehaviourDelegate {
 		int size = 2000 + 3500 * moduleList.size() + 500 * tasks.length;
 		
 		monitor = ProgressUtil.getMonitorFor(monitor);
-		monitor.beginTask(NLS.bind(Messages.publishing, getServer().getName()), size);
+		String mainTaskMsg = NLS.bind(Messages.publishing, getServer().getName());
+		monitor.beginTask(mainTaskMsg, size);
 		
 		MultiStatus tempMulti = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, "", null);
 		
@@ -926,11 +927,13 @@ public abstract class ServerBehaviourDelegate {
 			
 			// execute tasks
 			MultiStatus taskStatus = performTasks(tasks, monitor);
+			monitor.setTaskName(mainTaskMsg);
 			if (taskStatus != null && !taskStatus.isOK())
 				tempMulti.addAll(taskStatus);
 			
 			// execute publishers
 			taskStatus = executePublishers(kind, moduleList, deltaKindList, monitor, info2);
+			monitor.setTaskName(mainTaskMsg);
 			if (taskStatus != null && !taskStatus.isOK())
 				tempMulti.addAll(taskStatus);
 			
@@ -939,6 +942,7 @@ public abstract class ServerBehaviourDelegate {
 			
 			// publish the server
 			publishServer(kind, ProgressUtil.getSubMonitorFor(monitor, 1000));
+			monitor.setTaskName(mainTaskMsg);
 			
 			if (monitor.isCanceled())
 				return Status.CANCEL_STATUS;
@@ -1213,6 +1217,7 @@ public abstract class ServerBehaviourDelegate {
 			// re-create the delta list as at least one publisher has changed the contents of the published modules.
 			deltaKinds = this.computeDelta(modules);
 		}
+		monitor.subTask("");
 		return multi;
 	}
 
@@ -1258,6 +1263,7 @@ public abstract class ServerBehaviourDelegate {
 				return multi;
 		}
 		
+		monitor.subTask("");
 		return multi;
 	}
 
