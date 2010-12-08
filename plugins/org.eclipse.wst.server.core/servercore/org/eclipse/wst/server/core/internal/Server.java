@@ -804,7 +804,7 @@ public class Server extends Base implements IServer {
 		}
 	}
 
-	protected List<IModule> getExternalModules() {
+	public List<IModule> getExternalModules() {
 		return externalModules;
  	}
 
