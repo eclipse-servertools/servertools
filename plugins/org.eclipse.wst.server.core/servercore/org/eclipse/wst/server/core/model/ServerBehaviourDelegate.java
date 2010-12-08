@@ -1097,10 +1097,10 @@ public abstract class ServerBehaviourDelegate {
 			if (monitor.isCanceled())
 				return;
 			
-			// skip closed projects
+			// should skip this publish
 			IModule[] module = (IModule[]) modules.get(i);
 			IModule m = module[module.length - 1];
-			if (m.getProject() != null && !m.getProject().isAccessible())
+			if(shouldIgnorePublishRequest(m))
 				continue;
 			
 			int kind2 = kind;
@@ -1121,6 +1121,15 @@ public abstract class ServerBehaviourDelegate {
 		}
 	}
 
+	/**
+	 * Returns whether this module should be ignore during the publish
+	 * @param m
+	 * @return
+	 */
+	protected boolean shouldIgnorePublishRequest(IModule m) {
+		return (m.getProject() != null && !m.getProject().isAccessible());
+	}
+	
 	/**
 	 * Returns the publish tasks that have been targeted to this server.
 	 * These tasks should be run during publishing.
