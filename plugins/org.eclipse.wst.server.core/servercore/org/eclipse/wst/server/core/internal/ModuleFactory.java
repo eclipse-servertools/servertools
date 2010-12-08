@@ -13,9 +13,7 @@ package org.eclipse.wst.server.core.internal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.expressions.*;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -28,8 +26,6 @@ import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
  */
 public class ModuleFactory implements IOrdered {
 	private IConfigurationElement element;
-	private Expression fContextualLaunchExpr = null;
-	
 	public ModuleFactoryDelegate delegate;
 	private List<IModuleType> moduleTypes;
 
@@ -139,58 +135,6 @@ public class ModuleFactory implements IOrdered {
 		} catch (Throwable t) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), t);
 			return new IModule[0];
-		}
-	}
-	
-	/**
-	 * Returns an expression that represents the enablement logic for the
-	 * contextual project of this module factory <code>null</code> if none.
-	 * @return an evaluatable expression or <code>null</code>
-	 * @throws CoreException if the configuration element can't be
-	 *  converted. Reasons include: (a) no handler is available to
-	 *  cope with a certain configuration element or (b) the XML
-	 *  expression tree is malformed.
-	 */
-	public Expression getContextualLaunchEnablementExpression() throws CoreException {
-		if (fContextualLaunchExpr == null) {
-			IConfigurationElement[] elements = element.getChildren(ExpressionTagNames.ENABLEMENT);
-			IConfigurationElement enablement = elements.length > 0 ? elements[0] : null; 
-
-			if (enablement != null)
-				fContextualLaunchExpr = ExpressionConverter.getDefault().perform(enablement);
-		}
-		return fContextualLaunchExpr;
-	}
-	
-	/**
-	 * Evaluate the given expression within the given context and return
-	 * the result. Returns <code>true</code> if result is either TRUE or NOT_LOADED.
-	 * This allows optimistic inclusion before plugins are loaded.
-	 * Returns <code>true</code> if exp is <code>null</code>.
-	 * 
-	 * @param exp the enablement expression to evaluate or <code>null</code>
-	 * @param context the context of the evaluation. 
-	 * @return the result of evaluating the expression
-	 * @throws CoreException
-	 */
-	protected boolean evalEnablementExpression(IEvaluationContext context, Expression exp) throws CoreException {
-		// for compatibility with the current behaviour, if the exp == null we return true. Meaning that the factory doesn't
-		// implement an expresion and should be enabled for all cases.
-		return (exp != null) ? ((exp.evaluate(context)) != EvaluationResult.FALSE) : true;
-	}
-	
-	/*
-	 * @see ModuleFactoryDelegate#getModules(IProject)
-	 */
-	public boolean isEnabled(IProject project, IProgressMonitor monitor) {
-		try {
-			IEvaluationContext context = new EvaluationContext(null, project);
-			context.addVariable("project", project);
-			
-			return evalEnablementExpression(context, getContextualLaunchEnablementExpression());
-		} catch (Throwable t) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), t);
-			return false;
 		}
 	}
 
