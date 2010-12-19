@@ -125,6 +125,7 @@ public class ServerTypeDefinitionManager
 	 * Returns all the ServerRuntimes registered a .serverdef.
 	 * @return serverRuntimes
 	 */
+	@SuppressWarnings("unchecked")
 	public ServerRuntime[] getServerTypeDefinitions(){
 		 List definitionList = fXmlUtils.getServerTypeDefinitions();
 		 return (ServerRuntime[])definitionList.toArray(new ServerRuntime[definitionList.size()]);

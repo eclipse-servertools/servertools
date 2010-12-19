@@ -262,6 +262,7 @@ public class FilesetTypeImpl extends EObjectImpl implements FilesetType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ServerTypePackage.FILESET_TYPE__GROUP:

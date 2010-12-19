@@ -53,7 +53,7 @@ public class Resolver {
 	 * @return resolved string
 	 */
 	public String resolveProperties(String proppedString) {
-		HashMap cache = new HashMap(getProperties().size());
+		HashMap<String, String> cache = new HashMap<String, String>(getProperties().size());
 		Iterator itr = getProperties().iterator();
 		while (itr.hasNext()) {
 			Property element =(Property) itr.next();

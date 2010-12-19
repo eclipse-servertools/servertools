@@ -52,6 +52,7 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 //		if (server.shouldPublish() && ServerCore.isAutoPublishing())
 //			server.publish(IServer.PUBLISH_INCREMENTAL, monitor);
 		
+		@SuppressWarnings("null")
 		GenericServerBehaviour genericServer = (GenericServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
 
 		try {

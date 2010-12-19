@@ -272,18 +272,18 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 	 * @generated NOT
 	 * @return
 	 */
-	private String cleanWhiteSpace(String string)
-	{
-		if(string==null)
-			return null;
-        char[] chars = string.toCharArray();
-		for (int i = 0; i < chars.length; i++) {
-			if(Character.isWhitespace(chars[i]))
-				chars[i]=' ';
-		}
-		return (new String(chars)).trim();
-		
-	}
+//	private String cleanWhiteSpace(String string)
+//	{
+//		if(string==null)
+//			return null;
+//        char[] chars = string.toCharArray();
+//		for (int i = 0; i < chars.length; i++) {
+//			if(Character.isWhitespace(chars[i]))
+//				chars[i]=' ';
+//		}
+//		return (new String(chars)).trim();
+//		
+//	}
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -447,6 +447,7 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP:

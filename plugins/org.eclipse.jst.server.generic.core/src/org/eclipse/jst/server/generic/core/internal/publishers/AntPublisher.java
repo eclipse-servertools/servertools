@@ -268,6 +268,7 @@ public class AntPublisher extends GenericPublisher {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	private Map getPublishProperties() {
 		Map props = new HashMap();
 		// pass all properties to build file.

@@ -205,7 +205,7 @@ public class GenericServerRuntime extends RuntimeDelegate implements IJavaRuntim
 	
 	public void setDefaults(IProgressMonitor monitor) {
 		List props = this.getServerTypeDefinition().getProperty();
- 		Map instancePropsMap = new HashMap();
+ 		Map<String, String> instancePropsMap = new HashMap<String, String>();
  		for (Iterator iter = props.iterator(); iter.hasNext();) {
 			Property element = (Property) iter.next();
 			if(Property.CONTEXT_RUNTIME.equalsIgnoreCase(element.getContext()))

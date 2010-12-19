@@ -61,6 +61,7 @@ public class ServerTypeDefinitionUtil
 	 * @param runtime
 	 * @return classpathEntry
 	 */
+	@SuppressWarnings("unchecked")
 	public static IClasspathEntry[] getServerClassPathEntry(IRuntime runtime)
 	{
 		ServerRuntime definition = getServerTypeDefinition(runtime);
@@ -74,11 +75,10 @@ public class ServerTypeDefinitionUtil
 	public  static ArrayList getClasspathEntries(String ref, ServerRuntime definition, boolean isLaunch) {
 		Classpath cp = definition.getClasspath(ref);
 		Iterator archives = cp.getArchive().iterator();
-		ArrayList entryList = new ArrayList();
+		ArrayList<Object> entryList = new ArrayList<Object>();
 		while (archives.hasNext()) {
 			ArchiveType archive = (ArchiveType) archives.next();
 			String item = definition.getResolver().resolveProperties(archive.getPath());
-			IClasspathEntry entry = null;
 			if(isLaunch)
 				entryList.add(JavaRuntime.newArchiveRuntimeClasspathEntry(new Path(item)));
 			else

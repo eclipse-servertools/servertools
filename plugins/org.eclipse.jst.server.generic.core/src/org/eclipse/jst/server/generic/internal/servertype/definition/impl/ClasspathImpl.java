@@ -184,6 +184,7 @@ public class ClasspathImpl extends EObjectImpl implements Classpath {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ServerTypePackage.CLASSPATH__GROUP:

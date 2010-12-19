@@ -76,7 +76,8 @@ public class ServerRuntimeMergeUtil {
         return serverdef;
     }
 
-    private static void addClasspathIfNotPresent(List classpaths, Classpath classpath) {
+    @SuppressWarnings("unchecked")
+	private static void addClasspathIfNotPresent(List classpaths, Classpath classpath) {
         if (!containsClasspath(classpaths, classpath.getId())) {
             classpaths.add(classpath);
         }
@@ -95,7 +96,8 @@ public class ServerRuntimeMergeUtil {
         return found;
     }
     
-    private static void addPropertyIfNotPresent(List properties, Property prop) {
+    @SuppressWarnings("unchecked")
+	private static void addPropertyIfNotPresent(List properties, Property prop) {
         if (!containsProperty(properties, prop.getId())) {
             properties.add(prop);
         }

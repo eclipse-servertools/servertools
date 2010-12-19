@@ -90,7 +90,8 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
     /* (non-Javadoc)
      * @see org.eclipse.wst.server.core.model.ServerDelegate#modifyModules(org.eclipse.wst.server.core.IModule[], org.eclipse.wst.server.core.IModule[], org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void modifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException {
+    @SuppressWarnings("unchecked")
+	public void modifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException {
       
         List modules = this.getAttribute(ATTR_GENERIC_SERVER_MODULES,(List)null);
         
@@ -152,6 +153,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	 * 
 	 * @return server instance properties.
 	 */
+	@SuppressWarnings("unchecked")
 	private Map getInstanceProperties() {
 		Map runtimeProperties =getRuntimeDelegate().getServerInstanceProperties();
 		Map serverProperties = getServerInstanceProperties();
@@ -168,7 +170,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	 * @see org.eclipse.wst.server.core.model.IMonitorableServer#getServerPorts()
 	 */
 	public org.eclipse.wst.server.core.ServerPort[] getServerPorts() {
-		List ports = new ArrayList();
+		List<ServerPort> ports = new ArrayList<ServerPort>();
 		Iterator pIter = this.getServerDefinition().getPort().iterator();
 		while (pIter.hasNext()) {
 			Port element = (Port) pIter.next();
@@ -176,7 +178,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 			ports.add(new ServerPort("server", element.getName(), port, element.getProtocol()));		 //$NON-NLS-1$
 		}
 	
-		return (org.eclipse.wst.server.core.ServerPort[])ports.toArray(new org.eclipse.wst.server.core.ServerPort[ports.size()]);
+		return ports.toArray(new org.eclipse.wst.server.core.ServerPort[ports.size()]);
 	}
 
 
@@ -278,7 +280,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
             return null;
         IStatus status = canModifyModules(new IModule[] { module }, null);
         if (status != null && !status.isOK())
-            throw  new CoreException(status);;
+            throw  new CoreException(status);
         IModule[] parents = doGetParentModules(module);
         if(parents.length>0)
         	return parents;
@@ -288,7 +290,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 
 	private IModule[] doGetParentModules(IModule module) {
 		IModule[] ears = ServerUtil.getModules("jst.ear"); //$NON-NLS-1$
-		ArrayList list = new ArrayList();
+		ArrayList<IModule> list = new ArrayList<IModule>();
 		for (int i = 0; i < ears.length; i++) {
 			IEnterpriseApplication ear = (IEnterpriseApplication)ears[i].loadAdapter(IEnterpriseApplication.class,null);
 			IModule[] childs = ear.getModules();
@@ -297,7 +299,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 					list.add(ears[i]);
 			}
 		}
-		return (IModule[])list.toArray(new IModule[list.size()]);
+		return list.toArray(new IModule[list.size()]);
 	}
 	/**
 	 * Returns the server properties.
@@ -337,6 +339,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 		return f.exists();
 	}
  
+	@SuppressWarnings("unchecked")
 	public void setDefaults(IProgressMonitor monitor) {
 		ServerRuntime serverRuntime =  this.getServerDefinition(); 
 		// although a server should always have a serverdefinition in some cases 

@@ -102,6 +102,7 @@ import java.io.File;
 public class DirectoryScanner extends org.apache.tools.ant.DirectoryScanner {
 	
 	public DirectoryScanner() {
+		// Empty contructor
 	}
 
 	public synchronized void setIncludes(String[] includes) {

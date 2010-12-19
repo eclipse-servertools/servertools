@@ -289,7 +289,8 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
      * @param wc
      * @param vmInstall
      */
-    protected void setupLaunchClasspath(ILaunchConfigurationWorkingCopy wc, IVMInstall vmInstall, List cp) {
+    @SuppressWarnings("unchecked")
+	protected void setupLaunchClasspath(ILaunchConfigurationWorkingCopy wc, IVMInstall vmInstall, List cp) {
 		//merge existing classpath with server classpath
 		try {
 			IRuntimeClasspathEntry[] existingCps = JavaRuntime.computeUnresolvedRuntimeClasspath(wc);
@@ -308,7 +309,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 
 	private List convertCPEntryToMemento(List cpEntryList)
 	{
-		List list = new ArrayList(cpEntryList.size());
+		List<String> list = new ArrayList<String>(cpEntryList.size());
 		Iterator iterator = cpEntryList.iterator();
 		while(iterator.hasNext())
 		{
@@ -332,7 +333,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 
     protected Map getEnvironmentVariables(LaunchConfiguration config){
         List variables = config.getEnvironmentVariable();
-        Map varsMap = new HashMap(variables.size());
+        Map<String, String> varsMap = new HashMap<String, String>(variables.size());
         Iterator iterator= variables.iterator();
         while(iterator.hasNext()){
         	ArgumentPair pair = (ArgumentPair)iterator.next();
@@ -417,7 +418,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     protected void startPingThread()
     {
     	try {
-    		String url = "http://"+getServer().getHost();; //$NON-NLS-1$
+    		String url = "http://"+getServer().getHost(); //$NON-NLS-1$
     	  	ServerPort[] ports = getServer().getServerPorts(null);
         	ServerPort sp = null;
     	    for(int i=0;i<ports.length;i++){

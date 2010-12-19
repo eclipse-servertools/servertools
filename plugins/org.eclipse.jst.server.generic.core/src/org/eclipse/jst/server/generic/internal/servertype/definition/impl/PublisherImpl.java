@@ -170,6 +170,7 @@ public class PublisherImpl extends EObjectImpl implements Publisher {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ServerTypePackage.PUBLISHER__GROUP:

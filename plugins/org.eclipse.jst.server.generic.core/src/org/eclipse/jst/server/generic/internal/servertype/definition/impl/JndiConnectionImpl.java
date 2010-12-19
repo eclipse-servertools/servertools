@@ -214,6 +214,7 @@ public class JndiConnectionImpl extends EObjectImpl implements JndiConnection {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ServerTypePackage.JNDI_CONNECTION__PROVIDER_URL:

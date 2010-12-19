@@ -97,7 +97,7 @@ public class ExtensionPointUtil {
     public static String[] getServerTypesFromLaunchConfig(String launchConfigId){
         IExtensionRegistry registry = Platform.getExtensionRegistry();
         IConfigurationElement[] cf = registry.getConfigurationElementsFor("org.eclipse.wst.server.core", EXTENSION_SERVER_TYPE); //$NON-NLS-1$
-        ArrayList list = new ArrayList();
+        ArrayList<String> list = new ArrayList<String>();
         for( int i = 0; i < cf.length; i++ )
         {      
             String id =  cf[i].getAttribute( "launchConfigId" ); //$NON-NLS-1$
@@ -106,8 +106,8 @@ public class ExtensionPointUtil {
                 list.add( cf[i].getAttribute( "id" ) ); //$NON-NLS-1$
             }
                
-        };
-        return (String[])list.toArray(new String[list.size()]);
+        }
+        return list.toArray(new String[list.size()]);
        
     }
 }

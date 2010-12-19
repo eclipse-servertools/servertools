@@ -42,8 +42,8 @@ import org.osgi.framework.Bundle;
 public class XMLUtils {
 
 	
-    private ArrayList serverDefinitions;
-    private ArrayList runtimeDefinitions;
+    private ArrayList<ServerRuntime> serverDefinitions;
+    private ArrayList<ServerRuntime> runtimeDefinitions;
 
 
 	/**
@@ -57,7 +57,7 @@ public class XMLUtils {
 	 * Load all the serverdefinition and runtimedefinition extensions.
 	 */
 	private void refresh() {
-        serverDefinitions = new ArrayList();
+        serverDefinitions = new ArrayList<ServerRuntime>();
         
         IExtension[] serverDefExtensions = ExtensionPointUtil.getGenericServerDefinitionExtensions();
         
@@ -78,7 +78,7 @@ public class XMLUtils {
             }
         }
 
-        runtimeDefinitions = new ArrayList();
+        runtimeDefinitions = new ArrayList<ServerRuntime>();
         
         IExtension[] runtimeDefExtensions = ExtensionPointUtil.getGenericServerRuntimeDefinitionExtensions();
         

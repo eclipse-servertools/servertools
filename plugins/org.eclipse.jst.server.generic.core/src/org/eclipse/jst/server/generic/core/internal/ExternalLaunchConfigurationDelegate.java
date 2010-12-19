@@ -94,6 +94,7 @@ public class ExternalLaunchConfigurationDelegate extends AbstractJavaLaunchConfi
 		    abort(GenericServerCoreMessages.missingServer, null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
 		}	
 
+		@SuppressWarnings("null")
 		ExternalServerBehaviour serverBehavior = (ExternalServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
 		
 		// initialize the server, check the ports and start the PingThread that will check 
@@ -172,7 +173,8 @@ public class ExternalLaunchConfigurationDelegate extends AbstractJavaLaunchConfi
 		debuggingDelegate.launch(wc, mode, launch, monitor);
 	}
 	  
-    private void setDebugArgument(ILaunchConfigurationWorkingCopy config, String attribKey, String key, String arg) {
+    @SuppressWarnings("unchecked")
+	private void setDebugArgument(ILaunchConfigurationWorkingCopy config, String attribKey, String key, String arg) {
         try {
             Map args = config.getAttribute(attribKey, (Map)null);
             if (args!=null) {

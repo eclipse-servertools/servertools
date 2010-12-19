@@ -644,6 +644,7 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ServerTypePackage.SERVER_RUNTIME__GROUP:
@@ -837,11 +838,11 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
 	 * <!-- end-user-doc -->
 	 * @generated NOT
 	 */
-	public Publisher getPublisher(String id) {
+	public Publisher getPublisher(String publisherID) {
 		Iterator iterator = this.getPublisher().iterator();
 		while (iterator.hasNext()) {
 			Publisher publisher = (Publisher) iterator.next();
-			if(id.equals(publisher.getId()))
+			if(publisherID.equals(publisher.getId()))
 				return publisher;
 		}
 		return null;

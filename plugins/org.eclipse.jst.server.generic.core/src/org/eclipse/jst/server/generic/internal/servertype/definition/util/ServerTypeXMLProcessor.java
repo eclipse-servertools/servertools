@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EPackage;
 
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
 
 import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
@@ -43,7 +44,7 @@ public class ServerTypeXMLProcessor extends XMLProcessor {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected Map getRegistrations() {
+	protected Map<String, Resource.Factory> getRegistrations() {
 		if (registrations == null) {
 			super.getRegistrations();
 			registrations.put(XML_EXTENSION, new ServerTypeResourceFactoryImpl());
