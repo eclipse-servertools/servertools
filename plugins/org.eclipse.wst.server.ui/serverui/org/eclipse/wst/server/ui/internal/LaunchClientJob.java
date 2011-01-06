@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -69,24 +69,39 @@ public class LaunchClientJob extends ChainedJob {
 			return Status.OK_STATUS;
 		
 		Trace.trace(Trace.FINER, "LaunchClient job 3");
-		
-		// display client on UI thread
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				Trace.trace(Trace.FINEST, "Attempting to load client: " + client.getId());
-				try {
-					Object launchable = launchableAdapter.getLaunchable(server, moduleArtifact);
-					IStatus status = client.launch(server, launchable, launchMode, server.getLaunch());
-					if (status != null && status.getSeverity() == IStatus.ERROR)
-						EclipseUtil.openError(null, status);
-				} catch (CoreException ce) {
-					EclipseUtil.openError(null, ce.getStatus());
-				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Server client failed", e);
+
+		// job return status
+		final IStatus[] resultingStatus = new IStatus[] { Status.OK_STATUS };
+
+		// acquire the launchable object.
+		final Object[] launchable = new Object[1];
+		try {
+			launchable[0] = launchableAdapter.getLaunchable(server, moduleArtifact);
+		}
+		catch (CoreException ce) {
+			resultingStatus[0] = ce.getStatus();
+			EclipseUtil.openError(null, resultingStatus[0]);
+		}
+		if (monitor.isCanceled()) {
+			return Status.CANCEL_STATUS;
+		}
+		// display client on UI thread if launchable exists.
+		if (launchable[0] != null) {
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					Trace.trace(Trace.FINEST, "Attempting to load client: " + client.getId());
+					try {
+						resultingStatus[0] = client.launch(server, launchable[0], launchMode, server.getLaunch());
+						if (resultingStatus[0] != null && resultingStatus[0].getSeverity() == IStatus.ERROR)
+							EclipseUtil.openError(null, resultingStatus[0]);
+					}
+					catch (Exception e) {
+						Trace.trace(Trace.SEVERE, "Server client failed", e);
+					}
 				}
-			}
-		});
+			});
+		}
 		Trace.trace(Trace.FINER, "LaunchClient job 4");
-		return Status.OK_STATUS;
+		return resultingStatus[0];
 	}
 }
