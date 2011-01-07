@@ -10,7 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.util;
 
+import java.net.URL;
+
 import junit.framework.TestCase;
+
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.model.IURLProvider2;
 import org.eclipse.wst.server.core.util.HttpLaunchable;
 
 public class HTTPLaunchableTestCase extends TestCase {
@@ -18,7 +23,14 @@ public class HTTPLaunchableTestCase extends TestCase {
 
 	protected HttpLaunchable getHttpLaunchable() {
 		if (launch == null) {
-			launch = new HttpLaunchable(null);
+			launch = new HttpLaunchable(new IURLProvider2(){
+				public URL getModuleRootURL(IModule module) {
+					return null;
+				}
+				public URL getLaunchableURL() {
+					return null;
+				}
+			});
 		}
 		return launch;
 	}
