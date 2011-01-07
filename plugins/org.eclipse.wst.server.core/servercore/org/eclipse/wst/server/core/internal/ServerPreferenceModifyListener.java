@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.internal;
 
+import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -44,8 +45,13 @@ public class ServerPreferenceModifyListener extends PreferenceModifyListener {
 
 	private void removeLockedServerRuntimePreference(Preferences preferences) {
 		try {
+			File prefFile = new File(preferences.get(RUNTIMES_PREFERENCE_NAME, ""));
+			if (!prefFile.exists()){
+				return; 
+			}
+			
 			Document doc = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder().parse(new InputSource(new StringReader(preferences.get(RUNTIMES_PREFERENCE_NAME, "")))); //$NON-NLS-1$
+					.newDocumentBuilder().parse(new InputSource(new StringReader(prefFile.toString()))); //$NON-NLS-1$
 			NodeList nodeList = doc.getElementsByTagName(RUNTIME_NODE_NAME);
 			for (int s = 0; s < nodeList.getLength(); s++) {
 				Node node = nodeList.item(s);
