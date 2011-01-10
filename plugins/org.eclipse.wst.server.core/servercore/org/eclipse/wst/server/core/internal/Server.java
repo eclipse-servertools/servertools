@@ -2378,7 +2378,7 @@ public class Server extends Base implements IServer {
 			throw new IllegalArgumentException("Module cannot be null or empty");
 		try {
 			int i = module.length - 1;
-			if (module[i].getProject() == null || !module[i].getProject().isAccessible())
+			if (!module[i].isExternal() && (module[i].getProject() == null || !module[i].getProject().isAccessible()))
 				return null;
 			
 			ServerDelegate sd = getDelegate(monitor);
