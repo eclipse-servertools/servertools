@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,22 +33,17 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Link;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
 import org.eclipse.wst.server.core.util.SocketUtil;
-import org.eclipse.wst.server.ui.*;
-import org.eclipse.wst.server.ui.internal.*;
+import org.eclipse.wst.server.ui.AbstractUIControl;
 import org.eclipse.wst.server.ui.AbstractUIControl.IUIControlListener;
 import org.eclipse.wst.server.ui.AbstractUIControl.UIControlEntry;
+import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.viewers.ServerTypeComposite;
 import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
@@ -108,6 +103,8 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 	protected ServerCreationCache cache = new ServerCreationCache();
 	
 	private IServerType oldServerType;
+	
+	private boolean canSupportModule=true;
 
 	/**
 	 * Creates a new server and server configuration.  If the initial
@@ -419,8 +416,6 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			boolean supportsRemote = selectedServerType.supportsRemoteHosts();
 			if(!supportsRemote && !SocketUtil.isLocalhost(hostname.getText()))
 				wizard.setMessage(NLS.bind(Messages.wizCheckRemoteSupport, new Object[0]), IMessageProvider.ERROR);
-			else 
-				wizard.setMessage(null, IMessageProvider.NONE);
 		}
 	}
 	
@@ -577,7 +572,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 				}
 				
 				runtimeCombo.select(sel);
-				setRuntime(runtimes[0]);
+				setRuntime(runtimes[sel]);
 			}
 			
 			IRuntimeType runtimeType = serverType.getRuntimeType();
@@ -603,8 +598,25 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 				serverName.setText(server.getName());
 				updatingServerName = false;
 			}
+			// Validate if selected module is supported with the selected runtime
+			wizard.setMessage(null, IMessageProvider.NONE);
+			if( module!=null ){
+				canSupportModule=true;
+				IStatus status = NewServerComposite.isSupportedModule(server, module);
+				if (status != null) {
+					if (status.getSeverity() == IStatus.ERROR){
+						wizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
+						canSupportModule=false;
+					}
+					else if (status.getSeverity() == IStatus.WARNING)
+						wizard.setMessage(status.getMessage(), IMessageProvider.WARNING);
+					else if (status.getSeverity() == IStatus.INFO)
+						wizard.setMessage(status.getMessage(), IMessageProvider.INFORMATION);
+				}
+			}
 		}
 		listener.runtimeSelected(runtime);
+
 	}
 	
 	protected void fireServerWorkingCopyChanged() {
@@ -649,7 +661,6 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 						wizard.setMessage(status.getMessage(), IMessageProvider.WARNING);
 					else if (status.getSeverity() == IStatus.INFO)
 						wizard.setMessage(status.getMessage(), IMessageProvider.INFORMATION);
-					server = null;
 				}
 			}
 		}
@@ -763,5 +774,9 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		if(hostname != null)
 			return hostname.getText();
 		return null;
+	}
+
+	public boolean canSupportModule() {
+		return canSupportModule;
 	}	
 }
