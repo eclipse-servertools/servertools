@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -2378,7 +2378,7 @@ public class Server extends Base implements IServer {
 			throw new IllegalArgumentException("Module cannot be null or empty");
 		try {
 			int i = module.length - 1;
-			if (module[i].getProject() == null || !module[i].getProject().isAccessible())
+			if (!module[i].isExternal() && (module[i].getProject() == null || !module[i].getProject().isAccessible()))
 				return null;
 			
 			ServerDelegate sd = getDelegate(monitor);
