@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,6 +33,11 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 
 	protected transient TomcatConfiguration configuration;
 	protected transient ITomcatVersionHandler versionHandler;
+
+	// Configuration version control
+	private int currentVersion;
+	private int loadedVersion;
+	private Object versionLock = new Object(); 
 
 	/**
 	 * TomcatServer.
@@ -73,7 +78,15 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	}
 
 	public TomcatConfiguration getTomcatConfiguration() throws CoreException {
-		if (configuration == null) {
+		int current;
+		TomcatConfiguration tcConfig;
+		// Grab current state
+		synchronized (versionLock) {
+			current = currentVersion;
+			tcConfig = configuration;
+		}
+		// If configuration needs loading
+		if (tcConfig == null || loadedVersion != current) {
 			IFolder folder = getServer().getServerConfiguration();
 			if (folder == null || !folder.exists()) {
 				String path = null;
@@ -85,73 +98,105 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 				}
 				throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorNoConfiguration, path), null));
 			}
-			
-			String id = getServer().getServerType().getId();
-			if (id.indexOf("32") > 0)
-				configuration = new Tomcat32Configuration(folder);
-			else if (id.indexOf("40") > 0)
-				configuration = new Tomcat40Configuration(folder);
-			else if (id.indexOf("41") > 0)
-				configuration = new Tomcat41Configuration(folder);
-			else if (id.indexOf("50") > 0)
-				configuration = new Tomcat50Configuration(folder);
-			else if (id.indexOf("55") > 0)
-				configuration = new Tomcat55Configuration(folder);
-			else if (id.indexOf("60") > 0)
-				configuration = new Tomcat60Configuration(folder);
-			else if (id.indexOf("70") > 0)
-				configuration = new Tomcat70Configuration(folder);
+			// If not yet loaded
+			if (tcConfig == null) {
+				
+				String id = getServer().getServerType().getId();
+				if (id.indexOf("32") > 0)
+					tcConfig = new Tomcat32Configuration(folder);
+				else if (id.indexOf("40") > 0)
+					tcConfig = new Tomcat40Configuration(folder);
+				else if (id.indexOf("41") > 0)
+					tcConfig = new Tomcat41Configuration(folder);
+				else if (id.indexOf("50") > 0)
+					tcConfig = new Tomcat50Configuration(folder);
+				else if (id.indexOf("55") > 0)
+					tcConfig = new Tomcat55Configuration(folder);
+				else if (id.indexOf("60") > 0)
+					tcConfig = new Tomcat60Configuration(folder);
+				else if (id.indexOf("70") > 0)
+					tcConfig = new Tomcat70Configuration(folder);
+				else {
+					throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorUnknownVersion, null));
+				}
+			}
 			try {
-				configuration.load(folder, null);
+				tcConfig.load(folder, null);
+				// Update loaded version
+				synchronized (versionLock) {
+					// If newer version not already loaded, update version
+					if (configuration == null || loadedVersion < current) {
+						configuration = tcConfig;
+						loadedVersion = current;
+					}
+				}
 			} catch (CoreException ce) {
-				// ignore
-				configuration = null;
+				// Ignore
 				throw ce;
 			}
 		}
-		return configuration;
+		return tcConfig;
 	}
 
 	public void importRuntimeConfiguration(IRuntime runtime, IProgressMonitor monitor) throws CoreException {
-		if (runtime == null) {
+		// Initialize state
+		synchronized (versionLock) {
 			configuration = null;
+			currentVersion = 0;
+			loadedVersion = 0;
+		}
+		if (runtime == null) {
 			return;
 		}
 		IPath path = runtime.getLocation().append("conf");
 		
 		String id = getServer().getServerType().getId();
 		IFolder folder = getServer().getServerConfiguration();
+		TomcatConfiguration tcConfig;
 		if (id.indexOf("32") > 0)
-			configuration = new Tomcat32Configuration(folder);
+			tcConfig = new Tomcat32Configuration(folder);
 		else if (id.indexOf("40") > 0)
-			configuration = new Tomcat40Configuration(folder);
+			tcConfig = new Tomcat40Configuration(folder);
 		else if (id.indexOf("41") > 0)
-			configuration = new Tomcat41Configuration(folder);
+			tcConfig = new Tomcat41Configuration(folder);
 		else if (id.indexOf("50") > 0)
-			configuration = new Tomcat50Configuration(folder);
+			tcConfig = new Tomcat50Configuration(folder);
 		else if (id.indexOf("55") > 0)
-			configuration = new Tomcat55Configuration(folder);
+			tcConfig = new Tomcat55Configuration(folder);
 		else if (id.indexOf("60") > 0)
-			configuration = new Tomcat60Configuration(folder);
+			tcConfig = new Tomcat60Configuration(folder);
 		else if (id.indexOf("70") > 0)
-			configuration = new Tomcat70Configuration(folder);
+			tcConfig = new Tomcat70Configuration(folder);
+		else {
+			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorUnknownVersion, null));
+		}
+
 		try {
-			configuration.importFromPath(path, isTestEnvironment(), monitor);
+			tcConfig.importFromPath(path, isTestEnvironment(), monitor);
 		} catch (CoreException ce) {
-			// ignore
-			configuration = null;
 			throw ce;
+		}
+		// Update version
+		synchronized (versionLock) {
+			// If not already initialized by some other thread, save the configuration
+			if (configuration == null) {
+				configuration = tcConfig;
+			}
 		}
 	}
 
 	public void saveConfiguration(IProgressMonitor monitor) throws CoreException {
-		if (configuration == null)
+		TomcatConfiguration tcConfig = configuration;
+		if (tcConfig == null)
 			return;
-		configuration.save(getServer().getServerConfiguration(), monitor);
+		tcConfig.save(getServer().getServerConfiguration(), monitor);
 	}
 
 	public void configurationChanged() {
-		configuration = null;
+		synchronized (versionLock) {
+			// Alter the current version
+			currentVersion++;
+		}
 	}
 
 	/**
