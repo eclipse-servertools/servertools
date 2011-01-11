@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2007, 2010 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.jst.server.tomcat.core.internal.wst;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 
 /**
@@ -39,6 +40,13 @@ public interface IModuleVisitor {
 	 * @param workspacePath path to component in workspace
 	 */
 	void visitArchiveComponent(IPath runtimePath, IPath workspacePath);
+
+	/**
+	 * Process Dependent Java project. Useful for determining
+	 * source paths.
+	 * @param IJavaProject dependent Java project
+	 */
+	void visitDependentJavaProject(IJavaProject javaProject);
 
 	/**
 	 * Process dependent component.
