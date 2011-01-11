@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -99,6 +99,17 @@ public class TomcatSourcePathComputerDelegate implements
 			// do nothing
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
+		public void visitDependentJavaProject(IJavaProject javaProject) {
+			// Ensure dependent projects are listed directly in the classpath list.
+			// This is needed because JavaRuntime.getSourceContainers() won't resolve them
+			// correctly if they have non-default output folders.  In this case, they resolve to
+			// binary archive folders with no associated source folder for some reason.
+			runtimeClasspath.add(JavaRuntime
+					.newDefaultProjectClasspathEntry(javaProject));
+		}
 		/**
 		 * {@inheritDoc}
 		 */

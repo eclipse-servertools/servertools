@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2007, 2010 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jst.server.tomcat.core.internal.wst.IModuleVisitor;
 import org.eclipse.jst.server.tomcat.core.internal.xml.Factory;
 import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Context;
@@ -111,6 +112,13 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
      */
     public void visitArchiveComponent(IPath runtimePath, IPath workspacePath) {
         addVirtualJarResource(runtimePath, workspacePath);
+    }
+
+    /**
+     * @see IModuleVisitor#visitDependentJavaProject(IJavaProject javaProject)
+     */
+    public void visitDependentJavaProject(IJavaProject javaProject) {
+        // Useful for finding source folders, so do nothing.
     }
 
     /**
