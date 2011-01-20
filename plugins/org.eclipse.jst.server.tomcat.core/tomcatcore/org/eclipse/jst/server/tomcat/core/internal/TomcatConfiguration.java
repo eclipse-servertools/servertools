@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -195,7 +195,7 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 	}
 
 	
-	protected IStatus updateContextsToServeDirectly(IPath baseDir, String loader, IProgressMonitor monitor) {
+	protected IStatus updateContextsToServeDirectly(IPath baseDir, String tomcatVersion, String loader, IProgressMonitor monitor) {
 		// Default implementation assumes nothing to do
 		return Status.OK_STATUS;
 	}

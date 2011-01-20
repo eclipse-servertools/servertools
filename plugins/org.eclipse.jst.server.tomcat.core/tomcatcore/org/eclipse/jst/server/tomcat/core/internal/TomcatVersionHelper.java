@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2007, 2010 SAS Institute, Inc and others.
+ * Copyright (c) 2007, 2011 SAS Institute, Inc and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -826,7 +826,7 @@ public class TomcatVersionHelper {
 	 * @param monitor a progress monitor
 	 * @return result of update operation
 	 */
-	public static IStatus updateContextsToServeDirectly(IPath baseDir, String loader, boolean enableMetaInfResources, IProgressMonitor monitor) {
+	public static IStatus updateContextsToServeDirectly(IPath baseDir, String tomcatVersion, String loader, boolean enableMetaInfResources, IProgressMonitor monitor) {
 
 		IPath confDir = baseDir.append("conf");
 		IPath serverXml = confDir.append("server.xml");
@@ -845,7 +845,7 @@ public class TomcatVersionHelper {
 
 			// care about top-level modules only
 			TomcatPublishModuleVisitor visitor = new TomcatPublishModuleVisitor(
-					baseDir, publishedInstance, loader, enableMetaInfResources);
+					baseDir, tomcatVersion, publishedInstance, loader, enableMetaInfResources);
 			Context [] contexts = publishedInstance.getContexts();
 			for (int i = 0; i < contexts.length; i++) {
 				String moduleId = contexts[i].getSource();
@@ -1019,8 +1019,8 @@ public class TomcatVersionHelper {
 		return context;
 	}
 
-	private static Map catalinaJarVersion = new ConcurrentHashMap();
-	private static Map catalinaJarLastModified = new HashMap();
+	private static Map<IPath, String> catalinaJarVersion = new ConcurrentHashMap<IPath, String>();
+	private static Map<IPath, Long> catalinaJarLastModified = new ConcurrentHashMap<IPath, Long>();
 	private static volatile long lastCheck = 0;
 
 	/**
@@ -1075,13 +1075,13 @@ public class TomcatVersionHelper {
 			}
 		}
 		if (catalinaJarPath != null) {
-			versionSubString = (String)catalinaJarVersion.get(catalinaJarPath);
+			versionSubString = catalinaJarVersion.get(catalinaJarPath);
 			long checkTime = System.currentTimeMillis();
 			// Use some logic to try to determine if a cached value is stale
 			// If last check was more than a couple of seconds ago, check the jar time stamp 
 			if (versionSubString != null && (checkTime - lastCheck > 2000)) {
 				long curLastModified = jarFile.lastModified();
-				Long oldLastModified = (Long)catalinaJarLastModified.get(catalinaJarPath);
+				Long oldLastModified = catalinaJarLastModified.get(catalinaJarPath);
 				// If jar time stamps differ, discard the cached version string
 				if (oldLastModified == null || curLastModified != oldLastModified.longValue()) {
 					versionSubString = null;
@@ -1108,17 +1108,11 @@ public class TomcatVersionHelper {
 									catalinaJarVersion.put(catalinaJarPath, versionSubString);
 									catalinaJarLastModified.put(catalinaJarPath, new Long(jarFile.lastModified()));
 								}
-								else {
-									return Status.CANCEL_STATUS;
-								}
 							}
 						}
 					}
-					else {
-						return Status.CANCEL_STATUS;
-					}
 				} catch (IOException e) {
-					return Status.CANCEL_STATUS;
+					// Ignore and handle as unknown version
 				}
 				finally {
 					if (is != null) {
@@ -1132,12 +1126,25 @@ public class TomcatVersionHelper {
 				}
 			}
 			if (versionSubString != null) {
-				String versionTest = (String)versionStringMap.get(serverType);
-				if (versionTest != null && !versionSubString.startsWith(versionTest)) {
-					return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID,
-							NLS.bind(Messages.errorInstallDirWrongVersion2,
-									versionSubString, versionTest.substring(0, versionTest.length() -1)));
+				// If we have an actual version, test the version
+				if (versionSubString.length() > 0) {
+					String versionTest = (String)versionStringMap.get(serverType);
+					if (versionTest != null && !versionSubString.startsWith(versionTest)) {
+						return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID,
+								NLS.bind(Messages.errorInstallDirWrongVersion2,
+										versionSubString, versionTest.substring(0, versionTest.length() -1)));
+					}
 				}
+				// Else we have an unknown version
+				else {
+					return Status.CANCEL_STATUS;
+				}
+			}
+			else {
+				// Cache blank version string for unknown version
+				catalinaJarVersion.put(catalinaJarPath, "");
+				catalinaJarLastModified.put(catalinaJarPath, new Long(jarFile.lastModified()));
+				return Status.CANCEL_STATUS;
 			}
 		}
 		// Else server type is not supported or jar doesn't exist
@@ -1146,5 +1153,27 @@ public class TomcatVersionHelper {
 		}
 		
 		return Status.OK_STATUS;
+	}
+
+	public static String getCatalinaVersion(IPath installPath, String serverType) {
+		for (Map.Entry<IPath, String> entry : catalinaJarVersion.entrySet()) {
+			IPath jarPath = entry.getKey();
+			if (installPath.isPrefixOf(jarPath)) {
+				return entry.getValue();
+			}
+		}
+		// If not found, we need to initialize the data for this server
+		IStatus result = checkCatalinaVersion(installPath, serverType);
+		// If successful, search again
+		if (result.isOK()) {
+			for (Map.Entry<IPath, String> entry : catalinaJarVersion.entrySet()) {
+				IPath jarPath = entry.getKey();
+				if (installPath.isPrefixOf(jarPath)) {
+					return entry.getValue();
+				}
+			}
+		}
+		// Return unknown version
+		return "";
 	}
 }

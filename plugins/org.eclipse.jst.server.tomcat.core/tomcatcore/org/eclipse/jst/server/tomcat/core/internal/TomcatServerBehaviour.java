@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -449,10 +449,12 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		// Include or remove loader jar depending on state of serving directly 
 		status = tvh.prepareForServingDirectly(baseDir, getTomcatServer());
 		if (status.isOK()) {
+			String serverTypeID = getServer().getServerType().getId();
 			// If serving modules directly, update server.xml accordingly (includes project context.xmls)
 			if (ts.isServeModulesWithoutPublish()) {
+				String tomcatVersion = TomcatVersionHelper.getCatalinaVersion(getServer().getRuntime().getLocation(), serverTypeID);
 				status = getTomcatConfiguration().updateContextsToServeDirectly(
-						baseDir, tvh.getSharedLoader(baseDir), monitor);
+						baseDir, tomcatVersion, tvh.getSharedLoader(baseDir), monitor);
 			}
 			// Else serving normally. Add project context.xmls to server.xml
 			else {
@@ -462,8 +464,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			}
 			if (status.isOK() && ts.isSaveSeparateContextFiles()) {
 				// Determine if context's path attribute should be removed
-				String id = getServer().getServerType().getId();
-				boolean noPath = id.indexOf("55") > 0 || id.indexOf("60") > 0;
+				boolean noPath = serverTypeID.indexOf("55") > 0 || serverTypeID.indexOf("60") > 0;
 				boolean serverStopped = getServer().getServerState() == IServer.STATE_STOPPED;
 				// TODO Add a monitor
 				TomcatVersionHelper.moveContextsToSeparateFiles(baseDir, noPath, serverStopped, null);

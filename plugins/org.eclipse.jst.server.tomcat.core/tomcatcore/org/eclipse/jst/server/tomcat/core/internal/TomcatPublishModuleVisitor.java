@@ -56,6 +56,11 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
     protected final IPath baseDir;
     
     /**
+     * Tomcat version (from "server.info" property in org.apache.catalina.util.ServerInfo.properties).
+     */
+    protected final String tomcatVersion;
+    
+    /**
      * Server instance in which to modify the context
      */
     protected final ServerInstance serverInstance;
@@ -90,10 +95,15 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
     /**
      * Instantiate a new TomcatPublishModuleVisitor
      * 
-     * @param catalinaBase catalina base path
+     * @param baseDir catalina base path
+     * @param tomcatVersion tomcat version
+     * @param serverInstance ServerInstance containing server.xml contents
+     * @param sharedLoader string value for shared.loader catalina configuration property
+     * @param enableMetaInfResources flag to indicate if Servlet 3.0 "META-INF/resources" feature should be supported
      */
-    TomcatPublishModuleVisitor(IPath catalinaBase, ServerInstance serverInstance, String sharedLoader, boolean enableMetaInfResources) {
-        this.baseDir = catalinaBase;
+    TomcatPublishModuleVisitor(IPath baseDir, String tomcatVersion, ServerInstance serverInstance, String sharedLoader, boolean enableMetaInfResources) {
+        this.baseDir = baseDir;
+        this.tomcatVersion = tomcatVersion;
         this.serverInstance = serverInstance;
         this.sharedLoader = sharedLoader;
         this.enableMetaInfResources = enableMetaInfResources;
@@ -269,6 +279,7 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
 		// Build list of additional resource paths and check for additional jars
 		StringBuffer rpBuffer = new StringBuffer();
 
+		boolean isTomcat7 = tomcatVersion.startsWith("7.");
 		// Add WEB-INF/classes elements to both settings
 		for (Iterator iterator = virtualClassClasspathElements.iterator();
 				iterator.hasNext();) {
@@ -277,6 +288,13 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
 				vcBuffer.append(";");
 			}
 			vcBuffer.append(element);
+			if (isTomcat7) {
+				if (rpBuffer.length() > 0) {
+					rpBuffer.append(";");
+				}
+				// Add to resource paths too, so resource artifacts can be found
+				rpBuffer.append("/WEB-INF/classes").append("|").append(element);
+			}
         }
         if (vcBuffer.length() > 0 && virtualJarClasspathElements.size() > 0) {
         	vcBuffer.append(";");
