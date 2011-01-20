@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,23 +10,15 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.internal;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
 import java.text.DateFormat;
+import java.util.*;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.wst.server.core.IModuleArtifact;
-import org.eclipse.wst.server.core.IModuleType;
-import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.IRuntimeType;
-import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
-import org.eclipse.wst.server.core.IServerAttributes;
-import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.core.ServerCore;
-import org.osgi.framework.Bundle;
+import org.eclipse.wst.server.core.*;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleListener;
@@ -80,7 +72,7 @@ public class ServerPlugin extends Plugin {
 	private static SaveEditorPrompter saveEditorPrompter;
 	
 	// cached copy of isRunningInGUICache
-	public static boolean isRunningInGUICache = false;
+	public static Boolean isRunningInGUICache = null;
 
 	// registry listener
 	private static IRegistryChangeListener registryListener;
@@ -1245,18 +1237,20 @@ public class ServerPlugin extends Plugin {
 		return value;
 	}
 	
-	public static boolean isRunningGUIMode(){
-		// check only when the the plugin is not Bundle.ACTIVE
-		if (isRunningInGUICache == true){
-			return isRunningInGUICache;
-		}
+	public static boolean isRunningGUIMode() {
 
-		Bundle swtEclipseUIbndl = Platform.getBundle("org.eclipse.ui");  //running in GUI mode if it is active.
-		if(swtEclipseUIbndl != null){
-			isRunningInGUICache= (swtEclipseUIbndl.getState() == Bundle.ACTIVE);
-			return isRunningInGUICache; 
-		}			
-		return false;
+		if (isRunningInGUICache == null) {
+
+			// first check if the plugin extension is adopted (meaning that org.eclipse.wst.server.ui is present)
+			SaveEditorPrompter sep = getSaveEditorHelper();
+			if (sep == null)
+				// sep is null thus plugin doesn't exists, we must be running in HEADLESS
+				isRunningInGUICache = new Boolean(false);
+			else
+				// sep is valid, check if there is UI elements 
+				isRunningInGUICache = new Boolean(sep.isCurrentContextUI());
+		}		
+		return isRunningInGUICache.booleanValue();
 	}	
 
 
@@ -1277,18 +1271,21 @@ public class ServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "saveEditorPrompter");
 		
 		int size = cf.length;
-		try{
-			saveEditorPrompter = (SaveEditorPrompter)cf[0].createExecutableExtension("class");
-			Trace.trace(Trace.EXTENSION_POINT, "  Loaded saveEditorPrompter: " + cf[0].getAttribute("id"));
-		} catch (CoreException ce){
-			Trace.trace(Trace.SEVERE, "  Could not load saveEditorPrompter: " + cf[0].getAttribute("id"), ce);			
+
+		if (size > 0){
+			try{
+				saveEditorPrompter = (SaveEditorPrompter)cf[0].createExecutableExtension("class");
+				Trace.trace(Trace.EXTENSION_POINT, "  Loaded saveEditorPrompter: " + cf[0].getAttribute("id"));
+			} catch (CoreException ce){
+				Trace.trace(Trace.SEVERE, "  Could not load saveEditorPrompter: " + cf[0].getAttribute("id"), ce);
+			}
 		}
+		
 		if (size < 1) {
 			Trace.trace(Trace.WARNING, "  More than one .saveEditorPrompter found, only one loaded =>"+ cf[0].getAttribute("id"));
 		}
-		
+
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .saveEditorPrompter extension point -<-");
-		
 	}
 	
 	

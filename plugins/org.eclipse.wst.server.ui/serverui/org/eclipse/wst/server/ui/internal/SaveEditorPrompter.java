@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package org.eclipse.wst.server.ui.internal;
 
 import org.eclipse.debug.ui.DebugUITools;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
@@ -74,5 +75,17 @@ public class SaveEditorPrompter extends
 			cachedSaveBeforeLaunch = org.eclipse.jface.dialogs.MessageDialogWithToggle.PROMPT;
 		}
 		setDebugSaveBeforeLaunching(cachedSaveBeforeLaunch);
+	}
+	
+	public boolean isCurrentContextUI() {
+		try {
+			if (ErrorDialog.AUTOMATED_MODE)
+				return false;
+
+			return PlatformUI.isWorkbenchRunning() || PlatformUI.getWorkbench().isClosing(); 
+		} catch (Exception e) {
+			//Ignore, workbench must not be running
+			return false;
+		}
 	}
 }
