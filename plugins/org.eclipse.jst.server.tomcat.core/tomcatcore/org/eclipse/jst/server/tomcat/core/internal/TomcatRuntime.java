@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -132,10 +132,10 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 				found = true;
 		}
 		
-		// on Tomcat 5.5 and 6.0, the Eclipse JDT compiler is used for JSP's
+		// on Tomcat 5.5 and later, the Eclipse JDT compiler is used for JSP's
 		String id = getRuntime().getRuntimeType().getId();
 		if (!found) {
-			if (id != null && (id.indexOf("55") > 0 || id.indexOf("60") > 0))
+			if (id != null && (id.indexOf("55") > 0 || id.indexOf("60") > 0 || id.indexOf("70") > 0))
 				found = true;
 		}
 		
