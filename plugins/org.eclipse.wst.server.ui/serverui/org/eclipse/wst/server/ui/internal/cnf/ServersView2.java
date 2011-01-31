@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008,2010 IBM Corporation and others.
+ * Copyright (c) 2008,2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,8 +23,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IDecoratorManager;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
@@ -147,13 +145,7 @@ public class ServersView2 extends CommonNavigator {
 	 */
 	protected void refreshServer(final IServer server){
 		Trace.trace(Trace.FINEST, "Refreshing UI for server="+server);
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {		
-				IDecoratorManager dm = PlatformUI.getWorkbench().getDecoratorManager();
-				dm.update("org.eclipse.wst.server.ui.navigatorDecorator");
-				tableViewer.setSelection(tableViewer.getSelection());
-			}
-		});
+		ServerDecoratorsHandler.refresh(tableViewer);
 	}
 	
 	protected void refreshServerContent(final IServer server){
@@ -168,13 +160,7 @@ public class ServersView2 extends CommonNavigator {
 	
 	protected void refreshServerState(final IServer server){
 		Trace.trace(Trace.FINEST, "Refreshing UI for server="+server);
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {		
-				IDecoratorManager dm = PlatformUI.getWorkbench().getDecoratorManager();
-				dm.update("org.eclipse.wst.server.ui.navigatorDecorator");
-				tableViewer.setSelection(tableViewer.getSelection());
-			}
-		});
+		ServerDecoratorsHandler.refresh(tableViewer);
 	}
 	
 	protected void addListener(){
