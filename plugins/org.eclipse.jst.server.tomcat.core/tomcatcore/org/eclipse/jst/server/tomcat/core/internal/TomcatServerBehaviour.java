@@ -446,13 +446,13 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		IPath baseDir = getRuntimeBaseDirectory();
 		TomcatServer ts = getTomcatServer();
 		ITomcatVersionHandler tvh = getTomcatVersionHandler();
+		String serverTypeID = getServer().getServerType().getId();
+		String tomcatVersion = TomcatVersionHelper.getCatalinaVersion(getServer().getRuntime().getLocation(), serverTypeID);
 		// Include or remove loader jar depending on state of serving directly 
-		status = tvh.prepareForServingDirectly(baseDir, getTomcatServer());
+		status = tvh.prepareForServingDirectly(baseDir, getTomcatServer(), tomcatVersion);
 		if (status.isOK()) {
-			String serverTypeID = getServer().getServerType().getId();
 			// If serving modules directly, update server.xml accordingly (includes project context.xmls)
 			if (ts.isServeModulesWithoutPublish()) {
-				String tomcatVersion = TomcatVersionHelper.getCatalinaVersion(getServer().getRuntime().getLocation(), serverTypeID);
 				status = getTomcatConfiguration().updateContextsToServeDirectly(
 						baseDir, tomcatVersion, tvh.getSharedLoader(baseDir), monitor);
 			}

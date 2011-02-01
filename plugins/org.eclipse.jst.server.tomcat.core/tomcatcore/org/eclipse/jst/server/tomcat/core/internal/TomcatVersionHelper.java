@@ -753,8 +753,8 @@ public class TomcatVersionHelper {
 	 * @param serverId ID of the server receiving the jar
 	 * @return result of copy operation
 	 */
-	public static IStatus copyLoaderJar(IPath destDir, String serverId) {
-        String loaderJar = "/" + serverId + ".loader.jar";
+	public static IStatus copyLoaderJar(IPath destDir, String serverId, String tomcatVersion) {
+		String loaderJar = getLoaderJarFile(serverId, tomcatVersion);
         URL installURL = TomcatPlugin.getInstance().getBundle().getEntry(loaderJar);
         if (installURL == null) {
 			Trace.trace(Trace.SEVERE, "Loader jar not found for server ID " + serverId);
@@ -784,9 +784,16 @@ public class TomcatVersionHelper {
 	 * @param serverId ID of the server from which to delete the jar
 	 * @return result of copy operation
 	 */
-	public static IStatus removeLoaderJar(IPath destDir, String serverId) {
-        String loaderJar = "/" + serverId + ".loader.jar";
+	public static IStatus removeLoaderJar(IPath destDir, String serverId, String tomcatVersion) {
+		String loaderJar = getLoaderJarFile(serverId, tomcatVersion);
         File loaderFile = destDir.append(loaderJar).toFile();
+		// If Tomcat 7, see if jar to remove exists.  If not, ensure default jar is not present
+		if ("org.eclipse.jst.server.tomcat.runtime.70".equals(serverId) && tomcatVersion != null) {
+			if (!loaderFile.exists()) {
+				loaderJar = getLoaderJarFile(serverId, "");
+				loaderFile = destDir.append(loaderJar).toFile();
+			}
+		}
         // If loader jar exists but is not successfully deleted, return warning
         if (loaderFile.exists() && !loaderFile.delete())
         	return new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0,
@@ -794,6 +801,62 @@ public class TomcatVersionHelper {
 
         return Status.OK_STATUS;
 	}
+
+	public static String getLoaderJarFile(String serverId, String tomcatVersion) {
+		String loaderJar = "/" + serverId + ".loader.jar";
+		// If Tomcat 7.0, we need to determine the older jar should be used
+		if ("org.eclipse.jst.server.tomcat.runtime.70".equals(serverId) && tomcatVersion != null) {
+			int index = tomcatVersion.indexOf('.');
+			if (index >= 0 && tomcatVersion.length() > index + 1) {
+				String versionStr = tomcatVersion.substring(0, index);
+				try {
+					int version = Integer.parseInt(versionStr);
+					if (version == 7) {
+						int index2 = tomcatVersion.indexOf('.', index + 1);
+						if (index2 >= 0 && tomcatVersion.length() > index2 + 1) {
+							versionStr = tomcatVersion.substring(index + 1, index2);
+							try {
+								version = Integer.parseInt(versionStr);
+								if (version == 0) {
+									int index3 = tomcatVersion.indexOf('.', index2 + 1);
+									if (index3 >= 0 && tomcatVersion.length() > index3 + 1) {
+										versionStr = tomcatVersion.substring(index2 + 1, index3);
+									}
+									else {
+										versionStr = tomcatVersion.substring(index2 + 1);
+										for (int i = 0; i < versionStr.length(); i++) {
+											if (!Character.isDigit(versionStr.charAt(i))) {
+												versionStr = versionStr.substring(0, i);
+												break;
+											}
+										}
+									}
+									try {
+										version = Integer.parseInt(versionStr);
+										if (version <= 6) {
+											// Use the jar for Tomcat 7.0.6 or earlier.
+											loaderJar = "/" + serverId + "6.loader.jar";
+										}
+									}
+									catch (NumberFormatException e) {
+										// Ignore and copy default jar
+									}
+								}
+							}
+							catch (NumberFormatException e) {
+								// Ignore and copy default jar
+							}
+						}
+					}
+				}
+				catch (NumberFormatException e) {
+					// Ignore and copy default jar
+				}
+			}
+		}
+		return loaderJar;
+	}
+
 	/**
 	 * Updates the catalina.properties file to include a extra entry in the
 	 * specified loader property to pickup the loader jar.

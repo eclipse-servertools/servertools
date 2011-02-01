@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2007, 2010 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -130,14 +130,14 @@ public class Tomcat60Handler implements ITomcatVersionHandler {
 	/**
 	 * @see ITomcatVersionHandler#prepareForServingDirectly(IPath, TomcatServer)
 	 */
-	public IStatus prepareForServingDirectly(IPath baseDir, TomcatServer server) {
+	public IStatus prepareForServingDirectly(IPath baseDir, TomcatServer server, String tomcatVersion) {
 		IStatus status;
 		// If serving modules without publishing, loader jar is needed
 		// TODO Need to examine catalina.properties to ensure loader jar and catalina.properties are handled appropriately
 		if (server.isServeModulesWithoutPublish()) {
 			status = TomcatVersionHelper.copyLoaderJar(
 					getRuntimeBaseDirectory(server).append("lib"),
-					server.getServer().getRuntime().getRuntimeType().getId());
+					server.getServer().getRuntime().getRuntimeType().getId(), tomcatVersion);
 			// If copy successful and running a separate server instance, modify catalina.properties
 			if (status.isOK() && server.isTestEnvironment()) {
 				status = TomcatVersionHelper.updatePropertiesToServeDirectly(baseDir, "lib", "common");
@@ -147,7 +147,7 @@ public class Tomcat60Handler implements ITomcatVersionHandler {
 		else {
 			TomcatVersionHelper.removeLoaderJar(
 					getRuntimeBaseDirectory(server).append("lib"),
-					server.getServer().getRuntime().getRuntimeType().getId());
+					server.getServer().getRuntime().getRuntimeType().getId(), tomcatVersion);
 			// TODO Decide what to do with removal warning, maybe nothing
 			status = Status.OK_STATUS;
 		}
