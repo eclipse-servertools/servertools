@@ -136,13 +136,13 @@ public class Tomcat50Handler implements ITomcatVersionHandler {
 	/**
 	 * @see ITomcatVersionHandler#prepareForServingDirectly(IPath, TomcatServer)
 	 */
-	public IStatus prepareForServingDirectly(IPath baseDir, TomcatServer server) {
+	public IStatus prepareForServingDirectly(IPath baseDir, TomcatServer server, String tomcatVersion) {
 		IStatus status;
 		// If serving modules without publishing, loader jar is needed
 		if (server.isServeModulesWithoutPublish()) {
 			status = TomcatVersionHelper.copyLoaderJar(
 					getRuntimeBaseDirectory(server).append("server/lib"),
-					server.getServer().getRuntime().getRuntimeType().getId());
+					server.getServer().getRuntime().getRuntimeType().getId(), tomcatVersion);
 			// If copy successful and running a separate server instance, modify catalina.properties
 			if (status.isOK() && server.isTestEnvironment()) {
 				status = TomcatVersionHelper.updatePropertiesToServeDirectly(baseDir, "server/lib", "server");
@@ -152,7 +152,7 @@ public class Tomcat50Handler implements ITomcatVersionHandler {
 		else {
 			TomcatVersionHelper.removeLoaderJar(
 					getRuntimeBaseDirectory(server).append("server/lib"),
-					server.getServer().getRuntime().getRuntimeType().getId());
+					server.getServer().getRuntime().getRuntimeType().getId(), tomcatVersion);
 			// TODO Decide what to do with removal warning, maybe nothing
 			status = Status.OK_STATUS;
 		}

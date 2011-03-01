@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -136,7 +136,7 @@ public class Tomcat41Handler implements ITomcatVersionHandler {
 	/**
 	 * @see ITomcatVersionHandler#prepareForServingDirectly(IPath, TomcatServer)
 	 */
-	public IStatus prepareForServingDirectly(IPath baseDir, TomcatServer server) {
+	public IStatus prepareForServingDirectly(IPath baseDir, TomcatServer server, String tomcatVersion) {
 		if (server.isServeModulesWithoutPublish())
 			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorNoPublishNotSupported, null);
 		return Status.OK_STATUS;

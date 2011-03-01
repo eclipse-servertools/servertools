@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -132,7 +132,7 @@ public interface ITomcatVersionHandler {
 	 * if serving directly is enabled
 	 * @return status result of the operation
 	 */
-	public IStatus prepareForServingDirectly(IPath baseDir, TomcatServer server);
+	public IStatus prepareForServingDirectly(IPath baseDir, TomcatServer server, String tomcatVersion);
 	
 	/**
 	 * Gets the name of the "shared" loader to use with serving
