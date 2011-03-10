@@ -14,12 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.*;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -34,11 +29,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
@@ -54,17 +45,18 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * The preference page that holds server runtimes.
  */
-public class RuntimePreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+public class RuntimePreferencePage extends PreferencePage implements IWorkbenchPreferencePage, IRuntimeLifecycleListener {
 	protected Button edit;
 	protected Button remove;
 	protected Label pathLabel;
-
+	RuntimeComposite runtimeComp;
 	/**
 	 * RuntimePreferencesPage constructor comment.
 	 */
 	public RuntimePreferencePage() {
 		super();
 		noDefaultAndApplyButton();
+		ServerCore.addRuntimeLifecycleListener(this);
 	}
 	
 	/**
@@ -101,7 +93,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		label.setLayoutData(data);
 		label.setText(Messages.preferenceRuntimesTable);
 		
-		final RuntimeComposite runtimeComp = new RuntimeComposite(composite, SWT.NONE, new RuntimeComposite.RuntimeSelectionListener() {
+		runtimeComp = new RuntimeComposite(composite, SWT.NONE, new RuntimeComposite.RuntimeSelectionListener() {
 			public void runtimeSelected(IRuntime runtime) {
 				if (runtime == null) {
 					edit.setEnabled(false);
@@ -146,11 +138,12 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		buttonComp.setLayoutData(data);
 		
 		Button add = SWTUtil.createButton(buttonComp, Messages.add);
+		final RuntimeComposite runtimeComp2 = runtimeComp;
 		add.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				if (showWizard(null) == Window.CANCEL)
 					return;
-				runtimeComp.refresh();
+				runtimeComp2.refresh();
 			}
 		});
 		
@@ -158,12 +151,12 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		edit.setEnabled(false);
 		edit.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				IRuntime runtime = runtimeComp.getSelectedRuntime();
+				IRuntime runtime = runtimeComp2.getSelectedRuntime();
 				if (runtime != null) {
 					IRuntimeWorkingCopy runtimeWorkingCopy = runtime.createWorkingCopy();
 					if (showWizard(runtimeWorkingCopy) != Window.CANCEL) {
 						try {
-							runtimeComp.refresh(runtime);
+							runtimeComp2.refresh(runtime);
 						} catch (Exception ex) {
 							// ignore
 						}
@@ -178,7 +171,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 			public void widgetSelected(SelectionEvent e) {
 				IRuntime runtime = runtimeComp.getSelectedRuntime();
 				if (removeRuntime(runtime))
-					runtimeComp.remove(runtime);
+					runtimeComp2.remove(runtime);
 			}
 		});
 		
@@ -420,5 +413,37 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		super.setVisible(visible);
 		if (visible)
 			setTitle(Messages.preferenceRuntimesTitleLong);
+	}
+	
+	@Override
+	public void dispose() {
+		ServerCore.removeRuntimeLifecycleListener(this);
+		super.dispose();
+	}
+
+	public void runtimeChanged(final IRuntime runtime) {
+		final RuntimeComposite runtimeComp2 = this.runtimeComp;
+		Display.getDefault().asyncExec(new Runnable(){
+			public void run(){
+				runtimeComp2.refresh(runtime);
+			}
+		});
+	}
+
+	public void runtimeAdded(final IRuntime runtime) {
+		final RuntimeComposite runtimeComp2 = this.runtimeComp;
+		Display.getDefault().asyncExec(new Runnable(){
+			public void run(){
+				runtimeComp2.add(runtime);
+			}
+		});
+	}
+	public void runtimeRemoved(final IRuntime runtime) {
+		final RuntimeComposite runtimeComp2 = this.runtimeComp;
+		Display.getDefault().asyncExec(new Runnable(){
+			public void run(){
+				runtimeComp2.remove(runtime);
+			}
+		});
 	}
 }
