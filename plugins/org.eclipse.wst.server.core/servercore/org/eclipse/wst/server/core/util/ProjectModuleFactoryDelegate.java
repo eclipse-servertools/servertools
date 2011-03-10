@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,7 +63,9 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 				return m;
 			}
 		} catch (Throwable t) {
-			Trace.trace(Trace.SEVERE, "Error creating module", t);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error creating module", t);
+			}
 		}
 		return new IModule[0];
 	}
@@ -92,13 +94,19 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 							if (modules2 != null)
 								modules.put(projects[i], modules2);
 						} catch (Throwable t) {
-							Trace.trace(Trace.SEVERE, "Error creating module for " + projects[i].getName(), t);
+							if (Trace.SEVERE) {
+								Trace.trace(Trace.STRING_SEVERE,
+										"Error creating module for "
+												+ projects[i].getName(), t);
+							}
 						}
 					}
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error caching modules", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error caching modules", e);
+			}
 		}
 	}
 
@@ -283,7 +291,10 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.FINER, "Could not find " + id + ". Reverting to default behaviour", e);
+			if (Trace.FINER) {
+				Trace.trace(Trace.STRING_FINER, "Could not find " + id
+						+ ". Reverting to default behaviour", e);
+			}
 		}
 
 		// otherwise default to searching all modules

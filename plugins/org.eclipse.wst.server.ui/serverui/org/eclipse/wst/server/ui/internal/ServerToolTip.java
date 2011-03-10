@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2007, 2010 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -233,7 +233,9 @@ public class ServerToolTip extends ToolTip {
 	}
 
 	private void loadExtensions() {
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading serverToolTip extension point ->-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "->- Loading serverToolTip extension point ->-");
+		}
 		
 		// search for extension points 
 		IExtensionRegistry reg = Platform.getExtensionRegistry();
@@ -257,15 +259,22 @@ public class ServerToolTip extends ToolTip {
 						
 						listOfProviders.add(exTooltip);
 						toolTipProviders.put(serverType.getId(), listOfProviders);
-						Trace.trace(Trace.EXTENSION_POINT, "  Loaded serverToolTip: " + exElement.getAttribute("id")
-								+ " for server type: " + serverType.getId());
+						if (Trace.EXTENSION_POINT) {
+							Trace.trace(Trace.STRING_EXTENSION_POINT,
+									"  Loaded serverToolTip: " + exElement.getAttribute("id") + " for server type: "
+											+ serverType.getId());
+						}
 					}
 				}
 			} catch (CoreException e) {
-				Trace.trace(Trace.SEVERE, "Tooltip failed to load" + exElement.toString(), e);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "Tooltip failed to load" + exElement.toString(), e);
+				}
 			}
 		}
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading serverToolTip extension point -<-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "-<- Done loading serverToolTip extension point -<-");
+		}
 	}
 
 //  read the createFocusedTooltip method for information on why this is commented out

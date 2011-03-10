@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -77,7 +77,9 @@ public class ServerLabelProvider implements ILabelProvider, IColorProvider, IWor
 			try {
 				srl[i].labelProviderChanged(event);
 			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "  Error firing label change event to " + srl[i], e);
+				if (Trace.WARNING) {
+					Trace.trace(Trace.STRING_WARNING, "  Error firing label change event to " + srl[i], e);
+				}
 			}
 		}
 	}
@@ -138,7 +140,9 @@ public class ServerLabelProvider implements ILabelProvider, IColorProvider, IWor
 				return ((IWorkbenchAdapter) element).getImageDescriptor(null);
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not get image descriptor", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not get image descriptor", e);
+			}
 		}
 		return null;
 	}
@@ -202,7 +206,9 @@ public class ServerLabelProvider implements ILabelProvider, IColorProvider, IWor
 				return decorate(getModuleImage(mt.getId()), ms);
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not get image descriptor", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not get image descriptor", e);
+			}
 		}
 		return null;
 	}

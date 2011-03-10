@@ -175,11 +175,17 @@ public class InstallableRuntime implements IInstallableRuntime {
 			URL siteURL = new URL(fromSite);
 			return SiteManager.getSite(siteURL, monitor);
 		} catch (MalformedURLException e) {
-			Trace.trace(Trace.WARNING, "Could not parse site", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Could not parse site", e);
+			}
 		} catch (CoreException e) {
-			Trace.trace(Trace.WARNING, "Could not parse site", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Could not parse site", e);
+			}
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not parse site", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Could not parse site", e);
+			}
 		}
 		return null;
 	}
@@ -190,10 +196,14 @@ public class InstallableRuntime implements IInstallableRuntime {
 				return SiteManager.getSite(fromSiteURL, monitor);
 			}
 		} catch (CoreException e) {
-			Trace.trace(Trace.WARNING, "Could not parse site", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Could not parse site", e);
+			}
 			throw new IOException(e.getMessage());
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not parse site", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Could not parse site", e);
+			}
 			throw new IOException(e.getMessage());
 		}
 	}
@@ -220,7 +230,10 @@ public class InstallableRuntime implements IInstallableRuntime {
 				if (urlEntries.length > mirror)
 					return urlEntries[mirror].getURL().toExternalForm();
 			} catch (CoreException e) {
-				Trace.trace(Trace.WARNING, "Could not find mirror site", e);
+				if (Trace.WARNING) {
+					Trace.trace(Trace.STRING_WARNING,
+							"Could not find mirror site", e);
+				}
 			}
 		}
 		return null;
@@ -267,7 +280,10 @@ public class InstallableRuntime implements IInstallableRuntime {
 					if (fromSite == null)
 						complete = true;
 				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error installing feature", e);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE,
+								"Error installing feature", e);
+					}
 					throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
 							NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
 				}
@@ -290,7 +306,9 @@ public class InstallableRuntime implements IInstallableRuntime {
 			InputStream in = url.openStream();
 			unzip(in, path, monitor);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error unzipping runtime", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error unzipping runtime", e);
+			}
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
 					NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
 		}

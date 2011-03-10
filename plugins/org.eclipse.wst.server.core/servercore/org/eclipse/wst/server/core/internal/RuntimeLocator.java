@@ -52,7 +52,10 @@ public class RuntimeLocator implements IRuntimeLocator {
 			try {
 				delegate = (RuntimeLocatorDelegate) element.createExecutableExtension("class");
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE,
+							"Could not create delegate " + toString(), t);
+				}
 			}
 		}
 		return delegate;
@@ -70,7 +73,10 @@ public class RuntimeLocator implements IRuntimeLocator {
 				}
 			}, monitor);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate "
+						+ toString(), e);
+			}
 		}
 	}
 

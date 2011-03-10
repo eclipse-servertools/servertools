@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,8 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.osgi.service.debug.DebugOptions;
+import org.eclipse.osgi.service.debug.DebugOptionsListener;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -44,6 +46,7 @@ import org.eclipse.wst.server.ui.internal.wizard.fragment.*;
 import org.eclipse.wst.server.ui.wizard.ServerCreationWizardPageExtension;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 import org.osgi.framework.BundleContext;
+
 /**
  * The server UI plugin class.
  */
@@ -215,7 +218,9 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	 * @see Plugin#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext context) throws Exception {
-		Trace.trace(Trace.CONFIG, "----->----- Server UI plugin start ----->-----");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "----->----- Server UI plugin start ----->-----");
+		}
 		super.start(context);
 		
 		ServerCore.addServerLifecycleListener(serverLifecycleListener);
@@ -225,13 +230,20 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		
 		InitializeJob job = new InitializeJob();
 		job.schedule();
+
+		// register the debug options listener
+		final Hashtable<String, String> props = new Hashtable<String, String>(4);
+		props.put(DebugOptions.LISTENER_SYMBOLICNAME, ServerUIPlugin.PLUGIN_ID);
+		context.registerService(DebugOptionsListener.class.getName(), new Trace(), props);
 	}
 
 	/**
 	 * @see Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
-		Trace.trace(Trace.CONFIG, "-----<----- Server UI plugin stop -----<-----");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "-----<----- Server UI plugin stop -----<-----");
+		}
 		super.stop(context);
 		
 		if (registryListener != null) {
@@ -424,7 +436,9 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 			IServerEditorInput input = new ServerEditorInput(serverId);
 			page.openEditor(input, IServerEditorInput.EDITOR_ID);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error opening server editor", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error opening server editor", e);
+			}
 		}
 	}
 
@@ -487,7 +501,9 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 					IWorkbench workbench = ServerUIPlugin.getInstance().getWorkbench();
 					IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
 					if (workbenchWindow == null) {
-						Trace.trace(Trace.FINER, "No active workbench window");
+						if (Trace.FINER) {
+							Trace.trace(Trace.STRING_FINER, "No active workbench window");
+						}
 						return;
 					}
 					
@@ -505,7 +521,9 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 						}
 					}
 				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error opening Servers view", e);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE, "Error opening Servers view", e);
+					}
 				}
 			}
 		});
@@ -675,7 +693,9 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	private static synchronized void loadWizardFragments() {
 		if (wizardFragments != null)
 			return;
-		Trace.trace(Trace.CONFIG, "->- Loading .wizardFragments extension point ->-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "->- Loading .wizardFragments extension point ->-");
+		}
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, EXTENSION_WIZARD_FRAGMENTS);
 		
@@ -684,7 +704,9 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		addRegistryListener();
 		wizardFragments = map;
 		
-		Trace.trace(Trace.CONFIG, "-<- Done loading .wizardFragments extension point -<-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "-<- Done loading .wizardFragments extension point -<-");
+		}
 	}
 
 	/**
@@ -698,9 +720,13 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 				int size = ids.length;
 				for (int j = 0; j < size; j++)
 					map.put(ids[j], new WizardFragmentData(id, cf[i]));
-				Trace.trace(Trace.CONFIG, "  Loaded wizardFragment: " + id);
+				if (Trace.CONFIG) {
+					Trace.trace(Trace.STRING_CONFIG, "  Loaded wizardFragment: " + id);
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load wizardFragment: " + cf[i].getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "  Could not load wizardFragment: " + cf[i].getAttribute("id"), t);
+				}
 			}
 		}
 	}
@@ -767,7 +793,9 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		if (serverCreationWizardPageExtensions != null)
 			return;
 		
-		Trace.trace(Trace.CONFIG, "->- Loading .serverCreationWizardPageExtension extension point ->-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "->- Loading .serverCreationWizardPageExtension extension point ->-");
+		}
 		serverCreationWizardPageExtensions = new ArrayList<ServerCreationWizardPageExtension>();
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "serverCreationWizardPageExtension");
@@ -777,16 +805,25 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 				// Create the class here already since the usage of the server wizard page will need to use all the extensions
 				// in all the calls.  Therefore, there is no need for lazy loading here.
 				ServerCreationWizardPageExtension curExtension = (ServerCreationWizardPageExtension)curConfigElement.createExecutableExtension("class");
-				Trace.trace(Trace.CONFIG, "  Loaded .serverCreationWizardPageExtension: " + cf[0].getAttribute("id") + ", loaded class=" + curExtension);
+				if (Trace.CONFIG) {
+					Trace.trace(Trace.STRING_CONFIG,
+							"  Loaded .serverCreationWizardPageExtension: " + cf[0].getAttribute("id")
+									+ ", loaded class=" + curExtension);
+				}
 				if (curExtension != null)
 					serverCreationWizardPageExtensions.add(curExtension);
 
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load .serverCreationWizardPageExtension: " + cf[0].getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE,
+							"  Could not load .serverCreationWizardPageExtension: " + cf[0].getAttribute("id"), t);
+				}
 			}
 		}
 		
-		Trace.trace(Trace.CONFIG, "-<- Done loading .serverCreationWizardPageExtension extension point -<-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "-<- Done loading .serverCreationWizardPageExtension extension point -<-");
+		}
 	}
 
 	/**
@@ -796,7 +833,9 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		if (serverEditorOverviewPageModifier != null)
 			return;
 		
-		Trace.trace(Trace.CONFIG, "->- Loading .serverEditorOverviewPageModifier extension point ->-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "->- Loading .serverEditorOverviewPageModifier extension point ->-");
+		}
 		serverEditorOverviewPageModifier = new ArrayList<ServerEditorOverviewPageModifier>();
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "serverEditorOverviewPageModifier");
@@ -804,16 +843,25 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		for (IConfigurationElement curConfigElement: cf) {
 			try {
 				ServerEditorOverviewPageModifier curExtension = (ServerEditorOverviewPageModifier)curConfigElement.createExecutableExtension("class");
-				Trace.trace(Trace.CONFIG, "  Loaded .serverEditorOverviewPageModifier: " + cf[0].getAttribute("id") + ", loaded class=" + curExtension);
+				if (Trace.CONFIG) {
+					Trace.trace(Trace.STRING_CONFIG,
+							"  Loaded .serverEditorOverviewPageModifier: " + cf[0].getAttribute("id")
+									+ ", loaded class=" + curExtension);
+				}
 				if (curExtension != null)
 					serverEditorOverviewPageModifier.add(curExtension);
 
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load .serverEditorOverviewPageModifier: " + cf[0].getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE,
+							"  Could not load .serverEditorOverviewPageModifier: " + cf[0].getAttribute("id"), t);
+				}
 			}
 		}
 		
-		Trace.trace(Trace.CONFIG, "-<- Done loading .serverEditorOverviewPageModifier extension point -<-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "-<- Done loading .serverEditorOverviewPageModifier extension point -<-");
+		}
 	}
 	
 	/**
@@ -824,7 +872,9 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		if (serverLabelProviders != null)
 			return;
 		
-		Trace.trace(Trace.CONFIG, "->- Loading .serverLabelProvider extension point ->-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "->- Loading .serverLabelProvider extension point ->-");
+		}
 		serverLabelProviders = new HashMap<String,AbstractServerLabelProvider>();
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "serverLabelProvider");
@@ -835,22 +885,31 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 			for (String exServerType : exServerTypes) {
 				try {
 					if (serverLabelProviders.containsKey(exServerType)){
-						// if a key is already bound for the same serverType, it means that more than one adopters is providing
-						// a ServerLabelProvider, since we don't know which one to use. We will default back to the WTP behaviour
-						Trace.trace(Trace.WARNING, "More that one .serverLabelProvider found - ignoring");
+						if (Trace.WARNING) {
+							Trace.trace(Trace.STRING_WARNING, "More that one .serverLabelProvider found - ignoring");
+						}
 						serverLabelProviders.put(exServerType, defaultServerLabelProvider);
 					}
 					else{
 						AbstractServerLabelProvider exClass = (AbstractServerLabelProvider)curConfigElement.createExecutableExtension("class");
-						Trace.trace(Trace.CONFIG, "  Loaded .serverLabelProvider: " + curConfigElement.getAttribute("id") + ", loaded class=" + exClass);
+						if (Trace.CONFIG) {
+							Trace.trace(Trace.STRING_CONFIG,
+									"  Loaded .serverLabelProvider: " + curConfigElement.getAttribute("id")
+											+ ", loaded class=" + exClass);
+						}
 						serverLabelProviders.put(exServerType, exClass); 
 					}
 				} catch (Throwable t) {
-					Trace.trace(Trace.SEVERE, "  Could not load .serverLabelProvider: " + curConfigElement.getAttribute("id"), t);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE,
+								"  Could not load .serverLabelProvider: " + curConfigElement.getAttribute("id"), t);
+					}
 				}
 			}
 		}		
-		Trace.trace(Trace.CONFIG, "-<- Done loading .serverLabelProvider extension point -<-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "-<- Done loading .serverLabelProvider extension point -<-");
+		}
 	}	
 	
 	/**
@@ -860,26 +919,38 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		if (selectionProvider != null)
 			return;
 		
-		Trace.trace(Trace.CONFIG, "->- Loading .initialSelectionProvider extension point ->-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "->- Loading .initialSelectionProvider extension point ->-");
+		}
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "initialSelectionProvider");
 		
 		if (cf.length == 1) {
 			try {
 				selectionProvider = (InitialSelectionProvider) cf[0].createExecutableExtension("class");
-				Trace.trace(Trace.CONFIG, "  Loaded initialSelectionProvider: " + cf[0].getAttribute("id"));
+				if (Trace.CONFIG) {
+					Trace.trace(Trace.STRING_CONFIG, "  Loaded initialSelectionProvider: " + cf[0].getAttribute("id"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load initialSelectionProvider: " + cf[0].getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE,
+							"  Could not load initialSelectionProvider: " + cf[0].getAttribute("id"), t);
+				}
 			}
 		} else if (cf.length > 1)
-			Trace.trace(Trace.WARNING, "More that one initial selection provider found - ignoring");
-		else
-			Trace.trace(Trace.CONFIG, "No initial selection provider found");
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "More that one initial selection provider found - ignoring");
+			}
+		else if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "No initial selection provider found");
+		}
 		
 		if (selectionProvider == null)
 			selectionProvider = new InitialSelectionProvider();
 		
-		Trace.trace(Trace.CONFIG, "-<- Done loading .initialSelectionProvider extension point -<-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "-<- Done loading .initialSelectionProvider extension point -<-");
+		}
 	}
 
 	protected static WizardFragment getWizardFragment(WizardFragmentData fragment) {
@@ -890,9 +961,16 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 			try {
 				long time = System.currentTimeMillis();
 				fragment.fragment = (WizardFragment) fragment.ce.createExecutableExtension("class");
-				Trace.trace(Trace.PERFORMANCE, "ServerUIPlugin.getWizardFragment(): <" + (System.currentTimeMillis() - time) + "> " + fragment.ce.getAttribute("id"));
+				if (Trace.PERFORMANCE) {
+					Trace.trace(Trace.STRING_PERFORMANCE,
+							"ServerUIPlugin.getWizardFragment(): <" + (System.currentTimeMillis() - time) + "> "
+									+ fragment.ce.getAttribute("id"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "Could not create wizardFragment: " + fragment.ce.getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE,
+							"Could not create wizardFragment: " + fragment.ce.getAttribute("id"), t);
+				}
 			}
 		}
 		return fragment.fragment;
@@ -991,7 +1069,9 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		if (clients != null) {
 			int size = clients.length;
 			for (int i = 0; i < size; i++) {
-				Trace.trace(Trace.FINEST, "client= " + clients[i]);
+				if (Trace.FINEST) {
+					Trace.trace(Trace.STRING_FINEST, "client= " + clients[i]);
+				}
 				if (clients[i].supports(server, launchable, launchMode))
 					list.add(clients[i]);
 			}
@@ -1011,13 +1091,17 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 				ILaunchableAdapter adapter = adapters[j];
 				try {
 					Object launchable2 = adapter.getLaunchable(server, moduleArtifact);
-					Trace.trace(Trace.FINEST, "adapter= " + adapter + ", launchable= " + launchable2);
+					if (Trace.FINEST) {
+						Trace.trace(Trace.STRING_FINEST, "adapter= " + adapter + ", launchable= " + launchable2);
+					}
 					if (launchable2 != null)
 						return new Object[] { adapter, launchable2 };
 				} catch (CoreException ce) {
 					lastStatus = ce.getStatus();
 				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error in launchable adapter", e);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE, "Error in launchable adapter", e);
+					}
 				}
 			}
 			if (lastStatus != null)

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -57,9 +57,15 @@ public class PublishTask implements IPublishTask {
 			try {
 				long time = System.currentTimeMillis();
 				delegate = (PublishTaskDelegate) element.createExecutableExtension("class");
-				Trace.trace(Trace.PERFORMANCE, "PublishTask.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getId());
+				if (Trace.PERFORMANCE) {
+					Trace.trace(Trace.STRING_PERFORMANCE, "PublishTask.getDelegate(): <"
+							+ (System.currentTimeMillis() - time) + "> " + getId());
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString(), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE,
+							"Could not create delegate" + toString(), t);
+				}
 			}
 		}
 		return delegate;
@@ -70,12 +76,17 @@ public class PublishTask implements IPublishTask {
 	 */
 	public PublishOperation[] getTasks(IServer server, List modules) {
 		try {
-			Trace.trace(Trace.FINEST, "Task.init " + this);
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "Task.init " + this);
+			}
 			PublishOperation[] po = getDelegate().getTasks(server, modules);
 			if (po != null)
 				return po;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate "
+						+ toString(), e);
+			}
 		}
 		return new PublishOperation[0];
 	}
@@ -85,12 +96,17 @@ public class PublishTask implements IPublishTask {
 	 */
 	public PublishOperation[] getTasks(IServer server, int kind, List modules, List kindList) {
 		try {
-			Trace.trace(Trace.FINEST, "Task.init " + this);
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "Task.init " + this);
+			}
 			PublishOperation[] po = getDelegate().getTasks(server, kind, modules, kindList);
 			if (po != null)
 				return po;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate "
+						+ toString(), e);
+			}
 		}
 		return new PublishOperation[0];
 	}

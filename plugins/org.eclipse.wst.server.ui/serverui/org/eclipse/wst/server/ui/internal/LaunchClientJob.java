@@ -41,7 +41,9 @@ public class LaunchClientJob extends ChainedJob {
 	 * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	protected IStatus run(IProgressMonitor monitor) {
-		Trace.trace(Trace.FINER, "LaunchClient job");
+		if (Trace.FINER) {
+			Trace.trace(Trace.STRING_FINER, "LaunchClient job");
+		}
 
 		// wait for up to 5 minutes
 		final Server server = (Server) getServer();
@@ -60,7 +62,9 @@ public class LaunchClientJob extends ChainedJob {
 			state = server.getModuleState(module);
 		}
 		
-		Trace.trace(Trace.FINER, "LaunchClient job 2 " + state);
+		if (Trace.FINER) {
+			Trace.trace(Trace.STRING_FINER, "LaunchClient job 2 " + state);
+		}
 		
 		if (monitor.isCanceled())
 			return Status.CANCEL_STATUS;
@@ -68,7 +72,9 @@ public class LaunchClientJob extends ChainedJob {
 		if (state == IServer.STATE_STARTING)
 			return Status.OK_STATUS;
 		
-		Trace.trace(Trace.FINER, "LaunchClient job 3");
+		if (Trace.FINER) {
+			Trace.trace(Trace.STRING_FINER, "LaunchClient job 3");
+		}
 
 		// job return status
 		final IStatus[] resultingStatus = new IStatus[] { Status.OK_STATUS };
@@ -89,19 +95,25 @@ public class LaunchClientJob extends ChainedJob {
 		if (launchable[0] != null) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					Trace.trace(Trace.FINEST, "Attempting to load client: " + client.getId());
+					if (Trace.FINEST) {
+						Trace.trace(Trace.STRING_FINEST, "Attempting to load client: " + client.getId());
+					}
 					try {
 						resultingStatus[0] = client.launch(server, launchable[0], launchMode, server.getLaunch());
 						if (resultingStatus[0] != null && resultingStatus[0].getSeverity() == IStatus.ERROR)
 							EclipseUtil.openError(null, resultingStatus[0]);
 					}
 					catch (Exception e) {
-						Trace.trace(Trace.SEVERE, "Server client failed", e);
+						if (Trace.SEVERE) {
+							Trace.trace(Trace.STRING_SEVERE, "Server client failed", e);
+						}
 					}
 				}
 			});
 		}
-		Trace.trace(Trace.FINER, "LaunchClient job 4");
+		if (Trace.FINER) {
+			Trace.trace(Trace.STRING_FINER, "LaunchClient job 4");
+		}
 		return resultingStatus[0];
 	}
 }

@@ -144,12 +144,16 @@ public class ServersView2 extends CommonNavigator {
 	 * @param server
 	 */
 	protected void refreshServer(final IServer server){
-		Trace.trace(Trace.FINEST, "Refreshing UI for server="+server);
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Refreshing UI for server=" + server);
+		}
 		ServerDecoratorsHandler.refresh(tableViewer);
 	}
 	
 	protected void refreshServerContent(final IServer server){
-		Trace.trace(Trace.FINEST, "Refreshing Content for server="+server);
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Refreshing Content for server=" + server);
+		}
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				if(!tableViewer.getTree().isDisposed())
@@ -159,7 +163,9 @@ public class ServersView2 extends CommonNavigator {
 	}
 	
 	protected void refreshServerState(final IServer server){
-		Trace.trace(Trace.FINEST, "Refreshing UI for server="+server);
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Refreshing UI for server=" + server);
+		}
 		ServerDecoratorsHandler.refresh(tableViewer);
 	}
 	
@@ -318,7 +324,9 @@ public class ServersView2 extends CommonNavigator {
 							}
 						}
 					} catch (Exception e) {
-						Trace.trace(Trace.FINEST, "Error in Servers view animation", e);
+						if (Trace.FINEST) {
+							Trace.trace(Trace.STRING_FINEST, "Error in Servers view animation", e);
+						}
 					}
 					display.timerExec(SLEEP, animator[0]);
 				}

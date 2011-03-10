@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -158,7 +158,10 @@ public class ServerMonitorManager implements IServerMonitorManager {
 					newPort = monitor.startMonitoring(server, port, newPort);
 					started = true;
 				} catch (CoreException e) {
-					Trace.trace(Trace.WARNING, "Could not restart server monitor", e);
+					if (Trace.WARNING) {
+						Trace.trace(Trace.STRING_WARNING,
+								"Could not restart server monitor", e);
+					}
 				}
 			}
 		}
@@ -257,7 +260,9 @@ public class ServerMonitorManager implements IServerMonitorManager {
 			if (port.isStarted())
 				monitor.stopMonitoring(port.getServer(), port.getServerPort());
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not remove monitor", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not remove monitor", e);
+			}
 		}
 	}
 
@@ -340,12 +345,16 @@ public class ServerMonitorManager implements IServerMonitorManager {
 			
 			memento.saveToFile(filename);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error saving monitor info", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error saving monitor info", e);
+			}
 		}
 	}
 	
 	protected void loadMonitors() {
-		Trace.trace(Trace.FINEST, "Loading monitor info");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Loading monitor info");
+		}
 		String filename = ServerPlugin.getInstance().getStateLocation().append(MONITOR_DATA_FILE).toOSString();
 		
 		try {
@@ -359,11 +368,16 @@ public class ServerMonitorManager implements IServerMonitorManager {
 					MonitoredPort mp = new MonitoredPort(children[i], null);
 					ports.add(mp);
 				} catch (Exception e) {
-					Trace.trace(Trace.WARNING, "Could not load monitor: " + e);
+					if (Trace.WARNING) {
+						Trace.trace(Trace.STRING_WARNING, "Could not load monitor: " + e);
+					}
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not load monitor info", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING,
+						"Could not load monitor info", e);
+			}
 		}
 	}
 }

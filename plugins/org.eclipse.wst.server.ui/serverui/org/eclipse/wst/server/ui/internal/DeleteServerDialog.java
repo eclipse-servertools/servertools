@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -173,7 +173,9 @@ public class DeleteServerDialog extends MessageDialog {
 										configs[i].delete(true, true, monitor);
 								}
 							} catch (Exception e) {
-								Trace.trace(Trace.SEVERE, "Error while deleting resources", e);
+								if (Trace.SEVERE) {
+									Trace.trace(Trace.STRING_SEVERE, "Error while deleting resources", e);
+								}
 								return new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, 0, e.getMessage(), e); 
 							}
 							
@@ -243,7 +245,9 @@ public class DeleteServerDialog extends MessageDialog {
 						Thread.sleep(200);
 					}
 				} catch (InterruptedException e) {
-					Trace.trace(Trace.WARNING, "Interrupted while waiting for servers stop");
+					if (Trace.WARNING) {
+						Trace.trace(Trace.STRING_WARNING, "Interrupted while waiting for servers stop");
+					}
 				}
 			}
 		}

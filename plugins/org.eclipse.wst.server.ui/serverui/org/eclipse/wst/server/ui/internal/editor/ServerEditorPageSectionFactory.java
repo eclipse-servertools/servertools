@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -130,7 +130,9 @@ public class ServerEditorPageSectionFactory implements IServerEditorPageSectionF
 		try {
 			return isEnabled(server);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate", e);
+			}
 			return false;
 		}
 	}
@@ -142,7 +144,9 @@ public class ServerEditorPageSectionFactory implements IServerEditorPageSectionF
 		try {
 			return (ServerEditorSection) element.createExecutableExtension("class");
 		} catch (Throwable t) {
-			Trace.trace(Trace.SEVERE, "Could not create server editor section", t);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not create server editor section", t);
+			}
 			return null;
 		}
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2009 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -146,7 +146,9 @@ public class GlobalCommandManager {
 	 * @param id an id
 	 */
 	public void getCommandManager(String id) {
-		Trace.trace(Trace.FINEST, "Getting command manager for " + id);
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Getting command manager for " + id);
+		}
 		try {
 			CommandManagerInfo info = commandManagers.get(id);
 			if (info != null) {
@@ -154,9 +156,13 @@ public class GlobalCommandManager {
 				return;
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not find existing command manager", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Could not find existing command manager", e);
+			}
 		}
-		Trace.trace(Trace.FINEST, "Creating new command manager for " + id);
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Creating new command manager for " + id);
+		}
 		try {
 			CommandManagerInfo info = new CommandManagerInfo();
 			info.count = 1;
@@ -171,7 +177,9 @@ public class GlobalCommandManager {
 			commandManagers.put(id, info);
 			updateTimestamps(id);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not obtain command manager", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not obtain command manager", e);
+			}
 		}
 		return;
 	}
@@ -182,7 +190,9 @@ public class GlobalCommandManager {
 	 * @param id an id
 	 */
 	public void releaseCommandManager(String id) {
-		Trace.trace(Trace.FINEST, "Releasing command manager for " + id);
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Releasing command manager for " + id);
+		}
 		try {
 			CommandManagerInfo info = commandManagers.get(id);
 			if (info != null) {
@@ -194,7 +204,9 @@ public class GlobalCommandManager {
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not release command manager", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not release command manager", e);
+			}
 		}
 	}
 
@@ -220,7 +232,9 @@ public class GlobalCommandManager {
 			setDirtyState(id, false);
 			updateTimestamps(id);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not release command manager", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not release command manager", e);
+			}
 		}
 	}
 
@@ -231,7 +245,9 @@ public class GlobalCommandManager {
 		try {
 			return commandManagers.get(id);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not find existing command manager info");
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not find existing command manager info");
+			}
 		}
 		return null;
 	}
@@ -287,7 +303,9 @@ public class GlobalCommandManager {
 			
 			return d.getActiveShell();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not get shell", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not get shell", e);
+			}
 			return null;
 		}
 	}
@@ -328,7 +346,9 @@ public class GlobalCommandManager {
 			if (status != null && !status.isOK())
 				MessageDialog.openError(shell, Messages.editorServerEditor, status.getMessage());
 		} catch (ExecutionException ce) {
-			Trace.trace(Trace.SEVERE, "Error executing command", ce);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error executing command", ce);
+			}
 			return;
 		}
 		
@@ -586,7 +606,9 @@ public class GlobalCommandManager {
 			if (status != null && !status.isOK())
 				MessageDialog.openError(shell, Messages.editorServerEditor, status.getMessage());
 		} catch (ExecutionException ce) {
-			Trace.trace(Trace.SEVERE, "Error executing command", ce);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error executing command", ce);
+			}
 			return;
 		}
 		redoList.remove(src);
@@ -628,7 +650,9 @@ public class GlobalCommandManager {
 			list.toArray(files);
 			return files;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "getReadOnlyFiles", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "getReadOnlyFiles", e);
+			}
 		}
 		return null;
 	}

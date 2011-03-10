@@ -162,7 +162,10 @@ public final class FacetUtil {
 				}
 			}
 		} catch (Throwable t) {
-			Trace.trace(Trace.WARNING, "Could not determine if runtime is in use", t);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING,
+						"Could not determine if runtime is in use", t);
+			}
 		}
 		return false;
 	}
@@ -193,7 +196,10 @@ public final class FacetUtil {
 		} catch (CoreException ce) {
 			throw ce;
 		} catch (Throwable t) {
-			Trace.trace(Trace.WARNING, "Could not remove runtime target", t);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING,
+						"Could not remove runtime target", t);
+			}
 		}
 	}
 }

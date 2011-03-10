@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -227,15 +227,22 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 									try {
 										locators[i].searchForRuntimes(path, listener, monitor2);
 									} catch (CoreException ce) {
-										Trace.trace(Trace.WARNING, "Error locating runtimes: " + locators[i].getId(), ce);
+										if (Trace.WARNING) {
+											Trace.trace(Trace.STRING_WARNING,
+													"Error locating runtimes: " + locators[i].getId(), ce);
+										}
 									}
 							}
-							Trace.trace(Trace.INFO, "Done search");
+							if (Trace.INFO) {
+								Trace.trace(Trace.STRING_INFO, "Done search");
+							}
 						}
 					};
 					dialog.run(true, true, runnable);
 					
-					Trace.trace(Trace.FINER, "Found runtimes: " + list.size());
+					if (Trace.FINER) {
+						Trace.trace(Trace.STRING_FINER, "Found runtimes: " + list.size());
+					}
 					
 					if (!monitor.isCanceled()) {
 						if (list.isEmpty()) {
@@ -243,8 +250,9 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 							return;
 						}
 						monitor.worked(5);
-						// remove duplicates from list (based on location)
-						Trace.trace(Trace.FINER, "Removing duplicates");
+						if (Trace.FINER) {
+							Trace.trace(Trace.STRING_FINER, "Removing duplicates");
+						}
 						List<IRuntime> good = new ArrayList<IRuntime>();
 						Iterator iterator2 = list.iterator();
 						while (iterator2.hasNext()) {
@@ -264,8 +272,9 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 						}
 						monitor.worked(5);
 						
-						// add to list
-						Trace.trace(Trace.FINER, "Adding runtimes: " + good.size());
+						if (Trace.FINER) {
+							Trace.trace(Trace.STRING_FINER, "Adding runtimes: " + good.size());
+						}
 						Iterator iterator = good.iterator();
 						while (iterator.hasNext()) {
 							IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy) iterator.next();
@@ -275,7 +284,9 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 					}
 					dialog.close();
 				} catch (Exception ex) {
-					Trace.trace(Trace.SEVERE, "Error finding runtimes", ex);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE, "Error finding runtimes", ex);
+					}
 				}
 				runtimeComp.refresh();
 			}
@@ -323,7 +334,9 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 						IServer server = (IServer) iter.next();
 						server.delete();
 					} catch (Exception e) {
-						Trace.trace(Trace.SEVERE, "Error deleting server", e);
+						if (Trace.SEVERE) {
+							Trace.trace(Trace.STRING_SEVERE, "Error deleting server", e);
+						}
 					}
 				}
 			}
@@ -339,7 +352,9 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		try {
 			runtime.delete();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error deleting runtime", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error deleting runtime", e);
+			}
 		}
 		return true;
 	}

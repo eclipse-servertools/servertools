@@ -194,9 +194,15 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 					long time = System.currentTimeMillis();
 					workingCopyDelegate = ((RuntimeType) runtimeType).createRuntimeDelegate();
 					InternalInitializer.initializeRuntimeDelegate(workingCopyDelegate, this, monitor);
-					Trace.trace(Trace.PERFORMANCE, "RuntimeWorkingCopy.getWorkingCopyDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getRuntimeType().getId());
+					if (Trace.PERFORMANCE) {
+						Trace.trace(Trace.STRING_PERFORMANCE, "RuntimeWorkingCopy.getWorkingCopyDelegate(): <"
+								+ (System.currentTimeMillis() - time) + "> " + getRuntimeType().getId());
+					}
 				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), e);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE,
+								"Could not create delegate " + toString(), e);
+					}
 				}
 			}
 		}
@@ -252,7 +258,10 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 			ServerUtil.setRuntimeDefaultName(this);
 			getWorkingCopyDelegate(monitor).setDefaults(monitor);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate setDefaults() " + toString(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE,
+						"Error calling delegate setDefaults() " + toString(), e);
+			}
 		}
 	}
 }

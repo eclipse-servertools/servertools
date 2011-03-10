@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,14 +54,18 @@ public class ServerEditorCore {
 	 * Load the editor page factory extension point.
 	 */
 	private static void loadEditorPageFactories() {
-		Trace.trace(Trace.CONFIG, "->- Loading .editorPages extension point ->-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "->- Loading .editorPages extension point ->-");
+		}
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, ServerUIPlugin.EXTENSION_EDITOR_PAGES);
 		List<ServerEditorPartFactory> list = new ArrayList<ServerEditorPartFactory>(cf.length);
 		loadEditorPageFactories(cf, list);
 		editorPageFactories = list;
 		ServerUIPlugin.addRegistryListener();
-		Trace.trace(Trace.CONFIG, "-<- Done loading .editorPages extension point -<-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "-<- Done loading .editorPages extension point -<-");
+		}
 	}
 
 	/**
@@ -72,9 +76,13 @@ public class ServerEditorCore {
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new ServerEditorPartFactory(cf[i]));
-				Trace.trace(Trace.CONFIG, "  Loaded editorPage: " + cf[i].getAttribute("id"));
+				if (Trace.CONFIG) {
+					Trace.trace(Trace.STRING_CONFIG, "  Loaded editorPage: " + cf[i].getAttribute("id"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load editorPage: " + cf[i].getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "  Could not load editorPage: " + cf[i].getAttribute("id"), t);
+				}
 			}
 		}
 		
@@ -112,14 +120,18 @@ public class ServerEditorCore {
 	 * Load the editor page section factory extension point.
 	 */
 	private static void loadEditorPageSectionFactories() {
-		Trace.trace(Trace.CONFIG, "->- Loading .editorPageSections extension point ->-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "->- Loading .editorPageSections extension point ->-");
+		}
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, ServerUIPlugin.EXTENSION_EDITOR_PAGE_SECTIONS);
 		List<ServerEditorPageSectionFactory> list = new ArrayList<ServerEditorPageSectionFactory>(cf.length);
 		loadEditorPageSectionFactories(cf, list);
 		editorPageSectionFactories = list;
 		ServerUIPlugin.addRegistryListener();
-		Trace.trace(Trace.CONFIG, "-<- Done loading .editorPageSections extension point -<-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "-<- Done loading .editorPageSections extension point -<-");
+		}
 	}
 
 	/**
@@ -130,9 +142,14 @@ public class ServerEditorCore {
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new ServerEditorPageSectionFactory(cf[i]));
-				Trace.trace(Trace.CONFIG, "  Loaded editorPageSection: " + cf[i].getAttribute("id"));
+				if (Trace.CONFIG) {
+					Trace.trace(Trace.STRING_CONFIG, "  Loaded editorPageSection: " + cf[i].getAttribute("id"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load editorPageSection: " + cf[i].getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "  Could not load editorPageSection: " + cf[i].getAttribute("id"),
+							t);
+				}
 			}
 		}
 		
@@ -181,7 +198,9 @@ public class ServerEditorCore {
 	 * Load the editor action factories extension point.
 	 */
 	private static void loadEditorActionFactories() {
-		Trace.trace(Trace.CONFIG, "->- Loading .editorActions extension point ->-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "->- Loading .editorActions extension point ->-");
+		}
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "editorActions");
 
@@ -190,9 +209,13 @@ public class ServerEditorCore {
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new ServerEditorActionFactory(cf[i]));
-				Trace.trace(Trace.CONFIG, "  Loaded editorAction: " + cf[i].getAttribute("id"));
+				if (Trace.CONFIG) {
+					Trace.trace(Trace.STRING_CONFIG, "  Loaded editorAction: " + cf[i].getAttribute("id"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load editorAction: " + cf[i].getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "  Could not load editorAction: " + cf[i].getAttribute("id"), t);
+				}
 			}
 		}
 		
@@ -200,7 +223,9 @@ public class ServerEditorCore {
 		sortOrderedList(list);
 		editorActionFactories = list;
 		
-		Trace.trace(Trace.CONFIG, "-<- Done loading .editorActions extension point -<-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "-<- Done loading .editorActions extension point -<-");
+		}
 	}
 	
 	/**

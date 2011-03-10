@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -154,7 +154,9 @@ public class ServersViewDropAdapter extends ViewerDropAdapter {
 		//if (!ServerUIPlugin.hasModuleArtifact(target))
 		//	return false;
 		
-		Trace.trace(Trace.FINER, "Drop target: " + target + " " + operation + " " + transferType);
+		if (Trace.FINER) {
+			Trace.trace(Trace.STRING_FINER, "Drop target: " + target + " " + operation + " " + transferType);
+		}
 		
 		if (FileTransfer.getInstance().isSupportedType(transferType))
 			return true;

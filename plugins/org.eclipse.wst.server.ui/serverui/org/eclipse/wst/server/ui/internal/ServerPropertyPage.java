@@ -129,7 +129,9 @@ public class ServerPropertyPage extends PropertyPage {
 					try {
 						Server.switchLocation(svr, null);
 					} catch (CoreException ce) {
-						Trace.trace(Trace.SEVERE, "Error switching server location", ce);
+						if (Trace.SEVERE) {
+							Trace.trace(Trace.STRING_SEVERE, "Error switching server location", ce);
+						}
 					}
 					if (svr.getFile() != null)
 						serverLocation.setText(svr.getFile().getFullPath().toPortableString());
@@ -142,7 +144,9 @@ public class ServerPropertyPage extends PropertyPage {
 			
 			return composite;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error creating property page", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error creating property page", e);
+			}
 			return null;
 		}
 	}

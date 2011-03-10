@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2009 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package org.eclipse.jst.server.core.internal;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,6 +26,8 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
+import org.eclipse.osgi.service.debug.DebugOptions;
+import org.eclipse.osgi.service.debug.DebugOptionsListener;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeLifecycleListener;
@@ -32,6 +35,7 @@ import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.osgi.framework.BundleContext;
+
 /**
  * The main server tooling plugin class.
  */
@@ -91,6 +95,11 @@ public class JavaServerPlugin extends Plugin {
 		};
 		
 		ServerCore.addRuntimeLifecycleListener(runtimeListener);
+
+    	// register the debug options listener
+		final Hashtable<String, String> props = new Hashtable<String, String>(4);
+		props.put(DebugOptions.LISTENER_SYMBOLICNAME, JavaServerPlugin.PLUGIN_ID);
+		context.registerService(DebugOptionsListener.class.getName(), new Trace(), props);
 	}
 
 	/**
@@ -110,7 +119,9 @@ public class JavaServerPlugin extends Plugin {
 		if (runtime == null)
 			throw new IllegalArgumentException();
 		
-		Trace.trace(Trace.FINEST, "Possible runtime change: " + runtime);
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Possible runtime change: " + runtime);
+		}
 		
 		if (runtime.getRuntimeType() == null)
 			return;
@@ -149,7 +160,9 @@ public class JavaServerPlugin extends Plugin {
 										}
 									}
 									
-									Trace.trace(Trace.FINEST, "Classpath change on: " + project + " " + found);
+									if (Trace.FINEST) {
+										Trace.trace(Trace.STRING_FINEST, "Classpath change on: " + project + " " + found);
+									}
 									
 									if (found) {
 										IRuntime runtime2 = runtime;
@@ -161,7 +174,9 @@ public class JavaServerPlugin extends Plugin {
 												new IClasspathContainer[] {container}, null);
 									}
 								} catch (Exception e) {
-									Trace.trace(Trace.SEVERE, "Could not update classpath container", e);
+									if (Trace.SEVERE) {
+										Trace.trace(Trace.STRING_SEVERE, "Could not update classpath container", e);
+									}
 								}
 							}
 						}
@@ -293,7 +308,9 @@ public class JavaServerPlugin extends Plugin {
 	private static synchronized void loadRuntimeClasspathProviders() {
 		if (runtimeClasspathProviders != null)
 			return;
-		Trace.trace(Trace.CONFIG, "->- Loading .runtimeClasspathProviders extension point ->-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "->- Loading .runtimeClasspathProviders extension point ->-");
+		}
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(JavaServerPlugin.PLUGIN_ID, "runtimeClasspathProviders");
 		
@@ -301,14 +318,21 @@ public class JavaServerPlugin extends Plugin {
 		for (IConfigurationElement ce : cf) {
 			try {
 				list.add(new RuntimeClasspathProviderWrapper(ce));
-				Trace.trace(Trace.CONFIG, "  Loaded runtimeClasspathProviders: " + ce.getAttribute("id"));
+				if (Trace.CONFIG) {
+					Trace.trace(Trace.STRING_CONFIG, "  Loaded runtimeClasspathProviders: " + ce.getAttribute("id"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load runtimeClasspathProviders: " + ce.getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE,
+							"  Could not load runtimeClasspathProviders: " + ce.getAttribute("id"), t);
+				}
 			}
 		}
 		runtimeClasspathProviders = list;
 		
-		Trace.trace(Trace.CONFIG, "-<- Done loading .runtimeClasspathProviders extension point -<-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "-<- Done loading .runtimeClasspathProviders extension point -<-");
+		}
 	}
 
 	/**
@@ -335,7 +359,9 @@ public class JavaServerPlugin extends Plugin {
 	private static synchronized void loadServerProfilers() {
 		if (serverProfilers != null)
 			return;
-		Trace.trace(Trace.CONFIG, "->- Loading .serverProfilers extension point ->-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "->- Loading .serverProfilers extension point ->-");
+		}
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(JavaServerPlugin.PLUGIN_ID, "serverProfilers");
 		
@@ -343,14 +369,20 @@ public class JavaServerPlugin extends Plugin {
 		for (IConfigurationElement ce : cf) {
 			try {
 				list.add(new ServerProfiler(ce));
-				Trace.trace(Trace.CONFIG, "  Loaded serverProfiler: " + ce.getAttribute("id"));
+				if (Trace.CONFIG) {
+					Trace.trace(Trace.STRING_CONFIG, "  Loaded serverProfiler: " + ce.getAttribute("id"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load serverProfiler: " + ce.getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "  Could not load serverProfiler: " + ce.getAttribute("id"), t);
+				}
 			}
 		}
 		serverProfilers = list;
 		
-		Trace.trace(Trace.CONFIG, "-<- Done loading .serverProfilers extension point -<-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "-<- Done loading .serverProfilers extension point -<-");
+		}
 	}
 
 	public static void configureProfiling(ILaunch launch, IVMInstall vmInstall, VMRunnerConfiguration vmConfig, IProgressMonitor monitor) throws CoreException {

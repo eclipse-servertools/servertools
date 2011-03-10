@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -307,11 +307,13 @@ public class ModifyModulesComposite extends Composite {
 				else
 					requiredModules = new IModule[] { requiredModule };
 			} catch (CoreException ce) {
-				// ignore
-				//errorMap.put(newModule, ce.getStatus());
-				Trace.trace(Trace.INFO, "A possible server implementation error", ce);
+				if (Trace.INFO) {
+					Trace.trace(Trace.STRING_INFO, "A possible server implementation error", ce);
+				}
 			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Could not find root module", e);
+				if (Trace.WARNING) {
+					Trace.trace(Trace.STRING_WARNING, "Could not find root module", e);
+				}
 			}
 		}
 		if (requiredModules != null && !deployed.contains(requiredModules[0]))
@@ -765,7 +767,9 @@ public class ModifyModulesComposite extends Composite {
 							break;
 						}
 					} catch (Exception e) {
-						Trace.trace(Trace.INFO,"Unable to handle error map for module:" + module); 
+						if (Trace.INFO) {
+							Trace.trace(Trace.STRING_INFO, "Unable to handle error map for module:" + module);
+						} 
 					}
 				}
 			}

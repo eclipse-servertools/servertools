@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,7 +51,9 @@ public class ModuleProperties {
 	 * Load the data.
 	 */
 	private void load() {
-		Trace.trace(Trace.FINEST, "Loading module info");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Loading module info");
+		}
 		String filename = ServerPlugin.getInstance().getStateLocation().append(MODULE_DATA_FILE).toOSString();
 		modules = new HashMap<String, String>();
 		if (!(new File(filename).exists()))
@@ -69,7 +71,9 @@ public class ModuleProperties {
 				modules.put(moduleId, serverId);
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not load servers", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Could not load servers", e);
+			}
 		}
 	}
 
@@ -91,7 +95,9 @@ public class ModuleProperties {
 			
 			memento.saveToFile(filename);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not save servers", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not save servers", e);
+			}
 		}
 	}
 

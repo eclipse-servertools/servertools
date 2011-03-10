@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -84,7 +84,10 @@ public class Client implements IClient {
 			try {
 				delegate = (ClientDelegate) element.createExecutableExtension("class");
 			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString(), e);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE,
+							"Could not create delegate" + toString(), e);
+				}
 			}
 		}
 		return delegate;
@@ -101,7 +104,10 @@ public class Client implements IClient {
 		try {
 			return getDelegate().supports(server, launchable, launchMode);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate "
+						+ toString(), e);
+			}
 			return false;
 		}
 	}
@@ -113,7 +119,10 @@ public class Client implements IClient {
 		try {
 			return getDelegate().launch(server, launchable, launchMode, launch);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate "
+						+ toString(), e);
+			}
 		}
 		return null;
 	}

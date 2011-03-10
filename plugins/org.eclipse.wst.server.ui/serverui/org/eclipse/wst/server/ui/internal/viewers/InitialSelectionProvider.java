@@ -117,7 +117,9 @@ public class InitialSelectionProvider extends ViewerSorter {
 					}
 				}
 				catch (CoreException ce){
-					Trace.trace(Trace.WARNING,"Could not create a faceted project",ce);
+					if (Trace.WARNING) {
+						Trace.trace(Trace.STRING_WARNING, "Could not create a faceted project", ce);
+					}
 				}
 			}
 		return rval;

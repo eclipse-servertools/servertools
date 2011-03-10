@@ -128,7 +128,9 @@ public class Server extends Base implements IServer {
 		}
 
 		public void run() {
-			Trace.trace(Trace.FINEST, "Auto-publish thread starting for " + Server.this + " - " + time + "s");
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "Auto-publish thread starting for " + Server.this + " - " + time + "s");
+			}
 			if (stop)
 				return;
 			
@@ -141,7 +143,9 @@ public class Server extends Base implements IServer {
 			if (stop)
 				return;
 			
-			Trace.trace(Trace.FINEST, "Auto-publish thread publishing " + Server.this);
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "Auto-publish thread publishing " + Server.this);
+			}
 			
 			if (getServerState() != IServer.STATE_STARTED)
 				return;
@@ -488,7 +492,10 @@ public class Server extends Base implements IServer {
 					delegate = ((ServerType) serverType).createServerDelegate();
 					if (delegate != null)
 						InternalInitializer.initializeServerDelegate(delegate, Server.this, monitor);
-					Trace.trace(Trace.PERFORMANCE, "Server.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
+					if (Trace.PERFORMANCE) {
+						Trace.trace(Trace.STRING_PERFORMANCE, "Server.getDelegate(): <"
+								+ (System.currentTimeMillis() - time) + "> " + getServerType().getId());
+					}
 				} catch (Throwable t) {
 					ServerPlugin.logExtensionFailure(toString(), t);
 				}
@@ -508,7 +515,11 @@ public class Server extends Base implements IServer {
 					behaviourDelegate = ((ServerType) serverType).createServerBehaviourDelegate();
 					if (behaviourDelegate != null)
 						InternalInitializer.initializeServerBehaviourDelegate(behaviourDelegate, Server.this, monitor);
-					Trace.trace(Trace.PERFORMANCE, "Server.getBehaviourDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
+					if (Trace.PERFORMANCE) {
+						Trace.trace(Trace.STRING_PERFORMANCE,
+								"Server.getBehaviourDelegate(): <" + (System.currentTimeMillis() - time) + "> "
+										+ getServerType().getId());
+					}
 
 					// publish only if the server is started but respect Server > Launching > PREF_AUTO_PUBLISH
 					if (getServerState() == IServer.STATE_STARTED && ServerCore.isAutoPublishing())
@@ -636,7 +647,9 @@ public class Server extends Base implements IServer {
 	public void addServerListener(IServerListener listener) {
 		if (listener == null)
 			throw new IllegalArgumentException("Module cannot be null");
-		Trace.trace(Trace.LISTENERS, "Adding server listener " + listener + " to " + this);
+		if (Trace.LISTENERS) {
+			Trace.trace(Trace.STRING_LISTENERS, "Adding server listener " + listener + " to " + this);
+		}
 		getServerNotificationManager().addListener(listener);
 	}
 
@@ -649,7 +662,10 @@ public class Server extends Base implements IServer {
 	public void addServerListener(IServerListener listener, int eventMask) {
 		if (listener == null)
 			throw new IllegalArgumentException("Module cannot be null");
-		Trace.trace(Trace.LISTENERS, "Adding server listener " + listener + " to " + this + " with eventMask " + eventMask);
+		if (Trace.LISTENERS) {
+			Trace.trace(Trace.STRING_LISTENERS, "Adding server listener " + listener + " to " + this
+					+ " with eventMask " + eventMask);
+		}
 		getServerNotificationManager().addListener(listener, eventMask);
 	}
 
@@ -661,7 +677,9 @@ public class Server extends Base implements IServer {
 	public void removeServerListener(IServerListener listener) {
 		if (listener == null)
 			throw new IllegalArgumentException("Module cannot be null");
-		Trace.trace(Trace.LISTENERS, "Removing server listener " + listener + " from " + this);
+		if (Trace.LISTENERS) {
+			Trace.trace(Trace.STRING_LISTENERS, "Removing server listener " + listener + " from " + this);
+		}
 		getServerNotificationManager().removeListener(listener);
 	}
 
@@ -669,7 +687,9 @@ public class Server extends Base implements IServer {
 	 * Fire a server listener restart state change event.
 	 */
 	protected void fireRestartStateChangeEvent() {
-		Trace.trace(Trace.LISTENERS, "->- Firing server restart change event: " + getName() + " ->-");
+		if (Trace.LISTENERS) {
+			Trace.trace(Trace.STRING_LISTENERS, "->- Firing server restart change event: " + getName() + " ->-");
+		}
 		
 		if (notificationManager == null || notificationManager.hasNoListeners())
 			return;
@@ -683,7 +703,10 @@ public class Server extends Base implements IServer {
 	 * Fire a server listener state change event.
 	 */
 	protected void fireServerStateChangeEvent() {
-		Trace.trace(Trace.LISTENERS, "->- Firing server state change event: " + getName() + ", " + getServerState() + " ->-");
+		if (Trace.LISTENERS) {
+			Trace.trace(Trace.STRING_LISTENERS, "->- Firing server state change event: " + getName() + ", "
+					+ getServerState() + " ->-");
+		}
 		
 		if (notificationManager == null || notificationManager.hasNoListeners())
 			return;
@@ -697,7 +720,10 @@ public class Server extends Base implements IServer {
 	 * Fire a server listener change event.
 	 */
 	protected void fireServerChangeEvent() {
-		Trace.trace(Trace.LISTENERS, "->- Firing server change event: " + getName() + ", " + getServerState() + " ->-");
+		if (Trace.LISTENERS) {
+			Trace.trace(Trace.STRING_LISTENERS, "->- Firing server change event: " + getName() + ", "
+					+ getServerState() + " ->-");
+		}
 		
 		if (notificationManager == null || notificationManager.hasNoListeners())
 			return;
@@ -711,7 +737,10 @@ public class Server extends Base implements IServer {
 	 * Fire a server listener module state change event.
 	 */
 	protected void fireModuleStateChangeEvent(IModule[] module) {
-		Trace.trace(Trace.LISTENERS, "->- Firing module state change event: " + getName() + ", " + getServerState() + " ->-");
+		if (Trace.LISTENERS) {
+			Trace.trace(Trace.STRING_LISTENERS, "->- Firing module state change event: " + getName() + ", "
+					+ getServerState() + " ->-");
+		}
 		
 		if (notificationManager == null || notificationManager.hasNoListeners())
 			return;
@@ -725,7 +754,10 @@ public class Server extends Base implements IServer {
 	 * Fire a server listener module publish state change event.
 	 */
 	protected void fireModulePublishStateChangeEvent(IModule[] module) {
-		Trace.trace(Trace.LISTENERS, "->- Firing module publish state change event: " + getName() + ", " + getServerState() + " ->-");
+		if (Trace.LISTENERS) {
+			Trace.trace(Trace.STRING_LISTENERS, "->- Firing module publish state change event: " + getName() + ", "
+					+ getServerState() + " ->-");
+		}
 		
 		if (notificationManager == null || notificationManager.hasNoListeners())
 			return;
@@ -739,7 +771,10 @@ public class Server extends Base implements IServer {
 	 * Fire a server listener module state change event.
 	 */
 	protected void fireModuleRestartChangeEvent(IModule[] module) {
-		Trace.trace(Trace.LISTENERS, "->- Firing module restart change event: " + getName() + ", " + getServerState() + " ->-");
+		if (Trace.LISTENERS) {
+			Trace.trace(Trace.STRING_LISTENERS, "->- Firing module restart change event: " + getName() + ", "
+					+ getServerState() + " ->-");
+		}
 		
 		if (notificationManager == null || notificationManager.hasNoListeners())
 			return;
@@ -813,7 +848,9 @@ public class Server extends Base implements IServer {
 	}
 
 	protected void handleModuleProjectChange(IModule module, IResourceChangeEvent buildEvent) {
-		Trace.trace(Trace.FINEST, "> handleDeployableProjectChange() " + this + " " + module);
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "> handleDeployableProjectChange() " + this + " " + module);
+		}
 		
 		if (!isModuleDeployed(module)){
 			return;
@@ -837,11 +874,15 @@ public class Server extends Base implements IServer {
 		job.setPriority(Job.BUILD);
 		job.schedule();
 		
-		Trace.trace(Trace.FINEST, "< handleDeployableProjectChange()");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "< handleDeployableProjectChange()");
+		}
 	}
 	
 	protected boolean isModuleDeployed(final IModule requestedModule){
-		Trace.trace(Trace.FINEST, "> isModuleDeployed()");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "> isModuleDeployed()");
+		}
 
 		// no modules are deployed
 		if (getModules().length < 0)
@@ -866,7 +907,9 @@ public class Server extends Base implements IServer {
 			}
 		}
 		
-		Trace.trace(Trace.FINEST, "< isModuleDeployed() deployed="+deployed);
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "< isModuleDeployed() deployed=" + deployed);
+		}
 		return deployed;
 	}
 
@@ -970,7 +1013,9 @@ public class Server extends Base implements IServer {
 	public void addPublishListener(IPublishListener listener) {
 		if (listener == null)
 			throw new IllegalArgumentException("Listener cannot be null");
-		Trace.trace(Trace.LISTENERS, "Adding publish listener " + listener + " to " + this);
+		if (Trace.LISTENERS) {
+			Trace.trace(Trace.STRING_LISTENERS, "Adding publish listener " + listener + " to " + this);
+		}
 		
 		if (publishListeners == null)
 			publishListeners = new ArrayList<IPublishListener>();
@@ -987,7 +1032,9 @@ public class Server extends Base implements IServer {
 	public void removePublishListener(IPublishListener listener) {
 		if (listener == null)
 			throw new IllegalArgumentException("Listener cannot be null");
-		Trace.trace(Trace.LISTENERS, "Removing publish listener " + listener + " from " + this);
+		if (Trace.LISTENERS) {
+			Trace.trace(Trace.STRING_LISTENERS, "Removing publish listener " + listener + " from " + this);
+		}
 
 		if (publishListeners != null)
 			publishListeners.remove(listener);
@@ -997,7 +1044,9 @@ public class Server extends Base implements IServer {
 	 * Fire a publish start event.
 	 */
 	protected void firePublishStarted() {
-		Trace.trace(Trace.FINEST, "->- Firing publish started event ->-");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "->- Firing publish started event ->-");
+		}
 	
 		if (publishListeners == null || publishListeners.isEmpty())
 			return;
@@ -1007,15 +1056,24 @@ public class Server extends Base implements IServer {
 		publishListeners.toArray(srl);
 
 		for (int i = 0; i < size; i++) {
-			Trace.trace(Trace.FINEST, "  Firing publish started event to " + srl[i]);
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "  Firing publish started event to " + srl[i]);
+			}
 			try {
 				srl[i].publishStarted(this);
 			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "  Error firing publish started event to " + srl[i], e);
+				if (Trace.SEVERE) {
+					Trace.trace(
+							Trace.STRING_SEVERE,
+							"  Error firing publish started event to " + srl[i],
+							e);
+				}
 			}
 		}
 
-		Trace.trace(Trace.FINEST, "-<- Done firing publish started event -<-");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "-<- Done firing publish started event -<-");
+		}
 	}
 
 	/**
@@ -1024,7 +1082,9 @@ public class Server extends Base implements IServer {
 	 * @param status publishing status
 	 */
 	protected void firePublishFinished(IStatus status) {
-		Trace.trace(Trace.FINEST, "->- Firing publishing finished event: " + status + " ->-");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "->- Firing publishing finished event: " + status + " ->-");
+		}
 	
 		if (publishListeners == null || publishListeners.isEmpty())
 			return;
@@ -1034,22 +1094,32 @@ public class Server extends Base implements IServer {
 		publishListeners.toArray(srl);
 
 		for (int i = 0; i < size; i++) {
-			Trace.trace(Trace.FINEST, "  Firing publishing finished event to " + srl[i]);
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "  Firing publishing finished event to " + srl[i]);
+			}
 			try {
 				srl[i].publishFinished(this, status);
 			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "  Error firing publishing finished event to " + srl[i], e);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE,
+							"  Error firing publishing finished event to "
+									+ srl[i], e);
+				}
 			}
 		}
 
-		Trace.trace(Trace.FINEST, "-<- Done firing publishing finished event -<-");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "-<- Done firing publishing finished event -<-");
+		}
 	}
 
 	/**
 	 * Fire a publish state change event.
 	 */
 	protected void firePublishStateChange() {
-		Trace.trace(Trace.FINEST, "->- Firing publish state change event ->-");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "->- Firing publish state change event ->-");
+		}
 		
 		if (notificationManager == null || notificationManager.hasNoListeners())
 			return;
@@ -1063,7 +1133,9 @@ public class Server extends Base implements IServer {
 	 * Fire a publish state change event.
 	 */
 	protected void firePublishStateChange(IModule[] module) {
-		Trace.trace(Trace.FINEST, "->- Firing publish state change event: " + module + " ->-");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "->- Firing publish state change event: " + module + " ->-");
+		}
 	
 		if (notificationManager == null || notificationManager.hasNoListeners())
 			return;
@@ -1528,7 +1600,9 @@ public class Server extends Base implements IServer {
 	}
 	
 	public void setLaunch(ILaunch launch) {
-		Trace.trace(Trace.FINEST, "setLaunch() "+ launch);
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "setLaunch() " + launch);
+		}
 		this.launch = launch;
 	}
 
@@ -1536,7 +1610,11 @@ public class Server extends Base implements IServer {
 		try {
 			getBehaviourDelegate(monitor).setupLaunchConfiguration(workingCopy, monitor);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate setupLaunchConfiguration() " + toString(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE,
+						"Error calling delegate setupLaunchConfiguration() "
+								+ toString(), e);
+			}
 		}
 	}
 
@@ -1585,7 +1663,11 @@ public class Server extends Base implements IServer {
 									try {
 										lc[0] = wc.doSave();
 									} catch (CoreException ce) {
-										Trace.trace(Trace.SEVERE, "Error configuring launch", ce);
+										if (Trace.SEVERE) {
+											Trace.trace(Trace.STRING_SEVERE,
+													"Error configuring launch",
+													ce);
+										}
 									}
 									return Status.OK_STATUS;
 								}
@@ -1595,7 +1677,10 @@ public class Server extends Base implements IServer {
 							try {
 								job.join();
 							} catch (Exception e) {
-								Trace.trace(Trace.SEVERE, "Error configuring launch", e);
+								if (Trace.SEVERE) {
+									Trace.trace(Trace.STRING_SEVERE,
+											"Error configuring launch", e);
+								}
 							}
 							if (job.getState() != Job.NONE) {
 								job.cancel();
@@ -1607,7 +1692,10 @@ public class Server extends Base implements IServer {
 						return launchConfigs[i];
 					}
 				} catch (CoreException e) {
-					Trace.trace(Trace.SEVERE, "Error configuring launch", e);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE,
+								"Error configuring launch", e);
+					}
 				}
 			}
 		}
@@ -1728,7 +1816,9 @@ public class Server extends Base implements IServer {
 		if (getServerState() == STATE_STOPPED)
 			return;
 		
-		Trace.trace(Trace.FINEST, "Restarting server: " + getName());
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Restarting server: " + getName());
+		}
 		
 		RestartJob restartJob = new RestartJob(mode2);
 		restartJob.schedule();
@@ -1852,7 +1942,9 @@ public class Server extends Base implements IServer {
 	 * @see IServer#start(String, IProgressMonitor)
 	 */
 	public void start(String mode2, IProgressMonitor monitor) throws CoreException {
-		Trace.trace(Trace.FINEST, "Starting server: " + toString() + ", launchMode: " + mode2);
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Starting server: " + toString() + ", launchMode: " + mode2);
+		}
 		if (getServerType() == null)
 			return;
 		
@@ -1862,7 +1954,9 @@ public class Server extends Base implements IServer {
 		IStatus status = publishBeforeStart(monitor,false);
 		
 		if (status != null && status.getSeverity() == IStatus.ERROR){
-			Trace.trace(Trace.FINEST,"Failed publish job during start routine");
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "Failed publish job during start routine");
+			}
 			return;
 		}
 		
@@ -1873,8 +1967,10 @@ public class Server extends Base implements IServer {
 			public void done(IJobChangeEvent event) {
 				IStatus resultStatus = event.getResult();
 				if (resultStatus != null && resultStatus.getSeverity() == IStatus.ERROR) { 
-					// Do not launch the publish.
-					Trace.trace(Trace.INFO,"Skipping auto publish after server start since the server start failed.");
+					if (Trace.INFO) {
+						Trace.trace(Trace.STRING_INFO,
+								"Skipping auto publish after server start since the server start failed.");
+					}
 				} else {
 					publishAfterStart(monitor2,false,null);
 				}
@@ -1899,7 +1995,9 @@ public class Server extends Base implements IServer {
 		IStatus status = publishBeforeStart(null,false);
 		
 		if (status != null && status.getSeverity() == IStatus.ERROR){
-			Trace.trace(Trace.FINEST,"Failed publish job during start routine");
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "Failed publish job during start routine");
+			}
 			return;
 		}
 
@@ -1930,8 +2028,10 @@ public class Server extends Base implements IServer {
 				public void done(IJobChangeEvent event) {
 					IStatus resultStatus = event.getResult();
 					if (resultStatus != null && resultStatus.getSeverity() == IStatus.ERROR) { 
-						// Do not launch the publish.
-						Trace.trace(Trace.INFO,"Skipping auto publish after server start since the server start failed.");
+						if (Trace.INFO) {
+							Trace.trace(Trace.STRING_INFO,
+									"Skipping auto publish after server start since the server start failed.");
+						}
 					} else {
 						publishAfterStart(null,false,opListener);
 					}
@@ -1951,7 +2051,9 @@ public class Server extends Base implements IServer {
 		IStatus status = publishBeforeStart(monitor,true);
 		
 		if (status != null && status.getSeverity() == IStatus.ERROR){
-			Trace.trace(Trace.FINEST,"Failed publish job during start routine");
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "Failed publish job during start routine");
+			}
 			return;
 		}
 		
@@ -1962,8 +2064,10 @@ public class Server extends Base implements IServer {
 			public void done(IJobChangeEvent event) {
 				IStatus resultStatus = event.getResult();
 				if (resultStatus != null && resultStatus.getSeverity() == IStatus.ERROR) { 
-					// Do not launch the publish.
-					Trace.trace(Trace.INFO,"Skipping auto publish after server start since the server start failed.");
+					if (Trace.INFO) {
+						Trace.trace(Trace.STRING_INFO,
+								"Skipping auto publish after server start since the server start failed.");
+					}
 				} else {
 					publishAfterStart(monitor2,true,null);
 				}
@@ -1974,7 +2078,9 @@ public class Server extends Base implements IServer {
 		try {
 			startJob.join();
 		} catch (InterruptedException e) {
-			Trace.trace(Trace.WARNING, "Error waiting for job", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Error waiting for job", e);
+			}
 		}
 	}
 
@@ -2055,7 +2161,9 @@ public class Server extends Base implements IServer {
 		try {
 			job.join();
 		} catch (InterruptedException e) {
-			Trace.trace(Trace.WARNING, "Error waiting for job", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Error waiting for job", e);
+			}
 		}
 	}
 
@@ -2509,11 +2617,16 @@ public class Server extends Base implements IServer {
 							// notify waiter
 							synchronized (notified) {
 								try {
-									Trace.trace(Trace.FINEST, "runAndWait notify");
+									if (Trace.FINEST) {
+										Trace.trace(Trace.STRING_FINEST, "runAndWait notify");
+									}
 									notified[0] = true;
 									notified.notifyAll();
 								} catch (Exception e) {
-									Trace.trace(Trace.SEVERE, "Error notifying runAndWait", e);
+									if (Trace.SEVERE) {
+										Trace.trace(Trace.STRING_SEVERE,
+												"Error notifying runAndWait", e);
+									}
 								}
 							}
 						}
@@ -2549,7 +2662,9 @@ public class Server extends Base implements IServer {
 								launch.terminate();//TODO
 							// notify waiter
 							synchronized (notified) {
-								Trace.trace(Trace.FINEST, "runAndWait user cancelled");
+								if (Trace.FINEST) {
+									Trace.trace(Trace.STRING_FINEST, "runAndWait user cancelled");
+								}
 								notified[0] = true;
 								notified.notifyAll();
 							}
@@ -2558,7 +2673,9 @@ public class Server extends Base implements IServer {
 					if (!userCancelled && !timer.alreadyDone && !notified[0]) {
 						// notify waiter
 						synchronized (notified) {
-							Trace.trace(Trace.FINEST, "runAndWait notify timeout");
+							if (Trace.FINEST) {
+								Trace.trace(Trace.STRING_FINEST, "runAndWait notify timeout");
+							}
 							if (!timer.alreadyDone && totalTimeout <= 0)
 								timer.timeout = true;
 							notified[0] = true;
@@ -2566,14 +2683,19 @@ public class Server extends Base implements IServer {
 						}
 					}
 				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error notifying runAndWait timeout", e);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE,
+								"Error notifying runAndWait timeout", e);
+					}
 				}
 			}
 		};
 		thread.setDaemon(true);
 		thread.start();
 	
-		Trace.trace(Trace.FINEST, "runAndWait 2");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "runAndWait 2");
+		}
 	
 		// do the operation
 		try {
@@ -2589,7 +2711,9 @@ public class Server extends Base implements IServer {
 			return Status.CANCEL_STATUS;
 		}
 		
-		Trace.trace(Trace.FINEST, "runAndWait 3");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "runAndWait 3");
+		}
 		
 		// wait for it! wait for it! ...
 		synchronized (notified) {
@@ -2599,7 +2723,10 @@ public class Server extends Base implements IServer {
 					notified.wait();
 				}
 			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error waiting for operation", e);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE,
+							"Error waiting for operation", e);
+				}
 			}
 			timer.alreadyDone = true;
 		}
@@ -2637,7 +2764,11 @@ public class Server extends Base implements IServer {
 						try {
 							getBehaviourDelegate(monitor2).startModule(module, monitor2);
 						} catch (Exception e) {
-							Trace.trace(Trace.SEVERE, "Error calling delegate startModule() " + toString(), e);
+							if (Trace.SEVERE) {
+								Trace.trace(Trace.STRING_SEVERE,
+										"Error calling delegate startModule() "
+												+ toString(), e);
+							}
 							throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, e.getMessage()));
 						}
 					}
@@ -2676,7 +2807,11 @@ public class Server extends Base implements IServer {
 						try {
 							getBehaviourDelegate(monitor2).stopModule(module, monitor2);
 						} catch (Exception e) {
-							Trace.trace(Trace.SEVERE, "Error calling delegate stopModule() " + toString(), e);
+							if (Trace.SEVERE) {
+								Trace.trace(Trace.STRING_SEVERE,
+										"Error calling delegate stopModule() "
+												+ toString(), e);
+							}
 							throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, e.getMessage()));
 						}
 					}
@@ -2715,7 +2850,11 @@ public class Server extends Base implements IServer {
 						try {
 							getBehaviourDelegate(monitor2).restartModule(module, monitor2);
 						} catch (Exception e) {
-							Trace.trace(Trace.SEVERE, "Error calling delegate restartModule() " + toString(), e);
+							if (Trace.SEVERE) {
+								Trace.trace(Trace.STRING_SEVERE,
+										"Error calling delegate restartModule() "
+												+ toString(), e);
+							}
 							throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, e.getMessage()));
 						}
 					}
@@ -2878,8 +3017,13 @@ public class Server extends Base implements IServer {
 	}
 
 	protected IStatus publishImpl(int kind, List<IModule[]> modules4, IAdaptable info, IProgressMonitor monitor) {
-		Trace.trace(Trace.FINEST, "-->-- Publishing to server: " + Server.this.toString() + " -->--");
-		Trace.trace(Trace.FINEST, "Server.publishImpl(): kind=<"+getPublishKindString(kind)+"> modules=" + modules4);
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "-->-- Publishing to server: " + Server.this.toString() + " -->--");
+		}
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Server.publishImpl(): kind=<" + getPublishKindString(kind) + "> modules="
+					+ modules4);
+		}
 		
 		stopAutoPublish();
 		
@@ -2892,7 +3036,10 @@ public class Server extends Base implements IServer {
 			try {
 				getBehaviourDelegate(monitor).publish(kind, modules4, monitor, info);
 			} catch (CoreException ce) {
-				Trace.trace(Trace.WARNING, "Error during publishing", ce);
+				if (Trace.WARNING) {
+					Trace.trace(Trace.STRING_WARNING,
+							"Error during publishing", ce);
+				}
 				status = ce.getStatus();
 			}
 			
@@ -2912,16 +3059,26 @@ public class Server extends Base implements IServer {
 			getServerPublishInfo().save();
 			
 			firePublishFinished(Status.OK_STATUS);
-			Trace.trace(Trace.PERFORMANCE, "Server.publishImpl(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
+			if (Trace.PERFORMANCE) {
+				Trace.trace(Trace.STRING_PERFORMANCE, "Server.publishImpl(): <" + (System.currentTimeMillis() - time)
+						+ "> " + getServerType().getId());
+			}
 			return status;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate publish() " + Server.this.toString(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(
+						Trace.STRING_SEVERE,
+						"Error calling delegate publish() "
+								+ Server.this.toString(), e);
+			}
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e);
 		}
 	}
 
 	protected IStatus restartImpl(String launchMode, IProgressMonitor monitor) {
-		Trace.trace(Trace.FINEST, "Restarting server: " + getName());
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Restarting server: " + getName());
+		}
 		
 		try {
 			try {
@@ -2931,7 +3088,9 @@ public class Server extends Base implements IServer {
 				return Status.OK_STATUS;
 			} catch (CoreException ce) {
 				if (ce.getStatus().getCode() != -1) {
-					Trace.trace(Trace.SEVERE, "Error calling delegate restart() " + Server.this.toString());
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE, "Error calling delegate restart() " + Server.this.toString());
+					}
 					return ce.getStatus();
 				}
 			}
@@ -2941,7 +3100,9 @@ public class Server extends Base implements IServer {
 			start(launchMode, monitor);
 
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error restarting server", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error restarting server", e);
+			}
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartFailed, getName()), e);
 		}
 		return Status.OK_STATUS;
@@ -2968,11 +3129,16 @@ public class Server extends Base implements IServer {
 						// notify waiter
 						synchronized (notified) {
 							try {
-								Trace.trace(Trace.FINEST, "synchronousRestart notify");
+								if (Trace.FINEST) {
+									Trace.trace(Trace.STRING_FINEST, "synchronousRestart notify");
+								}
 								notified[0] = true;
 								notified.notifyAll();
 							} catch (Exception e) {
-								Trace.trace(Trace.SEVERE, "Error notifying server restart", e);
+								if (Trace.SEVERE) {
+									Trace.trace(Trace.STRING_SEVERE,
+											"Error notifying server restart", e);
+								}
 							}
 						}
 					}
@@ -3008,7 +3174,9 @@ public class Server extends Base implements IServer {
 								launch.terminate();
 							// notify waiter
 							synchronized (notified) {
-								Trace.trace(Trace.FINEST, "synchronousRestart user cancelled");
+								if (Trace.FINEST) {
+									Trace.trace(Trace.STRING_FINEST, "synchronousRestart user cancelled");
+								}
 								notified[0] = true;
 								notified.notifyAll();
 							}
@@ -3017,7 +3185,9 @@ public class Server extends Base implements IServer {
 					if (!userCancelled && !timer.alreadyDone && !notified[0]) {
 						// notify waiter
 						synchronized (notified) {
-							Trace.trace(Trace.FINEST, "synchronousRestart notify timeout");
+							if (Trace.FINEST) {
+								Trace.trace(Trace.STRING_FINEST, "synchronousRestart notify timeout");
+							}
 							if (!timer.alreadyDone && totalTimeout <= 0)
 								timer.timeout = true;
 							notified[0] = true;
@@ -3025,14 +3195,19 @@ public class Server extends Base implements IServer {
 						}
 					}
 				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error notifying server restart timeout", e);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE,
+								"Error notifying server restart timeout", e);
+					}
 				}
 			}
 		};
 		thread.setDaemon(true);
 		thread.start();
 		
-		Trace.trace(Trace.FINEST, "synchronousRestart 2");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "synchronousRestart 2");
+		}
 		
 		// call the delegate restart
 		try {
@@ -3048,7 +3223,9 @@ public class Server extends Base implements IServer {
 			return Status.CANCEL_STATUS;
 		}
 		
-		Trace.trace(Trace.FINEST, "synchronousRestart 3");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "synchronousRestart 3");
+		}
 		
 		// wait for it! wait for it! ...
 		synchronized (notified) {
@@ -3058,7 +3235,10 @@ public class Server extends Base implements IServer {
 					notified.wait();
 				}
 			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error waiting for server restart", e);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE,
+							"Error waiting for server restart", e);
+				}
 			}
 			timer.alreadyDone = true;
 		}
@@ -3072,7 +3252,9 @@ public class Server extends Base implements IServer {
 		if (!monitor.isCanceled() && getServerState() == IServer.STATE_STOPPED)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorRestartFailed, getName()), null);
 		
-		Trace.trace(Trace.FINEST, "synchronousRestart 4");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "synchronousRestart 4");
+		}
 		return Status.OK_STATUS;
 	}
 	
@@ -3092,11 +3274,16 @@ public class Server extends Base implements IServer {
 						// notify waiter
 						synchronized (notified) {
 							try {
-								Trace.trace(Trace.FINEST, "synchronousStart notify");
+								if (Trace.FINEST) {
+									Trace.trace(Trace.STRING_FINEST, "synchronousStart notify");
+								}
 								notified[0] = true;
 								notified.notifyAll();
 							} catch (Exception e) {
-								Trace.trace(Trace.SEVERE, "Error notifying server start", e);
+								if (Trace.SEVERE) {
+									Trace.trace(Trace.STRING_SEVERE,
+											"Error notifying server start", e);
+								}
 							}
 						}
 					}
@@ -3132,7 +3319,9 @@ public class Server extends Base implements IServer {
 								launch.terminate();
 							// notify waiter
 							synchronized (notified) {
-								Trace.trace(Trace.FINEST, "synchronousStart user cancelled");
+								if (Trace.FINEST) {
+									Trace.trace(Trace.STRING_FINEST, "synchronousStart user cancelled");
+								}
 								notified[0] = true;
 								notified.notifyAll();
 							}
@@ -3141,7 +3330,9 @@ public class Server extends Base implements IServer {
 					if (!userCancelled && !timer.alreadyDone && !notified[0]) {
 						// notify waiter
 						synchronized (notified) {
-							Trace.trace(Trace.FINEST, "synchronousStart notify timeout");
+							if (Trace.FINEST) {
+								Trace.trace(Trace.STRING_FINEST, "synchronousStart notify timeout");
+							}
 							if (!timer.alreadyDone && totalTimeout <= 0)
 								timer.timeout = true;
 							notified[0] = true;
@@ -3149,14 +3340,19 @@ public class Server extends Base implements IServer {
 						}
 					}
 				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error notifying server start timeout", e);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE,
+								"Error notifying server start timeout", e);
+					}
 				}
 			}
 		};
 		thread.setDaemon(true);
 		thread.start();
 	
-		Trace.trace(Trace.FINEST, "synchronousStart 2");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "synchronousStart 2");
+		}
 	
 		// start the server
 		try {
@@ -3172,7 +3368,9 @@ public class Server extends Base implements IServer {
 			return Status.CANCEL_STATUS;
 		}
 		
-		Trace.trace(Trace.FINEST, "synchronousStart 3");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "synchronousStart 3");
+		}
 		
 		// wait for it! wait for it! ...
 		synchronized (notified) {
@@ -3182,7 +3380,10 @@ public class Server extends Base implements IServer {
 					notified.wait();
 				}
 			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error waiting for server start", e);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE,
+							"Error waiting for server start", e);
+				}
 			}
 			timer.alreadyDone = true;
 		}
@@ -3196,12 +3397,16 @@ public class Server extends Base implements IServer {
 		if (!monitor.isCanceled() && getServerState() == IServer.STATE_STOPPED)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartFailed, getName()), null);
 		
-		Trace.trace(Trace.FINEST, "synchronousStart 4");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "synchronousStart 4");
+		}
 		return Status.OK_STATUS;
 	}
 
 	protected void startImpl2(String mode2, IProgressMonitor monitor) throws CoreException {
-		Trace.trace(Trace.FINEST, "Starting server: " + Server.this.toString() + ", launchMode: " + mode2);
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Starting server: " + Server.this.toString() + ", launchMode: " + mode2);
+		}
 		SaveEditorPrompter editorHelper = (ServerPlugin.isRunningGUIMode()) ? ServerPlugin.getSaveEditorHelper() : null;
 		// make sure that the delegate is loaded and the server state is correct
 		loadAdapter(ServerBehaviourDelegate.class, monitor);
@@ -3219,9 +3424,14 @@ public class Server extends Base implements IServer {
 				editorHelper.setDebugOriginalValue();
 			}
 			
-			Trace.trace(Trace.FINEST, "Launch: " + launch);
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "Launch: " + launch);
+			}
 		} catch (CoreException e) {
-			Trace.trace(Trace.SEVERE, "Error starting server " + Server.this.toString(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error starting server "
+						+ Server.this.toString(), e);
+			}
 			throw e;
 		}
 	}
@@ -3242,7 +3452,10 @@ public class Server extends Base implements IServer {
 							try {
 								mutex.notifyAll();
 							} catch (Exception e) {
-								Trace.trace(Trace.SEVERE, "Error notifying server stop", e);
+								if (Trace.SEVERE) {
+									Trace.trace(Trace.STRING_SEVERE,
+											"Error notifying server stop", e);
+								}
 							}
 						}
 					}
@@ -3267,12 +3480,17 @@ public class Server extends Base implements IServer {
 							timer.timeout = true;
 							// notify waiter
 							synchronized (mutex) {
-								Trace.trace(Trace.FINEST, "stop notify timeout");
+								if (Trace.FINEST) {
+									Trace.trace(Trace.STRING_FINEST, "stop notify timeout");
+								}
 								mutex.notifyAll();
 							}
 						}
 					} catch (Exception e) {
-						Trace.trace(Trace.SEVERE, "Error notifying server stop timeout", e);
+						if (Trace.SEVERE) {
+							Trace.trace(Trace.STRING_SEVERE,
+									"Error notifying server stop timeout", e);
+						}
 					}
 				}
 			};
@@ -3290,7 +3508,10 @@ public class Server extends Base implements IServer {
 						getServerState() != IServer.STATE_STARTED)
 					mutex.wait();
 			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error waiting for server stop", e);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE,
+							"Error waiting for server stop", e);
+				}
 			}
 		}
 		removeServerListener(listener);
@@ -3311,15 +3532,27 @@ public class Server extends Base implements IServer {
 		if (getServerState() == STATE_STOPPED)
 			return;
 		
-		Trace.trace(Trace.FINEST, "Stopping server: " + Server.this.toString());
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Stopping server: " + Server.this.toString());
+		}
 		
 		try {
 			getBehaviourDelegate(null).stop(force);
 		} catch (RuntimeException e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate stop() " + Server.this.toString(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(
+						Trace.STRING_SEVERE,
+						"Error calling delegate stop() "
+								+ Server.this.toString(), e);
+			}
 			throw e;
 		} catch (Throwable t) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate stop() " + Server.this.toString(), t);
+			if (Trace.SEVERE) {
+				Trace.trace(
+						Trace.STRING_SEVERE,
+						"Error calling delegate stop() "
+								+ Server.this.toString(), t);
+			}
 			throw new RuntimeException(t);
 		}
 	}

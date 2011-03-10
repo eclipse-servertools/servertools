@@ -243,7 +243,10 @@ public class ServerType implements IServerType {
 				try {
 					runtime = runtimeType.createRuntime(id, monitor);
 				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Couldn't create runtime", e);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE,
+								"Couldn't create runtime", e);
+					}
 				}
 			}
 		}

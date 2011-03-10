@@ -58,7 +58,9 @@ public class ProfilerPreferences {
 		try {
 			node.flush();			
 		} catch (BackingStoreException e) {
-			Trace.trace(Trace.SEVERE, "Could not save server profiler preference", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not save server profiler preference", e);
+			}
 		}
 	}
 	

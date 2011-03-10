@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,7 +33,9 @@ public class Connection {
 	 * Close the connection.
 	 */
 	public void close() {
-		Trace.trace(Trace.FINEST, "Closing connection");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Closing connection");
+		}
 		try {
 			in.getOutputStream().flush();
 			in.shutdownInput();
@@ -42,9 +44,13 @@ public class Connection {
 			out.getOutputStream().flush();
 			out.shutdownInput();
 			out.shutdownOutput();
-			Trace.trace(Trace.FINEST, "Connection closed");
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "Connection closed");
+			}
 		} catch (Exception ex) {
-			Trace.trace(Trace.WARNING, "Error closing connection " + this, ex);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Error closing connection " + this, ex);
+			}
 		}
 	}
 }

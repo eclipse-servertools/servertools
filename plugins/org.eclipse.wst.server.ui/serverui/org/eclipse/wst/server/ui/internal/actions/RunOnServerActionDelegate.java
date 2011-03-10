@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -100,7 +100,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				ServerUtil.modifyModules(wc, new IModule[] { module }, new IModule[0], monitor);
 				wc.save(false, monitor);
 			} catch (CoreException ce) {
-				Trace.trace(Trace.SEVERE, "Could not add module to server", ce);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "Could not add module to server", ce);
+				}
 				server = null;
 			}
 		}
@@ -112,8 +114,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			shell = ServerUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
 		
 		if (server == null) {
-			// try the full wizard
-			Trace.trace(Trace.FINEST, "Launching wizard");
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "Launching wizard");
+			}
 			RunOnServerWizard wizard = new RunOnServerWizard(module, launchMode, moduleArtifact);
 			WizardDialog dialog = new WizardDialog(shell, wizard);
 			if (dialog.open() == Window.CANCEL) {
@@ -125,7 +128,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			try {
 				Job.getJobManager().join("org.eclipse.wst.server.ui.family", null);
 			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Error waiting for job", e);
+				if (Trace.WARNING) {
+					Trace.trace(Trace.STRING_WARNING, "Error waiting for job", e);
+				}
 			}
 			server = wizard.getServer();
 			boolean preferred = wizard.isPreferredServer();
@@ -147,7 +152,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		try {
 			Job.getJobManager().join("org.eclipse.wst.server.ui.family", new NullProgressMonitor());
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Error waiting for job", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Error waiting for job", e);
+			}
 		}
 		
 		return server;
@@ -160,7 +167,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		final IModuleArtifact[] moduleArtifacts = ServerPlugin.getModuleArtifacts(selection);
 		if (moduleArtifacts == null || moduleArtifacts.length == 0 || moduleArtifacts[0] == null) {
 			EclipseUtil.openError(Messages.errorNoArtifact);
-			Trace.trace(Trace.FINEST, "No module artifact found");
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "No module artifact found");
+			}
 			return;
 		}
 		
@@ -199,7 +208,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		
 		if (moduleArtifact.getModule() == null) { // 149425
 			EclipseUtil.openError(Messages.errorNoModules);
-			Trace.trace(Trace.FINEST, "Module artifact not contained in a module");
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "Module artifact not contained in a module");
+			}
 			return;
 		}
 		final IModule module = moduleArtifact.getModule();
@@ -238,7 +249,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			}
 			if (!found) {
 				EclipseUtil.openError(Messages.errorNoServer);
-				Trace.trace(Trace.FINEST, "No server for start mode");
+				if (Trace.FINEST) {
+					Trace.trace(Trace.STRING_FINEST, "No server for start mode");
+				}
 				return;
 			}
 		}
@@ -269,11 +282,15 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		//if (monitor.isCanceled())
 		//	return;
 		
-		Trace.trace(Trace.FINEST, "Server: " + server);
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Server: " + server);
+		}
 		
 		if (server == null) {
 			EclipseUtil.openError(Messages.errorNoServer);
-			Trace.trace(Trace.SEVERE, "No server found");
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "No server found");
+			}
 			return;
 		}
 		
@@ -324,7 +341,10 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				if (c.newInstance() != null)
 					canLoad = true;
 			} catch (Throwable t) {
-				Trace.trace(Trace.WARNING, "Could not load module artifact delegate class, switching to backup");
+				if (Trace.WARNING) {
+					Trace.trace(Trace.STRING_WARNING,
+							"Could not load module artifact delegate class, switching to backup");
+				}
 			}
 			if (canLoad) {
 				try {
@@ -332,7 +352,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 					ILaunchConfiguration config = getLaunchConfiguration(server, (ModuleArtifactDelegate) moduleArtifact, launchableAdapter, client, monitor);
 					config.launch(launchMode, monitor);
 				} catch (CoreException ce) {
-					Trace.trace(Trace.SEVERE, "Could not launch Run on Server", ce);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE, "Could not launch Run on Server", ce);
+					}
 				}
 				return;
 			}
@@ -340,7 +362,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		
 		Thread thread = new Thread("Run on Server") {
 			public void run() {
-				Trace.trace(Trace.FINEST, "Ready to launch");
+				if (Trace.FINEST) {
+					Trace.trace(Trace.STRING_FINEST, "Ready to launch");
+				}
 				
 				// start server if it's not already started
 				// and cue the client to start
@@ -486,7 +510,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			IProject project = moduleArtifact.getModule().getProject();
 			config.setMappedResources(new IResource[] { project });
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not associate launch with a project", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Could not associate launch with a project", e);
+			}
 		}
 	}
 
@@ -515,13 +541,17 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 								try {
 									return wc.doSave();
 								} catch (CoreException ce) {
-									Trace.trace(Trace.SEVERE, "Error configuring launch", ce);
+									if (Trace.SEVERE) {
+										Trace.trace(Trace.STRING_SEVERE, "Error configuring launch", ce);
+									}
 								}
 							}
 							return launchConfigs[i];
 						}
 					} catch (CoreException e) {
-						Trace.trace(Trace.SEVERE, "Error configuring launch", e);
+						if (Trace.SEVERE) {
+							Trace.trace(Trace.STRING_SEVERE, "Error configuring launch", e);
+						}
 					}
 				}
 			}
@@ -684,11 +714,15 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 * portion of the plugin action
 	 */
 	public void run(IAction action) {
-		Trace.trace(Trace.FINEST, "Running on Server...");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Running on Server...");
+		}
 		try {
 			run();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Run on Server Error", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Run on Server Error", e);
+			}
 		}
 	}
 
@@ -726,7 +760,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 * @param sel current selection in the desktop
 	 */
 	public void selectionChanged(IAction action, ISelection sel) {
-		Trace.trace(Trace.FINEST, "> selectionChanged");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "> selectionChanged");
+		}
 		selection = null;
 		long time = System.currentTimeMillis();
 		if (sel == null || sel.isEmpty() || !(sel instanceof IStructuredSelection)) {
@@ -747,9 +783,13 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		}
 		
 		if (selection != globalSelection) {
-			Trace.trace(Trace.FINEST, "Selection: " + selection);
-			if (selection != null)	
-				Trace.trace(Trace.FINEST, "Selection type: " + selection.getClass().getName());
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "Selection: " + selection);
+			}
+			if (selection != null)
+				if (Trace.FINEST) {
+					Trace.trace(Trace.STRING_FINEST, "Selection type: " + selection.getClass().getName());
+				}
 			globalSelection = selection;
 			globalLaunchMode = new HashMap<String, Boolean>();
 			if (!ServerPlugin.hasModuleArtifact(globalSelection)) {
@@ -757,7 +797,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				return;
 			}
 			
-			Trace.trace(Trace.FINEST, "checking for module artifact");
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "checking for module artifact");
+			}
 			// TODO - multiple module artifacts
 			IModuleArtifact[] moduleArtifacts = ServerPlugin.getModuleArtifacts(globalSelection);
 			IModuleArtifact moduleArtifact = null;
@@ -767,7 +809,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			IModule module = null;
 			if (moduleArtifact != null)
 				module = moduleArtifact.getModule();
-			Trace.trace(Trace.FINEST, "moduleArtifact= " + moduleArtifact + ", module= " + module);
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "moduleArtifact= " + moduleArtifact + ", module= " + module);
+			}
 			if (module != null)
 				findGlobalLaunchModes(module);
 			else {
@@ -778,7 +822,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		}
 		
 		action.setEnabled(isEnabled());
-		Trace.trace(Trace.FINEST, "< selectionChanged " + (System.currentTimeMillis() - time));
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "< selectionChanged " + (System.currentTimeMillis() - time));
+		}
 	}
 
 	/**

@@ -1,4 +1,10 @@
 # Debugging options for the org.eclipse.wst.internet.monitor.ui plugin
 
-# Turn on general debugging
+# Turn on general tracing
 org.eclipse.wst.internet.monitor.ui/debug=true
+
+# Tracing options
+org.eclipse.wst.internet.monitor.ui/config=false
+org.eclipse.wst.internet.monitor.ui/finest=false
+org.eclipse.wst.internet.monitor.ui/warning=false
+org.eclipse.wst.internet.monitor.ui/severe=false

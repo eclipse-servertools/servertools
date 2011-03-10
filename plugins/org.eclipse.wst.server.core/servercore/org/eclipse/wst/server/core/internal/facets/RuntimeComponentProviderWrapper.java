@@ -62,7 +62,9 @@ public class RuntimeComponentProviderWrapper {
 			list.toArray(s);
 			return s;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not parse runtime type ids: " + element);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not parse runtime type ids: " + element);
+			}
 			return null;
 		}
 	}

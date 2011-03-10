@@ -68,7 +68,10 @@ public class ServerNotificationManager {
 	 * @param eventMask
 	 */
 	public void addListener(IServerListener curListener, int eventMask) {
-		Trace.trace(Trace.FINEST, "->- Adding server listener to notification manager: " + curListener + " " + eventMask + " ->-");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "->- Adding server listener to notification manager: " + curListener + " "
+					+ eventMask + " ->-");
+		}
 		if (curListener == null) {
 			return;
 		}
@@ -79,12 +82,16 @@ public class ServerNotificationManager {
 	}
 
 	protected void broadcastChange(ServerEvent event) {
-		Trace.trace(Trace.FINEST, "->- Broadcasting server event: " + event + " ->-");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "->- Broadcasting server event: " + event + " ->-");
+		}
 		if (event == null) {
 			return;
 		}
 		int eventKind = event.getKind();
-		Trace.trace(Trace.FINEST, "  Server event kind: " + eventKind + " ->-");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "  Server event kind: " + eventKind + " ->-");
+		}
 		
 		// only notify listeners that listen to module event
 		int size;
@@ -104,17 +111,32 @@ public class ServerNotificationManager {
 			boolean isKindMatch = (mask & eventKind ^ ServerEvent.SERVER_CHANGE ^ ServerEvent.MODULE_CHANGE) != 0;
 			
 			if (isTypeMatch && isKindMatch) {
-				Trace.trace(Trace.FINEST, "->- Firing server event to listener: " + curEntry.getListener() + " ->-");
+				if (Trace.FINEST) {
+					Trace.trace(Trace.STRING_FINEST, "->- Firing server event to listener: " + curEntry.getListener()
+							+ " ->-");
+				}
 				try {
-					Trace.trace(Trace.LISTENERS, "  Firing server event to listener: " + curEntry.getListener());
+					if (Trace.LISTENERS) {
+						Trace.trace(Trace.STRING_LISTENERS,
+								"  Firing server event to listener: " + curEntry.getListener());
+					}
 					curEntry.getListener().serverChanged(event);
 				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "  Error firing server event: " + curEntry.getListener(), e);
+					if (Trace.SEVERE) {
+						Trace.trace(
+								Trace.STRING_SEVERE,
+								"  Error firing server event: "
+										+ curEntry.getListener(), e);
+					}
 				}
-				Trace.trace(Trace.LISTENERS, "-<- Done firing server event -<-");
+				if (Trace.LISTENERS) {
+					Trace.trace(Trace.STRING_LISTENERS, "-<- Done firing server event -<-");
+				}
 			}
 		}
-		Trace.trace(Trace.FINEST, "-<- Done broadcasting server event -<-");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "-<- Done broadcasting server event -<-");
+		}
 	}
 
 	/**
@@ -132,7 +154,10 @@ public class ServerNotificationManager {
 	 * @param curListener
 	 */
 	public void removeListener(IServerListener curListener) {
-		Trace.trace(Trace.FINEST, "->- Removing server listener from notification manager: " + curListener + " ->-");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "->- Removing server listener from notification manager: " + curListener
+					+ " ->-");
+		}
 		if (curListener == null)
 			return;
 		
