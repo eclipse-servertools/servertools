@@ -23,12 +23,27 @@ import org.eclipse.wst.server.ui.internal.wizard.fragment.RunOnServerWizardFragm
  * A wizard used for Run on Server.
  */
 public class RunOnServerWizard extends TaskWizard {
+	
 	/**
 	 * RunOnServerWizard constructor comment.
 	 * 
 	 * @param module a module
 	 * @param launchMode a launch mode
 	 * @param moduleArtifact a module artifact
+	 * 
+	 * @deprecated
+	 */
+	public RunOnServerWizard(IModule module, String launchMode, IModuleArtifact moduleArtifact) {
+		this(module, launchMode,moduleArtifact, null);
+	}
+	
+	/**
+	 * RunOnServerWizard constructor comment.
+	 * 
+	 * @param module a module
+	 * @param launchMode a launch mode
+	 * @param moduleArtifact a module artifact
+	 * @param properties a HashMap with the key/value pair that defines the behaviour of the wizard 
 	 */
 	public RunOnServerWizard(IModule module, String launchMode, IModuleArtifact moduleArtifact, HashMap properties) {
 		super(Messages.wizRunOnServerTitle, createRootWizard(module, launchMode, moduleArtifact, properties));
