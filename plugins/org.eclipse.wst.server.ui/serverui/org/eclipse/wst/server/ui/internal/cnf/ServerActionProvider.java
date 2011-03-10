@@ -11,7 +11,9 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.cnf;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.action.*;
@@ -147,10 +149,19 @@ public class ServerActionProvider extends CommonActionProvider {
 		actionBars.setGlobalActionHandler(ActionFactory.RENAME.getId(), renameAction);
 		
 		IContributionManager cm = actionBars.getToolBarManager();
-		cm.removeAll();
+	    IContributionItem[] cis = cm.getItems();
+	    List<IAction> existingActions = new ArrayList<IAction>();
+	    for (IContributionItem ci : cis) {
+	        if (ci instanceof ActionContributionItem) {
+	            ActionContributionItem aci = (ActionContributionItem) ci;
+	            existingActions.add(aci.getAction());
+	        }
+	    }
 
-		for (int i = 0; i < actions.length - 1; i++)
-			cm.add(actions[i]);
+	    for (int i = 0; i < actions.length - 1; i++)
+	        if (!existingActions.contains(actions[i]))
+	            cm.add(actions[i]);
+
 	}
 	
 	public void fillContextMenu(IMenuManager menu) {
