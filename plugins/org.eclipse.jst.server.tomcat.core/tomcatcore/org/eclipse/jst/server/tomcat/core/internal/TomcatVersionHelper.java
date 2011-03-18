@@ -804,7 +804,7 @@ public class TomcatVersionHelper {
 
 	public static String getLoaderJarFile(String serverId, String tomcatVersion) {
 		String loaderJar = "/" + serverId + ".loader.jar";
-		// If Tomcat 7.0, we need to determine the older jar should be used
+		// If Tomcat 7.0, we need to determine if an older jar should be used
 		if ("org.eclipse.jst.server.tomcat.runtime.70".equals(serverId) && tomcatVersion != null) {
 			int index = tomcatVersion.indexOf('.');
 			if (index >= 0 && tomcatVersion.length() > index + 1) {
@@ -834,8 +834,12 @@ public class TomcatVersionHelper {
 									try {
 										version = Integer.parseInt(versionStr);
 										if (version <= 6) {
-											// Use the jar for Tomcat 7.0.6 or earlier.
+											// Use this jar for Tomcat 7.0.6 or earlier.
 											loaderJar = "/" + serverId + "6.loader.jar";
+										}
+										else if (version <= 8) {
+											// Use this jar for Tomcat 7.0.8 (7.0.7 didn't release)
+											loaderJar = "/" + serverId + "8.loader.jar";
 										}
 									}
 									catch (NumberFormatException e) {
