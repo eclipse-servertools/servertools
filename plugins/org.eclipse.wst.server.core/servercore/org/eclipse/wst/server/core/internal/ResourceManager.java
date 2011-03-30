@@ -405,11 +405,17 @@ public class ResourceManager {
 	}
 	
 	protected void shutdownImpl() {
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		if (workspace != null)
-			workspace.removeResourceChangeListener(resourceChangeListener);
-		
-		ServerPlugin.getInstance().getPluginPreferences().removePropertyChangeListener(pcl);
+		if(!initialized) {
+			return;
+		}
+
+		if (resourceChangeListener != null) {
+			IWorkspace workspace = ResourcesPlugin.getWorkspace();
+			if (workspace != null)
+				workspace.removeResourceChangeListener(resourceChangeListener);
+			
+			ServerPlugin.getInstance().getPluginPreferences().removePropertyChangeListener(pcl);
+		}
 		
 		removeServerLifecycleListener(ServerListener.getInstance());
 	}
