@@ -1120,9 +1120,11 @@ public class ResourceManager {
 		fireServerEvent(server, EVENT_ADDED);
 		
 		ServerType serverType = (ServerType) server.getServerType();
-		String bundleId = serverType.getNamespace();
-		if (activeBundles != null && !activeBundles.contains(bundleId))
-			activeBundles.add(bundleId);
+		if (serverType != null) {
+			String bundleId = serverType.getNamespace();
+			if (activeBundles != null && !activeBundles.contains(bundleId))
+				activeBundles.add(bundleId);
+		}
 	}
 
 	public String toString() {

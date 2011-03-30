@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -469,7 +469,7 @@ public final class ServerCore {
 		PublishController[] controllers = ServerPlugin.getPublishController();
 		if (controllers.length > 0){
 			for (PublishController controller : controllers){
-				if (controller.supportsType(server.getServerType().getId()))
+				if (server.getServerType() != null && controller.supportsType(server.getServerType().getId()))
 					return controller.isPublishRequired(server, delta2);
 			}
 		}
