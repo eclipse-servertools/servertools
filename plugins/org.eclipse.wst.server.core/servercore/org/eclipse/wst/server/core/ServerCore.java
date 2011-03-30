@@ -491,7 +491,7 @@ public final class ServerCore {
 		PublishController[] controllers = ServerPlugin.getPublishController();
 		if (controllers.length > 0){
 			for (PublishController controller : controllers){
-				if (controller.supportsType(server.getServerType().getId()))
+				if (server.getServerType() != null && controller.supportsType(server.getServerType().getId()))
 					return controller.isPublishRequired(server, delta2);
 			}
 		}
