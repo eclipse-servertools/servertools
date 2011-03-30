@@ -199,6 +199,7 @@ public class ServerEditorPageSectionFactory implements IServerEditorPageSectionF
 		if (getContextualLaunchEnablementExpression() == null)
 			return true;
 		IEvaluationContext context = new EvaluationContext(null, obj);
+		context.setAllowPluginActivation(true);
 		context.addVariable("server", obj);
 		return evalEnablementExpression(context, getContextualLaunchEnablementExpression());
 	}

@@ -241,6 +241,7 @@ public class ServerEditorPartFactory implements IServerEditorPartFactory {
 		if (getContextualLaunchEnablementExpression() == null)
 			return true;
 		IEvaluationContext context = new EvaluationContext(null, obj);
+		context.setAllowPluginActivation(true);
 		context.addVariable("server", obj);
 		return evalEnablementExpression(context, getContextualLaunchEnablementExpression());
 	}
