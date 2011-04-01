@@ -3427,7 +3427,9 @@ public class Server extends Base implements IServer {
 				editorHelper.setDebugNeverSave();
 			}
 			
-			launch = launchConfig.launch(mode2, monitor); // , true); - causes workspace lock
+			if (launchConfig != null){
+				launch = launchConfig.launch(mode2, monitor); // , true); - causes workspace lock
+			}
 			
 			if (editorHelper != null){
 				editorHelper.setDebugOriginalValue();
