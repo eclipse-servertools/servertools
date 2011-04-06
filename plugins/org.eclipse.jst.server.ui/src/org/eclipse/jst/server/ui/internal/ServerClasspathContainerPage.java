@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,9 @@
 package org.eclipse.jst.server.ui.internal;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -22,6 +24,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.WizardPage;
@@ -109,7 +112,20 @@ public class ServerClasspathContainerPage extends WizardPage implements IClasspa
 		});
 		tableViewer.setLabelProvider(new RuntimeTableLabelProvider());
 		tableViewer.setInput("root");
-		
+
+		if( selection != null ) {
+			Set<IRuntime> set = runtimeMap.keySet();
+			IRuntime rt;
+			for( Iterator<IRuntime> i = set.iterator(); i.hasNext();) {
+				rt = i.next();
+				if( runtimeMap.get(rt).getPath().equals(selection.getPath())) {
+					tableViewer.setSelection(new StructuredSelection(new Object[]{rt}));
+					setPageComplete(true);
+					break;
+				}
+			}
+		}
+
 		tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				try {
