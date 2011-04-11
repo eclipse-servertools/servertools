@@ -2,8 +2,8 @@
 <html lang="en-us" xml:lang="en-us">
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<meta name="copyright" content="Copyright (c) 2000, 2009 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
-<meta name="DC.rights.owner" content="(C) Copyright 2000, 2009" />
+<meta name="copyright" content="Copyright (c) 2000, 2011 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
+<meta name="DC.rights.owner" content="(C) Copyright 2000, 2011" />
 <meta content="public" name="security" />
 <meta content="index,follow" name="Robots" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
@@ -15,6 +15,9 @@
 <meta content="servers, creating, creating a pointer" name="keywords" />
 <meta scheme="URI" name="DC.Relation" content="../topics/twinstprf.html" />
 <meta scheme="URI" name="DC.Relation" content="../topics/tcreate.html" />
+<meta scheme="URI" name="DC.Relation" content="../../org.eclipse.jst.server.ui.doc.user/topics/tomcat.html" />
+<meta scheme="URI" name="DC.Relation" content="../topics/thttppreview.html" />
+<meta scheme="URI" name="DC.Relation" content="../topics/tj2eepreview.html" />
 <meta content="XHTML" name="DC.Format" />
 <meta content="twcrtins_wst" name="DC.Identifier" />
 <meta content="en-us" name="DC.Language" />
@@ -60,9 +63,6 @@ to an application server.</span></li>
 select the type of server or test environment where you want to publish
 or test your resources.</span>
 <ol type="a">
-<li class="substepexpand"><span>(Optional) Refer to the <span class="uicontrol">Description</span> section
-for brief details about the server you have selected.</span></li>
-
 <li class="substepexpand"><span>(Optional) In the text field under the <span class="uicontrol">Select
 the server type</span> label, you can replace the text <kbd class="userinput">type
 filter text</kbd> with keywords to filter the list of available
@@ -102,6 +102,9 @@ level or any servers that may have a version-level of 1.2.</dd>
 </dl>
 </li>
 
+<li class="substepexpand"><span>There is a brief description about the server selected
+from the server type list.</span></li>
+
 </ol>
 
 </li>
@@ -118,31 +121,50 @@ type a label to identify this server entry in the Servers view.</span>
 convention: <em>server type</em> at <em>host name</em>, for example <kbd class="userinput">Tomcat
 v6.0 Server at localhost</kbd>.</li>
 
-<li class="stepexpand" id="twcrtins_wst__step6"><a name="twcrtins_wst__step6"><!-- --></a><span>In the <span class="uicontrol">Server runtime environment</span> list,
-select a server runtime environment as defined in the Preferences
+<li class="stepexpand" id="twcrtins_wst__step6"><a name="twcrtins_wst__step6"><!-- --></a><span>The <span class="uicontrol">Server runtime environment</span> list
+is available, when you select a server from the server type list that
+contains a runtime environment entry in the Runtime Environments preferences
 page (<span class="menucascade"><span class="uicontrol">Window</span> &gt; <span class="uicontrol">Preferences</span>
  &gt; <span class="uicontrol">Server</span> &gt; <span class="uicontrol">Runtime Environments</span>
-</span>). You can direct the workbench to use a specific runtime
-environment of an application server for compiling, testing, or running
-your application. To modify the server runtime environment, select
-the <span class="uicontrol">Configure runtime environments</span> link. To
-add a new server runtime environment, select the <span class="uicontrol">Add</span> link.</span>
- For more details about runtime environments, see the <em>Defining
-the server runtime environments preferences</em> link at the bottom
-of this topic.</li>
+</span>).</span>  In the <span class="uicontrol">Server runtime environment</span> list,
+select the runtime environment of an application server for compiling,
+testing, or running your application. To modify the server runtime
+environment, select the <span class="uicontrol">Configure runtime environments</span> link.
+To add a new server runtime environment, select the <span class="uicontrol">Add</span> link.
+For more details about runtime environments, see the <em>Defining the
+server runtime environments preferences</em> link at the bottom of
+this topic. <p>If the <span class="uicontrol">Server runtime environment</span> list
+is not available, continue to the next page of the New Server wizard
+where it is going to prompt you for the installation directory of
+the server. After you complete this New Server wizard, the workbench
+automatically adds a runtime environment entry in the Runtime Environments
+preference page.</p>
+</li>
 
 <li class="stepexpand" id="twcrtins_wst__step7"><a name="twcrtins_wst__step7"><!-- --></a><span>Click <span class="uicontrol">Next</span> and follow
 the instructions in the wizard to specify the details of the server
-that you want to create.</span></li>
+that you want to create.</span>  See the links at the end of this
+topic, as there might be documentation available when continuing through
+this wizard for creating the server you have selected in the server
+type list.</li>
 
-<li class="stepexpand" id="twcrtins_wst__step8"><a name="twcrtins_wst__step8"><!-- --></a><span>Click  <span class="uicontrol">Finish</span>.</span> The
-new server appears in the Servers view.</li>
+<li class="stepexpand" id="twcrtins_wst__step8"><a name="twcrtins_wst__step8"><!-- --></a><span>After completing the New Server wizard, by click <span class="uicontrol">Finish</span>,
+the new server appears in the Servers view.</span></li>
 
 </ol>
 
 </div>
 
 <div>
+<ul class="ullinks">
+<li class="ulchildlink"><strong><a href="../../org.eclipse.jst.server.ui.doc.user/topics/tomcat.html">...Apache Tomcat server</a></strong><br />
+</li>
+<li class="ulchildlink"><strong><a href="../topics/thttppreview.html">...HTTP Preview server</a></strong><br />
+</li>
+<li class="ulchildlink"><strong><a href="../topics/tj2eepreview.html">...J2EE Preview server</a></strong><br />
+</li>
+</ul>
+
 <div class="familylinks">
 <div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tcreate.html" title="">Creating, editing, and deleting servers</a></div>
 </div>

@@ -38,8 +38,6 @@ to an application server.</cmd></step>
 select the type of server or test environment where you want to publish
 or test your resources.</cmd>
 <substeps>
-<substep><cmd>(Optional) Refer to the <uicontrol>Description</uicontrol> section
-for brief details about the server you have selected.</cmd></substep>
 <substep><cmd>(Optional) In the text field under the <uicontrol>Select
 the server type</uicontrol> label, you can replace the text <userinput>type
 filter text</userinput> with keywords to filter the list of available
@@ -65,6 +63,8 @@ or supports JEE 5 specification level.</dd>
 <dd>Filters the list of available servers that supports J2EE 1.2 specification
 level or any servers that may have a version-level of 1.2.</dd>
 </dlentry></dl></info></substep>
+<substep><cmd>There is a brief description about the server selected
+from the server type list.</cmd></substep>
 </substeps>
 </step>
 <step id="step3"><cmd>In the <uicontrol>Server's host name</uicontrol> field,
@@ -77,24 +77,33 @@ type a label to identify this server entry in the Servers view.</cmd>
 <info> By default, this field is completed with the following naming
 convention: <i>server type</i> at <i>host name</i>, for example <userinput>Tomcat
 v6.0 Server at localhost</userinput>.</info></step>
-<step id="step6"><cmd>In the <uicontrol>Server runtime environment</uicontrol> list,
-select a server runtime environment as defined in the Preferences
+<step id="step6"><cmd>The <uicontrol>Server runtime environment</uicontrol> list
+is available, when you select a server from the server type list that
+contains a runtime environment entry in the Runtime Environments preferences
 page (<menucascade><uicontrol>Window</uicontrol><uicontrol>Preferences</uicontrol>
 <uicontrol>Server</uicontrol><uicontrol>Runtime Environments</uicontrol>
-</menucascade>). You can direct the workbench to use a specific runtime
-environment of an application server for compiling, testing, or running
-your application. To modify the server runtime environment, select
-the <uicontrol>Configure runtime environments</uicontrol> link. To
-add a new server runtime environment, select the <uicontrol>Add</uicontrol> link.</cmd>
-<info>For more details about runtime environments, see the <i>Defining
-the server runtime environments preferences</i> link at the bottom
-of this topic.</info></step><?Pub Caret 614?>
+</menucascade>).</cmd><info> In the <uicontrol>Server runtime environment</uicontrol> list,
+select the runtime environment of an application server for compiling,
+testing, or running your application. To modify the server runtime
+environment, select the <uicontrol>Configure runtime environments</uicontrol> link.
+To add a new server runtime environment, select the <uicontrol>Add</uicontrol> link.
+For more details about runtime environments, see the <i>Defining the
+server runtime environments preferences</i> link at the bottom of
+this topic.</info><info><p>If the <uicontrol>Server runtime environment</uicontrol> list
+is not available, continue to the next page of the New Server wizard
+where it is going to prompt you for the installation directory of
+the server. After you complete this New Server wizard, the workbench
+automatically adds a runtime environment entry in the Runtime Environments
+preference page.</p></info></step>
 <step id="step7"><cmd>Click <uicontrol>Next</uicontrol> and follow
 the instructions in the wizard to specify the details of the server
-that you want to create.</cmd></step>
-<step id="step8"><cmd>Click  <uicontrol>Finish</uicontrol>.</cmd><info>The
-new server appears in the Servers view.</info></step>
+that you want to create.</cmd><info> See the links at the end of this
+topic, as there might be documentation available when continuing through
+this wizard for creating the server you have selected in the server
+type list.</info></step><?Pub Caret 206?>
+<step id="step8"><cmd>After completing the New Server wizard, by click <uicontrol>Finish</uicontrol>,
+the new server appears in the Servers view.</cmd></step>
 </steps>
 </taskbody>
 </task>
-<?Pub *0000005228?>
+<?Pub *0000005898?>

@@ -19,8 +19,8 @@ status="changed">workbench<indexterm>launching preferences</indexterm></indexter
 </keywords>
 </metadata></prolog>
 <taskbody>
-<prereq></prereq>
-<context id="context">To define these preferences, complete the following:</context>
+<context id="context">To define these preferences, complete the following:</context><?Pub
+Caret -2?>
 <steps>
 <step id="step1"><cmd>In the toolbar, select <menucascade><uicontrol>Window</uicontrol>
 <uicontrol>Preferences</uicontrol></menucascade>.</cmd></step>
@@ -41,7 +41,7 @@ in an open server editor before starting the server</li>
 open editors before starting the server</li>
 <li>Prompt - specifies the workbench to prompt you before saving any
 changes in an open server editor</li>
-</ul></chdesc></chrow><?Pub Caret -2?>
+</ul></chdesc></chrow>
 <chrow><choption id="choption1">When switching to a different server
 mode<!--context id = .spge0030--></choption><chdesc><ph id="chdesc1_ph1">When
 switching the server to run in a different mode, for example using
@@ -97,4 +97,4 @@ the breakpoints set in your applications</li>
 </steps>
 </taskbody>
 </task>
-<?Pub *0000005625?>
+<?Pub *0000005607?>

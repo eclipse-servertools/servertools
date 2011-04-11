@@ -1,64 +1,73 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2006, v.4002-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2009, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <task id="twtcpprf_wst" xml:lang="en-us">
 <title id="title">Defining the TCP/IP Monitor preferences</title>
-<shortdesc id="shortdesc">Using the Preferences page, you can define the TCP/IP
-Monitor attributes. To define these preferences, complete the following:</shortdesc>
+<shortdesc id="shortdesc">Using the Preferences page, you can define
+the TCP/IP Monitor attributes.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm keyref="twtcpprf|1|preferencesTCP/IPMonitor"
-status="new">preferences<indexterm>TCP/IP Monitor</indexterm></indexterm>
-<indexterm keyref="twtcpprf|2|TCP/IPpreferences" status="new">TCP/IP<indexterm>preferences</indexterm></indexterm>
-<indexterm keyref="twtcpprf|3|viewsTCP/IPMonitorpreferences" status="changed">views<indexterm>TCP/IP
-monitors</indexterm></indexterm></keywords>
+<keywords id="index"><indexterm
+keyref="twtcpprf|1|preferencesTCP/IPMonitor" status="new">preferences<indexterm>TCP/IP
+Monitor</indexterm></indexterm><indexterm
+keyref="twtcpprf|2|TCP/IPpreferences" status="new">TCP/IP<indexterm>preferences</indexterm></indexterm>
+<indexterm keyref="twtcpprf|3|viewsTCP/IPMonitorpreferences"
+status="changed">views<indexterm>TCP/IP monitors</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
-<context></context>
+<context>To define these preferences, complete the following steps:</context><?Pub
+Caret 57?>
 <steps id="steps">
 <step><cmd>From the toolbar, select <menucascade><uicontrol>Window</uicontrol>
 <uicontrol>Preferences</uicontrol></menucascade>.</cmd></step>
 <step><cmd>In the Preferences window, expand  <uicontrol>Run/Debug</uicontrol> and
 then select  <uicontrol>TCP/IP Monitor</uicontrol>.</cmd></step>
-<step><cmd>Select the <uicontrol>Show TCP/IP Monitor View when there is activity</uicontrol> check
-box if you want to display the TCP/IP Monitor view when there is activity
-through a TCP/IP monitoring server.</cmd></step>
+<step><cmd>Select the <uicontrol>Show TCP/IP Monitor View when there
+is activity</uicontrol> check box if you want to display the TCP/IP
+Monitor view when there is activity through a TCP/IP monitoring server.</cmd>
+</step>
 <step><cmd>To add a TCP/IP monitoring server, complete the following:</cmd>
 <substeps>
-<substep><cmd>Under the <uicontrol>TCP/IP Monitors</uicontrol> lists, click <uicontrol>Add</uicontrol>.</cmd>
-<info>A <uicontrol>New Monitor</uicontrol> dialog opens.</info></substep>
+<substep><cmd>Under the <uicontrol>TCP/IP Monitors</uicontrol> lists,
+click <uicontrol>Add</uicontrol>.</cmd><info>A <uicontrol>New Monitor</uicontrol> dialog
+opens.</info></substep>
 <substep><cmd>Specify the following settings, then click <uicontrol>OK</uicontrol>:</cmd>
 </substep>
 </substeps>
 <choicetable>
-<chrow><choption>Local monitoring port</choption><chdesc>Specify a unique
-port number on your local machine.</chdesc></chrow>
-<chrow><choption>Host name</choption><chdesc>Specify the host name or IP address
-of the machine where the server is running.</chdesc></chrow>
-<chrow><choption>Port</choption><chdesc>Specify the port number of the remote
-server.</chdesc></chrow>
-<chrow><choption>Type</choption><chdesc>Specify whether the request type from
-the Web browser are sent by HTTP or TCP/IP. If the HTTP option is selected
-the requests from the Web browser are modified so that the HTTP header points
-to the remote machine and separated if multiple HTTP requests are received
-in the same connection. If the TCP/IP option is selected, all the requests
-are sent byte for byte and the TCP/IP Monitor will not translate or modify
-any requests that it forwards. </chdesc></chrow>
-<chrow><choption>Timeout (in milliseconds)</choption><chdesc>Specify the length
-of time, in milliseconds, that you can wait before ending the TCP/IP connection
-to a server.</chdesc></chrow>
+<chrow><choption>Local monitoring port</choption><chdesc>Specify a
+unique port number on your local machine.</chdesc></chrow>
+<chrow><choption>Host name</choption><chdesc>Specify the host name
+or IP address of the machine where the server is running.</chdesc>
+</chrow>
+<chrow><choption>Port</choption><chdesc>Specify the port number of
+the remote server.</chdesc></chrow>
+<chrow><choption>Type</choption><chdesc>Specify whether the request
+type from the Web browser are sent by HTTP or TCP/IP. If the HTTP
+option is selected the requests from the Web browser are modified
+so that the HTTP header points to the remote machine and separated
+if multiple HTTP requests are received in the same connection. If
+the TCP/IP option is selected, all the requests are sent byte for
+byte and the TCP/IP Monitor will not translate or modify any requests
+that it forwards. </chdesc></chrow>
+<chrow><choption>Timeout (in milliseconds)</choption><chdesc>Specify
+the length of time, in milliseconds, that you can wait before ending
+the TCP/IP connection to a server.</chdesc></chrow>
 </choicetable>
 </step>
 <step><cmd>Use the <uicontrol>Start</uicontrol> and <uicontrol>Stop</uicontrol> buttons
-to manage the TCP/IP monitoring servers.</cmd><info>The TCP/IP Monitor table
-lists the available TCP/IP monitoring servers. You can add, edit, remove,
-start or stop the available TCP/IP monitoring servers from the TCP/IP Monitor
- table. The <b>Status</b> column shows if the TCP/IP monitor is started or
-stopped. The <b>Host name</b>  column shows the host name or IP address of
-the machine where the server is running. The <b>Type</b>  column shows whether
-the request type from the Web browser are sent by HTTP or TCP/IP.</info></step>
+to manage the TCP/IP monitoring servers.</cmd><info>The TCP/IP Monitor
+table lists the available TCP/IP monitoring servers. You can add,
+edit, remove, start or stop the available TCP/IP monitoring servers
+from the TCP/IP Monitor  table. The <b>Status</b> column shows if
+the TCP/IP monitor is started or stopped. The <b>Host name</b>  column
+shows the host name or IP address of the machine where the server
+is running. The <b>Type</b>  column shows whether the request type
+from the Web browser are sent by HTTP or TCP/IP.</info></step>
 <step><cmd>Click  <uicontrol>Apply</uicontrol> and then  <uicontrol>OK</uicontrol> to
 save your changes.</cmd></step>
 </steps>
 </taskbody>
 </task>
+<?Pub *0000003734?>

@@ -1,14 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2006, v.4002-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2009, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <task id="twedtins_wst" xml:lang="en-us">
 <title id="title">Editing a server</title>
-<shortdesc id="shortdesc">You can edit your server using a server editor.
-The fields that you change are dependant on what runtime environment the server
-is defined to use, or whether it is defined as a local or remote server.</shortdesc>
+<shortdesc id="shortdesc">You can edit your server using a server
+editor. The fields that you change are dependant on what runtime environment
+the server is defined to use, or whether it is defined as a local
+or remote server.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm keyref="twedtins|1|serversediting" status="new">servers<indexterm>editing</indexterm></indexterm>
+<keywords id="index"><indexterm keyref="twedtins|1|serversediting"
+status="new">servers<indexterm>editing</indexterm></indexterm>
 <indexterm keyref="twedtins|3|editorsserver" status="new">editors<indexterm>server</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
@@ -17,23 +19,26 @@ is defined to use, or whether it is defined as a local or remote server.</shortd
 <steps id="steps">
 <step><cmd>Open a server editor, completing one of the following:</cmd>
 <choices>
-<choice>In the Servers view, double-click on the server that you want to edit.</choice>
-<choice>Right-click on the server in the Servers view, from the pop-up menu
-select <uicontrol>Open</uicontrol>. </choice>
+<choice>In the Servers view, double-click on the server that you want
+to edit.</choice>
+<choice>Right-click on the server in the Servers view, from the pop-up
+menu select <uicontrol>Open</uicontrol>. </choice>
 </choices>
 </step>
-<step><cmd>When the server editor is open on the workbench, you can save your
-changes by either selecting from the toolbar <menucascade><uicontrol>File</uicontrol>
-<uicontrol>Save</uicontrol></menucascade> or type <userinput>CTRL+S</userinput>. </cmd>
-<info><note type="tip">Changes to the server editor that have not yet been
-saved are indicated with a * icon located at the top of the server editor.
-After you save your changes on the server editor, the * icon should no longer
-appear on the server editor.</note></info></step>
-<step><cmd>For good practice, close all server editors before starting, restarting,
-or adding and removing modules on the server.</cmd><info>Otherwise, you might
-be prompt the following message:<codeblock>File Changed
-The server has been changed on the file system.  Do you want to load the changes?  Yes or No.</codeblock></info>
-</step>
+<step><cmd>When the server editor is open on the workbench, you can
+save your changes by either selecting from the toolbar <menucascade>
+<uicontrol>File</uicontrol><uicontrol>Save</uicontrol></menucascade> or
+type <userinput>CTRL+S</userinput>. </cmd><info><note type="tip">Changes
+to the server editor that have not yet been saved are indicated with
+a * icon located at the top of the server editor. After you save your
+changes on the server editor, the * icon should no longer appear on
+the server editor.</note></info></step>
+<step><cmd>Close all server editors before starting, restarting, or
+adding and removing modules on the server.</cmd><info> Otherwise,
+you might be prompt the following message:<codeblock>File Changed
+The server has been changed on the file system.  Do you want to load the changes?  Yes or No.</codeblock><?Pub
+Caret 0?></info></step>
 </steps>
 </taskbody>
 </task>
+<?Pub *0000002063?>

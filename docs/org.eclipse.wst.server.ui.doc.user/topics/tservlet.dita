@@ -39,8 +39,11 @@ to see that the server is launched.</info></step>
 view opens.</cmd><info>Step through the code, inspect and display
 variables, and make any necessary changes to the servlet. For detailed
 information on debugging, refer to the online help.</info></step>
-<step id="tservlet_step6"><cmd>When you are finished debugging, remove
-the breakpoint and save the servlet.</cmd></step>
+<step id="tservlet_step6"><cmd>When you are finished debugging, save
+the servlet.</cmd><info> Wait for the debugger to refresh and pick
+up the changes. When the debugger refresh is complete, the execution
+of the code resumes at the beginning of the method that was currently
+running.</info></step><?Pub Caret 33?>
 <step id="tservlet_step7"><cmd>Click the  <uicontrol>Resume</uicontrol> icon
 on the Debug toolbar to execute the servlet.</cmd></step>
 <step id="tservlet_step8"><cmd>If you have hot method replace enabled,
@@ -55,7 +58,7 @@ id="tservlet_info10">To update the changes, restart the server.</info>
 </step>
 </steps>
 <result id="tservlet_result"><p>The result is the server recognizes
-your changes.</p><?Pub Caret -2?></result>
+your changes.</p></result>
 </taskbody>
 </task>
-<?Pub *0000003369?>
+<?Pub *0000003546?>

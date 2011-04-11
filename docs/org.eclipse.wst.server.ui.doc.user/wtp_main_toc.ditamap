@@ -57,10 +57,11 @@ navtitle="Publishing your application"></topicref>
 <!--Creating-->
 <topicref href="topics/tcreate.dita" id="create_server" locktitle="yes"
 navtitle="Creating, editing and deleting servers">
-<topicref href="topics/twcrtins.dita" linking="none" locktitle="yes"
-navtitle="Creating a server ">
+<topicref href="topics/twcrtins.dita" linking="targetonly"
+locktitle="yes" navtitle="Creating a server ">
 <navref
-mapref="../org.eclipse.jst.server.ui.doc.user/tomcat_create.ditamap"/>
+mapref="../org.eclipse.jst.server.ui.doc.user/tomcat_create.ditamap"/><?Pub
+Caret -2?>
 <topicref href="topics/thttppreview.dita" locktitle="yes"
 navtitle="...HTTP Preview server"></topicref>
 <topicref href="topics/tj2eepreview.dita" locktitle="yes"
@@ -84,7 +85,7 @@ navtitle="Starting a server">
 navtitle="Starting a server in debug mode"></topicref>
 </topicref>
 <topicref href="topics/twstpins.dita" locktitle="yes"
-navtitle="Stopping a server"></topicref><?Pub Caret -2?>
+navtitle="Stopping a server"></topicref>
 <topicref href="topics/ttimeout.dita"
 navtitle="Setting timeout on the start or stop of the server">
 </topicref>
@@ -119,4 +120,4 @@ navtitle="Showing the state and status in the Servers view"></topicref>
 </topicref>
 </topicref>
 </map>
-<?Pub *0000005018?>
+<?Pub *0000005024?>

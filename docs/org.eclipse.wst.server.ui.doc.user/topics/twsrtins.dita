@@ -23,8 +23,8 @@ for testing</indexterm></indexterm></keywords>
 <context id="twrstins_context"><p>Once you have started the server
 you can test the projects that are associated with the server. You
 can stop and restart the server at any time. The status of the server
-is displayed in the  <uicontrol>Status</uicontrol> column of the Servers
-view.</p><p>To manually start a server:</p></context>
+is displayed in the Servers view.</p><?Pub Caret 185?><p>To manually
+start a server:</p></context>
 <steps id="twrtins_steps">
 <step><cmd>Switch to the Servers view.</cmd></step>
 <step><cmd>In the Servers view, right-click the server you want to
@@ -43,11 +43,11 @@ on the remote server when it is started.</li>
 start the server. If the server fails to start, check for the reason
 that it failed in the Console.</li>
 <li>In the Servers view, the status of the server changes to  <systemoutput>Started</systemoutput>.</li>
-</ul></info></step><?Pub Caret 34?>
+</ul></info></step>
 </steps>
 <result id="twsrtins_result"><note type="tip">The server is automatically
 started when you right-click on a file and then select  <uicontrol>Run
 As > Run on Server</uicontrol>.</note></result>
 </taskbody>
 </task>
-<?Pub *0000002751?>
+<?Pub *0000002707?>

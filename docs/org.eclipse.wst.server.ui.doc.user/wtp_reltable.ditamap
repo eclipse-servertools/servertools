@@ -204,6 +204,37 @@ navtitle="Deleting a server" type="task"></topicref>
 <relcell></relcell>
 <relcell></relcell>
 </relrow>
+<relrow>
+<relcell></relcell>
+<relcell>
+<topicref href="topics/twcrtins.dita" locktitle="yes"
+navtitle="Creating a server " scope="local">
+<topicref href="../org.eclipse.jst.server.ui.doc.user/topics/tomcat.dita"
+locktitle="yes" navtitle="...Apache Tomcat server" scope="peer">
+<topicmeta>
+<linktext>...Apache Tomcat server</linktext>
+<shortdesc></shortdesc>
+</topicmeta><?Pub Caret -2?>
+</topicref>
+<topicref href="topics/thttppreview.dita" locktitle="yes"
+navtitle="...HTTP Preview server" scope="local">
+<topicmeta>
+<linktext>...HTTP Preview server</linktext>
+<shortdesc></shortdesc>
+</topicmeta>
+</topicref>
+<topicref href="topics/tj2eepreview.dita" locktitle="yes"
+navtitle="...J2EE Preview server" scope="local">
+<topicmeta>
+<linktext>...J2EE Preview server</linktext>
+<shortdesc></shortdesc>
+</topicmeta>
+</topicref>
+</topicref>
+</relcell>
+<relcell></relcell>
+<relcell></relcell>
+</relrow>
 <!--Managing-->
 <relrow>
 <relcell></relcell>
@@ -222,7 +253,7 @@ navtitle="Stopping a server"></topicref>
 navtitle="Setting timeout on the start or stop of the server">
 </topicref>
 <topicref href="topics/twprefin.dita" locktitle="yes"
-navtitle="Setting a default server"></topicref><?Pub Caret -2?>
+navtitle="Setting a default server"></topicref>
 <topicref href="topics/tmetasrv.dita" locktitle="yes"
 navtitle="Displaying or hiding the metadata of the server"></topicref>
 <topicref href="topics/tclean.dita" locktitle="yes"
@@ -276,4 +307,4 @@ navtitle="Enabling server state decorator"></topicref>
 </relrow>
 </reltable>
 </map>
-<?Pub *0000008786?>
+<?Pub *0000009666?>

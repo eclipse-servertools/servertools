@@ -1,39 +1,48 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2006, v.4002-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2009, v.4002-->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
  "concept.dtd">
 <concept id="cwover_wst" xml:lang="en-us">
 <title id="cwover_title">Testing and publishing on your server</title>
-<shortdesc id="cwover_shortdesc"><ph id="cwover_shortdesc_ph1">The testing
-and publishing tools provides runtime environments where you can test JSP
-files, servlets, HTML files,</ph> <ph id="cwover_shortdesc_ph2">and <tm tmclass="special"
-tmowner="Sun Microsystems, Inc." tmtype="tm" trademark="Java">Java</tm> classes.</ph></shortdesc>
+<shortdesc id="cwover_shortdesc"><ph id="cwover_shortdesc_ph1">The
+testing and publishing tools provides runtime environments where you
+can test JSP files, servlets, HTML files,</ph> <ph
+id="cwover_shortdesc_ph2"><tm tmclass="special"
+tmowner="Sun Microsystems, Inc." tmtype="tm" trademark="Java">Java</tm> classes
+and many more artifacts.</ph></shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm keyref="cwover|1|applicationclientprojectstestingonservers"
+<keywords id="index"><indexterm
+keyref="cwover|1|applicationclientprojectstestingonservers"
 status="changed">application client projects<indexterm>testing</indexterm></indexterm>
 <indexterm keyref="cwover|2|serverstestingprojectresources" status="new">servers<indexterm>testing
 project resources</indexterm></indexterm></keywords>
 </metadata></prolog>
 <conbody>
 <p id="cwover_p1">You can use the workbench to test and publish resources
-from the following types of projects:</p>
+from many types of projects, here are examples:</p><?Pub Caret -1?>
 <ul id="cwover_ul1">
-<li>Dynamic Web projects, which typically contain JSP files, HTML files, servlets,
-and <tm tmclass="special" tmowner="Sun Microsystems, Inc." tmtype="tm" trademark="JavaBeans">JavaBeans</tm></li>
-<li>Static Web projects, which typically contain HTML files and graphic files</li>
-<li>Enterprise Applications projects, which may contain <tm tmclass="special"
-tmowner="Sun Microsystems, Inc." tmtype="tm" trademark="Java">Java</tm> Archive
-(JAR) files or Web Archive (WAR) files or both, and pointers to other Web
-or EJB projects</li>
+<li>Dynamic Web projects, which typically contain JSP files, HTML
+files, servlets, and <tm tmclass="special"
+tmowner="Sun Microsystems, Inc." tmtype="tm" trademark="JavaBeans">JavaBeans</tm></li>
+<li>Static Web projects, which typically contain HTML files and graphic
+files</li>
+<li>Enterprise Applications projects, which may contain <tm
+tmclass="special" tmowner="Sun Microsystems, Inc." tmtype="tm"
+trademark="Java">Java</tm> Archive (JAR) files or Web Archive (WAR)
+files or both, and pointers to other Web or EJB projects</li>
 <li>EJB projects, which contain enterprise beans</li>
 <li>Application client projects</li>
 </ul>
-<p id="cwover_p2">After testing your application locally, you can use the
+<p id="cwover_p2">After testing your application, you can use the
 tools to publish the application.</p>
 <section id="cwover_server_definitions"><title>Server definitions</title><p>The
-server tools use  <varname>servers</varname> to test and publish your projects.
-Servers are definitions that identify where you want to test your projects.
-You can either have the development environment create the servers automatically
-for you, or you can create them using a wizard.</p></section>
+workbench defines <varname>servers</varname> to test and publish your
+projects. Servers are definitions that identify where you want to
+test your projects. You can either have the development environment
+create the servers automatically for you, or you can create them using
+the <uicontrol>New Server</uicontrol> wizard (right-click in the Servers
+view and select <menucascade><uicontrol>New</uicontrol><uicontrol>Server</uicontrol>
+</menucascade>).</p></section>
 </conbody>
 </concept>
+<?Pub *0000002489?>
