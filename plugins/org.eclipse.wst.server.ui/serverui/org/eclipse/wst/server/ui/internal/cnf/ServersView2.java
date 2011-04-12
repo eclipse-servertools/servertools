@@ -230,7 +230,10 @@ public class ServersView2 extends CommonNavigator {
 						}
 						refreshServerState(server);
 						refreshServerContent(server);
-					} 
+					}
+					else if ((eventKind & ServerEvent.PUBLISH_STATE_CHANGE) != 0) {
+						refreshServerState(server);
+					}
 				} else if ((eventKind & ServerEvent.MODULE_CHANGE) != 0) {
 					// module change event
 					if ((eventKind & ServerEvent.STATE_CHANGE) != 0 || (eventKind & ServerEvent.PUBLISH_STATE_CHANGE) != 0) {
