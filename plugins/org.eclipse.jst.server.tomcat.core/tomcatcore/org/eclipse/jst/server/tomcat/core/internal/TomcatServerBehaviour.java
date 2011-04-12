@@ -1171,4 +1171,12 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			}
 		}
 	}
+
+	public void setTomcatServerPublishState(int state) {
+		setServerPublishState(state);
+	}
+
+	public void setTomcatServerRestartState(boolean state) {
+		setServerRestartState(state);
+	}
 }

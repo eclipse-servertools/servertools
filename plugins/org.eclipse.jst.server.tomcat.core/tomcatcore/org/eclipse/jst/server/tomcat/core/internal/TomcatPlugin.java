@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,11 +18,14 @@ import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
+import org.osgi.framework.BundleContext;
 /**
  * The Tomcat plugin.
  */
@@ -52,12 +55,26 @@ public class TomcatPlugin extends Plugin {
 	protected static final IStatus wrongDirVersionStatus = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorInstallDirWrongVersion, null);
 	protected static final IStatus installDirDoesNotExist = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorInstallDirDoesNotExist, null);
 
+	private static ConfigurationResourceListener configurationListener;
 	/**
 	 * TomcatPlugin constructor comment.
 	 */
 	public TomcatPlugin() {
 		super();
 		singleton = this;
+	}
+
+	@Override
+	public void start(BundleContext context) throws Exception {
+		super.start(context);
+		configurationListener = new ConfigurationResourceListener();
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(configurationListener, IResourceChangeEvent.POST_CHANGE);
+	}
+
+	@Override
+	public void stop(BundleContext context) throws Exception {
+		ResourcesPlugin.getWorkspace().removeResourceChangeListener(configurationListener);
+		super.stop(context);
 	}
 
 	/**
