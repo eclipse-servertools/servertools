@@ -989,7 +989,12 @@ public class TomcatVersionHelper {
 					if (name.length() == 0) {
 						name = "ROOT";
 					}
-					
+					// Update name if multi-level path.  For 5.5 and later the "#" has been
+					// "reserved" as a legal file name placeholder for "/".  For Tomcat 5.0,
+					// we just need a legal unique file name since "/" will fail.  Prior to
+					// 5.0, this feature is not supported.
+					name = name.replace('/', '#');
+
 					// TODO Determine circumstances, if any, where setting antiResourceLocking true can cause the original docBase content to be deleted.
 					if (Boolean.valueOf(context.getAttributeValue("antiResourceLocking")).booleanValue())
 						context.setAttributeValue("antiResourceLocking", "false");
@@ -1068,6 +1073,8 @@ public class TomcatVersionHelper {
 						path = fileName.substring(0, fileName.length() - ".xml".length());
 						if ("ROOT".equals(path))
 							path = "";
+						// Assuming this use for "#" since Tomcat has "reserved" this use of "#" since 5.5.
+						path = path.replace('#', '/');
 						context.setPath("/" + path);
 					}
 				}
