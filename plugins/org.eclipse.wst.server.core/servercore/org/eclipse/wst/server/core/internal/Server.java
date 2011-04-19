@@ -1813,8 +1813,12 @@ public class Server extends Base implements IServer {
 		if (ServerCore.isAutoPublishing() && shouldPublish()) {
 			if (((ServerType)getServerType()).startBeforePublish())
 				pub = StartJob.PUBLISH_AFTER;
-			else
+			else {
+				if(op != null) {
+					op.done(Status.OK_STATUS);
+				}
 				return Status.OK_STATUS;
+			}
 		}
 		
 		final IStatus [] pubStatus = new IStatus[]{Status.OK_STATUS};
@@ -1900,6 +1904,8 @@ public class Server extends Base implements IServer {
 		
 		if (status != null && status.getSeverity() == IStatus.ERROR){
 			Trace.trace(Trace.FINEST,"Failed publish job during start routine");
+			if (opListener != null)
+				opListener.done(Status.OK_STATUS);
 			return;
 		}
 
@@ -1932,7 +1938,10 @@ public class Server extends Base implements IServer {
 					if (resultStatus != null && resultStatus.getSeverity() == IStatus.ERROR) { 
 						// Do not launch the publish.
 						Trace.trace(Trace.INFO,"Skipping auto publish after server start since the server start failed.");
-					} else {
+						if (opListener != null)
+							opListener.done(Status.OK_STATUS);
+					}
+					else {
 						publishAfterStart(null,false,opListener);
 					}
 				}
