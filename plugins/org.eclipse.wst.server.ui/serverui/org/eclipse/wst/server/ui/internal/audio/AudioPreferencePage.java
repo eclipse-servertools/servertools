@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -245,7 +245,9 @@ public class AudioPreferencePage extends PreferencePage implements IWorkbenchPre
 						resetButton.setEnabled(false);
 					}
 				} catch (Exception ex) {
-					Trace.trace(Trace.SEVERE, "Error in table selection", ex);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE, "Error in table selection", ex);
+					}
 				}
 			}
 		});
@@ -259,7 +261,9 @@ public class AudioPreferencePage extends PreferencePage implements IWorkbenchPre
 						Sound sound = (Sound) table.getItem(sel).getData();
 						AudioCore.playSound(getSoundURL(sound.getId()), volume.getSelection());
 					} catch (Exception ex) {
-						Trace.trace(Trace.SEVERE, "Error in table selection", ex);
+						if (Trace.SEVERE) {
+							Trace.trace(Trace.STRING_SEVERE, "Error in table selection", ex);
+						}
 					}
 				}
 			});
@@ -278,7 +282,9 @@ public class AudioPreferencePage extends PreferencePage implements IWorkbenchPre
 						playButton.setEnabled(true);
 					}
 				} catch (Exception ex) {
-					Trace.trace(Trace.SEVERE, "Error browsing", ex);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE, "Error browsing", ex);
+					}
 				}
 			}
 		});
@@ -292,7 +298,9 @@ public class AudioPreferencePage extends PreferencePage implements IWorkbenchPre
 					viewer.refresh(sound);
 					//playButton.setEnabled(true);
 				} catch (Exception ex) {
-					Trace.trace(Trace.SEVERE, "Error reseting sound", ex);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE, "Error reseting sound", ex);
+					}
 				}
 			}
 		});

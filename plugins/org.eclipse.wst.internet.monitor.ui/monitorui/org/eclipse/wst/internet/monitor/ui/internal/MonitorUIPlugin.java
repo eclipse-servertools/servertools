@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,8 @@ import java.util.zip.GZIPInputStream;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.osgi.service.debug.DebugOptions;
+import org.eclipse.osgi.service.debug.DebugOptionsListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.internet.monitor.core.internal.provisional.*;
@@ -192,7 +194,9 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 			registry.put(key, id);
 			imageDescriptors.put(key, id);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error registering image", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error registering image", e);
+			}
 		}
 	}
 
@@ -212,6 +216,11 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 			for (IMonitor monitor : monitors)
 				monitor.addRequestListener(requestListener);
 		}
+
+		// register the debug options listener
+		final Hashtable<String, String> props = new Hashtable<String, String>(4);
+		props.put(DebugOptions.LISTENER_SYMBOLICNAME, PLUGIN_ID);
+		context.registerService(DebugOptionsListener.class.getName(), new Trace(), props);
 	}
 
 	/**
@@ -286,7 +295,9 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 			}
 			return t;
 		} catch (Exception e) {
-			Trace.trace(Trace.FINEST, "Could not unzip byte array");
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "Could not unzip byte array");
+			}
 			return b;
 		}
 	}
@@ -315,7 +326,9 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 					sb.append(lineSeparator);
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error parsing input", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error parsing input", e);
+			}
 		}
 		
 		return sb.toString();

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -301,7 +301,9 @@ public class SocketUtil {
 				return true;
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Localhost caching failure", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Localhost caching failure", e);
+			}
 		}
 		
 		// check for current thread and wait if necessary
@@ -316,7 +318,9 @@ public class SocketUtil {
 				t.join(30);
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Localhost caching failure", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Localhost caching failure", e);
+			}
 		}
 		
 		// check if cache is still ok
@@ -363,7 +367,9 @@ public class SocketUtil {
 				cacheThread.join(200);
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Localhost caching failure", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Localhost caching failure", e);
+			}
 		}
 		
 		synchronized (lock) {
@@ -391,7 +397,9 @@ public class SocketUtil {
 						return true;
 				}
 			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Could not find localhost", e);
+				if (Trace.WARNING) {
+					Trace.trace(Trace.STRING_WARNING, "Could not find localhost", e);
+				}
 			}
 		}
 		synchronized (lock) {

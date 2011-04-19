@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -250,7 +250,9 @@ public class ServerPublishInfo {
 		String filename = path.toOSString();
 		
 		if (new File(filename).exists()) {
-			Trace.trace(Trace.FINEST, "Loading publish info from " + filename);
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "Loading publish info from " + filename);
+			}
 			
 			DataInputStream in = null;
 			try {
@@ -268,13 +270,17 @@ public class ServerPublishInfo {
 					return;
 				}
 			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Could not load publish information", e);
+				if (Trace.WARNING) {
+					Trace.trace(Trace.STRING_WARNING, "Could not load publish information", e);
+				}
 			}
 		}
 		
 		filename = filename.substring(0, filename.length() - 3) + "xml";
 		if (new File(filename).exists()) {
-			Trace.trace(Trace.FINEST, "Loading publish info from old format " + filename);
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "Loading publish info from old format " + filename);
+			}
 			
 			try {
 				IMemento memento2 = XMLMemento.loadMemento(filename);
@@ -290,7 +296,9 @@ public class ServerPublishInfo {
 					modulePublishInfo.put(getKey(mpi.getModuleId()), mpi);
 				}
 			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Could not load publish information", e);
+				if (Trace.WARNING) {
+					Trace.trace(Trace.STRING_WARNING, "Could not load publish information", e);
+				}
 			}
 		}
 	}
@@ -300,7 +308,9 @@ public class ServerPublishInfo {
 	 */
 	public void save() {
 		String filename = path.toOSString();
-		Trace.trace(Trace.FINEST, "Saving publish info to " + filename);
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Saving publish info to " + filename);
+		}
 		
 		DataOutputStream out = null;
 		try {
@@ -320,7 +330,9 @@ public class ServerPublishInfo {
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not save publish information", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not save publish information", e);
+			}
 		} finally {
 			try {
 				if (out != null)

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,7 +30,9 @@ public class J2EELaunchableClient extends ClientDelegate {
 	 * @see ClientDelegate#launch(ILaunchable)
 	 */
 	public IStatus launch(IServer server, Object launchable, String launchMode, ILaunch launch) {
-		Trace.trace(Trace.FINEST, "JNDI client launched");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "JNDI client launched");
+		}
 		return null;
 	}
 }

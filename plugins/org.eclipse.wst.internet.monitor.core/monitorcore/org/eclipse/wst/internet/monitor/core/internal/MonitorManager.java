@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -201,7 +201,9 @@ public class MonitorManager {
 	}
 
 	protected synchronized void loadMonitors() {
-		Trace.trace(Trace.FINEST, "Loading monitors");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Loading monitors");
+		}
 		
 		monitors = new ArrayList<IMonitor>();
 		Preferences prefs = MonitorPlugin.getInstance().getPluginPreferences();
@@ -221,7 +223,9 @@ public class MonitorManager {
 					}
 				}
 			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Could not load monitors", e);
+				if (Trace.WARNING) {
+					Trace.trace(Trace.STRING_WARNING, "Could not load monitors", e);
+				}
 			}
 		}
 	}
@@ -243,7 +247,9 @@ public class MonitorManager {
 			prefs.setValue("monitors", xmlString);
 			MonitorPlugin.getInstance().savePluginPreferences();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not save browsers", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not save browsers", e);
+			}
 		}
 		ignorePreferenceChanges = false;
 	}
@@ -311,7 +317,9 @@ public class MonitorManager {
 				try {
 					monitor.start();
 				} catch (CoreException e) {
-					Trace.trace(Trace.SEVERE, "Failed to start monitor:" + monitor.toString(), e);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE, "Failed to start monitor:" + monitor.toString(), e);
+					}
 				}
 		}
 	}

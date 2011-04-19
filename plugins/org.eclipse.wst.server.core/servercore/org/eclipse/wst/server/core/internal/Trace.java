@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,81 +17,122 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.service.debug.DebugOptions;
+import org.eclipse.osgi.service.debug.DebugOptionsListener;
+
 /**
  * Helper class to route trace output.
  */
-public class Trace {
-	public static final byte CONFIG = 0;
-	public static final byte INFO = 1;
-	public static final byte WARNING = 2;
-	public static final byte SEVERE = 3;
-	public static final byte FINER = 4;
-	public static final byte FINEST = 5;
-	
-	public static final byte RESOURCES = 6;
-	public static final byte EXTENSION_POINT = 7;
-	public static final byte LISTENERS = 8;
-	public static final byte RUNTIME_TARGET = 9;
-	public static final byte PERFORMANCE = 10;
-	public static final byte PUBLISHING = 11;
+public class Trace implements DebugOptionsListener {
 
-	private static final String[] levelNames = new String[] {
-		"CONFIG   ", "INFO     ", "WARNING  ", "SEVERE   ", "FINER    ", "FINEST   ",
-		"RESOURCES", "EXTENSION", "LISTENERS", "TARGET   ", "PERF     ", "PUBLISH  "};
-
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm.ss.SSS");
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm.ss.SSS"); //$NON-NLS-1$
 
 	private static Set<String> logged = new HashSet<String>();
 
+	// tracing enablement flags
+	public static boolean CONFIG = false;
+	public static boolean INFO = false;
+	public static boolean WARNING = false;
+	public static boolean SEVERE = false;
+	public static boolean FINER = false;
+	public static boolean FINEST = false;
+	public static boolean RESOURCES = false;
+	public static boolean EXTENSION_POINT = false;
+	public static boolean LISTENERS = false;
+	public static boolean RUNTIME_TARGET = false;
+	public static boolean PERFORMANCE = false;
+	public static boolean PUBLISHING = false;
+
+	// tracing levels. One most exist for each debug option
+	public final static String STRING_CONFIG = "/config"; //$NON-NLS-1$
+	public final static String STRING_INFO = "/info"; //$NON-NLS-1$
+	public final static String STRING_WARNING = "/warning"; //$NON-NLS-1$
+	public final static String STRING_SEVERE = "/severe"; //$NON-NLS-1$
+	public final static String STRING_FINER = "/finer"; //$NON-NLS-1$
+	public final static String STRING_FINEST = "/finest"; //$NON-NLS-1$
+	public final static String STRING_RESOURCES = "/resources"; //$NON-NLS-1$
+	public final static String STRING_EXTENSION_POINT = "/extension_point"; //$NON-NLS-1$
+	public final static String STRING_LISTENERS = "/listeners"; //$NON-NLS-1$
+	public final static String STRING_RUNTIME_TARGET = "/runtime_target"; //$NON-NLS-1$
+	public final static String STRING_PERFORMANCE = "/performance"; //$NON-NLS-1$
+	public final static String STRING_PUBLISHING = "/publishing"; //$NON-NLS-1$
+	
 	/**
-	 * Trace constructor comment.
+	 * Trace constructor. This should never be explicitly called by clients and is used to register this class with the
+	 * {@link DebugOptions} service.
 	 */
-	private Trace() {
+	public Trace() {
 		super();
 	}
 
-	/**
-	 * Trace the given text.
-	 *
-	 * @param level a trace level
-	 * @param s a message
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.osgi.service.debug.DebugOptionsListener#optionsChanged(org.eclipse.osgi.service.debug.DebugOptions)
 	 */
-	public static void trace(int level, String s) {
-		trace(level, s, null);
+	public void optionsChanged(DebugOptions options) {
+		Trace.CONFIG = options.getBooleanOption(ServerPlugin.PLUGIN_ID + Trace.STRING_CONFIG, false);
+		Trace.INFO = options.getBooleanOption(ServerPlugin.PLUGIN_ID + Trace.STRING_INFO, false);
+		Trace.WARNING = options.getBooleanOption(ServerPlugin.PLUGIN_ID + Trace.STRING_WARNING, false);
+		Trace.SEVERE = options.getBooleanOption(ServerPlugin.PLUGIN_ID + Trace.STRING_SEVERE, false);
+		Trace.FINER = options.getBooleanOption(ServerPlugin.PLUGIN_ID + Trace.STRING_FINER, false);
+		Trace.FINEST = options.getBooleanOption(ServerPlugin.PLUGIN_ID + Trace.STRING_FINEST, false);
+		Trace.RESOURCES = options.getBooleanOption(ServerPlugin.PLUGIN_ID + Trace.STRING_RESOURCES, false);
+		Trace.EXTENSION_POINT = options.getBooleanOption(ServerPlugin.PLUGIN_ID + Trace.STRING_EXTENSION_POINT, false);
+		Trace.LISTENERS = options.getBooleanOption(ServerPlugin.PLUGIN_ID + Trace.STRING_LISTENERS, false);
+		Trace.RUNTIME_TARGET = options.getBooleanOption(ServerPlugin.PLUGIN_ID + Trace.STRING_RUNTIME_TARGET, false);
+		Trace.PERFORMANCE = options.getBooleanOption(ServerPlugin.PLUGIN_ID + Trace.STRING_PERFORMANCE, false);
+		Trace.PUBLISHING = options.getBooleanOption(ServerPlugin.PLUGIN_ID + Trace.STRING_PUBLISHING, false);
+	}
+
+	/**
+	 * Trace the given message.
+	 * 
+	 * @param level
+	 *            The tracing level.
+	 * @param s
+	 *            The message to trace
+	 */
+	public static void trace(final String level, String s) {
+
+		Trace.trace(level, s, null);
 	}
 
 	/**
 	 * Trace the given message and exception.
-	 *
-	 * @param level a trace level
-	 * @param s a message
-	 * @param t a throwable
+	 * 
+	 * @param level
+	 *            The tracing level.
+	 * @param s
+	 *            The message to trace
+	 * @param t
+	 *            A {@link Throwable} to trace
 	 */
-	public static void trace(int level, String s, Throwable t) {
-		if (s == null)
+	public static void trace(final String level, String s, Throwable t) {
+		if (s == null) {
 			return;
-		
-		if (level == SEVERE) {
+		}
+		if (Trace.STRING_SEVERE.equals(level)) {
 			if (!logged.contains(s)) {
 				ServerPlugin.log(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, s, t));
 				logged.add(s);
 			}
 		}
-		
-		if (!ServerPlugin.getInstance().isDebugging())
-			return;
-		
-		StringBuffer sb = new StringBuffer(ServerPlugin.PLUGIN_ID);
-		sb.append(" ");
-		sb.append(levelNames[level]);
-		sb.append(" ");
-		sb.append(sdf.format(new Date()));
-		sb.append(" ");
-		sb.append(s);
-		//Platform.getDebugOption(ServerCore.PLUGIN_ID + "/" + "resources");
-
-		System.out.println(sb.toString());
-		if (t != null)
-			t.printStackTrace();
+		if (ServerPlugin.getInstance().isDebugging()) {
+			final StringBuffer sb = new StringBuffer(ServerPlugin.PLUGIN_ID);
+			sb.append(" "); //$NON-NLS-1$
+			sb.append(level);
+			sb.append(" "); //$NON-NLS-1$
+			sb.append(sdf.format(new Date()));
+			sb.append(" "); //$NON-NLS-1$
+			sb.append(s);
+			System.out.println(sb.toString());
+			if (t != null) {
+				t.printStackTrace();
+			}
+		}
 	}
+
+	
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -73,7 +73,9 @@ public class RunOnServerLaunchConfigurationDelegate extends LaunchConfigurationD
 			moduleArtifact.deserialize(moduleArt);
 			module = moduleArtifact.getModule();
 		} catch (Throwable t) {
-			Trace.trace(Trace.WARNING, "Could not load module artifact delegate class");
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Could not load module artifact delegate class");
+			}
 		}
 		
 		if (moduleArtifact == null)
@@ -128,7 +130,9 @@ public class RunOnServerLaunchConfigurationDelegate extends LaunchConfigurationD
 			};
 		}
 		
-		Trace.trace(Trace.FINEST, "Ready to launch");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Ready to launch");
+		}
 		launch2.addProcess(new RunOnServerProcess(launch2));
 		
 		// start server if it's not already started

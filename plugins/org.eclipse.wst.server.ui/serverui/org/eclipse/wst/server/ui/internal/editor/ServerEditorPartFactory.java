@@ -172,7 +172,9 @@ public class ServerEditorPartFactory implements IServerEditorPartFactory {
 		try {
 			return isEnabled(server);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate", e);
+			}
 			return false;
 		}
 	}
@@ -184,7 +186,9 @@ public class ServerEditorPartFactory implements IServerEditorPartFactory {
 		try {
 			return (IEditorPart) element.createExecutableExtension("class");
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate", e);
+			}
 			return null;
 		}
 	}

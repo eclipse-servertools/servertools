@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,12 +17,13 @@ import java.util.*;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.osgi.service.debug.DebugOptions;
+import org.eclipse.osgi.service.debug.DebugOptionsListener;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.common.core.util.UIContextDetermination;
 import org.eclipse.wst.server.core.*;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleEvent;
-import org.osgi.framework.BundleListener;
+import org.osgi.framework.*;
+
 /**
  * The main server plugin class.
  */
@@ -218,7 +219,9 @@ public class ServerPlugin extends Plugin {
 				deleteDirectory(statePath.append(dir.path).toFile(), null);
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not remove temp directory", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Could not remove temp directory", e);
+			}
 		}
 	}
 
@@ -232,7 +235,9 @@ public class ServerPlugin extends Plugin {
 	 * Load the temporary directory information.
 	 */
 	private void loadTempDirInfo() {
-		Trace.trace(Trace.FINEST, "Loading temporary directory information");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Loading temporary directory information");
+		}
 		IPath statePath = ServerPlugin.getInstance().getStateLocation();
 		String filename = statePath.append(TEMP_DATA_FILE).toOSString();
 		
@@ -260,7 +265,9 @@ public class ServerPlugin extends Plugin {
 				tempDirHash.put(key, d);
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not load temporary directory information", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Could not load temporary directory information", e);
+			}
 		}
 	}
 
@@ -302,7 +309,9 @@ public class ServerPlugin extends Plugin {
 	
 			memento.saveToFile(filename);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not save temporary directory information", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not save temporary directory information", e);
+			}
 		}
 	}
 
@@ -310,7 +319,9 @@ public class ServerPlugin extends Plugin {
 	 * @see Plugin#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext context) throws Exception {
-		Trace.trace(Trace.CONFIG, "----->----- Server Core plugin startup ----->-----");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "----->----- Server Core plugin startup ----->-----");
+		}
 		super.start(context);
 		bundleContext = context;
 		
@@ -327,6 +338,11 @@ public class ServerPlugin extends Plugin {
 		// Load the PublishController during plugin startup since this will be used
 		// during the a workspace delta (changes to the workspace)
 		getPublishController();
+
+		// register the debug options listener
+		final Hashtable<String, String> props = new Hashtable<String, String>(4);
+		props.put(DebugOptions.LISTENER_SYMBOLICNAME, ServerPlugin.PLUGIN_ID);
+		context.registerService(DebugOptionsListener.class.getName(), new Trace(), props);
 	}
 
 	protected void stopBundle(final String bundleId) {
@@ -358,7 +374,9 @@ public class ServerPlugin extends Plugin {
 	 * @see Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
-		Trace.trace(Trace.CONFIG, "-----<----- Server Core plugin shutdown -----<-----");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "-----<----- Server Core plugin shutdown -----<-----");
+		}
 		super.stop(context);
 		
 		if (registryListener != null)
@@ -370,7 +388,9 @@ public class ServerPlugin extends Plugin {
 		try {
 			Job.getJobManager().join(SHUTDOWN_JOB_FAMILY, null);
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Error waiting for shutdown job", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Error waiting for shutdown job", e);
+			}
 		}
 		context.removeBundleListener(bundleListener);
 	}
@@ -385,8 +405,13 @@ public class ServerPlugin extends Plugin {
 	 * @param t a throwable or exception
 	 */
 	public static void logExtensionFailure(String id, Throwable t) {
-		Trace.trace(Trace.SEVERE, "Missing or failed server extension: " + id + ". Enable tracing for more information");
-		Trace.trace(Trace.WARNING, "Exception in server delegate", t);
+		if (Trace.SEVERE) {
+			Trace.trace(Trace.STRING_SEVERE, "Missing or failed server extension: " + id
+					+ ". Enable tracing for more information");
+		}
+		if (Trace.WARNING) {
+			Trace.trace(Trace.STRING_WARNING, "Exception in server delegate", t);
+		}
 	}
 
 	private static void addAll(List<Object> list, Object[] obj) {
@@ -475,16 +500,25 @@ public class ServerPlugin extends Plugin {
 			try {
 				String [] looseModuleRuntimeIds = ServerPlugin.tokenize(ce.getAttribute("runtimeTypes"), ",");				
 				if (looseModuleRuntimeIds.length < 0){
-					Trace.trace(Trace.EXTENSION_POINT, "  runtimeTypes on extension point definition is empty");
+					if (Trace.EXTENSION_POINT) {
+						Trace.trace(Trace.STRING_EXTENSION_POINT,
+								"  runtimeTypes on extension point definition is empty");
+					}
 					return;
 				}
 				
 				if (ServerPlugin.contains(looseModuleRuntimeIds, runtimeType.getId())){
 					((RuntimeType)runtimeType).addModuleType(ce);					
-					Trace.trace(Trace.EXTENSION_POINT, "  Loaded Runtime supported ModuleType: " + ce.getAttribute("id"));
+					if (Trace.EXTENSION_POINT) {
+						Trace.trace(Trace.STRING_EXTENSION_POINT,
+								"  Loaded Runtime supported ModuleType: " + ce.getAttribute("id"));
+					}
 				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load Runtime supported ModuleType: " + ce.getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE,
+							"  Could not load Runtime supported ModuleType: " + ce.getAttribute("id"), t);
+				}
 			}
 		}
 	}
@@ -566,7 +600,9 @@ public class ServerPlugin extends Plugin {
 			dir.delete();
 			monitor.done();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error deleting directory " + dir.getAbsolutePath(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error deleting directory " + dir.getAbsolutePath(), e);
+			}
 		}
 	}
 	
@@ -608,7 +644,9 @@ public class ServerPlugin extends Plugin {
 	private static synchronized void loadLaunchableAdapters() {
 		if (launchableAdapters != null)
 			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .launchableAdapters extension point ->-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "->- Loading .launchableAdapters extension point ->-");
+		}
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "launchableAdapters");
 
@@ -617,9 +655,14 @@ public class ServerPlugin extends Plugin {
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new LaunchableAdapter(cf[i]));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded launchableAdapter: " + cf[i].getAttribute("id"));
+				if (Trace.EXTENSION_POINT) {
+					Trace.trace(Trace.STRING_EXTENSION_POINT, "  Loaded launchableAdapter: " + cf[i].getAttribute("id"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load launchableAdapter: " + cf[i].getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "  Could not load launchableAdapter: " + cf[i].getAttribute("id"),
+							t);
+				}
 			}
 		}
 		
@@ -636,7 +679,9 @@ public class ServerPlugin extends Plugin {
 			}
 		}
 		launchableAdapters = list;
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .launchableAdapters extension point -<-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "-<- Done loading .launchableAdapters extension point -<-");
+		}
 	}
 
 	/**
@@ -645,7 +690,9 @@ public class ServerPlugin extends Plugin {
 	private static synchronized void loadClients() {
 		if (clients != null)
 			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .clients extension point ->-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "->- Loading .clients extension point ->-");
+		}
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "clients");
 		
@@ -654,9 +701,13 @@ public class ServerPlugin extends Plugin {
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new Client(cf[i]));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded clients: " + cf[i].getAttribute("id"));
+				if (Trace.EXTENSION_POINT) {
+					Trace.trace(Trace.STRING_EXTENSION_POINT, "  Loaded clients: " + cf[i].getAttribute("id"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load clients: " + cf[i].getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "  Could not load clients: " + cf[i].getAttribute("id"), t);
+				}
 			}
 		}
 		
@@ -674,7 +725,9 @@ public class ServerPlugin extends Plugin {
 		}
 		clients = list;
 		
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .clients extension point -<-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "-<- Done loading .clients extension point -<-");
+		}
 	}
 
 	/**
@@ -699,7 +752,9 @@ public class ServerPlugin extends Plugin {
 	private static synchronized void loadPublishTasks() {
 		if (publishTasks != null)
 			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .publishTasks extension point ->-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "->- Loading .publishTasks extension point ->-");
+		}
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "publishTasks");
 		
@@ -708,14 +763,20 @@ public class ServerPlugin extends Plugin {
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new PublishTask(cf[i]));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded publishTask: " + cf[i].getAttribute("id"));
+				if (Trace.EXTENSION_POINT) {
+					Trace.trace(Trace.STRING_EXTENSION_POINT, "  Loaded publishTask: " + cf[i].getAttribute("id"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load publishTask: " + cf[i].getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "  Could not load publishTask: " + cf[i].getAttribute("id"), t);
+				}
 			}
 		}
 		publishTasks = list;
 		
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .publishTasks extension point -<-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "-<- Done loading .publishTasks extension point -<-");
+		}
 	}
 
 	/**
@@ -766,7 +827,9 @@ public class ServerPlugin extends Plugin {
 	private static synchronized void loadPublishers() {
 		if (publishers != null)
 			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .publishers extension point ->-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "->- Loading .publishers extension point ->-");
+		}
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "publishers");
 		
@@ -775,14 +838,20 @@ public class ServerPlugin extends Plugin {
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new Publisher(cf[i]));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded publisher: " + cf[i].getAttribute("id"));
+				if (Trace.EXTENSION_POINT) {
+					Trace.trace(Trace.STRING_EXTENSION_POINT, "  Loaded publisher: " + cf[i].getAttribute("id"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load publisher: " + cf[i].getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "  Could not load publisher: " + cf[i].getAttribute("id"), t);
+				}
 			}
 		}
 		publishers = list;
 		
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .publishers extension point -<-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "-<- Done loading .publishers extension point -<-");
+		}
 	}
 	
 	/**
@@ -807,7 +876,9 @@ public class ServerPlugin extends Plugin {
 	private static synchronized void loadPublishControllers() {
 		if (publishControllers != null)
 			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .publishController extension point ->-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "->- Loading .publishController extension point ->-");
+		}
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "publishController");
 		
@@ -816,14 +887,22 @@ public class ServerPlugin extends Plugin {
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new PublishController(cf[i]));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded .publishController: " + cf[i].getAttribute("id"));
+				if (Trace.EXTENSION_POINT) {
+					Trace.trace(Trace.STRING_EXTENSION_POINT,
+							"  Loaded .publishController: " + cf[i].getAttribute("id"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load .publishController: " + cf[i].getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE,
+							"  Could not load .publishController: " + cf[i].getAttribute("id"), t);
+				}
 			}
 		}
 		publishControllers = list;
 		
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .publishController extension point -<-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "-<- Done loading .publishController extension point -<-");
+		}
 	}
 	
 
@@ -928,7 +1007,9 @@ public class ServerPlugin extends Plugin {
 	private static synchronized void loadModuleFactories() {
 		if (moduleFactories != null)
 			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleFactories extension point ->-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "->- Loading .moduleFactories extension point ->-");
+		}
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "moduleFactories");
 		
@@ -937,9 +1018,13 @@ public class ServerPlugin extends Plugin {
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new ModuleFactory(cf[i]));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded moduleFactories: " + cf[i].getAttribute("id"));
+				if (Trace.EXTENSION_POINT) {
+					Trace.trace(Trace.STRING_EXTENSION_POINT, "  Loaded moduleFactories: " + cf[i].getAttribute("id"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load moduleFactories: " + cf[i].getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "  Could not load moduleFactories: " + cf[i].getAttribute("id"), t);
+				}
 			}
 		}
 		
@@ -956,7 +1041,9 @@ public class ServerPlugin extends Plugin {
 		}
 		moduleFactories = list;
 		
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .moduleFactories extension point -<-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "-<- Done loading .moduleFactories extension point -<-");
+		}
 	}
 
 	/**
@@ -981,7 +1068,9 @@ public class ServerPlugin extends Plugin {
 	private static synchronized void loadServerMonitors() {
 		if (monitors != null)
 			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .serverMonitors extension point ->-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "->- Loading .serverMonitors extension point ->-");
+		}
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "internalServerMonitors");
 
@@ -990,14 +1079,20 @@ public class ServerPlugin extends Plugin {
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new ServerMonitor(cf[i]));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded serverMonitor: " + cf[i].getAttribute("id"));
+				if (Trace.EXTENSION_POINT) {
+					Trace.trace(Trace.STRING_EXTENSION_POINT, "  Loaded serverMonitor: " + cf[i].getAttribute("id"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load serverMonitor: " + cf[i].getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "  Could not load serverMonitor: " + cf[i].getAttribute("id"), t);
+				}
 			}
 		}
 		monitors = list;
 		
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .serverMonitors extension point -<-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "-<- Done loading .serverMonitors extension point -<-");
+		}
 	}
 
 	/**
@@ -1022,7 +1117,9 @@ public class ServerPlugin extends Plugin {
 	private static synchronized void loadRuntimeLocators() {
 		if (runtimeLocators != null)
 			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .runtimeLocators extension point ->-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "->- Loading .runtimeLocators extension point ->-");
+		}
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "runtimeLocators");
 
@@ -1031,14 +1128,20 @@ public class ServerPlugin extends Plugin {
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new RuntimeLocator(cf[i]));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded runtimeLocator: " + cf[i].getAttribute("id"));
+				if (Trace.EXTENSION_POINT) {
+					Trace.trace(Trace.STRING_EXTENSION_POINT, "  Loaded runtimeLocator: " + cf[i].getAttribute("id"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load runtimeLocator: " + cf[i].getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "  Could not load runtimeLocator: " + cf[i].getAttribute("id"), t);
+				}
 			}
 		}
 		runtimeLocators = list;
 		
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .runtimeLocators extension point -<-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "-<- Done loading .runtimeLocators extension point -<-");
+		}
 	}
 
 	/**
@@ -1061,7 +1164,9 @@ public class ServerPlugin extends Plugin {
 	private static synchronized void loadModuleArtifactAdapters() {
 		if (moduleArtifactAdapters != null)
 			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleArtifactAdapters extension point ->-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "->- Loading .moduleArtifactAdapters extension point ->-");
+		}
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "moduleArtifactAdapters");
 
@@ -1070,9 +1175,15 @@ public class ServerPlugin extends Plugin {
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new ModuleArtifactAdapter(cf[i]));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded moduleArtifactAdapter: " + cf[i].getAttribute("id"));
+				if (Trace.EXTENSION_POINT) {
+					Trace.trace(Trace.STRING_EXTENSION_POINT,
+							"  Loaded moduleArtifactAdapter: " + cf[i].getAttribute("id"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load moduleArtifactAdapter: " + cf[i].getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE,
+							"  Could not load moduleArtifactAdapter: " + cf[i].getAttribute("id"), t);
+				}
 			}
 		}
 		
@@ -1090,7 +1201,9 @@ public class ServerPlugin extends Plugin {
 		}
 		moduleArtifactAdapters = list;
 		
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .moduleArtifactAdapters extension point -<-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "-<- Done loading .moduleArtifactAdapters extension point -<-");
+		}
 	}
 
 	/**
@@ -1101,30 +1214,45 @@ public class ServerPlugin extends Plugin {
 	 * @return <code>true</code> if there is a module artifact adapter
 	 */
 	public static boolean hasModuleArtifact(Object obj) {
-		Trace.trace(Trace.FINEST, "ServerPlugin.hasModuleArtifact() " + obj);
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "ServerPlugin.hasModuleArtifact() " + obj);
+		}
 		ModuleArtifactAdapter[] adapters = getModuleArtifactAdapters();
 		if (adapters != null) {
 			int size = adapters.length;
 			for (int i = 0; i < size; i++) {
 				try {
 					if (adapters[i].isEnabled(obj)) {
-						Trace.trace(Trace.FINER, "ServerPlugin.hasModuleArtifact() - " + adapters[i].getId());
+						if (Trace.FINER) {
+							Trace.trace(Trace.STRING_FINER, "ServerPlugin.hasModuleArtifact() - " + adapters[i].getId());
+						}
 						if (adapters[i].isDelegateLoaded()) {
 							long time = System.currentTimeMillis();
 							IModuleArtifact[] ma = adapters[i].getModuleArtifacts(obj);
-							Trace.trace(Trace.FINER, "Deep enabled time: " + (System.currentTimeMillis() - time));
+							if (Trace.FINER) {
+								Trace.trace(Trace.STRING_FINER, "Deep enabled time: "
+										+ (System.currentTimeMillis() - time));
+							}
 							if (ma != null) {
-								Trace.trace(Trace.FINER, "Deep enabled");
+								if (Trace.FINER) {
+									Trace.trace(Trace.STRING_FINER, "Deep enabled");
+								}
 								return true;
 							}
-							Trace.trace(Trace.FINER, "Not enabled");
+							if (Trace.FINER) {
+								Trace.trace(Trace.STRING_FINER, "Not enabled");
+							}
 						} else {
-							Trace.trace(Trace.FINER, "Enabled");
+							if (Trace.FINER) {
+								Trace.trace(Trace.STRING_FINER, "Enabled");
+							}
 							return true;
 						}
 					}
 				} catch (CoreException ce) {
-					Trace.trace(Trace.WARNING, "Could not use moduleArtifactAdapter", ce);
+					if (Trace.WARNING) {
+						Trace.trace(Trace.STRING_WARNING, "Could not use moduleArtifactAdapter", ce);
+					}
 				}
 			}
 		}
@@ -1139,7 +1267,9 @@ public class ServerPlugin extends Plugin {
 	 * @return a module artifact, or null
 	 */
 	public static IModuleArtifact[] getModuleArtifacts(Object obj) {
-		Trace.trace(Trace.FINEST, "ServerPlugin.getModuleArtifact() " + obj);
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "ServerPlugin.getModuleArtifact() " + obj);
+		}
 		ModuleArtifactAdapter[] adapters = getModuleArtifactAdapters();
 		if (adapters != null) {
 			int size = adapters.length;
@@ -1154,7 +1284,9 @@ public class ServerPlugin extends Plugin {
 						}*/
 					}
 				} catch (Exception e) {
-					Trace.trace(Trace.WARNING, "Could not use moduleArtifactAdapter " + adapters[i], e);
+					if (Trace.WARNING) {
+						Trace.trace(Trace.STRING_WARNING, "Could not use moduleArtifactAdapter " + adapters[i], e);
+					}
 				}
 			}
 		}
@@ -1223,9 +1355,9 @@ public class ServerPlugin extends Plugin {
 	 * and is now supported through the p2 repository lookup APIs
 	 */
 	private static synchronized void loadInstallableRuntimes() {
-		//if (installableRuntimes != null)
-		//	return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .installableRuntimes extension point ->-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "->- Loading .installableRuntimes extension point ->-");
+		}
 		
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "installableRuntimes");
@@ -1240,14 +1372,22 @@ public class ServerPlugin extends Plugin {
 						list.add(new InstallableRuntime2(cf[i]));
 				} else
 					list.add(new InstallableRuntime(cf[i]));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded installableRuntime: " + cf[i].getAttribute("id"));
+				if (Trace.EXTENSION_POINT) {
+					Trace.trace(Trace.STRING_EXTENSION_POINT,
+							"  Loaded installableRuntime: " + cf[i].getAttribute("id"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load installableRuntime: " + cf[i].getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE,
+							"  Could not load installableRuntime: " + cf[i].getAttribute("id"), t);
+				}
 			}
 		}
 		installableRuntimes = list;
 		
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .installableRuntimes extension point -<-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "-<- Done loading .installableRuntimes extension point -<-");
+		}
 	}
 
 	public static void setRegistryListener(IRegistryChangeListener listener) {
@@ -1282,7 +1422,9 @@ public class ServerPlugin extends Plugin {
 			|| (b.endsWith(".*") && a.startsWith(b.substring(0, b.length() - 1))))
 			return true;
 		if (a.startsWith(b) || b.startsWith(a)) {
-			Trace.trace(Trace.WARNING, "Invalid matching rules used: " + a + "/" + b);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Invalid matching rules used: " + a + "/" + b);
+			}
 			return true;
 		}
 		return false;
@@ -1329,7 +1471,9 @@ public class ServerPlugin extends Plugin {
 	private static void loadSaveEditorExtension() {
 		if (saveEditorPrompter != null)
 			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .saveEditorPrompter extension point ->-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "->- Loading .saveEditorPrompter extension point ->-");
+		}
 		
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "saveEditorPrompter");
@@ -1337,15 +1481,24 @@ public class ServerPlugin extends Plugin {
 		int size = cf.length;
 		try{
 			saveEditorPrompter = (SaveEditorPrompter)cf[0].createExecutableExtension("class");
-			Trace.trace(Trace.EXTENSION_POINT, "  Loaded saveEditorPrompter: " + cf[0].getAttribute("id"));
+			if (Trace.EXTENSION_POINT) {
+				Trace.trace(Trace.STRING_EXTENSION_POINT, "  Loaded saveEditorPrompter: " + cf[0].getAttribute("id"));
+			}
 		} catch (CoreException ce){
-			Trace.trace(Trace.SEVERE, "  Could not load saveEditorPrompter: " + cf[0].getAttribute("id"), ce);			
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "  Could not load saveEditorPrompter: " + cf[0].getAttribute("id"), ce);
+			}			
 		}
 		if (size < 1) {
-			Trace.trace(Trace.WARNING, "  More than one .saveEditorPrompter found, only one loaded =>"+ cf[0].getAttribute("id"));
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "  More than one .saveEditorPrompter found, only one loaded =>"
+						+ cf[0].getAttribute("id"));
+			}
 		}
 		
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .saveEditorPrompter extension point -<-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "-<- Done loading .saveEditorPrompter extension point -<-");
+		}
 		
 	}
 	

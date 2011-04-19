@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2010 IBM Corporation and others.
+ * Copyright (c) 2008, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -73,9 +73,14 @@ public class Publisher {
 			try {
 				long time = System.currentTimeMillis();
 				delegate = (PublisherDelegate) element.createExecutableExtension("class");
-				Trace.trace(Trace.PERFORMANCE, "PublishTask.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getId());
+				if (Trace.PERFORMANCE) {
+					Trace.trace(Trace.STRING_PERFORMANCE, "PublishTask.getDelegate(): <"
+							+ (System.currentTimeMillis() - time) + "> " + getId());
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString(), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "Could not create delegate" + toString(), t);
+				}
 			}
 		}
 		return delegate;
@@ -131,7 +136,10 @@ public class Publisher {
 				while (moduleIterator.hasNext()) {
 					IModule[] module = moduleIterator.next();
 					if (module != null) {
-						Trace.trace(Trace.FINEST, "rebuilding cache for module: " + module[module.length - 1]);
+						if (Trace.FINEST) {
+							Trace.trace(Trace.STRING_FINEST, "rebuilding cache for module: "
+									+ module[module.length - 1]);
+						}
 						server.getServerPublishInfo().rebuildCache(module);
 					}
 				}
@@ -141,7 +149,9 @@ public class Publisher {
 	
 	public IStatus execute(int kind, IProgressMonitor monitor, IAdaptable info) throws CoreException {
 
-		Trace.trace(Trace.FINEST, "Task.init " + this);
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Task.init " + this);
+		}
 		ISchedulingRule delegatePublisherRule = null;
 		final ISchedulingRule originalPublisherRule = Job.getJobManager().currentRule();
 		IStatus resultStatus = null;
@@ -149,29 +159,47 @@ public class Publisher {
 		try {
 			delegatePublisherRule = getDelegate().getRule();
 			changeSchedulingRules = this.changeSchedulingRule(originalPublisherRule, delegatePublisherRule);
-			Trace.trace(Trace.FINEST, "Change the scheduling rule to execute delegate: " + changeSchedulingRules);
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "Change the scheduling rule to execute delegate: "
+						+ changeSchedulingRules);
+			}
 			if (changeSchedulingRules) {
-				Trace.trace(Trace.FINEST, "Ending the current scheduling rule " + originalPublisherRule);
+				if (Trace.FINEST) {
+					Trace.trace(Trace.STRING_FINEST, "Ending the current scheduling rule " + originalPublisherRule);
+				}
 				Job.getJobManager().endRule(originalPublisherRule);
-				Trace.trace(Trace.FINEST, "Beginning the new scheduling rule: " + delegatePublisherRule);
+				if (Trace.FINEST) {
+					Trace.trace(Trace.STRING_FINEST, "Beginning the new scheduling rule: " + delegatePublisherRule);
+				}
 				Job.getJobManager().beginRule(delegatePublisherRule, monitor);
 			}
 			resultStatus = getDelegate().execute(kind, monitor, info);
 			this.modifyModules = getDelegate().isModifyModules();
-			Trace.trace(Trace.FINEST, "The publisher delegate stated that it modified modules: " + this.modifyModules);
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "The publisher delegate stated that it modified modules: "
+						+ this.modifyModules);
+			}
 			if(this.modifyModules) {
 				this.rebuildModuleCache();
 			}
 		}
 		catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate " + toString(), e);
+			}
 			resultStatus = new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, "Error in delegate", e);
 		}
 		finally {
 			if (changeSchedulingRules) {
-				Trace.trace(Trace.FINEST, "Reseting the scheduling rules... ending: " + delegatePublisherRule);
+				if (Trace.FINEST) {
+					Trace.trace(Trace.STRING_FINEST, "Reseting the scheduling rules... ending: "
+							+ delegatePublisherRule);
+				}
 				Job.getJobManager().endRule(delegatePublisherRule);
-				Trace.trace(Trace.FINEST, "Reseting the scheduling rules... beginning: " + originalPublisherRule);
+				if (Trace.FINEST) {
+					Trace.trace(Trace.STRING_FINEST, "Reseting the scheduling rules... beginning: "
+							+ originalPublisherRule);
+				}
 				Job.getJobManager().beginRule(originalPublisherRule, monitor);
 			}
 		}
@@ -182,7 +210,9 @@ public class Publisher {
 		try {
 			getDelegate().setTaskModel(taskModel);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate " + toString(), e);
+			}
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2006 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -79,7 +79,10 @@ public class Runtime extends Base implements IRuntime {
 					delegate = ((RuntimeType) runtimeType).createRuntimeDelegate();
 					if (delegate != null)
 						InternalInitializer.initializeRuntimeDelegate(delegate, this, monitor);
-					Trace.trace(Trace.PERFORMANCE, "Runtime.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getRuntimeType().getId());
+					if (Trace.PERFORMANCE) {
+						Trace.trace(Trace.STRING_PERFORMANCE, "Runtime.getDelegate(): <"
+								+ (System.currentTimeMillis() - time) + "> " + getRuntimeType().getId());
+					}
 				} catch (Throwable t) {
 					ServerPlugin.logExtensionFailure(toString(), t);
 				}

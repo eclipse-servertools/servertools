@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -66,7 +66,9 @@ public class ServerMonitor implements IServerMonitor {
 			try {
 				delegate = (ServerMonitorDelegate) element.createExecutableExtension("class");
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString(), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "Could not create delegate" + toString(), t);
+				}
 			}
 		}
 		return delegate;
@@ -88,7 +90,9 @@ public class ServerMonitor implements IServerMonitor {
 		} catch (CoreException ce) {
 			throw ce;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate " + toString(), e);
+			}
 			return -1;
 		}
 	}
@@ -103,7 +107,9 @@ public class ServerMonitor implements IServerMonitor {
 		try {
 			getDelegate().stopMonitoring(server, port);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate " + toString(), e);
+			}
 		}
 	}
 

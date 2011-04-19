@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -79,7 +79,9 @@ public class FacetMappingUtil extends Plugin {
 	private static synchronized void loadRuntimeComponentProviders() {
 		if (runtimeComponentProviders != null)
 			return;
-		Trace.trace(Trace.CONFIG, "->- Loading .runtimeFacetComponentProviders extension point ->-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "->- Loading .runtimeFacetComponentProviders extension point ->-");
+		}
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "runtimeFacetComponentProviders");
 		
@@ -88,9 +90,14 @@ public class FacetMappingUtil extends Plugin {
 		for (IConfigurationElement ce : cf) {
 			try {
 				list.add(new RuntimeComponentProviderWrapper(ce));
-				Trace.trace(Trace.CONFIG, "  Loaded runtimeFacetComponentProvider: " + ce.getAttribute("id"));
+				if (Trace.CONFIG) {
+					Trace.trace(Trace.STRING_CONFIG, "  Loaded runtimeFacetComponentProvider: " + ce.getAttribute("id"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load runtimeFacetComponentProvider: " + ce.getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE,
+							"  Could not load runtimeFacetComponentProvider: " + ce.getAttribute("id"), t);
+				}
 			}
 		}
 		
@@ -100,14 +107,21 @@ public class FacetMappingUtil extends Plugin {
 		for (IConfigurationElement ce : cf) {
 			try {
 				list.add(new RuntimeComponentProviderWrapper(ce));
-				Trace.trace(Trace.CONFIG, "  Loaded runtimeFacetComponentProvider: " + ce.getAttribute("id"));
+				if (Trace.CONFIG) {
+					Trace.trace(Trace.STRING_CONFIG, "  Loaded runtimeFacetComponentProvider: " + ce.getAttribute("id"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load runtimeFacetComponentProvider: " + ce.getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE,
+							"  Could not load runtimeFacetComponentProvider: " + ce.getAttribute("id"), t);
+				}
 			}
 		}
 		runtimeComponentProviders = list;
 		
-		Trace.trace(Trace.CONFIG, "-<- Done loading .runtimeFacetComponentProviders extension point -<-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "-<- Done loading .runtimeFacetComponentProviders extension point -<-");
+		}
 	}
 
 	/**
@@ -116,7 +130,9 @@ public class FacetMappingUtil extends Plugin {
 	private static synchronized void loadRuntimeFacetMapping() {
 		if (runtimeFacetMappings != null)
 			return;
-		Trace.trace(Trace.CONFIG, "->- Loading .runtimeFacetMapping extension point ->-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "->- Loading .runtimeFacetMapping extension point ->-");
+		}
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor("org.eclipse.jst.server.core.runtimeFacetMappings");
 		
@@ -124,13 +140,21 @@ public class FacetMappingUtil extends Plugin {
 		for (IConfigurationElement ce : cf) {
 			try {
 				list.add(new RuntimeFacetMapping(ce));
-				Trace.trace(Trace.CONFIG, "  Loaded runtimeFacetMapping: " + ce.getAttribute("runtimeTypeId"));
+				if (Trace.CONFIG) {
+					Trace.trace(Trace.STRING_CONFIG,
+							"  Loaded runtimeFacetMapping: " + ce.getAttribute("runtimeTypeId"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load runtimeFacetMapping: " + ce.getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "  Could not load runtimeFacetMapping: " + ce.getAttribute("id"),
+							t);
+				}
 			}
 		}
 		runtimeFacetMappings = list;
 		
-		Trace.trace(Trace.CONFIG, "-<- Done loading .runtimeFacetMapping extension point -<-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "-<- Done loading .runtimeFacetMapping extension point -<-");
+		}
 	}	
 }

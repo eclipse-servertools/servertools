@@ -99,8 +99,10 @@ public class ResourceManager {
 			if (event.getBuildKind() == IncrementalProjectBuilder.CLEAN_BUILD)
 				return;
 			
-			// search for changes related to Server projects  
-			Trace.trace(Trace.RESOURCES, "->- ServerResourceChangeListener responding to resource change: " + event.getType() + " ->-");
+			if (Trace.RESOURCES) {
+				Trace.trace(Trace.STRING_RESOURCES, "->- ServerResourceChangeListener responding to resource change: "
+						+ event.getType() + " ->-");
+			}
 			IResourceDelta[] children = delta.getAffectedChildren();
 			if (children != null) {
 				int size = children.length;
@@ -127,10 +129,15 @@ public class ResourceManager {
 					}
 				});
 			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error responding to resource change", e);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "Error responding to resource change", e);
+				}
 			}
 			
-			Trace.trace(Trace.RESOURCES, "-<- Done ServerResourceChangeListener responding to resource change -<-");
+			if (Trace.RESOURCES) {
+				Trace.trace(Trace.STRING_RESOURCES,
+						"-<- Done ServerResourceChangeListener responding to resource change -<-");
+			}
 		}
 
 		/**
@@ -143,7 +150,9 @@ public class ResourceManager {
 			String projectName = project.getName();
 			if (!ServerPlugin.getProjectProperties(project).isServerProject()) {
 				if (!serverProjects.contains(projectName)) {
-					Trace.trace(Trace.RESOURCES, "Not a server project: " + project.getName());
+					if (Trace.RESOURCES) {
+						Trace.trace(Trace.STRING_RESOURCES, "Not a server project: " + project.getName());
+					}
 					return;
 				}
 				serverProjects.remove(projectName);
@@ -164,7 +173,9 @@ public class ResourceManager {
 						}
 					});
 				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error responding to resource change", e);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE, "Error responding to resource change", e);
+					}
 				}
 			}
 		}
@@ -182,7 +193,9 @@ public class ResourceManager {
 	 * Execute the server startup extension points.
 	 */
 	private static synchronized void executeStartups() {
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .startup extension point ->-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "->- Loading .startup extension point ->-");
+		}
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "internalStartup");
 		
@@ -193,15 +206,21 @@ public class ResourceManager {
 				try {
 					startup.startup();
 				} catch (Exception ex) {
-					Trace.trace(Trace.SEVERE, "Startup failed" + startup.toString(), ex);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE, "Startup failed" + startup.toString(), ex);
+					}
 				}
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded startup: " + cf[i].getAttribute("id"));
+				if (Trace.EXTENSION_POINT) {
+					Trace.trace(Trace.STRING_EXTENSION_POINT, "  Loaded startup: " + cf[i].getAttribute("id"));
+				}
 			} catch (Throwable t) {
 				ServerPlugin.logExtensionFailure(cf[i].getAttribute("id"), t);
 			}
 		}
 		
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .startup extension point -<-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "-<- Done loading .startup extension point -<-");
+		}
 	}
 
 	protected synchronized void init() {
@@ -245,7 +264,9 @@ public class ResourceManager {
 		resourceChangeListener = new ServerResourceChangeListener();
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeListener, IResourceChangeEvent.POST_BUILD | IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_DELETE);
 		
-		Trace.trace(Trace.FINER, "Loading workspace servers and server configurations");
+		if (Trace.FINER) {
+			Trace.trace(Trace.STRING_FINER, "Loading workspace servers and server configurations");
+		}
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		if (projects != null) {
 			int size = projects.length;
@@ -268,7 +289,9 @@ public class ResourceManager {
 	 * Load all of the servers and server configurations from the given project.
 	 */
 	protected static void loadFromProject(IProject project) {
-		Trace.trace(Trace.FINER, "Initial server resource load for " + project.getName(), null);
+		if (Trace.FINER) {
+			Trace.trace(Trace.STRING_FINER, "Initial server resource load for " + project.getName(), null);
+		}
 		final ResourceManager rm = ResourceManager.getInstance();
 		
 		try {
@@ -280,7 +303,9 @@ public class ResourceManager {
 							try {
 								rm.handleNewFile(file, null);
 							} catch (Exception e) {
-								Trace.trace(Trace.SEVERE, "Error during initial server resource load", e);
+								if (Trace.SEVERE) {
+									Trace.trace(Trace.STRING_SEVERE, "Error during initial server resource load", e);
+								}
 							}
 							return false;
 						}
@@ -288,7 +313,9 @@ public class ResourceManager {
 				}
 			}, 0);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not load server project " + project.getName(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not load server project " + project.getName(), e);
+			}
 		}
 	}
 		
@@ -312,7 +339,9 @@ public class ResourceManager {
 		try {
 			instance.shutdownImpl();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error during shutdown", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error during shutdown", e);
+			}
 		}
 	}
 
@@ -337,7 +366,9 @@ public class ResourceManager {
 					server.dispose();
 				}
 			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Error disposing server", e);
+				if (Trace.WARNING) {
+					Trace.trace(Trace.STRING_WARNING, "Error disposing server", e);
+				}
 			}
 		}
 		
@@ -351,7 +382,9 @@ public class ResourceManager {
 					runtime.dispose();
 				}
 			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Error disposing server", e);
+				if (Trace.WARNING) {
+					Trace.trace(Trace.STRING_WARNING, "Error disposing server", e);
+				}
 			}
 		}
 		try {
@@ -381,7 +414,9 @@ public class ResourceManager {
 	 * 
 	 */
 	public void addRuntimeLifecycleListener(IRuntimeLifecycleListener listener) {
-		Trace.trace(Trace.LISTENERS, "Adding runtime lifecycle listener " + listener + " to " + this);
+		if (Trace.LISTENERS) {
+			Trace.trace(Trace.STRING_LISTENERS, "Adding runtime lifecycle listener " + listener + " to " + this);
+		}
 		
 		synchronized (runtimeListeners) {
 			runtimeListeners.add(listener);
@@ -392,7 +427,9 @@ public class ResourceManager {
 	 *
 	 */
 	public void removeRuntimeLifecycleListener(IRuntimeLifecycleListener listener) {
-		Trace.trace(Trace.LISTENERS, "Removing runtime lifecycle listener " + listener + " from " + this);
+		if (Trace.LISTENERS) {
+			Trace.trace(Trace.STRING_LISTENERS, "Removing runtime lifecycle listener " + listener + " from " + this);
+		}
 		
 		synchronized (runtimeListeners) {
 			runtimeListeners.remove(listener);
@@ -403,7 +440,9 @@ public class ResourceManager {
 	 * 
 	 */
 	public void addServerLifecycleListener(IServerLifecycleListener listener) {
-		Trace.trace(Trace.LISTENERS, "Adding server lifecycle listener " + listener + " to " + this);
+		if (Trace.LISTENERS) {
+			Trace.trace(Trace.STRING_LISTENERS, "Adding server lifecycle listener " + listener + " to " + this);
+		}
 		
 		synchronized (serverListeners) {
 			serverListeners.add(listener);
@@ -414,7 +453,9 @@ public class ResourceManager {
 	 *
 	 */
 	public void removeServerLifecycleListener(IServerLifecycleListener listener) {
-		Trace.trace(Trace.LISTENERS, "Removing server lifecycle listener " + listener + " from " + this);
+		if (Trace.LISTENERS) {
+			Trace.trace(Trace.STRING_LISTENERS, "Removing server lifecycle listener " + listener + " from " + this);
+		}
 		
 		synchronized (serverListeners) {
 			serverListeners.remove(listener);
@@ -430,7 +471,9 @@ public class ResourceManager {
 		if (runtime == null)
 			return;
 		
-		Trace.trace(Trace.RESOURCES, "Deregistering runtime: " + runtime.getName());
+		if (Trace.RESOURCES) {
+			Trace.trace(Trace.STRING_RESOURCES, "Deregistering runtime: " + runtime.getName());
+		}
 		
 		runtimes.remove(runtime);
 		fireRuntimeEvent(runtime, EVENT_REMOVED);
@@ -446,7 +489,9 @@ public class ResourceManager {
 		if (server == null)
 			return;
 		
-		Trace.trace(Trace.RESOURCES, "Deregistering server: " + server.getName());
+		if (Trace.RESOURCES) {
+			Trace.trace(Trace.STRING_RESOURCES, "Deregistering server: " + server.getName());
+		}
 		
 		((Server) server).deleteMetadata();
 		
@@ -459,7 +504,9 @@ public class ResourceManager {
 	 * Fire a runtime event.
 	 */
 	private void fireRuntimeEvent(final IRuntime runtime, byte b) {
-		Trace.trace(Trace.LISTENERS, "->- Firing runtime event: " + runtime.getName() + " ->-");
+		if (Trace.LISTENERS) {
+			Trace.trace(Trace.STRING_LISTENERS, "->- Firing runtime event: " + runtime.getName() + " ->-");
+		}
 		
 		if (runtimeListeners.isEmpty())
 			return;
@@ -467,7 +514,9 @@ public class ResourceManager {
 		List<IRuntimeLifecycleListener> clone = new ArrayList<IRuntimeLifecycleListener>();
 		clone.addAll(runtimeListeners);
 		for (IRuntimeLifecycleListener srl : clone) {
-			Trace.trace(Trace.LISTENERS, "  Firing runtime event to " + srl);
+			if (Trace.LISTENERS) {
+				Trace.trace(Trace.STRING_LISTENERS, "  Firing runtime event to " + srl);
+			}
 			try {
 				if (b == EVENT_ADDED)
 					srl.runtimeAdded(runtime);
@@ -476,17 +525,23 @@ public class ResourceManager {
 				else
 					srl.runtimeRemoved(runtime);
 			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "  Error firing runtime event to " + srl, e);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "  Error firing runtime event to " + srl, e);
+				}
 			}
 		}
-		Trace.trace(Trace.LISTENERS, "-<- Done firing runtime event -<-");
+		if (Trace.LISTENERS) {
+			Trace.trace(Trace.STRING_LISTENERS, "-<- Done firing runtime event -<-");
+		}
 	}
 
 	/**
 	 * Fire a server event.
 	 */
 	private void fireServerEvent(final IServer server, byte b) {
-		Trace.trace(Trace.LISTENERS, "->- Firing server event: " + server.getName() + " ->-");
+		if (Trace.LISTENERS) {
+			Trace.trace(Trace.STRING_LISTENERS, "->- Firing server event: " + server.getName() + " ->-");
+		}
 		
 		if (serverListeners.isEmpty())
 			return;
@@ -494,7 +549,9 @@ public class ResourceManager {
 		List<IServerLifecycleListener> clone = new ArrayList<IServerLifecycleListener>();
 		clone.addAll(serverListeners);
 		for (IServerLifecycleListener srl : clone) {
-			Trace.trace(Trace.LISTENERS, "  Firing server event to " + srl);
+			if (Trace.LISTENERS) {
+				Trace.trace(Trace.STRING_LISTENERS, "  Firing server event to " + srl);
+			}
 			try {
 				if (b == EVENT_ADDED)
 					srl.serverAdded(server);
@@ -503,10 +560,14 @@ public class ResourceManager {
 				else
 					srl.serverRemoved(server);
 			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "  Error firing server event to " + srl, e);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "  Error firing server event to " + srl, e);
+				}
 			}
 		}
-		Trace.trace(Trace.LISTENERS, "-<- Done firing server event -<-");
+		if (Trace.LISTENERS) {
+			Trace.trace(Trace.STRING_LISTENERS, "-<- Done firing server event -<-");
+		}
 	}
 
 	protected void saveRuntimesList() {
@@ -527,7 +588,9 @@ public class ResourceManager {
 			prefs.setValue("runtimes", xmlString);
 			ServerPlugin.getInstance().savePluginPreferences();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not save runtimes", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not save runtimes", e);
+			}
 		}
 		ignorePreferenceChanges = false;
 	}
@@ -550,12 +613,16 @@ public class ResourceManager {
 			
 			memento.saveToFile(filename);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not save servers", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not save servers", e);
+			}
 		}
 	}
 
 	protected void loadRuntimesList() {
-		Trace.trace(Trace.FINEST, "Loading runtime info");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Loading runtime info");
+		}
 		Preferences prefs = ServerPlugin.getInstance().getPluginPreferences();
 		String xmlString = prefs.getString("runtimes");
 		
@@ -574,13 +641,17 @@ public class ResourceManager {
 					runtimes.add(runtime);
 				}
 			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Could not load runtimes", e);
+				if (Trace.WARNING) {
+					Trace.trace(Trace.STRING_WARNING, "Could not load runtimes", e);
+				}
 			}
 		}
 	}
 
 	protected void loadServersList() {
-		Trace.trace(Trace.FINEST, "Loading server info");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Loading server info");
+		}
 		String filename = ServerPlugin.getInstance().getStateLocation().append(SERVER_DATA_FILE).toOSString();
 		
 		try {
@@ -595,7 +666,9 @@ public class ResourceManager {
 				servers.add(server);
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not load servers", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Could not load servers", e);
+			}
 		}
 	}
 
@@ -763,7 +836,9 @@ public class ResourceManager {
 		if (kind == IResourceDelta.CHANGED && (flags & IResourceDelta.MARKERS) != 0)
 			return false;
 		
-		Trace.trace(Trace.RESOURCES, "Resource changed: " + resource2 + " " + kind);
+		if (Trace.RESOURCES) {
+			Trace.trace(Trace.STRING_RESOURCES, "Resource changed: " + resource2 + " " + kind);
+		}
 		
 		if (resource2 instanceof IFile) {
 			IFile file = (IFile) resource2;
@@ -789,7 +864,9 @@ public class ResourceManager {
 				try {
 					((Server)server).getDelegate(null).configurationChanged();
 				} catch (Exception e) {
-					Trace.trace(Trace.WARNING, "Server failed on configuration change");
+					if (Trace.WARNING) {
+						Trace.trace(Trace.STRING_WARNING, "Server failed on configuration change");
+					}
 				}
 			}
 		}
@@ -811,7 +888,9 @@ public class ResourceManager {
 	 * @return boolean
 	 */
 	protected boolean handleNewFile(IFile file, IProgressMonitor monitor) {
-		Trace.trace(Trace.RESOURCES, "handleNewFile: " + file);
+		if (Trace.RESOURCES) {
+			Trace.trace(Trace.STRING_RESOURCES, "handleNewFile: " + file);
+		}
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.beginTask("", 2000);
 		
@@ -826,7 +905,9 @@ public class ResourceManager {
 					return true;
 				}
 			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error loading server", e);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "Error loading server", e);
+				}
 			}
 		}
 		
@@ -843,7 +924,9 @@ public class ResourceManager {
 	 * @return boolean
 	 */
 	private boolean handleMovedFile(IFile file, IResourceDelta delta, IProgressMonitor monitor) {
-		Trace.trace(Trace.RESOURCES, "handleMovedFile: " + file);
+		if (Trace.RESOURCES) {
+			Trace.trace(Trace.STRING_RESOURCES, "handleMovedFile: " + file);
+		}
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.beginTask("", 2000);
 		
@@ -907,7 +990,9 @@ public class ResourceManager {
 	 * @return boolean
 	 */
 	private boolean handleChangedFile(IFile file, IProgressMonitor monitor) {
-		Trace.trace(Trace.RESOURCES, "handleChangedFile: " + file);
+		if (Trace.RESOURCES) {
+			Trace.trace(Trace.STRING_RESOURCES, "handleChangedFile: " + file);
+		}
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.beginTask("", 1000);
 		boolean found = false;
@@ -916,15 +1001,21 @@ public class ResourceManager {
 		if (server != null) {
 			found = true;
 			try {
-				Trace.trace(Trace.RESOURCES, "Reloading server: " + server);
+				if (Trace.RESOURCES) {
+					Trace.trace(Trace.STRING_RESOURCES, "Reloading server: " + server);
+				}
 				((Server) server).loadFromFile(monitor);
 				fireServerEvent(server, EVENT_CHANGED);
 			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error reloading server " + server.getName() + " from " + file, e);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "Error reloading server " + server.getName() + " from " + file, e);
+				}
 				removeServer(server);
 			}
-		} else
-			Trace.trace(Trace.RESOURCES, "No server found at: " + file);
+		}
+		else if (Trace.RESOURCES) {
+			Trace.trace(Trace.STRING_RESOURCES, "No server found at: " + file);
+		}
 		
 		monitor.done();
 		return found;
@@ -938,7 +1029,9 @@ public class ResourceManager {
 	 * @return boolean
 	 */
 	private boolean handleRemovedFile(IFile file) {
-		Trace.trace(Trace.RESOURCES, "handleRemovedFile: " + file);
+		if (Trace.RESOURCES) {
+			Trace.trace(Trace.STRING_RESOURCES, "handleRemovedFile: " + file);
+		}
 		
 		IServer server = findServer(file);
 		if (server != null) {
@@ -946,7 +1039,9 @@ public class ResourceManager {
 			return true;
 		}
 		
-		Trace.trace(Trace.RESOURCES, "No server found at: " + file);
+		if (Trace.RESOURCES) {
+			Trace.trace(Trace.STRING_RESOURCES, "No server found at: " + file);
+		}
 		return false;
 	}
 
@@ -968,7 +1063,9 @@ public class ResourceManager {
 	 * @param buildEvent whether this event was a build event
 	 */
 	protected void publishHandleProjectChange(IResourceDelta delta, IResourceChangeEvent event) {
-		Trace.trace(Trace.FINEST, "> publishHandleProjectChange " + delta.getResource());
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "> publishHandleProjectChange " + delta.getResource());
+		}
 		IProject project = (IProject) delta.getResource();
 		
 		if (project == null)
@@ -983,7 +1080,9 @@ public class ResourceManager {
 		if (modules == null)
 			return;
 		
-		Trace.trace(Trace.FINEST, "- publishHandleProjectChange");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "- publishHandleProjectChange");
+		}
 
 		int size = modules.length;
 		int size2 = servers2.length;
@@ -993,7 +1092,9 @@ public class ResourceManager {
 					((Server) servers2[j]).handleModuleProjectChange(modules[i], event);
 			}
 		}
-		Trace.trace(Trace.FINEST, "< publishHandleProjectChange");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "< publishHandleProjectChange");
+		}
 	}
 
 	private IServer[] getPublishRequiredServers(IResourceDelta delta){		
@@ -1094,7 +1195,9 @@ public class ResourceManager {
 		if (runtime == null)
 			return;
 		
-		Trace.trace(Trace.RESOURCES, "Registering runtime: " + runtime.getName());
+		if (Trace.RESOURCES) {
+			Trace.trace(Trace.STRING_RESOURCES, "Registering runtime: " + runtime.getName());
+		}
 		
 		runtimes.add(runtime);
 		fireRuntimeEvent(runtime, EVENT_ADDED);
@@ -1114,7 +1217,9 @@ public class ResourceManager {
 		if (server == null)
 			return;
 		
-		Trace.trace(Trace.RESOURCES, "Registering server: " + server.getName());
+		if (Trace.RESOURCES) {
+			Trace.trace(Trace.STRING_RESOURCES, "Registering server: " + server.getName());
+		}
 		
 		servers.add(server);
 		fireServerEvent(server, EVENT_ADDED);

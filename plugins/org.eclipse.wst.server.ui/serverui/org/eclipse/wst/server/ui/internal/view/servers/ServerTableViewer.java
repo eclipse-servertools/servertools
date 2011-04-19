@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -168,7 +168,9 @@ public class ServerTableViewer extends TreeViewer {
 								updateAnimation(server);
 						}
 					} catch (Exception e) {
-						Trace.trace(Trace.FINEST, "Error in Servers view animation", e);
+						if (Trace.FINEST) {
+							Trace.trace(Trace.STRING_FINEST, "Error in Servers view animation", e);
+						}
 					}
 					display.timerExec(SLEEP, animator[0]);
 				}
@@ -618,7 +620,9 @@ public class ServerTableViewer extends TreeViewer {
 			item.setText(1, labelProvider.getColumnText(server, 1));
 			item.setImage(1, labelProvider.getColumnImage(server, 1));
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Error in optimized animation", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Error in optimized animation", e);
+			}
 		}
 	}
 }

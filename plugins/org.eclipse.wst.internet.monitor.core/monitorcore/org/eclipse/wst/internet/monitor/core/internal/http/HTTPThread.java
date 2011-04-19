@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2009 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -97,7 +97,9 @@ Host: localhost:8081
 		setPriority(Thread.NORM_PRIORITY + 1);
 		setDaemon(true);
 		
-		Trace.trace(Trace.PARSING, "Started: " + this);
+		if (Trace.PARSING) {
+			Trace.trace(Trace.STRING_PARSING, "Started: " + this);
+		}
 	}
 	
 	/**
@@ -189,7 +191,9 @@ Host: localhost:8081
 	 * @throws IOException
 	 */
 	public void parseBody() throws IOException {
-		Trace.trace(Trace.PARSING, "Parsing body for: " + this);
+		if (Trace.PARSING) {
+			Trace.trace(Trace.STRING_PARSING, "Parsing body for: " + this);
+		}
 		
 		if (responseType != null && ("204".equals(responseType) || "304".equals(responseType))) {
 			setHTTPBody(new byte[0]);
@@ -208,7 +212,9 @@ Host: localhost:8081
 					b2Index += b.length;
 				}
 				int bytesLeft = contentLength - b.length;
-				Trace.trace(Trace.PARSING, "[Request] bytesLeft: "+ bytesLeft);
+				if (Trace.PARSING) {
+					Trace.trace(Trace.STRING_PARSING, "[Request] bytesLeft: " + bytesLeft);
+				}
 				out.write(b);
 				
 				int n = 0;
@@ -220,7 +226,9 @@ Host: localhost:8081
 						b2Index += n;
 					}
 					out.write(readBuffer, 0, n);					
-					Trace.trace(Trace.PARSING, "[Request] bytes read: "+ n + " bytesLeft: "+ bytesLeft);
+					if (Trace.PARSING) {
+						Trace.trace(Trace.STRING_PARSING, "[Request] bytes read: " + n + " bytesLeft: " + bytesLeft);
+					}
 				}
 				
 				// restore the byte array for display
@@ -233,18 +241,24 @@ Host: localhost:8081
 				parseChunk();
 			}
 			
-			Trace.trace(Trace.PARSING, "Done parsing request body for: " + this);
+			if (Trace.PARSING) {
+				Trace.trace(Trace.STRING_PARSING, "Done parsing request body for: " + this);
+			}
 			return;
 		}
 		
 		// just return body for HTTP 1.0 responses
 		if (!isRequest && !connectionKeepAlive && contentLength == -1 && transferEncoding == -1) {
-			Trace.trace(Trace.PARSING, "Assuming HTTP 1.0 for: " + this);
+			if (Trace.PARSING) {
+				Trace.trace(Trace.STRING_PARSING, "Assuming HTTP 1.0 for: " + this);
+			}
 			int n = buffer.length - bufferIndex;
 			byte[] b = readBytes(n);
 			byte[] body = new byte[0];
 			while (n >= 0) {
-				Trace.trace(Trace.PARSING, "Bytes read: " + n + " " + this);
+				if (Trace.PARSING) {
+					Trace.trace(Trace.STRING_PARSING, "Bytes read: " + n + " " + this);
+				}
 				if (b != null && n > 0) {
 					byte[] x = null;
 					if (n == b.length)
@@ -295,7 +309,9 @@ Host: localhost:8081
 				b2Index += b.length;
 			}
 			int bytesLeft = contentLength - b.length;
-			Trace.trace(Trace.PARSING,"bytesLeft: "+ bytesLeft);
+			if (Trace.PARSING) {
+				Trace.trace(Trace.STRING_PARSING, "bytesLeft: " + bytesLeft);
+			}
 			out.write(b);
 			
 			int n = 0;
@@ -306,7 +322,9 @@ Host: localhost:8081
 					System.arraycopy(readBuffer, 0, b2, b2Index, n);
 					b2Index += n;
 				}
-				Trace.trace(Trace.PARSING,"bytes read: "+n + " bytesLeft: "+ bytesLeft);
+				if (Trace.PARSING) {
+					Trace.trace(Trace.STRING_PARSING, "bytes read: " + n + " bytesLeft: " + bytesLeft);
+				}
 				out.write(readBuffer, 0, n);
 			}
 						
@@ -324,7 +342,9 @@ Host: localhost:8081
 		
 		// spec 4.4.4 (?)
 		
-		Trace.trace(Trace.PARSING, "Unknown body for: " + this);
+		if (Trace.PARSING) {
+			Trace.trace(Trace.STRING_PARSING, "Unknown body for: " + this);
+		}
 	}
 
 	// Use this method to dump the content of a byte array
@@ -347,7 +367,9 @@ Host: localhost:8081
 	 * @throws IOException
 	 */
 	public void parseChunk() throws IOException {
-		Trace.trace(Trace.PARSING, "Parsing chunk for: " + this);
+		if (Trace.PARSING) {
+			Trace.trace(Trace.STRING_PARSING, "Parsing chunk for: " + this);
+		}
 		boolean done = false;
 		byte[] body = new byte[0];
 	
@@ -356,7 +378,9 @@ Host: localhost:8081
 			byte[] b = readLine();
 	
 			String s = new String(b);
-			Trace.trace(Trace.PARSING, "Chunk-length: "+s);
+			if (Trace.PARSING) {
+				Trace.trace(Trace.STRING_PARSING, "Chunk-length: " + s);
+			}
 			int index = s.indexOf(" ");
 			int length = -1;
 			try {
@@ -364,7 +388,9 @@ Host: localhost:8081
 					s = s.substring(0, index);
 				length = Integer.parseInt(s.trim(), 16);
 			} catch (Exception e) {
-				Trace.trace(Trace.PARSING, "Error chunk for: " + this, e);
+				if (Trace.PARSING) {
+					Trace.trace(Trace.STRING_PARSING, "Error chunk for: " + this, e);
+				}
 			}
 	
 			// output bytes
@@ -402,7 +428,9 @@ Host: localhost:8081
 	 * @throws IOException
 	 */
 	public void parseHeader() throws IOException {
-		Trace.trace(Trace.PARSING, "Parsing header for: " + this);
+		if (Trace.PARSING) {
+			Trace.trace(Trace.STRING_PARSING, "Parsing header for: " + this);
+		}
 	
 		// read until first blank line
 		boolean isFirstLine = true;
@@ -410,7 +438,9 @@ Host: localhost:8081
 	
 		byte[] b = readLine();
 		while (b.length > 5) {
-			Trace.trace(Trace.PARSING, "Parsing header line: '" + new String(b) + "'");
+			if (Trace.PARSING) {
+				Trace.trace(Trace.STRING_PARSING, "Parsing header line: '" + new String(b) + "'");
+			}
 			
 			if (isFirstLine) {
 				String s = new String(b);
@@ -425,9 +455,13 @@ Host: localhost:8081
 	
 					try {
 						responseType = s.substring(index1 + 1, index2).trim();
-						Trace.trace(Trace.PARSING, "Response Type: " + this + " " + responseType);
+						if (Trace.PARSING) {
+							Trace.trace(Trace.STRING_PARSING, "Response Type: " + this + " " + responseType);
+						}
 					} catch (Exception e) {
-						Trace.trace(Trace.PARSING, "Error parsing response type for: " + this, e);
+						if (Trace.PARSING) {
+							Trace.trace(Trace.STRING_PARSING, "Error parsing response type for: " + this, e);
+						}
 					}
 					if (responseType != null && responseType.equals("100")) {
 						outputBytes(b, isNew);
@@ -443,9 +477,13 @@ Host: localhost:8081
 
 						try {
 							responseType = s.substring(index1 + 1, index2).trim();
-							Trace.trace(Trace.PARSING, "Response Type: " + this + " " + responseType);
+							if (Trace.PARSING) {
+								Trace.trace(Trace.STRING_PARSING, "Response Type: " + this + " " + responseType);
+							}
 						} catch (Exception e) {
-							Trace.trace(Trace.PARSING, "Error parsing response type for: " + this, e);
+							if (Trace.PARSING) {
+								Trace.trace(Trace.STRING_PARSING, "Error parsing response type for: " + this, e);
+							}
 						}
 					}
 				}
@@ -461,12 +499,16 @@ Host: localhost:8081
 			b = readLine();
 		}
 		
-		Trace.trace(Trace.PARSING, "Parsing final header line: '" + new String(b) + "'");
+		if (Trace.PARSING) {
+			Trace.trace(Trace.STRING_PARSING, "Parsing final header line: '" + new String(b) + "'");
+		}
 		
 		outputBytes(b, false);
 		
 		Request rr = conn.getRequestResponse(isRequest);
-		Trace.trace(Trace.PARSING, "Setting header length: " + rr.getRequest(Request.ALL).length);
+		if (Trace.PARSING) {
+			Trace.trace(Trace.STRING_PARSING, "Setting header length: " + rr.getRequest(Request.ALL).length);
+		}
 		
 		setHTTPHeader(rr);
 	}
@@ -476,7 +518,9 @@ Host: localhost:8081
 	 * @return byte[]
 	 */
 	protected byte[] readBytes(int n) throws IOException {
-		Trace.trace(Trace.PARSING, "readBytes() " + n + " for: " + this);
+		if (Trace.PARSING) {
+			Trace.trace(Trace.STRING_PARSING, "readBytes() " + n + " for: " + this);
+		}
 		while (buffer.length - bufferIndex < n)
 			fillBuffer();
 		
@@ -489,7 +533,9 @@ Host: localhost:8081
 	 * @return byte[]
 	 */
 	protected byte[] readLine() throws IOException {
-		Trace.trace(Trace.PARSING, "readLine() for: " + this);
+		if (Trace.PARSING) {
+			Trace.trace(Trace.STRING_PARSING, "readLine() for: " + this);
+		}
 		
 		int n = getFirstCRLF();
 		while (n < 0) {
@@ -547,7 +593,9 @@ Host: localhost:8081
 					//Request r = conn.getRequestResponse(true);
 					//r.fireChangedEvent();
 					
-					Trace.trace(Trace.PARSING, "Done HTTP request for " + this + " " + connectionKeepAlive);
+					if (Trace.PARSING) {
+						Trace.trace(Trace.STRING_PARSING, "Done HTTP request for " + this + " " + connectionKeepAlive);
+					}
 					if (!isRequest && (!request.connectionKeepAlive || connectionClose)) {
 						conn2.close();
 						if (request.connectionKeepAlive && connectionClose)
@@ -562,15 +610,18 @@ Host: localhost:8081
 					Thread.yield();
 				}
 			} catch (IOException e) {
-				// reached end of input
-				Trace.trace(Trace.PARSING, "End of buffer for: " + this, e);
+				if (Trace.PARSING) {
+					Trace.trace(Trace.STRING_PARSING, "End of buffer for: " + this, e);
+				}
 				if (!isRequest) {
 					try {
 						request.connectionKeepAlive = false;
 						request.conn2.close();
 						notifyRequest();
 					} catch (Exception ex) {
-						Trace.trace(Trace.PARSING, "Error closing request in response to error: " + this, e);
+						if (Trace.PARSING) {
+							Trace.trace(Trace.STRING_PARSING, "Error closing request in response to error: " + this, e);
+						}
 					}
 				}
 			}
@@ -579,12 +630,16 @@ Host: localhost:8081
 			out.write(buffer, bufferIndex, buffer.length - bufferIndex);
 			out.flush();
 		} catch (Exception e) {
-			Trace.trace(Trace.PARSING, "Error in: " + this, e);
+			if (Trace.PARSING) {
+				Trace.trace(Trace.STRING_PARSING, "Error in: " + this, e);
+			}
 		}
 		//if (!isRequest)
 		//	conn2.close();
 		
-		Trace.trace(Trace.PARSING, "Closing thread " + this);
+		if (Trace.PARSING) {
+			Trace.trace(Trace.STRING_PARSING, "Closing thread " + this);
+		}
 	}
 
 	/**
@@ -624,9 +679,13 @@ Host: localhost:8081
 		} else if (s.toLowerCase().startsWith("content-length: ")) {
 			try {
 				contentLength = Integer.parseInt(s.substring(16).trim());
-				Trace.trace(Trace.PARSING, "Content length: " + this + " " + contentLength);
+				if (Trace.PARSING) {
+					Trace.trace(Trace.STRING_PARSING, "Content length: " + this + " " + contentLength);
+				}
 			} catch (Exception e) {
-				Trace.trace(Trace.PARSING, "Content length error", e);
+				if (Trace.PARSING) {
+					Trace.trace(Trace.STRING_PARSING, "Content length error", e);
+				}
 			}
 		} else if (s.toLowerCase().startsWith("connection: ")) {
 			try {
@@ -641,9 +700,13 @@ Host: localhost:8081
 				// so we have to let it alone
 				if (t.equalsIgnoreCase("close"))
 					connectionClose = true;
-				Trace.trace(Trace.PARSING, "Keep alive: " + connectionKeepAlive);
+				if (Trace.PARSING) {
+					Trace.trace(Trace.STRING_PARSING, "Keep alive: " + connectionKeepAlive);
+				}
 			} catch (Exception e) {
-				Trace.trace(Trace.PARSING, "Error getting Connection: from header", e);
+				if (Trace.PARSING) {
+					Trace.trace(Trace.STRING_PARSING, "Error getting Connection: from header", e);
+				}
 			}
 		} else if (s.toLowerCase().startsWith("transfer-encoding: ")) {
 			String t = s.substring(19).trim();
@@ -651,7 +714,9 @@ Host: localhost:8081
 			for (int i = 0; i < size; i++) {
 				if (ENCODING_STRING[i].equalsIgnoreCase(t)) {
 					transferEncoding = (byte) i;
-					Trace.trace(Trace.PARSING, "Transfer encoding: " + ENCODING_STRING[i]);
+					if (Trace.PARSING) {
+						Trace.trace(Trace.STRING_PARSING, "Transfer encoding: " + ENCODING_STRING[i]);
+					}
 				}
 			}
 		}
@@ -661,31 +726,45 @@ Host: localhost:8081
 	
 	protected void close() {
 		try {
-			Trace.trace(Trace.PARSING, "Closing: " + this);
+			if (Trace.PARSING) {
+				Trace.trace(Trace.STRING_PARSING, "Closing: " + this);
+			}
 			out.close();
 		} catch (Exception e) {
-			Trace.trace(Trace.PARSING, "Error closing connection " + this, e);
+			if (Trace.PARSING) {
+				Trace.trace(Trace.STRING_PARSING, "Error closing connection " + this, e);
+			}
 		}
 	}
 
 	protected void waitForResponse() {
-		Trace.trace(Trace.PARSING, "Waiting for response " + this);
+		if (Trace.PARSING) {
+			Trace.trace(Trace.STRING_PARSING, "Waiting for response " + this);
+		}
 		synchronized (this) {
 			try {
 				isWaiting = true;
 				wait();
 			} catch (Exception e) {
-				Trace.trace(Trace.PARSING, "Error in waitForResponse() " + this, e);
+				if (Trace.PARSING) {
+					Trace.trace(Trace.STRING_PARSING, "Error in waitForResponse() " + this, e);
+				}
 			}
 			isWaiting = false;
 		}
-		Trace.trace(Trace.PARSING, "Done waiting for response " + this);
+		if (Trace.PARSING) {
+			Trace.trace(Trace.STRING_PARSING, "Done waiting for response " + this);
+		}
 	}
 
 	protected void notifyRequest() {
-		Trace.trace(Trace.PARSING, "Notifying request " + this);
+		if (Trace.PARSING) {
+			Trace.trace(Trace.STRING_PARSING, "Notifying request " + this);
+		}
 		while (request.connectionKeepAlive && !request.isWaiting) {
-			Trace.trace(Trace.PARSING, "Waiting for request " + this);
+			if (Trace.PARSING) {
+				Trace.trace(Trace.STRING_PARSING, "Waiting for request " + this);
+			}
 			try {
 				Thread.sleep(100);
 			} catch (Exception e) {
@@ -696,10 +775,14 @@ Host: localhost:8081
 			try {
 				request.notify();
 			} catch (Exception e) {
-				Trace.trace(Trace.PARSING, "Error in notifyRequest() " + this, e);
+				if (Trace.PARSING) {
+					Trace.trace(Trace.STRING_PARSING, "Error in notifyRequest() " + this, e);
+				}
 			}
 		}
-		Trace.trace(Trace.PARSING, "Done notifying request " + this);
+		if (Trace.PARSING) {
+			Trace.trace(Trace.STRING_PARSING, "Done notifying request " + this);
+		}
 	}
 
 	protected void setHTTPHeader(Request rr) {

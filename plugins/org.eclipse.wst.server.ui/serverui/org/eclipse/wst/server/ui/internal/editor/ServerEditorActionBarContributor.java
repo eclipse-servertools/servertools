@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -69,7 +69,9 @@ public class ServerEditorActionBarContributor extends EditorActionBarContributor
 
 		if (targetEditor instanceof ServerEditor) {
 			editor = (ServerEditor) targetEditor;
-			Trace.trace(Trace.FINEST, "Editor action bar contributor for: " + editor);
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "Editor action bar contributor for: " + editor);
+			}
 			editor.updateUndoAction();
 			editor.updateRedoAction();
 			
@@ -93,9 +95,13 @@ public class ServerEditorActionBarContributor extends EditorActionBarContributor
 			boolean modified = false;
 			if (actions != null) {
 				int size = actions.length;
-				Trace.trace(Trace.FINEST, "Attempting to add editor actions: " + size);
+				if (Trace.FINEST) {
+					Trace.trace(Trace.STRING_FINEST, "Attempting to add editor actions: " + size);
+				}
 				for (int i = 0; i < size; i++) {
-					Trace.trace(Trace.FINEST, "action: " + actions[i]);
+					if (Trace.FINEST) {
+						Trace.trace(Trace.STRING_FINEST, "action: " + actions[i]);
+					}
 					tbm.appendToGroup(SERVER_EDITOR_SEPARATOR, actions[i]);
 					modified = true;
 				}

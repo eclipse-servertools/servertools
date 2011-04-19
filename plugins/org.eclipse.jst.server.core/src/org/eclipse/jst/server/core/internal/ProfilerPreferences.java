@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -58,7 +58,9 @@ public class ProfilerPreferences {
 		try {
 			node.flush();			
 		} catch (BackingStoreException e) {
-			Trace.trace(Trace.SEVERE, "Could not save server profiler preference", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not save server profiler preference", e);
+			}
 		}
 	}
 	

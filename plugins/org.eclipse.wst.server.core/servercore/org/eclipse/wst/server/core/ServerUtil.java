@@ -332,7 +332,9 @@ public class ServerUtil {
 						addParentModules.add(parent);
 				}
 			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Could not find parent module", e);
+				if (Trace.WARNING) {
+					Trace.trace(Trace.STRING_WARNING, "Could not find parent module", e);
+				}
 			}
 			
 			if (!found)
@@ -356,7 +358,9 @@ public class ServerUtil {
 						removeParentModules.add(parent);
 				}
 			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Could not find parent module 2", e);
+				if (Trace.WARNING) {
+					Trace.trace(Trace.STRING_WARNING, "Could not find parent module 2", e);
+				}
 			}
 			
 			if (!found)
@@ -688,7 +692,9 @@ public class ServerUtil {
 		if (server == null || module == null)
 			throw new IllegalArgumentException("Arguments cannot be null");
 		
-		Trace.trace(Trace.FINEST, "containsModule() " + server + " " + module);
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "containsModule() " + server + " " + module);
+		}
 		
 		final boolean[] b = new boolean[1];
 		

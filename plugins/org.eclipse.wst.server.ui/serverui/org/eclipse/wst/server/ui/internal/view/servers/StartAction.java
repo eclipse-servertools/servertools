@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -175,7 +175,9 @@ public class StartAction extends AbstractServerAction {
 					launchMode2 = server.getMode();
 				server.restart(launchMode2, (IOperationListener) null);
 			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error restarting server", e);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "Error restarting server", e);
+				}
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -111,7 +111,9 @@ public class ModuleType implements IModuleType {
 	private static synchronized void loadModuleTypes() {
 		if (moduleKinds != null)
 			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleTypes extension point ->-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "->- Loading .moduleTypes extension point ->-");
+		}
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "moduleTypes");
 
@@ -121,13 +123,19 @@ public class ModuleType implements IModuleType {
 			try {
 				ModuleKind moduleType = new ModuleKind(cf[i]);
 				moduleKinds.add(moduleType);
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded moduleType: " + cf[i].getAttribute("id"));
+				if (Trace.EXTENSION_POINT) {
+					Trace.trace(Trace.STRING_EXTENSION_POINT, "  Loaded moduleType: " + cf[i].getAttribute("id"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load moduleType: " + cf[i].getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "  Could not load moduleType: " + cf[i].getAttribute("id"), t);
+				}
 			}
 		}
 		
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .moduleTypes extension point -<-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "-<- Done loading .moduleTypes extension point -<-");
+		}
 	}
 
 	public int hashCode() {

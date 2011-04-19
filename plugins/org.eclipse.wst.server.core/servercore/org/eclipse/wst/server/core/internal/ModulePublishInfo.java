@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -110,7 +110,9 @@ public class ModulePublishInfo {
 	 * Used only for reading from WTP 1.x workspaces.
 	 */
 	protected void load(IMemento memento) {
-		Trace.trace(Trace.FINEST, "Loading module publish info for: " + memento);
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Loading module publish info for: " + memento);
+		}
 		
 		try {
 			moduleId = memento.getString(MODULE_ID);
@@ -122,7 +124,9 @@ public class ModulePublishInfo {
 			
 			resources = loadResource(memento, new Path(""));
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not load module publish info information", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Could not load module publish info information", e);
+			}
 		}
 	}
 
@@ -165,7 +169,10 @@ public class ModulePublishInfo {
 	}
 
 	protected void load(DataInput in) throws IOException {
-		Trace.trace(Trace.FINEST, "Loading module publish info");
+
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Loading module publish info");
+		}
 		
 		moduleId = in.readUTF();
 		byte b = in.readByte(); // 8?
@@ -228,7 +235,9 @@ public class ModulePublishInfo {
 			}
 			saveResource(out, resources);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not save module publish info", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not save module publish info", e);
+			}
 		}
 	}
 
@@ -286,9 +295,14 @@ public class ModulePublishInfo {
 			
 			delta = ServerPublishInfo.getDelta(resources, currentResources);
 			hasDelta = (delta != null && delta.length > 0);
-			Trace.trace(Trace.PERFORMANCE, "Filling publish cache for " + m.getName() + ": " + (System.currentTimeMillis() - time));
+			if (Trace.PERFORMANCE) {
+				Trace.trace(Trace.STRING_PERFORMANCE,
+						"Filling publish cache for " + m.getName() + ": " + (System.currentTimeMillis() - time));
+			}
 		} catch (CoreException ce) {
-			Trace.trace(Trace.WARNING, "Couldn't fill publish cache for " + module);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Couldn't fill publish cache for " + module);
+			}
 		}
 		if (delta == null)
 			delta = EMPTY_MODULE_RESOURCE_DELTA;
@@ -322,10 +336,15 @@ public class ModulePublishInfo {
 			if (ServerPlugin.getInstance().isDebugging())
 				printModule(x,"resources: ");
 			
-			Trace.trace(Trace.PERFORMANCE, "Time to get members() for " + module[size - 1].getName() + ": " + (System.currentTimeMillis() - time));
+			if (Trace.PERFORMANCE) {
+				Trace.trace(Trace.STRING_PERFORMANCE, "Time to get members() for " + module[size - 1].getName() + ": "
+						+ (System.currentTimeMillis() - time));
+			}
 			return x;
 		} catch (CoreException ce) {
-			Trace.trace(Trace.WARNING, "Possible failure in getModuleResources", ce);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Possible failure in getModuleResources", ce);
+			}
 		}
 		return EMPTY_MODULE_RESOURCE;
 	}
@@ -337,7 +356,9 @@ public class ModulePublishInfo {
 	}
 
 	private void printModule(IModuleResource r, String s) {
-		Trace.trace(Trace.RESOURCES, s + r.getName());
+		if (Trace.RESOURCES) {
+			Trace.trace(Trace.STRING_RESOURCES, s + r.getName());
+		}
 		if (r instanceof IModuleFolder) {
 			IModuleFolder mf = (IModuleFolder) r;
 			IModuleResource[] mr = mf.members();
@@ -366,7 +387,9 @@ public class ModulePublishInfo {
 			resources2 = pm.members();
 			printModule(resources2, "delta:");
 		} catch (CoreException ce) {
-			Trace.trace(Trace.WARNING, "Possible failure in getDelta", ce);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Possible failure in getDelta", ce);
+			}
 		}
 		if (resources2 == null)
 			resources2 = EMPTY_MODULE_RESOURCE;
@@ -391,7 +414,9 @@ public class ModulePublishInfo {
 		try {
 			resources2 = pm.members();
 		} catch (CoreException ce) {
-			Trace.trace(Trace.WARNING, "Possible failure in hasDelta", ce);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Possible failure in hasDelta", ce);
+			}
 		}
 		if (resources2 == null)
 			resources2 = EMPTY_MODULE_RESOURCE;
@@ -418,7 +443,9 @@ public class ModulePublishInfo {
 		try {
 			setResources(pm.members());
 		} catch (CoreException ce) {
-			Trace.trace(Trace.WARNING, "Possible failure in fill", ce);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Possible failure in fill", ce);
+			}
 		}
 	}
 

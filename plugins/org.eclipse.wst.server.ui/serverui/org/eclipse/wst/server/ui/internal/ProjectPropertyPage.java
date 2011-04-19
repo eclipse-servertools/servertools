@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -168,7 +168,9 @@ public class ProjectPropertyPage extends PropertyPage {
 			
 			return composite;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error creating project property page", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error creating project property page", e);
+			}
 			return null;
 		}
 	}
@@ -217,7 +219,9 @@ public class ProjectPropertyPage extends PropertyPage {
 			try {
 				ServerCore.setDefaultServer(module, server, null);
 			} catch (CoreException e) {
-				Trace.trace(Trace.SEVERE, "Error setting preferred server", e);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "Error setting preferred server", e);
+				}
 				EclipseUtil.openError(Messages.errorCouldNotSavePreference, e.getStatus());
 				return false;
 			}

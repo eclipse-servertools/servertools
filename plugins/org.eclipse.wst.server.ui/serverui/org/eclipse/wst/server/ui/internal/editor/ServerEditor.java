@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -227,7 +227,9 @@ public class ServerEditor extends MultiPageEditorPart {
 			while (iterator.hasNext()) {
 				IServerEditorPartFactory factory = (IServerEditorPartFactory) iterator.next();
 				if (factory.supportsType(serverTypeId) && factory.shouldCreatePage(server)) {
-					Trace.trace(Trace.FINEST, "Adding page: " + factory.getId() + " " + editorPartInput);
+					if (Trace.FINEST) {
+						Trace.trace(Trace.STRING_FINEST, "Adding page: " + factory.getId() + " " + editorPartInput);
+					}
 					try {
 						IEditorPart page = factory.createPage();
 						if (page != null) {
@@ -240,7 +242,9 @@ public class ServerEditor extends MultiPageEditorPart {
 							pageCount ++;
 						}
 					} catch (Exception e) {
-						Trace.trace(Trace.SEVERE, "Could not display editor page " + factory.getId(), e);
+						if (Trace.SEVERE) {
+							Trace.trace(Trace.STRING_SEVERE, "Could not display editor page " + factory.getId(), e);
+						}
 					}
 				}
 			}
@@ -256,7 +260,9 @@ public class ServerEditor extends MultiPageEditorPart {
 			}
 			updateActions();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error creating server editor pages", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error creating server editor pages", e);
+			}
 		}
 	}
 
@@ -282,7 +288,9 @@ public class ServerEditor extends MultiPageEditorPart {
 					try {
 						((ServerWorkingCopy)server).renameFiles(null);
 					} catch (Exception e) {
-						Trace.trace(Trace.SEVERE, "Error renaming server", e);
+						if (Trace.SEVERE) {
+							Trace.trace(Trace.STRING_SEVERE, "Error renaming server", e);
+						}
 					}
 			}
 		}
@@ -378,7 +386,9 @@ public class ServerEditor extends MultiPageEditorPart {
 				setPartName(labelProvider.getText(server));
 			labelProvider.dispose();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error saving server editor", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error saving server editor", e);
+			}
 			
 			monitor.setCanceled(true);
 			
@@ -876,7 +886,9 @@ public class ServerEditor extends MultiPageEditorPart {
 			try {
 				part.init(part.getEditorSite(), editorPartInput);
 			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error refresh()ing editor part", e);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "Error refresh()ing editor part", e);
+				}
 			}
 		}	
 	}

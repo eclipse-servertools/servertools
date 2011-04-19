@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -165,7 +165,9 @@ public abstract class RuntimeClasspathProviderDelegate {
 			Integer previousEntries = previousClasspath.get(key);
 			
 			if ((previousEntries == null) || (previousEntries.intValue() != entries.length)) {
-				Trace.trace(Trace.FINEST, "Classpath update: " + key + " " + entries);
+				if (Trace.FINEST) {
+					Trace.trace(Trace.STRING_FINEST, "Classpath update: " + key + " " + entries);
+				}
 				previousClasspath.put(key, new Integer(entries.length));
 				
 				IPath path = new Path(RuntimeClasspathContainer.SERVER_CONTAINER);
@@ -175,7 +177,9 @@ public abstract class RuntimeClasspathProviderDelegate {
 					JavaCore.setClasspathContainer(path, new IJavaProject[] { javaProject },
 							new IClasspathContainer[] { null }, new NullProgressMonitor());
 				} catch (Exception e) {
-					Trace.trace(Trace.WARNING, "Error updating classpath", e);
+					if (Trace.WARNING) {
+						Trace.trace(Trace.STRING_WARNING, "Error updating classpath", e);
+					}
 				}
 			}
 		}
@@ -312,11 +316,15 @@ public abstract class RuntimeClasspathProviderDelegate {
 					}
 					srcAttachments.add(sau);
 				} catch (Exception e) {
-					Trace.trace(Trace.WARNING, "Could not load source attachment: " + e);
+					if (Trace.WARNING) {
+						Trace.trace(Trace.STRING_WARNING, "Could not load source attachment: " + e);
+					}
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not load source path info", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Could not load source path info", e);
+			}
 		}
 		sourceAttachments = srcAttachments;
 	}
@@ -355,7 +363,9 @@ public abstract class RuntimeClasspathProviderDelegate {
 			
 			memento.saveToFile(filename);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error saving source path info", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error saving source path info", e);
+			}
 		}
 	}
 	

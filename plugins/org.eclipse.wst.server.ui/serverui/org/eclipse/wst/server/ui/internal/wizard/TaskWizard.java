@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -145,7 +145,9 @@ public class TaskWizard implements IWizard {
 		} catch (Exception e) {
 			t = e;
 		}
-		Trace.trace(Trace.SEVERE, "Error cancelling task wizard", t);
+		if (Trace.SEVERE) {
+			Trace.trace(Trace.STRING_SEVERE, "Error cancelling task wizard", t);
+		}
 		
 		if (t instanceof CoreException) {
 			EclipseUtil.openError(t.getLocalizedMessage(), ((CoreException)t).getStatus());
@@ -177,7 +179,9 @@ public class TaskWizard implements IWizard {
 							}
 						});
 					} catch (Exception e) {
-						Trace.trace(Trace.WARNING, "Could not enter/exit page", e);
+						if (Trace.WARNING) {
+							Trace.trace(Trace.STRING_WARNING, "Could not enter/exit page", e);
+						}
 					}
 				}
 				
@@ -197,7 +201,9 @@ public class TaskWizard implements IWizard {
 								while (iterator.hasNext())
 									executeTask((WizardFragment) iterator.next(), FINISH, monitor2);
 							} catch (CoreException ce) {
-								Trace.trace(Trace.SEVERE, "Error finishing wizard job", ce);
+								if (Trace.SEVERE) {
+									Trace.trace(Trace.STRING_SEVERE, "Error finishing wizard job", ce);
+								}
 								return new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, 0, ce.getLocalizedMessage(), null);
 							}
 							return Status.OK_STATUS;
@@ -223,21 +229,26 @@ public class TaskWizard implements IWizard {
 				runnable.run(new NullProgressMonitor());
 			return true;
 		} catch (InvocationTargetException te) {
-			Trace.trace(Trace.SEVERE, "Error finishing task wizard", te);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error finishing task wizard", te);
+			}
 			t = te.getCause();
 		} catch(InterruptedException interruptedEx) {
-			// the dialog was canceled - do nothing.
-			Trace.trace(Trace.INFO, "The task wizard was cancelled.", interruptedEx);
+			if (Trace.INFO) {
+				Trace.trace(Trace.STRING_INFO, "The task wizard was cancelled.", interruptedEx);
+			}
 			return false; // return false since the request was canceled
 		}
 		catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error finishing task wizard 2", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error finishing task wizard 2", e);
+			}
 			t = e;
 		}
 		
-		// TODO: show better error dialog, e.g. when Tomcat config is corrupt while doing Add/Remove
-		// it currently displays the error message twice
-		Trace.trace(Trace.WARNING, "Error completing wizard", t);
+		if (Trace.WARNING) {
+			Trace.trace(Trace.STRING_WARNING, "Error completing wizard", t);
+		}
 		if (t instanceof CoreException) {
 			EclipseUtil.openError(t.getLocalizedMessage(), ((CoreException)t).getStatus());
 		} else if (t instanceof NullPointerException)
@@ -348,7 +359,9 @@ public class TaskWizard implements IWizard {
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error adding fragments to wizard", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error adding fragments to wizard", e);
+			}
 		} finally {
 			addingPages = false;
 		}
@@ -369,7 +382,9 @@ public class TaskWizard implements IWizard {
 			if (page != null)
 				return page;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error getting fragment data", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error getting fragment data", e);
+			}
 		}
 		
 		return null;

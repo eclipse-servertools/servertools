@@ -1,7 +1,11 @@
 # Debugging options for the org.eclipse.jst.server.core plugin
 
-# Turn on general debugging
+# Turn on general tracing
 org.eclipse.jst.server.core/debug=true
 
-# Turn on general debugging
+# Tracing options
+org.eclipse.jst.server.core/config=false
+org.eclipse.jst.server.core/finest=false
+org.eclipse.jst.server.core/warning=false
+org.eclipse.jst.server.core/severe=false
 org.eclipse.jst.server.core/publishing=false

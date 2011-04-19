@@ -91,7 +91,9 @@ public class ServerActionProvider extends CommonActionProvider {
 					IServer server = (IServer) data;
 					ServerUIPlugin.editServer(server);
 				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Could not open server", e);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE, "Could not open server", e);
+					}
 				}
 			}
 		});

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -67,7 +67,9 @@ public final class PublishUtil {
 			}
 			return Status.OK_STATUS;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error copying file", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error copying file", e);
+			}
 			return new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCopyingFile, new String[] {to, e.getLocalizedMessage()}), e);
 		} finally {
 			try {
@@ -123,7 +125,9 @@ public final class PublishUtil {
 	 * @deprecated does not fail or return status if delete doesn't work
 	 */
 	protected static void deleteFile(IPath path, IModuleFile file) {
-		Trace.trace(Trace.PUBLISHING, "Deleting: " + file.getName() + " from " + path.toString());
+		if (Trace.PUBLISHING) {
+			Trace.trace(Trace.STRING_PUBLISHING, "Deleting: " + file.getName() + " from " + path.toString());
+		}
 		IPath path2 = path.append(file.getModuleRelativePath()).append(file.getName());
 		path2.toFile().delete();
 	}

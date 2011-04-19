@@ -1,4 +1,10 @@
 # Debugging options for the org.eclipse.jst.server.ui plugin
 
-# Turn on general debugging
+# Turn on general tracing
 org.eclipse.jst.server.ui/debug=true
+
+# Tracing options
+org.eclipse.jst.server.ui/config=false
+org.eclipse.jst.server.ui/finest=false
+org.eclipse.jst.server.ui/warning=false
+org.eclipse.jst.server.ui/severe=false

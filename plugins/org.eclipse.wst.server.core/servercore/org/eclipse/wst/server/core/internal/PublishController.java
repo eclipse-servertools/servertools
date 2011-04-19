@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -66,9 +66,14 @@ public class PublishController {
 			try {
 				long time = System.currentTimeMillis();
 				delegate = (PublishControllerDelegate) element.createExecutableExtension("class");
-				Trace.trace(Trace.PERFORMANCE, "PublishTask.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getId());
+				if (Trace.PERFORMANCE) {
+					Trace.trace(Trace.STRING_PERFORMANCE, "PublishTask.getDelegate(): <"
+							+ (System.currentTimeMillis() - time) + "> " + getId());
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString(), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "Could not create delegate" + toString(), t);
+				}
 			}
 		}
 		return delegate;
@@ -76,10 +81,14 @@ public class PublishController {
 
 	public boolean isPublishRequired(IServer server, IResourceDelta delta) {
 		try {
-			Trace.trace(Trace.FINEST, "Task.init " + this);
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "Task.init " + this);
+			}
 			return getDelegate().isPublishRequired(server, delta);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate " + toString(), e);
+			}
 			return true;
 		}
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,9 @@ package org.eclipse.wst.internet.monitor.core.internal;
 import java.util.*;
 
 import org.eclipse.core.runtime.*;
+import org.eclipse.osgi.service.debug.DebugOptions;
+import org.eclipse.osgi.service.debug.DebugOptionsListener;
+import org.osgi.framework.BundleContext;
 /**
  * The monitor core plugin.
  */
@@ -125,7 +128,9 @@ public class MonitorPlugin extends Plugin {
 	protected synchronized void loadProtocolAdapters() {
 		if (protocolAdapters != null)
 			return;
-		Trace.trace(Trace.CONFIG, "Loading protocol adapters"); 
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "Loading protocol adapters");
+		} 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(MonitorPlugin.PLUGIN_ID, "internalProtocolAdapters");
 
@@ -133,7 +138,9 @@ public class MonitorPlugin extends Plugin {
 		Map<String, ProtocolAdapter> map = new HashMap<String, ProtocolAdapter>(size);
 		for (int i = 0; i < size; i++) {
 			String id = cf[i].getAttribute("id");
-			Trace.trace(Trace.CONFIG, "Loading adapter: " + id);
+			if (Trace.CONFIG) {
+				Trace.trace(Trace.STRING_CONFIG, "Loading adapter: " + id);
+			}
 			map.put(id, new ProtocolAdapter(cf[i]));
 		}
 		protocolAdapters = map;
@@ -142,7 +149,9 @@ public class MonitorPlugin extends Plugin {
 	protected synchronized void loadContentFilters() {
 		if (contentFilters != null)
 			return;
-		Trace.trace(Trace.CONFIG, "Loading content filters"); 
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "Loading content filters");
+		} 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(MonitorPlugin.PLUGIN_ID, "internalContentFilters");
 
@@ -150,7 +159,9 @@ public class MonitorPlugin extends Plugin {
 		Map<String, IContentFilter> map = new HashMap<String, IContentFilter>(size);
 		for (int i = 0; i < size; i++) {
 			String id = cf[i].getAttribute("id");
-			Trace.trace(Trace.CONFIG, "Loading filter: " + id);
+			if (Trace.CONFIG) {
+				Trace.trace(Trace.STRING_CONFIG, "Loading filter: " + id);
+			}
 			map.put(id, new ContentFilter(cf[i]));
 		}
 		contentFilters = map;
@@ -160,24 +171,42 @@ public class MonitorPlugin extends Plugin {
 		if (startupsLoaded)
 			return;
 		
-		Trace.trace(Trace.CONFIG, "Loading startups"); 
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "Loading startups");
+		} 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(MonitorPlugin.PLUGIN_ID, "internalStartup");
 		
 		int size = cf.length;
 		for (int i = 0; i < size; i++) {
 			String id = cf[i].getAttribute("id");
-			Trace.trace(Trace.CONFIG, "Loading startup: " + id);
+			if (Trace.CONFIG) {
+				Trace.trace(Trace.STRING_CONFIG, "Loading startup: " + id);
+			}
 			try {
 				IStartup startup = (IStartup) cf[i].createExecutableExtension("class");
 				try {
 					startup.startup();
 				} catch (Exception ex) {
-					Trace.trace(Trace.SEVERE, "Startup failed" + startup.toString(), ex);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE, "Startup failed" + startup.toString(), ex);
+					}
 				}
 			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Could not create startup: " + id, e);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "Could not create startup: " + id, e);
+				}
 			}
 		}
+	}
+
+	public void start(BundleContext context) throws Exception {
+
+		super.start(context);
+		
+		// register the debug options listener
+		final Hashtable<String, String> props = new Hashtable<String, String>(4);
+		props.put(DebugOptions.LISTENER_SYMBOLICNAME, PLUGIN_ID);
+		context.registerService(DebugOptionsListener.class.getName(), new Trace(), props);
 	}
 }

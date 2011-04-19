@@ -95,9 +95,14 @@ public class ModuleFactory implements IOrdered {
 				long time = System.currentTimeMillis();
 				delegate = (ModuleFactoryDelegate) element.createExecutableExtension("class");
 				InternalInitializer.initializeModuleFactoryDelegate(delegate, this, monitor);
-				Trace.trace(Trace.PERFORMANCE, "ModuleFactory.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getId());
+				if (Trace.PERFORMANCE) {
+					Trace.trace(Trace.STRING_PERFORMANCE,
+							"ModuleFactory.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getId());
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "Could not create delegate " + toString(), t);
+				}
 			}
 		}
 		return delegate;
@@ -120,7 +125,9 @@ public class ModuleFactory implements IOrdered {
 				modules = filter(modules);
 			return modules;
 		} catch (Throwable t) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), t);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate " + toString(), t);
+			}
 			return new IModule[0];
 		}
 	}
@@ -135,7 +142,9 @@ public class ModuleFactory implements IOrdered {
 				modules = filter(modules);
 			return modules;
 		} catch (Throwable t) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), t);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate " + toString(), t);
+			}
 			return new IModule[0];
 		}
 	}
@@ -184,7 +193,9 @@ public class ModuleFactory implements IOrdered {
 			
 			return evalEnablementExpression(context, getContextualLaunchEnablementExpression());
 		} catch (Throwable t) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), t);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate " + toString(), t);
+			}
 			return false;
 		}
 	}
@@ -204,7 +215,9 @@ public class ModuleFactory implements IOrdered {
 			
 			return module;
 		} catch (Throwable t) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), t);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate " + toString(), t);
+			}
 			return null;
 		}
 	}
@@ -235,8 +248,9 @@ public class ModuleFactory implements IOrdered {
 			IModule m = modules[i];
 			if (moduleTypes.contains(m.getModuleType()))
 				list.add(m);
-			else
-				Trace.trace(Trace.WARNING, "Invalid module returned from factory, ignored: " + m);
+			else if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Invalid module returned from factory, ignored: " + m);
+			}
 		}
 		
 		IModule[] m = new IModule[list.size()];

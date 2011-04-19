@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -124,7 +124,9 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 			copyWithSize(in, out, null, 0);
 			return new String(out.toByteArray());
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Error loading license", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Error loading license", e);
+			}
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
 					NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
 		} finally {
@@ -215,7 +217,9 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 		} catch (IOException e) {
 			if (monitor != null)
 				monitor.done();
-			Trace.trace(Trace.WARNING, "Error creating url and temp file", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Error creating url and temp file", e);
+			}
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
 				NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
 		}
@@ -236,7 +240,9 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 		} catch (Exception e) {
 			if (monitor != null)
 				monitor.done();
-			Trace.trace(Trace.WARNING, "Error downloading runtime", e);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Error downloading runtime", e);
+			}
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
 				NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
 		} finally {
@@ -277,7 +283,9 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error uncompressing runtime", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error uncompressing runtime", e);
+			}
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
 				NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
 		} finally {

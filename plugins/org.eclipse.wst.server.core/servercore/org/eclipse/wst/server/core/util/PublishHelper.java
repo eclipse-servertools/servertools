@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -98,7 +98,10 @@ public class PublishHelper {
 			throw e;
 		} catch (Exception e) {
 			IPath path = mf.getModuleRelativePath().append(mf.getName());
-			Trace.trace(Trace.SEVERE, "Error copying file: " + path.toOSString() + " to " + to.toOSString(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error copying file: " + path.toOSString() + " to " + to.toOSString(),
+						e);
+			}
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCopyingFile, path.toOSString(), e.getLocalizedMessage()), null));
 		} finally {
 			if (tempFile != null && tempFile.exists())
@@ -161,7 +164,9 @@ public class PublishHelper {
 				status.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDeleting, dir.getAbsolutePath()), null));
 			monitor.done();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error deleting directory " + dir.getAbsolutePath(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error deleting directory " + dir.getAbsolutePath(), e);
+			}
 			status.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, e.getLocalizedMessage(), null));
 		}
 		
@@ -469,14 +474,18 @@ public class PublishHelper {
 	}
 
 	private static void deleteFile(IPath path, IModuleFile file) throws CoreException {
-		Trace.trace(Trace.PUBLISHING, "Deleting: " + file.getName() + " from " + path.toString());
+		if (Trace.PUBLISHING) {
+			Trace.trace(Trace.STRING_PUBLISHING, "Deleting: " + file.getName() + " from " + path.toString());
+		}
 		IPath path2 = path.append(file.getModuleRelativePath()).append(file.getName());
 		if (path2.toFile().exists() && !path2.toFile().delete())
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDeleting, path2), null));
 	}
 
 	private void copyFile(IModuleFile mf, IPath path) throws CoreException {
-		Trace.trace(Trace.PUBLISHING, "Copying: " + mf.getName() + " to " + path.toString());
+		if (Trace.PUBLISHING) {
+			Trace.trace(Trace.STRING_PUBLISHING, "Copying: " + mf.getName() + " to " + path.toString());
+		}
 		
 		if(!isCopyFile(mf, path)){
 			return;
@@ -536,7 +545,9 @@ public class PublishHelper {
 
 	private IStatus[] copy(IModuleResource resource, IPath path, IProgressMonitor monitor) {
 		String name = resource.getName();
-		Trace.trace(Trace.PUBLISHING, "Copying: " + name + " to " + path.toString());
+		if (Trace.PUBLISHING) {
+			Trace.trace(Trace.STRING_PUBLISHING, "Copying: " + name + " to " + path.toString());
+		}
 		List<IStatus> status = new ArrayList<IStatus>(2);
 		if (resource instanceof IModuleFolder) {
 			IModuleFolder folder = (IModuleFolder) resource;
@@ -594,7 +605,9 @@ public class PublishHelper {
 		} catch (CoreException e) {
 			return new IStatus[] { e.getStatus() };
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error zipping", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error zipping", e);
+			}
 			return new Status[] { new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCreatingZipFile, path.lastSegment(), e.getLocalizedMessage()), e) };
 		} finally {
 			if (tempFile != null && tempFile.exists())
@@ -766,7 +779,9 @@ public class PublishHelper {
 			}
 			return Status.OK_STATUS;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error copying file", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error copying file", e);
+			}
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCopyingFile, new String[] {to, e.getLocalizedMessage()}), e);
 		} finally {
 			try {

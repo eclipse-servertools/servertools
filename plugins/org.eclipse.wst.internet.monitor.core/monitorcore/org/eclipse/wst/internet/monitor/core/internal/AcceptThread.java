@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,10 +40,14 @@ public class AcceptThread {
 			try {
 				serverSocket = new ServerSocket(monitor.getLocalPort());
 				serverSocket.setSoTimeout(2000);
-				Trace.trace(Trace.FINEST, "Monitoring localhost:" + monitor.getLocalPort() + " -> " + monitor.getRemoteHost()
-						+ ":" + monitor.getRemotePort());
+				if (Trace.FINEST) {
+					Trace.trace(Trace.STRING_FINEST, "Monitoring localhost:" + monitor.getLocalPort() + " -> "
+							+ monitor.getRemoteHost() + ":" + monitor.getRemotePort());
+				}
 			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Could not start monitoring");
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "Could not start monitoring");
+				}
 				return;
 			}
 			
@@ -79,7 +83,9 @@ public class AcceptThread {
 					// do nothing
 				} catch (Exception e) {
 					if (alive)
-						Trace.trace(Trace.SEVERE, "Error while monitoring", e);
+						if (Trace.SEVERE) {
+							Trace.trace(Trace.STRING_SEVERE, "Error while monitoring", e);
+						}
 				}
 			}
 		}
@@ -144,7 +150,9 @@ public class AcceptThread {
 			if (serverSocket != null)
 				serverSocket.close();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error stopping server", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error stopping server", e);
+			}
 		}
 	}
 	

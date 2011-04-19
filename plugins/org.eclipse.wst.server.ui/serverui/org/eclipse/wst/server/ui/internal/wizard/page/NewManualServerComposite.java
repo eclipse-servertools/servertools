@@ -344,7 +344,9 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			IRuntimeWorkingCopy runtimeWorkingCopy = runtimeType.createRuntime(null, null);
 			taskModel.putObject(TaskModel.TASK_RUNTIME, runtimeWorkingCopy);
 		} catch (CoreException ce) {
-			Trace.trace(Trace.SEVERE, "Error creating runtime", ce);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error creating runtime", ce);
+			}
 			return Window.CANCEL;
 		}
 		fragment = new WizardFragment() {
@@ -465,7 +467,9 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 				fireServerWorkingCopyChanged();
 			}
 		} catch (CoreException ce) {
-			Trace.trace(Trace.SEVERE, "Error creating server", ce);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error creating server", ce);
+			}
 			server = null;
 			runtime = null;
 			wizard.setMessage(ce.getLocalizedMessage(), IMessageProvider.ERROR);
@@ -523,7 +527,9 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			runtimes[0] = runtimeWC;
 			newRuntime = runtimeWC;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Couldn't create runtime", e); //$NON-NLS-1$
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Couldn't create runtime", e);
+			}
 		}
 	}
 

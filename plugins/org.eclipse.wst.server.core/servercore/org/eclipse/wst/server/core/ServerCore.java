@@ -185,7 +185,9 @@ public final class ServerCore {
 	private static synchronized void loadRuntimeTypes() {
 		if (runtimeTypes != null)
 			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .runtimeTypes extension point ->-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "->- Loading .runtimeTypes extension point ->-");
+		}
 		
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, EXTENSION_RUNTIME_TYPE);
@@ -194,7 +196,9 @@ public final class ServerCore {
 		addRegistryListener();
 		runtimeTypes = list;
 		
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .runtimeTypes extension point -<-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "-<- Done loading .runtimeTypes extension point -<-");
+		}
 	}
 
 	/**
@@ -205,9 +209,13 @@ public final class ServerCore {
 			try {
 				if (!ServerPlugin.contains(ServerPlugin.getExcludedServerAdapters(), ce.getAttribute("id")))
 					list.add(new RuntimeType(ce));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded runtimeType: " + ce.getAttribute("id"));
+				if (Trace.EXTENSION_POINT) {
+					Trace.trace(Trace.STRING_EXTENSION_POINT, "  Loaded runtimeType: " + ce.getAttribute("id"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load runtimeType: " + ce.getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "  Could not load runtimeType: " + ce.getAttribute("id"), t);
+				}
 			}
 		}
 	}
@@ -219,7 +227,9 @@ public final class ServerCore {
 		if (serverTypes != null)
 			return;
 		
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .serverTypes extension point ->-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "->- Loading .serverTypes extension point ->-");
+		}
 		
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, EXTENSION_SERVER_TYPE);
@@ -228,7 +238,9 @@ public final class ServerCore {
 		addRegistryListener();
 		serverTypes = list;
 		
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .serverTypes extension point -<-");
+		if (Trace.EXTENSION_POINT) {
+			Trace.trace(Trace.STRING_EXTENSION_POINT, "-<- Done loading .serverTypes extension point -<-");
+		}
 	}
 
 	/**
@@ -239,9 +251,13 @@ public final class ServerCore {
 			try {
 				if (!ServerPlugin.contains(ServerPlugin.getExcludedServerAdapters(), ce.getAttribute("id")))
 					list.add(new ServerType(ce));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded serverType: " + ce.getAttribute("id"));
+				if (Trace.EXTENSION_POINT) {
+					Trace.trace(Trace.STRING_EXTENSION_POINT, "  Loaded serverType: " + ce.getAttribute("id"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load serverType: " + ce.getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "  Could not load serverType: " + ce.getAttribute("id"), t);
+				}
 			}
 		}
 	}

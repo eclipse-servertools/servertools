@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,7 +44,9 @@ public class ImageResource {
 			String pathSuffix = "icons/";
 			ICON_BASE_URL = ServerUIPlugin.getInstance().getBundle().getEntry(pathSuffix);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not set icon base URL", e);
+			if(Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not set icon base URL", e);
+			}
 		}
 	}
 
@@ -333,7 +335,9 @@ public class ImageResource {
 			imageRegistry.put(key, id);
 			imageDescriptors.put(key, id);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error registering image " + key + " from " + partialURL, e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error registering image " + key + " from " + partialURL, e);
+			}
 		}
 	}
 
@@ -341,11 +345,15 @@ public class ImageResource {
 	 * Load the server images.
 	 */
 	private static void loadServerImages() {
-		Trace.trace(Trace.CONFIG, "->- Loading .serverImages extension point ->-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "->- Loading .serverImages extension point ->-");
+		}
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		loadServerImages(registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, ServerUIPlugin.EXTENSION_SERVER_IMAGES));
 		ServerUIPlugin.addRegistryListener();
-		Trace.trace(Trace.CONFIG, "-<- Done loading .serverImages extension point -<-");
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "-<- Done loading .serverImages extension point -<-");
+		}
 	}
 
 	/**
@@ -369,9 +377,13 @@ public class ImageResource {
 						imageDescriptors.put(typeIds[j], imageDescriptor);
 					}
 				}
-				Trace.trace(Trace.CONFIG, "  Loaded serverImage: " + cf[i].getAttribute("id"));
+				if (Trace.CONFIG) {
+					Trace.trace(Trace.STRING_CONFIG, "  Loaded serverImage: " + cf[i].getAttribute("id"));
+				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load serverImage: " + cf[i].getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "  Could not load serverImage: " + cf[i].getAttribute("id"), t);
+				}
 			}
 		}
 	}

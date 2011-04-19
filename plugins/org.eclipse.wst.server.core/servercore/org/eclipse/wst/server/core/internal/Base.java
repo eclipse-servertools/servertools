@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -252,7 +252,9 @@ public abstract class Base {
 			else
 				file.create(in, true, ProgressUtil.getSubMonitorFor(monitor, 1000));
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not save " + getXMLRoot(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not save " + getXMLRoot(), e);
+			}
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorSaving, getFile().toString()), e));
 		}
 	}
@@ -370,7 +372,9 @@ public abstract class Base {
 			IMemento memento = XMLMemento.loadMemento(in);
 			load(memento);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not load from file", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not load from file", e);
+			}
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorLoading, getFile().toString()), e));
 		} finally {
 			try {
@@ -396,7 +400,9 @@ public abstract class Base {
 			IMemento memento = XMLMemento.loadMemento(in);
 			load(memento);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not load from path", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not load from path", e);
+			}
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorLoading, path.toString()), e));
 		} finally {
 			try {

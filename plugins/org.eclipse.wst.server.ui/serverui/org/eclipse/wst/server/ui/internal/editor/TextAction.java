@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -240,7 +240,9 @@ public class TextAction extends Action {
 				setEnabled(newText != null && newText.length() > 0);
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error updating text action", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error updating text action", e);
+			}
 		}
 	}
 }

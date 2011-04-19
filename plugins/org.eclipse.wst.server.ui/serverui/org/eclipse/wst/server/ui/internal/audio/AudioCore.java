@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -104,7 +104,9 @@ public class AudioCore {
 			clip.open(audioInputStream);
 			return clip;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not get clip: " + url, e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not get clip: " + url, e);
+			}
 		}
 		return null;
 	}
@@ -140,7 +142,9 @@ public class AudioCore {
 			}
 			return sound;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not verify audio status", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not verify audio status", e);
+			}
 		}
 		return true;
 	}
@@ -231,7 +235,9 @@ public class AudioCore {
 			if (path != null)
 				return path;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not get sound URL: " + id, e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not get sound URL: " + id, e);
+			}
 		}
 		return null;
 	}
@@ -319,7 +325,9 @@ public class AudioCore {
 	
 					disabledCategories.add(id);
 				} catch (Exception ex) {
-					Trace.trace(Trace.SEVERE, "Error reading URL map ", ex);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE, "Error reading URL map ", ex);
+					}
 				}
 			}
 	
@@ -334,7 +342,9 @@ public class AudioCore {
 	
 					disabledSounds.add(id);
 				} catch (Exception ex) {
-					Trace.trace(Trace.SEVERE, "Error reading URL map ", ex);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE, "Error reading URL map ", ex);
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -384,7 +394,9 @@ public class AudioCore {
 					sounds.put(id, sound);
 				}
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "Could not load audio: " + cf[i].getAttribute("id"), t);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "Could not load audio: " + cf[i].getAttribute("id"), t);
+				}
 			}
 		}
 	}
@@ -413,7 +425,9 @@ public class AudioCore {
 	
 					userSoundMap.put(id, path);
 				} catch (Exception ex) {
-					Trace.trace(Trace.SEVERE, "Error reading URL map ", ex);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE, "Error reading URL map ", ex);
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -457,7 +471,9 @@ public class AudioCore {
 	
 			playSound(url, getVolume());
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error playing audio: " + id, e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error playing audio: " + id, e);
+			}
 		}
 	}
 
@@ -468,7 +484,9 @@ public class AudioCore {
 	 */
 	protected static void playSound(URL url, final int volume) {
 		try {
-			Trace.trace(Trace.FINEST, "playSound");
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "playSound");
+			}
 			if (url == null || volume <= 0)
 				return;
 	
@@ -476,7 +494,9 @@ public class AudioCore {
 			if (clip == null)
 				return;
 				
-			Trace.trace(Trace.FINEST, "playing");
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "playing");
+			}
 	
 			Thread t = new Thread("Sound Thread") {
 				public void run() {
@@ -486,7 +506,9 @@ public class AudioCore {
 					float dB = (float) (Math.log(value==0.0?0.0001:value)/Math.log(10.0)*20.0);
 					gainControl.setValue(dB);
 	
-					Trace.trace(Trace.FINEST, "start");
+					if (Trace.FINEST) {
+						Trace.trace(Trace.STRING_FINEST, "start");
+					}
 					clip.start();
 					try {
 						sleep(99);
@@ -503,13 +525,17 @@ public class AudioCore {
 					}
 					clip.stop();
 					clip.close();
-					Trace.trace(Trace.FINEST, "stop");
+					if (Trace.FINEST) {
+						Trace.trace(Trace.STRING_FINEST, "stop");
+					}
 				}
 			};
 			t.setDaemon(true);
 			t.start();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error playing audio: " + url, e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error playing audio: " + url, e);
+			}
 		}
 	}
 
@@ -542,7 +568,9 @@ public class AudioCore {
 			fout = new FileOutputStream(filename);
 			memento.save(fout);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not save disabled information", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not save disabled information", e);
+			}
 		} finally {
 			if (fout != null) {
 				try {
@@ -576,7 +604,9 @@ public class AudioCore {
 			fout = new FileOutputStream(filename);
 			memento.save(fout);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not save URL map information", e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not save URL map information", e);
+			}
 		} finally {
 			if (fout != null) {
 				try {
@@ -666,7 +696,9 @@ public class AudioCore {
 			userSoundMap.put(id, path);
 			saveSoundMap();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not get sound URL: " + id, e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not get sound URL: " + id, e);
+			}
 		}
 	}
 

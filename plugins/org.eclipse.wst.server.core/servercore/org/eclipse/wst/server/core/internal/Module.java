@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -115,9 +115,14 @@ public class Module implements IModule {
 					long time = System.currentTimeMillis();
 					delegate = factory.getDelegate(monitor).getModuleDelegate(this);
 					delegate.initialize(this);
-					Trace.trace(Trace.PERFORMANCE, "Module.getDelegate(): <" + (System.currentTimeMillis() - time) + " " + factory.getId());
+					if (Trace.PERFORMANCE) {
+						Trace.trace(Trace.STRING_PERFORMANCE, "Module.getDelegate(): <"
+								+ (System.currentTimeMillis() - time) + " " + factory.getId());
+					}
 				} catch (Throwable t) {
-					Trace.trace(Trace.WARNING, "Could not create delegate " + toString(), t);
+					if (Trace.WARNING) {
+						Trace.trace(Trace.STRING_WARNING, "Could not create delegate " + toString(), t);
+					}
 				}
 			}
 		}
@@ -134,7 +139,9 @@ public class Module implements IModule {
 		try {
 			return getDelegate(monitor).getChildModules();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate getChildModules() " + toString(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate getChildModules() " + toString(), e);
+			}
 			return null;
 		}
 	}
@@ -186,7 +193,9 @@ public class Module implements IModule {
 		try {
 			return getDelegate(monitor).validate();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate validate() " + toString(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate validate() " + toString(), e);
+			}
 			return null;
 		}
 	}

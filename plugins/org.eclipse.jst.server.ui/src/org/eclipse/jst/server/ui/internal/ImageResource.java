@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2009 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,7 +35,9 @@ public class ImageResource {
 			String pathSuffix = "icons/";
 			ICON_BASE_URL = JavaServerUIPlugin.getInstance().getBundle().getEntry(pathSuffix);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not set icon base URL", e);
+			if(Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Could not set icon base URL", e);
+			}
 		}
 	}
 
@@ -96,7 +98,9 @@ public class ImageResource {
 			imageRegistry.put(key, id);
 			imageDescriptors.put(key, id);
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Error registering image " + key + " from " + partialURL, e);
+			if(Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Error registering image " + key + " from " + partialURL, e);
+			}
 		}
 	}
 }

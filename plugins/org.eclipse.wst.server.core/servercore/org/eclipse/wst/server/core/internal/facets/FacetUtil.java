@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -162,7 +162,9 @@ public final class FacetUtil {
 				}
 			}
 		} catch (Throwable t) {
-			Trace.trace(Trace.WARNING, "Could not determine if runtime is in use", t);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Could not determine if runtime is in use", t);
+			}
 		}
 		return false;
 	}
@@ -193,7 +195,9 @@ public final class FacetUtil {
 		} catch (CoreException ce) {
 			throw ce;
 		} catch (Throwable t) {
-			Trace.trace(Trace.WARNING, "Could not remove runtime target", t);
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Could not remove runtime target", t);
+			}
 		}
 	}
 }

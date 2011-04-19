@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -128,7 +128,9 @@ public class TasksComposite extends ScrolledComposite {
 		}
 		
 		if (size == 0)
-			Trace.trace(Trace.SEVERE, "Task composite appeared with no tasks!");
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Task composite appeared with no tasks!");
+			}
 		
 		Dialog.applyDialogFont(this);
 		

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2009 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -363,9 +363,15 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 					long time = System.currentTimeMillis();
 					workingCopyDelegate = ((ServerType) serverType).createServerDelegate();
 					InternalInitializer.initializeServerDelegate(workingCopyDelegate, this, monitor);
-					Trace.trace(Trace.PERFORMANCE, "ServerWorkingCopy.getWorkingCopyDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
+					if (Trace.PERFORMANCE) {
+						Trace.trace(Trace.STRING_PERFORMANCE,
+								"ServerWorkingCopy.getWorkingCopyDelegate(): <" + (System.currentTimeMillis() - time)
+										+ "> " + getServerType().getId());
+					}
 				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), e);
+					if (Trace.SEVERE) {
+						Trace.trace(Trace.STRING_SEVERE, "Could not create delegate " + toString(), e);
+					}
 				}
 			}
 		}
@@ -593,7 +599,9 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		} catch (CoreException ce) {
 			throw ce;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate modifyModule() " + toString(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate modifyModule() " + toString(), e);
+			}
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, "" + e.getLocalizedMessage(), e));
 		}
 	}
@@ -656,7 +664,9 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			ServerUtil.setServerDefaultName(this);
 			getWorkingCopyDelegate(monitor).setDefaults(monitor);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate setDefaults() " + toString(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate setDefaults() " + toString(), e);
+			}
 		}
 	}
 
@@ -766,7 +776,9 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		try {
 			getWorkingCopyDelegate(monitor).importConfiguration(runtime2, monitor);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate importConfiguration() " + toString(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate importConfiguration() " + toString(), e);
+			}
 		}
 	}
 
@@ -783,10 +795,15 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		try {
 			getWorkingCopyDelegate(monitor).importRuntimeConfiguration(runtime2, monitor);
 		} catch (CoreException ce) {
-			Trace.trace(Trace.SEVERE, "CoreException calling delegate importConfiguration() " + toString(), ce);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "CoreException calling delegate importConfiguration() " + toString(),
+						ce);
+			}
 			throw ce;
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate importConfiguration() " + toString(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate importConfiguration() " + toString(), e);
+			}
 		}
 	}
 

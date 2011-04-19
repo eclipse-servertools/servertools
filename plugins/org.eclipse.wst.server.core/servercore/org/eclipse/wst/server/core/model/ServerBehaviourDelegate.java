@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -898,7 +898,9 @@ public abstract class ServerBehaviourDelegate {
 	 * @return the publish status
 	 */
 	public IStatus publish(int kind, IProgressMonitor monitor) {
-		Trace.trace(Trace.FINEST, "-->-- Publishing to server: " + getServer().toString() + " -->--");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "-->-- Publishing to server: " + getServer().toString() + " -->--");
+		}
 		
 		if (getServer().getServerType().hasRuntime() && getServer().getRuntime() == null)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishNoRuntime, null);
@@ -919,7 +921,9 @@ public abstract class ServerBehaviourDelegate {
 			return Status.CANCEL_STATUS;
 		
 		try {
-			Trace.trace(Trace.FINEST, "Starting publish");
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "Starting publish");
+			}
 			publishStart(ProgressUtil.getSubMonitorFor(monitor, 1000));
 			
 			if (monitor.isCanceled())
@@ -955,25 +959,35 @@ public abstract class ServerBehaviourDelegate {
 			
 			monitor.done();
 		} catch (CoreException ce) {
-			Trace.trace(Trace.INFO, "CoreException publishing to " + toString(), ce);
+			if (Trace.INFO) {
+				Trace.trace(Trace.STRING_INFO, "CoreException publishing to " + toString(), ce);
+			}
 			return ce.getStatus();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error publishing  to " + toString(), e);
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error publishing  to " + toString(), e);
+			}
 			tempMulti.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e));
 		} finally {
 			// end the publishing
 			try {
 				publishFinish(ProgressUtil.getSubMonitorFor(monitor, 500));
 			} catch (CoreException ce) {
-				Trace.trace(Trace.INFO, "CoreException publishing to " + toString(), ce);
+				if (Trace.INFO) {
+					Trace.trace(Trace.STRING_INFO, "CoreException publishing to " + toString(), ce);
+				}
 				tempMulti.add(ce.getStatus());
 			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error stopping publish to " + toString(), e);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "Error stopping publish to " + toString(), e);
+				}
 				tempMulti.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e));
 			}
 		}
 		
-		Trace.trace(Trace.FINEST, "--<-- Done publishing --<--");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "--<-- Done publishing --<--");
+		}
 		
 		if (tempMulti.getChildren().length == 1)
 			return tempMulti.getChildren()[0];
@@ -1017,11 +1031,15 @@ public abstract class ServerBehaviourDelegate {
 	 * @return the status
 	 */
 	protected IStatus publishModule(int kind, IModule[] module, int deltaKind, IProgressMonitor monitor) {
-		Trace.trace(Trace.FINEST, "-->-- Publishing module");
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "-->-- Publishing module");
+		}
 		
 		int size = module.length;
 		IModule m = module[size - 1];
-		Trace.trace(Trace.FINEST, "Module: "+m);
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Module: " + m);
+		}
 		monitor.beginTask(NLS.bind(Messages.publishingModule, m.getName()), 1000);
 		
 		try {
@@ -1033,7 +1051,9 @@ public abstract class ServerBehaviourDelegate {
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e);
 		} finally {
 			monitor.done();
-			Trace.trace(Trace.FINEST, "--<-- Done publishing module");
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "--<-- Done publishing module");
+			}
 		}
 	}
 
@@ -1187,7 +1207,9 @@ public abstract class ServerBehaviourDelegate {
 	protected MultiStatus executePublishers(int kind, List<IModule[]> modules, List<Integer> deltaKinds, IProgressMonitor monitor, IAdaptable info) throws CoreException {
 		Publisher[] publishers = ((Server)getServer()).getEnabledPublishers();
 		int size = publishers.length;
-		Trace.trace(Trace.FINEST, "Executing publishers: " + size);
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Executing publishers: " + size);
+		}
 		
 		if (size == 0)
 			return null;
@@ -1214,7 +1236,9 @@ public abstract class ServerBehaviourDelegate {
 				}
 				multi.add(pubStatus);
 			} catch (CoreException ce) {
-				Trace.trace(Trace.SEVERE, "Publisher failed", ce);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "Publisher failed", ce);
+				}
 				throw ce;
 			}
 			
@@ -1250,7 +1274,9 @@ public abstract class ServerBehaviourDelegate {
 	 */
 	protected MultiStatus performTasks(PublishOperation[] tasks, IProgressMonitor monitor) {
 		int size = tasks.length;
-		Trace.trace(Trace.FINEST, "Performing tasks: " + size);
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Performing tasks: " + size);
+		}
 		
 		if (size == 0)
 			return null;
@@ -1263,7 +1289,9 @@ public abstract class ServerBehaviourDelegate {
 			try {
 				task.execute(ProgressUtil.getSubMonitorFor(monitor, 500), null);
 			} catch (CoreException ce) {
-				Trace.trace(Trace.SEVERE, "Task failed", ce);
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "Task failed", ce);
+				}
 				multi.add(ce.getStatus());
 			}
 			
