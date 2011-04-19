@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,7 @@ import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
+import org.eclipse.wst.server.ui.internal.view.servers.PublishAction;
 
 public class ServersViewDropAdapterAssistant extends CommonDropAdapterAssistant {
 
@@ -109,20 +110,20 @@ public class ServersViewDropAdapterAssistant extends CommonDropAdapterAssistant 
 	}
 
 	protected IStatus internalHandleDrop(Object target, List elements) {
-		boolean b = false;
+		boolean success = false;
 		if (target instanceof IServer) {
-			b = true;
+			success = true;
 			if (dndElementList != null) {
 				Iterator iterator = elements.iterator();
 				while (iterator.hasNext()) {
 					Object data2 = iterator.next();
 					if (!doRunOnServerAction((IServer) target, data2))
-						b = false;
+						success = false;
 				}
 			}
 		}
 		clear();
-		return b ? Status.OK_STATUS : Status.CANCEL_STATUS;
+		return success ? Status.OK_STATUS : Status.CANCEL_STATUS;
 	}
 
 	private void clear() {
@@ -142,13 +143,16 @@ public class ServersViewDropAdapterAssistant extends CommonDropAdapterAssistant 
 					if (parents == null || parents.length == 0)
 						return false;
 
-					if (ServerUtil.containsModule(server, parents[0], null))
+					if (ServerUtil.containsModule(server, parents[0], null)){
+						PublishAction.publish(server, getShell());
 						return false;
+					}
 
 					IModule[] add = new IModule[] { parents[0] };
 					if (wc.canModifyModules(add, null, null).getSeverity() != IStatus.ERROR) {
 						wc.modifyModules(modules, null, null);
 						wc.save(false, null);
+						PublishAction.publish(server, getShell());
 						return true;
 					}
 				} catch (final CoreException ce) {
