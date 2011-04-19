@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,8 @@
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.actions;
+
+import java.util.HashMap;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -23,6 +25,7 @@ import org.eclipse.wst.server.ui.internal.Messages;
 public class RunOnServerAction extends Action {
 	protected RunOnServerActionDelegate delegate;
 
+	protected HashMap<String,Object> map;
 	/**
 	 * Run on server action.
 	 * 
@@ -41,6 +44,11 @@ public class RunOnServerAction extends Action {
 			delegate.selectionChanged(this, sel);
 		} else
 			delegate.selectionChanged(this, null);
+	}
+	
+	public RunOnServerAction(Object object, HashMap<String,Object> map){		
+		this(object);
+		delegate.setMap(map);
 	}
 
 	/**

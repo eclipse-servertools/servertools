@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,8 @@ import java.util.List;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.internal.IClient;
+import org.eclipse.wst.server.core.internal.ILaunchableAdapter;
 import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
@@ -24,6 +26,9 @@ public class RunOnServerWizardFragment extends WizardFragment {
 	protected IServer server;
 	protected IModule module;
 	protected IModuleArtifact moduleArtifact;
+	
+	protected IClient client;
+	protected ILaunchableAdapter launchable;
 
 	/**
 	 * Create the Run on Server wizard with all pages.
@@ -67,7 +72,16 @@ public class RunOnServerWizardFragment extends WizardFragment {
 		list.add(WizardTaskUtil.SaveServerFragment);
 		if (server == null)
 			list.add(WizardTaskUtil.SaveHostnameFragment);
-		
-		list.add(new OptionalClientWizardFragment(moduleArtifact));
+		if (client == null || launchable == null){
+			list.add(new OptionalClientWizardFragment(moduleArtifact));
+		}
+	}
+
+	public void setClient(IClient client) {
+		this.client = client;			
+	}
+
+	public void setLaunchable(ILaunchableAdapter launchable) {
+		this.launchable = launchable;	
 	}
 }

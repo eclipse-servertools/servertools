@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,28 +10,43 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.wizard;
 
+import java.util.HashMap;
+
 import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IModuleArtifact;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.TaskModel;
+import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.IClient;
 import org.eclipse.wst.server.core.internal.ILaunchableAdapter;
 import org.eclipse.wst.server.ui.internal.Messages;
+import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.RunOnServerWizardFragment;
 /**
  * A wizard used for Run on Server.
  */
 public class RunOnServerWizard extends TaskWizard {
+	
 	/**
 	 * RunOnServerWizard constructor comment.
 	 * 
 	 * @param module a module
 	 * @param launchMode a launch mode
 	 * @param moduleArtifact a module artifact
+	 * 
+	 * @deprecated
 	 */
 	public RunOnServerWizard(IModule module, String launchMode, IModuleArtifact moduleArtifact) {
-		super(Messages.wizRunOnServerTitle, new RunOnServerWizardFragment(module, launchMode, moduleArtifact));
+		this(module, launchMode,moduleArtifact, null);
+	}
+	
+	/**
+	 * RunOnServerWizard constructor comment.
+	 * 
+	 * @param module a module
+	 * @param launchMode a launch mode
+	 * @param moduleArtifact a module artifact
+	 * @param properties a HashMap with the key/value pair that defines the behaviour of the wizard 
+	 */
+	public RunOnServerWizard(IModule module, String launchMode, IModuleArtifact moduleArtifact, HashMap properties) {
+		super(Messages.wizRunOnServerTitle, createRootWizard(module, launchMode, moduleArtifact, properties));
 		
 		setNeedsProgressMonitor(true);
 		if (ILaunchManager.DEBUG_MODE.equals(launchMode))
@@ -41,6 +56,25 @@ public class RunOnServerWizard extends TaskWizard {
 		getTaskModel().putObject(TaskModel.TASK_LAUNCH_MODE, launchMode);
 	}
 
+	private static RunOnServerWizardFragment createRootWizard(IModule module, String launchMode, IModuleArtifact moduleArtifact, HashMap properties){
+		RunOnServerWizardFragment fragment = new RunOnServerWizardFragment(module, launchMode, moduleArtifact);
+		setFragmentProperties(fragment, properties);
+		return fragment;
+	}
+	
+	private static RunOnServerWizardFragment createRootWizard	(IServer server, String launchMode, IModuleArtifact moduleArtifact,HashMap properties) {
+		RunOnServerWizardFragment fragment = new RunOnServerWizardFragment(server, launchMode, moduleArtifact);
+		setFragmentProperties(fragment, properties);		
+		return fragment;
+	}
+	
+	private static void setFragmentProperties(RunOnServerWizardFragment fragment, HashMap properties){
+		if (properties != null){
+			fragment.setClient((IClient)properties.get(RunOnServerActionDelegate.ROS_CLIENT));
+			fragment.setLaunchable((ILaunchableAdapter)properties.get(RunOnServerActionDelegate.ROS_LAUNCHABLE));
+		}
+	}
+	
 	/**
 	 * RunOnServerWizard constructor comment.
 	 * 
@@ -48,8 +82,8 @@ public class RunOnServerWizard extends TaskWizard {
 	 * @param launchMode a launch mode
 	 * @param moduleArtifact a module artifact
 	 */
-	public RunOnServerWizard(IServer server, String launchMode, IModuleArtifact moduleArtifact) {
-		super(Messages.wizRunOnServerTitle, new RunOnServerWizardFragment(server, launchMode, moduleArtifact));
+	public RunOnServerWizard(IServer server, String launchMode, IModuleArtifact moduleArtifact,HashMap properties) {
+		super(Messages.wizRunOnServerTitle, createRootWizard(server,launchMode,moduleArtifact, properties));
 		
 		setNeedsProgressMonitor(true);
 		if (ILaunchManager.DEBUG_MODE.equals(launchMode))
@@ -102,6 +136,14 @@ public class RunOnServerWizard extends TaskWizard {
 		}
 	}
 
+	/**
+	 * Set the launchable adapter
+	 * @param launch
+	 */
+	public void setLaunchableAdapter(ILaunchableAdapter launch){
+		getTaskModel().putObject(WizardTaskUtil.TASK_LAUNCHABLE_ADAPTER, launch);
+	}
+	
 	/**
 	 * Return the launchable adapter.
 	 * 

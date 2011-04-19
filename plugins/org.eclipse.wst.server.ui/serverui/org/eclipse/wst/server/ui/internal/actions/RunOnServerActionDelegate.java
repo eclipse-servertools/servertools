@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,10 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal.actions;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -28,6 +25,11 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.IClient;
 import org.eclipse.wst.server.core.internal.ILaunchableAdapter;
@@ -36,12 +38,7 @@ import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.core.model.ModuleArtifactDelegate;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.viewers.ModuleArtifactComposite;
-import org.eclipse.wst.server.ui.internal.wizard.*;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.wst.server.ui.internal.wizard.RunOnServerWizard;
 /**
  * Support for starting/stopping server and clients for resources running on a server.
  */
@@ -49,6 +46,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	protected static final String[] launchModes = {
 		ILaunchManager.RUN_MODE, ILaunchManager.DEBUG_MODE, ILaunchManager.PROFILE_MODE };
 
+	public static String ROS_CLIENT = "ros_client";
+	public static String ROS_LAUNCHABLE = "ros_launchable";
+	
 	protected Object selection;
 
 	protected IWorkbenchWindow window;
@@ -59,6 +59,8 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	protected String launchMode = ILaunchManager.RUN_MODE;
 
 	protected boolean tasksAndClientShown;
+	
+	protected HashMap<String, Object> wiz_properties; 
 
 	protected ILaunchableAdapter launchableAdapter;
 	protected IClient client;
@@ -68,6 +70,17 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 */
 	public RunOnServerActionDelegate() {
 		super();
+	}
+	
+	/**
+	 * RunOnServerActionDelegate constructor comment.
+	 */
+	public RunOnServerActionDelegate(HashMap<String, Object>properties) {
+		this.wiz_properties = properties;
+	}
+	
+	public void setActionProperties(HashMap<String,Object>properties){
+		this.wiz_properties = properties;
 	}
 
 	/**
@@ -114,7 +127,8 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		if (server == null) {
 			// try the full wizard
 			Trace.trace(Trace.FINEST, "Launching wizard");
-			RunOnServerWizard wizard = new RunOnServerWizard(module, launchMode, moduleArtifact);
+			RunOnServerWizard wizard = new RunOnServerWizard(module, launchMode, moduleArtifact, wiz_properties);
+
 			WizardDialog dialog = new WizardDialog(shell, wizard);
 			if (dialog.open() == Window.CANCEL) {
 				if (monitor != null)
@@ -130,8 +144,10 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			server = wizard.getServer();
 			boolean preferred = wizard.isPreferredServer();
 			tasksAndClientShown = true;
-			client = wizard.getSelectedClient();
-			launchableAdapter = wizard.getLaunchableAdapter();
+			if (client == null || launchableAdapter == null){
+				client = wizard.getSelectedClient();
+				launchableAdapter = wizard.getLaunchableAdapter();
+			}
 			
 			// set preferred server if requested
 			if (server != null && preferred) {
@@ -185,7 +201,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			}
 		};
 		
-		// get a valid ModuleArtifact that we can use for launching
+		// If there is more than 1 moduleArtifact, get a valid ModuleArtifact that we can use for launching
 		// TODO The ModuleArtifactComposite should be part of the RunOnServerWizard
 		final IModuleArtifact moduleArtifact;
 		if (moduleArtifacts.length > 1) {
@@ -245,11 +261,13 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		
 		if (!ServerUIPlugin.saveEditors())
 			return;
-		
+
 		tasksAndClientShown = false;
 		IServer server2 = null;
-		client = null;
-		launchableAdapter = null;
+		// initialize its value using the predefined value if one has been given
+		client = (IClient)getOverwriteValue(ROS_CLIENT);
+		launchableAdapter = (ILaunchableAdapter) getOverwriteValue(ROS_LAUNCHABLE);
+		
 		try {
 			IProgressMonitor monitor = new NullProgressMonitor();
 			server2 = getServer(module, moduleArtifact, monitor);
@@ -280,8 +298,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		if (!ServerUIPlugin.promptIfDirty(shell, server))
 			return;
 		
+		// We need to check if the client and launchable were pre-populated
 		if (!tasksAndClientShown) {
-			RunOnServerWizard wizard = new RunOnServerWizard(server, launchMode, moduleArtifact);
+			RunOnServerWizard wizard = new RunOnServerWizard(server, launchMode, moduleArtifact, wiz_properties);
 			if (wizard.shouldAppear()) {
 				WizardDialog dialog = new WizardDialog(shell, wizard);
 				if (dialog.open() == Window.CANCEL)
@@ -813,5 +832,24 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			return false;
 		}
 		return true;
+	}
+	
+	protected void setMap(HashMap<String,Object> map){
+		this.wiz_properties = map;
+	}
+	
+	/**
+	 * Returns the value from the hashmap provided in the constructor of this class
+	 *  
+	 * @param key  
+	 * @param obj the type of object to be returned
+	 * @return
+	 */
+	protected Object getOverwriteValue(String key){
+		if (wiz_properties != null){ 
+			Object o = wiz_properties.get(key);
+			return o;	
+		}
+		return null;
 	}
 }
