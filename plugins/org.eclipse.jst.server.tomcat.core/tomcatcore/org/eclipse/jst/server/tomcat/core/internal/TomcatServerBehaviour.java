@@ -305,7 +305,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 * @throws CoreException
 	 */
 	private void publishDir(int deltaKind, Properties p, IModule module[], PublishHelper helper, IProgressMonitor monitor) throws CoreException {
-		List status = new ArrayList();
+		List<IStatus> status = new ArrayList<IStatus>();
 		// Remove if requested or if previously published and are now serving without publishing
 		if (deltaKind == REMOVED || getTomcatServer().isServeModulesWithoutPublish()) {
 			String publishPath = (String) p.get(module[0].getId());
@@ -394,7 +394,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			
 			IModuleResource[] mr = getResources(module);
 			IStatus[] stat = helper.publishZip(mr, jarPath, monitor);
-			List status = new ArrayList();
+			List<IStatus> status = new ArrayList<IStatus>();
 			PublishOperation2.addArrayToList(status, stat);
 			PublishOperation2.throwException(status);
 			p.put(module[1].getId(), jarPath.toOSString());
@@ -414,7 +414,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, "Could not remove archive module", e));
 			}
 		} else {
-			List status = new ArrayList();
+			List<IStatus> status = new ArrayList<IStatus>();
 			IPath path = getModuleDeployDirectory(module[0]);
 			if (jarURI == null) {
 				jarURI = "WEB-INF/lib" + module[1].getName();
@@ -497,7 +497,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		
 		// check that ports are free
 		Iterator iterator = configuration.getServerPorts().iterator();
-		List usedPorts = new ArrayList();
+		List<ServerPort> usedPorts = new ArrayList<ServerPort>();
 		while (iterator.hasNext()) {
 			ServerPort sp = (ServerPort) iterator.next();
 			if (sp.getPort() < 0)
@@ -507,7 +507,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			}
 		}
 		if (usedPorts.size() == 1) {
-			ServerPort port = (ServerPort) usedPorts.get(0);
+			ServerPort port = usedPorts.get(0);
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPortInUse, new String[] {port.getPort() + "", getServer().getName()}), null));
 		} else if (usedPorts.size() > 1) {
 			String portStr = "";
@@ -525,7 +525,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		
 		// check that there is only one app for each context root
 		iterator = configuration.getWebModules().iterator();
-		List contextRoots = new ArrayList();
+		List<String> contextRoots = new ArrayList<String>();
 		while (iterator.hasNext()) {
 			WebModule module = (WebModule) iterator.next();
 			String contextRoot = module.getPath();
@@ -796,10 +796,10 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 * @param cp
 	 * @param entry
 	 */
-	public static void replaceJREContainer(List cp, IRuntimeClasspathEntry entry) {
+	public static void replaceJREContainer(List<IRuntimeClasspathEntry> cp, IRuntimeClasspathEntry entry) {
 		int size = cp.size();
 		for (int i = 0; i < size; i++) {
-			IRuntimeClasspathEntry entry2 = (IRuntimeClasspathEntry) cp.get(i);
+			IRuntimeClasspathEntry entry2 = cp.get(i);
 			if (entry2.getPath().uptoSegment(2).isPrefixOf(entry.getPath())) {
 				cp.set(i, entry);
 				return;
@@ -815,7 +815,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 * @param cp
 	 * @param entry
 	 */
-	public static void mergeClasspath(List cp, IRuntimeClasspathEntry entry) {
+	public static void mergeClasspath(List<IRuntimeClasspathEntry> cp, IRuntimeClasspathEntry entry) {
 		Iterator iterator = cp.iterator();
 		while (iterator.hasNext()) {
 			IRuntimeClasspathEntry entry2 = (IRuntimeClasspathEntry) iterator.next();
@@ -893,7 +893,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		// update classpath
 		IRuntimeClasspathEntry[] originalClasspath = JavaRuntime.computeUnresolvedRuntimeClasspath(workingCopy);
 		int size = originalClasspath.length;
-		List oldCp = new ArrayList(originalClasspath.length + 2);
+		List<IRuntimeClasspathEntry> oldCp = new ArrayList<IRuntimeClasspathEntry>(originalClasspath.length + 2);
 		for (int i = 0; i < size; i++)
 			oldCp.add(originalClasspath[i]);
 		
@@ -920,7 +920,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 					// Search for index to any existing tools.jar entry
 					int toolsIndex;
 					for (toolsIndex = 0; toolsIndex < oldCp.size(); toolsIndex++ ) {
-						IRuntimeClasspathEntry entry = (IRuntimeClasspathEntry) oldCp.get(toolsIndex);
+						IRuntimeClasspathEntry entry = oldCp.get(toolsIndex);
 						if (entry.getType() == IRuntimeClasspathEntry.ARCHIVE
 								&& entry.getPath().lastSegment().equals("tools.jar")) {
 							break;
@@ -936,7 +936,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		}
 		
 		iterator = oldCp.iterator();
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		while (iterator.hasNext()) {
 			IRuntimeClasspathEntry entry = (IRuntimeClasspathEntry) iterator.next();
 			try {

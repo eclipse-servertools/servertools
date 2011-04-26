@@ -185,7 +185,7 @@ public class TomcatPlugin extends Plugin {
 			verify.replace('/', File.separatorChar);
 
 			StringTokenizer st = new StringTokenizer(verify, ",");
-			List list = new ArrayList();
+			List<VerifyResourceSpec> list = new ArrayList<VerifyResourceSpec>();
 			while (st.hasMoreTokens())
 				list.add(new VerifyResourceSpec(st.nextToken()));
 			Trace.trace(Trace.FINEST, "Verify32: " + list.toString());
@@ -201,7 +201,7 @@ public class TomcatPlugin extends Plugin {
 			verify.replace('/', File.separatorChar);
 
 			st = new StringTokenizer(verify, ",");
-			list = new ArrayList();
+			list = new ArrayList<VerifyResourceSpec>();
 			while (st.hasMoreTokens())
 				list.add(new VerifyResourceSpec(st.nextToken()));
 			Trace.trace(Trace.FINEST, "Verify40: " + list.toString());
@@ -217,7 +217,7 @@ public class TomcatPlugin extends Plugin {
 			verify.replace('/', File.separatorChar);
 
 			st = new StringTokenizer(verify, ",");
-			list = new ArrayList();
+			list = new ArrayList<VerifyResourceSpec>();
 			while (st.hasMoreTokens())
 				list.add(new VerifyResourceSpec(st.nextToken()));
 			Trace.trace(Trace.FINEST, "Verify41: " + list.toString());
@@ -233,7 +233,7 @@ public class TomcatPlugin extends Plugin {
 			verify.replace('/', File.separatorChar);
 
 			st = new StringTokenizer(verify, ",");
-			list = new ArrayList();
+			list = new ArrayList<VerifyResourceSpec>();
 			while (st.hasMoreTokens())
 				list.add(new VerifyResourceSpec(st.nextToken()));
 			Trace.trace(Trace.FINEST, "Verify50: " + list.toString());
@@ -249,7 +249,7 @@ public class TomcatPlugin extends Plugin {
 			verify.replace('/', File.separatorChar);
 
 			st = new StringTokenizer(verify, ",");
-			list = new ArrayList();
+			list = new ArrayList<VerifyResourceSpec>();
 			while (st.hasMoreTokens())
 				list.add(new VerifyResourceSpec(st.nextToken()));
 			Trace.trace(Trace.FINEST, "Verify55: " + list.toString());
@@ -265,7 +265,7 @@ public class TomcatPlugin extends Plugin {
 			verify.replace('/', File.separatorChar);
 
 			st = new StringTokenizer(verify, ",");
-			list = new ArrayList();
+			list = new ArrayList<VerifyResourceSpec>();
 			while (st.hasMoreTokens())
 				list.add(new VerifyResourceSpec(st.nextToken()));
 			Trace.trace(Trace.FINEST, "Verify60: " + list.toString());
@@ -281,7 +281,7 @@ public class TomcatPlugin extends Plugin {
 			verify.replace('/', File.separatorChar);
 
 			st = new StringTokenizer(verify, ",");
-			list = new ArrayList();
+			list = new ArrayList<VerifyResourceSpec>();
 			while (st.hasMoreTokens())
 				list.add(new VerifyResourceSpec(st.nextToken()));
 			Trace.trace(Trace.FINEST, "Verify70: " + list.toString());

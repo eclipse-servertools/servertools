@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,7 @@ public class PublishTask extends PublishTaskDelegate {
 		if (!tomcatServer.getTomcatServer().isTestEnvironment())
 			return null;
 		
-		List tasks = new ArrayList();
+		List<PublishOperation> tasks = new ArrayList<PublishOperation>();
 		int size = modules.size();
 		for (int i = 0; i < size; i++) {
 			IModule[] module = (IModule[]) modules.get(i);
@@ -34,6 +34,6 @@ public class PublishTask extends PublishTaskDelegate {
 			tasks.add(new PublishOperation2(tomcatServer, kind, module, in.intValue()));
 		}
 		
-		return (PublishOperation[]) tasks.toArray(new PublishOperation[tasks.size()]);
+		return tasks.toArray(new PublishOperation[tasks.size()]);
 	}
 }

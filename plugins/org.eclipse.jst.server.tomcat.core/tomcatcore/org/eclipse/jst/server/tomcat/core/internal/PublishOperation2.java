@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -76,7 +76,7 @@ public class PublishOperation2 extends PublishOperation {
 	 * @see PublishOperation#execute(IProgressMonitor, IAdaptable)
 	 */
 	public void execute(IProgressMonitor monitor, IAdaptable info) throws CoreException {
-		List status = new ArrayList();
+		List<IStatus> status = new ArrayList<IStatus>();
 		// If parent web module
 		if (module.length == 1) {
 			publishDir(module[0], status, monitor);
@@ -110,7 +110,7 @@ public class PublishOperation2 extends PublishOperation {
 		server.setModulePublishState2(module, IServer.PUBLISH_STATE_NONE);
 	}
 
-	private void publishDir(IModule module2, List status, IProgressMonitor monitor) throws CoreException {
+	private void publishDir(IModule module2, List<IStatus> status, IProgressMonitor monitor) throws CoreException {
 		IPath path = server.getModuleDeployDirectory(module2);
 		
 		// Remove if requested or if previously published and are now serving without publishing
@@ -143,7 +143,7 @@ public class PublishOperation2 extends PublishOperation {
 		}
 	}
 
-	private void publishJar(String jarURI, Properties p, List status, IProgressMonitor monitor) throws CoreException {
+	private void publishJar(String jarURI, Properties p, List<IStatus> status, IProgressMonitor monitor) throws CoreException {
 		IPath path = server.getModuleDeployDirectory(module[0]);
 		boolean moving = false;
 		// Get URI used for previous publish, if known
@@ -196,7 +196,7 @@ public class PublishOperation2 extends PublishOperation {
 		p.put(module[1].getId(), jarURI);
 	}
 
-	private void publishArchiveModule(String jarURI, Properties p, List status, IProgressMonitor monitor) {
+	private void publishArchiveModule(String jarURI, Properties p, List<IStatus> status, IProgressMonitor monitor) {
 		IPath path = server.getModuleDeployDirectory(module[0]);
 		boolean moving = false;
 		// Get URI used for previous publish, if known
@@ -257,12 +257,12 @@ public class PublishOperation2 extends PublishOperation {
 	 * @param status a List containing error and warning IStatus
 	 * @throws CoreException
 	 */
-	protected static void throwException(List status) throws CoreException {
+	protected static void throwException(List<IStatus> status) throws CoreException {
 		if (status == null || status.size() == 0)
 			return;
 		
 		if (status.size() == 1) {
-			IStatus status2 = (IStatus) status.get(0);
+			IStatus status2 = status.get(0);
 			throw new CoreException(status2);
 		}
 		IStatus[] children = new IStatus[status.size()];
@@ -272,7 +272,7 @@ public class PublishOperation2 extends PublishOperation {
 		throw new CoreException(status2);
 	}
 
-	protected static void addArrayToList(List list, IStatus[] a) {
+	protected static void addArrayToList(List<IStatus> list, IStatus[] a) {
 		if (list == null || a == null || a.length == 0)
 			return;
 		

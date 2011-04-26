@@ -39,7 +39,7 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 	protected static final String PROP_VM_INSTALL_TYPE_ID = "vm-install-type-id";
 	protected static final String PROP_VM_INSTALL_ID = "vm-install-id";
 	
-	protected static Map sdkMap = new HashMap(2);
+	protected static Map<File, Boolean> sdkMap = new HashMap<File, Boolean>(2);
 
 	public TomcatRuntime() {
 		// do nothing
@@ -224,7 +224,7 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 		// first try the cache
 		File javaHome = getVMInstall().getInstallLocation();
 		try {
-			Boolean b = (Boolean) sdkMap.get(javaHome);
+			Boolean b = sdkMap.get(javaHome);
 			return b.booleanValue();
 		} catch (Exception e) {
 			// ignore
@@ -278,14 +278,14 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 		}
 		
 		// log error that we were unable to check for the compiler
-		TomcatPlugin.log(MessageFormat.format("Failed compiler check for {0}", new String[] { javaHome.getAbsolutePath() }));
+		TomcatPlugin.log(MessageFormat.format("Failed compiler check for {0}", (Object []) new String[] { javaHome.getAbsolutePath() }));
 		return false;
 	}
 
-	private static Map javaVersionMap = new ConcurrentHashMap();
+	private static Map<String, Integer> javaVersionMap = new ConcurrentHashMap<String, Integer>();
 
 	private boolean isVMMinimumVersion(String javaVersion, int minimumVersion) {
-		Integer version = (Integer)javaVersionMap.get(javaVersion);
+		Integer version = javaVersionMap.get(javaVersion);
 		if (version == null) {
 			int index = javaVersion.indexOf('.');
 			if (index > 0) {

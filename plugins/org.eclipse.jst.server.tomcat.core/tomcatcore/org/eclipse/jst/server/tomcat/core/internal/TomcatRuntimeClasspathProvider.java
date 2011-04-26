@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,7 +32,7 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 		if (installPath == null)
 			return new IClasspathEntry[0];
 		
-		List list = new ArrayList();
+		List<IClasspathEntry> list = new ArrayList<IClasspathEntry>();
 		String runtimeId = runtime.getRuntimeType().getId();
 		if (runtimeId.indexOf("32") > 0) {
 			IPath path = installPath.append("lib");
@@ -48,6 +48,6 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 			addLibraryEntries(list, path.append("lib").toFile(), true);
 			addLibraryEntries(list, path.append("endorsed").toFile(), true);
 		}
-		return (IClasspathEntry[])list.toArray(new IClasspathEntry[list.size()]);
+		return list.toArray(new IClasspathEntry[list.size()]);
 	}
 }

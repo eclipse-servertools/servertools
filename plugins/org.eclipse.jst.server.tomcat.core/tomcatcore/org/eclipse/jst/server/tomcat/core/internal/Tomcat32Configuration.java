@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -108,7 +108,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	 * @return java.util.List
 	 */
 	public List getServerPorts() {
-		List ports = new ArrayList();
+		List<ServerPort> ports = new ArrayList<ServerPort>();
 	
 		try {
 			Connector [] connectors = serverInstance.getConnectors();
@@ -173,7 +173,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	 * @return java.util.List
 	 */
 	public List getWebModules() {
-		List list = new ArrayList();
+		List<WebModule> list = new ArrayList<WebModule>();
 	
 		try {
 			Context [] contexts = serverInstance.getContexts();
@@ -503,7 +503,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 			// If not deploying to "webapps", context docBase attributes need updating
 			boolean deployingToWebapps = "webapps".equals(server2.getDeployDirectory());
 			
-			Map pathMap = new HashMap();
+			Map<String, String> pathMap = new HashMap<String, String>();
 			
 			MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, 
 					NLS.bind(Messages.errorPublishServer, server2.getServer().getName()), null);
@@ -532,7 +532,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 							pathMap.put(lcPath, origPath);
 						}
 						else {
-							String otherPath = (String)pathMap.get(lcPath);
+							String otherPath = pathMap.get(lcPath);
 							IStatus s = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID,
 									origPath.equals(otherPath) ? NLS.bind(Messages.errorPublishPathDup, origPath) 
 											: NLS.bind(Messages.errorPublishPathConflict, origPath, otherPath));
@@ -694,7 +694,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 				ServerInstance oldInstance = new ServerInstance(oldServer);
 				
 				// Collect paths of old web modules managed by WTP
-				Set oldPaths = new HashSet();
+				Set<String> oldPaths = new HashSet<String>();
 				Context [] contexts = oldInstance.getContexts();
 				if (contexts != null) {
 					for (int i = 0; i < contexts.length; i++) {

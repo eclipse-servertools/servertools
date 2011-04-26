@@ -78,19 +78,19 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
     /**
      * Classpath entries added by ear configurations.
      */
-    protected final List earCommonResources = new ArrayList();
+    protected final List<String> earCommonResources = new ArrayList<String>();
 
     /**
      * List of classpath elements that will be used by the custom tomcat loader.
      * This set should include any class dir from referenced project.
      */
-    protected Set virtualClassClasspathElements = new LinkedHashSet();
-    protected Set virtualJarClasspathElements = new LinkedHashSet();
+    protected Set<String> virtualClassClasspathElements = new LinkedHashSet<String>();
+    protected Set<String> virtualJarClasspathElements = new LinkedHashSet<String>();
 
     /**
      * Map of resources found in "META-INF/resources" folder of dependent projects
      */
-    protected Map virtualDependentResources = new LinkedHashMap();
+    protected Map<String, List<String>> virtualDependentResources = new LinkedHashMap<String, List<String>>();
 
     /**
      * Instantiate a new TomcatPublishModuleVisitor
@@ -171,7 +171,7 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
             try {
                 CatalinaPropertiesUtil.addGlobalClasspath(baseDir.append(
                 		"conf/catalina.properties").toFile(), sharedLoader,
-                		(String[]) earCommonResources.toArray(new String[earCommonResources.size()]));
+                		earCommonResources.toArray(new String[earCommonResources.size()]));
             } catch (IOException e) {
                 Trace.trace(Trace.WARNING, "Unable to add ear path entries to catalina.properties", e);
             } finally {
@@ -309,10 +309,10 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
         virtualClassClasspathElements.clear();
         virtualJarClasspathElements.clear();
 
-		Set rtPathsProcessed = new HashSet();
-		Set locationsIncluded = new HashSet();
+		Set<String> rtPathsProcessed = new HashSet<String>();
+		Set<String> locationsIncluded = new HashSet<String>();
 		locationsIncluded.add(docBase);
-		Map retryLocations = new HashMap();
+		Map<String, String> retryLocations = new HashMap<String, String>();
 		IVirtualResource [] virtualResources = component.getRootFolder().getResources("");
 		// Loop over the module's resources
 		for (int i = 0; i < virtualResources.length; i++) {
@@ -533,9 +533,9 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
     
     private void addContentResource(IPath runtimePath, IPath workspacePath) {
     	String rtPath = runtimePath.toString(); 
-    	List locations = (List)virtualDependentResources.get(rtPath);
+    	List<String> locations = virtualDependentResources.get(rtPath);
     	if (locations == null) {
-    		locations = new ArrayList();
+    		locations = new ArrayList<String>();
     		virtualDependentResources.put(rtPath, locations);
     	}
     	locations.add(workspacePath.toOSString());

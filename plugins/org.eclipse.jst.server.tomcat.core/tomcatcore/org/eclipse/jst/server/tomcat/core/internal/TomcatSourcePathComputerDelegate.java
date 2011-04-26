@@ -65,7 +65,7 @@ public class TomcatSourcePathComputerDelegate implements
 		/**
 		 * List<IRuntimeClasspathEntry> of unresolved IRuntimeClasspathEntries
 		 */
-		List runtimeClasspath = new ArrayList();
+		List<IRuntimeClasspathEntry> runtimeClasspath = new ArrayList<IRuntimeClasspathEntry>();
 
 		SourcePathComputerVisitor(ILaunchConfiguration configuration) {
 			this.configuration = configuration;
@@ -157,7 +157,7 @@ public class TomcatSourcePathComputerDelegate implements
 		ISourceContainer[] getSourceContainers() throws CoreException {
 			runtimeClasspath.addAll(Arrays.asList(JavaRuntime
 					.computeUnresolvedSourceLookupPath(configuration)));
-			IRuntimeClasspathEntry[] entries = (IRuntimeClasspathEntry[]) runtimeClasspath
+			IRuntimeClasspathEntry[] entries = runtimeClasspath
 					.toArray(new IRuntimeClasspathEntry[runtimeClasspath.size()]);
 			IRuntimeClasspathEntry[] resolved = JavaRuntime
 					.resolveSourceLookupPath(entries, configuration);

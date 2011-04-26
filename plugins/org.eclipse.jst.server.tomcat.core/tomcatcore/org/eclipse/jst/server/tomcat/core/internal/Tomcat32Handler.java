@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.wst.server.core.IModule;
 /**
@@ -41,7 +42,7 @@ public class Tomcat32Handler implements ITomcatVersionHandler {
 	 * @see ITomcatVersionHandler#getRuntimeClasspath(IPath, IPath)
 	 */
 	public List getRuntimeClasspath(IPath installPath, IPath configPath) {
-		List cp = new ArrayList();
+		List<IRuntimeClasspathEntry> cp = new ArrayList<IRuntimeClasspathEntry>();
 		// add all jars from the Tomcat lib directory
 		File libDir = installPath.append("lib").toFile();
 		if (libDir.exists()) {
@@ -61,7 +62,7 @@ public class Tomcat32Handler implements ITomcatVersionHandler {
 	 * @see ITomcatVersionHandler#getRuntimeProgramArguments(IPath, boolean, boolean)
 	 */
 	public String[] getRuntimeProgramArguments(IPath configPath, boolean debug, boolean starting) {
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		if (configPath != null) {
 			list.add("-f \"" + configPath.append("conf").append("server.xml").toOSString() + "\"");
 		}
@@ -85,7 +86,7 @@ public class Tomcat32Handler implements ITomcatVersionHandler {
 	 * @see ITomcatVersionHandler#getRuntimeVMArguments(IPath, IPath, IPath, boolean)
 	 */
 	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, IPath deployPath, boolean isTestEnv) {
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		list.add("-Dtomcat.home=\"" + installPath.toOSString() + "\"");
 		// Include a system property for the configurable deploy location
 		list.add("-Dwtp.deploy=\"" + deployPath.toOSString() + "\"");

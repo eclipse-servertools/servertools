@@ -98,7 +98,7 @@ public class TomcatVersionHelper {
 	/**
 	 * Map of server type ID to expected version string fragment for version checking.
 	 */
-	private static final Map versionStringMap = new HashMap();
+	private static final Map<String, String> versionStringMap = new HashMap<String, String>();
 	
 	static {
 		versionStringMap.put(TomcatPlugin.TOMCAT_41, "4.1.");
@@ -175,7 +175,7 @@ public class TomcatVersionHelper {
 	 * @return array of strings containing VM arguments
 	 */
 	public static String[] getCatalinaVMArguments(IPath installPath, IPath instancePath, IPath deployPath, String endorsedDirs, boolean isTestEnv) {
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		if (isTestEnv)
 			list.add("-Dcatalina.base=\"" + instancePath.toOSString() + "\"");
 		else 
@@ -217,7 +217,7 @@ public class TomcatVersionHelper {
 			IPath contextPath = serverInstance.getContextXmlDirectory(serverXml.removeLastSegments(1));
 			File contextDir = contextPath.toFile();
 			if (contextDir.exists()) {
-				Map projectContexts = new HashMap();
+				Map<File, Context> projectContexts = new HashMap<File, Context>();
 				loadSeparateContextFiles(contextPath.toFile(), factory, projectContexts);
 				
 				// add any separately saved contexts
@@ -246,7 +246,7 @@ public class TomcatVersionHelper {
 	 * @param keptContextsMap Map to receive kept contexts mapped by path
 	 */
 	public static void getRemovedKeptCatalinaContexts(ServerInstance oldServerInstance,
-			List modules, Map removedContextsMap, Map keptContextsMap) {
+			List modules, Map<String, Context> removedContextsMap, Map<String, Context> keptContextsMap) {
 		// Collect paths of old web modules managed by WTP
 		Context [] contexts = oldServerInstance.getContexts();
 		if (contexts != null) {
@@ -262,7 +262,7 @@ public class TomcatVersionHelper {
 		int size = modules.size();
 		for (int i = 0; i < size; i++) {
 			WebModule module = (WebModule) modules.get(i);
-			Context context = (Context)removedContextsMap.remove(module.getPath());
+			Context context = removedContextsMap.remove(module.getPath());
 			if (context != null)
 				keptContextsMap.put(context.getPath(), context);
 		}
@@ -294,8 +294,8 @@ public class TomcatVersionHelper {
 			IPath serverXml = baseDir.append("conf").append("server.xml");
 			ServerInstance oldInstance = TomcatVersionHelper.getCatalinaServerInstance(serverXml, null, null);
 			if (oldInstance != null) {
-				Map removedContextsMap = new HashMap();
-				Map keptContextsMap = new HashMap();
+				Map<String, Context> removedContextsMap = new HashMap<String, Context>();
+				Map<String, Context> keptContextsMap = new HashMap<String, Context>();
 				TomcatVersionHelper.getRemovedKeptCatalinaContexts(oldInstance, modules, removedContextsMap, keptContextsMap);
 				monitor.worked(100);
 				if (removedContextsMap.size() > 0) {
@@ -306,7 +306,7 @@ public class TomcatVersionHelper {
 					Iterator iter = removedContextsMap.keySet().iterator();
 					while (iter.hasNext()) {
 						String oldPath = (String)iter.next();
-						Context ctx = (Context)removedContextsMap.get(oldPath);
+						Context ctx = removedContextsMap.get(oldPath);
 						
 						// Delete the corresponding context file, if it exists
 						IPath ctxFilePath = oldInstance.getContextFilePath(baseDir, ctx);
@@ -362,7 +362,7 @@ public class TomcatVersionHelper {
 					Iterator iter = keptContextsMap.keySet().iterator();
 					while (iter.hasNext()) {
 						String keptPath = (String)iter.next();
-						Context ctx = (Context)keptContextsMap.get(keptPath);
+						Context ctx = keptContextsMap.get(keptPath);
 						
 						// Delete the corresponding context file, if it exists
 						IPath ctxFilePath = oldInstance.getContextFilePath(baseDir, ctx);
@@ -652,7 +652,7 @@ public class TomcatVersionHelper {
 			// TODO Improve to compare with appBase value instead of hardcoded "webapps"
 			boolean deployingToAppBase = "webapps".equals(server.getDeployDirectory());
 			
-			Map pathMap = new HashMap();
+			Map<String, String> pathMap = new HashMap<String, String>();
 			
 			MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, 
 					NLS.bind(Messages.errorPublishServer, server.getServer().getName()), null);
@@ -680,7 +680,7 @@ public class TomcatVersionHelper {
 							pathMap.put(lcPath, origPath);
 						}
 						else {
-							String otherPath = (String)pathMap.get(lcPath);
+							String otherPath = pathMap.get(lcPath);
 							IStatus s = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID,
 									origPath.equals(otherPath) ? NLS.bind(Messages.errorPublishPathDup, origPath) 
 											: NLS.bind(Messages.errorPublishPathConflict, origPath, otherPath));
@@ -1035,7 +1035,7 @@ public class TomcatVersionHelper {
 		return Status.OK_STATUS;
 	}
 	
-	private static void loadSeparateContextFiles(File contextDir, Factory factory, Map projectContexts) {
+	private static void loadSeparateContextFiles(File contextDir, Factory factory, Map<File, Context> projectContexts) {
 		File[] contextFiles = contextDir.listFiles(new FilenameFilter() {
 			public boolean accept(File dir, String name) {
 				return name.toLowerCase().endsWith(".xml");
@@ -1202,7 +1202,7 @@ public class TomcatVersionHelper {
 			if (versionSubString != null) {
 				// If we have an actual version, test the version
 				if (versionSubString.length() > 0) {
-					String versionTest = (String)versionStringMap.get(serverType);
+					String versionTest = versionStringMap.get(serverType);
 					if (versionTest != null && !versionSubString.startsWith(versionTest)) {
 						return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID,
 								NLS.bind(Messages.errorInstallDirWrongVersion2,

@@ -423,7 +423,8 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 			return new ServerPort[0];
 		
 		try {
-			List list = getTomcatConfiguration().getServerPorts();
+			@SuppressWarnings("unchecked")
+			List<ServerPort> list = getTomcatConfiguration().getServerPorts();
 			ServerPort[] sp = new ServerPort[list.size()];
 			list.toArray(sp);
 			return sp;

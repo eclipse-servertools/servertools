@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.wst.server.core.IModule;
 /**
@@ -45,7 +46,7 @@ public class Tomcat70Handler implements ITomcatVersionHandler {
 	 * @see ITomcatVersionHandler#getRuntimeClasspath(IPath, IPath)
 	 */
 	public List getRuntimeClasspath(IPath installPath, IPath configPath) {
-		List cp = new ArrayList();
+		List<IRuntimeClasspathEntry> cp = new ArrayList<IRuntimeClasspathEntry>();
 		
 		// 7.0 - add bootstrap.jar and tomcat-juli.jar from the Tomcat bin directory
 		IPath binPath = installPath.append("bin");
@@ -73,7 +74,7 @@ public class Tomcat70Handler implements ITomcatVersionHandler {
 	 * @see ITomcatVersionHandler#getRuntimeProgramArguments(IPath, boolean, boolean)
 	 */
 	public String[] getRuntimeProgramArguments(IPath configPath, boolean debug, boolean starting) {
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 
 		if (starting)
 			list.add("start");

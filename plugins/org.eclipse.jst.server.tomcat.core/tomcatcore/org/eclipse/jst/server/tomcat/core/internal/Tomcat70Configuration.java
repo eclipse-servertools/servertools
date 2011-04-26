@@ -62,7 +62,7 @@ public class Tomcat70Configuration extends TomcatConfiguration {
 
 	protected String propertiesFile;
 	
-	protected static final Map protocolHandlerMap = new HashMap();
+	protected static final Map<String, String> protocolHandlerMap = new HashMap<String, String>();
 	static {
 		protocolHandlerMap.put("org.apache.coyote.http11.Http11Protocol", "HTTP/1.1");
 		protocolHandlerMap.put("org.apache.coyote.http11.Http11NioProtocol", "HTTP/1.1");
@@ -109,7 +109,7 @@ public class Tomcat70Configuration extends TomcatConfiguration {
 	 * @return java.util.List
 	 */
 	public List getServerPorts() {
-		List ports = new ArrayList();
+		List<ServerPort> ports = new ArrayList<ServerPort>();
 	
 		// first add server port
 		try {
@@ -149,7 +149,7 @@ public class Tomcat70Configuration extends TomcatConfiguration {
 						}
 						else {
 							// Get Tomcat equivalent name if protocol handler class specified
-							name = (String)protocolHandlerMap.get(protocol);
+							name = protocolHandlerMap.get(protocol);
 							if (name != null) {
 								// Prepare simple protocol string for ServerPort protocol
 								int index = name.indexOf('/');
@@ -192,7 +192,7 @@ public class Tomcat70Configuration extends TomcatConfiguration {
 	 * @return java.util.List
 	 */
 	public List getWebModules() {
-		List list = new ArrayList();
+		List<WebModule> list = new ArrayList<WebModule>();
 	
 		try {
 			Context [] contexts = serverInstance.getContexts();

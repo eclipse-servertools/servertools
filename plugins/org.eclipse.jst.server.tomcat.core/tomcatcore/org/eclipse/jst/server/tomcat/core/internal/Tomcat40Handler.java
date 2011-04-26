@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.wst.server.core.IModule;
 /**
@@ -40,7 +41,7 @@ public class Tomcat40Handler implements ITomcatVersionHandler {
 	 * @see ITomcatVersionHandler#getRuntimeClasspath(IPath, IPath)
 	 */
 	public List getRuntimeClasspath(IPath installPath, IPath configPath) {
-		List cp = new ArrayList();
+		List<IRuntimeClasspathEntry> cp = new ArrayList<IRuntimeClasspathEntry>();
 		
 		// 4.0 - add bootstrap.jar from the Tomcat bin directory
 		IPath binPath = installPath.append("bin");
@@ -56,7 +57,7 @@ public class Tomcat40Handler implements ITomcatVersionHandler {
 	 * @see ITomcatVersionHandler#getRuntimeProgramArguments(IPath, boolean, boolean)
 	 */
 	public String[] getRuntimeProgramArguments(IPath configPath, boolean debug, boolean starting) {
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		
 		if (debug)
 			list.add("-debug");
@@ -85,7 +86,7 @@ public class Tomcat40Handler implements ITomcatVersionHandler {
 	 * @see ITomcatVersionHandler#getRuntimeVMArguments(IPath, IPath, IPath, boolean)
 	 */
 	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, IPath deployPath, boolean isTestEnv) {
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		if (isTestEnv)
 			list.add("-Dcatalina.base=\"" + configPath.toOSString() + "\"");
 		else 

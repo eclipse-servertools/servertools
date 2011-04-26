@@ -51,6 +51,7 @@ import org.eclipse.wst.server.core.IModule;
 /**
  * Temporary solution for https://bugs.eclipse.org/bugs/show_bug.cgi?id=103888
  */
+@SuppressWarnings("restriction")
 public class ModuleTraverser {
 
 	/**
@@ -413,7 +414,7 @@ public class ModuleTraverser {
 
 		// get the raw entries
 		final Map referencedRawEntries = getRawComponentClasspathDependencies(javaProject);
-		final Map validRawEntries = new HashMap();
+		final Map<IClasspathEntry, IClasspathAttribute> validRawEntries = new HashMap<IClasspathEntry, IClasspathAttribute>();
 
 		// filter out non-valid referenced raw entries
 		final Iterator i = referencedRawEntries.keySet().iterator();
@@ -439,14 +440,14 @@ public class ModuleTraverser {
 		
 		// retrieve the resolved classpath
 		final IClasspathEntry[] entries = javaProject.getResolvedClasspath(true);
-		final Map pathToResolvedEntry = new HashMap();
+		final Map<IPath, IClasspathEntry> pathToResolvedEntry = new HashMap<IPath, IClasspathEntry>();
 		
 		// store in a map from path to entry
 		for (int j = 0; j < entries.length; j++) {
 			pathToResolvedEntry.put(entries[j].getPath(), entries[j]);
 		}
 
-		final Map referencedEntries = new LinkedHashMap();
+		final Map<IClasspathEntry, IClasspathAttribute> referencedEntries = new LinkedHashMap<IClasspathEntry, IClasspathAttribute>();
 		
 		// grab all IPackageFragmentRoots
 		final IPackageFragmentRoot[] roots = javaProject.getPackageFragmentRoots();
@@ -455,13 +456,13 @@ public class ModuleTraverser {
 			final IClasspathEntry rawEntry = root.getRawClasspathEntry();
 			
 			// is the raw entry valid?
-			IClasspathAttribute attrib = (IClasspathAttribute) validRawEntries.get(rawEntry);
+			IClasspathAttribute attrib = validRawEntries.get(rawEntry);
 			if (attrib == null) {
 				continue;
 			}
 			
 			final IPath pkgFragPath = root.getPath();
-			final IClasspathEntry resolvedEntry = (IClasspathEntry) pathToResolvedEntry.get(pkgFragPath);
+			final IClasspathEntry resolvedEntry = pathToResolvedEntry.get(pkgFragPath);
 			final IClasspathAttribute resolvedAttrib = checkForComponentDependencyAttribute(resolvedEntry,
 					DEPENDECYATTRIBUTETYPE_DEPENDENCY_OR_NONDEPENDENCY);
 			// attribute for the resolved entry must either be unspecified or it must be the
@@ -488,7 +489,7 @@ public class ModuleTraverser {
 		if (javaProject == null) {
 			return Collections.EMPTY_MAP;
 		}
-		final Map referencedRawEntries = new HashMap();
+		final Map<IClasspathEntry, IClasspathAttribute> referencedRawEntries = new HashMap<IClasspathEntry, IClasspathAttribute>();
 		final IClasspathEntry[] entries = javaProject.getRawClasspath();
         for (int i = 0; i < entries.length; i++) {
             final IClasspathEntry entry = entries[i];
@@ -591,9 +592,8 @@ public class ModuleTraverser {
     	if (attrib == null || attrib.getValue()== null || attrib.getValue().length() == 0) {
     		if (isWebApp) {
     			return isClassFolder ? "/WEB_INF/classes" : "WEB-INF/lib";
-    		} else {
-    			return isClassFolder ? "/" : "../";
     		}
+			return isClassFolder ? "/" : "../";
     	}
     	return attrib.getValue();
 	}

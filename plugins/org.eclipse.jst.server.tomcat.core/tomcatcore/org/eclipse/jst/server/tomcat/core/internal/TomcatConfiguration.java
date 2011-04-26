@@ -46,7 +46,7 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 	protected IFolder configPath;
 
 	// property change listeners
-	private transient List propertyListeners;
+	private transient List<PropertyChangeListener> propertyListeners;
 
 	/**
 	 * TomcatConfiguration constructor.
@@ -300,7 +300,7 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		if (propertyListeners == null)
-			propertyListeners = new ArrayList();
+			propertyListeners = new ArrayList<PropertyChangeListener>();
 		propertyListeners.add(listener);
 	}
 
