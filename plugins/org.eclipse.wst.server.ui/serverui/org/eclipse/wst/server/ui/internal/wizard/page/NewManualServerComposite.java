@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.wizard.page;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -104,6 +106,9 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 	
 	private IServerType oldServerType;
 	
+	HostnameChangedAction hostnameChangeAction;
+	Timer timer = null;
+	
 	private boolean canSupportModule=true;
 
 	/**
@@ -192,7 +197,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		
 		hostname.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				hostnameChanged(hostname.getText());
+				setHostnameChangeTimer(hostname.getText());
 			}
 		});
 		
@@ -775,14 +780,82 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			}
 		}
 	}
-	
-	public String getCurrentHostname(){
-		if(hostname != null)
+
+	public String getCurrentHostname() {
+		if (hostname != null)
 			return hostname.getText();
 		return null;
 	}
 
 	public boolean canSupportModule() {
 		return canSupportModule;
-	}	
+	}
+
+	void setHostnameChangeTimer(String hostName) {
+		if (hostnameChangeAction == null) {
+			hostnameChangeAction = new HostnameChangedAction(hostName);
+		} else {
+			hostnameChangeAction.setHostName(hostName);
+		}
+
+		if (timer == null) {
+			timer = new Timer(300, hostnameChangeAction);
+		}
+		/*
+		 * Kick off the timer and then call setMessage if the Timer wasn't
+		 * previously running because we want to trigger the isComplete on the page
+		 * so that it stops the user from proceeding to the next page while the
+		 * timer is running.
+		 */
+		if (!timer.isRunning()) {
+			timer.runTimer();
+			wizard.setMessage(null, IMessageProvider.NONE);
+		} else {
+			timer.runTimer();
+		}
+	}
+
+	public boolean isTimerRunning() {
+		if (timer == null) {
+			return false;
+		}
+		return timer.isRunning();
+	}
+
+	public boolean isTimerScheduled() {
+		if (timer == null) {
+			return false;
+		}
+		return timer.isScheduled();
+	}
+
+	/**
+	 * Disposes the timer when the wizard is disposed.
+	 */
+	public void dispose() {
+		if (timer != null) {
+			timer.dispose();
+		}
+	}
+
+	private class HostnameChangedAction implements ActionListener {
+
+		String hostName;
+
+		public HostnameChangedAction(String name) {
+			hostName = name;
+		}
+
+		public void actionPerformed(ActionEvent a) {
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+						hostnameChanged(hostName);
+				}
+			});
+		}
+
+		void setHostName(String host) {
+			hostName = host;
+		}
+	}
 }

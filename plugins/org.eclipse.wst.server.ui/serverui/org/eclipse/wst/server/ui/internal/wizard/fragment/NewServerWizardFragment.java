@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
@@ -159,8 +160,11 @@ public class NewServerWizardFragment extends WizardFragment {
 		if(comp != null){
 			Composite composite = comp.getNewManualServerComposite();
 			if(composite != null && composite instanceof NewManualServerComposite){
-				NewManualServerComposite manualComp = (NewManualServerComposite)composite;
-
+				NewManualServerComposite manualComp = (NewManualServerComposite) composite;
+				if (manualComp.isTimerRunning() || manualComp.isTimerScheduled()) {
+					return false;
+				}
+				
 				if(!supportsRemote && !SocketUtil.isLocalhost(manualComp.getCurrentHostname())){
 					isComplete = false;
 				}if (!manualComp.canSupportModule() ){
@@ -179,5 +183,19 @@ public class NewServerWizardFragment extends WizardFragment {
 		} catch (Exception e) {
 			return null;
 		}
+	}
+	
+	public void performCancel(IProgressMonitor monitor) throws CoreException {
+		if(comp != null) {
+			comp.getNewManualServerComposite().dispose();
+		}
+		super.performCancel(monitor);
+	}
+	
+	public void performFinish(IProgressMonitor monitor) throws CoreException {
+		if(comp != null) {
+			comp.getNewManualServerComposite().dispose();
+		}
+		super.performFinish(monitor);
 	}
 }
