@@ -794,7 +794,8 @@ public class ModifyModulesComposite extends Composite {
 							wizard.setMessage(NLS.bind(Messages.wizModuleRequiredModule, module.getName()), IMessageProvider.ERROR);
 							enabled = false;
 							break;
-						}
+						} else
+							enabled = true;
 					}
 					else 
 						enabled = true;
