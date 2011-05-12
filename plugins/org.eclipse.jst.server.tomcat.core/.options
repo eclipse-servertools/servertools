@@ -1,4 +1,0 @@
-# Debugging options for the org.eclipse.jst.server.tomcat.core plugin
-
-# Turn on general debugging
-org.eclipse.jst.server.tomcat.core/debug=true
