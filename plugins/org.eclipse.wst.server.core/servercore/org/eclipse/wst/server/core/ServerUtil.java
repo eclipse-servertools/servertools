@@ -566,12 +566,13 @@ public class ServerUtil {
 	
 	/**
 	 * Return a list of all runtime types that match the given type, version,
-	 * and partial runtime type id. If type, version, or runtimeTypeId is null,
+	 * and partial runtime type id. Multiple partial runtime type id are accepted 
+	 * using a comma separated string. If type, version, or runtimeTypeId is null,
 	 * it matches all of that type or version.
 	 * 
 	 * @param type a module type
 	 * @param version a module version
-	 * @param runtimeTypeId the id of a runtime type
+	 * @param runtimeTypeId(s) the id of a runtime type. If multiple separate using comma
 	 * @return a possibly-empty array of runtime type instances {@link IRuntimeType}
 	 */
 	public static IRuntimeType[] getRuntimeTypes(String type, String version, String runtimeTypeId) {
@@ -580,8 +581,17 @@ public class ServerUtil {
 		if (runtimeTypes != null) {
 			for (IRuntimeType runtimeType : runtimeTypes) {
 				if (isSupportedModule(runtimeType.getModuleTypes(), type, version)) {
-					if (runtimeTypeId == null || runtimeType.getId().startsWith(runtimeTypeId))
+					if (runtimeTypeId == null) {
 						list.add(runtimeType);
+					} else {
+						StringTokenizer tokenizer = new StringTokenizer(runtimeTypeId, ",");
+						while (tokenizer.hasMoreTokens()) {
+							String curRuntimeTypeId = tokenizer.nextToken();
+							if (runtimeType.getId().startsWith(curRuntimeTypeId)) {
+								list.add(runtimeType);
+							}
+						}
+					}
 				}
 			}
 		}
