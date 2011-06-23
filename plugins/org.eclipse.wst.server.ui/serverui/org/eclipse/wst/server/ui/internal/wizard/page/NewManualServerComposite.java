@@ -95,7 +95,6 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 	protected String serverTypeId;
 	protected boolean includeIncompatible;
 	
-	protected String lastHostname;
 	protected HostnameComposite manualHostComp;
 	IHostnameSelectionListener hostnameListener;
 	protected Label hostnameLabel;
@@ -181,7 +180,6 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		
 		hostnameListener = 	new IHostnameSelectionListener() {
 			public void hostnameSelected(String selectedHostname) {
-				lastHostname = selectedHostname;
 				setHost(selectedHostname);
 			}
 	    };		
@@ -746,8 +744,13 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 	protected void hostnameChanged(String newHost) {
 		if (newHost == null)
 			return;
-		if (newHost.equals(host))
-			return;
+		/*
+		 * Bug 349434, with the fix in Timer.runTimer, the chance that a new 
+		 * host name is the same as the host name will be very rare. In some  
+		 * cases, it still needs to go through processes such as loadServerImpl. 
+		 * It doesn't worth to handle it differently. Therefore, we are not checking 
+		 * for the same host name in here.
+		 */
 
 		host = newHost;
 		hostnameListener.hostnameSelected(host);
