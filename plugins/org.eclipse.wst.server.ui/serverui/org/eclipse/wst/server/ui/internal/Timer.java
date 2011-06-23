@@ -36,11 +36,12 @@ public class Timer {
 	/**
 	 * Runs the timer if it is stopped or updates the stop time directly
 	 * to effectively restart the timer.
+	 * only one command should be executed at a time. 
 	 */
 	public void runTimer(){
 		timerRunnable.setStopTime(System.currentTimeMillis() + delay);
 
-		if(!timerRunnable.isRunning()){
+		if(!timerRunnable.isRunning() && !timerRunnable.isScheduled()){
 			timerRunnable.setIsScheduled(true);
 			executor.execute(timerRunnable);
 		}
