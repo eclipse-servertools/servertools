@@ -409,11 +409,12 @@ public class ResourceManager {
 			return;
 		}
 
-		if (resourceChangeListener != null) {
-			IWorkspace workspace = ResourcesPlugin.getWorkspace();
-			if (workspace != null)
-				workspace.removeResourceChangeListener(resourceChangeListener);
-			
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		if (workspace != null && resourceChangeListener != null) {
+			workspace.removeResourceChangeListener(resourceChangeListener);
+		}
+
+		if (pcl != null) {
 			ServerPlugin.getInstance().getPluginPreferences().removePropertyChangeListener(pcl);
 		}
 		
