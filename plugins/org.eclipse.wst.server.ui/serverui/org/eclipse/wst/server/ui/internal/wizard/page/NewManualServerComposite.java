@@ -607,6 +607,9 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 				serverName.setText(server.getName());
 				updatingServerName = false;
 			}
+			else {
+				server.setName(serverName.getText());
+			}
 			// Validate if selected module is supported with the selected runtime
 			wizard.setMessage(null, IMessageProvider.NONE);
 			if( module!=null ){
