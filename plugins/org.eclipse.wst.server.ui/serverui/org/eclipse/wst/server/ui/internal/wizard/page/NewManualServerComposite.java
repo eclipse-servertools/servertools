@@ -392,7 +392,9 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 	protected void handleHostnameChange(IServerType serverType) {
 
 		wizard.setMessage(null, IMessageProvider.NONE);
-		checkHostAndServerType(serverType);
+		if (!checkHostAndServerType(serverType)) {
+			return;// Host name validation failed, so there is no need to continue handling hostname change event			
+		}
 		loadServerImpl(serverType);
 		
 		if (serverName != null && !serverNameModified) {
@@ -416,12 +418,24 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		}
 	}
 
-	protected void checkHostAndServerType(IServerType selectedServerType){
-		if(selectedServerType != null){
-			boolean supportsRemote = selectedServerType.supportsRemoteHosts();
-			if(!supportsRemote && !SocketUtil.isLocalhost(hostname.getText()))
-				wizard.setMessage(NLS.bind(Messages.wizCheckRemoteSupport, new Object[0]), IMessageProvider.ERROR);
+	/**
+	 * Validates the server's host name<br/>
+	 * @param selectedServerType
+	 * @return The results of validation: <br/>
+	 * <b>false</b> in case when the selected server type does not support remote host and the field "hostname" is not recognized as localhost one.  This method will also return false on an invalid server type.<br/> 
+	 * <b>true</b> in any other case   
+	 */
+	protected boolean checkHostAndServerType(IServerType selectedServerType){
+		if(selectedServerType == null){
+			return false;
 		}
+		boolean supportsRemote = selectedServerType.supportsRemoteHosts();
+		if(!supportsRemote && !SocketUtil.isLocalhost(hostname.getText())) {
+			wizard.setMessage(NLS.bind(Messages.wizCheckRemoteSupport, new Object[0]), IMessageProvider.ERROR);
+			return false;
+		}
+		
+		return true;
 	}
 	
 	/**
