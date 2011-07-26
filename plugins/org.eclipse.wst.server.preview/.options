@@ -1,4 +1,0 @@
-# Debugging options for the org.eclipse.wst.server.preview plugin
-
-# Turn on general debugging
-org.eclipse.wst.server.preview/debug=true
