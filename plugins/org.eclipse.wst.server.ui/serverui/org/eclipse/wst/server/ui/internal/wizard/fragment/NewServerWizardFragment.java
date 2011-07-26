@@ -167,7 +167,7 @@ public class NewServerWizardFragment extends WizardFragment {
 				
 				if(!supportsRemote && !SocketUtil.isLocalhost(manualComp.getCurrentHostname())){
 					isComplete = false;
-				}if (!manualComp.canSupportModule() ){
+				} else if (!manualComp.canSupportModule() ){
 					isComplete = false;
 				}
 				else
