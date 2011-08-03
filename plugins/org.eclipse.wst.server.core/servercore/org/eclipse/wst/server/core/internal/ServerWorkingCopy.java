@@ -447,6 +447,9 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			getWorkingCopyDelegate(monitor).saveConfiguration(monitor);
 		wch.setDirty(false);
 		
+		if (getServerState() == IServer.STATE_STARTED)
+			autoPublish();
+		
 		return server;
 	}
 
