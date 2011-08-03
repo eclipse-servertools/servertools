@@ -2332,8 +2332,6 @@ public class Server extends Base implements IServer {
 		//serverState = wc.serverState;
 		delegate = wc.delegate;
 		
-		if (getServerState() == IServer.STATE_STARTED)
-			autoPublish();
 	}
 
 	protected void saveState(IMemento memento) {
