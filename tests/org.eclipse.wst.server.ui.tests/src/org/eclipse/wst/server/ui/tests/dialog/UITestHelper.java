@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -199,6 +199,11 @@ public class UITestHelper {
 	 * @param label The label to verify,
 	 */
 	private static void verifyLabelText(Label label) {
+		
+		if (label.getText().length() == 0){
+			return;
+		}
+		
 		String widget = label.toString();
 		Point size = label.getSize();
 
@@ -206,16 +211,20 @@ public class UITestHelper {
 		Point preferred = label.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 		//if (size.y/preferred.y) == X, then label spans X lines, so divide
 		//the calculated value of preferred.x by X
+		int countLinesText = countLines(label.getText());
+		
 		if (preferred.y * size.y > 0) {
-			preferred.y /= countLines(label.getText());
+			preferred.y /= countLinesText;
 			if (size.y / preferred.y > 1) {
 				preferred.x /= (size.y / preferred.y);
 			}
 		}
-		String message = new StringBuffer("Warning: ").append(widget)
-			.append("\n\tActual Width -> ").append(size.x)
-			.append("\n\tRecommended Width -> ").append(preferred.x).toString();
 		if (preferred.x > size.x) {
+			String message = new StringBuffer("Warning: ").append(widget)
+					.append("\n\tActual Width -> ").append(size.x)
+					.append("\n\tRecommended Width -> ").append(preferred.x)
+					.append("\n\tDiagnostic information: preferred.y=").append(preferred.y).append(" size.y=").append(size.y).append(" countLines=").append(countLinesText).toString();			
+			
 			//close the dialog
 			label.getShell().dispose();
 			Assert.assertTrue(message.toString(), false);
