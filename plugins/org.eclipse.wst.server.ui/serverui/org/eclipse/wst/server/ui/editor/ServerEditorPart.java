@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2009 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import java.util.*;
 import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
@@ -23,6 +24,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.editor.*;
 /**
  * An abstract server editor which implements the most common methods
@@ -303,7 +305,12 @@ public abstract class ServerEditorPart extends EditorPart {
 		Iterator iterator = getSections(id).iterator();
 		while (iterator.hasNext()) {
 			ServerEditorSection section = (ServerEditorSection) iterator.next();
-			section.createSection(parent);
+			try {
+				section.createSection(parent);
+			} catch( RuntimeException re ) {
+				ServerUIPlugin.getInstance().getLog().log(new Status(IStatus.ERROR, 
+						ServerUIPlugin.PLUGIN_ID, re.getLocalizedMessage(), re));
+			}
 		}
 	}
 
