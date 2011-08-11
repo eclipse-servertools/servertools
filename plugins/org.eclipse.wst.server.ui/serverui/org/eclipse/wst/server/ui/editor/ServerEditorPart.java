@@ -23,6 +23,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
+import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.editor.*;
 /**
  * An abstract server editor which implements the most common methods
@@ -303,7 +304,13 @@ public abstract class ServerEditorPart extends EditorPart {
 		Iterator iterator = getSections(id).iterator();
 		while (iterator.hasNext()) {
 			ServerEditorSection section = (ServerEditorSection) iterator.next();
-			section.createSection(parent);
+			try {
+				section.createSection(parent);
+			} catch (RuntimeException e) {
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "Failed to insert editor section: " + id + "\n" + e.getLocalizedMessage(), e);
+				}
+			}
 		}
 	}
 
