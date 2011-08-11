@@ -15,7 +15,6 @@ import java.util.*;
 import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
@@ -24,7 +23,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.editor.*;
 /**
  * An abstract server editor which implements the most common methods
@@ -307,9 +306,10 @@ public abstract class ServerEditorPart extends EditorPart {
 			ServerEditorSection section = (ServerEditorSection) iterator.next();
 			try {
 				section.createSection(parent);
-			} catch( RuntimeException re ) {
-				ServerUIPlugin.getInstance().getLog().log(new Status(IStatus.ERROR, 
-						ServerUIPlugin.PLUGIN_ID, re.getLocalizedMessage(), re));
+			} catch (RuntimeException e) {
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE, "Failed to insert editor section: " + id + "\n" + e.getLocalizedMessage(), e);
+				}
 			}
 		}
 	}
