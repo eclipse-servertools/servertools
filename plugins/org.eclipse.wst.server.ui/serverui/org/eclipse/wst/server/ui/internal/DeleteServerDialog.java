@@ -112,23 +112,27 @@ public class DeleteServerDialog extends MessageDialog {
 		// prompt for stopping running servers
 		int size = runningServersList.size();
 		if (size > 0) {
-			checkDeleteRunning = new Button(composite, SWT.CHECK);
-			checkDeleteRunning.setText(Messages.deleteServerDialogRunningServer);
-			checkDeleteRunning.setSelection(true);
+			if (servers.length > 1) {
+				checkDeleteRunning = new Button(composite, SWT.CHECK);
+				checkDeleteRunning.setText(Messages.deleteServerDialogRunningServer);
+				checkDeleteRunning.setSelection(true);
+			}
 			
 			if (runningServerCanStop) {
 				checkDeleteRunningStop = new Button(composite, SWT.CHECK);
 				checkDeleteRunningStop.setText(Messages.deleteServerDialogRunningServerStop);
 				checkDeleteRunningStop.setSelection(true);
 				GridData data = new GridData();
-				data.horizontalIndent = 15;
-				checkDeleteRunningStop.setLayoutData(data);
-				
-				checkDeleteRunning.addSelectionListener(new SelectionAdapter() {
-					public void widgetSelected(SelectionEvent e) {
-						checkDeleteRunningStop.setEnabled(checkDeleteRunning.getSelection());
-					}
-				});
+				if (checkDeleteRunning != null) {
+					// Only indent the checkbox if the delete running servers checkbox is available.
+					data.horizontalIndent = 15;
+					checkDeleteRunning.addSelectionListener(new SelectionAdapter() {
+						public void widgetSelected(SelectionEvent e) {
+							checkDeleteRunningStop.setEnabled(checkDeleteRunning.getSelection());
+						}
+					});
+				}
+				checkDeleteRunningStop.setLayoutData(data);				
 			}
 		}
 		
@@ -140,7 +144,7 @@ public class DeleteServerDialog extends MessageDialog {
 	protected void buttonPressed(int buttonId) {
 		if (buttonId == OK) {
 			final boolean checked = (checkDeleteConfigs != null && checkDeleteConfigs.getSelection());
-			final boolean deleteRunning = (checkDeleteRunning != null && checkDeleteRunning.getSelection());
+			final boolean deleteRunning = (checkDeleteRunning == null || checkDeleteRunning.getSelection());
 			final boolean deleteRunningStop = (checkDeleteRunningStop != null && checkDeleteRunningStop.getSelection());
 			
 			Thread t = new Thread("Delete servers") {
