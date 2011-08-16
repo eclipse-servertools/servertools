@@ -430,6 +430,10 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			return false;
 		}
 		boolean supportsRemote = selectedServerType.supportsRemoteHosts();
+		if (hostname.getText().trim().length() == 0){
+			wizard.setMessage(NLS.bind(Messages.wizEmptyHostName, new Object[0]), IMessageProvider.ERROR);
+			return false;
+		}
 		if(!supportsRemote && !SocketUtil.isLocalhost(hostname.getText())) {
 			wizard.setMessage(NLS.bind(Messages.wizCheckRemoteSupport, new Object[0]), IMessageProvider.ERROR);
 			return false;
