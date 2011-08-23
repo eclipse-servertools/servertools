@@ -95,7 +95,6 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 	protected String serverTypeId;
 	protected boolean includeIncompatible;
 	
-	protected String lastHostname;
 	protected HostnameComposite manualHostComp;
 	IHostnameSelectionListener hostnameListener;
 	protected Label hostnameLabel;
@@ -181,7 +180,6 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		
 		hostnameListener = 	new IHostnameSelectionListener() {
 			public void hostnameSelected(String selectedHostname) {
-				lastHostname = selectedHostname;
 				setHost(selectedHostname);
 			}
 	    };		
@@ -394,7 +392,9 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 	protected void handleHostnameChange(IServerType serverType) {
 
 		wizard.setMessage(null, IMessageProvider.NONE);
-		checkHostAndServerType(serverType);
+		if (!checkHostAndServerType(serverType)) {
+			return;// Host name validation failed, so there is no need to continue handling hostname change event			
+		}
 		loadServerImpl(serverType);
 		
 		if (serverName != null && !serverNameModified) {
@@ -418,12 +418,28 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		}
 	}
 
-	protected void checkHostAndServerType(IServerType selectedServerType){
-		if(selectedServerType != null){
-			boolean supportsRemote = selectedServerType.supportsRemoteHosts();
-			if(!supportsRemote && !SocketUtil.isLocalhost(hostname.getText()))
-				wizard.setMessage(NLS.bind(Messages.wizCheckRemoteSupport, new Object[0]), IMessageProvider.ERROR);
+	/**
+	 * Validates the server's host name<br/>
+	 * @param selectedServerType
+	 * @return The results of validation: <br/>
+	 * <b>false</b> in case when the selected server type does not support remote host and the field "hostname" is not recognized as localhost one.  This method will also return false on an invalid server type.<br/> 
+	 * <b>true</b> in any other case   
+	 */
+	protected boolean checkHostAndServerType(IServerType selectedServerType){
+		if(selectedServerType == null){
+			return false;
 		}
+		boolean supportsRemote = selectedServerType.supportsRemoteHosts();
+		if (hostname.getText().trim().length() == 0){
+			wizard.setMessage(NLS.bind(Messages.wizEmptyHostName, new Object[0]), IMessageProvider.ERROR);
+			return false;
+		}
+		if(!supportsRemote && !SocketUtil.isLocalhost(hostname.getText())) {
+			wizard.setMessage(NLS.bind(Messages.wizCheckRemoteSupport, new Object[0]), IMessageProvider.ERROR);
+			return false;
+		}
+		
+		return true;
 	}
 	
 	/**
@@ -609,6 +625,9 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 				serverName.setText(server.getName());
 				updatingServerName = false;
 			}
+			else {
+				server.setName(serverName.getText());
+			}
 			// Validate if selected module is supported with the selected runtime
 			wizard.setMessage(null, IMessageProvider.NONE);
 			if( module!=null ){
@@ -746,8 +765,13 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 	protected void hostnameChanged(String newHost) {
 		if (newHost == null)
 			return;
-		if (newHost.equals(host))
-			return;
+		/*
+		 * Bug 349434, with the fix in Timer.runTimer, the chance that a new 
+		 * host name is the same as the host name will be very rare. In some  
+		 * cases, it still needs to go through processes such as loadServerImpl. 
+		 * It doesn't worth to handle it differently. Therefore, we are not checking 
+		 * for the same host name in here.
+		 */
 
 		host = newHost;
 		hostnameListener.hostnameSelected(host);

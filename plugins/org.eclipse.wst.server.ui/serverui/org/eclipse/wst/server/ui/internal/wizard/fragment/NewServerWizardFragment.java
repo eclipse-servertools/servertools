@@ -165,9 +165,11 @@ public class NewServerWizardFragment extends WizardFragment {
 					return false;
 				}
 				
-				if(!supportsRemote && !SocketUtil.isLocalhost(manualComp.getCurrentHostname())){
+				if (manualComp.getCurrentHostname().trim().length() == 0){
 					isComplete = false;
-				}if (!manualComp.canSupportModule() ){
+				} else if(!supportsRemote && !SocketUtil.isLocalhost(manualComp.getCurrentHostname())){
+					isComplete = false;
+				} else if (!manualComp.canSupportModule() ){
 					isComplete = false;
 				}
 				else

@@ -407,8 +407,8 @@ public class ServerUtil {
 		}
 
 		while (ServerPlugin.isNameInUse(runtime.getOriginal(), name)) {
-			suffix++;
 			name = NLS.bind(Messages.defaultRuntimeName2, new String[] { typeName, suffix + "" });
+			suffix++;
 		}
 		runtime.setName(name);
 		return suffix;

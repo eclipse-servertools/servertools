@@ -487,7 +487,7 @@ public class NewServerComposite extends Composite {
 
 		GridData data = new GridData(GridData.FILL_BOTH);
 		data.horizontalSpan = 3;
-		data.heightHint = 325;
+		data.heightHint = 360;
 		manualComp.setLayoutData(data);
 	}
 	
