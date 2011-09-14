@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -150,9 +150,9 @@ public class ServerEvent {
 	 * <p>
 	 * This kind can be used to test whether this event is a server event or module event by using
 	 * the following code (the example is checking for the server event):
-	 *    ((getKind() | SERVER_CHANGE) != 0) 
+	 *    ((getKind() & SERVER_CHANGE) != 0) 
 	 * the following code (the example is checking for the module event):
-	 *    ((getKind() | MODULE_CHANGE) != 0) 
+	 *    ((getKind() & MODULE_CHANGE) != 0) 
 	 * 
 	 * @return the kind of the change (<code>XXX_CHANGE</code>
 	 *    constants declared on {@link ServerEvent}
