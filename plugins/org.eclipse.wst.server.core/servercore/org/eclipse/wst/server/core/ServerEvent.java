@@ -224,9 +224,9 @@ public class ServerEvent {
 	 * <p>
 	 * This kind can be used to test whether this event is a server event or module event by using
 	 * the following code (the example is checking for the server event):
-	 *    ((getKind() | SERVER_CHANGE) != 0) 
+	 *    ((getKind() & SERVER_CHANGE) != 0) 
 	 * the following code (the example is checking for the module event):
-	 *    ((getKind() | MODULE_CHANGE) != 0) 
+	 *    ((getKind() & MODULE_CHANGE) != 0) 
 	 * 
 	 * @return the kind of the change (<code>XXX_CHANGE</code>
 	 *    constants declared on {@link ServerEvent}

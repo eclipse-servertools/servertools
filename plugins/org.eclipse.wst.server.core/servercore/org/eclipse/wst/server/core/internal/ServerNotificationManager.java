@@ -108,7 +108,9 @@ public class ServerNotificationManager {
 			boolean isTypeMatch = ((mask & eventKind & ServerEvent.SERVER_CHANGE) != 0) 
 					|| ((mask & eventKind & ServerEvent.MODULE_CHANGE) != 0);
 			// check the kind of change
-			boolean isKindMatch = (mask & eventKind ^ ServerEvent.SERVER_CHANGE ^ ServerEvent.MODULE_CHANGE) != 0;
+			// take out the ServerEvent.SERVER_CHANGE bit and ServerEvent.MODULE_CHANGE bit
+			int kindOnly = (eventKind | ServerEvent.SERVER_CHANGE | ServerEvent.MODULE_CHANGE) ^ ServerEvent.SERVER_CHANGE ^ ServerEvent.MODULE_CHANGE;
+			boolean isKindMatch = (mask & kindOnly) != 0;
 			
 			if (isTypeMatch && isKindMatch) {
 				if (Trace.FINEST) {
