@@ -9,6 +9,9 @@
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.server.core;
+
+import org.eclipse.core.runtime.IStatus;
+
 /**
  * An event fired when a server change or module changes.
  * 
@@ -21,6 +24,7 @@ public class ServerEvent {
 	private int state;
 	private int publishState;
 	private boolean restartState;
+	private IStatus status;
 	
 	/**
 	 * For notification when the state has changed.
@@ -55,6 +59,8 @@ public class ServerEvent {
 	 * @see #getKind()
 	 */
 	public static final int RESTART_STATE_CHANGE = 0x0004;
+	
+	public static final int STATUS_CHANGE = 0x0008;
 	
 	/**
 	 * For event on server changes. This kind is mutually exclusive with <code>MODULE_CHANGE</code>.
@@ -99,6 +105,38 @@ public class ServerEvent {
 		
 		checkKind();
 	}
+	
+	/**
+	 * Create a new server event for server change events.
+	 * 
+	 * @param kind the kind of the change. (<code>XXX_CHANGE</code>). If the kind does not 
+	 *    include the <code>SERVER_CHANGE</code> kind, the SERVER_CHANGE will be added automatically.  
+	 *    constants declared on {@link ServerEvent}
+	 * @param server the server that the server event takes place
+	 * @param state the server state after the change (<code>STATE_XXX</code>)
+	 *    constants declared on {@link IServer}
+	 * @param publishingState the server publishing state after the 
+	 *    change (<code>PUBLISH_STATE_XXX</code>)
+	 *    constants declared on {@link IServer}
+	 * @param restartState get the server restart state after the server is restart 
+	 *    needed property change event
+	 * @param status the server status after the change
+	 */
+	public ServerEvent(int kind, IServer server, int state, int publishingState, boolean restartState, IStatus status) {
+		this.kind = kind |= SERVER_CHANGE;
+		this.server = server;
+		this.state = state;
+		this.publishState = publishingState;
+		this.restartState = restartState;
+		this.status = status;
+		
+		if (server == null)
+			throw new IllegalArgumentException("Server parameter must not be null");
+		if ((kind & MODULE_CHANGE) != 0)
+			throw new IllegalArgumentException("Kind parameter invalid");
+		
+		checkKind();
+	}
 
 	/**
 	 * Create a new ServerEvent for module change events.
@@ -131,6 +169,40 @@ public class ServerEvent {
 		
 		checkKind();
 	}
+	
+	/**
+	 * Create a new ServerEvent for module change events.
+	 * 
+	 * @param kind the kind of the change. (<code>XXX_CHANGE</code>). If the kind does not 
+	 *    include the <code>MODULE_CHANGE</code> kind, the MODULE_CHANGE will be added automatically.  
+	 *    constants declared on {@link ServerEvent}
+	 * @param server the server that the module event takes place
+	 * @param module the module that has changed
+	 * @param state the module state after the change (<code>STATE_XXX</code>)
+	 *    constants declared on {@link IServer}
+	 * @param publishingState the module publishing state after the 
+	 *    change (<code>PUBLISH_STATE_XXX</code>)
+	 *    constants declared on {@link IServer}
+	 * @param restartState get the module restart state after the module is restart 
+	 *    needed property change event.
+	 * @param status the module status after the change
+	 */
+	public ServerEvent(int kind, IServer server, IModule[] module, int state, int publishingState, boolean restartState, IStatus status) {
+		this.kind = kind |= MODULE_CHANGE;
+		this.server = server;
+		this.moduleTree = module;
+		this.state = state;
+		this.publishState = publishingState;
+		this.restartState = restartState;
+		this.status = status;
+		
+		if (moduleTree == null || moduleTree.length == 0)
+			throw new IllegalArgumentException("Module parameter invalid");
+		if ((kind & SERVER_CHANGE) != 0)
+			throw new IllegalArgumentException("Kind parameter invalid");
+		
+		checkKind();
+	}
 
 	private void checkKind() {
 		int i = 0;
@@ -140,6 +212,8 @@ public class ServerEvent {
 			i++;
 		if ((kind & PUBLISH_STATE_CHANGE) != 0)
 			i++;
+		if ((kind & STATUS_CHANGE) != 0)
+			i++;		
 		
 		if (i != 0 && i != 1)
 			throw new IllegalArgumentException("Kind parameter invalid");
@@ -213,6 +287,19 @@ public class ServerEvent {
 	}
 	
 	/**
+	 * Get the status after the change that triggers this server event. If this event 
+	 * is of the SERVER_CHANGE kind, then the status is the server status.
+	 * If this event is of the MODULE_CHANGE kind, then the status is the module
+	 * status.
+	 * 
+	 * @return the server state after the change (<code>STATE_XXX</code>)
+	 *    constants declared on {@link IServer}
+	 */
+	public IStatus getStatus() {
+		return status;
+	}
+	
+	/**
 	 * Returns the server involved in the change event.
 	 * 
 	 * @return the server involved in the change event.
@@ -233,6 +320,7 @@ public class ServerEvent {
 				+ " state="+getState()
 				+ " publishState="+getPublishState()
 				+ " restartState="+getRestartState()
+				+ " status="+getStatus()
 				+ ">";
 	}
 }

@@ -698,6 +698,23 @@ public class Server extends Base implements IServer {
 			new ServerEvent(ServerEvent.SERVER_CHANGE | ServerEvent.RESTART_STATE_CHANGE, this, getServerState(), 
 				getServerPublishState(), getServerRestartState()));
 	}
+	
+	/**
+	 * Fire a server listener server status change event
+	 */
+	protected void fireServerStatusChangeEvent() {
+		if (Trace.LISTENERS) {
+			Trace.trace(Trace.STRING_LISTENERS, "->- Firing server status change event: " + getName() + ", "
+					+ getServerStatus() + " ->-");
+		}
+		
+		if (notificationManager == null || notificationManager.hasNoListeners())
+			return;
+		
+		notificationManager.broadcastChange(
+			new ServerEvent(ServerEvent.SERVER_CHANGE | ServerEvent.STATUS_CHANGE, this, getServerState(), 
+				getServerPublishState(), getServerRestartState(), getServerStatus()));
+	}
 
 	/**
 	 * Fire a server listener state change event.
@@ -748,6 +765,24 @@ public class Server extends Base implements IServer {
 		notificationManager.broadcastChange(
 			new ServerEvent(ServerEvent.MODULE_CHANGE | ServerEvent.STATE_CHANGE, this, module, getModuleState(module), 
 				getModulePublishState(module), getModuleRestartState(module)));
+	}
+	
+
+	/**
+	 * Fire a server listener module status change event.
+	 */
+	protected void fireModuleStatusChangeEvent(IModule[] module) {
+		if (Trace.LISTENERS) {
+			Trace.trace(Trace.STRING_LISTENERS, "->- Firing module status change event: " + getName() + ", "
+					+ getModuleStatus(module) + " ->-");
+		}
+		
+		if (notificationManager == null || notificationManager.hasNoListeners())
+			return;
+		
+		notificationManager.broadcastChange(
+			new ServerEvent(ServerEvent.MODULE_CHANGE | ServerEvent.STATUS_CHANGE, this, module, getModuleState(module), 
+				getModulePublishState(module), getModuleRestartState(module), getModuleStatus(module)));
 	}
 
 	/**
@@ -2962,7 +2997,7 @@ public class Server extends Base implements IServer {
 		if (module == null || module.length == 0)
 			throw new IllegalArgumentException("Module cannot be null or empty");
 		moduleStatus.put(getKey(module), status);
-		//fireServerModuleStateChangeEvent(module);
+		fireModuleStatusChangeEvent(module);
 	}
 
 	public IStatus getModuleStatus(IModule[] module) {
@@ -2977,7 +3012,7 @@ public class Server extends Base implements IServer {
 
 	public void setServerStatus(IStatus status) {
 		serverStatus = status;
-		//fireServerStateChangeEvent();
+		fireServerStatusChangeEvent();
 	}
 
 	public IStatus getServerStatus() {
