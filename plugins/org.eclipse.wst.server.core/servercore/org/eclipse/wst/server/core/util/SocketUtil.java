@@ -37,7 +37,7 @@ public class SocketUtil {
 
 	protected static final Object lock = new Object();
 
-	private static Set<String> localHostCache = new HashSet<String>();
+	protected static Set<String> localHostCache = new HashSet<String>();
 	private static Set<String> notLocalHostCache = new HashSet<String>();
 	private static Map<String, CacheThread> threadMap = new HashMap<String, CacheThread>();
 
@@ -258,7 +258,7 @@ public class SocketUtil {
 	 * </p><p>
 	 * On machines where the network configuration of the machine is bad or the
 	 * network has problems, the first call to this method will always return after
-	 * 250ms, even if the caching is not complete. At that point it may return
+	 * 350ms, even if the caching is not complete. At that point it may return
 	 * "false negative" results. (i.e. the method will return <code>false</code>
 	 * even though it may later determine that the host address is a local host)
 	 * </p><p>
@@ -293,7 +293,6 @@ public class SocketUtil {
 		try {
 			localHostaddr = InetAddress.getLocalHost();
 			if (host.equals(localHostaddr.getHostName().toLowerCase())
-					|| host.equals(localHostaddr.getCanonicalHostName().toLowerCase())
 					|| host.equals(localHostaddr.getHostAddress().toLowerCase())){
 				synchronized (lock) {
 					localHostCache.add(host);
@@ -304,6 +303,39 @@ public class SocketUtil {
 			if (Trace.WARNING) {
 				Trace.trace(Trace.STRING_WARNING, "Localhost caching failure", e);
 			}
+		}
+		
+		// Bug 337763 - the InetAddress's getCanonicalHostName was removed from the simple case
+		// to be called in its own separate thread. This was due to the call being platform
+		// dependent and in some cases, taking up to 10 seconds to return. 
+		// 
+		// The cached thread may perform operations that are expensive. Therefore, to handle
+		// the case where the canonical host name returns quickly, a thread that terminates 
+		// after 100ms is used.
+		try {
+			final String hostFinal = host;
+			final InetAddress localHostaddrFinal = localHostaddr;
+			Thread compareCanonicalHostNameThread = new Thread(){
+				public void run(){
+					boolean isLocal = 
+						hostFinal.equals(localHostaddrFinal.getCanonicalHostName().toLowerCase());					
+					if (isLocal){
+						synchronized (lock) {
+							localHostCache.add(hostFinal);
+						}
+					}
+				}
+			};
+			compareCanonicalHostNameThread.start();
+			compareCanonicalHostNameThread.join(100);
+			// Check cache again
+			if (localHostCache.contains(host)){
+				return true;
+			}
+		} catch (Exception e){
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Comparing host with local host conical host name failed", e);
+			}			
 		}
 		
 		// check for current thread and wait if necessary
