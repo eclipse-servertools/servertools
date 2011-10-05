@@ -55,6 +55,7 @@
       <complexType>
          <sequence>
             <element ref="moduleType" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="enablement" minOccurs="0" maxOccurs="1"/>
          </sequence>
          <attribute name="id" type="string" use="required">
             <annotation>
