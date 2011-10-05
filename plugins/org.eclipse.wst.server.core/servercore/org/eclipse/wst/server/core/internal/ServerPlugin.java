@@ -1503,6 +1503,12 @@ public class ServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "saveEditorPrompter");
 		
 		int size = cf.length;
+		if (size == 0) {
+			if (Trace.EXTENSION_POINT) {
+				Trace.trace(Trace.STRING_EXTENSION_POINT, "  No .saveEditorPrompter is found.");
+			}
+			return;
+		}
 		try{
 			saveEditorPrompter = (SaveEditorPrompter)cf[0].createExecutableExtension("class");
 			if (Trace.EXTENSION_POINT) {
@@ -1516,7 +1522,7 @@ public class ServerPlugin extends Plugin {
 								+ cf[0].getAttribute("id"), ce);
 			}			
 		}
-		if (size < 1) {
+		if (size > 1) {
 			if (Trace.WARNING) {
 				Trace.trace(Trace.STRING_WARNING, "  More than one .saveEditorPrompter found, only one loaded =>"
 						+ cf[0].getAttribute("id"));
@@ -1526,8 +1532,5 @@ public class ServerPlugin extends Plugin {
 		if (Trace.EXTENSION_POINT) {
 			Trace.trace(Trace.STRING_EXTENSION_POINT, "-<- Done loading .saveEditorPrompter extension point -<-");
 		}
-		
 	}
-	
-	
 }
