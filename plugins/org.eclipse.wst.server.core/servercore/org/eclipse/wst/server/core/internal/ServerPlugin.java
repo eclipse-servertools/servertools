@@ -1507,28 +1507,27 @@ public class ServerPlugin extends Plugin {
 			if (Trace.EXTENSION_POINT) {
 				Trace.trace(Trace.STRING_EXTENSION_POINT, "  No .saveEditorPrompter is found.");
 			}
-			return;
-		}
-		try{
-			saveEditorPrompter = (SaveEditorPrompter)cf[0].createExecutableExtension("class");
-			if (Trace.EXTENSION_POINT) {
-				Trace.trace(Trace.STRING_EXTENSION_POINT, "  Loaded saveEditorPrompter: " + cf[0].getAttribute("id"));
+		} else {
+			try{
+				saveEditorPrompter = (SaveEditorPrompter)cf[0].createExecutableExtension("class");
+				if (Trace.EXTENSION_POINT) {
+					Trace.trace(Trace.STRING_EXTENSION_POINT, "  Loaded saveEditorPrompter: " + cf[0].getAttribute("id"));
+				}
+			} catch (CoreException ce){
+				if (Trace.SEVERE) {
+					Trace.trace(
+							Trace.STRING_SEVERE,
+							"  Could not load saveEditorPrompter: "
+									+ cf[0].getAttribute("id"), ce);
+				}			
 			}
-		} catch (CoreException ce){
-			if (Trace.SEVERE) {
-				Trace.trace(
-						Trace.STRING_SEVERE,
-						"  Could not load saveEditorPrompter: "
-								+ cf[0].getAttribute("id"), ce);
-			}			
-		}
-		if (size > 1) {
-			if (Trace.WARNING) {
-				Trace.trace(Trace.STRING_WARNING, "  More than one .saveEditorPrompter found, only one loaded =>"
-						+ cf[0].getAttribute("id"));
+			if (size > 1) {
+				if (Trace.WARNING) {
+					Trace.trace(Trace.STRING_WARNING, "  More than one .saveEditorPrompter found, only one loaded =>"
+							+ cf[0].getAttribute("id"));
+				}
 			}
 		}
-		
 		if (Trace.EXTENSION_POINT) {
 			Trace.trace(Trace.STRING_EXTENSION_POINT, "-<- Done loading .saveEditorPrompter extension point -<-");
 		}
