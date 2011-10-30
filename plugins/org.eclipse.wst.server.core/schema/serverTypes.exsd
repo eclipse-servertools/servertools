@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.wst.server.core" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="org.eclipse.wst.server.core">
 <annotation>
       <appInfo>
          <meta.schema plugin="org.eclipse.wst.server.core" id="serverTypes" name="Server Types"/>
@@ -11,11 +11,6 @@
    </annotation>
 
    <element name="extension">
-      <annotation>
-         <appInfo>
-            <meta.element />
-         </appInfo>
-      </annotation>
       <complexType>
          <sequence>
             <element ref="serverType" minOccurs="1" maxOccurs="unbounded"/>
@@ -170,13 +165,6 @@ Server instances of this type will delegate to instances of this class. Delegate
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="synchronousStart" type="boolean">
-            <annotation>
-               <documentation>
-                  boolean value &quot;true&quot; or &quot;false&quot; to specify whether the server needs to be started synchronously. If &quot;true&quot;, the server will execute publish and start jobs serially.
-               </documentation>
-            </annotation>
-         </attribute>
       </complexType>
    </element>
 
@@ -227,6 +215,14 @@ Value of the attribute &lt;b&gt;behaviourClass&lt;/b&gt; must be a fully qualifi
       </documentation>
    </annotation>
 
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
 
    <annotation>
       <appInfo>
