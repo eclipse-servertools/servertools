@@ -178,7 +178,9 @@ public class ServerActionProvider extends CommonActionProvider {
 
 		IServer server = null;
 		IModule[] module = null;
+		ArrayList<IModule> multipleModulesOnOneServer = null;
 		if (selection != null && !selection.isEmpty()) {
+			multipleModulesOnOneServer = getMultipleModulesOnOneServer(selection);
 			Iterator iterator = selection.iterator();
 			Object obj = iterator.next();
 			if (obj instanceof IServer)
@@ -232,6 +234,11 @@ public class ServerActionProvider extends CommonActionProvider {
 				menu.add(new RemoveModuleAction(shell, server, module[0]));
 			}
 			menu.add(invisibleSeparator(CONTROL_MODULE_SECTION_END_SEPARATOR));
+		} else if( server == null && module == null && multipleModulesOnOneServer != null) {
+			server = selection.getFirstElement() == null ? null : ((ModuleServer)selection.getFirstElement()).getServer();
+			menu.add(invisibleSeparator(CONTROL_MODULE_SECTION_START_SEPARATOR));
+			menu.add(new RemoveModuleAction(shell, server, multipleModulesOnOneServer.toArray(new IModule[multipleModulesOnOneServer.size()])));
+			menu.add(invisibleSeparator(CONTROL_MODULE_SECTION_END_SEPARATOR));
 		}
 	
 		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
@@ -239,6 +246,15 @@ public class ServerActionProvider extends CommonActionProvider {
 		menu.add(propertiesAction);
 	}
 
+	/*
+	 * If the selection is several modules under one server, return
+	 * the list of ModuleServer[] objects
+	 */
+	protected ArrayList<IModule> getMultipleModulesOnOneServer(IStructuredSelection selection) {
+		return GlobalDeleteAction.getRemovableModuleList(selection);
+	}
+
+	
 	protected void addTopSection(IMenuManager menu, IServer server, IModule[] module) {
 		MenuManager newMenu = new MenuManager(Messages.actionNew, NEW_MENU_ID);
 		IAction newServerAction = new NewServerWizardAction();

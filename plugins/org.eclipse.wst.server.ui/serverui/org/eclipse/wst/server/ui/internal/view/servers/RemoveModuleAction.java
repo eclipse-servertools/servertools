@@ -32,7 +32,7 @@ import org.eclipse.wst.server.ui.internal.Trace;
  */
 public class RemoveModuleAction extends Action {
 	protected IServer server;
-	protected IModule module;
+	protected IModule[] module;
 	protected Shell shell;
 	CoreException saveServerException = null;
 
@@ -44,6 +44,17 @@ public class RemoveModuleAction extends Action {
 	 * @param module a module
 	 */
 	public RemoveModuleAction(Shell shell, IServer server, IModule module) {
+		this(shell, server, new IModule[] {module});
+	}
+	
+	/**
+	 * RemoveModuleAction constructor.
+	 * 
+	 * @param shell a shell
+	 * @param server a server
+	 * @param module a list of module items, used for removing multiple different modules
+	 */
+	public RemoveModuleAction(Shell shell, IServer server, IModule[] module) {
 		super(Messages.actionRemove);
 		this.shell = shell;
 		ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
@@ -58,7 +69,14 @@ public class RemoveModuleAction extends Action {
 	 * Invoked when an action occurs. 
 	 */
 	public void run() {
-		if (MessageDialog.openConfirm(shell, Messages.defaultDialogTitle, Messages.dialogRemoveModuleConfirm)) {
+		String message = module.length == 1 ? Messages.dialogRemoveModuleConfirm : Messages.dialogRemoveModulesConfirm;
+		if (MessageDialog.openConfirm(shell, Messages.defaultDialogTitle, message)) {
+			for( int i = 0; i < module.length; i++ ) 
+				handleRemoveOneModule(module[i]);
+		}
+	}
+	
+	protected void handleRemoveOneModule(final IModule mod) {
 			try {
 				final ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
 				dialog.setBlockOnOpen(false);
@@ -70,7 +88,7 @@ public class RemoveModuleAction extends Action {
 							if (monitor.isCanceled()) {
 								return;
 							}
-							wc.modifyModules(null, new IModule[] { module }, monitor);
+							wc.modifyModules(null, new IModule[] { mod }, monitor);
 							if (monitor.isCanceled()) {
 								return;
 							}
@@ -110,6 +128,5 @@ public class RemoveModuleAction extends Action {
 					Trace.trace(Trace.STRING_WARNING, "Could not remove module", e);
 				}
 			}
-		}
 	}
 }
