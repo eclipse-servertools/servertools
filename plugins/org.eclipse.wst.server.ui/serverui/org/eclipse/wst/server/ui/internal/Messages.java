@@ -139,6 +139,7 @@ public class Messages extends NLS {
 	public static String actionDelete;
 	public static String actionRemove;
 	public static String dialogRemoveModuleConfirm;
+	public static String dialogRemoveModulesConfirm;
 	public static String terminateServerDialogTitle;
 	public static String actionDebugOnServer;
 	public static String actionProfileOnServer;

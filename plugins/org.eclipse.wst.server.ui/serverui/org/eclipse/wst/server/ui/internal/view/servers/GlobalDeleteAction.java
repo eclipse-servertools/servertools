@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -122,35 +122,55 @@ public class GlobalDeleteAction extends SelectionProviderAction {
 
 	@Override
 	public void run() {		
-		IServer server = null;
-		IModule[] moduleArray = null;
-		
 		IStructuredSelection sel = getStructuredSelection();
 		// filter the selection
 		if (!sel.isEmpty()) {
-			Iterator iterator = sel.iterator();
-			Object obj = iterator.next();
-			if (obj instanceof IServer)
-				server = (IServer) obj;
-			if (obj instanceof ModuleServer) {
-				ModuleServer ms = (ModuleServer) obj;
-				server = ms.server; 
-				moduleArray = ms.module;
-			}
-			// avoid no selection or multiple selection
-			if (iterator.hasNext()) {
-				server = null;
-				moduleArray = null;
+			Object firstElement = sel.getFirstElement();
+			if( sel.size() == 1 && firstElement instanceof IServer) {
+				deleteServer((IServer)firstElement);
+			} else {
+				ArrayList<IModule> moduleList = getRemovableModuleList(sel);
+				if( moduleList != null ) {
+					IServer s = ((ModuleServer)firstElement).getServer();
+					IModule[] asArray = moduleList.toArray(new IModule[moduleList.size()]);
+					new RemoveModuleAction(shell, s, asArray).run();
+				}
 			}
 		}
-		
-		// Perform actions
-		if (server != null && moduleArray == null)
-			deleteServer(server);
-		
-		if (moduleArray != null && moduleArray.length == 1) 
-			new RemoveModuleAction(shell, server, moduleArray[0]).run();
-		
+	}
+	
+	/*
+	 * Return an arraylist of all IModules from this selection that 
+	 * should be deleted, or null if the selection is invalid or requires
+	 * no action be taken. 
+	 */
+	public static ArrayList<IModule> getRemovableModuleList(IStructuredSelection sel) {
+		Iterator i = sel.iterator();
+		IServer s = null;
+		Object next = null;
+		ArrayList<IModule> moduleList = new ArrayList<IModule>();
+		while(i.hasNext()) {
+			next = i.next();
+			// If there is anything *not* a ModuleServer in the selection, do nothing
+			if( !(next instanceof ModuleServer) || ((ModuleServer)next).getServer() == null) {
+				return null;
+			}
+			if( s == null )
+				s = ((ModuleServer)next).getServer();
+			else if( !s.getId().equals(((ModuleServer)next).getServer().getId()))
+				// Requests to remove modules under different servers should be ignored
+				return null;  
+			
+			IModule[] nextMod = ((ModuleServer)next).getModule();
+			if( nextMod == null || nextMod.length != 1 || nextMod[0] == null) 
+				// If the module is a child module (ejb / war underneath an ear) ignore this request
+				return null; 
+			
+			// Add the item to the list of removable modules
+			moduleList.add(((ModuleServer)next).getModule()[0]);
+		}
+		// All modules are under the same server and may be removed. 
+		return moduleList;
 	}
 	
 	protected void deleteServer(IServer server){
