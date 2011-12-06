@@ -17,12 +17,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.mortbay.jetty.HttpConnection;
-import org.mortbay.jetty.MimeTypes;
-import org.mortbay.jetty.Request;
-import org.mortbay.jetty.handler.AbstractHandler;
-import org.mortbay.util.ByteArrayISO8859Writer;
-import org.mortbay.util.StringUtil;
+import org.eclipse.jetty.server.HttpConnection;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.util.ByteArrayISO8859Writer;
+import org.eclipse.jetty.util.StringUtil;
 
 public class WTPDefaultHandler extends AbstractHandler {
 	protected int port;

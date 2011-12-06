@@ -16,10 +16,10 @@ import java.io.Writer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.mortbay.jetty.HttpConnection;
-import org.mortbay.jetty.Request;
-import org.mortbay.jetty.handler.ErrorHandler;
-import org.mortbay.util.StringUtil;
+import org.eclipse.jetty.server.HttpConnection;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.ErrorHandler;
+import org.eclipse.jetty.util.StringUtil;
 
 public class WTPErrorHandler extends ErrorHandler {
 	private static final long serialVersionUID = 1L;

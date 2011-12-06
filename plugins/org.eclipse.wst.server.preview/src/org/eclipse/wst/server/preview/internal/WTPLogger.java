@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.preview.internal;
 
-import org.mortbay.log.Logger;
+import org.eclipse.jetty.util.log.Logger;
 
 public class WTPLogger implements Logger {
 	protected boolean debug = false;

@@ -12,9 +12,9 @@ package org.eclipse.wst.server.preview.internal;
 
 import java.io.File;
 
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.handler.HandlerList;
-import org.mortbay.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.webapp.WebAppContext;
 
 public class PreviewStarter {
 	protected String configPath;

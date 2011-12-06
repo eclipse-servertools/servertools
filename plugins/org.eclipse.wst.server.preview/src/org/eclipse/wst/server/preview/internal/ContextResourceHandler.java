@@ -12,8 +12,8 @@ package org.eclipse.wst.server.preview.internal;
 
 import java.net.MalformedURLException;
 
-import org.mortbay.jetty.handler.ResourceHandler;
-import org.mortbay.resource.Resource;
+import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.util.resource.Resource;
 
 public class ContextResourceHandler extends ResourceHandler {
 	protected String context;
