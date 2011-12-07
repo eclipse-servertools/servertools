@@ -1,1 +1,0 @@
-This bundle was used during development of the preview server and never shipped in WTP. 
