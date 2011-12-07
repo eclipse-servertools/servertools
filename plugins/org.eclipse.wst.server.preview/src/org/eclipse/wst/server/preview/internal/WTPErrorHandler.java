@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,10 +24,12 @@ import org.eclipse.jetty.util.StringUtil;
 public class WTPErrorHandler extends ErrorHandler {
 	private static final long serialVersionUID = 1L;
 
-	public void handle(String target, HttpServletRequest request, HttpServletResponse response, int dispatch) throws IOException {
-		super.handle(target, request, response, dispatch);
-		Request base_request = request instanceof Request?(Request)request:HttpConnection.getCurrentConnection().getRequest();
-		base_request.setHandled(true);
+  public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		super.handle(target, baseRequest, request, response);
+		if (baseRequest == null) {
+			baseRequest = request instanceof Request?(Request)request:HttpConnection.getCurrentConnection().getRequest();
+		}
+		baseRequest.setHandled(true);
 	}
 
 	protected void writeErrorPageBody(HttpServletRequest request, Writer writer, int code, String message, boolean showStacks)

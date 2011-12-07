@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008,2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.eclipse.jetty.http.MimeTypes;
 import org.eclipse.jetty.server.HttpConnection;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
@@ -32,13 +33,14 @@ public class WTPDefaultHandler extends AbstractHandler {
 		this.modules = modules;
 	}
 
-	public void handle(String target, HttpServletRequest request, HttpServletResponse response,
-			int dispatch) throws IOException, ServletException {
-		Request base_request = request instanceof Request?(Request)request:HttpConnection.getCurrentConnection().getRequest();
-		
-		if (response.isCommitted() || base_request.isHandled())
+	public void handle(String target, Request baseRequest, HttpServletRequest request,
+      HttpServletResponse response) throws IOException, ServletException {
+		if (baseRequest == null) {
+			baseRequest = request instanceof Request?(Request)request:HttpConnection.getCurrentConnection().getRequest();
+		}
+		if (response.isCommitted() || baseRequest.isHandled())
 			return;
-		base_request.setHandled(true);
+		baseRequest.setHandled(true);
 		
 		response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 		response.setContentType(MimeTypes.TEXT_HTML);
@@ -72,4 +74,5 @@ public class WTPDefaultHandler extends AbstractHandler {
 		writer.writeTo(out);
 		out.close();
 	}
+
 }
