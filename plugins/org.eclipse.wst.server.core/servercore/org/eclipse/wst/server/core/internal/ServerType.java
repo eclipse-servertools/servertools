@@ -70,6 +70,14 @@ public class ServerType implements IServerType {
 		}
 	}
 
+	public boolean synchronousStart() {
+		try {
+			return "true".equals(element.getAttribute("synchronousStart"));
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
 	public String getDescription() {
 		try {
 			return element.getAttribute("description");

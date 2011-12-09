@@ -1979,7 +1979,8 @@ public class Server extends Base implements IServer {
 		// make sure that the delegate is loaded and the server state is correct
 		loadAdapter(ServerBehaviourDelegate.class, null);
 		
-		IStatus status = publishBeforeStart(monitor,false);
+		boolean synchronous = ((ServerType)getServerType()).synchronousStart();
+		IStatus status = publishBeforeStart(monitor,synchronous);
 		
 		if (status != null && status.getSeverity() == IStatus.ERROR){
 			if (Trace.FINEST) {
@@ -1991,6 +1992,7 @@ public class Server extends Base implements IServer {
 		StartJob startJob = new StartJob(mode2);
 		// 287442 - only do publish after start if the server start is successful.
 		final IProgressMonitor monitor2 = monitor; 
+		final boolean synchronous2 = synchronous;
 		startJob.addJobChangeListener(new JobChangeAdapter() {
 			public void done(IJobChangeEvent event) {
 				IStatus resultStatus = event.getResult();
@@ -2000,11 +2002,19 @@ public class Server extends Base implements IServer {
 								"Skipping auto publish after server start since the server start failed.");
 					}
 				} else {
-					publishAfterStart(monitor2,false,null);
+					publishAfterStart(monitor2,synchronous2,null);
 				}
 			}
 		});
 		startJob.schedule();
+		try {
+			if(synchronous)
+				startJob.join();
+		} catch (InterruptedException e) {
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Error waiting for job", e);
+			}
+		}
 	}
 	
 	/**
@@ -2020,7 +2030,8 @@ public class Server extends Base implements IServer {
 		// make sure that the delegate is loaded and the server state is correct
 		loadAdapter(ServerBehaviourDelegate.class, null);
 		
-		IStatus status = publishBeforeStart(null,false);
+		boolean synchronous = ((ServerType)getServerType()).synchronousStart();
+		IStatus status = publishBeforeStart(null,synchronous);
 		
 		if (status != null && status.getSeverity() == IStatus.ERROR){
 			if (Trace.FINEST) {
@@ -2053,6 +2064,7 @@ public class Server extends Base implements IServer {
 			});
 		}
 		// 287442 - only do publish after start if the server start is successful.
+		final boolean synchronous2 = synchronous;
 		if (pub == StartJob.PUBLISH_AFTER) {
 			startJob.addJobChangeListener(new JobChangeAdapter() {
 				public void done(IJobChangeEvent event) {
@@ -2067,12 +2079,21 @@ public class Server extends Base implements IServer {
 							opListener.done(Status.OK_STATUS);
 					}
 					else {
-						publishAfterStart(null,false,opListener);
+						publishAfterStart(null,synchronous2,opListener);
 					}
 				}
 			});
 		}
 		startJob.schedule();
+		
+		try {
+			if(synchronous)
+				startJob.join();
+		} catch (InterruptedException e) {
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Error waiting for job", e);
+			}
+		}
 	}
 
 	public void synchronousStart(String mode2, IProgressMonitor monitor) throws CoreException {
