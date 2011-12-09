@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.http.MimeTypes;
-import org.eclipse.jetty.server.HttpConnection;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.util.ByteArrayISO8859Writer;
@@ -35,9 +34,6 @@ public class WTPDefaultHandler extends AbstractHandler {
 
 	public void handle(String target, Request baseRequest, HttpServletRequest request,
       HttpServletResponse response) throws IOException, ServletException {
-		if (baseRequest == null) {
-			baseRequest = request instanceof Request?(Request)request:HttpConnection.getCurrentConnection().getRequest();
-		}
 		if (response.isCommitted() || baseRequest.isHandled())
 			return;
 		baseRequest.setHandled(true);

@@ -16,7 +16,6 @@ import java.io.Writer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.jetty.server.HttpConnection;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.ErrorHandler;
 import org.eclipse.jetty.util.StringUtil;
@@ -26,9 +25,6 @@ public class WTPErrorHandler extends ErrorHandler {
 
   public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		super.handle(target, baseRequest, request, response);
-		if (baseRequest == null) {
-			baseRequest = request instanceof Request?(Request)request:HttpConnection.getCurrentConnection().getRequest();
-		}
 		baseRequest.setHandled(true);
 	}
 
