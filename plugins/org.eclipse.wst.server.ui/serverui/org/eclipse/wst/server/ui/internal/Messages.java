@@ -302,6 +302,7 @@ public class Messages extends NLS {
 	public static String serverEditorOverviewServerNameCommand;
 	public static String serverEditorOverviewRuntimeCommand;
 	public static String serverEditorOverviewOpenLaunchConfiguration;
+	public static String serverEditorSaving;
 	public static String errorMissingConfiguration;
 	public static String errorConfigurationNotAccessible;
 	public static String viewStatusStarting4;
@@ -361,7 +362,7 @@ public class Messages extends NLS {
 	public static String audioUnknown;
 	public static String audioNone;
 	public static String audioDefault;
-
+	
 	public static String internalWebBrowserName;
 
 	static {
