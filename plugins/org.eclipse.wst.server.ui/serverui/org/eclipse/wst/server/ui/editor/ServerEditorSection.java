@@ -11,6 +11,7 @@
 package org.eclipse.wst.server.ui.editor;
 
 import org.eclipse.core.commands.operations.IUndoableOperation;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Composite;
@@ -167,6 +168,21 @@ public abstract class ServerEditorSection {
 		return editor.getManagedForm();
 	}
 
+	/**
+	 * Allow a section an opportunity to respond to a doSave request on the editor.
+	 * @param monitor the progress monitor for the save operation.
+	 */
+	public void doSave(IProgressMonitor monitor) {
+		monitor.worked(100);
+	}
+
+	/**
+	 * Allow a section an opportunity to respond to a doSaveAs request on the editor.
+	 */
+	public void doSaveAs() {
+		// do nothing
+	}
+	
 	/**
 	 * Disposes of the section.
 	 */

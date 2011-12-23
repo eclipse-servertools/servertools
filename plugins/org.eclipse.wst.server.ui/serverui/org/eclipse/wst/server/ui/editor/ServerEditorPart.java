@@ -15,6 +15,7 @@ import java.util.*;
 import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
@@ -23,6 +24,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.editor.*;
 /**
@@ -69,14 +71,21 @@ public abstract class ServerEditorPart extends EditorPart {
 	 * @see org.eclipse.ui.IEditorPart#doSave(IProgressMonitor)
 	 */
 	public void doSave(IProgressMonitor monitor) {
-		// do nothing
+		List<ServerEditorSection> curSections = getSections();
+		int ticks = 100;
+		monitor.beginTask(Messages.savingTask, curSections.size() * ticks);
+		for (ServerEditorSection section: curSections) {
+			section.doSave(new SubProgressMonitor(monitor, ticks));
+		}
 	}
 
 	/**
 	 * @see org.eclipse.ui.IEditorPart#doSaveAs()
 	 */
 	public void doSaveAs() {
-		// do nothing
+		for (ServerEditorSection section: getSections()) {
+			section.doSaveAs();
+		}
 	}
 
 	/**
@@ -193,7 +202,7 @@ public abstract class ServerEditorPart extends EditorPart {
 		return status;
 	}
 
-	private List getSections() {
+	private List<ServerEditorSection> getSections() {
 		if (sections == null) {
 			sections = new ArrayList<ServerEditorSection>();
 			sectionToInsertionId = new HashMap<String, List<ServerEditorSection>>();
