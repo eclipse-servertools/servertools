@@ -71,6 +71,9 @@ public abstract class ServerEditorPart extends EditorPart {
 	 * @see org.eclipse.ui.IEditorPart#doSave(IProgressMonitor)
 	 */
 	public void doSave(IProgressMonitor monitor) {
+		if (monitor == null) 
+			return;
+		
 		List<ServerEditorSection> curSections = getSections();
 		int ticks = 100;
 		monitor.beginTask(Messages.savingTask, curSections.size() * ticks);
