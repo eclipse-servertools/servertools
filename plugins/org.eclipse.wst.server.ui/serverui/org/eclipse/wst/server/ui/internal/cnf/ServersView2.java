@@ -20,12 +20,21 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.contexts.IContextService;
+import org.eclipse.ui.forms.widgets.Form;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
+import org.eclipse.ui.part.PageBook;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.internal.UpdateServerJob;
@@ -33,6 +42,7 @@ import org.eclipse.wst.server.core.util.PublishAdapter;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerToolTip;
 import org.eclipse.wst.server.ui.internal.Trace;
+import org.eclipse.wst.server.ui.internal.wizard.NewServerWizard;
 /**
  * A view of servers, their modules, and status.
  */
@@ -40,6 +50,9 @@ public class ServersView2 extends CommonNavigator {
 	private static final String SERVERS_VIEW_CONTEXT = "org.eclipse.ui.serverViewScope";
 	
 	protected CommonViewer tableViewer;
+	private Control mainPage;
+	private Control noServersPage;
+	PageBook book;
 	
 	protected IServerLifecycleListener serverResourceListener;
 	protected IPublishListener publishListener;
@@ -60,12 +73,61 @@ public class ServersView2 extends CommonNavigator {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		super.createPartControl(parent);
+		// Add PageBook as parent composite
+		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
+		book = new PageBook(parent, SWT.NONE);
+		super.createPartControl(book);
+		// Main page for the Servers tableViewer
+		mainPage = getCommonViewer().getControl();
+		// Page prompting to define a new server
+		noServersPage = createDefaultPage(toolkit); 
+		book.showPage(mainPage);
 
 		IContextService contextSupport = (IContextService)getSite().getService(IContextService.class);
 		contextSupport.activateContext(SERVERS_VIEW_CONTEXT);
-
 		deferInitialization();
+	}
+
+	/**
+	 * Creates a page displayed when there are no servers defined.
+	 * 
+	 * @param kit
+	 * @return Control
+	 */
+	private Control createDefaultPage(FormToolkit kit){
+		Form form = kit.createForm(book);
+		Composite body = form.getBody();
+    GridLayout layout = new GridLayout(2, false);
+    body.setLayout(layout);
+    
+		Link hlink = new Link(body, SWT.NONE);
+		hlink.setText(Messages.ServersView2_noServers); 
+		hlink.setBackground(book.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+		GridData gd = new GridData(SWT.LEFT, SWT.FILL, true, false);
+		hlink.setLayoutData(gd);
+		hlink.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				NewServerWizard wizard = new NewServerWizard();
+				WizardDialog wd = new WizardDialog(book.getShell(), wizard);
+				if( wd.open() == Window.OK){
+					toggleDefultPage();
+				}
+			}
+		});
+		
+		return form;
+	}
+	
+	/**
+	 * Switch between the servers and default/empty page. 
+	 * 
+	 */
+	void toggleDefultPage(){
+		if(tableViewer.getTree().getItemCount() < 1){
+			book.showPage(noServersPage);
+		} else{
+			book.showPage(mainPage);
+		}
 	}
 
 	private void deferInitialization() {
@@ -121,6 +183,8 @@ public class ServersView2 extends CommonNavigator {
 						if (tableViewer.getTree().getItemCount() > 0) {
 							Object obj = tableViewer.getTree().getItem(0).getData();
 							tableViewer.setSelection(new StructuredSelection(obj));
+						} else{
+							toggleDefultPage();
 						}
 					}
 				});
@@ -267,6 +331,7 @@ public class ServersView2 extends CommonNavigator {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				tableViewer.add(tableViewer.getInput(), server);
+				toggleDefultPage();
 			}
 		});
 	}
@@ -275,6 +340,7 @@ public class ServersView2 extends CommonNavigator {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				tableViewer.remove(server);
+				toggleDefultPage();
 			}
 		});
 	}

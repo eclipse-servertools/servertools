@@ -363,6 +363,8 @@ public class Messages extends NLS {
 
 	public static String internalWebBrowserName;
 
+	public static String ServersView2_noServers;
+
 	static {
 		NLS.initializeMessages(ServerUIPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);
 	}
