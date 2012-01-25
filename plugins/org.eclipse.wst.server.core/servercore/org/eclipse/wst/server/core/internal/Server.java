@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -83,6 +83,9 @@ public class Server extends Base implements IServer {
 
 	// the list of modules that are to be published to the server
 	protected List<IModule> modules;
+	
+	/** A lock that is used to synchronize access to modules. */
+	protected final Object modulesLock = new Object();
 
 	// the list of external modules
 	protected List<IModule> externalModules;
@@ -923,22 +926,28 @@ public class Server extends Base implements IServer {
 		if (getModules().length < 0)
 			return false;
 		
-		// shallow search: check for root modules first
-		boolean deployed = modules.contains(requestedModule);
+		boolean deployed = false;
 		
-		if(!deployed){
-			// deep search: look into all the child modules
-			Iterator<IModule> itr = modules.iterator();
-			while(itr.hasNext() && !deployed){
-				IModule[] m = new IModule[] {itr.next()};
-				deployed = !visitModule(m, new IModuleVisitor(){
-					public boolean visit(IModule[] modules2) {
-						for (int i =0;i<=modules2.length-1;i++){
-							if (modules2[i].equals(requestedModule))
-								return false;
-						}
-						return true;
-				}}, null);
+		synchronized (modulesLock){
+			// shallow search: check for root modules first
+			if (modules != null){
+				deployed = modules.contains(requestedModule);
+			
+				if(!deployed){
+					// deep search: look into all the child modules
+					Iterator<IModule> itr = modules.iterator();
+					while(itr.hasNext() && !deployed){
+						IModule[] m = new IModule[] {itr.next()};
+						deployed = !visitModule(m, new IModuleVisitor(){
+							public boolean visit(IModule[] modules2) {
+								for (int i =0;i<=modules2.length-1;i++){
+									if (modules2[i].equals(requestedModule))
+										return false;
+								}
+								return true;
+						}}, null);
+					}
+				}
 			}
 		}
 		
@@ -2372,7 +2381,9 @@ public class Server extends Base implements IServer {
 		serverSyncState = wc.serverSyncState;
 		//restartNeeded = wc.restartNeeded;
 		serverType = wc.serverType;
-		modules = wc.modules;
+		synchronized(modulesLock){
+			modules = wc.modules;
+		}
 		
 		// can never modify the following properties via the working copy
 		//serverState = wc.serverState;
@@ -2438,13 +2449,26 @@ public class Server extends Base implements IServer {
 	}
 	
 	public void clearModuleCache() {
-		modules = null;
+		synchronized (modulesLock){
+			modules = null;
+		}
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.IServer#getModules()
 	 */
 	public IModule[] getModules() {
+		synchronized (modulesLock){
+			return getModulesWithoutLock();
+		}
+	}
+
+	/* (non-Javadoc)
+	 * The implementation for getModules but this one does not lock the modules object. Caller is responsible for locking the modulesLock
+	 * object when calling this method for thread safe implementation.
+	 * @see org.eclipse.wst.server.core.IServer#getModules()
+	 */
+	protected IModule[] getModulesWithoutLock() {
 		if (modules == null) {
 			// convert from attribute
 			List<String> list = getAttribute(MODULE_LIST, (List<String>) null);

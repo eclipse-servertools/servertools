@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -552,51 +552,53 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			wch.setDirty(true);
 			
 			// trigger load of modules list
-			getModules();
-			
-			if (add != null) {
-				int size = add.length;
-				for (int i = 0; i < size; i++) {
-					if (!modules.contains(add[i])) {
-						modules.add(add[i]);
-						resetState(new IModule[] { add[i] }, monitor);
+			synchronized (modulesLock){
+				getModulesWithoutLock();
+				if (add != null) {
+					int size = add.length;
+					for (int i = 0; i < size; i++) {
+						if (!modules.contains(add[i])) {
+							modules.add(add[i]);
+							resetState(new IModule[] { add[i] }, monitor);
+						}
 					}
 				}
-			}
-			
-			if (remove != null) {
-				int size = remove.length;
-				externalModules = getExternalModules();
-				for (int i = 0; i < size; i++) {
-					if (modules.contains(remove[i])) {
-						modules.remove(remove[i]);
-						resetState(new IModule[] { remove[i] }, monitor);
-					}
-					if (externalModules != null && externalModules.contains(remove[i])) {
-						externalModules.remove(remove[i]);
-						resetState(new IModule[] { remove[i] }, monitor);
+				
+				if (remove != null) {
+					int size = remove.length;
+					externalModules = getExternalModules();
+					for (int i = 0; i < size; i++) {
+						if (modules.contains(remove[i])) {
+							modules.remove(remove[i]);
+							resetState(new IModule[] { remove[i] }, monitor);
+						}
+						if (externalModules != null && externalModules.contains(remove[i])) {
+							externalModules.remove(remove[i]);
+							resetState(new IModule[] { remove[i] }, monitor);
+						}
 					}
 				}
-			}
-			
-			// convert to attribute
-			List<String> list = new ArrayList<String>();
-			Iterator iterator = modules.iterator();
-			while (iterator.hasNext()) {
-				IModule module = (IModule) iterator.next();
-				StringBuffer sb = new StringBuffer(module.getName());
-				sb.append("::");
-				sb.append(module.getId());
-				IModuleType mt = module.getModuleType();
-				if (mt != null) {
+				
+				// convert to attribute
+				List<String> list = new ArrayList<String>();
+				Iterator iterator = modules.iterator();
+				while (iterator.hasNext()) {
+					IModule module = (IModule) iterator.next();
+					StringBuffer sb = new StringBuffer(module.getName());
 					sb.append("::");
-					sb.append(mt.getId());
-					sb.append("::");
-					sb.append(mt.getVersion());
+					sb.append(module.getId());
+					IModuleType mt = module.getModuleType();
+					if (mt != null) {
+						sb.append("::");
+						sb.append(mt.getId());
+						sb.append("::");
+						sb.append(mt.getVersion());
+					}
+					list.add(sb.toString());
 				}
-				list.add(sb.toString());
+				setAttribute(MODULE_LIST, list);
 			}
-			setAttribute(MODULE_LIST, list);
+
 			resetOptionalPublishOperations();
 			resetPreferredPublishOperations();
 		} catch (CoreException ce) {
