@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -209,34 +209,41 @@ public abstract class ServerEditorPart extends EditorPart {
 		if (sections == null) {
 			sections = new ArrayList<ServerEditorSection>();
 			sectionToInsertionId = new HashMap<String, List<ServerEditorSection>>();
-			ServerEditor serverEditor = commandManager.getServerEditor();
-			Iterator iterator = ServerEditorCore.getServerEditorPageSectionFactories().iterator();
-			while (iterator.hasNext()) {
-				IServerEditorPageSectionFactory factory = (IServerEditorPageSectionFactory) iterator.next();
-				String insertionId = factory.getInsertionId();
-				
-				IServerEditorPartFactory pageFactory = serverEditor.getPageFactory(this);
-				if (pageFactory.supportsInsertionId(insertionId)) {
-					String serverTypeId = null;
-					if (server != null && server.getServerType() != null)
-						serverTypeId = server.getServerType().getId();
-					if (serverTypeId != null && factory.supportsType(serverTypeId)
-							&& factory.shouldCreateSection(server)) {
-						ServerEditorSection section = factory.createSection();
-						if (section != null) {
-							section.setServerEditorPart(this);
-							sections.add(section);
-							List<ServerEditorSection> list = null;
-							try {
-								list = sectionToInsertionId.get(insertionId);
-							} catch (Exception e) {
-								// ignore
+			
+			if (commandManager != null){
+				ServerEditor serverEditor = commandManager.getServerEditor();
+				Iterator iterator = ServerEditorCore.getServerEditorPageSectionFactories().iterator();
+				String insertionId = null;
+				while (iterator.hasNext()) {
+					try {
+						IServerEditorPageSectionFactory factory = (IServerEditorPageSectionFactory) iterator.next();
+						insertionId = factory.getInsertionId();
+						
+						IServerEditorPartFactory pageFactory = serverEditor.getPageFactory(this);
+						if (pageFactory.supportsInsertionId(insertionId)) {
+							String serverTypeId = null;
+							if (server != null && server.getServerType() != null)
+								serverTypeId = server.getServerType().getId();
+							if (serverTypeId != null && factory.supportsType(serverTypeId)
+									&& factory.shouldCreateSection(server)) {
+								ServerEditorSection section = factory.createSection();
+								if (section != null) {
+									section.setServerEditorPart(this);
+									sections.add(section);
+									List<ServerEditorSection> list = null;
+									list = sectionToInsertionId.get(insertionId);
+
+									if (list == null)
+										list = new ArrayList<ServerEditorSection>();
+									list.add(section);
+									sectionToInsertionId.put(insertionId, list);
+								}
 							}
-							if (list == null)
-								list = new ArrayList<ServerEditorSection>();
-							list.add(section);
-							sectionToInsertionId.put(insertionId, list);
 						}
+					} catch (Exception e){
+						if (Trace.WARNING) {
+							Trace.trace(Trace.STRING_WARNING, "Failed to get sections " + insertionId + ": ", e);
+						}						
 					}
 				}
 			}
