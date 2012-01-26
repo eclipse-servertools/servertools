@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -355,6 +355,9 @@ public class ModifyModulesComposite extends Composite {
 				IModule[] children = server.getChildModules(new IModule[] { module }, null);
 				if (children != null && children.length > 0)
 					childModuleMap.put(new ChildModuleMapKey(module), children);
+				IStatus status = server.canModifyModules(null, new IModule[] { module }, null);
+				if (status != null && !status.isOK())
+					errorMap.put(module, status);
 			} catch (Exception e) {
 				// ignore
 			}
@@ -782,22 +785,26 @@ public class ModifyModulesComposite extends Composite {
 			remove.setEnabled(false);
 		} else {
 			boolean enabled = false;
-			// iterate through selection, if we find at least ONE module that can't be added, exit the loop
+			// iterate through selection, if we find at least ONE module that can't be removed, exit the loop
 			for (int i = 0; i < ms.length; i++) {
 				IModule module = getModule(ms[i]);
 				if (module != null && deployed.contains(module)) {
 					// provide error about removing required single module
 					// required modules can't be removed
-					if (requiredModules != null){
+					if (requiredModules != null ){
 						if (requiredModules.length == 1 && requiredModules[0].equals(module)) {
 							// this is a required module and can't be removed, exit the loop
 							wizard.setMessage(NLS.bind(Messages.wizModuleRequiredModule, module.getName()), IMessageProvider.ERROR);
 							enabled = false;
 							break;
-						} else
-							enabled = true;
-					}
-					else 
+						}
+						enabled = true;
+					} else if( errorMap.containsKey(module)){
+						// this is a required module and can't be removed, exit the loop
+						wizard.setMessage(errorMap.get(module).getMessage(), IMessageProvider.ERROR);
+						enabled = false;
+						break;
+					} else 
 						enabled = true;
 				}
 				else{
