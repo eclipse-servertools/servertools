@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008,2011 IBM Corporation and others.
+ * Copyright (c) 2008,2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -29,11 +33,11 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.navigator.CommonNavigator;
-import org.eclipse.ui.navigator.CommonViewer;
+import org.eclipse.ui.navigator.*;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
@@ -115,6 +119,48 @@ public class ServersView2 extends CommonNavigator {
 			}
 		});
 		
+
+		// Create the context menu for the default page
+		final CommonViewer commonViewer = this.getCommonViewer();
+		if (commonViewer != null){
+			ICommonViewerSite commonViewerSite = CommonViewerSiteFactory
+					.createCommonViewerSite(this.getViewSite());
+			
+			if (commonViewerSite != null){
+				// Note: actionService cannot be null
+				final NavigatorActionService actionService = new NavigatorActionService(commonViewerSite,
+						commonViewer, commonViewer.getNavigatorContentService());
+				
+				MenuManager menuManager = new MenuManager("#PopupMenu");
+				menuManager.addMenuListener(new IMenuListener() {
+					public void menuAboutToShow(IMenuManager mgr) {
+						ISelection selection = commonViewer.getSelection();
+						actionService.setContext(new ActionContext(selection));
+						actionService.fillContextMenu(mgr);
+					}
+				});
+				Menu menu = menuManager.createContextMenu(body);
+
+				// It is necessary to set the menu in two places:
+				// 1. The white space in the server view
+				// 2. The text and link in the server view. If this menu is not set, if the
+				// user right clicks on the text or uses shortcut keys to open the context menu,
+				// the context menu will not come up
+				body.setMenu(menu);	
+				hlink.setMenu(menu);
+			}
+			else {
+				if (Trace.FINEST) {
+					Trace.trace(Trace.STRING_FINEST, "The commonViewerSite is null");
+				}
+			}
+		}
+		else {
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "The commonViewer is null");
+			}
+		}
+		
 		return form;
 	}
 	
@@ -180,11 +226,18 @@ public class ServersView2 extends CommonNavigator {
 			public void done(IJobChangeEvent event) {
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
-						if (tableViewer.getTree().getItemCount() > 0) {
-							Object obj = tableViewer.getTree().getItem(0).getData();
-							tableViewer.setSelection(new StructuredSelection(obj));
-						} else{
-							toggleDefultPage();
+						try {
+							if (tableViewer.getTree().getItemCount() > 0) {
+								Object obj = tableViewer.getTree().getItem(0).getData();
+								tableViewer.setSelection(new StructuredSelection(obj));
+							} else{
+								toggleDefultPage();
+							}
+						}
+						catch (Exception e){
+							if (Trace.WARNING) {
+								Trace.trace(Trace.STRING_WARNING, "Failed to update the server view.", e);
+							}
 						}
 					}
 				});
