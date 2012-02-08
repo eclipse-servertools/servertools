@@ -230,6 +230,7 @@ public class Server extends Base implements IServer {
 			if (getServerPublishInfo().hasStructureChanged(modules2)) {
 				int newState = getServerPublishState() == IServer.PUBLISH_STATE_FULL ? IServer.PUBLISH_STATE_FULL : IServer.PUBLISH_STATE_INCREMENTAL;
 				setServerPublishState(newState);
+				changed[0] = true;
 			}
 			
 			if (!changed[0])
