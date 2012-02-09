@@ -165,6 +165,13 @@ Server instances of this type will delegate to instances of this class. Delegate
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="synchronousStart" type="boolean">
+            <annotation>
+               <documentation>
+                  boolean value &quot;true&quot; or &quot;false&quot; to specify whether the server needs to be started synchronously. If &quot;true&quot;, the server will execute publish and start jobs serially.
+               </documentation>
+            </annotation>
+         </attribute>        
       </complexType>
    </element>
 
