@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -280,6 +280,12 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		client = (IClient)getOverwriteValue(ROS_CLIENT);
 		launchableAdapter = (ILaunchableAdapter) getOverwriteValue(ROS_LAUNCHABLE);
 		
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, 
+					"Client and launchableAdapter after setting predefined values: launchableAdapter="
+					+ launchableAdapter + " client=" + client);
+		}		
+		
 		try {
 			IProgressMonitor monitor = new NullProgressMonitor();
 			server2 = getServer(module, moduleArtifact, monitor);
@@ -323,8 +329,18 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 					return;
 			} else
 				wizard.performFinish();
-			client = wizard.getSelectedClient();
-			launchableAdapter = wizard.getLaunchableAdapter();
+
+			// Do not overwrite the client or launchableAdapter value, as it may
+			// have been set by getOverwriteValue, which will add predefined values 
+			// if provided. There is no guarantee that getting the values (client and 
+			// launchableAadapter) from the wizard will be valid, since the values from
+			// the wizard are used only if the client and launchableAdapter are null
+			if (client == null){
+				client = wizard.getSelectedClient();
+			}
+			if (launchableAdapter == null){
+				launchableAdapter = wizard.getLaunchableAdapter();
+			}
 		}
 		
 		// if there is no client, use a dummy
@@ -350,6 +366,11 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 					return true;
 				}
 			};
+		}
+		
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, 
+					"Prior to creating launch client jobs: launchableAdapter="+ launchableAdapter + " client=" + client);
 		}
 		
 		if (moduleArtifact instanceof ModuleArtifactDelegate) {
