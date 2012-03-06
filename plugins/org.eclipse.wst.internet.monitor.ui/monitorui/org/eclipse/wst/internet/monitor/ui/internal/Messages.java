@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,6 +51,7 @@ public class Messages extends NLS {
 	public static String viewType;
 	public static String viewResponseTimeFormat;
 	public static String viewSize;
+	public static String viewEncoding;
 	public static String viewResponse;
 	public static String viewRequest;
 	public static String actionSortByResponseTime;
@@ -61,6 +62,7 @@ public class Messages extends NLS {
 	public static String actionProperties;
 	public static String yes;
 	public static String no;
+	public static String defaultEncodingOption;
 
 	static {
 		NLS.initializeMessages(MonitorUIPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);

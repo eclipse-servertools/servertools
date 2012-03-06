@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -128,5 +128,18 @@ public abstract class ContentViewer {
 	 */
 	public boolean getEditable() {
 		return false;
+	}
+	
+	/**
+	 * Sets the encoding of the viewer for views that encode content.  
+	 * <p>
+	 * The default implementation of this method does nothing.
+	 * Subclasses should override this method to allows instances
+	 * to set the encoding.
+	 * </p>
+	 * @param str an array of encodings
+	 */
+	public void setEncodings(String[] str){
+		// do nothing
 	}
 }

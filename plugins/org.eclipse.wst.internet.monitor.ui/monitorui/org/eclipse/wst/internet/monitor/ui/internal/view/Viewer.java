@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,8 @@ import org.eclipse.wst.internet.monitor.ui.internal.provisional.ContentViewer;
 public class Viewer {
 	private IConfigurationElement element;
 
+	protected String[] encodings = null;
+	
 	/**
 	 * Create a new content viewer.
 	 * 
@@ -40,6 +42,31 @@ public class Viewer {
 		return label;
 	}
 
+	public String[] getEncodings(){
+		// Cache the encoding
+		if (encodings == null){
+			String encodingString = element.getAttribute("encodings");
+			
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "encodingString from extension point : " + encodingString);
+			}
+			
+			if (encodingString != null){
+				encodings = encodingString.split(",");
+				int size= encodings.length;
+				for (int i=0;i<size;i++){
+					// Clean up input
+					encodings[i] = encodings[i].trim();
+				}
+			}
+		}
+		
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Get encodings : " + encodings);
+		}		
+		return encodings;
+	}
+	
 	/**
 	 * Create an instance of the viewer.
 	 * 
