@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,7 +13,10 @@ package org.eclipse.wst.internet.monitor.ui.internal.view;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.eclipse.core.runtime.*;
+
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -265,8 +268,10 @@ public class ViewerManager {
 		reqViewer.dispose();
 		
 		requestViewer = viewer;
-		if (viewer != null)
+		if (viewer != null){
 			reqViewer = viewer.createViewer();
+			reqViewer.setEncodings(viewer.getEncodings());
+		}
 		else
 			reqViewer = null;
 		if (reqViewer == null)
@@ -298,8 +303,10 @@ public class ViewerManager {
 		respViewer.dispose();
 		
 		responseViewer = viewer;
-		if (viewer != null)
+		if (viewer != null){
 			respViewer = viewer.createViewer();
+			respViewer.setEncodings(viewer.getEncodings());
+		}
 		else
 			respViewer = null;
 		if (respViewer == null)
