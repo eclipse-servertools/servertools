@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.server_ui.feature.patch"
       label="%featureName"
-      version="3.2.5.qualifier"
+      version="3.3.2.qualifier"
       provider-name="%providerName">
 
    <description>
@@ -18,8 +18,15 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.wst.server_ui.feature" version="3.2.5.v20110706-7B4FDjAtJcbvFLNiPIYMRMjBF56" patch="true"/>
+      <import feature="org.eclipse.wst.server_ui.feature" version="3.3.2.v20111026_1748-7B79FBdAtJcez0EONePJUSNPjBC42" patch="true"/>
    </requires>
+
+   <plugin
+         id="org.eclipse.wst.internet.monitor.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.eclipse.wst.server.ui"
