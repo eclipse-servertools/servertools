@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,7 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.ui.internal.DeleteServerDialog;
 import org.eclipse.wst.server.ui.internal.Messages;
+import org.eclipse.wst.server.ui.internal.Trace;
 /**
  * This global delete action handles both the server and module deletion.
  */
@@ -154,6 +155,32 @@ public class GlobalDeleteAction extends SelectionProviderAction {
 	}
 	
 	protected void deleteServer(IServer server){
+		// It is possible that the server is created and added to the server view on workbench
+		// startup. As a result, when the user switches to the server view, the server is 
+		// selected, but the selectionChanged event is not called, which results in servers
+		// being null. When servers is null the server will not be deleted and the error log
+		// will have an IllegalArgumentException.
+		//
+		// To handle the case where servers is null, the selectionChanged method is called
+		// to ensure servers will be populated.
+		if (servers == null){
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "Delete server called when servers is null");
+			}				
+			
+			IStructuredSelection sel = getStructuredSelection();
+			if (sel != null){
+				selectionChanged(sel);
+			}
+		}
+				
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Opening delete server dialog with parameters shell="
+					+ shell + " servers=" + servers + " configs=" + configs);
+		}		
+		
+		// No check is made for valid parameters at this point, since if there is a failure, it
+		// should be output to the error log instead of failing silently.
 		DeleteServerDialog dsd = new DeleteServerDialog(shell, servers, configs);
 		dsd.open();
 	}
