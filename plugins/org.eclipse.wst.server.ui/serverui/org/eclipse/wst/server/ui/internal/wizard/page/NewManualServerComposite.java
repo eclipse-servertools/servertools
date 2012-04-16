@@ -859,6 +859,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 	public void dispose() {
 		if (timer != null) {
 			timer.dispose();
+			timer = null;
 		}
 	}
 
