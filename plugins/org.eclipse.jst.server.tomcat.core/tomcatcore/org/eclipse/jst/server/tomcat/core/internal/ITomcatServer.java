@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,6 +44,12 @@ public interface ITomcatServer extends IURLProvider {
 	 * be saved to separate context files.
 	 */
 	public static final String PROPERTY_SAVE_SEPARATE_CONTEXT_FILES = "saveSeparateContextFiles";
+	
+	/**
+	 * Property which specifies contexts in the server.xml file should
+	 * be reloadable by default.
+	 */
+	public static final String PROPERTY_MODULES_RELOADABLE_BY_DEFAULT = "modulesReloadableByDefault";
 
 	/**
 	 * Returns true if this is a test (publish and run code out of the

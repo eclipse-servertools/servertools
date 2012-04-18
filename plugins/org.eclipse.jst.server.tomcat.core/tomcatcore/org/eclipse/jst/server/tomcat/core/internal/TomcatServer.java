@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -300,6 +300,19 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 			return getAttribute(PROPERTY_SAVE_SEPARATE_CONTEXT_FILES, false);
 		return false;
 	}
+	
+	/**
+	 * Returns true if contexts should be made reloadable by default.
+	 * 
+	 * @return boolean
+	 */
+	public boolean isModulesReloadableByDefault() {
+		// If feature is supported, return current setting
+		ITomcatVersionHandler tvh = getTomcatVersionHandler();
+		if (tvh != null)
+			return getAttribute(PROPERTY_MODULES_RELOADABLE_BY_DEFAULT, true);
+		return true;
+	}
 
 	
 	/**
@@ -501,6 +514,13 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	}
 
 	/**
+	 * @see ITomcatServerWorkingCopy#setModulesReloadableByDefault(boolean)
+	 */
+	public void setModulesReloadableByDefault(boolean b) {
+		setAttribute(PROPERTY_MODULES_RELOADABLE_BY_DEFAULT, b);
+	}
+
+	/**
 	 * @see ServerDelegate#modifyModules(IModule[], IModule[], IProgressMonitor)
 	 */
 	public void modifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException {
@@ -519,7 +539,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 				if (contextRoot != null && !contextRoot.startsWith("/") && contextRoot.length() > 0)
 					contextRoot = "/" + contextRoot;
 				String docBase = config.getDocBasePrefix() + module3.getName();
-				WebModule module2 = new WebModule(contextRoot, docBase, module3.getId(), true);
+				WebModule module2 = new WebModule(contextRoot, docBase, module3.getId(), isModulesReloadableByDefault());
 				config.addWebModule(-1, module2);
 			}
 		}

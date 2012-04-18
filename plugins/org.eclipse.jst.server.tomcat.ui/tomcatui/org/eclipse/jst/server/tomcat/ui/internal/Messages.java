@@ -72,6 +72,7 @@ public class Messages extends NLS {
 	public static String serverEditorTestEnvironment;
 	public static String serverEditorNoPublish;
 	public static String serverEditorSeparateContextFiles;
+	public static String serverEditorReloadableByDefault;
 	public static String serverEditorSecure;
 	public static String serverEditorDebugMode;
 	public static String serverEditorNotSupported;

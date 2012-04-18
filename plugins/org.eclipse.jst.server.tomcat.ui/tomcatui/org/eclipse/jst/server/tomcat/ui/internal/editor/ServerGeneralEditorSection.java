@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import org.eclipse.jst.server.tomcat.core.internal.ITomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatVersionHandler;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.command.SetDebugModeCommand;
+import org.eclipse.jst.server.tomcat.core.internal.command.SetModulesReloadableByDefaultCommand;
 import org.eclipse.jst.server.tomcat.core.internal.command.SetSecureCommand;
 import org.eclipse.jst.server.tomcat.core.internal.command.SetSaveSeparateContextFilesCommand;
 import org.eclipse.jst.server.tomcat.core.internal.command.SetServeModulesWithoutPublishCommand;
@@ -52,6 +53,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 	protected Button debug;
 	protected Button noPublish;
 	protected Button separateContextFiles;
+	protected Button reloadableByDefault;
 	protected boolean updating;
 
 	protected PropertyChangeListener listener;
@@ -91,6 +93,9 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 					ServerGeneralEditorSection.this.separateContextFiles.setSelection(b.booleanValue());
 					// Indicate this setting has changed
 					separateContextFilesChanged = true;
+				} else if (ITomcatServer.PROPERTY_MODULES_RELOADABLE_BY_DEFAULT.equals(event.getPropertyName())) {
+					Boolean b = (Boolean) event.getNewValue();
+					ServerGeneralEditorSection.this.reloadableByDefault.setSelection(b.booleanValue());
 				}
 				updating = false;
 			}
@@ -164,6 +169,23 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 		});
 		// TODO Address help
 //		whs.setHelp(separateContextFiles, ContextIds.SERVER_EDITOR_SECURE);
+
+		// modules reloadable by default
+		reloadableByDefault = toolkit.createButton(composite, NLS.bind(Messages.serverEditorReloadableByDefault, ""), SWT.CHECK);
+		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		data.horizontalSpan = 3;
+		reloadableByDefault.setLayoutData(data);
+		reloadableByDefault.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent se) {
+				if (updating)
+					return;
+				updating = true;
+				execute(new SetModulesReloadableByDefaultCommand(tomcatServer, reloadableByDefault.getSelection()));
+				updating = false;
+			}
+		});
+		// TODO Address help
+//		whs.setHelp(reloadableByDefault, ContextIds.SERVER_EDITOR_SECURE);
 		
 		// security
 		secure = toolkit.createButton(composite, Messages.serverEditorSecure, SWT.CHECK);
@@ -249,6 +271,16 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 			separateContextFiles.setEnabled(false);
 		else
 			separateContextFiles.setEnabled(true);
+		
+		supported = true; // all versions of Tomcat support reloadable option
+		label = NLS.bind(Messages.serverEditorReloadableByDefault,
+				supported ? "" : Messages.serverEditorNotSupported);
+		reloadableByDefault.setText(label);
+		reloadableByDefault.setSelection(tomcatServer.isModulesReloadableByDefault());
+		if (readOnly || !supported)
+			reloadableByDefault.setEnabled(false);
+		else
+			reloadableByDefault.setEnabled(true);
 
 		secure.setSelection(tomcatServer.isSecure());
 		

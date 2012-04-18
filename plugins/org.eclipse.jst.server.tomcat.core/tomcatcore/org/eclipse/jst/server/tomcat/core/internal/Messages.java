@@ -113,6 +113,7 @@ public class Messages extends NLS {
 	public static String serverEditorActionSetDeployDirectory;
 	public static String serverEditorActionSetServeWithoutPublish;
 	public static String serverEidtorActionSetSeparateContextFiles;
+	public static String serverEditorActionSetModulesReloadableByDefault;
 
 	static {
 		NLS.initializeMessages(TomcatPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);
