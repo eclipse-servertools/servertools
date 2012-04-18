@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceRuleFactory;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -173,8 +174,10 @@ public class DeleteServerDialog extends MessageDialog {
 								
 								if (checked) {
 									size = configs.length;
-									for (int i = 0; i < size; i++)
+									for (int i = 0; i < size; i++) {
+										configs[i].refreshLocal(IResource.DEPTH_INFINITE, monitor);
 										configs[i].delete(true, true, monitor);
+									}
 								}
 							} catch (Exception e) {
 								if (Trace.SEVERE) {
