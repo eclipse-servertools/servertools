@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -95,8 +95,18 @@ public class ServerEditor extends MultiPageEditorPart {
 			// do nothing
 		}
 		public void serverRemoved(IServer oldServer) {
-			if (oldServer.equals(server.getOriginal()) && !isDirty())
-				closeEditor();
+			if (oldServer.equals(server.getOriginal())) {
+				resourceDeleted = true;
+				if (!isDirty()) {
+					closeEditor();
+				} else {
+					Display.getDefault().asyncExec(new Runnable() {
+						public void run() {
+							checkAndCloseEditorOnDeletedServer();
+						}
+					});
+				}
+			}
 		}
 	}
 
@@ -927,17 +937,8 @@ public class ServerEditor extends MultiPageEditorPart {
 	public void setFocus() {
 		super.setFocus();
 	}
-
-	/**
-	 * 
-	 */
-	protected void checkResourceState() {
-		// do not check the resource state change if saving through the editor
-		if (isSaving) {
-			// do nothing
-			return;
-		}
-		
+	
+	void checkAndCloseEditorOnDeletedServer() {
 		// check for deleted files
 		if (resourceDeleted) {
 			String title = Messages.editorResourceDeleteTitle;
@@ -951,9 +952,22 @@ public class ServerEditor extends MultiPageEditorPart {
 				doSave(new NullProgressMonitor());
 			else
 				closeEditor();
-			return;
 		}
 		resourceDeleted = false;
+	}
+
+	/**
+	 * 
+	 */
+	protected void checkResourceState() {
+		// do not check the resource state change if saving through the editor
+		if (isSaving) {
+			// do nothing
+			return;
+		}
+		
+		// check for deleted files
+		checkAndCloseEditorOnDeletedServer();
 		
 		// check for server changes
 		if (serverId != null) {
