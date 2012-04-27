@@ -3246,8 +3246,6 @@ public class Server extends Base implements IServer {
 				}
 			}
 		};
-		thread.setDaemon(true);
-		thread.start();
 		
 		if (Trace.FINEST) {
 			Trace.trace(Trace.STRING_FINEST, "synchronousRestart 2");
@@ -3256,6 +3254,9 @@ public class Server extends Base implements IServer {
 		// call the delegate restart
 		try {
 			getBehaviourDelegate(null).restart(launchMode);
+			
+			thread.setDaemon(true);
+			thread.start();			
 		} catch (CoreException e) {
 			removeServerListener(listener);
 			timer.alreadyDone = true;
@@ -3388,8 +3389,6 @@ public class Server extends Base implements IServer {
 				}
 			}
 		};
-		thread.setDaemon(true);
-		thread.start();
 	
 		if (Trace.FINEST) {
 			Trace.trace(Trace.STRING_FINEST, "synchronousStart 2");
@@ -3398,6 +3397,9 @@ public class Server extends Base implements IServer {
 		// start the server
 		try {
 			startImpl2(launchMode, monitor);
+			
+			thread.setDaemon(true);
+			thread.start();			
 		} catch (CoreException e) {
 			removeServerListener(listener);
 			timer.alreadyDone = true;
@@ -3511,11 +3513,23 @@ public class Server extends Base implements IServer {
 		final Timer timer = new Timer();
 		
 		final int serverTimeout = getStopTimeout() * 1000;
+		Thread thread = null;
 		if (serverTimeout > 0) {
-			Thread thread = new Thread("Server Stop Timeout") {
+			thread = new Thread("Server Stop Timeout") {
 				public void run() {
-					try {
-						Thread.sleep(serverTimeout);
+					try {					
+						int totalTimeout = serverTimeout;
+						if (totalTimeout < 0)
+							totalTimeout = 1;
+						
+						int retryPeriod = 1000;						
+
+						while (totalTimeout > 0 && !timer.alreadyDone){
+							Thread.sleep(retryPeriod);
+							if (serverTimeout > 0)
+								totalTimeout -= retryPeriod;
+						}
+
 						if (!timer.alreadyDone) {
 							timer.timeout = true;
 							// notify waiter
@@ -3533,12 +3547,15 @@ public class Server extends Base implements IServer {
 					}
 				}
 			};
-			thread.setDaemon(true);
-			thread.start();
 		}
 		
 		// stop the server
 		stopImpl2(force);
+		
+		if (thread != null){
+			thread.setDaemon(true);
+			thread.start();
+		}
 		
 		// wait for it! wait for it!
 		synchronized (mutex) {
@@ -3551,6 +3568,7 @@ public class Server extends Base implements IServer {
 					Trace.trace(Trace.STRING_SEVERE, "Error waiting for server stop", e);
 				}
 			}
+			timer.alreadyDone = true;
 		}
 		removeServerListener(listener);
 		
