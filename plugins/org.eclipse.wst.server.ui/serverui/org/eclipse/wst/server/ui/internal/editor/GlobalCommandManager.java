@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -602,7 +602,7 @@ public class GlobalCommandManager {
 					return null;
 				}
 			};
-			IStatus status = src.command.execute(new NullProgressMonitor(), adaptable);
+			IStatus status = src.command.redo(new NullProgressMonitor(), adaptable);
 			if (status != null && !status.isOK())
 				MessageDialog.openError(shell, Messages.editorServerEditor, status.getMessage());
 		} catch (ExecutionException ce) {
