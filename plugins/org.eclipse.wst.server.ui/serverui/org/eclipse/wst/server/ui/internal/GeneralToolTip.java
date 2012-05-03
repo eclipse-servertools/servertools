@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2007,2010 IBM Corporation and others.
+ * Copyright (c) 2007,2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ public class GeneralToolTip implements IServerToolTip {
 	public void createContent(Composite parent, IServer server) {
 		Text text = new Text(parent,SWT.NONE);
 		text.setBackground(parent.getBackground());
+		text.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
 		text.setEditable(false);
 		String s = "";
 		if (server.getRuntime() != null)

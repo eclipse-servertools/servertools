@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2007, 2011 IBM Corporation and others.
+ * Copyright (c) 2007, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -157,6 +157,7 @@ public class ServerToolTip extends ToolTip {
 		
 		// set the default text for the tooltip
 		StyledText sText = new StyledText(parent, SWT.NONE);
+		sText.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
 		sText.setEditable(false);
 		sText.setBackground(parent.getBackground());
 		
@@ -192,7 +193,7 @@ public class ServerToolTip extends ToolTip {
 		hintLabel.setAlignment(SWT.RIGHT);
 		hintLabel.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 		hintLabel.setText(Messages.toolTipEnableFocus);
-		hintLabel.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_DARK_GRAY));
+		hintLabel.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
 		
 		final Font font;
 		Display display = parent.getDisplay();
