@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,18 +35,34 @@ import org.osgi.framework.Bundle;
  * 
  */
 public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfigurationDelegate {
+	// To support running from the workbench, be careful when adding and removing 
+	// bundles to this array. For instance, org.eclipse.wst.server.preview is a 
+	// plug-in that can be checked out in the workbench. If it is, the classpath
+	// needs to point to the bin directory of this plug-in. This plug-in is tracked
+	// in the array with CLASSPATH_BIN_INDEX_PREVIEW_SERVER. Therefore, when updating
+	// this array, please ensure the index of org.eclipse.wst.server.preview 
+	// corresponds to CLASSPATH_BIN_INDEX_PREVIEW_SERVER
 	private static final String[] REQUIRED_BUNDLE_IDS = new String[] {
 		"org.apache.commons.logging",
-		"org.apache.commons.el",
 		"javax.servlet",
 		"javax.servlet.jsp",
-		"org.apache.jasper",
-		"org.mortbay.jetty.server",
-		"org.mortbay.jetty.util",
+		"org.eclipse.jetty.server",
+		"org.eclipse.jetty.util",
+		"org.eclipse.jetty.continuation",
+		"org.eclipse.jetty.http",
+		"org.eclipse.jetty.io",
+		"org.eclipse.jetty.security",
+		"org.eclipse.jetty.servlet",
+		"javax.el",
+		"com.sun.el",
+		"org.apache.jasper.glassfish",
 		"org.eclipse.wst.server.preview"
 	};
 
 	private static final String MAIN_CLASS = "org.eclipse.wst.server.preview.internal.PreviewStarter";
+	// The index of org.eclipse.wst.server.preview in REQUIRED_BUNDLE_IDS, for supporting
+	// running on the workbench when the plug-in is checked out
+	private static final int CLASSPATH_BIN_INDEX_PREVIEW_SERVER = REQUIRED_BUNDLE_IDS.length-1;
 
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		IServer server = ServerUtil.getServer(configuration);
@@ -73,9 +89,11 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 			jars[i] = path.toOSString();
 		}
 		
-		Trace.trace(Trace.FINEST,jars[7] + File.separator + "bin");
-		if (new File(jars[7] + File.separator + "bin").exists())
-			jars[7] = jars[7] + File.separator + "bin";
+		// Appending the bin onto the classpath is to support running from the workbench
+		// when org.eclipse.wst.server.preview is checked out
+		Trace.trace(Trace.FINEST,jars[CLASSPATH_BIN_INDEX_PREVIEW_SERVER] + File.separator + "bin");
+		if (new File(jars[CLASSPATH_BIN_INDEX_PREVIEW_SERVER] + File.separator + "bin").exists())
+			jars[CLASSPATH_BIN_INDEX_PREVIEW_SERVER] = jars[CLASSPATH_BIN_INDEX_PREVIEW_SERVER] + File.separator + "bin";
 		
 		IVMInstall vm = verifyVMInstall(configuration);
 		
