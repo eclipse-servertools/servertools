@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,13 +36,26 @@ import org.osgi.framework.Bundle;
  * 
  */
 public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
+	// To support running from the workbench, be careful when adding and removing 
+	// bundles to this array. For instance, org.eclipse.wst.server.preview is a 
+	// plug-in that can be checked out in the workbench. If it is, the classpath
+	// needs to point to the bin directory of this plug-in. This plug-in is tracked
+	// in the array with CLASSPATH_BIN_INDEX_PREVIEW_SERVER. Therefore, when updating
+	// this array, please ensure the index of org.eclipse.wst.server.preview 
+	// corresponds to CLASSPATH_BIN_INDEX_PREVIEW_SERVER	
 	private static final String[] REQUIRED_BUNDLE_IDS = new String[] {
 		"javax.servlet",
-		"javax.servlet.jsp",
-		"org.mortbay.jetty.server",
-		"org.mortbay.jetty.util",
+		"org.eclipse.jetty.server",
+		"org.eclipse.jetty.util",
+		"org.eclipse.jetty.continuation",
+		"org.eclipse.jetty.http",
+		"org.eclipse.jetty.io",
 		"org.eclipse.wst.server.preview"
 	};
+	
+	// The index of org.eclipse.wst.server.preview in REQUIRED_BUNDLE_IDS, for supporting
+	// running on the workbench when the plug-in is checked out
+	private static final int CLASSPATH_BIN_INDEX_PREVIEW_SERVER = REQUIRED_BUNDLE_IDS.length-1;	
 
 	private static final String[] fgCandidateJavaFiles = {"javaw", "javaw.exe", "java",
 		"java.exe", "j9w", "j9w.exe", "j9", "j9.exe"};
@@ -75,7 +88,7 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 				throw new CoreException(new Status(IStatus.ERROR, PreviewPlugin.PLUGIN_ID, "Could not find required bundle " + REQUIRED_BUNDLE_IDS[i]));
 			
 			// run from workbench support
-			if (i == 4 && path.append("bin").toFile().exists())
+			if (i == CLASSPATH_BIN_INDEX_PREVIEW_SERVER && path.append("bin").toFile().exists())
 				path = path.append("bin");
 			
 			if (i > 0)
