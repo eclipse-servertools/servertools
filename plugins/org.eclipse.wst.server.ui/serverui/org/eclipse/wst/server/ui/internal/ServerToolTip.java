@@ -130,8 +130,25 @@ public class ServerToolTip extends ToolTip {
 	}
 
 	protected final boolean shouldCreateToolTip(Event event) {
-		if (tree.getItem(new Point(event.x, event.y)) == null)
+		Object o = tree.getItem(new Point(event.x, event.y));
+		if (o == null) {
 			return false;
+		}
+		IServer server = null;
+		IServerModule module = null;
+		if (o instanceof TreeItem) {
+			Object obj = ((TreeItem)o).getData();
+			if (obj instanceof IServer) {
+				server = (IServer) obj;
+			}
+			if (obj instanceof IServerModule) {
+				module = (IServerModule) obj;
+			}
+		}
+		// Only enable for supported objects.
+		if (server == null && module == null) {
+			return false;
+		}
 		return super.shouldCreateToolTip(event);
 	}
 
