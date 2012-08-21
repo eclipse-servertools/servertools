@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,6 +45,8 @@ public class HttpSection extends ServerEditorSection {
 	protected Spinner portSpinner;
 	protected PropertyChangeListener listener;
 
+	protected static int MAXIMUM_PORT = 999999;
+	
 	public HttpSection() {
 		super();
 	}
@@ -117,7 +119,9 @@ public class HttpSection extends ServerEditorSection {
 		
 		portSpinner = new Spinner(composite, SWT.BORDER);
 		portSpinner.setMinimum(0);
-		portSpinner.setMinimum(999999);
+		portSpinner.setMaximum(MAXIMUM_PORT);
+		portSpinner.setTextLimit((Integer.toString(MAXIMUM_PORT)).length());
+
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		portSpinner.setLayoutData(data);
 		portSpinner.addModifyListener(new ModifyListener() {
