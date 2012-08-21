@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,6 +40,10 @@ public class NewRuntimeWizardFragment extends WizardFragment {
 
 	protected Map<String, WizardFragment> fragmentMap = new HashMap<String, WizardFragment>();
 
+	// Storing the NewRuntimeComposite is required to determine if the selected item
+	// by the user is a valid server runtime
+	protected NewRuntimeComposite comp;
+	
 	public NewRuntimeWizardFragment() {
 		// do nothing
 	}
@@ -58,7 +62,8 @@ public class NewRuntimeWizardFragment extends WizardFragment {
 	 * @see org.eclipse.wst.server.ui.internal.task.WizardTask#getWizardPage()
 	 */
 	public Composite createComposite(Composite parent, IWizardHandle wizard) {
-		return new NewRuntimeComposite(parent, wizard, getTaskModel(), type, version, runtimeTypeId);
+		comp = new NewRuntimeComposite(parent, wizard, getTaskModel(), type, version, runtimeTypeId);
+		return comp;
 	}
 
 	public List getChildFragments() {
@@ -121,4 +126,13 @@ public class NewRuntimeWizardFragment extends WizardFragment {
 			fragmentMap.put(typeId, fragment);
 		return fragment;
 	}
+	
+	public boolean isComplete(){
+		// If the selected runtime is invalid, the wizard 
+		// should not allow the user to press Finish
+		if (comp.hasValidSelectedRuntime()){
+			return true;
+		}
+		return false;
+	}	
 }
