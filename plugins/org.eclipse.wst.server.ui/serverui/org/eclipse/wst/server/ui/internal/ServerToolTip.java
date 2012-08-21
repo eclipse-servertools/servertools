@@ -86,7 +86,16 @@ public class ServerToolTip extends ToolTip {
 				| SWT.NO_FOCUS);
 		stickyTooltip.setLayout(new FillLayout());
 		stickyTooltip.setBackground(stickyTooltip.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-		
+		stickyTooltip.addShellListener(new ShellAdapter() {
+			public void shellClosed(ShellEvent e) {
+				if (CURRENT_TOOLTIP != null) {
+					CURRENT_TOOLTIP.dispose();
+					CURRENT_TOOLTIP = null;
+				}
+				activate();
+			}
+		});
+
 		control.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				Event event = new Event();
