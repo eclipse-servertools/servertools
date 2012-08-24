@@ -55,14 +55,14 @@ happen after changes on a file are saved.</li>
 is the <b>Automatically publish when resources change</b> option is
 enabled with a value set in the publishing interval.</p><p>In addition,
 under the <uicontrol>Select publishing actions</uicontrol> list, select
-the tasks you want to run during publishing.</p><b id="twpub_manualtitle">Manually
-publishing to a server</b><p id="twpub_manual1">If you do not want
-to wait for the automatic publishing interval to pass or the <uicontrol>Never
-publish automatically</uicontrol> option is enabled, at anytime you
-can manually request the workbench to issue a publish command to the
-server. Each manual publish command causes a single publishing request
-to the server. To publish your application manually you can complete
-one of the following in the Servers view:</p><?Pub Caret 75?><p><ul>
+the tasks you want to run during publishing.</p><?Pub Caret -3?><b
+id="twpub_manualtitle">Manually publishing to a server</b><p
+id="twpub_manual1">If you do not want to wait for the automatic publishing
+interval to pass, at anytime you can manually request the workbench
+to issue a publish command to the server. Each manual publish command
+causes a single publishing request to the server. To publish your
+application manually you can complete one of the following in the
+Servers view:</p><p><ul>
 <li><ph id="twpub_steps_ph1">Select the server and then click the
  <uicontrol>Publish to the server</uicontrol></ph> <image
 alt="This is an image of the Publish toolbar icon."
@@ -78,4 +78,4 @@ in these projects are transferred to the location that is defined
 by the server.</p></result>
 </taskbody>
 </task>
-<?Pub *0000004895?>
+<?Pub *0000004819?>

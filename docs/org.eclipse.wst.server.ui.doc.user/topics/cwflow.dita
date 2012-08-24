@@ -1,48 +1,53 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2011, v.4002-->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
  "concept.dtd">
 <concept id="cwflow_wst" xml:lang="en-us">
 <title id="cwflow_title">Which server will start</title>
-<shortdesc id="cwflow_shortdesc"><ph id="cwflow_shortdesc_ph1">You can start
-the server automatically as part of running a selected resource on the server,
-or you can simply start the server without running resources on the server.
-For example, the server is automatically started when you right-click a project
-or an application resource in the Project Explorer view and select <menucascade>
-<uicontrol>Run As</uicontrol><uicontrol>Run on Server</uicontrol></menucascade>.
-If you want to start the server without running resources on the server, in
-the Servers view select a server and select the <b>Start the server</b></ph>  <image
-alt="This is an image of the Run on Server icon." href="../images/launch_run.gif">
-<alt>This is an image of the Run on Server icon</alt></image> <ph id="cwflow_shortdesc_ph2">icon,
-the  <b>Start the server in debug mode</b></ph>  <image alt="This is an image of the Debug on server icon."
-href="../images/launch_debug.gif"><alt>This is an image of the Debug on server
-icon.</alt></image><ph id="cwflow_shortdesc_ph3"> icon , or the  <uicontrol>Start
-the server in profiling mode</uicontrol></ph>  <image alt="This is an image of the Start the server in profiling mode icon."
-href="../images/launch_profile.gif"><alt>This is an image of the Start the
-server in profiling mode icon.</alt></image><ph id="cwflow_shortdesc_ph4"> icon.</ph></shortdesc>
+<shortdesc id="cwflow_shortdesc"><ph id="cwflow_shortdesc_ph1">You
+can start the server automatically as part of running a selected resource
+on the server, or you can simply start the server without running
+resources on the server. For example, the server is automatically
+started when you right-click a project or an application resource
+in the Project Explorer view and select <menucascade><uicontrol>Run
+As</uicontrol><uicontrol>Run on Server</uicontrol></menucascade>.
+If you want to start the server without running resources on the server,
+in the Servers view select a server and select the <b>Start the server</b
+></ph>  <image alt="Image of the Run on Server icon."
+href="../images/launch_run.gif"><alt>Image of the Run on Server icon</alt>
+</image> <ph id="cwflow_shortdesc_ph2">icon, the  <b>Start the server
+in debug mode</b></ph>  <image alt="Image of the Debug on server icon."
+href="../images/launch_debug.gif"><alt>Image of the Debug on server
+icon.</alt></image><ph id="cwflow_shortdesc_ph3"> icon , or the  <uicontrol
+>Start the server in profiling mode</uicontrol></ph>  <image
+alt="Image of the Start the server in profiling mode icon."
+href="../images/launch_profile.gif"><alt>Image of the Start the server
+in profiling mode icon.</alt></image><ph id="cwflow_shortdesc_ph4"
+> icon.</ph></shortdesc><?Pub Caret 573?>
 <prolog><metadata>
-<keywords id="index"><indexterm>servers<indexterm>starting</indexterm></indexterm>
-</keywords>
+<keywords id="index"><indexterm>servers<indexterm>starting</indexterm
+></indexterm></keywords>
 </metadata></prolog>
 <conbody>
-<p id="cwflow_p1">When you run a file or project, the Server Tools first verify
-that the servers and configurations for that particular resource are already
-set up and determines how many are defined. You are then prompted by the Run
-on Server dialog box to select a server.</p>
-<section id="cwflow_section1"><title>Run on Server</title><p>If this is the
-first time you are testing a file or project, you will be prompted to create
-a new server. The Run on Server dialog box presents you with two options for
-deciding which server to run:</p><ul>
-<li> <uicontrol>Choose an existing server</uicontrol> This list includes servers
-that may or may not have already been configured. If you choose a server that
-is not already configured, it will be configured automatically and might be
-restarted if the server is already running.</li>
-<li> <uicontrol>Manually define a server</uicontrol> This option will create
-a new server and server configuration before testing.</li>
-</ul><p>If this is the first time you are testing a file or project,  <uicontrol>Manually
-define a server</uicontrol> is selected for you by default. When you select
-the type of server and click  <uicontrol>Next</uicontrol>, a server will be
-automatically created for you and the server will start.</p></section>
+<p id="cwflow_p1">When you run a file or project, the Server Tools
+first verify that the servers and configurations for that particular
+resource are already set up and determines how many are defined. You
+are then prompted by the Run on Server dialog box to select a server.</p>
+<section id="cwflow_section1"><title>Run on Server</title><p>If this
+is the first time you are testing a file or project, you will be prompted
+to create a new server. The Run on Server dialog box presents you
+with two options for deciding which server to run:</p><ul>
+<li> <uicontrol>Choose an existing server</uicontrol> This list includes
+servers that may or may not have already been configured. If you choose
+a server that is not already configured, it will be configured automatically
+and might be restarted if the server is already running.</li>
+<li> <uicontrol>Manually define a server</uicontrol> This option will
+create a new server and server configuration before testing.</li>
+</ul><p>If this is the first time you are testing a file or project,
+ <uicontrol>Manually define a server</uicontrol> is selected for you
+by default. When you select the type of server and click  <uicontrol
+>Next</uicontrol>, a server will be automatically created for you
+and the server will start.</p></section>
 </conbody>
 </concept>
-<?Pub *0000003233?>
+<?Pub *0000003059?>

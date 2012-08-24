@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Arbortext, Inc., 1988-2009, v.4002-->
+<!--Arbortext, Inc., 1988-2011, v.4002-->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
  "map.dtd">
 <?Pub Sty _display FontColor="red"?>
@@ -57,11 +57,10 @@ navtitle="Publishing your application"></topicref>
 <!--Creating-->
 <topicref href="topics/tcreate.dita" id="create_server" locktitle="yes"
 navtitle="Creating, editing and deleting servers">
-<topicref href="topics/twcrtins.dita" linking="targetonly"
-locktitle="yes" navtitle="Creating a server ">
+<topicref href="topics/twcrtins.dita" linking="none" locktitle="yes"
+navtitle="Creating a server ">
 <navref
-mapref="../org.eclipse.jst.server.ui.doc.user/tomcat_create.ditamap"/><?Pub
-Caret -2?>
+mapref="../org.eclipse.jst.server.ui.doc.user/tomcat_create.ditamap"/>
 <topicref href="topics/thttppreview.dita" locktitle="yes"
 navtitle="...HTTP Preview server"></topicref>
 <topicref href="topics/tj2eepreview.dita" locktitle="yes"
@@ -86,9 +85,11 @@ navtitle="Starting a server in debug mode"></topicref>
 </topicref>
 <topicref href="topics/twstpins.dita" locktitle="yes"
 navtitle="Stopping a server"></topicref>
+<topicref href="topics/tdeactivateactivate.dita"
+navtitle="Deactivate and activate server"></topicref>
 <topicref href="topics/ttimeout.dita"
 navtitle="Setting timeout on the start or stop of the server">
-</topicref>
+</topicref><?Pub Caret -2?>
 <topicref href="topics/twprefin.dita" locktitle="yes"
 navtitle="Setting a default server"></topicref>
 <topicref href="topics/tmetasrv.dita" locktitle="yes"
@@ -120,4 +121,4 @@ navtitle="Showing the state and status in the Servers view"></topicref>
 </topicref>
 </topicref>
 </map>
-<?Pub *0000005024?>
+<?Pub *0000005121?>

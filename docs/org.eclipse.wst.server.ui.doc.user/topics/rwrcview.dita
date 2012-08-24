@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Arbortext, Inc., 1988-2009, v.4002-->
+<!--Arbortext, Inc., 1988-2011, v.4002-->
 <!DOCTYPE reference PUBLIC "-//OASIS//DTD DITA Reference//EN"
  "reference.dtd">
 <reference id="rwrcview_wst" xml:lang="en-us">
@@ -15,19 +15,19 @@ current status and state of the server; and the projects added to
 the server from the workbench.</ph></shortdesc>
 <prolog><metadata>
 <keywords id="index"><indexterm
-keyref="rwrcview|1|serversmanagingusingtheServersview" status="new">servers<indexterm>managing
-using the Servers view</indexterm></indexterm><indexterm
-keyref="rwrcview|2|viewsServers" status="changed">views<indexterm>servers<indexterm>overview</indexterm></indexterm></indexterm>
+keyref="rwrcview|1|serversmanagingusingtheServersview" status="new"
+>servers<indexterm>managing using the Servers view</indexterm></indexterm>
+<indexterm keyref="rwrcview|2|viewsServers" status="changed">views<indexterm
+>servers<indexterm>overview</indexterm></indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <refbody>
-<section><p> <image alt="This is a screen capture of the Server view."
-href="../images/scpview.gif"><alt>This is a screen capture of the
-Server view.</alt></image> </p><p id="rwrcview_p2">Use the Servers
-view to perform the following tasks:</p><ul>
+<section><p> <image alt="Servers view." href="../images/scpview.gif">
+<alt>Servers view.</alt></image> </p><?Pub Caret 10?><p id="rwrcview_p2"
+>Use the Servers view to perform the following tasks:</p><ul>
 <li id="rwrcview_li1">Create a server</li>
 <li id="rwrcview_li2">Edit a server</li>
-<li id="rwrcview_li3">Delete a server</li><?Pub Caret -2?>
+<li id="rwrcview_li3">Delete a server</li>
 <li id="rwrcview_li4">Start a server in debug mode</li>
 <li id="rwrcview_li5">Start a server </li>
 <li id="rwrcview_li6">Restart a server in debug mode</li>
@@ -38,10 +38,12 @@ view to perform the following tasks:</p><ul>
 <li id="rwrcview_li11b">Displaying or hiding the metadata of the server
 from the workbench</li>
 <li id="rwrcview_li12">Add and remove projects from a server</li>
+<li id="rwrcview_li13">Deactivate server</li>
+<li id="rwrcview_li14">Activate server</li>
 </ul></section>
-<section><title id="rwrcview_section_server_state_title">Server State</title><p
-id="rwrcview_rwrcview_section_server_state_p1">The Servers view displays
-the current state of all the servers.</p><p
+<section><title id="rwrcview_section_server_state_title">Server State</title
+><p id="rwrcview_rwrcview_section_server_state_p1">The Servers view
+displays the current state of all the servers.</p><p
 id="rwrcview_rwrcview_section_server_state_p2">The following table
 lists the possible states of the server:</p><table><title
 id="rwrcview_section_server_state_table_title">Description of the
@@ -77,17 +79,23 @@ server.</entry>
 <entry>The workbench is in the process of connecting to the server
 and is ending the process on the server.</entry>
 </row>
+<row>
+<entry colname="COLSPEC0">Stopped</entry>
+<entry colname="COLSPEC1"><ph
+id="rwrcview_section_server_state_stopped_description">The server
+process has ended. Or the workbench is unable to connect to the server.</ph
+></entry>
+</row>
 <row id="rwrcview_section_server_state_stopped">
-<entry id="rwrcview_section_server_state_stopped_entry">Stopped</entry>
-<entry><ph id="rwrcview_section_server_state_stopped_description">The
-server process has ended. Or the workbench is unable to connect to
-the server.</ph></entry>
+<entry id="rwrcview_section_server_state_stopped_entry">Inactive</entry>
+<entry><ph id="rwrcview_section_server_state_stopped_description"
+>The server has been deactivated</ph></entry>
 </row>
 </tbody>
 </tgroup>
 </table></section>
-<section id="rwrcview_section_server_status"><title>Server Status</title><p>The
-Servers view also displays the current status of all the servers.
+<section id="rwrcview_section_server_status"><title>Server Status</title
+><p>The Servers view also displays the current status of all the servers.
 Depending on the state of the server and the preference options that
 are selected for that particular server, the workbench determines
 the server actions that may be taken. Use the status as an indicator
@@ -122,16 +130,17 @@ take place.</entry>
 The changed files need to be updated on the server.</entry>
 </row>
 <row>
-<entry>Restart and republish</entry>
-<entry>Either the server or the applications or both have changed.
-When the server is restarted, the changed files are also republished.</entry>
+<entry colname="COLSPEC0">Restart and republish</entry>
+<entry colname="COLSPEC1">Either the server or the applications or
+both have changed. When the server is restarted, the changed files
+are also republished.</entry>
 </row>
 </tbody>
 </tgroup>
 </table></section>
-<section id="rwrcview_section_project_state"><title>Project State</title><p>The
-Servers view might display the current state of the application is
-either started or stopped. When the Servers view does not display
+<section id="rwrcview_section_project_state"><title>Project State</title
+><p>The Servers view might display the current state of the application
+is either started or stopped. When the Servers view does not display
 a current state for the project, the workbench cannot retrieve the
 state of the project from the server or the server does not support
 this function.</p><p>If a project name appears in italic font style,
@@ -160,14 +169,14 @@ is not taking server requests to run.</entry>
 </tbody>
 </tgroup>
 </table></p></section>
-<section id="rwrcview_section_project_status"><title>Project Status</title><p>The
-Servers view might display the current status of the application is
-either synchronized or republished. When the Servers view does not
-display a current status for the project, the workbench cannot retrieve
-the status of the project from the server, the server is stopped or
-the server does not support this function.</p><p id="rwrcview_p3a">The
-following table lists the possible project status:</p><table><title>Description
-of project status</title>
+<section id="rwrcview_section_project_status"><title>Project Status</title
+><p>The Servers view might display the current status of the application
+is either synchronized or republished. When the Servers view does
+not display a current status for the project, the workbench cannot
+retrieve the status of the project from the server, the server is
+stopped or the server does not support this function.</p><p
+id="rwrcview_p3a">The following table lists the possible project status:</p
+><table><title>Description of project status</title>
 <tgroup cols="2"><colspec colname="COLSPEC0"/><colspec colname="COLSPEC1"/>
 <thead>
 <row>
@@ -192,4 +201,4 @@ server needs to be updated.</entry>
 </table></section>
 </refbody>
 </reference>
-<?Pub *0000007992?>
+<?Pub *0000008256?>
