@@ -375,11 +375,18 @@ public class Server extends Base implements IServer {
 		public RestartJob(String launchMode) {
 			super(NLS.bind(Messages.jobRestarting, Server.this.getName()));
 			this.launchMode = launchMode;
-			setRule(Server.this);
 		}
 
 		protected IStatus run(IProgressMonitor monitor) {
-			return restartImpl(launchMode, monitor);
+			try{
+				// Do begin rule in here instead of setRule on constructor to prevent deadlock
+				// on the default restart operation during the join() in the StartJob.
+				Job.getJobManager().beginRule(Server.this, monitor);
+				return restartImpl(launchMode, monitor);
+			}
+			finally{
+				Job.getJobManager().endRule(Server.this);
+			}
 		}
 	}
 
@@ -3164,8 +3171,18 @@ public class Server extends Base implements IServer {
 			// if restart is not implemented by the server adopter
 			// lets provide a default implementation
 			stop(false);
-			start(launchMode, monitor);
-
+			ISchedulingRule curRule = null;
+			try {
+				if (((ServerType)getServerType()).synchronousStart()) {
+					curRule = Job.getJobManager().currentRule();
+					Job.getJobManager().endRule(curRule);
+				}
+				start(launchMode, monitor);
+			} finally {
+				if (curRule != null) {
+					Job.getJobManager().beginRule(curRule, monitor);
+				}
+			}
 		} catch (Exception e) {
 			if (Trace.SEVERE) {
 				Trace.trace(Trace.STRING_SEVERE, "Error restarting server", e);
