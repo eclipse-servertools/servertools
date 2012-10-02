@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -149,10 +149,15 @@ public class NewServerWizardFragment extends WizardFragment {
 		if(getServer().getServerType() == null)
 			return false;
 		
-		return checkHostAndServerType();
+		return checkValidInput();
 	}
 	
-	private boolean checkHostAndServerType(){
+	/*
+	 * Checks for valid host name, server type, and server name
+	 * 
+	 * @return true if input is valid, false otherwise
+	 */
+	private boolean checkValidInput(){
 		boolean isComplete = false;
 
 		boolean supportsRemote = getServer().getServerType().supportsRemoteHosts();
@@ -162,6 +167,10 @@ public class NewServerWizardFragment extends WizardFragment {
 			if(composite != null && composite instanceof NewManualServerComposite){
 				NewManualServerComposite manualComp = (NewManualServerComposite) composite;
 				if (manualComp.isTimerRunning() || manualComp.isTimerScheduled()) {
+					return false;
+				}
+				
+				if (manualComp.isServerNameInUse()){
 					return false;
 				}
 				
