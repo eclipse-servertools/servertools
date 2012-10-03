@@ -243,7 +243,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 				String name = serverName.getText();
 								
 				IServerType selectedServerType = serverTypeComposite.getSelectedServerType();
-				if (validate(selectedServerType)) {
+				if (!validate(selectedServerType)) {
 					// Do not set the server name if it is invalid
 					return;			
 				}
