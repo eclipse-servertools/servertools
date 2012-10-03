@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,6 +40,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
 import org.eclipse.wst.server.core.util.SocketUtil;
 import org.eclipse.wst.server.ui.AbstractUIControl;
@@ -110,6 +111,10 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 	
 	private boolean canSupportModule=true;
 
+	// These variables deal with caching server name checks
+	private boolean isServerNameInUse=false;
+	private String cacheServerNameCheck="";
+	
 	/**
 	 * Creates a new server and server configuration.  If the initial
 	 * resource selection contains exactly one container resource then it will be
@@ -236,6 +241,13 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 					return;
 				
 				String name = serverName.getText();
+								
+				IServerType selectedServerType = serverTypeComposite.getSelectedServerType();
+				if (!validate(selectedServerType)) {
+					// Do not set the server name if it is invalid
+					return;			
+				}
+				
 				if (server != null) {
 					server.setName(name);
 					IRuntime runtime2 = server.getRuntime();
@@ -392,7 +404,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 	protected void handleHostnameChange(IServerType serverType) {
 
 		wizard.setMessage(null, IMessageProvider.NONE);
-		if (!checkHostAndServerType(serverType)) {
+		if (!validate(serverType)) {
 			return;// Host name validation failed, so there is no need to continue handling hostname change event			
 		}
 		loadServerImpl(serverType);
@@ -438,8 +450,21 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			wizard.setMessage(NLS.bind(Messages.wizCheckRemoteSupport, new Object[0]), IMessageProvider.ERROR);
 			return false;
 		}
-		
+
 		return true;
+	}
+	
+	protected boolean checkServerName(){		
+		if (isServerNameInUse()){
+			wizard.setMessage(Messages.errorDuplicateServerName, IMessageProvider.ERROR);
+			return false;			
+		}
+		return true;
+	}
+	
+	protected boolean validate(IServerType selectedServerType){
+		wizard.setMessage(null, IMessageProvider.NONE);
+		return (checkHostAndServerType(selectedServerType) & checkServerName());
 	}
 	
 	/**
@@ -723,7 +748,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		// Update the old server type value.
 		oldServerType = serverType;
 
-		checkHostAndServerType(serverType);
+		validate(serverType);
 		wizard.update();
 	}
 
@@ -883,4 +908,28 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			hostName = host;
 		}
 	}
+	
+	/**
+	 * Determines if the server name is in use. The server name that is checked
+	 * is cached to increase performance on multiple calls. 
+	 * 
+	 * @return true if name is in use, false otherwise
+	 */
+	public boolean isServerNameInUse(){
+		String myServerName="";
+		if (serverName != null){
+			myServerName = serverName.getText().trim();
+			// If the server name is equal to the cached server name, then return the
+			// previously cached value. If the server name is not equal to the cached
+			// server name, check to see if the name is in use
+			if (!cacheServerNameCheck.equals(myServerName)){
+				cacheServerNameCheck = myServerName;
+				isServerNameInUse = ServerPlugin.isNameInUse(server, serverName.getText().trim());				
+			}
+			return isServerNameInUse;			
+		}
+
+		// If the widget is null, return false
+		return false;
+	}	
 }

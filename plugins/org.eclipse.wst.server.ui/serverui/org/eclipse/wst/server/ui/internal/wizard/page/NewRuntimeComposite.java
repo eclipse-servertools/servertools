@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -201,5 +201,18 @@ public class NewRuntimeComposite extends Composite {
 				if (c[i] != null)
 					c[i].setVisible(visible);
 		}
+	}
+	
+	/**
+	 * 
+	 * Determines if the selected runtime is a
+	 * valid. 
+	 * 
+	 */
+	public boolean hasValidSelectedRuntime(){
+		if (runtime == null){
+			return false;
+		}
+		return true;
 	}
 }

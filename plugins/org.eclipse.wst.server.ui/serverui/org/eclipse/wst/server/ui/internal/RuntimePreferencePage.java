@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -281,7 +281,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 						Trace.trace(Trace.STRING_SEVERE, "Error finding runtimes", ex);
 					}
 				}
-				runtimeComp.refresh();
+				runtimeComp2.refresh();
 			}
 		});
 		
@@ -434,7 +434,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		final RuntimeComposite runtimeComp2 = this.runtimeComp;
 		Display.getDefault().asyncExec(new Runnable(){
 			public void run(){
-				runtimeComp2.add(runtime);
+				runtimeComp2.refresh();
 			}
 		});
 	}
@@ -442,7 +442,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		final RuntimeComposite runtimeComp2 = this.runtimeComp;
 		Display.getDefault().asyncExec(new Runnable(){
 			public void run(){
-				runtimeComp2.remove(runtime);
+				runtimeComp2.refresh();
 			}
 		});
 	}
