@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2011 IBM Corporation and others.
+ * Copyright (c) 2005, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -920,11 +920,32 @@ public abstract class ServerBehaviourDelegate {
 		if (monitor.isCanceled())
 			return Status.CANCEL_STATUS;
 		
+		/**
+		 * Trace time for when publishing begins.
+		 */
+		long publishStartTime = 0;
+		/**
+		 * Trace time of the previous publishing action.
+		 */
+		long previousPublishActionTime = publishStartTime;
+		if(Trace.PERFORMANCE) {
+			publishStartTime = System.currentTimeMillis();
+			previousPublishActionTime = publishStartTime;
+		}
 		try {
+			if(Trace.PERFORMANCE) {
+				Trace.trace(Trace.STRING_PERFORMANCE, "ServerBehaviourDelegate.publish(): start");
+			}
 			if (Trace.FINEST) {
 				Trace.trace(Trace.STRING_FINEST, "Starting publish");
 			}
 			publishStart(ProgressUtil.getSubMonitorFor(monitor, 1000));
+			long currentTime = 0;
+			if(Trace.PERFORMANCE) {
+				currentTime = System.currentTimeMillis();
+				Trace.trace(Trace.STRING_PERFORMANCE, "ServerBehaviourDelegate.publish(): publish start <" + (currentTime - previousPublishActionTime) + "> " + getServer().getServerType().getId());
+				previousPublishActionTime = currentTime;
+			}
 			
 			if (monitor.isCanceled())
 				return Status.CANCEL_STATUS;
@@ -937,6 +958,12 @@ public abstract class ServerBehaviourDelegate {
 			
 			// execute publishers
 			taskStatus = executePublishers(kind, moduleList, deltaKindList, monitor, info2);
+			if(Trace.PERFORMANCE) {
+				currentTime = System.currentTimeMillis();
+				Trace.trace(Trace.STRING_PERFORMANCE, "ServerBehaviourDelegate.publish(): run publishers <" + (currentTime - previousPublishActionTime) + "> " + getServer().getServerType().getId());
+				previousPublishActionTime = currentTime;
+			}
+			
 			monitor.setTaskName(mainTaskMsg);
 			if (taskStatus != null && !taskStatus.isOK())
 				tempMulti.addAll(taskStatus);
@@ -947,12 +974,22 @@ public abstract class ServerBehaviourDelegate {
 			// publish the server
 			publishServer(kind, ProgressUtil.getSubMonitorFor(monitor, 1000));
 			monitor.setTaskName(mainTaskMsg);
+			if(Trace.PERFORMANCE) {
+				currentTime = System.currentTimeMillis();
+				Trace.trace(Trace.STRING_PERFORMANCE, "ServerBehaviourDelegate.publish(): publisher server <" + (currentTime - previousPublishActionTime) + "> " + getServer().getServerType().getId());
+				previousPublishActionTime = currentTime;
+			}
 			
 			if (monitor.isCanceled())
 				return Status.CANCEL_STATUS;
 			
 			// publish modules
 			publishModules(kind, moduleList, deltaKindList, tempMulti, monitor);
+			if(Trace.PERFORMANCE) {
+				currentTime = System.currentTimeMillis();
+				Trace.trace(Trace.STRING_PERFORMANCE, "ServerBehaviourDelegate.publish(): publish modules <" + (currentTime - previousPublishActionTime) + "> " + getServer().getServerType().getId());
+				previousPublishActionTime = currentTime;
+			}
 			
 			if (monitor.isCanceled())
 				return Status.CANCEL_STATUS;
@@ -972,6 +1009,11 @@ public abstract class ServerBehaviourDelegate {
 			// end the publishing
 			try {
 				publishFinish(ProgressUtil.getSubMonitorFor(monitor, 500));
+				if(Trace.PERFORMANCE) {
+					long currentTime = System.currentTimeMillis();
+					Trace.trace(Trace.STRING_PERFORMANCE, "ServerBehaviourDelegate.publish(): publish finish <" + (currentTime - previousPublishActionTime) + "> " + getServer().getServerType().getId());
+					previousPublishActionTime = currentTime;
+				}
 			} catch (CoreException ce) {
 				if (Trace.INFO) {
 					Trace.trace(Trace.STRING_INFO, "CoreException publishing to " + toString(), ce);
@@ -982,6 +1024,9 @@ public abstract class ServerBehaviourDelegate {
 					Trace.trace(Trace.STRING_SEVERE, "Error stopping publish to " + toString(), e);
 				}
 				tempMulti.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e));
+			}
+			if(Trace.PERFORMANCE) {
+				Trace.trace(Trace.STRING_PERFORMANCE, "ServerBehaviourDelegate.publish(): <" + (previousPublishActionTime - publishStartTime) + "> " + getServer().getServerType().getId());
 			}
 		}
 		
