@@ -739,6 +739,10 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 				serverNameToolBar.getControl().setVisible(serverNameModified);
 			}
 		}
+		
+		if (hostname != null && server != null) {
+			hostname.setText(server.getHost());
+		}
 		listener.serverSelected(server);
 		// Fire the property change event. 
 		List<ServerCreationWizardPageExtension> pageExtensionLst = ServerUIPlugin.getServerCreationWizardPageExtensions();
