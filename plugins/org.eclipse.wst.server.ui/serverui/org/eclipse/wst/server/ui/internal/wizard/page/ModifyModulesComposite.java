@@ -864,7 +864,7 @@ public class ModifyModulesComposite extends Composite {
 		for (int i = 0; i < size; i++) {
 			IStatus status = errorMap.get(mods[i]);
 			
-			if (status == null && !list.contains(mods[i]))
+			if ((status == null || status.getSeverity() != IStatus.ERROR) && !list.contains(mods[i]))
 				list.add(mods[i]);
 		}
 		
