@@ -84,7 +84,6 @@ public class PingThread {
 				Trace.trace(Trace.FINEST, "Ping: pinging " + count);
 				URL pingUrl = new URL(url);
 				URLConnection conn = pingUrl.openConnection();
-				((HttpURLConnection)conn).setInstanceFollowRedirects(false);
 				((HttpURLConnection)conn).getResponseCode();
 	
 				// ping worked - server is up
