@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 IBM Corporation and others.
+ * Copyright (c) 2007, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,8 +13,8 @@ package org.eclipse.wst.server.preview.internal;
 import java.io.File;
 
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.webapp.WebAppContext;
 
 public class PreviewStarter {
 	protected String configPath;
@@ -57,9 +57,9 @@ public class PreviewStarter {
 					resourceHandler.setContext(module.getContext());
 					handlers.addHandler(resourceHandler);
 				} else {
-					ContextHandler wac = new ContextHandler();
+					WebAppContext wac = new WebAppContext();
 					wac.setContextPath(module.getContext());
-//					wac.setWar(module.getPath());
+					wac.setWar(module.getPath());
 					wac.setErrorHandler(errorHandler);
 					handlers.addHandler(wac);
 				}
