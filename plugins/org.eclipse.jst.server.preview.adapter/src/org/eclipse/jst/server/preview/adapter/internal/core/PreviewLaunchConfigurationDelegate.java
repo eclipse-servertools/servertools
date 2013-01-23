@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2012 IBM Corporation and others.
+ * Copyright (c) 2007, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -53,6 +53,8 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 		"org.eclipse.jetty.io",
 		"org.eclipse.jetty.security",
 		"org.eclipse.jetty.servlet",
+		"org.eclipse.jetty.webapp",
+		"org.eclipse.jetty.xml",
 		"javax.el",
 		"com.sun.el",
 		"org.apache.jasper.glassfish",
