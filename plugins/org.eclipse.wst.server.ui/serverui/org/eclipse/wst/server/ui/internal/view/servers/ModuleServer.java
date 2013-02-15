@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.wst.server.ui.internal.view.servers;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.ui.IServerModule;
 /**
  * A utility class for referencing a server and a module at the same time.
@@ -57,7 +58,19 @@ public class ModuleServer implements IServerModule {
 	public IModule[] getModule() {
 		return module;
 	}
-
+	
+	/**
+	 * Get the display name of the module of this module server.
+	 * @return the display name
+	 */
+	public String getModuleDisplayName() {
+		int size = module.length;
+		if (size == 0) {
+			return null;
+		}
+		return ServerUtil.getModuleDisplayName(module[size - 1]);
+	}
+	
 	/**
 	 * @see Object#equals(Object)
 	 */

@@ -1,5 +1,5 @@
 /***************************************************************************************************
- * Copyright (c) 2005, 2009 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * Copyright (c) 2005, 2013 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+
 import org.eclipse.ant.ui.launching.IAntLaunchConfigurationConstants;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -52,6 +53,7 @@ import org.eclipse.jst.server.generic.servertype.definition.PublisherData;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.osgi.framework.Bundle;
 
@@ -319,16 +321,16 @@ public class AntPublisher extends GenericPublisher {
 	}
 
 	private String guessModuleName(IModule module) {
-		String moduleName = module.getName();
+		String deployName = ServerUtil.getModuleDisplayName(module); 
 		if ("jst.web".equals(getModuleTypeId())) { //$NON-NLS-1$
 			IWebModule webModule = (IWebModule) getModule()[0].loadAdapter(IWebModule.class, null);
 			if (webModule == null) {
-				return module.getName();
+				return deployName;
 			}
 			String contextRoot = webModule.getURI(module);
-			moduleName = contextRoot.substring(0, contextRoot.lastIndexOf('.'));
+			deployName = contextRoot.substring(0, contextRoot.lastIndexOf('.'));
 		}
-		return moduleName;
+		return deployName;
 	}
 
 	private String guessContextRoot(IModule module) {

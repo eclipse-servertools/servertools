@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2012 IBM Corporation and others.
+ * Copyright (c) 2003, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -134,6 +134,21 @@ public class ServerUtil {
 		
 		String moduleSubId = moduleId.substring(index+1);
 		return moduleFactory.findModule(moduleSubId, null);
+	}
+
+	/**
+	 * Get the display name of a given module
+	 * @return the display name
+	 * @since 1.5
+	 */
+	public static String getModuleDisplayName(IModule curModule) {
+		if (curModule instanceof IModule2) {
+			String displayProp = ((IModule2)curModule).getProperty(IModule2.PROP_DISPLAY_NAME);
+			if (displayProp != null) {
+				return displayProp;
+			}
+		}
+		return curModule.getName();
 	}
 
 	/**
@@ -796,4 +811,5 @@ public class ServerUtil {
 	public static ISchedulingRule getServerSchedulingRule(IServer server) {
 		return server;
 	}
+
 }
