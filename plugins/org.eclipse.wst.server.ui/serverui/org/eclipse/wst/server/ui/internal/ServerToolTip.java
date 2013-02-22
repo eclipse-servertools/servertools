@@ -190,7 +190,7 @@ public class ServerToolTip extends ToolTip {
 		if (module != null) {
 			IModule[] modules = module.getModule();
 			IModule m = modules[modules.length - 1];
-			sText.setText("<b>" + m.getName() + "</b>");
+			sText.setText("<b>" + ServerUtil.getModuleDisplayName(m) + "</b>");
 			//sText.setText("<b>" + m.getName() + "</b></p>" + m.getModuleType().getName());
 			
 			StyledText sText2 = new StyledText(parent, SWT.NONE);
