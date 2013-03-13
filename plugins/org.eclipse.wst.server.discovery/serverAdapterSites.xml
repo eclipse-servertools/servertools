@@ -9,5 +9,5 @@
    <site url="http://download.oracle.com/otn_software/oepe/kepler/wtp/"/>
    <site url="http://download.eclipse.org/jetty/updates/jetty-wtp/"/>
    <site url="http://www.caucho.com/eclipse/"/>   
-   <site url="http://download.jboss.org/jbosstools/updates/webtools/juno/"/>
+   <site url="http://download.jboss.org/jbosstools/updates/webtools/kepler/"/>
 </extensions>
