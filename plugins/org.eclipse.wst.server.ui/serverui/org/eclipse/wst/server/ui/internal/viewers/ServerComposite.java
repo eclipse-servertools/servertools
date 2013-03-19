@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2012 IBM Corporation and others.
+ * Copyright (c) 2003, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,13 +21,18 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.IShellProvider;
+import org.eclipse.jface.util.ConfigureColumns;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.ui.dialogs.FilteredTree;
-
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.Messages;
@@ -36,7 +41,7 @@ import org.eclipse.wst.server.ui.internal.view.servers.ServerTableLabelProvider;
 /**
  * 
  */
-public class ServerComposite extends AbstractTreeComposite {
+public class ServerComposite extends AbstractTreeComposite implements IShellProvider {
 	protected IServer selection;
 	protected ServerSelectionListener listener;
 	protected ServerTreeContentProvider contentProvider;
@@ -172,4 +177,21 @@ public class ServerComposite extends AbstractTreeComposite {
 		job.setPriority(Job.SHORT);
 		job.schedule();
 	}
+	
+	protected void createWidgets() {
+		super.createWidgets();		
+		
+		Button columnsButton = new Button(this, SWT.PUSH);
+		columnsButton.setText(Messages.actionColumns);
+		final ServerComposite myClass = this;
+		columnsButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				ConfigureColumns.forTree(treeViewer.getTree(), myClass);
+			}
+		});	
+		
+		GridData data = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
+		data.horizontalSpan = 1;
+		columnsButton.setLayoutData(data);		
+	}	
 }

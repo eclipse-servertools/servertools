@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -104,7 +104,7 @@ public abstract class AbstractTreeComposite extends Composite {
 			Point p = description.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 			description.setText("");
 			data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);
-			data.horizontalSpan = 2;
+			data.horizontalSpan = 1;
 			if (p.y > 10)
 				data.heightHint = p.y;
 			else
