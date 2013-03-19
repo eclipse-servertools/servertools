@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 IBM Corporation and others.
+ * Copyright (c) 2007, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -536,6 +536,10 @@ public class PublishHelper {
 		for (int i = 0; i < size; i++) {
 			IStatus[] stat = copy(resources[i], path, monitor);
 			addArrayToList(status, stat);
+			
+			if (monitor.isCanceled()) {
+				break;
+			}
 		}
 		
 		IStatus[] stat = new IStatus[status.size()];
@@ -544,6 +548,9 @@ public class PublishHelper {
 	}
 
 	private IStatus[] copy(IModuleResource resource, IPath path, IProgressMonitor monitor) {
+		if (monitor.isCanceled()) {
+			return new IStatus[0];
+		}
 		String name = resource.getName();
 		if (Trace.PUBLISHING) {
 			Trace.trace(Trace.STRING_PUBLISHING, "Copying: " + name + " to " + path.toString());
@@ -557,12 +564,26 @@ public class PublishHelper {
 			IModuleFile mf = (IModuleFile) resource;
 			path = path.append(mf.getModuleRelativePath()).append(name);
 			File f = path.toFile().getParentFile();
-			if (!f.exists())
-				f.mkdirs();
-			try {
-				copyFile(mf, path);
-			} catch (CoreException ce) {
-				status.add(ce.getStatus());
+			if (f.exists()) {
+				try {
+					copyFile(mf, path);
+				} catch (CoreException ce) {
+					status.add(ce.getStatus());
+				}
+			} else {
+				// Create the parent directory.
+				if (f.mkdirs()) {
+					try {
+						copyFile(mf, path);
+					} catch (CoreException ce) {
+						status.add(ce.getStatus());
+					}
+				} else {
+					if (Trace.PUBLISHING) {
+						Trace.trace(Trace.STRING_PUBLISHING, "Failed to create the directory: " + f.getAbsolutePath() );
+					}
+					status.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorMkdir, f.getAbsolutePath()), null));
+				}
 			}
 		}
 		IStatus[] stat = new IStatus[status.size()];

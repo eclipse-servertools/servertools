@@ -168,12 +168,12 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 	}
 
 	protected static File getJavaExecutable() {
-		// do not detect on the Mac OS
+		// set the 'java.home' system property on the Mac OS
 		if (Platform.getOS().equals(Constants.OS_MACOSX))
-			return null;
+			System.setProperty("java.home", "/Library/Java/Home");
 		
 		// retrieve the 'java.home' system property. If that directory doesn't exist, return null
-		File javaHome; 
+		File javaHome;
 		try {
 			javaHome = new File(System.getProperty("java.home")).getCanonicalFile();
 		} catch (IOException e) {

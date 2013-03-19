@@ -375,11 +375,18 @@ public class Server extends Base implements IServer {
 		public RestartJob(String launchMode) {
 			super(NLS.bind(Messages.jobRestarting, Server.this.getName()));
 			this.launchMode = launchMode;
-			setRule(Server.this);
 		}
 
 		protected IStatus run(IProgressMonitor monitor) {
-			return restartImpl(launchMode, monitor);
+			try{
+				// Do begin rule in here instead of setRule on constructor to prevent deadlock
+				// on the default restart operation during the join() in the StartJob.
+				Job.getJobManager().beginRule(Server.this, monitor);
+				return restartImpl(launchMode, monitor);
+			}
+			finally{
+				Job.getJobManager().endRule(Server.this);
+			}
 		}
 	}
 
@@ -1891,7 +1898,7 @@ public class Server extends Base implements IServer {
 		job.schedule();
 	}
 
-	protected IStatus publishBeforeStart(IProgressMonitor monitor, boolean synchronous){
+	protected IStatus publishBeforeStart(IProgressMonitor monitor, final StartJob startJob, final boolean synchronous){
 
 		// check if we need to publish
 		byte pub = StartJob.PUBLISH_NONE;
@@ -1910,21 +1917,52 @@ public class Server extends Base implements IServer {
 			pubJob.addJobChangeListener(new JobChangeAdapter(){
 				public void done(IJobChangeEvent event) {
 					IStatus status = event.getResult();
-					if (status != null && status.getSeverity() == IStatus.ERROR)
-						pubStatus[0] = status; 
+					if (status != null && status.getSeverity() == IStatus.ERROR) {
+						pubStatus[0] = status;
+						if (Trace.INFO) {
+							Trace.trace(Trace.STRING_INFO,
+									"Skipping server start job schedule since the server publish failed on a publish before start server.");
+						}
+					} else {
+						if (Trace.INFO) {
+							Trace.trace(Trace.STRING_INFO,
+									"Scheduling server start job after successful publish.");
+						}
+						// Schedule the server start job since the publish operation is completed successfully.
+						startJob.schedule();
+						
+						try {
+							if (synchronous)
+								startJob.join();
+						} catch (InterruptedException e) {
+							if (Trace.WARNING) {
+								Trace.trace(Trace.STRING_WARNING, "Error waiting for job", e);
+							}
+						}
+					}
 				}
 				
 			});
-			
 			pubJob.schedule();
 			
-			try{
+			try {
 				if (synchronous)
 					pubJob.join();
-					
-			}
-			catch (InterruptedException ie){
+			} catch (InterruptedException ie) {
 				return Status.CANCEL_STATUS;
+			}
+		} else {
+			// Schedule the server start since a publish is not needed so 
+			// Schedule the server start job since the publish operation is completed successfully.
+			startJob.schedule();
+			
+			try {
+				if (synchronous)
+					startJob.join();
+			} catch (InterruptedException e) {
+				if (Trace.WARNING) {
+					Trace.trace(Trace.STRING_WARNING, "Error waiting for job", e);
+				}
 			}
 		}
 		return pubStatus[0];
@@ -1989,20 +2027,10 @@ public class Server extends Base implements IServer {
 		// make sure that the delegate is loaded and the server state is correct
 		loadAdapter(ServerBehaviourDelegate.class, null);
 		
-		boolean synchronous = ((ServerType)getServerType()).synchronousStart();
-		IStatus status = publishBeforeStart(monitor,synchronous);
-		
-		if (status != null && status.getSeverity() == IStatus.ERROR){
-			if (Trace.FINEST) {
-				Trace.trace(Trace.STRING_FINEST, "Failed publish job during start routine");
-			}
-			return;
-		}
-		
 		StartJob startJob = new StartJob(mode2);
 		// 287442 - only do publish after start if the server start is successful.
 		final IProgressMonitor monitor2 = monitor; 
-		final boolean synchronous2 = synchronous;
+		final boolean synchronous = ((ServerType)getServerType()).synchronousStart();
 		startJob.addJobChangeListener(new JobChangeAdapter() {
 			public void done(IJobChangeEvent event) {
 				IStatus resultStatus = event.getResult();
@@ -2012,17 +2040,29 @@ public class Server extends Base implements IServer {
 								"Skipping auto publish after server start since the server start failed.");
 					}
 				} else {
-					publishAfterStart(monitor2,synchronous2,null);
+					publishAfterStart(monitor2,synchronous,null);
 				}
 			}
 		});
-		startJob.schedule();
-		try {
-			if(synchronous)
-				startJob.join();
-		} catch (InterruptedException e) {
-			if (Trace.WARNING) {
-				Trace.trace(Trace.STRING_WARNING, "Error waiting for job", e);
+		// Forces synchronous start since this method is supposed to wait until the publish operation is completed.
+		IStatus status = publishBeforeStart(monitor, startJob, true);
+		
+		if (status != null && status.getSeverity() == IStatus.ERROR){
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "Failed publish job during start routine");
+			}
+			return;
+		}
+		
+		if (((ServerType)getServerType()).startBeforePublish()) {
+			startJob.schedule();
+			try {
+				if(synchronous)
+					startJob.join();
+			} catch (InterruptedException e) {
+				if (Trace.WARNING) {
+					Trace.trace(Trace.STRING_WARNING, "Error waiting for job", e);
+				}
 			}
 		}
 	}
@@ -2040,18 +2080,6 @@ public class Server extends Base implements IServer {
 		// make sure that the delegate is loaded and the server state is correct
 		loadAdapter(ServerBehaviourDelegate.class, null);
 		
-		boolean synchronous = ((ServerType)getServerType()).synchronousStart();
-		IStatus status = publishBeforeStart(null,synchronous);
-		
-		if (status != null && status.getSeverity() == IStatus.ERROR){
-			if (Trace.FINEST) {
-				Trace.trace(Trace.STRING_FINEST, "Failed publish job during start routine");
-			}
-			if (opListener != null)
-				opListener.done(Status.OK_STATUS);
-			return;
-		}
-
 		// check the publish flag (again) to determine when to call opListener.done 
 		byte pub = StartJob.PUBLISH_NONE;
 		if (ServerCore.isAutoPublishing() && shouldPublish()) {
@@ -2073,8 +2101,22 @@ public class Server extends Base implements IServer {
 				}
 			});
 		}
+		
+		final boolean synchronous = ((ServerType)getServerType()).synchronousStart();
+		// For publish before start servers, the start job will only be kicked off if the publishing
+		// operation is completed successfully.
+		IStatus status = publishBeforeStart(null, startJob, synchronous);
+		
+		if (status != null && status.getSeverity() == IStatus.ERROR){
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "Failed publish job during start routine");
+			}
+			if (opListener != null)
+				opListener.done(Status.OK_STATUS);
+			return;
+		}
+
 		// 287442 - only do publish after start if the server start is successful.
-		final boolean synchronous2 = synchronous;
 		if (pub == StartJob.PUBLISH_AFTER) {
 			startJob.addJobChangeListener(new JobChangeAdapter() {
 				public void done(IJobChangeEvent event) {
@@ -2089,19 +2131,19 @@ public class Server extends Base implements IServer {
 							opListener.done(Status.OK_STATUS);
 					}
 					else {
-						publishAfterStart(null,synchronous2,opListener);
+						publishAfterStart(null,synchronous,opListener);
 					}
 				}
 			});
-		}
-		startJob.schedule();
-		
-		try {
-			if(synchronous)
-				startJob.join();
-		} catch (InterruptedException e) {
-			if (Trace.WARNING) {
-				Trace.trace(Trace.STRING_WARNING, "Error waiting for job", e);
+			startJob.schedule();
+			
+			try {
+				if(synchronous)
+					startJob.join();
+			} catch (InterruptedException e) {
+				if (Trace.WARNING) {
+					Trace.trace(Trace.STRING_WARNING, "Error waiting for job", e);
+				}
 			}
 		}
 	}
@@ -2112,15 +2154,6 @@ public class Server extends Base implements IServer {
 		
 		// make sure that the delegate is loaded and the server state is correct
 		loadAdapter(ServerBehaviourDelegate.class, monitor);
-		
-		IStatus status = publishBeforeStart(monitor,true);
-		
-		if (status != null && status.getSeverity() == IStatus.ERROR){
-			if (Trace.FINEST) {
-				Trace.trace(Trace.STRING_FINEST, "Failed publish job during start routine");
-			}
-			return;
-		}
 		
 		StartJob startJob = new StartJob(mode2);
 		// 287442 - only do publish after start if the server start is successful.
@@ -2138,13 +2171,25 @@ public class Server extends Base implements IServer {
 				}
 			}
 		});
-		startJob.schedule();
 		
-		try {
-			startJob.join();
-		} catch (InterruptedException e) {
-			if (Trace.WARNING) {
-				Trace.trace(Trace.STRING_WARNING, "Error waiting for job", e);
+		IStatus status = publishBeforeStart(monitor, startJob, true);
+		
+		if (status != null && status.getSeverity() == IStatus.ERROR){
+			if (Trace.FINEST) {
+				Trace.trace(Trace.STRING_FINEST, "Failed publish job during start routine");
+			}
+			return;
+		}
+		
+		if (((ServerType)getServerType()).startBeforePublish()) {
+			startJob.schedule();
+			
+			try {
+				startJob.join();
+			} catch (InterruptedException e) {
+				if (Trace.WARNING) {
+					Trace.trace(Trace.STRING_WARNING, "Error waiting for job", e);
+				}
 			}
 		}
 	}
@@ -3147,6 +3192,7 @@ public class Server extends Base implements IServer {
 			Trace.trace(Trace.STRING_FINEST, "Restarting server: " + getName());
 		}
 		
+		ISchedulingRule curRule = null;
 		try {
 			try {
 				// synchronous restart
@@ -3163,14 +3209,21 @@ public class Server extends Base implements IServer {
 			}
 			// if restart is not implemented by the server adopter
 			// lets provide a default implementation
+			// Ending the current rule setup by the RestartJob to prevent deadlock since the StopJob triggered
+			// by the stop(false) also setup the Server as the scheduling rule.
+			curRule = Job.getJobManager().currentRule();
+			Job.getJobManager().endRule(curRule);
 			stop(false);
 			start(launchMode, monitor);
-
 		} catch (Exception e) {
 			if (Trace.SEVERE) {
 				Trace.trace(Trace.STRING_SEVERE, "Error restarting server", e);
 			}
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartFailed, getName()), e);
+		} finally {
+			if (curRule != null) {
+				Job.getJobManager().beginRule(curRule, monitor);
+			}
 		}
 		return Status.OK_STATUS;
 	}

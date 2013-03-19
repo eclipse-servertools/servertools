@@ -448,7 +448,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		wch.setDirty(false);
 		
 		if (getServerState() == IServer.STATE_STARTED)
-			autoPublish();
+			server.autoPublish();
 		
 		return server;
 	}

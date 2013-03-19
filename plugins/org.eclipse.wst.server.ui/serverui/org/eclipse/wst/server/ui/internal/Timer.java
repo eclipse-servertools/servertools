@@ -99,6 +99,7 @@ public class Timer {
 				}
 				if (!isCancelled) {
 					if (listener != null) {
+						isRunning = false;
 						listener.actionPerformed(new ActionEvent(Timer.this, 0, "", System.currentTimeMillis(), 0));
 					}
 				} else {
