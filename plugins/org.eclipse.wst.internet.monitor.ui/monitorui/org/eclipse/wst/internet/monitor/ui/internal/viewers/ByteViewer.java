@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2012 IBM Corporation and others.
+ * Copyright (c) 2003, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -70,10 +70,16 @@ public class ByteViewer extends ContentViewer {
 		byteViewerBodyComposite.setLayoutData(data);		
 		byteViewerBodyComposite.setLayout(layout);
 		
-		encodingLabel = new Label(byteViewerBodyComposite, SWT.NONE);
-				
-		encodingLabel.setText(NLS.bind(Messages.viewEncoding,""));
-		encodingCombo = new Combo(byteViewerBodyComposite, SWT.RIGHT);
+		// This additional layout helps with aligning the text boxes in
+		// org.eclipse.wst.internet.monitor.ui.internal.view.MonitorView
+		Composite request = new Composite(byteViewerBodyComposite, SWT.NONE);
+		GridLayout layout2 = new GridLayout();
+		layout2.numColumns = 2;
+		request.setLayout(layout2);
+		
+		encodingLabel = new Label(request, SWT.NONE);
+		encodingLabel.setText(NLS.bind(Messages.viewEncoding,""));		
+		encodingCombo = new Combo(request, SWT.RIGHT);
 		
 		// Add the default option
 		encodingCombo.add(NLS.bind(Messages.defaultEncodingOption,""));

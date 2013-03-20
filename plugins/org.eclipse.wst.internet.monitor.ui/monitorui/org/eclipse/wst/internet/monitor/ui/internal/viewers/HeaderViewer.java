@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.internet.monitor.core.internal.provisional.Request;
@@ -32,7 +31,7 @@ public class HeaderViewer {
 	protected Composite headerComp;
 	protected MonitorStackLayout layout;
 
-	protected Label headerLabel;
+	protected Text headerLabel;
 	protected Text headerText;
 	protected Request rr;
 	protected byte msg;
@@ -70,7 +69,7 @@ public class HeaderViewer {
 		headerText.setFont(JFaceResources.getTextFont());
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(headerText, ContextIds.VIEW_RESPONSE);
 		
-		headerLabel = new Label(headerComp, SWT.NONE);
+		headerLabel = new Text(headerComp, SWT.READ_ONLY);
 		
 		layout.topControl = headerText;
 		

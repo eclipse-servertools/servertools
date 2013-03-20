@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,11 +14,23 @@ import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.jface.action.*;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
-import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -33,15 +45,24 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.ui.*;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wst.internet.monitor.core.internal.IContentFilter;
 import org.eclipse.wst.internet.monitor.core.internal.MonitorPlugin;
 import org.eclipse.wst.internet.monitor.core.internal.http.ResendHTTPRequest;
 import org.eclipse.wst.internet.monitor.core.internal.provisional.IRequestListener;
 import org.eclipse.wst.internet.monitor.core.internal.provisional.Request;
-import org.eclipse.wst.internet.monitor.ui.internal.*;
+import org.eclipse.wst.internet.monitor.ui.internal.ContextIds;
+import org.eclipse.wst.internet.monitor.ui.internal.Messages;
+import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
+import org.eclipse.wst.internet.monitor.ui.internal.Trace;
 /**
  * View of TCP/IP activity.
  */
@@ -130,6 +151,8 @@ public class MonitorView extends ViewPart {
 	 */
 	public void createPartControl(Composite parent) {
 		SashForm sashFparent = new SashForm(parent, SWT.VERTICAL);
+		sashFparent.setBackground(sashFparent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+		
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		layout.horizontalSpacing = 4;
@@ -169,20 +192,20 @@ public class MonitorView extends ViewPart {
 		layout.marginWidth = 0;
 		detailsPanel.setLayout(layout);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL);
-		data.widthHint = 200;
+		data.widthHint = 350;
 		detailsPanel.setLayoutData(data);
 
-		final Label label = new Label(detailsPanel, SWT.NONE);
-		label.setText(NLS.bind(Messages.viewTime, ""));
-		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
+		final Text detailsTimeText = new Text(detailsPanel, SWT.READ_ONLY);
+		detailsTimeText.setText(NLS.bind(Messages.viewTime, ""));
+		detailsTimeText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
 
-		final Label label2 = new Label(detailsPanel, SWT.NONE);
-		label2.setText(NLS.bind(Messages.viewResponseTime, ""));
-		label2.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
+		final Text detailsResponseTimeText = new Text(detailsPanel, SWT.READ_ONLY);
+		detailsResponseTimeText.setText(NLS.bind(Messages.viewResponseTime, ""));
+		detailsResponseTimeText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
 		
-		final Label label3 = new Label(detailsPanel, SWT.NONE);
-		label3.setText(NLS.bind(Messages.viewType, ""));
-		label3.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
+		final Text detailsViewTimeText = new Text(detailsPanel, SWT.READ_ONLY);
+		detailsViewTimeText.setText(NLS.bind(Messages.viewType, ""));
+		detailsViewTimeText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
 		
 		// create center and right panels
 		SashForm sashFchild = new SashForm(sashFparent, SWT.HORIZONTAL);
@@ -196,7 +219,6 @@ public class MonitorView extends ViewPart {
 		// request panel
 		Composite request = new Composite(sashFchild, SWT.NONE);
 		layout = new GridLayout();
-		layout.verticalSpacing = 3;
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		request.setLayout(layout);
@@ -208,23 +230,36 @@ public class MonitorView extends ViewPart {
 		layout.numColumns = 2;
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
-		layout.marginLeft = 2;
+		layout.marginLeft = 0;
 		data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
 		requestHeader.setLayout(layout);
 		requestHeader.setLayoutData(data);
 		
-		final Label requestLabel = new Label(requestHeader, SWT.NONE);
-		requestLabel.setText(NLS.bind(Messages.viewRequest, ""));
-		requestLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		final Label requestViewerComboLabel = new Label(requestHeader, SWT.NONE);
+		requestViewerComboLabel.setText(NLS.bind(Messages.viewRequestType, ""));
+		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		data.verticalSpan = 1;
+		data.horizontalIndent=3;
+		requestViewerComboLabel.setLayoutData(data);
 		
 		final Combo requestViewerCombo = new Combo(requestHeader, SWT.DROP_DOWN | SWT.READ_ONLY);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
-		data.verticalSpan = 2;
+		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		data.verticalSpan = 1;
 		requestViewerCombo.setLayoutData(data);
 		
-		final Label requestSizeLabel = new Label(requestHeader, SWT.NONE);
+		final Text requestLabel = new Text(requestHeader, SWT.READ_ONLY);
+		requestLabel.setText(NLS.bind(Messages.viewRequest, ""));	
+		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		data.verticalSpan = 1;
+		data.horizontalSpan = 2;
+		requestLabel.setLayoutData(data);		
+		
+		final Text requestSizeLabel = new Text(requestHeader, SWT.READ_ONLY);
 		requestSizeLabel.setText(NLS.bind(Messages.viewSize, ""));
-		requestSizeLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		data.verticalSpan = 1;
+		data.horizontalSpan = 2;
+		requestSizeLabel.setLayoutData(data);
 		
 		// response panel
 		Composite response = new Composite(sashFchild, SWT.NONE);
@@ -241,23 +276,36 @@ public class MonitorView extends ViewPart {
 		layout.numColumns = 2;
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
-		layout.marginLeft = 2;
+		layout.marginLeft = 0;
 		data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
 		responseHeader.setLayout(layout);
 		responseHeader.setLayoutData(data);
-		
-		final Label responseLabel = new Label(responseHeader, SWT.NONE);
-		responseLabel.setText(NLS.bind(Messages.viewResponse, ""));
-		responseLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+				
+		final Label responseViewerComboLabel = new Label(responseHeader, SWT.NONE);
+		responseViewerComboLabel.setText(NLS.bind(Messages.viewResponseType, ""));
+		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		data.verticalSpan = 1;
+		data.horizontalIndent=3;
+		responseViewerComboLabel.setLayoutData(data);		
 		
 		final Combo responseViewerCombo = new Combo(responseHeader, SWT.DROP_DOWN | SWT.READ_ONLY);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
-		data.verticalSpan = 2;
+		data.verticalSpan = 1;
 		responseViewerCombo.setLayoutData(data);
 		
-		final Label responseSizeLabel = new Label(responseHeader, SWT.NONE);
+		final Text responseLabel = new Text(responseHeader, SWT.READ_ONLY);
+		responseLabel.setText(NLS.bind(Messages.viewResponse, ""));
+		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		data.verticalSpan = 1;
+		data.horizontalSpan = 2;
+		requestLabel.setLayoutData(data);			
+		
+		final Text responseSizeLabel = new Text(responseHeader, SWT.READ_ONLY);
 		responseSizeLabel.setText(NLS.bind(Messages.viewSize, ""));
-		responseSizeLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		data.verticalSpan = 1;
+		data.horizontalSpan = 2;
+		responseSizeLabel.setLayoutData(data);
 		
 		// viewer manager
 		vm = new ViewerManager(request, response);
@@ -330,15 +378,15 @@ public class MonitorView extends ViewPart {
 				}
 	
 				if (currentRequest != null) {
-					label.setText(NLS.bind(Messages.viewTime, format.format(currentRequest.getDate())));
+					detailsTimeText.setText(NLS.bind(Messages.viewTime, format.format(currentRequest.getDate())));
 	
 					if (currentRequest.getResponseTime() == -1)
-						label2.setText(NLS.bind(Messages.viewResponseTime, ""));
+						detailsResponseTimeText.setText(NLS.bind(Messages.viewResponseTime, ""));
 					else {
 						String time = NLS.bind(Messages.viewResponseTimeFormat, currentRequest.getResponseTime() + "");
-						label2.setText(NLS.bind(Messages.viewResponseTime, time));
+						detailsResponseTimeText.setText(NLS.bind(Messages.viewResponseTime, time));
 					}
-					label3.setText(NLS.bind(Messages.viewType, currentRequest.getProtocol()));
+					detailsViewTimeText.setText(NLS.bind(Messages.viewType, currentRequest.getProtocol()));
 	
 					// request information
 					requestLabel.setText(NLS.bind(Messages.viewRequest, "localhost:" + currentRequest.getLocalPort()));
@@ -366,8 +414,8 @@ public class MonitorView extends ViewPart {
 						responseViewerCombo.select(responseViewers.indexOf(viewer));
 					}
 				} else {
-					label.setText(NLS.bind(Messages.viewTime, ""));
-					label2.setText(NLS.bind(Messages.viewResponseTime, ""));
+					detailsTimeText.setText(NLS.bind(Messages.viewTime, ""));
+					detailsResponseTimeText.setText(NLS.bind(Messages.viewResponseTime, ""));
 					requestLabel.setText(NLS.bind(Messages.viewRequest, ""));
 					requestSizeLabel.setText(NLS.bind(Messages.viewSize, ""));
 					responseLabel.setText(NLS.bind(Messages.viewResponse, ""));

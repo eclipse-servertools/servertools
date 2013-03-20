@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2012 IBM Corporation and others.
+ * Copyright (c) 2003, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,8 +19,10 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.util.ConfigureColumns;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -45,7 +47,7 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * The preference page that holds server runtimes.
  */
-public class RuntimePreferencePage extends PreferencePage implements IWorkbenchPreferencePage, IRuntimeLifecycleListener {
+public class RuntimePreferencePage extends PreferencePage implements IWorkbenchPreferencePage, IRuntimeLifecycleListener, IShellProvider {
 	protected Button edit;
 	protected Button remove;
 	protected Label pathLabel;
@@ -282,6 +284,15 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 					}
 				}
 				runtimeComp2.refresh();
+			}
+		});
+		
+		Button columnsButton = SWTUtil.createButton(buttonComp, Messages.actionColumns);
+		data = (GridData) columnsButton.getLayoutData();
+		final RuntimePreferencePage thisClass = this;
+		columnsButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				ConfigureColumns.forTable(runtimeComp.getTable(), thisClass);
 			}
 		});
 		

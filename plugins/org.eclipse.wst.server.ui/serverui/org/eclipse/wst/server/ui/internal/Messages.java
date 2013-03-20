@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005, 2012 IBM Corporation and others.
+ * Copyright (c) 2005, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -138,6 +138,7 @@ public class Messages extends NLS {
 	public static String actionRename;
 	public static String actionDelete;
 	public static String actionRemove;
+	public static String actionColumns;
 	public static String dialogRemoveModuleConfirm;
 	public static String dialogRemoveModulesConfirm;
 	public static String terminateServerDialogTitle;
