@@ -136,7 +136,7 @@ public abstract class ModuleFactoryDelegate {
 	 * @param project the project that the module is contained in
 	 * @param properties a map of key/value pairs for additional information
 	 * @return a module instance
-	 * @since 1.4
+	 * @since 1.5
 	 */
 	protected final IModule createModule(String id, String name, String type, String version, IProject project, Map<String, String> properties) {
 		return new Module(factory, id, name, type, version, project, properties);
