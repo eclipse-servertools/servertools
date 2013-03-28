@@ -77,6 +77,7 @@ public class ShowInDebugAction extends AbstractServerAction {
 				if (part != null) {
 					IDebugView view = (IDebugView)part.getAdapter(IDebugView.class);
 					if (view != null) {
+						page.activate(part);
 						view.setFocus();
 						Viewer viewer = view.getViewer();
 						if (viewer != null) {

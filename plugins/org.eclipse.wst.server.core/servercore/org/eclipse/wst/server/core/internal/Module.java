@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,16 +10,20 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.internal;
 
+import java.util.Map;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IModuleType;
+import org.eclipse.wst.server.core.IModule2;
 import org.eclipse.wst.server.core.model.ModuleDelegate;
 /**
  * 
  */
-public class Module implements IModule {
+public class Module implements IModule2 {
 	protected String id;
 	protected String name;
 	protected ModuleFactory factory;
@@ -28,6 +32,8 @@ public class Module implements IModule {
 	protected ModuleDelegate delegate;
 	protected String id2;
 
+	protected Map<String, String> properties;
+	
 	/**
 	 * Module constructor.
 	 * 
@@ -39,6 +45,20 @@ public class Module implements IModule {
 	 * @param project
 	 */
 	public Module(ModuleFactory factory, String id, String name, String type, String version, IProject project) {
+		this(factory, id, name, type, version, project, null);
+	}
+	
+	/**
+	 * Module constructor with properties
+	 * 
+	 * @param factory
+	 * @param id
+	 * @param name
+	 * @param type
+	 * @param version
+	 * @param project
+	 */
+	public Module(ModuleFactory factory, String id, String name, String type, String version, IProject project, Map<String, String> properties) {
 		super();
 		this.factory = factory;
 		this.project = project;
@@ -50,6 +70,7 @@ public class Module implements IModule {
 		else
 			id2 = ":";
 		id2 += id;
+		this.properties = properties;
 	}
 
 	/**
@@ -267,5 +288,13 @@ public class Module implements IModule {
 	 */
 	public String toString() {
 		return "Module[" + name + "," + id2 + "]";
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.wst.server.core.IModule2#getProperty(java.lang.String)
+	 */
+	public String getProperty(String key) {
+		return properties == null || key == null ? null : properties.get(key);
 	}
 }

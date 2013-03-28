@@ -118,6 +118,8 @@ public class RemoveModuleAction extends Action {
 						public Object getAdapter(Class adapter) {
 							if (Shell.class.equals(adapter))
 								return shell;
+		                    if (String.class.equals(adapter))
+		                        return "user";
 							return null;
 						}
 					};

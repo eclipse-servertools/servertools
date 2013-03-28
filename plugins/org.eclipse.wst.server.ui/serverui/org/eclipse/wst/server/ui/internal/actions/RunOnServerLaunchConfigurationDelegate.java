@@ -140,8 +140,19 @@ public class RunOnServerLaunchConfigurationDelegate extends LaunchConfigurationD
 		IModule[] modules = new IModule[] { module }; // TODO: get parent hierarchy correct
 		int state = server.getServerState();
 		if (state == IServer.STATE_STARTING) {
-			LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
-			clientJob.schedule();
+			final LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
+			final IServer server2 = server;
+			if (server2.shouldPublish()) {
+				server2.publish(IServer.PUBLISH_INCREMENTAL, null, info, new IServer.IOperationListener() {
+					public void done(IStatus result) {
+						if (result.isOK()){
+							clientJob.schedule();
+						}
+					}
+				});
+			}else{
+				clientJob.schedule();
+			}
 		} else if (state == IServer.STATE_STARTED) {
 			boolean restart = false;
 			String mode = server.getMode();

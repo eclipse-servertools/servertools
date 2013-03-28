@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2012 IBM Corporation and others.
+ * Copyright (c) 2003, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -510,7 +510,7 @@ public class ModifyModulesComposite extends Composite {
 				if (e1 instanceof ModuleServer && e2 instanceof ModuleServer) {
 					ModuleServer s1 = (ModuleServer) e1;
 					ModuleServer s2 = (ModuleServer) e2;
-					return (s1.module[s1.module.length - 1].getName().compareToIgnoreCase(s2.module[s2.module.length - 1].getName()));
+					return (s1.getModuleDisplayName().compareToIgnoreCase(s2.getModuleDisplayName()));
 				}
 				
 				return super.compare(viewer, e1, e2);

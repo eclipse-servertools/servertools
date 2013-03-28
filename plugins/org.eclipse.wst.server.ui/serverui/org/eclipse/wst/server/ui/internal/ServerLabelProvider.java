@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -251,8 +251,7 @@ public class ServerLabelProvider implements ILabelProvider, IColorProvider, IWor
 			return decorate(module.getName(), modules);
 		} else if (element instanceof ModuleServer) {
 			ModuleServer ms = (ModuleServer) element;
-			IModule module = ms.module[ms.module.length - 1];
-			return decorate(module.getName(), ms);
+			return decorate(ms.getModuleDisplayName(), ms);
 		} else if (element instanceof IWorkbenchAdapter) {
 			return ((IWorkbenchAdapter) element).getLabel(null);
 		}

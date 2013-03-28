@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.wst.server.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -120,6 +121,25 @@ public abstract class ModuleFactoryDelegate {
 	 */
 	protected final IModule createModule(String id, String name, String type, String version, IProject project) {
 		return new Module(factory, id, name, type, version, project);
+	}
+
+	/**
+	 * Creates a module instance with the given static information,
+	 * including a map of properties. 
+	 * 
+	 * This method is used by module factory delegates to create module instances.
+	 * 
+	 * @param id the module id
+	 * @param name the module name
+	 * @param type the module type id
+	 * @param version the module version id
+	 * @param project the project that the module is contained in
+	 * @param properties a map of key/value pairs for additional information
+	 * @return a module instance
+	 * @since 1.5
+	 */
+	protected final IModule createModule(String id, String name, String type, String version, IProject project, Map<String, String> properties) {
+		return new Module(factory, id, name, type, version, project, properties);
 	}
 
 	/**

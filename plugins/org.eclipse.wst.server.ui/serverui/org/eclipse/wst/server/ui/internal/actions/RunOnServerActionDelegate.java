@@ -207,7 +207,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			public Object getAdapter(Class adapter) {
 				if (Shell.class.equals(adapter))
 					return shell;
-				return null;
+				if (String.class.equals(adapter))
+					return "user";
+ 				return null;
 			}
 		};
 		

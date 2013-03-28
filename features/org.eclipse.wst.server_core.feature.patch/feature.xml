@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.server_core.feature.patch"
       label="Patch Feature for Server Core"
-      version="1.0.0.qualifier"
+      version="3.4.2.qualifier"
       provider-name="Eclipse.org">
 
    <description>
@@ -18,11 +18,18 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.wst.server_core.feature" version="1.5.4.v200704150133-----1G955H5G5Ep" patch="true"/>
+      <import feature="org.eclipse.wst.server_core.feature" version="3.3.200.v20121107_1651-33F8S8s7357385Ja2251" patch="true"/>
    </requires>
 
    <plugin
          id="org.eclipse.wst.server.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.wst.server.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
