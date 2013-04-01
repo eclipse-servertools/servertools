@@ -71,12 +71,11 @@ public class RemoveModuleAction extends Action {
 	public void run() {
 		String message = module.length == 1 ? Messages.dialogRemoveModuleConfirm : Messages.dialogRemoveModulesConfirm;
 		if (MessageDialog.openConfirm(shell, Messages.defaultDialogTitle, message)) {
-			for( int i = 0; i < module.length; i++ ) 
-				handleRemoveOneModule(module[i]);
+			removeModules(module);  
 		}
 	}
 	
-	protected void handleRemoveOneModule(final IModule mod) {
+	protected void removeModules(final IModule[] modules) {
 			try {
 				final ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
 				dialog.setBlockOnOpen(false);
@@ -88,7 +87,7 @@ public class RemoveModuleAction extends Action {
 							if (monitor.isCanceled()) {
 								return;
 							}
-							wc.modifyModules(null, new IModule[] { mod }, monitor);
+							wc.modifyModules(null, modules, monitor);
 							if (monitor.isCanceled()) {
 								return;
 							}
