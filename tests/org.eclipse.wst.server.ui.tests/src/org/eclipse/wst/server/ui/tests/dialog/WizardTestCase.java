@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,28 +29,22 @@ public class WizardTestCase extends TestCase {
 		UITestHelper.assertDialog(dialog);
 	}
 
-	public void testRunOnServerWizard() throws Exception {
+	public void testAll() throws Exception {
 		testRoS(null);
-	}
 
-	public void testModifyModulesWizard() throws Exception {
 		Shell shell = UITestHelper.getShell();
 		ModifyModulesWizard wiz = new ModifyModulesWizard(null);
 		WizardDialog dialog = new WizardDialog(shell, wiz);
 		UITestHelper.assertDialog(dialog);
-	}
 
-	public void testNewRuntimeWizard() throws Exception {
-		Shell shell = UITestHelper.getShell();
-		NewRuntimeWizard wiz = new NewRuntimeWizard();
-		WizardDialog dialog = new WizardDialog(shell, wiz);
+		shell = UITestHelper.getShell();
+		NewRuntimeWizard wiz2 = new NewRuntimeWizard();
+		dialog = new WizardDialog(shell, wiz2);
 		UITestHelper.assertDialog(dialog);
-	}
 
-	public void testNewServerWizard() throws Exception {
-		Shell shell = UITestHelper.getShell();
-		NewServerWizard wiz = new NewServerWizard();
-		WizardDialog dialog = new WizardDialog(shell, wiz);
+		shell = UITestHelper.getShell();
+		NewServerWizard wiz3 = new NewServerWizard();
+		dialog = new WizardDialog(shell, wiz3);
 		UITestHelper.assertDialog(dialog);
 	}
 }
