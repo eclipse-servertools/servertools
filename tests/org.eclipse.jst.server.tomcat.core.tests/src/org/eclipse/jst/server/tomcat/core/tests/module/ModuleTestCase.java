@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,24 +19,16 @@ public class ModuleTestCase extends TestCase {
 	protected static final String CLOSED_PROJECT = "ClosedProject";
 	public static IModule webModule;
 
-	public void test00ClosedProject() throws Exception {
+	public void testAll() throws Exception {
 		ModuleHelper.createClosedProject(CLOSED_PROJECT);
-	}
 
-	public void test01CreateWebModule() throws Exception {
 		ModuleHelper.createModule(WEB_MODULE_NAME);
-	}
 
-	public void test02CreateWebContent() throws Exception {
 		ModuleHelper.createWebContent(WEB_MODULE_NAME, 0);
-	}
 
-	public void test04GetModule() throws Exception {
 		ModuleHelper.buildFull();
 		webModule = ModuleHelper.getModule(WEB_MODULE_NAME);
-	}
 
-	public void test05CountFilesInModule() throws Exception {
 		assertEquals(ModuleHelper.countFilesInModule(webModule), 3);
 	}
 }

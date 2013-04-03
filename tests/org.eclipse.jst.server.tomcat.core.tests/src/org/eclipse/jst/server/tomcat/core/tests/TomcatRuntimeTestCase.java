@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,11 +34,6 @@ public class TomcatRuntimeTestCase extends TestCase {
 		wc.setLocation(new Path("c://test"));
 		return wc;
 	}
-
-	public void test00CreateRuntime() throws Exception {
-		runtime = createRuntime(RUNTIME_TYPE_ID_32).save(false, null);
-		assertTrue(!runtime.isWorkingCopy());
-	}
 	
 	protected void validateRuntime() throws Exception {
 		IStatus status = runtime.validate(null);
@@ -67,103 +62,60 @@ public class TomcatRuntimeTestCase extends TestCase {
 		tomcatRuntime = null;
 	}
 
-	public void test01ValidateRuntime() throws Exception {
-		validateRuntime();
-	}
-	
-	public void test02AdaptRuntime() throws Exception {
-		adaptRuntime();
-	}
-	
-	public void test03ModifyRuntime() throws Exception {
-		modifyRuntime();
-	}
+	public void testAll() throws Exception {
+		runtime = createRuntime(RUNTIME_TYPE_ID_32).save(false, null);
+		assertTrue(!runtime.isWorkingCopy());
 
-	public void test04DeleteRuntime() throws Exception {
+		validateRuntime();
+
+		adaptRuntime();
+
+		modifyRuntime();
+
 		deleteRuntime();
-	}
-	
-	public void test10CreateRuntime() throws Exception {
+
 		runtime = createRuntime(RUNTIME_TYPE_ID_40).save(false, null);
 		assertTrue(!runtime.isWorkingCopy());
-	}
 
-	public void test11ValidateRuntime() throws Exception {
 		validateRuntime();
-	}
-	
-	public void test12AdaptRuntime() throws Exception {
-		adaptRuntime();
-	}
-	
-	public void test13ModifyRuntime() throws Exception {
-		modifyRuntime();
-	}
 
-	public void test14DeleteRuntime() throws Exception {
+		adaptRuntime();
+
+		modifyRuntime();
+
 		deleteRuntime();
-	}
-	
-	public void test20CreateRuntime() throws Exception {
+
 		runtime = createRuntime(RUNTIME_TYPE_ID_41).save(false, null);
 		assertTrue(!runtime.isWorkingCopy());
-	}
 
-	public void test21ValidateRuntime() throws Exception {
 		validateRuntime();
-	}
-	
-	public void test22AdaptRuntime() throws Exception {
-		adaptRuntime();
-	}
-	
-	public void test23ModifyRuntime() throws Exception {
-		modifyRuntime();
-	}
 
-	public void test24DeleteRuntime() throws Exception {
+		adaptRuntime();
+
+		modifyRuntime();
+
 		deleteRuntime();
-	}
-	
-	public void test30CreateRuntime() throws Exception {
+
 		runtime = createRuntime(RUNTIME_TYPE_ID_50).save(false, null);
 		assertTrue(!runtime.isWorkingCopy());
-	}
 
-	public void test31ValidateRuntime() throws Exception {
 		validateRuntime();
-	}
-	
-	public void test32AdaptRuntime() throws Exception {
-		adaptRuntime();
-	}
-	
-	public void test33ModifyRuntime() throws Exception {
-		modifyRuntime();
-	}
 
-	public void test34DeleteRuntime() throws Exception {
+		adaptRuntime();
+
+		modifyRuntime();
+
 		deleteRuntime();
-	}
-	
-	public void test40CreateRuntime() throws Exception {
+
 		runtime = createRuntime(RUNTIME_TYPE_ID_55).save(false, null);
 		assertTrue(!runtime.isWorkingCopy());
-	}
 
-	public void test41ValidateRuntime() throws Exception {
 		validateRuntime();
-	}
-	
-	public void test42AdaptRuntime() throws Exception {
-		adaptRuntime();
-	}
-	
-	public void test43ModifyRuntime() throws Exception {
-		modifyRuntime();
-	}
 
-	public void test44DeleteRuntime() throws Exception {
+		adaptRuntime();
+
+		modifyRuntime();
+
 		deleteRuntime();
 	}
 }
