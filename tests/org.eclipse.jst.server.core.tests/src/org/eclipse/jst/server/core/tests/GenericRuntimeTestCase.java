@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -56,40 +56,24 @@ public class GenericRuntimeTestCase extends TestCase {
 		suite.addTest(TestSuite.createTest(GenericRuntimeTestCase.class, "deleteRuntime"));
 	}
 
-	public void testCreateRuntime() throws Exception {
+	public void testAll() throws Exception {
 		assertTrue(!getRuntime().isWorkingCopy());
-	}
 
-	public void testValidateRuntime() throws Exception {
 		IStatus status = getRuntime().validate(null);
 		assertTrue(!status.isOK());
-	}
-	
-	public void testUtil() throws Exception {
+
 		assertTrue(GenericRuntimeUtil.isGenericJ2EERuntime(getRuntime()));
-	}
-	
-	public void testAdapt() throws Exception {
+
 		assertNotNull(getGenericRuntime());
-	}
-	
-	public void testAdaptWorkingCopy() throws Exception {
+
 		assertNotNull(getRuntime().getAdapter(IGenericRuntimeWorkingCopy.class));
-	}
-	
-	public void testGetJVM() throws Exception {
+
 		assertNotNull(getGenericRuntime().getVMInstall());
-	}
-	
-	public void testAdapt2() throws Exception {
+
 		assertNotNull(getGenericRuntimeWC());
-	}
-	
-	public void testAdapt3() throws Exception {
+
 		assertNotNull(getRuntimeWC().loadAdapter(IGenericRuntime.class, null));
-	}
-	
-	public void testSetJVM() throws Exception {
+
 		assertNotNull(getGenericRuntimeWC().getVMInstall());
 		assertNotNull(getGenericRuntimeWC().getVMInstall());
 	}
