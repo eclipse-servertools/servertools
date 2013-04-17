@@ -38,7 +38,7 @@ import org.eclipse.wst.server.core.tests.ext.AbstractServerTestCase;
 
 public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCase {
 	protected abstract String getServerTypeId();
-
+	
 	public void deleteServer(IServer server2) throws Exception {
 		server2.getRuntime().delete();
 		server2.delete();

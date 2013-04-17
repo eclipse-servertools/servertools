@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,9 +28,9 @@ public class AllTests {
 		System.setProperty("wtp.autotest.noninteractive", "true");
 		
 		suite.addTestSuite(ExistenceTest.class);
-		TestSuite subSuite = new TestSuite(GenericRuntimeTestCase.class);
-		GenericRuntimeTestCase.addOrderedTests(subSuite);
-		suite.addTest(subSuite);
+		TestSuite subSuite = new TestSuite();
+		
+		suite.addTest(GenericRuntimeTestCase.getOrderedTests());
 		
 		suite.addTestSuite(J2EEModuleTestCase.class);
 		suite.addTestSuite(ApplicationClientTestCase.class);

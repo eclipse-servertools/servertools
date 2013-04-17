@@ -11,6 +11,7 @@
 package org.eclipse.wst.server.ui.tests.dialog;
 
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -22,6 +23,18 @@ import org.eclipse.wst.server.ui.internal.wizard.NewServerWizard;
 import org.eclipse.wst.server.ui.internal.wizard.RunOnServerWizard;
 
 public class WizardTestCase extends TestCase {
+
+	// This test suite ensures the test methods are run in order
+	public static TestSuite getOrderedTests() {
+		TestSuite mySuite = new TestSuite();
+	
+		mySuite.addTest(TestSuite.createTest(WizardTestCase.class, "testRunOnServerWizard"));
+		mySuite.addTest(TestSuite.createTest(WizardTestCase.class, "testModifyModulesWizard"));
+		mySuite.addTest(TestSuite.createTest(WizardTestCase.class, "testNewRuntimeWizard"));
+		mySuite.addTest(TestSuite.createTest(WizardTestCase.class, "testNewServerWizard"));
+		return mySuite;
+	}	
+	
 	public static void testRoS(IModule module) {
 		Shell shell = UITestHelper.getShell();
 		RunOnServerWizard ros = new RunOnServerWizard(module, ILaunchManager.RUN_MODE, null);
@@ -29,22 +42,28 @@ public class WizardTestCase extends TestCase {
 		UITestHelper.assertDialog(dialog);
 	}
 
-	public void testAll() throws Exception {
+	public void testRunOnServerWizard() throws Exception {
 		testRoS(null);
+	}
 
+	public void testModifyModulesWizard() throws Exception {
 		Shell shell = UITestHelper.getShell();
 		ModifyModulesWizard wiz = new ModifyModulesWizard(null);
 		WizardDialog dialog = new WizardDialog(shell, wiz);
 		UITestHelper.assertDialog(dialog);
+	}
 
-		shell = UITestHelper.getShell();
-		NewRuntimeWizard wiz2 = new NewRuntimeWizard();
-		dialog = new WizardDialog(shell, wiz2);
+	public void testNewRuntimeWizard() throws Exception {
+		Shell shell = UITestHelper.getShell();
+		NewRuntimeWizard wiz = new NewRuntimeWizard();
+		WizardDialog dialog = new WizardDialog(shell, wiz);
 		UITestHelper.assertDialog(dialog);
+	}
 
-		shell = UITestHelper.getShell();
-		NewServerWizard wiz3 = new NewServerWizard();
-		dialog = new WizardDialog(shell, wiz3);
+	public void testNewServerWizard() throws Exception {
+		Shell shell = UITestHelper.getShell();
+		NewServerWizard wiz = new NewServerWizard();
+		WizardDialog dialog = new WizardDialog(shell, wiz);
 		UITestHelper.assertDialog(dialog);
 	}
 }

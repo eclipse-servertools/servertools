@@ -30,6 +30,22 @@ public class GenericRuntimeTestCase extends TestCase {
 
 	protected static IRuntime runtime;
 
+	// This test suite ensures the test methods are run in order
+	public static TestSuite getOrderedTests() {
+		TestSuite mySuite = new TestSuite();
+		mySuite.addTest(TestSuite.createTest(GenericRuntimeTestCase.class, "testCreateRuntime"));
+		mySuite.addTest(TestSuite.createTest(GenericRuntimeTestCase.class, "testValidateRuntime"));
+		mySuite.addTest(TestSuite.createTest(GenericRuntimeTestCase.class, "testUtil"));
+		mySuite.addTest(TestSuite.createTest(GenericRuntimeTestCase.class, "testAdapt"));
+		mySuite.addTest(TestSuite.createTest(GenericRuntimeTestCase.class, "testAdaptWorkingCopy"));
+		mySuite.addTest(TestSuite.createTest(GenericRuntimeTestCase.class, "testGetJVM"));
+		mySuite.addTest(TestSuite.createTest(GenericRuntimeTestCase.class, "testAdapt2"));
+		mySuite.addTest(TestSuite.createTest(GenericRuntimeTestCase.class, "testAdapt3"));
+		mySuite.addTest(TestSuite.createTest(GenericRuntimeTestCase.class, "testSetJVM"));
+		mySuite.addTest(TestSuite.createTest(GenericRuntimeTestCase.class, "deleteRuntime"));
+		return mySuite;
+	}	
+	
 	protected IRuntime getRuntime() throws Exception {
 		if (runtime == null) {
 			IRuntimeType rt = ServerCore.findRuntimeType(RUNTIME_TYPE_ID);
@@ -56,24 +72,40 @@ public class GenericRuntimeTestCase extends TestCase {
 		suite.addTest(TestSuite.createTest(GenericRuntimeTestCase.class, "deleteRuntime"));
 	}
 
-	public void testAll() throws Exception {
+	public void testCreateRuntime() throws Exception {
 		assertTrue(!getRuntime().isWorkingCopy());
+	}
 
+	public void testValidateRuntime() throws Exception {
 		IStatus status = getRuntime().validate(null);
 		assertTrue(!status.isOK());
-
+	}
+	
+	public void testUtil() throws Exception {
 		assertTrue(GenericRuntimeUtil.isGenericJ2EERuntime(getRuntime()));
-
+	}
+	
+	public void testAdapt() throws Exception {
 		assertNotNull(getGenericRuntime());
-
+	}
+	
+	public void testAdaptWorkingCopy() throws Exception {
 		assertNotNull(getRuntime().getAdapter(IGenericRuntimeWorkingCopy.class));
-
+	}
+	
+	public void testGetJVM() throws Exception {
 		assertNotNull(getGenericRuntime().getVMInstall());
-
+	}
+	
+	public void testAdapt2() throws Exception {
 		assertNotNull(getGenericRuntimeWC());
-
+	}
+	
+	public void testAdapt3() throws Exception {
 		assertNotNull(getRuntimeWC().loadAdapter(IGenericRuntime.class, null));
-
+	}
+	
+	public void testSetJVM() throws Exception {
 		assertNotNull(getGenericRuntimeWC().getVMInstall());
 		assertNotNull(getGenericRuntimeWC().getVMInstall());
 	}

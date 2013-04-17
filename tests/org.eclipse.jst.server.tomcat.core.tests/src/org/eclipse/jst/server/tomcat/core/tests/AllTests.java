@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,8 +25,8 @@ public class AllTests {
 		System.setProperty("wtp.autotest.noninteractive", "true");
 		
 		suite.addTestSuite(ExistenceTest.class);
-		suite.addTestSuite(TomcatRuntimeTestCase.class);
-		suite.addTestSuite(ModuleTestCase.class);
+		suite.addTest(TomcatRuntimeTestCase.getOrderedTests());
+		suite.addTest(ModuleTestCase.getOrderedTests());
 		
 		String s = System.getProperty("org.eclipse.jst.server.tomcat.32"); 
 		//s = "D:\\Tools\\tomcat\\jakarta-tomcat-3.2.4";
@@ -35,7 +35,9 @@ public class AllTests {
 			TestSuite subSuite = new TestSuite(Tomcat32RuntimeTestCase.class);
 			Tomcat32RuntimeTestCase.addOrderedTests(subSuite);
 			suite.addTest(subSuite);
-			subSuite = new TestSuite(Tomcat32ServerTestCase.class);
+			subSuite = new TestSuite();
+			Tomcat32ServerTestCase tc = new Tomcat32ServerTestCase();
+			subSuite.addTest(tc.getOrderedTests(Tomcat32ServerTestCase.class));			
 			Tomcat32ServerTestCase.addOrderedTests(subSuite);
 			suite.addTest(subSuite);
 		} else {
@@ -48,7 +50,9 @@ public class AllTests {
 			TestSuite subSuite = new TestSuite(Tomcat40RuntimeTestCase.class);
 			Tomcat40RuntimeTestCase.addOrderedTests(subSuite);
 			suite.addTest(subSuite);
-			subSuite = new TestSuite(Tomcat40ServerTestCase.class);
+			subSuite = new TestSuite();
+			Tomcat40ServerTestCase tc = new Tomcat40ServerTestCase();
+			subSuite.addTest(tc.getOrderedTests(Tomcat40ServerTestCase.class));				
 			Tomcat40ServerTestCase.addOrderedTests(subSuite);
 			suite.addTest(subSuite);
 		} else {
@@ -61,7 +65,9 @@ public class AllTests {
 			TestSuite subSuite = new TestSuite(Tomcat41RuntimeTestCase.class);
 			Tomcat41RuntimeTestCase.addOrderedTests(subSuite);
 			suite.addTest(subSuite);
-			subSuite = new TestSuite(Tomcat41ServerTestCase.class);
+			subSuite = new TestSuite();
+			Tomcat41ServerTestCase tc = new Tomcat41ServerTestCase();
+			subSuite.addTest(tc.getOrderedTests(Tomcat41ServerTestCase.class));		
 			Tomcat41ServerTestCase.addOrderedTests(subSuite);
 			suite.addTest(subSuite);
 		} else {
@@ -75,7 +81,9 @@ public class AllTests {
 			TestSuite subSuite = new TestSuite(Tomcat50RuntimeTestCase.class);
 			Tomcat50RuntimeTestCase.addOrderedTests(subSuite);
 			suite.addTest(subSuite);
-			subSuite = new TestSuite(Tomcat50ServerTestCase.class);
+			subSuite = new TestSuite();
+			Tomcat50ServerTestCase tc = new Tomcat50ServerTestCase();
+			subSuite.addTest(tc.getOrderedTests(Tomcat50ServerTestCase.class));			
 			Tomcat50ServerTestCase.addOrderedTests(subSuite);
 			suite.addTest(subSuite);
 		} else {
@@ -88,7 +96,9 @@ public class AllTests {
 			TestSuite subSuite = new TestSuite(Tomcat55RuntimeTestCase.class);
 			Tomcat55RuntimeTestCase.addOrderedTests(subSuite);
 			suite.addTest(subSuite);
-			subSuite = new TestSuite(Tomcat55ServerTestCase.class);
+			subSuite = new TestSuite();
+			Tomcat55ServerTestCase tc = new Tomcat55ServerTestCase();
+			subSuite.addTest(tc.getOrderedTests(Tomcat55ServerTestCase.class));
 			Tomcat55ServerTestCase.addOrderedTests(subSuite);
 			suite.addTest(subSuite);
 		} else {
@@ -101,7 +111,9 @@ public class AllTests {
 			TestSuite subSuite = new TestSuite(Tomcat60RuntimeTestCase.class);
 			Tomcat60RuntimeTestCase.addOrderedTests(subSuite);
 			suite.addTest(subSuite);
-			subSuite = new TestSuite(Tomcat60ServerTestCase.class);
+			subSuite = new TestSuite();
+			Tomcat60ServerTestCase tc = new Tomcat60ServerTestCase();
+			subSuite.addTest(tc.getOrderedTests(Tomcat60ServerTestCase.class));
 			Tomcat60ServerTestCase.addOrderedTests(subSuite);
 			suite.addTest(subSuite);
 		} else {
@@ -115,7 +127,9 @@ public class AllTests {
 			TestSuite subSuite = new TestSuite(Tomcat70RuntimeTestCase.class);
 			Tomcat70RuntimeTestCase.addOrderedTests(subSuite);
 			suite.addTest(subSuite);
-			subSuite = new TestSuite(Tomcat70ServerTestCase.class);
+			subSuite = new TestSuite();
+			Tomcat70ServerTestCase tc = new Tomcat70ServerTestCase();
+			subSuite.addTest(tc.getOrderedTests(Tomcat70ServerTestCase.class));
 			Tomcat70ServerTestCase.addOrderedTests(subSuite);
 			suite.addTest(subSuite);
 		} else {

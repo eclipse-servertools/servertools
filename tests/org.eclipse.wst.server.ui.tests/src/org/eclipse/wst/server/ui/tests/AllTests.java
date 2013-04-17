@@ -23,7 +23,7 @@ public class AllTests {
 		TestSuite suite = new TestSuite("Test suite for org.eclipse.wst.server.ui.tests");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(ExistenceTest.class);
-		suite.addTestSuite(ServerUIPreferencesTestCase.class);
+		suite.addTest(ServerUIPreferencesTestCase.getOrderedTests());
 		
 		suite.addTestSuite(ServerUICoreTestCase.class);
 		suite.addTestSuite(ServerLaunchConfigurationTabTestCase.class);
@@ -35,11 +35,12 @@ public class AllTests {
 		suite.addTestSuite(DialogsTestCase.class);
 		suite.addTestSuite(PreferencesTestCase.class);
 		suite.addTestSuite(ViewTestCase.class);
-		suite.addTestSuite(WizardTestCase.class);
+		suite.addTest(WizardTestCase.getOrderedTests());
 		
 		suite.addTestSuite(ServerEditorActionFactoryDelegateTestCase.class);
 		
-		suite.addTestSuite(IWizardHandleTestCase.class);
+		suite.addTest(IWizardHandleTestCase.getOrderedTests());
+
 		suite.addTestSuite(TaskWizardTestCase.class);
 		suite.addTestSuite(WizardFragmentTestCase.class);
 			

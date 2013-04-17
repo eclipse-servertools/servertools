@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,6 +40,58 @@ public abstract class AbstractServerTestCase extends TestCase {
 	protected static IServer server;
 	protected static IServerAttributes serverAttr;
 	protected static IServerWorkingCopy serverWC;
+
+	// This test suite ensures the test methods are run in order
+	public TestSuite getOrderedTests(Class<? extends TestCase> testClass) {
+		TestSuite mySuite = new TestSuite();
+		mySuite.addTest(TestSuite.createTest(testClass, "testGetProperties"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testServerGetDelegate"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testServerAttributesGetDelegate"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testServerAttributesLoadDelegate"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testServerGetBehaviourDelegate"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testGetServerPorts"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testGetServerState"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testGetServerPublishState"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testGetServerRestartState"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testGetModuleState"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testGetModulePublishState"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testGetModuleRestartState"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testGetMode"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testCanPublish"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testCanRestart"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testCanControlModule"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testAddServerListener"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testAddServerListener2"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testRemoveServerListener"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testGetName"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testGetId"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testIsReadOnly"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testIsWorkingCopy"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testGetHost"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testGetRuntime"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testGetServerType"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testGetServerConfiguration"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testCreateWorkingCopy"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testGetModules"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testCanModifyModules"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testGetModules"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testCanModifyModules"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testGetChildModules"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testGetRootModules"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testGetServerPorts2"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testServerAttributesDelete"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testIsDirty"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testSetName"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testSetName"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testSetHost"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testSetReadOnly"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testServerWCIsDirty"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testPropertyChangeListener"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testGetOriginal"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testSetServerConfiguration"));
+		mySuite.addTest(TestSuite.createTest(testClass, "testModifyModules"));
+		return mySuite;
+	}	
 	
 	private static final PropertyChangeListener pcl = new PropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent arg0) {
