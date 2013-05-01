@@ -342,6 +342,14 @@ public class ServerUtil {
 				IModule[] parents = server.getRootModules(module, monitor);
 				if (parents != null && parents.length > 0) {				
 					IModule parent = parents[0];
+					if(parents.length > 1){
+						for(int i = 1 ; i <parents.length; i++){
+							if(module.equals(parents[i])){
+								parent = parents[i];
+								break;
+							}
+						}
+					}
 					found = true;
 					if (!addParentModules.contains(parent))
 						addParentModules.add(parent);
