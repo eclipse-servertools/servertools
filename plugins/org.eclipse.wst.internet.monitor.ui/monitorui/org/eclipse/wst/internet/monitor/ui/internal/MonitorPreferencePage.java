@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,20 +14,12 @@ package org.eclipse.wst.internet.monitor.ui.internal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.eclipse.swt.*;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.*;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.util.ConfigureColumns;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -36,7 +28,20 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
@@ -46,7 +51,7 @@ import org.eclipse.wst.internet.monitor.core.internal.provisional.MonitorCore;
 /**
  * The preference page that holds monitor properties.
  */
-public class MonitorPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+public class MonitorPreferencePage extends PreferencePage implements IWorkbenchPreferencePage, IShellProvider {
 	protected Button displayButton;
 	
 	protected Table table;
@@ -56,6 +61,7 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 	protected Button remove;
 	protected Button start;
 	protected Button stop;
+	protected Button columns;
 	
 	protected List<Object> selection2;
 
@@ -87,12 +93,12 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
 		composite.setLayoutData(data);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, ContextIds.PREF);
-		
-		Label label = new Label(composite, SWT.WRAP);
-		label.setText(Messages.preferenceDescription);
+				
+		Text description = new Text(composite, SWT.READ_ONLY);
+		description.setText(Messages.preferenceDescription);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		data.horizontalSpan = 2;
-		label.setLayoutData(data);
+		description.setLayoutData(data);
 	
 		displayButton = new Button(composite, SWT.CHECK);
 		displayButton.setText(Messages.prefShowView);
@@ -103,7 +109,7 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 		displayButton.setLayoutData(data);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(displayButton, ContextIds.PREF_SHOW);
 		
-		label = new Label(composite, SWT.WRAP);
+		Label label = new Label(composite, SWT.WRAP);
 		label.setText(Messages.monitorList);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalSpan = 2;
@@ -264,6 +270,17 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 			}
 		});
 		stop.setEnabled(false);
+		
+		columns = SWTUtil.createButton(buttonComp, Messages.columns);
+		data = (GridData) columns.getLayoutData();
+		data.verticalIndent = 9;
+		
+		final MonitorPreferencePage thisClass = this;
+		columns.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				ConfigureColumns.forTable(tableViewer.getTable(), thisClass);
+			}
+		});
 		
 		Dialog.applyDialogFont(composite);
 	
