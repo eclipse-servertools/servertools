@@ -39,6 +39,7 @@ public class Messages extends NLS {
 	public static String remove;
 	public static String start;
 	public static String stop;
+	public static String columns;
 	public static String started;
 	public static String stopped;
 	public static String headerLabel;
