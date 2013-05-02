@@ -168,7 +168,7 @@ public class ServerPublishInfo {
 			
 			// have to create a new one
 			IModule mod = module[module.length - 1];
-			ModulePublishInfo mpi = new ModulePublishInfo(getKey(module), mod.getName(), mod.getModuleType());
+			ModulePublishInfo mpi = new ModulePublishInfo(getKey(module), mod.getName(), mod.getModuleType(), mod.isExternal());
 			modulePublishInfo.put(key, mpi);
 			return mpi;
 		}

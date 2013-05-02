@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2011 IBM Corporation and others.
+ * Copyright (c) 2005, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,11 +22,17 @@ public class DeletedModule implements IModule {
 	protected String id;
 	protected String name;
 	protected IModuleType moduleType2;
+	protected boolean isExternal;
 
 	public DeletedModule(String id, String name, IModuleType moduleType) {
+		this(id, name, moduleType, false);
+	}
+
+	public DeletedModule(String id, String name, IModuleType moduleType, boolean isExternal) {
 		this.id = id;
 		this.name = name;
 		this.moduleType2 = moduleType;
+		this.isExternal = isExternal;
 	}
 
 	public String getId() {
@@ -73,7 +79,7 @@ public class DeletedModule implements IModule {
 	}
 
 	public boolean isExternal() {
-		return false;
+		return isExternal;
 	}
 
 	public boolean exists() {

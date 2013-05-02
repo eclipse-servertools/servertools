@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2011 IBM Corporation and others.
+ * Copyright (c) 2005, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,7 @@ public class ModulePublishInfo {
 	private static final String NAME = "name";
 	private static final String MODULE_TYPE_ID = "module-type-id";
 	private static final String MODULE_TYPE_VERSION = "module-type-version";
+	private static final String MODULE_IS_EXTERNAL = "module-is-external";
 	private static final String STAMP = "stamp";
 	private static final String FILE = "file";
 	private static final String FOLDER = "folder";
@@ -42,6 +43,7 @@ public class ModulePublishInfo {
 	private String name;
 	private IModuleResource[] resources = EMPTY_MODULE_RESOURCE;
 	private IModuleType moduleType;
+	private boolean isExternal;
 
 	private boolean useCache;
 	private IModuleResource[] currentResources = null;
@@ -61,6 +63,22 @@ public class ModulePublishInfo {
 		this.moduleId = moduleId;
 		this.name = name;
 		this.moduleType = moduleType;
+	}
+
+	/**
+	 * ModulePublishInfo constructor.
+	 * 
+	 * @param moduleId a module id
+	 * @param name the module's name
+	 * @param moduleType the module type
+	 */
+	public ModulePublishInfo(String moduleId, String name, IModuleType moduleType, boolean isExternal) {
+		super();
+
+		this.moduleId = moduleId;
+		this.name = name;
+		this.moduleType = moduleType;
+		this.isExternal = isExternal;
 	}
 
 	/**
@@ -121,6 +139,8 @@ public class ModulePublishInfo {
 			String mv = memento.getString(MODULE_TYPE_VERSION);
 			if (mt != null && mt.length() > 0)
 				moduleType = ModuleType.getModuleType(mt, mv);
+			String isExternalStr = memento.getString(MODULE_IS_EXTERNAL);
+			isExternal = Boolean.parseBoolean(isExternalStr);
 			
 			resources = loadResource(memento, new Path(""));
 		} catch (Exception e) {
@@ -459,7 +479,7 @@ public class ModulePublishInfo {
 		int index = id.lastIndexOf("#");
 		if (index > 0)
 			id = id.substring(index+1);
-		return new DeletedModule(id, name, moduleType);
+		return new DeletedModule(id, name, moduleType, isExternal);
 	}
 
 	public String toString() {
