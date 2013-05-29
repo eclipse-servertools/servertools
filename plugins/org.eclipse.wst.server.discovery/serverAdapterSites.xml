@@ -10,5 +10,5 @@
    <site url="http://download.eclipse.org/jetty/updates/jetty-wtp/"/>
    <site url="http://www.caucho.com/eclipse/"/>   
    <site url="http://download.jboss.org/jbosstools/updates/webtools/kepler/"/>
-   <site url="http://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/updates/"/>
+   <site url="http://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/updates/wdt/V8.5.5/"/>
 </extensions>
