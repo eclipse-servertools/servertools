@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -32,11 +33,11 @@ import org.eclipse.wst.server.ui.internal.Messages;
  * This global delete action handles both the server and module deletion.
  */
 public class GlobalDeleteAction extends SelectionProviderAction {
-	private Shell shell;
+	private TreeViewer viewer;
 
-	public GlobalDeleteAction(Shell shell, ISelectionProvider selectionProvider) {
+	public GlobalDeleteAction(TreeViewer viewer, ISelectionProvider selectionProvider) {
 		super(selectionProvider, Messages.actionDelete);
-		this.shell = shell;
+		this.viewer = viewer;
 		ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
 		setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));		
 		setDisabledImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE_DISABLED));
@@ -101,10 +102,17 @@ public class GlobalDeleteAction extends SelectionProviderAction {
 				if( moduleList != null ) {
 					IServer s = ((ModuleServer)sel.getFirstElement()).getServer();
 					IModule[] asArray = moduleList.toArray(new IModule[moduleList.size()]);
-					new RemoveModuleAction(shell, s, asArray).run();
+					new RemoveModuleAction(getShell(), s, asArray).run();
 				}
 			}
 		}
+	}
+	
+	private Shell getShell() {
+		if (viewer != null && !viewer.getControl().isDisposed()) {
+			return viewer.getTree().getShell();
+		}
+		return null;
 	}
 	
 	private IFolder[] getConfigurationsFor(IServer[] serverArr) {
@@ -196,7 +204,7 @@ public class GlobalDeleteAction extends SelectionProviderAction {
 		
 		// No check is made for valid parameters at this point, since if there is a failure, it
 		// should be output to the error log instead of failing silently.
-		DeleteServerDialog dsd = new DeleteServerDialog(shell, servers, getConfigurationsFor(servers));
+		DeleteServerDialog dsd = new DeleteServerDialog(getShell(), servers, getConfigurationsFor(servers));
 		dsd.open();
 	}
 }

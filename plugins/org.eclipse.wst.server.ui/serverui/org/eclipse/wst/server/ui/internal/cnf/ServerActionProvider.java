@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2011 IBM Corporation and others.
+ * Copyright (c) 2009, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -122,7 +122,7 @@ public class ServerActionProvider extends CommonActionProvider {
 		// create copy, paste, and delete actions
 		pasteAction = new PasteAction(shell, provider, clipboard);
 		copyAction = new CopyAction(provider, clipboard, pasteAction);
-		globalDeleteAction = new GlobalDeleteAction(shell, provider);
+		globalDeleteAction = new GlobalDeleteAction(tableViewer, provider);
 		renameAction = new RenameAction(shell, tableViewer, provider);
 		
 		// create the other actions

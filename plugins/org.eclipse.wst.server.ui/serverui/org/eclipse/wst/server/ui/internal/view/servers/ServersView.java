@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -286,7 +286,7 @@ public class ServersView extends ViewPart {
 		deleteAction = new DeleteAction(shell, provider);
 		// Create a second delete action that can act in modules, when the delete key is pressed
 		// the old DeleteAction only works for servers see bug# 286960
-		globalDeleteAction = new GlobalDeleteAction(shell, provider);
+		globalDeleteAction = new GlobalDeleteAction(tableViewer, provider);
 		renameAction = new RenameAction(shell, tableViewer, provider);
 		actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), copyAction);
 		actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), pasteAction);
