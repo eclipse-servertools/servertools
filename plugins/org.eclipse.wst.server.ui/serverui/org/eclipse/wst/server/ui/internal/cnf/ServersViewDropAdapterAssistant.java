@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2011 IBM Corporation and others.
+ * Copyright (c) 2009, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -131,57 +131,67 @@ public class ServersViewDropAdapterAssistant extends CommonDropAdapterAssistant 
 	}
 
 	protected boolean doRunOnServerAction(IServer server, Object data) {
-		// check if the selection is a project (module) that we can add to the server
-		IProject project = (IProject) Platform.getAdapterManager().getAdapter(
-				data, IProject.class);
-		if (project != null) {
-			IModule[] modules = ServerUtil.getModules(project);
-			if (modules != null && modules.length == 1) {
-				try {
-					IServerWorkingCopy wc = server.createWorkingCopy();
-					IModule[] parents = wc.getRootModules(modules[0], null);
-					if (parents == null || parents.length == 0)
-						return false;
+		IModule module = null;
+		// If the selection can be directly converted to an IModule, use that.
+		module = (IModule) Platform.getAdapterManager().getAdapter(data,
+				IModule.class);
+		if (module == null) {
+			// check if the selection is a project (module) that we can add to
+			// the server
+			IProject project = (IProject) Platform.getAdapterManager()
+					.getAdapter(data, IProject.class);
+			if (project != null) {
+				IModule[] modules = ServerUtil.getModules(project);
+				if (modules != null && modules.length == 1) {
+					module = modules[0];
+				}
+			}
+		}
 
-					if (ServerUtil.containsModule(server, parents[0], null)){
-						PublishAction.publish(server, getShell());
-						return false;
-					}
+		if (module != null) {
+			try {
+				IServerWorkingCopy wc = server.createWorkingCopy();
+				IModule[] parents = wc.getRootModules(module, null);
+				if (parents == null || parents.length == 0)
+					return false;
 
-					IModule[] add = new IModule[] { parents[0] };
-					if (wc.canModifyModules(add, null, null).getSeverity() != IStatus.ERROR) {
-						wc.modifyModules(modules, null, null);
-						wc.save(false, null);
-						PublishAction.publish(server, getShell());
-						return true;
-					}
-				} catch (final CoreException ce) {
-					final Shell shell = getShell();
-					shell.getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							EclipseUtil.openError(shell, ce
-									.getLocalizedMessage());
-						}
-					});
+				if (ServerUtil.containsModule(server, parents[0], null)) {
+					PublishAction.publish(server, getShell());
+					return false;
+				}
+
+				IModule[] add = new IModule[] { parents[0] };
+				if (wc.canModifyModules(add, null, null).getSeverity() != IStatus.ERROR) {
+					wc.modifyModules(new IModule[] { module }, null, null);
+					wc.save(false, null);
+					PublishAction.publish(server, getShell());
 					return true;
 				}
+			} catch (final CoreException ce) {
+				final Shell shell = getShell();
+				shell.getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						EclipseUtil.openError(shell, ce.getLocalizedMessage());
+					}
+				});
+				return true;
 			}
 		}
 
 		// otherwise, try Run on Server
 		final IServer finalServer = server;
 		RunOnServerActionDelegate ros = new RunOnServerActionDelegate() {
-			public IServer getServer(IModule module,
+			public IServer getServer(IModule module2,
 					IModuleArtifact moduleArtifact, IProgressMonitor monitor)
 					throws CoreException {
 				if (!ServerUIPlugin.isCompatibleWithLaunchMode(finalServer,
 						launchMode))
 					return null;
 
-				if (!ServerUtil.containsModule(finalServer, module, monitor)) {
+				if (!ServerUtil.containsModule(finalServer, module2, monitor)) {
 					IServerWorkingCopy wc = finalServer.createWorkingCopy();
 					try {
-						ServerUtil.modifyModules(wc, new IModule[] { module },
+						ServerUtil.modifyModules(wc, new IModule[] { module2 },
 								new IModule[0], monitor);
 						wc.save(false, monitor);
 					} catch (CoreException ce) {
