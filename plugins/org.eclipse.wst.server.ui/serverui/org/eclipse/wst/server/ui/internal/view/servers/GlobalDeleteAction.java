@@ -28,13 +28,10 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.ui.internal.DeleteServerDialog;
 import org.eclipse.wst.server.ui.internal.Messages;
-import org.eclipse.wst.server.ui.internal.Trace;
 /**
  * This global delete action handles both the server and module deletion.
  */
 public class GlobalDeleteAction extends SelectionProviderAction {
-	protected IServer[] servers;
-	protected IFolder[] configs;
 	private Shell shell;
 
 	public GlobalDeleteAction(Shell shell, ISelectionProvider selectionProvider) {
@@ -52,26 +49,28 @@ public class GlobalDeleteAction extends SelectionProviderAction {
 			setEnabled(false);
 			return;
 		}
-		boolean enabled = false;
+
+		IServer[] servers = getAcceptedServers(sel);
+		if (servers != null && servers.length > 0) {
+			setEnabled(true);
+			return;
+		}
+		// selection isn't servers. If selection is only module-servers, then
+		// its acceptable
+		setEnabled(allSelectionAreModuleServer(sel));
+	}
+
+	private boolean allSelectionAreModuleServer(IStructuredSelection sel) {
 		Iterator iterator = sel.iterator();
 		while (iterator.hasNext()) {
 			Object obj = iterator.next();
-			if (obj instanceof IServer) {
-				IServer server = (IServer) obj;
-				if (accept(server))
-					enabled = true;
-			} 
-			else if (obj instanceof ModuleServer){
-				ModuleServer ms = (ModuleServer) obj;
-				if (accept(ms))
-					enabled = true;
-			}
-			else {
-				setEnabled(false);
-				return;
-			}
+			if (!(obj instanceof ModuleServer))
+				return false;
+			ModuleServer ms = (ModuleServer) obj;
+			if (!accept(ms))
+				return false;
 		}
-		setEnabled(enabled);
+		return true;
 	}
 
 	public boolean accept(ModuleServer ms){
@@ -86,16 +85,34 @@ public class GlobalDeleteAction extends SelectionProviderAction {
 	}
 
 	public boolean accept(IServer server) {
-		servers = new IServer[] { server };
+		return !server.isReadOnly();
+	}
+
+	@Override
+	public void run() {	
+		IStructuredSelection sel = getStructuredSelection();
+		// filter the selection
+		if (!sel.isEmpty()) {
+			IServer[] selAsServers = getAcceptedServers(sel);
+			if( selAsServers != null) {
+				deleteServers(selAsServers);
+			} else {
+				ArrayList<IModule> moduleList = getRemovableModuleList(sel);
+				if( moduleList != null ) {
+					IServer s = ((ModuleServer)sel.getFirstElement()).getServer();
+					IModule[] asArray = moduleList.toArray(new IModule[moduleList.size()]);
+					new RemoveModuleAction(shell, s, asArray).run();
+				}
+			}
+		}
+	}
+	
+	private IFolder[] getConfigurationsFor(IServer[] serverArr) {
 		List<IFolder> list = new ArrayList<IFolder>();
-		
-		int size = servers.length;
-		for (int i = 0; i < size; i++) {
-			if (servers[i].isReadOnly())
-				return false;
-			
-			if (servers[i].getServerConfiguration() != null)
-				list.add(servers[i].getServerConfiguration());
+		for( int i = 0; i < serverArr.length; i++ ) {
+			if (serverArr[i].getServerConfiguration() != null) {
+				list.add(serverArr[i].getServerConfiguration());
+			}
 		}
 		
 		// remove configurations that are still referenced by other servers
@@ -104,8 +121,8 @@ public class GlobalDeleteAction extends SelectionProviderAction {
 			int size2 = servers2.length;
 			for (int j = 0; j < size2; j++) {
 				boolean found = false;
-				for (int i = 0; i < size; i++) {
-					if (servers[i].equals(servers2[j]))
+				for (int i = 0; i < serverArr.length; i++) {
+					if (serverArr[i].equals(servers2[j]))
 						found = true;
 				}
 				if (!found) {
@@ -115,29 +132,26 @@ public class GlobalDeleteAction extends SelectionProviderAction {
 				}
 			}
 		}
-		
-		configs = new IFolder[list.size()];
-		list.toArray(configs);
-		return true;
+		return list.toArray(new IFolder[list.size()]);
 	}
 
-	@Override
-	public void run() {		
-		IStructuredSelection sel = getStructuredSelection();
-		// filter the selection
-		if (!sel.isEmpty()) {
-			Object firstElement = sel.getFirstElement();
-			if( sel.size() == 1 && firstElement instanceof IServer) {
-				deleteServer((IServer)firstElement);
-			} else {
-				ArrayList<IModule> moduleList = getRemovableModuleList(sel);
-				if( moduleList != null ) {
-					IServer s = ((ModuleServer)firstElement).getServer();
-					IModule[] asArray = moduleList.toArray(new IModule[moduleList.size()]);
-					new RemoveModuleAction(shell, s, asArray).run();
-				}
-			}
+	/*
+	 * get an array of IServer if all elements in the selection are IServer.
+	 * Otherwise, return null.
+	 */
+	private IServer[] getAcceptedServers(IStructuredSelection sel) {
+		ArrayList<IServer> l = new ArrayList<IServer>();
+		Iterator i = sel.iterator();
+		Object o = null;
+		while (i.hasNext()) {
+			o = i.next();
+			if (!(o instanceof IServer))
+				return null;
+			// Do not add it if its read only
+			if (!((IServer) o).isReadOnly())
+				l.add((IServer) o);
 		}
+		return l.toArray(new IServer[l.size()]);
 	}
 	
 	/*
@@ -175,33 +189,14 @@ public class GlobalDeleteAction extends SelectionProviderAction {
 	}
 	
 	protected void deleteServer(IServer server){
-		// It is possible that the server is created and added to the server view on workbench
-		// startup. As a result, when the user switches to the server view, the server is 
-		// selected, but the selectionChanged event is not called, which results in servers
-		// being null. When servers is null the server will not be deleted and the error log
-		// will have an IllegalArgumentException.
-		//
-		// To handle the case where servers is null, the selectionChanged method is called
-		// to ensure servers will be populated.
-		if (servers == null){
-			if (Trace.FINEST) {
-				Trace.trace(Trace.STRING_FINEST, "Delete server called when servers is null");
-			}				
-			
-			IStructuredSelection sel = getStructuredSelection();
-			if (sel != null){
-				selectionChanged(sel);
-			}
-		}
-				
-		if (Trace.FINEST) {
-			Trace.trace(Trace.STRING_FINEST, "Opening delete server dialog with parameters shell="
-					+ shell + " servers=" + servers + " configs=" + configs);
-		}		
+		deleteServers(new IServer[]{server});
+	}
+	
+	protected void deleteServers(IServer[] servers){
 		
 		// No check is made for valid parameters at this point, since if there is a failure, it
 		// should be output to the error log instead of failing silently.
-		DeleteServerDialog dsd = new DeleteServerDialog(shell, servers, configs);
+		DeleteServerDialog dsd = new DeleteServerDialog(shell, servers, getConfigurationsFor(servers));
 		dsd.open();
 	}
 }
