@@ -275,7 +275,8 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
         loader.setUseSystemClassLoaderAsParent(Boolean.FALSE.toString());
 
         // Build the virtual classPath setting
-        StringBuffer vcBuffer = new StringBuffer();
+		StringBuffer vcBuffer = new StringBuffer(); // Filled with classes entries first, then jar entries added
+		StringBuffer vcJarBuffer = new StringBuffer(); // Filled with jar enteries only
 		// Build list of additional resource paths and check for additional jars
 		StringBuffer rpBuffer = new StringBuffer();
 
@@ -296,14 +297,11 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
 				rpBuffer.append("/WEB-INF/classes").append("|").append(element);
 			}
         }
-        if (vcBuffer.length() > 0 && virtualJarClasspathElements.size() > 0) {
-        	vcBuffer.append(";");
-        }
         for (Iterator iterator = virtualJarClasspathElements.iterator();
         		iterator.hasNext();) {
-        	vcBuffer.append(iterator.next());
+			vcJarBuffer.append(iterator.next());
         	if (iterator.hasNext()) {
-        		vcBuffer.append(";");
+				vcJarBuffer.append(";");
         	}
         }
         virtualClassClasspathElements.clear();
@@ -345,9 +343,17 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
 								rpBuffer.append(location);
 								// Add to the set of locations included
 								locationsIncluded.add(location);
+								// If a "WEB-INF/classes" exists and is a directory, add to virtual classpath
+								File webInfClasses = resLoc.append("WEB-INF/classes").toFile();
+								if (webInfClasses.exists() && webInfClasses.isDirectory()) {
+									if (vcBuffer.length() != 0) {
+										vcBuffer.append(";");
+									}
+									vcBuffer.append(webInfClasses.getPath());
+								}
 								// Check if this extra content location contains jars
 								File webInfLib = resLoc.append("WEB-INF/lib").toFile();
-								// If this "WEB-INF/lib" exists and is a directory, add
+								// If a "WEB-INF/lib" exists and is a directory, add
 								// its jars to the virtual classpath
 								if (webInfLib.exists() && webInfLib.isDirectory()) {
 									String [] jars = webInfLib.list(new FilenameFilter() {
@@ -357,10 +363,10 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
 											}
 										});
 									for (int k = 0; k < jars.length; k++) {
-										if (vcBuffer.length() != 0) {
-											vcBuffer.append(";");
+										if (vcJarBuffer.length() != 0) {
+											vcJarBuffer.append(";");
 										}
-										vcBuffer.append(webInfLib.getPath() + File.separator + jars[k]);
+										vcJarBuffer.append(webInfLib.getPath() + File.separator + jars[k]);
 									}
 								}
 							}
@@ -390,11 +396,23 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
 									locationsIncluded.add(location);
 									// Check if this extra content location contains jars
 									File webInfLib = null;
+									File webInfClasses = null;
 									if ("/WEB-INF".equals(rtPath)) {
 										webInfLib = resLoc.append("lib").toFile();
+										webInfClasses = resLoc.append("classes").toFile();
 									}
 									else if ("/WEB-INF/lib".equals(rtPath)) {
 										webInfLib = resLoc.toFile();
+									}
+									else if ("/WEB-INF/classes".equals(rtPath)) {
+										webInfClasses = resLoc.toFile();
+									}
+									// If a "WEB-INF/classes" exists and is a directory, add to virtual classpath
+									if (webInfClasses != null && webInfClasses.exists() && webInfClasses.isDirectory()) {
+										if (vcBuffer.length() != 0) {
+											vcBuffer.append(";");
+										}
+										vcBuffer.append(webInfClasses.getPath());
 									}
 									// If this "WEB-INF/lib" exists and is a directory, add
 									// its jars to the virtual classpath
@@ -406,10 +424,10 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
 												}
 											});
 										for (int k = 0; k < jars.length; k++) {
-											if (vcBuffer.length() != 0) {
-												vcBuffer.append(";");
+											if (vcJarBuffer.length() != 0) {
+												vcJarBuffer.append(";");
 											}
-											vcBuffer.append(webInfLib.getPath() + File.separator + jars[k]);
+											vcJarBuffer.append(webInfLib.getPath() + File.separator + jars[k]);
 										}
 									}
 								}
@@ -453,13 +471,25 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
 					rpBuffer.append(rtPath).append("|").append(location);
 					// Check if this extra content location contains jars
 					File webInfLib = null;
+					File webInfClasses = null;
 					if ("/WEB-INF".equals(rtPath)) {
 						webInfLib = new File(location, "lib");
+						webInfClasses = new File(location, "classes");
 					}
 					else if ("/WEB-INF/lib".equals(rtPath)) {
 						webInfLib = new File(location);
 					}
-					// If this "WEB-INF/lib" exists and is a directory, add
+					else if ("/WEB-INF/classes".equals(rtPath)) {
+						webInfClasses = new File(location);
+					}
+					// If a "WEB-INF/classes" exists and is a directory, add to virtual classpath
+					if (webInfClasses != null && webInfClasses.exists() && webInfClasses.isDirectory()) {
+						if (vcBuffer.length() != 0) {
+							vcBuffer.append(";");
+						}
+						vcBuffer.append(webInfClasses.getPath());
+					}
+					// If a "WEB-INF/lib" exists and is a directory, add
 					// its jars to the virtual classpath
 					if (webInfLib != null && webInfLib.exists() && webInfLib.isDirectory()) {
 						String [] jars = webInfLib.list(new FilenameFilter() {
@@ -469,10 +499,10 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
 								}
 							});
 						for (int k = 0; k < jars.length; k++) {
-							if (vcBuffer.length() != 0) {
-								vcBuffer.append(";");
+							if (vcJarBuffer.length() != 0) {
+								vcJarBuffer.append(";");
 							}
-							vcBuffer.append(webInfLib.getPath() + File.separator + jars[k]);
+							vcJarBuffer.append(webInfLib.getPath() + File.separator + jars[k]);
 						}
 					}
 				}
@@ -496,6 +526,14 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
 					}
 				}
 			}			
+		}
+
+		// Combine the classes and jar virtual classpaths
+		if (vcJarBuffer.length() > 0) {
+			if (vcBuffer.length() > 0) {
+				vcBuffer.append(';');
+			}
+			vcBuffer.append(vcJarBuffer);
 		}
 
         String vcp = vcBuffer.toString();
