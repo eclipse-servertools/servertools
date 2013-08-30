@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -314,6 +314,11 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 		form.reflow(true);
 		
 		initialize();
+		
+		if (serverName != null)
+			serverName.setFocus();
+		else if (serverConfiguration != null)
+			serverConfiguration.setFocus();		
 	}
 
 	protected void createGeneralSection(Composite leftColumnComp, FormToolkit toolkit) {
@@ -1081,10 +1086,12 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 	 * @see IWorkbenchPart#setFocus()
 	 */
 	public void setFocus() {
-		if (serverName != null)
-			serverName.setFocus();
-		else if (serverConfiguration != null)
-			serverConfiguration.setFocus();
+		// Bugzilla 409584: do nothing because we don't want the focus
+		// to be taken away from the control the user is pressing in the editor.
+		// Previously, it was going to the server name text field instead of the
+		// selected control in the editor when the focus was given to the 
+		// server editor (e.g. clicking something outside the server editor and 
+		// then clicking a control in the server editor) 
 	}
 
 	public String getControlStringValue(String controlId) {
