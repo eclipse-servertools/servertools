@@ -16,12 +16,12 @@
   <parent>
     <groupId>org.eclipse.webtools.servertools</groupId>
     <artifactId>org.eclipse.webtools.servertools</artifactId>
-    <version>3.5.0-SNAPSHOT</version>
+    <version>3.6.0-SNAPSHOT</version>
     <relativePath>../../</relativePath>
   </parent>
 
   <groupId>org.eclipse.webtools.servertools</groupId>
   <artifactId>org.eclipse.wst.server_sdk.feature</artifactId>
-  <version>3.3.301-SNAPSHOT</version>
+  <version>3.3.302-SNAPSHOT</version>
   <packaging>eclipse-feature</packaging>
 </project>

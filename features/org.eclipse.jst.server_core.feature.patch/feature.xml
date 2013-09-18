@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.jst.server_core.feature.patch"
       label="%featureName"
-      version="1.5.5.qualifier"
+      version="1.5.100.qualifier"
       provider-name="%providerName">
 
    <description>

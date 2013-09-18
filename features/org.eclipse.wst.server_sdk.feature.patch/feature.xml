@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.server_sdk.feature.patch"
       label="%featureName"
-      version="3.0.4.qualifier"
+      version="3.0.100.qualifier"
       provider-name="%providerName">
 
    <description>
