@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Server Test utilities
 Bundle-SymbolicName: org.eclipse.wst.server.util.tests;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.100.qualifier
 Bundle-Activator: org.eclipse.wst.server.test.util.Activator
 Bundle-Vendor: Eclipse.org
 Require-Bundle: org.eclipse.ui,
