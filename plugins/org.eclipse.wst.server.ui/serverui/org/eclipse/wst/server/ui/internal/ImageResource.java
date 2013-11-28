@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -74,6 +74,7 @@ public class ImageResource {
 	public static final String IMG_CLCL_STOP = "IMG_CLCL_STOP";
 	public static final String IMG_CLCL_PUBLISH = "IMG_CLCL_PUBLISH";
 	public static final String IMG_CLCL_DISCONNECT = "IMG_CLCL_DISCONNECT";
+	public static final String IMG_CLCL_RESTART = "IMG_CLCL_RESTART";
 
 	public static final String IMG_ELCL_START = "IMG_ELCL_START";
 	public static final String IMG_ELCL_START_DEBUG = "IMG_ELCL_START_DEBUG";
@@ -81,6 +82,7 @@ public class ImageResource {
 	public static final String IMG_ELCL_STOP = "IMG_ELCL_STOP";
 	public static final String IMG_ELCL_PUBLISH = "IMG_ELCL_PUBLISH";
 	public static final String IMG_ELCL_DISCONNECT = "IMG_ELCL_DISCONNECT";
+	public static final String IMG_ELCL_RESTART= "IMG_ELCL_RESTART";
 
 	public static final String IMG_DLCL_START = "IMG_DLCL_START";
 	public static final String IMG_DLCL_START_DEBUG = "IMG_DLCL_START_DEBUG";
@@ -88,6 +90,7 @@ public class ImageResource {
 	public static final String IMG_DLCL_STOP = "IMG_DLCL_STOP";
 	public static final String IMG_DLCL_PUBLISH = "IMG_DLCL_PUBLISH";
 	public static final String IMG_DLCL_DISCONNECT = "IMG_DLCL_DISCONNECT";
+	public static final String IMG_DLCL_RESTART = "IMG_DLCL_RESTART";
 
 	// Wizard Banner Images
 	public static final String IMG_WIZBAN_NEW_RUNTIME = "newServerWiz";
@@ -283,6 +286,7 @@ public class ImageResource {
 		registerImage(IMG_ELCL_START_PROFILE, URL_ELCL + "launch_profile.gif");
 		registerImage(IMG_ELCL_STOP, URL_ELCL + "launch_stop.gif");
 		registerImage(IMG_ELCL_DISCONNECT, URL_ELCL + "launch_disconnect.gif");
+		registerImage(IMG_ELCL_RESTART, URL_ELCL + "launch_restart.gif");
 	
 		registerImage(IMG_CLCL_PUBLISH, URL_CLCL + "launch_publish.gif");
 		registerImage(IMG_CLCL_START, URL_CLCL + "launch_run.gif");
@@ -290,6 +294,7 @@ public class ImageResource {
 		registerImage(IMG_CLCL_START_PROFILE, URL_CLCL + "launch_profile.gif");
 		registerImage(IMG_CLCL_STOP, URL_CLCL + "launch_stop.gif");
 		registerImage(IMG_CLCL_DISCONNECT, URL_CLCL + "launch_disconnect.gif");
+		registerImage(IMG_CLCL_RESTART, URL_CLCL + "launch_restart.gif");
 	
 		registerImage(IMG_DLCL_PUBLISH, URL_DLCL + "launch_publish.gif");
 		registerImage(IMG_DLCL_START, URL_DLCL + "launch_run.gif");
@@ -297,7 +302,8 @@ public class ImageResource {
 		registerImage(IMG_DLCL_START_PROFILE, URL_DLCL + "launch_profile.gif");
 		registerImage(IMG_DLCL_STOP, URL_DLCL + "launch_stop.gif");
 		registerImage(IMG_DLCL_DISCONNECT, URL_DLCL + "launch_disconnect.gif");
-	
+		registerImage(IMG_DLCL_RESTART, URL_DLCL + "launch_restart.gif");
+		
 		// load general object images
 		registerImage(IMG_SERVER, URL_OBJ + "server.gif");
 		registerImage(IMG_SERVER_CONFIGURATION_NONE, URL_OBJ + "configuration_none.gif");
