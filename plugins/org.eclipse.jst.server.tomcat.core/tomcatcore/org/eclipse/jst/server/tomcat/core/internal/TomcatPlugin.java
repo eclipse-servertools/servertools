@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,6 +41,7 @@ public class TomcatPlugin extends Plugin {
 	public static final String TOMCAT_55 = "org.eclipse.jst.server.tomcat.55";
 	public static final String TOMCAT_60 = "org.eclipse.jst.server.tomcat.60";
 	public static final String TOMCAT_70 = "org.eclipse.jst.server.tomcat.70";
+	public static final String TOMCAT_80 = "org.eclipse.jst.server.tomcat.80";
 
 	protected static final String VERIFY_INSTALL_FILE = "verifyInstall.properties";
 	protected static VerifyResourceSpec[] verify32;
@@ -50,6 +51,7 @@ public class TomcatPlugin extends Plugin {
 	protected static VerifyResourceSpec[] verify55;
 	protected static VerifyResourceSpec[] verify60;
 	protected static VerifyResourceSpec[] verify70;
+	protected static VerifyResourceSpec[] verify80;
 	
 	protected static final IStatus emptyInstallDirStatus = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorInstallDirEmpty, null);
 	protected static final IStatus wrongDirVersionStatus = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorInstallDirWrongVersion, null);
@@ -151,6 +153,8 @@ public class TomcatPlugin extends Plugin {
 			return new Tomcat60Handler();
 		else if (TOMCAT_70.equals(id))
 			return new Tomcat70Handler();
+		else if (TOMCAT_80.equals(id))
+			return new Tomcat80Handler();
 		else
 			return null;
 	}
@@ -170,6 +174,7 @@ public class TomcatPlugin extends Plugin {
 		verify55 = new VerifyResourceSpec[0];
 		verify60 = new VerifyResourceSpec[0];
 		verify70 = new VerifyResourceSpec[0];
+		verify80 = new VerifyResourceSpec[0];
 		
 		try {
 			URL url = getInstance().getBundle().getEntry(VERIFY_INSTALL_FILE);
@@ -177,121 +182,72 @@ public class TomcatPlugin extends Plugin {
 			Properties p = new Properties();
 			p.load(url.openStream());
 
-			// Check backdoor system property, use internal spec if not found
-			String verify = System.getProperty(PLUGIN_ID + ".verify32install");
-			if (verify == null) {
-				verify = p.getProperty("verify32install");
-			}
-			verify.replace('/', File.separatorChar);
-
-			StringTokenizer st = new StringTokenizer(verify, ",");
-			List<VerifyResourceSpec> list = new ArrayList<VerifyResourceSpec>();
-			while (st.hasMoreTokens())
-				list.add(new VerifyResourceSpec(st.nextToken()));
-			Trace.trace(Trace.FINEST, "Verify32: " + list.toString());
+			// Check back door system property, use internal spec if not found
+			List<VerifyResourceSpec> list = loadVerifyResourceSpecs("verify32install", p);
 			verify32 = new VerifyResourceSpec[list.size()];
 			list.toArray(verify32);
 
 			// v4.0
-			// Check backdoor system property, use internal spec if not found
-			verify = System.getProperty(PLUGIN_ID + ".verify40install");
-			if (verify == null) {
-				verify = p.getProperty("verify40install");
-			}
-			verify.replace('/', File.separatorChar);
-
-			st = new StringTokenizer(verify, ",");
-			list = new ArrayList<VerifyResourceSpec>();
-			while (st.hasMoreTokens())
-				list.add(new VerifyResourceSpec(st.nextToken()));
-			Trace.trace(Trace.FINEST, "Verify40: " + list.toString());
+			// Check back door system property, use internal spec if not found
+			list = loadVerifyResourceSpecs("verify40install", p);
 			verify40 = new VerifyResourceSpec[list.size()];
 			list.toArray(verify40);
 			
 			// v4.1
 			// Check backdoor system property, use internal spec if not found
-			verify = System.getProperty(PLUGIN_ID + ".verify41install");
-			if (verify == null) {
-				verify = p.getProperty("verify41install");
-			}
-			verify.replace('/', File.separatorChar);
-
-			st = new StringTokenizer(verify, ",");
-			list = new ArrayList<VerifyResourceSpec>();
-			while (st.hasMoreTokens())
-				list.add(new VerifyResourceSpec(st.nextToken()));
-			Trace.trace(Trace.FINEST, "Verify41: " + list.toString());
+			list = loadVerifyResourceSpecs("verify41install", p);
 			verify41 = new VerifyResourceSpec[list.size()];
 			list.toArray(verify41);
 			
 			// v5.0
 			// Check backdoor system property, use internal spec if not found
-			verify = System.getProperty(PLUGIN_ID + ".verify50install");
-			if (verify == null) {
-				verify = p.getProperty("verify50install");
-			}
-			verify.replace('/', File.separatorChar);
-
-			st = new StringTokenizer(verify, ",");
-			list = new ArrayList<VerifyResourceSpec>();
-			while (st.hasMoreTokens())
-				list.add(new VerifyResourceSpec(st.nextToken()));
-			Trace.trace(Trace.FINEST, "Verify50: " + list.toString());
+			list = loadVerifyResourceSpecs("verify50install", p);
 			verify50 = new VerifyResourceSpec[list.size()];
 			list.toArray(verify50);
 
 			// v5.5
 			// Check backdoor system property, use internal spec if not found
-			verify = System.getProperty(PLUGIN_ID + ".verify55install");
-			if (verify == null) {
-				verify = p.getProperty("verify55install");
-			}
-			verify.replace('/', File.separatorChar);
-
-			st = new StringTokenizer(verify, ",");
-			list = new ArrayList<VerifyResourceSpec>();
-			while (st.hasMoreTokens())
-				list.add(new VerifyResourceSpec(st.nextToken()));
-			Trace.trace(Trace.FINEST, "Verify55: " + list.toString());
+			list = loadVerifyResourceSpecs("verify55install", p);
 			verify55 = new VerifyResourceSpec[list.size()];
 			list.toArray(verify55);
 
 			// v6.0
 			// Check backdoor system property, use internal spec if not found
-			verify = System.getProperty(PLUGIN_ID + ".verify60install");
-			if (verify == null) {
-				verify = p.getProperty("verify60install");
-			}
-			verify.replace('/', File.separatorChar);
-
-			st = new StringTokenizer(verify, ",");
-			list = new ArrayList<VerifyResourceSpec>();
-			while (st.hasMoreTokens())
-				list.add(new VerifyResourceSpec(st.nextToken()));
-			Trace.trace(Trace.FINEST, "Verify60: " + list.toString());
+			list = loadVerifyResourceSpecs("verify60install", p);
 			verify60 = new VerifyResourceSpec[list.size()];
 			list.toArray(verify60);
 
 			// v7.0
 			// Check backdoor system property, use internal spec if not found
-			verify = System.getProperty(PLUGIN_ID + ".verify70install");
-			if (verify == null) {
-				verify = p.getProperty("verify70install");
-			}
-			verify.replace('/', File.separatorChar);
-
-			st = new StringTokenizer(verify, ",");
-			list = new ArrayList<VerifyResourceSpec>();
-			while (st.hasMoreTokens())
-				list.add(new VerifyResourceSpec(st.nextToken()));
-			Trace.trace(Trace.FINEST, "Verify70: " + list.toString());
+			list = loadVerifyResourceSpecs("verify70install", p);
 			verify70 = new VerifyResourceSpec[list.size()];
 			list.toArray(verify70);
+
+			// v8.0
+			// Check backdoor system property, use internal spec if not found
+			list = loadVerifyResourceSpecs("verify80install", p);
+			verify80 = new VerifyResourceSpec[list.size()];
+			list.toArray(verify80);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not load installation verification properties", e);
 		}
 	}
 
+	public static List<VerifyResourceSpec> loadVerifyResourceSpecs(String propName, Properties defaultVerifyProperties) {
+		// Fetch list of resources to check if they all exist
+		String verify = System.getProperty(PLUGIN_ID + "." + propName);
+		if (verify == null) {
+			verify = defaultVerifyProperties.getProperty(propName);
+		}
+		verify.replace('/', File.separatorChar);
+
+		StringTokenizer st = new StringTokenizer(verify, ",");
+		List<VerifyResourceSpec> list = new ArrayList<VerifyResourceSpec>();
+		while (st.hasMoreTokens())
+			list.add(new VerifyResourceSpec(st.nextToken()));
+		Trace.trace(Trace.FINEST, propName + ": " + list.toString());
+		return list;
+	}
 	/**
 	 * Utility method to verify an installation directory according to the
 	 * specified server ID.  The verification includes checking the installation

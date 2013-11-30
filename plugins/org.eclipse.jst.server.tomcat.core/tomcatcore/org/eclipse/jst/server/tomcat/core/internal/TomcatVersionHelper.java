@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2007, 2011 SAS Institute, Inc and others.
+ * Copyright (c) 2007, 2013 SAS Institute, Inc and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -106,6 +106,7 @@ public class TomcatVersionHelper {
 		versionStringMap.put(TomcatPlugin.TOMCAT_55, "5.5.");
 		versionStringMap.put(TomcatPlugin.TOMCAT_60, "6.0.");
 		versionStringMap.put(TomcatPlugin.TOMCAT_70, "7.0.");
+		versionStringMap.put(TomcatPlugin.TOMCAT_80, "8.0.");
 	}
 
 	/**
@@ -1121,7 +1122,7 @@ public class TomcatVersionHelper {
 		IPath catalinaJarPath = null;
 		File jarFile = null;
 		
-		if (TomcatPlugin.TOMCAT_60.equals(serverType) || TomcatPlugin.TOMCAT_70.equals(serverType)) {
+		if (TomcatPlugin.TOMCAT_60.equals(serverType) || TomcatPlugin.TOMCAT_70.equals(serverType) || TomcatPlugin.TOMCAT_80.equals(serverType)) {
 			catalinaJarPath = installPath.append("lib").append("catalina.jar");
 			jarFile = catalinaJarPath.toFile();
 			// If jar is not at expected location, try alternate location

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -177,6 +177,16 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 				String javaVersion = ((IVMInstall2)vmInstall).getJavaVersion();
 				if (javaVersion != null && !isVMMinimumVersion(javaVersion, 106)) {
 					return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorJRETomcat70, null);
+				}
+			}
+		}
+		// Else for Tomcat 8.0, ensure we have J2SE 7.0
+		else if (id != null && id.indexOf("80") > 0) {
+			IVMInstall vmInstall = getVMInstall();
+			if (vmInstall instanceof IVMInstall2) {
+				String javaVersion = ((IVMInstall2)vmInstall).getJavaVersion();
+				if (javaVersion != null && !isVMMinimumVersion(javaVersion, 107)) {
+					return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorJRETomcat80, null);
 				}
 			}
 		}

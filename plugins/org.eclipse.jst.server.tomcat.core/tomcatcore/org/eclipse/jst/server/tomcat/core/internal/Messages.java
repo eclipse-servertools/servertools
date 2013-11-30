@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,6 +31,7 @@ public class Messages extends NLS {
 	public static String errorJRE;
 	public static String errorJRETomcat60;
 	public static String errorJRETomcat70;
+	public static String errorJRETomcat80;
 	public static String warningJRE;
 	public static String warningCantReadConfig;
 	public static String target32runtime;
@@ -53,6 +54,7 @@ public class Messages extends NLS {
 	public static String errorSpec55;
 	public static String errorSpec60;
 	public static String errorSpec70;
+	public static String errorSpec80;
 	public static String portServer;
 	public static String runtimeDirPrepared;
 	public static String publishConfigurationTask;
