@@ -507,34 +507,34 @@
     <runtime
         id="org.eclipse.jst.server.tomcat.runtime.60"
         licenseUrl="http://www.apache.org/licenses/LICENSE-2.0.txt"
-        archiveUrl="http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.32/bin/apache-tomcat-6.0.32-windows-x86.zip"
-        archivePath="apache-tomcat-6.0.32"
-        archiveSize="7378296"
-        fileCount="495"
+        archiveUrl="http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.37/bin/apache-tomcat-6.0.37-windows-x86.zip"
+        archivePath="apache-tomcat-6.0.37"
+        archiveSize="7912624"
+        fileCount="496"
         os="win32"/>
     <runtime
         id="org.eclipse.jst.server.tomcat.runtime.60"
         licenseUrl="http://www.apache.org/licenses/LICENSE-2.0.txt"
-        archiveUrl="http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.32/bin/apache-tomcat-6.0.32.tar.gz"
-        archivePath="apache-tomcat-6.0.32"
-        archiveSize="6507748"
-        fileCount="491"
+        archiveUrl="http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.37/bin/apache-tomcat-6.0.37.tar.gz"
+        archivePath="apache-tomcat-6.0.37"
+        archiveSize="6885442"
+        fileCount="492"
         os="linux"/>
     <runtime
         id="org.eclipse.jst.server.tomcat.runtime.70"
         licenseUrl="http://www.apache.org/licenses/LICENSE-2.0.txt"
-        archiveUrl="http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.12/bin/apache-tomcat-7.0.12-windows-x86.zip"
-        archivePath="apache-tomcat-7.0.12"
-        archiveSize="8118755"
-        fileCount="544"
+        archiveUrl="http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.47/bin/apache-tomcat-7.0.47-windows-x86.zip"
+        archivePath="apache-tomcat-7.0.47"
+        archiveSize="9418080"
+        fileCount="633"
         os="win32"/>
     <runtime
         id="org.eclipse.jst.server.tomcat.runtime.70"
         licenseUrl="http://www.apache.org/licenses/LICENSE-2.0.txt"
-        archiveUrl="http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.12/bin/apache-tomcat-7.0.12.tar.gz"
-        archivePath="apache-tomcat-7.0.12"
-        archiveSize="7205567"
-        fileCount="540"
+        archiveUrl="http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.47/bin/apache-tomcat-7.0.47.tar.gz"
+        archivePath="apache-tomcat-7.0.47"
+        archiveSize="8234674"
+        fileCount="629"
         os="linux"/>
   </extension>
 </plugin>
