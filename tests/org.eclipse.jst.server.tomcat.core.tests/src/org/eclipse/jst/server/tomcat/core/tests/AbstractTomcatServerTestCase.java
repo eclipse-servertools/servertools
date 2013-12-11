@@ -18,6 +18,7 @@ import junit.framework.TestSuite;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatConfigurationWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatServerWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
@@ -37,6 +38,17 @@ import org.eclipse.wst.server.core.model.IModuleResource;
 import org.eclipse.wst.server.core.tests.ext.AbstractServerTestCase;
 
 public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCase {
+	// See Bug 419182: Due to lazy loading, launching Tomcat in a JUnit test can cause
+	// the DebugUIPlugin to load and initialize on the job thread that will try to
+	// start Tomcat.  There is a risk that in some environments that initialization
+	// of the DebugUIPlugin may invoke some initialization that is required to
+	// run in the main/UI thread. The exception that gets throw can cause Tomcat
+	// not to start, resulting in test failures.  The following code forces the
+	// DebugUIPlugin to load and initialize on the thread loading this test plug-in,
+	// rather than taking the risk of loading it on the job thread when Tomcat is
+	// launched.
+	protected static boolean workaround = DebugUIPlugin.DEBUG; // Access something in DebugUIPlugin;
+
 	protected abstract String getServerTypeId();
 	
 	public void deleteServer(IServer server2) throws Exception {
