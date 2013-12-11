@@ -135,7 +135,7 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 		// on Tomcat 5.5 and later, the Eclipse JDT compiler is used for JSP's
 		String id = getRuntime().getRuntimeType().getId();
 		if (!found) {
-			if (id != null && (id.indexOf("55") > 0 || id.indexOf("60") > 0 || id.indexOf("70") > 0))
+			if (id != null && (id.indexOf("55") > 0 || id.indexOf("60") > 0 || id.indexOf("70") > 0 || id.indexOf("80") > 0))
 				found = true;
 		}
 		
