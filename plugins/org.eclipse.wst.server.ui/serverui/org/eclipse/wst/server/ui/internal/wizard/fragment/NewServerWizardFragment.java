@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2012 IBM Corporation and others.
+ * Copyright (c) 2003, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -105,7 +105,7 @@ public class NewServerWizardFragment extends WizardFragment {
 		if (getTaskModel() == null)
 			return;
 		
-		Byte b = (Byte) getTaskModel().getObject(WizardTaskUtil.TASK_MODE);
+		Byte b = getMode();
 		if (b != null && b.byteValue() == MODE_MANUAL) {
 			IRuntime runtime = (IRuntime) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
 			if (runtime != null && runtime instanceof IRuntimeWorkingCopy) {
@@ -143,6 +143,11 @@ public class NewServerWizardFragment extends WizardFragment {
 	}
 
 	public boolean isComplete() {
+		// Can skip the validation since the mode is not manual, i.e. not a new server creation, so we can skip
+		// the validation on this page.
+		if(getMode() != null && getMode().byteValue() != MODE_MANUAL)
+			return true;
+		
 		if(getServer() == null)
 			return false;
 		
@@ -160,9 +165,7 @@ public class NewServerWizardFragment extends WizardFragment {
 	private boolean checkValidInput(){
 		boolean isComplete = false;
 
-		boolean supportsRemote = getServer().getServerType().supportsRemoteHosts();
-		
-		if(comp != null){
+		if(comp != null) {
 			Composite composite = comp.getNewManualServerComposite();
 			if(composite != null && composite instanceof NewManualServerComposite){
 				NewManualServerComposite manualComp = (NewManualServerComposite) composite;
@@ -174,6 +177,7 @@ public class NewServerWizardFragment extends WizardFragment {
 					return false;
 				}
 				
+				boolean supportsRemote = getServer().getServerType().supportsRemoteHosts();
 				if (manualComp.getCurrentHostname().trim().length() == 0){
 					isComplete = false;
 				} else if(!supportsRemote && !SocketUtil.isLocalhost(manualComp.getCurrentHostname())){
@@ -191,6 +195,14 @@ public class NewServerWizardFragment extends WizardFragment {
 	private IServerWorkingCopy getServer() {
 		try {
 			return (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	private Byte getMode() {
+		try {
+			return (Byte)getTaskModel().getObject(WizardTaskUtil.TASK_MODE);
 		} catch (Exception e) {
 			return null;
 		}
