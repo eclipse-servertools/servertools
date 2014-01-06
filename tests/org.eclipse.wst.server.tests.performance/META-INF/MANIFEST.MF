@@ -8,7 +8,7 @@ Bundle-Activator: org.eclipse.wst.server.tests.performance.TestsPlugin
 Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.wst.server.tests.performance,
  org.eclipse.wst.server.tests.performance.common
-Require-Bundle: org.junit;bundle-version="[3.8.0,4.0.0)",
+Require-Bundle: org.junit,
  org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
