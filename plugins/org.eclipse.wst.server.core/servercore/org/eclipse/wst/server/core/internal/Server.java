@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2013 IBM Corporation and others.
+ * Copyright (c) 2003, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1250,20 +1250,21 @@ public class Server extends Base implements IServer {
 		if (getServerPublishState() != PUBLISH_STATE_UNKNOWN)
 			return false;
 		
-		final boolean[] publish = new boolean[1];
-		publish[0] = true;
+		final boolean[] isPublishUnknown = new boolean[1];
+		isPublishUnknown[0] = true;
 		
 		visit(new IModuleVisitor() {
 			public boolean visit(IModule[] module) {
-				if (getModulePublishState(module) != PUBLISH_STATE_UNKNOWN) {
-					publish[0] = false;
+				int curState = getModulePublishState(module);
+				if (curState != PUBLISH_STATE_UNKNOWN && curState != PUBLISH_STATE_NONE) {
+					isPublishUnknown[0] = false;
 					return false;
 				}
 				return true;
 			}
 		}, null);
 		
-		return publish[0];
+		return isPublishUnknown[0];
 	}
 
 	/**
