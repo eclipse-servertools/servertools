@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.wst.server.ui.tests
-Bundle-SymbolicName: org.eclipse.wst.server.ui.tests
+Bundle-SymbolicName: org.eclipse.wst.server.ui.tests;singleton:=true
 Bundle-Version: 1.1.300.qualifier
 Bundle-ClassPath: tests.jar
 Bundle-Activator: org.eclipse.wst.server.ui.tests.TestsPlugin
