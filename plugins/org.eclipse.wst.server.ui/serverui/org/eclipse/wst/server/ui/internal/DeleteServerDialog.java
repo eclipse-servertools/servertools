@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,6 +42,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServer.IOperationListener;
+import org.eclipse.wst.server.ui.DeleteServerDialogExtension;
+
 /**
  * Dialog that prompts a user to delete server(s) and/or server configuration(s).
  */
@@ -55,6 +57,8 @@ public class DeleteServerDialog extends MessageDialog {
 	protected Button checkDeleteConfigs;
 	protected Button checkDeleteRunning;
 	protected Button checkDeleteRunningStop;
+	
+	List<DeleteServerDialogExtension> dialogExtensionLst = new ArrayList<DeleteServerDialogExtension>();
 
 	/**
 	 * DeleteServerDialog constructor comment.
@@ -137,6 +141,16 @@ public class DeleteServerDialog extends MessageDialog {
 			}
 		}
 		
+		List<DeleteServerDialogExtension> fullDialogExtensionLst = ServerUIPlugin.getDeleteServerDialogExtensions();
+		// Add the dialog extension UI. 
+		for (DeleteServerDialogExtension curDialogExtension : fullDialogExtensionLst) {
+			curDialogExtension.setServers(servers);
+			if (curDialogExtension.isEnabled()) {
+				dialogExtensionLst.add(curDialogExtension);
+				curDialogExtension.createControl(composite);
+			}
+		}
+		
 		Dialog.applyDialogFont(composite);
 		
 		return composite;
@@ -165,6 +179,10 @@ public class DeleteServerDialog extends MessageDialog {
 								if (monitor.isCanceled())
 									return Status.CANCEL_STATUS;
 								
+								for (DeleteServerDialogExtension curDialogExtension : dialogExtensionLst) {
+									curDialogExtension.performPreDeleteAction(monitor);
+								}
+								
 								int size = servers.length;
 								for (int i = 0; i < size; i++)
 									servers[i].delete();
@@ -178,6 +196,9 @@ public class DeleteServerDialog extends MessageDialog {
 										configs[i].refreshLocal(IResource.DEPTH_INFINITE, monitor);
 										configs[i].delete(true, true, monitor);
 									}
+								}
+								for (DeleteServerDialogExtension curDialogExtension : dialogExtensionLst) {
+									curDialogExtension.performPostDeleteAction(monitor);
 								}
 							} catch (Exception e) {
 								if (Trace.SEVERE) {

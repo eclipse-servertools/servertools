@@ -32,6 +32,7 @@ import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.*;
 import org.eclipse.wst.server.core.model.LaunchableAdapterDelegate;
 import org.eclipse.wst.server.core.util.PublishAdapter;
+import org.eclipse.wst.server.ui.DeleteServerDialogExtension;
 import org.eclipse.wst.server.ui.editor.ServerEditorOverviewPageModifier;
 import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
 import org.eclipse.wst.server.ui.internal.editor.IServerEditorInput;
@@ -85,6 +86,9 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	
 	// Cached copy of all server editor UI modifiers
 	private static List<ServerEditorOverviewPageModifier> serverEditorOverviewPageModifier;
+	
+	// Cached copy of all delete dialog UI modifier
+	private static List<DeleteServerDialogExtension> deleteServerDialogExtensions;
 	
 	// Cached copy of server state label provider
 	private static HashMap<String,AbstractServerLabelProvider> serverLabelProviders;
@@ -787,6 +791,18 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 			loadServerEditorOverviewPageModifiers();
 		return serverEditorOverviewPageModifier;
 	}
+	
+	/**
+	 * Returns the list of delete server dialog modifiers.
+	 *
+	 * @return the list of delete server dialog modifiers, or an empty list if none could be found
+	 */
+	public static List<DeleteServerDialogExtension> getDeleteServerDialogExtensions() {
+		if (deleteServerDialogExtensions == null)
+			loadDeleteServerDialogExtensions();
+
+		return deleteServerDialogExtensions;
+	}
 
 	/**
 	 * Load the Server creation wizard page modifiers.
@@ -863,6 +879,44 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		
 		if (Trace.CONFIG) {
 			Trace.trace(Trace.STRING_CONFIG, "-<- Done loading .serverEditorOverviewPageModifier extension point -<-");
+		}
+	}
+	
+	/**
+	 * Load the Delete server dialog modifiers.
+	 */
+	private static synchronized void loadDeleteServerDialogExtensions() {
+		if (deleteServerDialogExtensions != null)
+			return;
+		
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "->- Loading .deleteServerDialogExtension extension point ->-");
+		}
+		deleteServerDialogExtensions = new ArrayList<DeleteServerDialogExtension>();
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "deleteServerDialogExtension");
+		
+		for (IConfigurationElement curConfigElement: cf) {
+			try {
+				DeleteServerDialogExtension curExtension = (DeleteServerDialogExtension)curConfigElement.createExecutableExtension("class");
+				if (Trace.CONFIG) {
+					Trace.trace(Trace.STRING_CONFIG,
+							"  Loaded .deleteServerDialogExtension: " + cf[0].getAttribute("id")
+									+ ", loaded class=" + curExtension);
+				}
+				if (curExtension != null)
+					deleteServerDialogExtensions.add(curExtension);
+
+			} catch (Throwable t) {
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE,
+							"  Could not load .deleteServerDialogExtension: " + cf[0].getAttribute("id"), t);
+				}
+			}
+		}
+		
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "-<- Done loading .deleteServerDialogExtension extension point -<-");
 		}
 	}
 	
