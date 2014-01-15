@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -175,6 +175,25 @@ public class RuntimeType implements IRuntimeType {
 		if (element == null)
 			return null;
 		return element.getDeclaringExtension().getContributor().getName();
+	}
+	
+	/**
+	 * Returns <code>true</code> if this type of runtime can be created manually
+	 * from the runtime creation wizard.
+	 * Returns <code>false</code> if the runtime type can only be programmatically
+	 * and hide from the runtime creation wizard.
+	 * 
+	 * @return <code>true</code> if this type of runtime can be created manually
+	 * from the runtime creation wizard, and <code>false</code> if it cannot.
+	 * @since 1.6
+	 */
+	public boolean supportsManualCreation() {
+		try {
+			String supportsManualCreation = element.getAttribute("supportsManualCreation");
+			return (supportsManualCreation == null || supportsManualCreation.toLowerCase().equals("true"));
+		} catch (Exception e) {
+			return true;
+		}
 	}
 
 	public String toString() {

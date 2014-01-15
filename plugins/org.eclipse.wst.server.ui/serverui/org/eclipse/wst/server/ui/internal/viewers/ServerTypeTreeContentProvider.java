@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.ServerType;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 /**
@@ -71,6 +72,14 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 	protected boolean include(IServerType serverType) {
 		if (serverTypeId != null && !serverType.getId().startsWith(serverTypeId))
 			return false;
+		
+		try {
+			if (!((ServerType)serverType).supportsManualCreation()) {
+				return false;
+			}
+		} catch (Exception e) {
+			// Do nothing since all IServerType should be instance of ServerType.
+		}
 		
 		IRuntimeType runtimeType = serverType.getRuntimeType();
 		if (runtimeType == null)

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -154,6 +154,25 @@ public class ServerType implements IServerType {
 			return mode.indexOf(launchMode) >= 0;
 		} catch (Exception e) {
 			return false;
+		}
+	}
+
+	/**
+	 * Returns <code>true</code> if this type of server can be created manually
+	 * from the server creation wizard.
+	 * Returns <code>false</code> if the server type can only be programmatically
+	 * and hide from the server creation wizard.
+	 * 
+	 * @return <code>true</code> if this type of server can be created manually
+	 * from the server creation wizard, and <code>false</code> if it cannot.
+	 * @since 1.6
+	 */
+	public boolean supportsManualCreation() {
+		try {
+			String supportsManualCreation = element.getAttribute("supportsManualCreation");
+			return (supportsManualCreation == null || supportsManualCreation.toLowerCase().equals("true"));
+		} catch (Exception e) {
+			return true;
 		}
 	}
 

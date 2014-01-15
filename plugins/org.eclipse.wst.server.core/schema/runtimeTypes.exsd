@@ -127,6 +127,13 @@ Runtime instances of this type will delegate to instances of this class. Delegat
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="supportsManualCreation" type="boolean">
+            <annotation>
+               <documentation>
+                  boolean value &quot;true&quot; or &quot;false&quot; to specify whether this runtime type supports manual creation via the runtime creation wizard.  This setting can be used for system runtimes or deprecated runtimes.  If &quot;true&quot;, the runtime will show on the list of selectable runtime types on the runtime creation wizard; otherwise, the runtime will be hidden from the runtime creation wizard. If not specified, the default value is true.
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 
@@ -190,7 +197,7 @@ Runtime instances of this type will delegate to instances of this class. Delegat
          <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-         Copyright (c) 2000, 2005 IBM Corporation and others.&lt;br&gt;
+         Copyright (c) 2000, 2014 IBM Corporation and others.&lt;br&gt;
 All rights reserved. This program and the accompanying materials are made 
 available under the terms of the Eclipse Public License v1.0 which accompanies 
 this distribution, and is available at 
