@@ -2611,18 +2611,18 @@ public class Server extends Base implements IServer {
 		try {
 			int i = module.length - 1;
 			if (!module[i].isExternal() && (module[i].getProject() == null || !module[i].getProject().isAccessible()))
-				return null;
+				return new IModule[0];
 			
 			ServerDelegate sd = getDelegate(monitor);
 			if (sd == null)
-				return null;
+				return new IModule[0];
 			IModule[] children = sd.getChildModules(module);
 			if (children != null && children.length == 1 && children[0].equals(module[module.length - 1]))
-				return null;
+				return new IModule[0];
 			return children;
 		} catch (Exception e) {
 			ServerPlugin.logExtensionFailure(toString(), e);
-			return null;
+			return new IModule[0];
 		}
 	}
 
