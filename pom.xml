@@ -47,9 +47,7 @@
 
     <module>plugins/org.eclipse.jst.server.core</module>
     <module>plugins/org.eclipse.jst.server.generic.core</module>
-    <module>plugins/org.eclipse.jst.server.generic.jboss</module>
     <module>plugins/org.eclipse.jst.server.generic.jonas</module>
-    <module>plugins/org.eclipse.jst.server.generic.oc4j</module>
     <module>plugins/org.eclipse.jst.server.generic.ui</module>
 
     <!-- per bug 412464 this module is not required for the build
@@ -61,7 +59,6 @@
     <module>plugins/org.eclipse.jst.server.tomcat.core</module>
     <module>plugins/org.eclipse.jst.server.tomcat.ui</module>
     <module>plugins/org.eclipse.jst.server.ui</module>
-    <module>plugins/org.eclipse.jst.server.websphere.core</module>
     <module>plugins/org.eclipse.wst.internet.monitor.core</module>
     <module>plugins/org.eclipse.wst.internet.monitor.ui</module>
     <module>plugins/org.eclipse.wst.server.core</module>
