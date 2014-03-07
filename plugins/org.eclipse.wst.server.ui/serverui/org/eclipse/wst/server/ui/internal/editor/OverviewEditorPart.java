@@ -107,6 +107,7 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 	protected Spinner startTimeoutSpinner;
 	protected Spinner stopTimeoutSpinner;
 	protected ManagedForm managedForm;
+	private List<ServerEditorOverviewPageModifier> pageModifiersList;
 
 	protected boolean updating;
 
@@ -411,9 +412,10 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 		// runtime
 		if (server != null && server.getServerType() != null && server.getServerType().hasRuntime()) {
 			final Hyperlink link = toolkit.createHyperlink(composite, Messages.serverEditorOverviewRuntime, SWT.NONE);
+			final IServerWorkingCopy server2 = server;
 			link.addHyperlinkListener(new HyperlinkAdapter() {
 				public void linkActivated(HyperlinkEvent e) {
-					IRuntime runtime = server.getRuntime();
+					IRuntime runtime = server2.getRuntime();
 					if (runtime != null && ServerUIPlugin.hasWizardFragment(runtime.getRuntimeType().getId()))
 						editRuntime(runtime);
 				}
@@ -576,15 +578,16 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 			browse.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		}
 		
+		IServerType serverType = null;
 		if (server != null && server.getServerType() != null) {
-			IServerType serverType = server.getServerType();
+			serverType = server.getServerType();
 			if (serverType.supportsLaunchMode(ILaunchManager.RUN_MODE) || serverType.supportsLaunchMode(ILaunchManager.DEBUG_MODE)
 					|| serverType.supportsLaunchMode(ILaunchManager.PROFILE_MODE)) {
 				ILaunchConfigurationType launchType = ((ServerType) serverType).getLaunchConfigurationType();
 				if (launchType != null && launchType.isPublic()) {
 					final Hyperlink link = toolkit.createHyperlink(composite, Messages.serverEditorOverviewOpenLaunchConfiguration, SWT.NONE);
 					GridData data = new GridData();
-					data.horizontalSpan = 2;
+					data.horizontalSpan = 3;
 					link.setLayoutData(data);
 					link.addHyperlinkListener(new HyperlinkAdapter() {
 						public void linkActivated(HyperlinkEvent e) {
@@ -605,9 +608,10 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 		
 		// Insertion of extension widgets. If the page modifier createControl is not implemented still 
 		// add the modifier to the listeners list.
-		List<ServerEditorOverviewPageModifier> pageModifiersLst = ServerUIPlugin.getServerEditorOverviewPageModifiers();
+		List<ServerEditorOverviewPageModifier> pageModifiersLst = getPageModifiers(serverType == null ? null : serverType.getId());
 		for (ServerEditorOverviewPageModifier curPageModifier : pageModifiersLst) {
 			if(server != null && server.getServerType() != null){
+				curPageModifier.setServerWorkingCopy(server);
 				curPageModifier.createControl(ServerEditorOverviewPageModifier.UI_LOCATION.OVERVIEW, composite);
 				curPageModifier.setUIControlListener(this);
 			}
@@ -1016,7 +1020,7 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 				autoPublishTime.setEnabled(publishSetting != Server.AUTO_PUBLISH_DISABLE);
 			}
 			
-			List<ServerEditorOverviewPageModifier> pageModifiersLst = ServerUIPlugin.getServerEditorOverviewPageModifiers();
+			List<ServerEditorOverviewPageModifier> pageModifiersLst = getPageModifiers(null);
 			for (ServerEditorOverviewPageModifier curPageModifier : pageModifiersLst) {
 				if(server != null && server.getServerType() != null)
 					curPageModifier.setServerWorkingCopy(server);
@@ -1026,6 +1030,14 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 		
 		updating = false;
 		validate();
+	}
+	
+	private List<ServerEditorOverviewPageModifier> getPageModifiers(String serverTypeId) {
+		if( pageModifiersList == null )  {
+			pageModifiersList = ServerUIPlugin.getServerEditorOverviewPageModifiers(serverTypeId);
+		}
+
+		return pageModifiersList;
 	}
 
 	protected void validate() {

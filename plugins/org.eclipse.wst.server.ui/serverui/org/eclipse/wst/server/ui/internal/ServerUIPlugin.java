@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -85,7 +85,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	private static List<ServerCreationWizardPageExtension> serverCreationWizardPageExtensions;
 	
 	// Cached copy of all server editor UI modifiers
-	private static List<ServerEditorOverviewPageModifier> serverEditorOverviewPageModifier;
+	private static List<OverviewPageModifierFactory> serverEditorOverviewPageModifierFactories;
 	
 	// Cached copy of all delete dialog UI modifier
 	private static List<DeleteServerDialogExtension> deleteServerDialogExtensions;
@@ -782,16 +782,77 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	}
 
  	/**
-	 * Returns the list of server editor modifiers.
+	 * Returns the list of server editor modifiers that are valid for this server type
 	 *
 	 * @return the list of server editor modifiers, or an empty list if none could be found
 	 */
-	public static List<ServerEditorOverviewPageModifier> getServerEditorOverviewPageModifiers() {
-		if (serverEditorOverviewPageModifier == null)
-			loadServerEditorOverviewPageModifiers();
-		return serverEditorOverviewPageModifier;
+	public static List<ServerEditorOverviewPageModifier> getServerEditorOverviewPageModifiers(String serverType) {
+		return getServerEditorOverviewPageModifiersImpl(serverType);
 	}
 	
+	private static List<ServerEditorOverviewPageModifier> getServerEditorOverviewPageModifiersImpl(String serverType) {
+		if (serverEditorOverviewPageModifierFactories == null)
+			loadServerEditorOverviewPageModifiers();
+		ArrayList<ServerEditorOverviewPageModifier> pageModifierImplLst = new ArrayList<ServerEditorOverviewPageModifier>();
+		Iterator<OverviewPageModifierFactory> dIterator = serverEditorOverviewPageModifierFactories.iterator();
+		OverviewPageModifierFactory curFactory;
+		while(dIterator.hasNext()) {
+			curFactory = dIterator.next();
+			if( curFactory != null && (serverType == null || curFactory.supportsType(serverType))) {
+				pageModifierImplLst.add(curFactory.createModifier());
+			}
+		}
+		return pageModifierImplLst;
+	}
+	
+	private static class OverviewPageModifierFactory implements Comparable<OverviewPageModifierFactory> {
+		IConfigurationElement element;
+		String[] serverTypes = null;
+		int order = 10;
+		OverviewPageModifierFactory(IConfigurationElement element) {
+			this.element = element;
+			init();
+		}
+		private void init() {
+			String attr = element.getAttribute("serverTypes");
+			serverTypes = (attr == null || attr.length() == 0) ? null : attr.split(",");
+			
+			String w = element.getAttribute("order");
+			if( w != null ) {
+				try {
+					order = Integer.parseInt(w);
+				} catch (NumberFormatException e) {
+					// Do nothing.
+				}
+			}
+		}
+		ServerEditorOverviewPageModifier createModifier() {
+			try {
+				ServerEditorOverviewPageModifier curExtension = (ServerEditorOverviewPageModifier)element.createExecutableExtension("class");
+				if (Trace.CONFIG) {
+					Trace.trace(Trace.STRING_CONFIG,
+							"  New instance of .serverEditorOverviewPageModifier: " + element.getAttribute("id")
+									+ ", loaded class=" + curExtension);
+				}
+				return curExtension;
+			} catch (Throwable t) {
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE,
+							"  Could not create new instance .serverEditorOverviewPageModifier: " + element.getAttribute("id"), t);
+				}
+			}
+			return null;
+		}
+		
+		boolean supportsType(String serverType) {
+			return ServerPlugin.contains(serverTypes, serverType);
+		}
+
+		public int compareTo(OverviewPageModifierFactory factory) {
+			return order - factory.order;
+		}
+	}
+
 	/**
 	 * Returns the list of delete server dialog modifiers.
 	 *
@@ -848,13 +909,13 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	 * Load the Server editor page modifiers.
 	 */
 	private static synchronized void loadServerEditorOverviewPageModifiers() {
-		if (serverEditorOverviewPageModifier != null)
+		if (serverEditorOverviewPageModifierFactories != null)
 			return;
 		
 		if (Trace.CONFIG) {
 			Trace.trace(Trace.STRING_CONFIG, "->- Loading .serverEditorOverviewPageModifier extension point ->-");
 		}
-		serverEditorOverviewPageModifier = new ArrayList<ServerEditorOverviewPageModifier>();
+		serverEditorOverviewPageModifierFactories = new ArrayList<OverviewPageModifierFactory>();
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "serverEditorOverviewPageModifier");
 		
@@ -867,8 +928,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 									+ ", loaded class=" + curExtension);
 				}
 				if (curExtension != null)
-					serverEditorOverviewPageModifier.add(curExtension);
-
+					serverEditorOverviewPageModifierFactories.add(new OverviewPageModifierFactory(curConfigElement));
 			} catch (Throwable t) {
 				if (Trace.SEVERE) {
 					Trace.trace(Trace.STRING_SEVERE,
@@ -876,7 +936,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 				}
 			}
 		}
-		
+		Collections.sort(serverEditorOverviewPageModifierFactories);
 		if (Trace.CONFIG) {
 			Trace.trace(Trace.STRING_CONFIG, "-<- Done loading .serverEditorOverviewPageModifier extension point -<-");
 		}

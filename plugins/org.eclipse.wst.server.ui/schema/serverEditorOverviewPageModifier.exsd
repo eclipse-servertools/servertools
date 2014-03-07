@@ -19,7 +19,7 @@ This extension point is part of an interim API that is still under development a
          </appInfo>
       </annotation>
       <complexType>
-         <sequence>
+         <sequence minOccurs="1" maxOccurs="unbounded">
             <element ref="serverEditorOverviewPageModifier"/>
          </sequence>
          <attribute name="point" type="string" use="required">
@@ -70,8 +70,38 @@ This extension point is part of an interim API that is still under development a
                </appInfo>
             </annotation>
          </attribute>
+         <attribute name="serverTypes" type="string">
+            <annotation>
+               <documentation>
+                  An optional list of comma-separated server types IDs for which this modifier is valid. An unset or empty value will be interpreted as the modifier being valid for all server types. May include wildcards (*) at the end of an id.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="order" type="string">
+            <annotation>
+               <documentation>
+                  Integer value to help the order which modifiers are run. Modifier with smaller order will be created near the top, while a larger order is placed near the bottom. Default value is 10 to
+                  allow relative order for modifiers that do not have order value provided.
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;code&gt;org.eclipse.wst.server.ui.editor.ServerEditorPageExtension&lt;/code&gt;.
+
+This extension point currently only supports the control on the following fields on the implementation of org.eclipse.wst.server.ui.AbstractUIControl.IUIControlListener.handleUIControlMapChanged(Map&lt;String, UIControlEntry&gt;):
+Server&apos;s host name
+
+This extension point currently only issue property change event on the following property change:
+Server type selection change
+      </documentation>
+   </annotation>
 
    <annotation>
       <appInfo>
@@ -93,8 +123,11 @@ This extension point is part of an interim API that is still under development a
    &lt;extension
          point=&quot;org.eclipse.wst.server.ui.serverEditorPageExtension&quot;&gt;
       &lt;serverEditorOverviewPageModifier
-            id=&quot;org.eclipse.wst.server.ui.test.serverEditorOverviewModifier&quot;
-                        class=&quot;org.eclipse.wst.server.ui.test.internal.serverEditorPageExtension.ServerEditorOverviewPageModifierTest&quot;/&gt;
+         	id=&quot;org.eclipse.wst.server.ui.tests.wizard.serverEditorOverviewPageModifierTest&quot;
+            class=&quot;org.eclipse.wst.server.ui.editor.ServerEditorOverviewPageModifierTest&quot;
+            order=&quot;12&quot;
+            serverTypes=&quot;org.eclipse.my.server.type,org.eclipse.my.server.type2.*&quot;&gt;
+      &lt;/serverEditorOverviewPageModifier&gt;
    &lt;/extension&gt;
 &lt;/pre&gt;
       </documentation>
@@ -106,26 +139,11 @@ This extension point is part of an interim API that is still under development a
          <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-         Copyright (c) 2010 IBM Corporation and others.&lt;br&gt;
+         Copyright (c) 2010,2014 IBM Corporation and others.&lt;br&gt;
 All rights reserved. This program and the accompanying materials are made 
 available under the terms of the Eclipse Public License v1.0 which accompanies 
 this distribution, and is available at 
 &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
-      </documentation>
-   </annotation>
-
-   <annotation>
-      <appInfo>
-         <meta.section type="apiInfo"/>
-      </appInfo>
-      <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;code&gt;org.eclipse.wst.server.ui.editor.ServerEditorPageExtension&lt;/code&gt;.
-
-This extension point currently only supports the control on the following fields on the implementation of org.eclipse.wst.server.ui.AbstractUIControl.IUIControlListener.handleUIControlMapChanged(Map&lt;String, UIControlEntry&gt;):
-Server&apos;s host name
-
-This extension point currently only issue property change event on the following property change:
-Server type selection change
       </documentation>
    </annotation>
 
