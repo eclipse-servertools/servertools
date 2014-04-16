@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,9 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.editor;
 
+import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.ui.AbstractUIControl;
+import org.eclipse.wst.server.ui.internal.Trace;
 
 /**
  * A modifier class that allows adopter to modify the behaviour of a UI control on the
@@ -22,7 +25,8 @@ import org.eclipse.wst.server.ui.AbstractUIControl;
  */
 public abstract class ServerEditorOverviewPageModifier extends AbstractUIControl {
 	protected IServerWorkingCopy serverWc = null;
-
+	private FormToolkit serverEditorFormToolkit = null;
+	private ServerEditorPart serverEditorPart = null;
 	
 	/**
 	 * The list of editor sections on the server editors that allow inserting custom GUI.
@@ -46,5 +50,28 @@ public abstract class ServerEditorOverviewPageModifier extends AbstractUIControl
 	*/
 	public void setServerWorkingCopy(IServerWorkingCopy curServerWc) {
 		serverWc = curServerWc;
+	}
+	
+	public void setServerEditorPart(ServerEditorPart part) {
+		serverEditorPart = part;
+	}
+
+	public void setFormToolkit(FormToolkit toolkit) {
+		this.serverEditorFormToolkit = toolkit;
+	}
+
+	protected FormToolkit getFormToolkit() {
+		return serverEditorFormToolkit;
+	}
+
+	protected void executeCommand(IUndoableOperation operation) {
+		if (serverEditorPart != null) {
+			serverEditorPart.execute(operation);
+		} else {
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE,
+						"Error executing command: No reference to editor part");
+			}
+		}
 	}
 }

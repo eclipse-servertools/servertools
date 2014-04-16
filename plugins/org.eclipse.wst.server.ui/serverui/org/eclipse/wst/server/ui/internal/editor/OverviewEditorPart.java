@@ -612,6 +612,8 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 		for (ServerEditorOverviewPageModifier curPageModifier : pageModifiersLst) {
 			if(server != null && server.getServerType() != null){
 				curPageModifier.setServerWorkingCopy(server);
+				curPageModifier.setServerEditorPart(this);
+				curPageModifier.setFormToolkit(toolkit);
 				curPageModifier.createControl(ServerEditorOverviewPageModifier.UI_LOCATION.OVERVIEW, composite);
 				curPageModifier.setUIControlListener(this);
 			}
