@@ -30,14 +30,12 @@
     <module>tests/org.eclipse.jst.server.core.tests</module>
     <module>tests/org.eclipse.jst.server.generic.tests</module>
     <module>tests/org.eclipse.jst.server.tomcat.core.tests</module>
-    <module>tests/org.eclipse.jst.server.tomcat.tests.performance</module>
     <module>tests/org.eclipse.jst.server.tomcat.ui.tests</module>
     <module>tests/org.eclipse.jst.server.ui.tests</module>
     <module>tests/org.eclipse.wst.internet.monitor.core.tests</module>
     <module>tests/org.eclipse.wst.internet.monitor.ui.tests</module>
     <module>tests/org.eclipse.wst.server.core.tests</module>
     <module>tests/org.eclipse.wst.server.http.core.tests</module>
-    <module>tests/org.eclipse.wst.server.tests.performance</module>
     <module>tests/org.eclipse.wst.server.ui.tests</module>
     <module>tests/org.eclipse.wst.server.util.tests</module>
   </modules>
