@@ -1629,6 +1629,9 @@ public class Server extends Base implements IServer {
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorMissingAdapter, null);
 		
 		int state = getServerState();
+		if( state == STATE_STARTED )
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.canStartErrorStateStarted, null);
+		
 		if (state != STATE_STOPPED && state != STATE_UNKNOWN)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.canStartErrorState, null);
 		
