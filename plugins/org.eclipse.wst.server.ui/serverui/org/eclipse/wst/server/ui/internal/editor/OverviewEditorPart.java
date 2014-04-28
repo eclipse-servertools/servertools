@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2013 IBM Corporation and others.
+ * Copyright (c) 2003, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,7 +55,9 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 import org.eclipse.ui.forms.IFormColors;
@@ -65,6 +67,7 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.*;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
+import org.eclipse.ui.part.MultiPageEditorSite;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Publisher;
 import org.eclipse.wst.server.core.internal.Server;
@@ -591,6 +594,9 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 					link.setLayoutData(data);
 					link.addHyperlinkListener(new HyperlinkAdapter() {
 						public void linkActivated(HyperlinkEvent e) {
+							IEditorPart part = ((MultiPageEditorSite)getSite()).getMultiPageEditor();
+							IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+							page.saveEditor(part, true);
 							try {
 								ILaunchConfiguration launchConfig = ((Server) getServer()).getLaunchConfiguration(true, null);
 								// TODO: use correct launch group
