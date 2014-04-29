@@ -911,9 +911,17 @@ public class TomcatVersionHelper {
 
 			boolean modified = false;
 
+			boolean isTomcat8 = tomcatVersion.startsWith("8.");
 			// care about top-level modules only
-			TomcatPublishModuleVisitor visitor = new TomcatPublishModuleVisitor(
-					baseDir, tomcatVersion, publishedInstance, loader, enableMetaInfResources);
+			TomcatPublishModuleVisitor visitor;
+			if (isTomcat8) {
+				visitor = new Tomcat80PublishModuleVisitor(
+						baseDir, tomcatVersion, publishedInstance, loader, enableMetaInfResources);
+			}
+			else {
+				visitor = new TomcatPublishModuleVisitor(
+						baseDir, tomcatVersion, publishedInstance, loader, enableMetaInfResources);
+			}
 			Context [] contexts = publishedInstance.getContexts();
 			for (int i = 0; i < contexts.length; i++) {
 				String moduleId = contexts[i].getSource();
@@ -1166,9 +1174,10 @@ public class TomcatVersionHelper {
 			// If a version string needs to be acquired
 			if (versionSubString == null) {
 				InputStream is = null;
+				JarFile jar = null;
 				try {
 					// Read version string from catalina.jar
-					JarFile jar = new JarFile(jarFile);
+					jar = new JarFile(jarFile);
 					JarEntry entry = jar.getJarEntry("org/apache/catalina/util/ServerInfo.properties");
 					if (entry != null) {
 						is = jar.getInputStream(entry);
@@ -1195,6 +1204,13 @@ public class TomcatVersionHelper {
 							is.close();
 						}
 						catch (IOException e) {
+							// Ignore
+						}
+					}
+					if (jar != null) {
+						try {
+							jar.close();
+						} catch (IOException e) {
 							// Ignore
 						}
 					}

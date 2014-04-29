@@ -145,27 +145,8 @@ public class Tomcat80Handler implements ITomcatVersionHandler {
 	 * @see ITomcatVersionHandler#prepareForServingDirectly(IPath, TomcatServer)
 	 */
 	public IStatus prepareForServingDirectly(IPath baseDir, TomcatServer server, String tomcatVersion) {
-		IStatus status;
-		// If serving modules without publishing, loader jar is needed
-		// TODO Need to examine catalina.properties to ensure loader jar and catalina.properties are handled appropriately
-		if (server.isServeModulesWithoutPublish()) {
-			status = TomcatVersionHelper.copyLoaderJar(
-					getRuntimeBaseDirectory(server).append("lib"),
-					server.getServer().getRuntime().getRuntimeType().getId(), tomcatVersion);
-			// If copy successful and running a separate server instance, modify catalina.properties
-			if (status.isOK() && server.isTestEnvironment()) {
-				status = TomcatVersionHelper.updatePropertiesToServeDirectly(baseDir, "lib", "common");
-			}
-		}
-		// Else ensure jar is removed
-		else {
-			TomcatVersionHelper.removeLoaderJar(
-					getRuntimeBaseDirectory(server).append("lib"),
-					server.getServer().getRuntime().getRuntimeType().getId(), tomcatVersion);
-			// TODO Decide what to do with removal warning, maybe nothing
-			status = Status.OK_STATUS;
-		}
-		return status;
+		// Nothing beyond configuration required for Tomcat 8
+		return Status.OK_STATUS;
 	}
 
 	/**
@@ -176,13 +157,12 @@ public class Tomcat80Handler implements ITomcatVersionHandler {
 	}
 	
 	/**
-	 * Returns true since Tomcat 6.x supports this feature.
+	 * Returns true since Tomcat 8.x supports this feature.
 	 * 
 	 * @return true since feature is supported
 	 */
 	public boolean supportsServeModulesWithoutPublish() {
-		// TODO Provide new implementation for Tomcat 8.0.  For now, don't allow.
-		return false;
+		return true;
 	}
 
 	/**

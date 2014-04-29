@@ -200,68 +200,8 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
     				NLS.bind(Messages.errorPublishContextNotFound, name), null));
         }
 
-        String contextName = null;
-        boolean reloadable = true;
-
-        contextName = context.getPath();
-        reloadable = Boolean.valueOf(context.getReloadable()).booleanValue();
-
-        // now strip initial /
-        if (contextName.startsWith("/")) {
-            contextName = contextName.substring(1);
-        }
-
-        // root context is deployed with the "ROOT" name in tomcat
-        if ("".equals(contextName)) {
-            contextName = "ROOT";
-        }
-
-        // handle project context.xml
-        Context projectContext = getProjectContextXml(component);
-
-        if (projectContext != null) {
-            // copy configuration to server context
-            projectContext.copyChildrenTo(context);
-
-            Map attrs = projectContext.getAttributes();
-            Iterator iter = attrs.keySet().iterator();
-            while (iter.hasNext()) {
-                String name = (String) iter.next();
-                if (!name.equalsIgnoreCase("path")
-                        && !name.equalsIgnoreCase("docBase")
-                        && !name.equalsIgnoreCase("source")) {
-                    String value = (String) attrs.get(name);
-                    String actualValue = context.getAttributeValue(name);
-                    if (!value.equals(actualValue)) {
-                        context.setAttributeValue(name, value);
-                        dirty = true;
-                    }
-                }
-            }
-        }
-
-        // handle changes in docBase
-        String docBase = component.getRootFolder().getUnderlyingFolder()
-                .getLocation().toOSString();
-        if (!docBase.equals(context.getDocBase())) {
-            dirty = true;
-            context.setDocBase(docBase);
-        }
-
-        // handle changes in reloadable flag
-        if (reloadable != (Boolean.valueOf((context.getReloadable()))
-                .booleanValue())) {
-            dirty = true;
-            context.setReloadable(Boolean.toString(reloadable));
-        }
-
-        String path = (contextName.equals("ROOT") ? "" : "/" + contextName);
-        // handle changes in the path
-        // PATH is required for tomcat 5.0, but ignored in tomcat 5.5
-        if (!path.equals(context.getPath())) {
-            dirty = true;
-            context.setPath(path);
-        }
+		dirty = includeProjectContextXml(component, context);
+		dirty = updateDocBaseAndPath(component, context);
 
         context.getResources().setClassName(
                 "org.eclipse.jst.server.tomcat.loader.WtpDirContext");
@@ -309,6 +249,7 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
 
 		Set<String> rtPathsProcessed = new HashSet<String>();
 		Set<String> locationsIncluded = new HashSet<String>();
+		String docBase = context.getDocBase();
 		locationsIncluded.add(docBase);
 		Map<String, String> retryLocations = new HashMap<String, String>();
 		IVirtualResource [] virtualResources = component.getRootFolder().getResources("");
@@ -527,6 +468,7 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
 				}
 			}			
 		}
+		virtualDependentResources.clear();
 
 		// Combine the classes and jar virtual classpaths
 		if (vcJarBuffer.length() > 0) {
@@ -637,4 +579,67 @@ public class TomcatPublishModuleVisitor implements IModuleVisitor {
 		}
         return null;
     }
+
+	String getContextName(Context context) {
+		String contextName = context.getPath();
+
+		// now strip initial /
+		if (contextName.startsWith("/")) {
+			contextName = contextName.substring(1);
+		}
+
+		// root context is deployed with the "ROOT" name in tomcat
+		if ("".equals(contextName)) {
+			contextName = "ROOT";
+		}
+		return contextName;
+	}
+
+	boolean includeProjectContextXml(IVirtualComponent component, Context context) throws CoreException {
+		boolean dirty = false;
+		// handle project context.xml
+		Context projectContext = getProjectContextXml(component);
+
+		if (projectContext != null) {
+			// copy configuration to server context
+			projectContext.copyChildrenTo(context);
+
+			Map attrs = projectContext.getAttributes();
+			Iterator iter = attrs.keySet().iterator();
+			while (iter.hasNext()) {
+				String name = (String) iter.next();
+				if (!name.equalsIgnoreCase("path")
+						&& !name.equalsIgnoreCase("docBase")
+						&& !name.equalsIgnoreCase("source")) {
+					String value = (String) attrs.get(name);
+					String actualValue = context.getAttributeValue(name);
+					if (!value.equals(actualValue)) {
+						context.setAttributeValue(name, value);
+						dirty = true;
+					}
+				}
+			}
+		}
+		return dirty;
+	}
+
+	boolean updateDocBaseAndPath(IVirtualComponent component, Context context) {
+		boolean dirty = false;
+		// handle changes in docBase
+		String docBase = component.getRootFolder().getUnderlyingFolder().getLocation().toOSString();
+		if (!docBase.equals(context.getDocBase())) {
+			dirty = true;
+			context.setDocBase(docBase);
+		}
+
+		String contextName = getContextName(context);
+		String path = (contextName.equals("ROOT") ? "" : "/" + contextName);
+		// handle changes in the path
+		// PATH is required for tomcat 5.0, but ignored in tomcat 5.5
+		if (!path.equals(context.getPath())) {
+			dirty = true;
+			context.setPath(path);
+		}
+		return dirty;
+	}
 }
