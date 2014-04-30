@@ -452,7 +452,7 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 						updating = true;
 						IRuntime newRuntime = runtimes[runtimeCombo.getSelectionIndex()];
 						execute(new SetServerRuntimeCommand(getServer(), newRuntime));
-						link.setEnabled(newRuntime != null && !ServerUIPlugin.hasWizardFragment(newRuntime.getRuntimeType().getId()));
+						link.setEnabled(newRuntime != null && ServerUIPlugin.hasWizardFragment(newRuntime.getRuntimeType().getId()));
 						updating = false;
 					} catch (Exception ex) {
 						// ignore
