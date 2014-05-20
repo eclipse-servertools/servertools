@@ -256,7 +256,7 @@ public class InitialSelectionProvider extends ViewerSorter {
 			
 		IServer [] servers = ResourceManager.getInstance().getServers();
 		for (IServer server:servers){
-			if (runtimeId == server.getRuntime().getId()){
+			if (server.getRuntime() != null && runtimeId == server.getRuntime().getId()){
 				return server;
 			}
 		}
