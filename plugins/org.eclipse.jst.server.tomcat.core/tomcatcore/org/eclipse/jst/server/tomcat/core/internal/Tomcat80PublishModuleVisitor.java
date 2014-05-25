@@ -15,6 +15,7 @@ import java.io.FileFilter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -247,14 +248,18 @@ public class Tomcat80PublishModuleVisitor extends TomcatPublishModuleVisitor {
 			}
 		}
 		if (!virtualDependentResources.isEmpty()) {
-			// TODO Implement support for WebFragment resources
-//			for (Map.Entry<String, List<String>> entry : virtualDependentResources.entrySet()) {
-//				String rtPath = entry.getKey();
-//				List<String> locations = entry.getValue();
-//				for (String location : locations) {
-//
-//				}
-//			}
+			for (Map.Entry<String, List<String>> entry : virtualDependentResources.entrySet()) {
+				String rtPath = entry.getKey();
+				List<String> locations = entry.getValue();
+				for (String location : locations) {
+					PostResources postResources = (PostResources)context.getResources().createElement("PostResources");
+					postResources.setClassName("org.apache.catalina.webresources.DirResourceSet");
+					postResources.setBase(location);
+					postResources.setWebAppMount(rtPath.length() > 0 ? rtPath : "/");
+					postResources.setInternalPath("/");
+					postResources.setClassLoaderOnly("false");
+				}
+			}
 		}
 		virtualDependentResources.clear();
 
