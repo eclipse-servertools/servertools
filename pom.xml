@@ -26,6 +26,10 @@
   <version>3.6.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
+  <properties>
+    <tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/servertools/webtools.servertools.tests.git</tycho.scmUrl>
+  </properties>
+
   <modules>
     <module>tests/org.eclipse.jst.server.core.tests</module>
     <module>tests/org.eclipse.jst.server.generic.tests</module>
