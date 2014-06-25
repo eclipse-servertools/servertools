@@ -26,6 +26,10 @@
   <version>3.6.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
+  <properties>
+    <tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/servertools/webtools.servertools.docs.git</tycho.scmUrl>
+  </properties>
+
   <modules>
     <module>docs/org.eclipse.jst.server.ui.doc.user</module>
     <module>docs/org.eclipse.jst.server.ui.infopop</module>
