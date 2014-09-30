@@ -1027,7 +1027,7 @@ public class Server extends Base implements IServer {
 	 * 
 	 * @return the notification manager
 	 */
-	private ServerNotificationManager getServerNotificationManager() {
+	private synchronized ServerNotificationManager getServerNotificationManager() {
 		if (notificationManager == null)
 			notificationManager = new ServerNotificationManager();
 		
