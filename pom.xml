@@ -31,46 +31,8 @@
   </properties>
 
   <modules>
-    <module>features/org.eclipse.jst.server_adapters.ext.feature</module>
-    <module>features/org.eclipse.jst.server_adapters.ext.sdk.feature</module>
-    <module>features/org.eclipse.jst.server_adapters.ext_tests.feature</module>
-    <module>features/org.eclipse.jst.server_adapters.feature</module>
-    <module>features/org.eclipse.jst.server_adapters.sdk.feature</module>
-    <module>features/org.eclipse.jst.server_core.feature</module>
-    <module>features/org.eclipse.jst.server_sdk.feature</module>
-    <module>features/org.eclipse.jst.server_tests.feature</module>
-    <module>features/org.eclipse.jst.server_ui.feature</module>
-    <module>features/org.eclipse.jst.server_userdoc.feature</module>
-    <module>features/org.eclipse.wst.server_adapters.feature</module>
-    <module>features/org.eclipse.wst.server_adapters.sdk.feature</module>
     <module>features/org.eclipse.wst.server_core.feature</module>
-    <module>features/org.eclipse.wst.server_sdk.feature</module>
-    <module>features/org.eclipse.wst.server_tests.feature</module>
-    <module>features/org.eclipse.wst.server_ui.feature</module>
-    <module>features/org.eclipse.wst.server_userdoc.feature</module>
-
-    <module>plugins/org.eclipse.jst.server.core</module>
-    <module>plugins/org.eclipse.jst.server.generic.core</module>
-    <module>plugins/org.eclipse.jst.server.generic.jonas</module>
-    <module>plugins/org.eclipse.jst.server.generic.ui</module>
-
-    <!-- per bug 412464 this module is not required for the build
-         https://bugs.eclipse.org/412464
-    <module>plugins/org.eclipse.jst.server.pde</module>
-    -->
-
-    <module>plugins/org.eclipse.jst.server.preview.adapter</module>
-    <module>plugins/org.eclipse.jst.server.tomcat.core</module>
-    <module>plugins/org.eclipse.jst.server.tomcat.ui</module>
-    <module>plugins/org.eclipse.jst.server.ui</module>
-    <module>plugins/org.eclipse.wst.internet.monitor.core</module>
-    <module>plugins/org.eclipse.wst.internet.monitor.ui</module>
+    <module>features/org.eclipse.wst.server_core.feature.patch</module>
     <module>plugins/org.eclipse.wst.server.core</module>
-    <module>plugins/org.eclipse.wst.server.discovery</module>
-    <module>plugins/org.eclipse.wst.server.http.core</module>
-    <module>plugins/org.eclipse.wst.server.http.ui</module>
-    <module>plugins/org.eclipse.wst.server.preview</module>
-    <module>plugins/org.eclipse.wst.server.preview.adapter</module>
-    <module>plugins/org.eclipse.wst.server.ui</module>
   </modules>
 </project>
