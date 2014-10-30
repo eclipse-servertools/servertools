@@ -11,4 +11,5 @@
    <site url="http://www.caucho.com/eclipse/"/>   
    <site url="http://download.jboss.org/jbosstools/updates/webtools/luna/"/>
    <site url="http://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/updates/libertyAdapter/luna/"/>
+   <site url="http://dist.springsource.com/release/TOOLS/cloudfoundry/"/>
 </extensions>
