@@ -22,7 +22,7 @@
 
   <groupId>org.eclipse.webtools.servertools</groupId>
   <artifactId>org.eclipse.jst.server_adapters.ext.feature</artifactId>
-  <version>3.3.300-SNAPSHOT</version>
+  <version>3.3.400-SNAPSHOT</version>
   <packaging>eclipse-feature</packaging>
 
   <build>
