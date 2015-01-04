@@ -263,7 +263,13 @@ public class TomcatVersionHelper {
 		int size = modules.size();
 		for (int i = 0; i < size; i++) {
 			WebModule module = (WebModule) modules.get(i);
-			Context context = removedContextsMap.remove(module.getPath());
+
+			String modulePath = module.getPath();
+			// normalize "/" to ""
+			if (modulePath.equals("/"))
+				modulePath = "";
+
+			Context context = removedContextsMap.remove(modulePath);
 			if (context != null)
 				keptContextsMap.put(context.getPath(), context);
 		}
