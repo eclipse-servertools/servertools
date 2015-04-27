@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,13 +10,21 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.tests;
 
-import org.eclipse.wst.server.ui.tests.dialog.*;
-import org.eclipse.wst.server.ui.tests.editor.*;
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
+import org.eclipse.wst.server.ui.tests.dialog.DialogsTestCase;
+import org.eclipse.wst.server.ui.tests.dialog.PreferencesTestCase;
+import org.eclipse.wst.server.ui.tests.dialog.ViewTestCase;
+import org.eclipse.wst.server.ui.tests.dialog.WizardTestCase;
+import org.eclipse.wst.server.ui.tests.discovery.ServerDiscoveryTestCase;
+import org.eclipse.wst.server.ui.tests.editor.IServerEditorPartInputTestCase;
+import org.eclipse.wst.server.ui.tests.editor.ServerEditorActionFactoryDelegateTestCase;
+import org.eclipse.wst.server.ui.tests.editor.ServerEditorPartTestCase;
+import org.eclipse.wst.server.ui.tests.editor.ServerEditorSectionTestCase;
 import org.eclipse.wst.server.ui.tests.wizard.IWizardHandleTestCase;
 import org.eclipse.wst.server.ui.tests.wizard.TaskWizardTestCase;
 import org.eclipse.wst.server.ui.tests.wizard.WizardFragmentTestCase;
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 public class AllTests {
 	public static Test suite() {
@@ -46,6 +54,8 @@ public class AllTests {
 			
 		suite.addTestSuite(ServerTooltipTestCase.class);
 		suite.addTestSuite(AbstractServerLabelProviderTestCase.class);
+		
+		suite.addTestSuite(ServerDiscoveryTestCase.class);
 		//$JUnit-END$
 		return suite;
 	}
