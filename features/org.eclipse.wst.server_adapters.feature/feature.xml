@@ -51,14 +51,14 @@
          id="org.eclipse.jetty.webapp"
          download-size="0"
          install-size="0"
-         version="9.2.3.qualifier"
+         version="0.0.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.jetty.xml"
          download-size="0"
          install-size="0"
-         version="9.2.3.qualifier"
+         version="0.0.0.qualifier"
          unpack="false"/>
 
 </feature>
