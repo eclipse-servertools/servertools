@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.internet.monitor.core.internal.MonitorPlugin;
 import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitor;
 import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitorListener;
 import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitorWorkingCopy;
@@ -86,8 +87,10 @@ public class DefaultMonitorDelegate extends ServerMonitorDelegate {
 				wc.setLocalPort(mport);
 				wc.setRemoteHost(server.getHost());
 				wc.setRemotePort(port.getPort());
-				if ("HTTP".equals(port.getProtocol()))
-					wc.setProtocol("HTTP");
+				String protocolId = port.getProtocol();
+				if (protocolId != null && MonitorPlugin.getInstance().getProtocolAdapter(protocolId) != null) {
+					wc.setProtocol(protocolId);
+				}
 				monitor = wc.save();
 				addListener();
 			} else
