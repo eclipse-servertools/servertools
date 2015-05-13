@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 IBM Corporation and others.
+ * Copyright (c) 2007, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -223,7 +223,7 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
 				NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
 		}
-		String name = url.getPath();
+		String name = (url.getQuery() != null) ? url.getQuery() : url.getPath();
 		int slashIdx = name.lastIndexOf('/');
 		if (slashIdx >= 0)
 			name = name.substring(slashIdx + 1);
