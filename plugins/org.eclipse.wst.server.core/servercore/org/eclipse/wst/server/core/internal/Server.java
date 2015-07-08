@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2014 IBM Corporation and others.
+ * Copyright (c) 2003, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1901,180 +1901,230 @@ public class Server extends Base implements IServer {
 		StopJob job = new StopJob(force);
 		job.schedule();
 	}
+	
+	/**
+	 * Publish before starting the server.
+	 * 
+	 * If the server is in a state where it must publish before starting, this method
+	 * will run the publishing operation. Otherwise, it will return an OK status. 
+	 *  
+	 * If this is a synchronous call, it will *only* run the publish job, and join on it, 
+	 * returning the result from the job. 
+	 * 
+	 * If this is an asynchronous call, it will schedule a job chain consisting of
+	 * the publish job and the start job, and schedule it. It will then return an OK status. 
+	 * 
+	 * This method should not be used when an IOperationListener is required
+	 * 
+	 * Callers should take care that in the event of an asynchronous call, they are not 
+	 * scheduling the StartJob twice. 
+	 * 
+	 * @param monitor
+	 * @param startJob
+	 * @param synchronous
+	 * @return the status of the publish. Status.OK_STATUS or Status.CANCEL_STATUS if publishing cancelled  
+	 */
 
 	protected IStatus publishBeforeStart(IProgressMonitor monitor, final StartJob startJob, final boolean synchronous){
+		return publishBeforeStart(monitor, startJob, synchronous, null);
+	}
+	
+	protected IStatus publishBeforeStart(IProgressMonitor monitor, final StartJob startJob, final boolean synchronous, final IOperationListener listener){
 
-		// check if we need to publish
-		byte pub = StartJob.PUBLISH_NONE;
-		if (ServerCore.isAutoPublishing() && shouldPublish()) {
-			if (((ServerType)getServerType()).startBeforePublish())
-				return Status.OK_STATUS;
-			pub = StartJob.PUBLISH_BEFORE;
+		if( synchronous) {
+			return publishBeforeStartSynchronous(monitor, listener);
+		}
+		
+		Job j = getPublishAndStartAsynchChainedJob(monitor, startJob, listener);
+		if( j != null ) 
+			j.schedule();
+		// Since this is asynchronous, always return OK_STATUS.
+		return Status.OK_STATUS;
+	}
+
+	/**
+	 * Execute the publish-before-start synchronous job. 
+	 * 
+	 * @param monitor
+	 * @return the status of the publish. Status.OK_STATUS or Status.CANCEL_STATUS if publishing cancelled
+	 */
+	protected IStatus publishBeforeStartSynchronous(IProgressMonitor monitor, final IOperationListener listener){
+		if( shouldPublishBeforeOrAfterStart() != StartJob.PUBLISH_BEFORE) {
+			return Status.OK_STATUS;
 		}
 		
 		final IStatus [] pubStatus = new IStatus[]{Status.OK_STATUS};
 		
-		// publish before start
-		byte publish = pub;
-		if (publish == StartJob.PUBLISH_BEFORE) {
-			PublishJob pubJob = new PublishJob(IServer.PUBLISH_INCREMENTAL, null,false, null);
-			pubJob.addJobChangeListener(new JobChangeAdapter(){
-				public void done(IJobChangeEvent event) {
-					IStatus status = event.getResult();
-					if (status != null && status.getSeverity() == IStatus.ERROR) {
-						pubStatus[0] = status;
-						if (Trace.INFO) {
-							Trace.trace(Trace.STRING_INFO,
-									"Skipping server start job schedule since the server publish failed on a publish before start server.");
-						}
-					} else {
-						if (Trace.INFO) {
-							Trace.trace(Trace.STRING_INFO,
-									"Scheduling server start job after successful publish.");
-						}
-						// Schedule the server start job since the publish operation is completed successfully.
-						startJob.schedule();
-						
-						try {
-							if (synchronous)
-								startJob.join();
-						} catch (InterruptedException e) {
-							if (Trace.WARNING) {
-								Trace.trace(Trace.STRING_WARNING, "Error waiting for job", e);
-							}
-						}
+		// publish before start and wait for it to finish
+		PublishJob pubJob = new PublishJob(IServer.PUBLISH_INCREMENTAL, null,false, null);
+		pubJob.addJobChangeListener(new JobChangeAdapter(){
+			public void done(IJobChangeEvent event) {
+				IStatus status = event.getResult();
+				if (status != null && status.getSeverity() == IStatus.ERROR) {
+					pubStatus[0] = status;
+					if (Trace.INFO) {
+						Trace.trace(Trace.STRING_INFO,
+								"Skipping server start job schedule since the server publish failed on a publish before start server."); //$NON-NLS-1$
 					}
-				}
-				
-			});
-			pubJob.schedule();
-			
-			try {
-				if (synchronous)
-					pubJob.join();
-			} catch (InterruptedException ie) {
-				return Status.CANCEL_STATUS;
+					if( listener != null )
+						listener.done(status);
+				} 
 			}
-		} else {
-			// Schedule the server start since a publish is not needed so 
-			// Schedule the server start job since the publish operation is completed successfully.
-			startJob.schedule();
-			
-			try {
-				if (synchronous)
-					startJob.join();
-			} catch (InterruptedException e) {
-				if (Trace.WARNING) {
-					Trace.trace(Trace.STRING_WARNING, "Error waiting for job", e);
-				}
-			}
+		});
+		pubJob.schedule();
+		try {
+			pubJob.join();
+		} catch (InterruptedException ie) {
+			return Status.CANCEL_STATUS;
 		}
 		return pubStatus[0];
 	}
 	
-	protected IStatus publishAfterStart(IProgressMonitor monitor, boolean synchronous, final IOperationListener op){
-		
+	/**
+	 * The publish-before-start asynchronous job will add a job listener to
+	 * run the start job if the publish was a success. It only does this 
+	 * to ensure the jobs are properly chained. Otherwise, it is impossible to 
+	 * ensure the start job (also scheduled asynchronously) would be run after the completion of 
+	 * the publish job.  
+	 * 
+	 * Anyone calling this method should take care to NOT schedule the startJob on their own, 
+	 * as it's already been called in this instance!
+	 * 
+	 * This method only returns the job, but does not schedule it. 
+	 * It may return null if no job needs to be executed
+	 * 
+	 * @param monitor 
+	 * @param startJob The start job we may wish to chain
+	 * @return the asynchronous publishing and starting Job
+	 */
+	protected Job getPublishAndStartAsynchChainedJob(IProgressMonitor monitor, final StartJob startJob, final IOperationListener listener){
+		if( shouldPublishBeforeOrAfterStart() != StartJob.PUBLISH_BEFORE) {
+			return null;
+		}
+
+		// publish before start
+		PublishJob pubJob = new PublishJob(IServer.PUBLISH_INCREMENTAL, null,false, null);
+		pubJob.addJobChangeListener(new JobChangeAdapter(){
+			public void done(IJobChangeEvent event) {
+				IStatus status = event.getResult();
+				if (status == null || status.getSeverity() != IStatus.ERROR) {
+					if (Trace.INFO) {
+						Trace.trace(Trace.STRING_INFO,
+								"Scheduling server start job after successful publish."); //$NON-NLS-1$
+					}
+					// Schedule the server start job since the publish operation is completed successfully.
+					startJob.schedule();
+				} else {
+					if( listener != null )
+						listener.done(status);
+				}
+			}
+			
+		});
+		return pubJob;
+	}
+	
+	
+	/**
+	 * Get whether we need to publish before or after the start job, 
+	 * or if no publish is required.
+	 *  
+	 * @return
+	 */
+	private byte shouldPublishBeforeOrAfterStart() {
 		// check if we need to publish
 		byte pub = StartJob.PUBLISH_NONE;
 		if (ServerCore.isAutoPublishing() && shouldPublish()) {
 			if (((ServerType)getServerType()).startBeforePublish())
 				pub = StartJob.PUBLISH_AFTER;
 			else {
-				if(op != null) {
-					op.done(Status.OK_STATUS);
-				}
-				return Status.OK_STATUS;
+				pub = StartJob.PUBLISH_BEFORE;
 			}
+		}
+		return pub;
+	}
+	
+	protected IStatus publishAfterStart(IProgressMonitor monitor, boolean synchronous, final IOperationListener op){
+		
+		// check if we need to publish
+		if( shouldPublishBeforeOrAfterStart() != StartJob.PUBLISH_AFTER) {
+			if(op != null) {
+				op.done(Status.OK_STATUS);
+			}
+			return Status.OK_STATUS;
 		}
 		
 		final IStatus [] pubStatus = new IStatus[]{Status.OK_STATUS};
 		
-		// publish after start
-		byte publish = pub;
-		if (publish == StartJob.PUBLISH_AFTER) {
-			PublishJob pubJob = new PublishJob(IServer.PUBLISH_INCREMENTAL, null,false, null);
-			pubJob.addJobChangeListener(new JobChangeAdapter(){
-				public void done(IJobChangeEvent event) {
-					IStatus status = event.getResult();
-					if (status != null && status.getSeverity() == IStatus.ERROR)
-						pubStatus[0] = status; 
-					if (op != null){
-						op.done(status);
-					}
+		PublishJob pubJob = new PublishJob(IServer.PUBLISH_INCREMENTAL, null,false, null);
+		pubJob.addJobChangeListener(new JobChangeAdapter(){
+			public void done(IJobChangeEvent event) {
+				IStatus status = event.getResult();
+				if (status != null && status.getSeverity() == IStatus.ERROR)
+					pubStatus[0] = status; 
+				if (op != null){
+					op.done(status);
 				}
-				
-			});
-			
-			pubJob.schedule();
-			
-			try{
-				if (synchronous)
-					pubJob.join();
 			}
-			catch (InterruptedException ie){
-				return Status.CANCEL_STATUS;
-			}
+			
+		});
+		
+		pubJob.schedule();
+		
+		try{
+			if (synchronous)
+				pubJob.join();
+		}
+		catch (InterruptedException ie){
+			return Status.CANCEL_STATUS;
 		}
 		return pubStatus[0];
 	}
 	
 	/**
+	 * Run the start logic with the synchronization flag taken from the server type
+	 * 
+	 * @param mode2       A mode to run
+	 * @param monitor     A progress monitor
 	 * @see IServer#start(String, IProgressMonitor)
 	 */
 	public void start(String mode2, IProgressMonitor monitor) throws CoreException {
-		if (Trace.FINEST) {
-			Trace.trace(Trace.STRING_FINEST, "Starting server: " + toString() + ", launchMode: " + mode2);
-		}
-		if (getServerType() == null)
-			return;
-		
-		// make sure that the delegate is loaded and the server state is correct
-		loadAdapter(ServerBehaviourDelegate.class, null);
-		
-		StartJob startJob = new StartJob(mode2);
-		// 287442 - only do publish after start if the server start is successful.
-		final IProgressMonitor monitor2 = monitor; 
-		final boolean synchronous = ((ServerType)getServerType()).synchronousStart();
-		startJob.addJobChangeListener(new JobChangeAdapter() {
-			public void done(IJobChangeEvent event) {
-				IStatus resultStatus = event.getResult();
-				if (resultStatus != null && resultStatus.getSeverity() == IStatus.ERROR) { 
-					if (Trace.INFO) {
-						Trace.trace(Trace.STRING_INFO,
-								"Skipping auto publish after server start since the server start failed.");
-					}
-				} else {
-					publishAfterStart(monitor2,synchronous,null);
-				}
-			}
-		});
-		// Forces synchronous start since this method is supposed to wait until the publish operation is completed.
-		IStatus status = publishBeforeStart(monitor, startJob, true);
-		
-		if (status != null && status.getSeverity() == IStatus.ERROR){
-			if (Trace.FINEST) {
-				Trace.trace(Trace.STRING_FINEST, "Failed publish job during start routine");
-			}
-			return;
-		}
-		
-		if (((ServerType)getServerType()).startBeforePublish()) {
-			startJob.schedule();
-			try {
-				if(synchronous)
-					startJob.join();
-			} catch (InterruptedException e) {
-				if (Trace.WARNING) {
-					Trace.trace(Trace.STRING_WARNING, "Error waiting for job", e);
-				}
-			}
-		}
+		start(mode2,  ((ServerType)getServerType()).synchronousStart(), monitor);
+	}
+	
+
+	/**
+	 * Run the start logic, forcing a synchronized workflow
+	 * 
+	 * @param mode2       A mode to run
+	 * @param monitor     A progress monitor
+	 */
+	public void synchronousStart(String mode2, IProgressMonitor monitor) throws CoreException {
+		start(mode2, true, monitor);
 	}
 	
 	/**
-	 * @see IServer#start(String, IOperationListener)
+	 * Run the start logic
+	 * @param mode2       A mode to run
+	 * @param synchronous Whether to do it synchronously or not
+	 * @param monitor     A progress monitor
 	 */
-	public void start(String mode2, final IOperationListener opListener) {
+	private void start(String mode2, final boolean synchronous, IProgressMonitor monitor) {
+		start(mode2, synchronous, null, monitor);
+	}
+	
+	/**
+	 * Run the start logic
+	 * @param mode2       A mode to run
+	 * @param synchronous Whether to do it synchronously or not
+	 * @param opListener  An optional opListener for asynchronous calls
+	 * @param monitor     A progress monitor
+	 */
+	private void start(String mode2, final boolean synchronous, final IOperationListener opListener, IProgressMonitor monitor) {
+		if (Trace.FINEST) {
+			Trace.trace(Trace.STRING_FINEST, "Starting server: " + toString() + ", launchMode: " + mode2); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		// First check some pre-reqs
 		if (getServerType() == null) {
 			if (opListener != null)
 				opListener.done(Status.OK_STATUS);
@@ -2084,119 +2134,81 @@ public class Server extends Base implements IServer {
 		// make sure that the delegate is loaded and the server state is correct
 		loadAdapter(ServerBehaviourDelegate.class, null);
 		
-		// check the publish flag (again) to determine when to call opListener.done 
-		byte pub = StartJob.PUBLISH_NONE;
-		if (ServerCore.isAutoPublishing() && shouldPublish()) {
-			if (((ServerType)getServerType()).startBeforePublish())
-				pub = StartJob.PUBLISH_AFTER;
-			else
-				pub = StartJob.PUBLISH_BEFORE;
-		}
-		
+		// Save all editors
 		if (ServerPlugin.isRunningGUIMode()){
 			ServerPlugin.getSaveEditorHelper().saveAllEditors();
 		}
 		
 		StartJob startJob = new StartJob(mode2);
-		if (opListener != null && pub != StartJob.PUBLISH_AFTER) {
-			startJob.addJobChangeListener(new JobChangeAdapter() {
-				public void done(IJobChangeEvent event) {
-					opListener.done(event.getResult());
-				}
-			});
-		}
-		
-		final boolean synchronous = ((ServerType)getServerType()).synchronousStart();
-		// For publish before start servers, the start job will only be kicked off if the publishing
-		// operation is completed successfully.
-		IStatus status = publishBeforeStart(null, startJob, synchronous);
-		
-		if (status != null && status.getSeverity() == IStatus.ERROR){
-			if (Trace.FINEST) {
-				Trace.trace(Trace.STRING_FINEST, "Failed publish job during start routine");
-			}
-			if (opListener != null)
-				opListener.done(Status.OK_STATUS);
-			return;
-		}
-
-		// 287442 - only do publish after start if the server start is successful.
-		if (pub == StartJob.PUBLISH_AFTER) {
-			startJob.addJobChangeListener(new JobChangeAdapter() {
-				public void done(IJobChangeEvent event) {
+		final IProgressMonitor monitor2 = (monitor == null ? new NullProgressMonitor() : monitor); 
+		final byte pub = shouldPublishBeforeOrAfterStart();
+				
+		// Add listeners for what to do once the startJob is over. 
+		// This may include running a publish (if we publish after start), or
+		// simply marking the opListener as done.  
+		startJob.addJobChangeListener(new JobChangeAdapter() {
+			public void done(IJobChangeEvent event) {
+				if( pub == StartJob.PUBLISH_AFTER ) {
 					IStatus resultStatus = event.getResult();
-					if (resultStatus != null && (resultStatus.getSeverity() == IStatus.ERROR || resultStatus.getSeverity() == IStatus.CANCEL)) { 
-						// Do not launch the publish.
+					// 287442 - only do publish after start if the server start is successful.
+					if (resultStatus != null && resultStatus.getSeverity() == IStatus.ERROR) { 
 						if (Trace.INFO) {
 							Trace.trace(Trace.STRING_INFO,
-									"Skipping auto publish after server start since the server start failed or cancelled.");
+									"Skipping auto publish after server start since the server start failed."); //$NON-NLS-1$
+							if (opListener != null)
+								opListener.done(Status.OK_STATUS);
 						}
-						if (opListener != null)
-							opListener.done(Status.OK_STATUS);
+					} else {
+						publishAfterStart(monitor2,synchronous,opListener);
 					}
-					else {
-						publishAfterStart(null,synchronous,opListener);
-					}
+				} else if( opListener != null ) {
+					// we're marked to publish BEFORE start, so no action needs to be taken after start
+					opListener.done(event.getResult());
 				}
-			});
-			startJob.schedule();
+			}
+		});
+		
+		// Should *we* kick the start job? Or has it been done for us already by a chained asynch call?
+		boolean kickStartJob = true;  
+		if (pub == StartJob.PUBLISH_BEFORE) {
+			// Only one situation can chain the start job for us:  publish_before + asynchronous. 
+			// If our publishBeforeStart is asynchronous, then we must NOT kick the start job ourselves,
+			// because our publishBeforeStart has already chained them together.
+			if( !synchronous )
+				kickStartJob = false;
 			
+			IStatus status = publishBeforeStart(new NullProgressMonitor(), startJob, synchronous, opListener);
+			if (status != null && status.getSeverity() == IStatus.ERROR){
+				if (Trace.FINEST) {
+					Trace.trace(Trace.STRING_FINEST, "Failed publish job during start routine"); //$NON-NLS-1$
+				}
+				if (opListener != null)
+					opListener.done(Status.OK_STATUS);
+				return;
+			}
+		}
+
+		// If the asynchronous publish job is kicking the start job, then we don't kick it. 
+		if( kickStartJob ) {
+			startJob.schedule();
 			try {
 				if(synchronous)
 					startJob.join();
 			} catch (InterruptedException e) {
 				if (Trace.WARNING) {
-					Trace.trace(Trace.STRING_WARNING, "Error waiting for job", e);
+					Trace.trace(Trace.STRING_WARNING, "Error waiting for job", e); //$NON-NLS-1$
 				}
 			}
 		}
 	}
-
-	public void synchronousStart(String mode2, IProgressMonitor monitor) throws CoreException {
-		if (getServerType() == null)
-			return;
-		
-		// make sure that the delegate is loaded and the server state is correct
-		loadAdapter(ServerBehaviourDelegate.class, monitor);
-		
-		StartJob startJob = new StartJob(mode2);
-		// 287442 - only do publish after start if the server start is successful.
-		final IProgressMonitor monitor2 = monitor; 
-		startJob.addJobChangeListener(new JobChangeAdapter() {
-			public void done(IJobChangeEvent event) {
-				IStatus resultStatus = event.getResult();
-				if (resultStatus != null && resultStatus.getSeverity() == IStatus.ERROR) { 
-					if (Trace.INFO) {
-						Trace.trace(Trace.STRING_INFO,
-								"Skipping auto publish after server start since the server start failed.");
-					}
-				} else {
-					publishAfterStart(monitor2,true,null);
-				}
-			}
-		});
-		
-		IStatus status = publishBeforeStart(monitor, startJob, true);
-		
-		if (status != null && status.getSeverity() == IStatus.ERROR){
-			if (Trace.FINEST) {
-				Trace.trace(Trace.STRING_FINEST, "Failed publish job during start routine");
-			}
-			return;
-		}
-		
-		if (((ServerType)getServerType()).startBeforePublish()) {
-			startJob.schedule();
-			
-			try {
-				startJob.join();
-			} catch (InterruptedException e) {
-				if (Trace.WARNING) {
-					Trace.trace(Trace.STRING_WARNING, "Error waiting for job", e);
-				}
-			}
-		}
+	
+	/**
+	 * @see IServer#start(String, IOperationListener)
+	 */
+	public void start(String mode2, final IOperationListener opListener) {
+		start(mode2, ((ServerType)getServerType()).synchronousStart(), opListener, new NullProgressMonitor());
 	}
+	
 
 	/*
 	 * @see IServer#synchronousRestart(String, IProgressMonitor)
