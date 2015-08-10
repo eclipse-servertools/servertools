@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.model.RuntimeLocatorDelegate;
 /**
- * 
+ * Runtime Locator
  */
 public class RuntimeLocator implements IRuntimeLocator {
 	private IConfigurationElement element;
