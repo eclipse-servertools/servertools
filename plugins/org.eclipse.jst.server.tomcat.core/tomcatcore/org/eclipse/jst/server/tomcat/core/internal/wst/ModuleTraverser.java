@@ -443,8 +443,15 @@ public class ModuleTraverser {
 		final Map<IPath, IClasspathEntry> pathToResolvedEntry = new HashMap<IPath, IClasspathEntry>();
 		
 		// store in a map from path to entry
+		// Note: We need to check the non-dependency attribute for each entry since it
+		// might be a child of a classpath container.
 		for (int j = 0; j < entries.length; j++) {
-			pathToResolvedEntry.put(entries[j].getPath(), entries[j]);
+			IClasspathAttribute attrib = checkForComponentDependencyAttribute(entries[j],
+					DEPENDECYATTRIBUTETYPE_CLASSPATH_COMPONENT_NONDEPENDENCY);
+			// If not a non-dependency (i.e. not excluded), then add this entry.
+			if (attrib == null) {
+    			pathToResolvedEntry.put(entries[j].getPath(), entries[j]);
+			}
 		}
 
 		final Map<IClasspathEntry, IClasspathAttribute> referencedEntries = new LinkedHashMap<IClasspathEntry, IClasspathAttribute>();
@@ -460,9 +467,13 @@ public class ModuleTraverser {
 			if (attrib == null) {
 				continue;
 			}
-			
+
 			final IPath pkgFragPath = root.getPath();
 			final IClasspathEntry resolvedEntry = pathToResolvedEntry.get(pkgFragPath);
+			// If the resolvedEntry is not present for this path, then it was excluded above due to being a non-dependency
+			if (resolvedEntry == null ) {
+				continue;
+			}
 			final IClasspathAttribute resolvedAttrib = checkForComponentDependencyAttribute(resolvedEntry,
 					DEPENDECYATTRIBUTETYPE_DEPENDENCY_OR_NONDEPENDENCY);
 			// attribute for the resolved entry must either be unspecified or it must be the

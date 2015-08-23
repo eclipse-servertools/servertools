@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.jst.server_adapters.ext.feature"
       label="%featureName"
-      version="3.3.400.qualifier"
+      version="3.3.401.qualifier"
       provider-name="%providerName"
       license-feature="org.eclipse.license"
       license-feature-version="1.0.1.qualifier">
