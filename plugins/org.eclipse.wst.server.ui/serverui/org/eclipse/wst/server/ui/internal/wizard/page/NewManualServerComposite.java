@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2012 IBM Corporation and others.
+ * Copyright (c) 2003, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -40,16 +41,20 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.internal.ServerPlugin;
-import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
+import org.eclipse.wst.server.core.internal.*;
 import org.eclipse.wst.server.core.util.SocketUtil;
+import org.eclipse.wst.server.discovery.Discovery;
+import org.eclipse.wst.server.discovery.ErrorMessage;
 import org.eclipse.wst.server.ui.AbstractUIControl;
 import org.eclipse.wst.server.ui.AbstractUIControl.IUIControlListener;
 import org.eclipse.wst.server.ui.AbstractUIControl.UIControlEntry;
 import org.eclipse.wst.server.ui.internal.*;
+import org.eclipse.wst.server.ui.internal.Messages;
+import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.viewers.ServerTypeComposite;
 import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
+import org.eclipse.wst.server.ui.internal.wizard.fragment.LicenseWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.page.HostnameComposite.IHostnameSelectionListener;
 import org.eclipse.wst.server.ui.wizard.ServerCreationWizardPageExtension;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
@@ -79,6 +84,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 	protected IRuntime[] runtimes;
 	protected IRuntime newRuntime;
 
+	protected Label serverNameLabel;
 	protected Text serverName;
 	protected String defaultServerName;
 	protected boolean serverNameModified;
@@ -101,6 +107,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 	protected Label hostnameLabel;
 	protected Text hostname;
 	protected ControlDecoration hostnameDecoration;
+	protected FieldDecoration fd;
 
 	protected ServerCreationCache cache = new ServerCreationCache();
 	
@@ -205,7 +212,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		});
 		
 		FieldDecorationRegistry registry = FieldDecorationRegistry.getDefault();
-		FieldDecoration fd = registry.getFieldDecoration(FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
+		fd = registry.getFieldDecoration(FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
 		hostnameDecoration.setImage(fd.getImage());
 		hostnameDecoration.setDescriptionText(fd.getDescription());
 		
@@ -223,7 +230,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		String[] hosts2 = hosts.toArray(new String[hosts.size()]);
 		new AutoCompleteField(hostname, new TextContentAdapter(), hosts2);
 		
-		Label serverNameLabel = new Label(this, SWT.NONE);
+		serverNameLabel = new Label(this, SWT.NONE);
 		serverNameLabel.setText(Messages.serverName);
 		
 		serverName = new Text(this, SWT.SINGLE | SWT.BORDER | SWT.CANCEL);
@@ -402,8 +409,9 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 	}
 	
 	protected void handleHostnameChange(IServerType serverType) {
-
 		wizard.setMessage(null, IMessageProvider.NONE);
+		if (serverType instanceof ServerTypeProxy)
+			return;
 		if (!validate(serverType)) {
 			return;// Host name validation failed, so there is no need to continue handling hostname change event			
 		}
@@ -441,6 +449,8 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		if(selectedServerType == null){
 			return false;
 		}
+		if (selectedServerType instanceof ServerTypeProxy)
+			return true;
 		boolean supportsRemote = selectedServerType.supportsRemoteHosts();
 		if (hostname.getText().trim().length() == 0){
 			wizard.setMessage(NLS.bind(Messages.wizEmptyHostName, new Object[0]), IMessageProvider.ERROR);
@@ -682,10 +692,143 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		}
 	}
 
+	boolean canProceed = true;
+	public boolean canProceed(){
+		return canProceed;
+	}
+	
+	public boolean refreshExtension(){
+		if (!(oldServerType instanceof ServerTypeProxy))
+			return true;
+		final ServerTypeProxy finalServerType = (ServerTypeProxy)oldServerType;
+		try {
+			wizard.run(true, true, new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					ErrorMessage errorMsg = Discovery.refreshExtension(finalServerType.getExtension(), finalServerType.getURI(), monitor);
+					if (errorMsg != null){
+						final ErrorMessage errorMsgFinal = errorMsg;
+						Display.getDefault().asyncExec(new Runnable() {
+							public void run() {
+								canProceed = false;
+								wizard.setMessage(errorMsgFinal.getErrorTitle(), IMessageProvider.ERROR);
+								WizardFragment fragment2 = ServerUIPlugin.getWizardFragment(finalServerType.getId());
+								if (fragment2 != null){
+									TaskModel taskModel = fragment2.getTaskModel();
+									taskModel.putObject(LicenseWizardFragment.LICENSE, errorMsgFinal.getErrorDescription());
+									taskModel.putObject(LicenseWizardFragment.LICENSE_ERROR, new Integer(IMessageProvider.ERROR));
+								}
+								wizard.update();
+							}
+						});
+					}
+					else{
+						WizardFragment fragment2 = ServerUIPlugin.getWizardFragment(finalServerType.getId());
+						if (fragment2 != null){
+							TaskModel taskModel = fragment2.getTaskModel();
+							taskModel.putObject(LicenseWizardFragment.LICENSE, Discovery.getLicenseText(finalServerType.getExtension()));
+							taskModel.putObject(LicenseWizardFragment.LICENSE_ERROR, new Integer(IMessageProvider.NONE));
+						}
+					}
+				}
+			});
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		return true;
+	}
+	
+	protected boolean showDownloadableServerWizard(ServerTypeProxy serverType, IProgressMonitor monitor) {
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				wizard.setMessage(Messages.downLoadableAdapterDescription, IMessageProvider.INFORMATION);
+			}
+		});
+		
+		WizardFragment fragment2 = ServerUIPlugin.getWizardFragment(serverType.getId());
+		if (fragment2 == null)
+			return false;
+		TaskModel taskModel = fragment2.getTaskModel();
+		if (taskModel == null)
+			taskModel = new TaskModel();
+		taskModel.putObject(TaskModel.TASK_EXTENSION, serverType.getExtension());
+		taskModel.putObject(TaskModel.TASK_RUNTIME, serverType.getRuntimeType());
+		taskModel.putObject(TaskModel.TASK_SERVER, serverType);
+		fragment2.setTaskModel(taskModel);
+		return true;
+	}
+	
+	boolean success ;
 	/**
 	 * Handle the server type selection.
 	 */
 	protected void handleTypeSelection(IServerType serverType) {
+		canProceed = true;
+	//	wizard.setMessage(null, IMessageProvider.NONE);
+		if (serverType instanceof ServerTypeProxy){
+			hostname.setVisible(false);
+			serverNameLabel.setVisible(false);
+			serverName.setVisible(false);
+			hostnameLabel.setVisible(false);
+			runtimeLabel.setVisible(false);
+			runtimeCombo.setVisible(false);
+			configureRuntimes.setVisible(false);
+			addRuntime.setVisible(false);
+			hostnameDecoration.setImage(null);
+			hostnameDecoration.setDescriptionText(null);
+			final ServerTypeProxy serverTypeFinal = (ServerTypeProxy)serverType;
+			success = false;
+			ServerTypeProxy serverProxy = (ServerTypeProxy)serverType;
+			RuntimeTypeProxy runtimeProxy = (RuntimeTypeProxy)serverProxy.getRuntimeType();
+			runtime = new RuntimeProxy(runtimeProxy);
+			server = new ServerWorkingCopy(serverProxy.getId(), null, runtime,serverProxy );
+			
+			fireServerWorkingCopyChanged();
+			listener.serverSelected(server);
+			// Fire the property change event. 
+			List<ServerCreationWizardPageExtension> pageExtensionLst = ServerUIPlugin.getServerCreationWizardPageExtensions();
+			for (ServerCreationWizardPageExtension curPageExtension : pageExtensionLst) {
+				curPageExtension.handlePropertyChanged(new PropertyChangeEvent(this, AbstractUIControl.PROP_SERVER_TYPE, oldServerType, serverType));
+			}
+			wizard.update();
+			try {
+				wizard.run(true, true, new IRunnableWithProgress() {
+					
+					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+						success = showDownloadableServerWizard(serverTypeFinal, monitor);
+				}
+				});
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+			
+			if (success){
+				// Update the old server type value.
+				oldServerType = serverTypeFinal;
+				
+			}
+			wizard.update();
+
+			return;
+		}
+		oldServerType = serverType;
+		if (serverType != null){
+			// Update the old server type value.
+			hostname.setVisible(true);
+			serverNameLabel.setVisible(true);
+			serverName.setVisible(true);
+			hostnameLabel.setVisible(true);
+			runtimeLabel.setVisible(true);
+			runtimeCombo.setVisible(true);
+			configureRuntimes.setVisible(true);
+			addRuntime.setVisible(true);
+			hostnameDecoration.setImage(fd.getImage());
+			hostnameDecoration.setDescriptionText(fd.getDescription());
+		}
 		boolean wrong = false;
 		if (serverType != null && moduleType != null) {
 			IRuntimeType runtimeType = serverType.getRuntimeType();
@@ -705,7 +848,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			runtime = null;
 			wizard.setMessage("", IMessageProvider.ERROR); //$NON-NLS-1$
 		} else {
-			wizard.setMessage(null, IMessageProvider.NONE);
+			//wizard.setMessage(null, IMessageProvider.NONE);
 			loadServerImpl(serverType);
 			if (server != null && module != null) {
 				IStatus status = NewServerComposite.isSupportedModule(server, module);
@@ -936,4 +1079,5 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		// If the widget is null, return false
 		return false;
 	}	
+	
 }

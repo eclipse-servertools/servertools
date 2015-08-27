@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,7 @@ public class ServerUIPreferences {
 	private static final String PREF_RESTART = "restart";
 	private static final String PREF_CREATE_SERVER_WITH_RUNTIME = "create-server";
 	private static final String PREF_PUBLISH_ON_ADD_REMOVE = "publish-on-add-remove";
+	private static final String PREF_EXT_ADAPTER = "external-adapter";
 
 	public static final byte SAVE_EDITORS_ALWAYS = 2;
 	public static final byte SAVE_EDITORS_NEVER = 0;
@@ -83,6 +84,7 @@ public class ServerUIPreferences {
 		preferences.setDefault(PREF_SHOW_ON_ACTIVITY, true);
 		preferences.setDefault(PREF_CREATE_SERVER_WITH_RUNTIME, false);
 		preferences.setDefault(PREF_PUBLISH_ON_ADD_REMOVE, true);
+		preferences.setDefault(PREF_EXT_ADAPTER, true);
 	}
 
 	/**
@@ -368,6 +370,27 @@ public class ServerUIPreferences {
 	 */
 	public void setPublishOnAddRemoveModule(boolean b) {
 		preferences.setValue(PREF_PUBLISH_ON_ADD_REMOVE, b);
+		ServerUIPlugin.getInstance().savePluginPreferences();
+	}
+	
+	/**
+	 * Returns whether the user should be prompted when the launch mode
+	 * of the server doesn't match.
+	 * 
+	 * @return int
+	 */
+	public boolean getExtAdapter() {
+		return preferences.getBoolean(PREF_EXT_ADAPTER);
+	}
+
+	/**
+	 * Sets whether the user should be prompted when the launch mode
+	 * of the server doesn't match.
+	 *
+	 * @param b a launch mode constant
+	 */
+	public void setExtAdapter(boolean b) {
+		preferences.setValue(PREF_EXT_ADAPTER, b);
 		ServerUIPlugin.getInstance().savePluginPreferences();
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,15 +11,13 @@
 package org.eclipse.wst.server.ui.internal.wizard;
 
 import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.internal.ProjectProperties;
-import org.eclipse.wst.server.core.internal.Server;
-import org.eclipse.wst.server.core.internal.ServerPlugin;
-import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
+import org.eclipse.wst.server.core.internal.*;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
@@ -97,6 +95,8 @@ public class WizardTaskUtil {
 		IServer server = (IServer) taskModel.getObject(TaskModel.TASK_SERVER);
 		if (server != null && server instanceof IServerWorkingCopy) {
 			IServerWorkingCopy workingCopy = (IServerWorkingCopy) server;
+			if (workingCopy.getServerType() instanceof ServerTypeProxy)
+				return;
 			if (workingCopy.isDirty()) {
 				IFile file = ((Server)workingCopy).getFile();
 				if (file != null) {
@@ -146,6 +146,8 @@ public class WizardTaskUtil {
 			}
 			IRuntime runtime = workingCopy.getRuntime();
 			
+			if (runtime instanceof RuntimeProxy)
+				return;
 			server = workingCopy.save(false, monitor);
 			workingCopy = server.createWorkingCopy();
 			

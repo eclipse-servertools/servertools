@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2013 IBM Corporation and others.
+ * Copyright (c) 2003, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -167,6 +167,9 @@ public class ImageResource {
 	// Audio images
 	public static final String IMG_AUDIO_SOUND = "sound";
 	public static final String IMG_AUDIO_CATEGORY = "category";
+	
+	public static final String IMG_DOWN_ARROW = "IMG_DOWN_ARROW";
+	
 
 	/**
 	 * Cannot construct an ImageResource. Use static methods only.
@@ -322,6 +325,8 @@ public class ImageResource {
 		// audio images
 		registerImage(IMG_AUDIO_SOUND, URL_OBJ + "audio_sound.gif");
 		registerImage(IMG_AUDIO_CATEGORY, URL_OBJ + "audio_category.gif");
+		
+		registerImage(IMG_DOWN_ARROW, URL_OBJ + "down_arrow.gif");
 		
 		loadServerImages();
 		

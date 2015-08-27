@@ -65,7 +65,7 @@ public class ExtensionUpdateSite {
 		return categories;
 	}
 
-	public List<Extension> getExtensions(IProgressMonitor monitor) throws CoreException {
+	public List<IServerExtension> getExtensions(IProgressMonitor monitor) throws CoreException , ProvisionException{
 		try {
 			/*
 			 * To discovery the server adapter, there are three methods:
@@ -86,7 +86,7 @@ public class ExtensionUpdateSite {
 			UpdateSiteMetadataRepositoryFactory mrf = new UpdateSiteMetadataRepositoryFactory();
 			mrf.setAgent(ExtensionUtility.getAgent(bd));
 			// If the site.xml does not exist, the load will throw a org.eclipse.equinox.p2.core.ProvisionException
-			List<Extension> list = new ArrayList<Extension>();
+			List<IServerExtension> list = new ArrayList<IServerExtension>();
 			try {
 				IMetadataRepository repo = mrf.load(url2, IRepositoryManager.REPOSITORIES_ALL, monitor);
 				IQuery<IInstallableUnit> query = QueryUtil.createMatchQuery("id ~=/*org.eclipse.wst.server.core.serverAdapter/"); //$NON-NLS-1$
@@ -106,11 +106,11 @@ public class ExtensionUpdateSite {
 				IQuery<IInstallableUnit> query = QueryUtil.createIUAnyQuery();
 				
 				IMetadataRepository repo = manager.loadRepository(url2, monitor);				
-				List<Extension> list2 = getInstallableUnits(repo,query,url2,monitor);
+				List<IServerExtension> list2 = getInstallableUnits(repo,query,url2,monitor);
 				
 				int size = list2.size();
 				for (int i=0;i<size;i++){
-					Extension e = list2.get(i);
+					Extension e = (Extension)list2.get(i);
 					IInstallableUnit[] iuArr = e.getIUs();
 					if(iuArr != null && iuArr.length > 0){
 						if (iuArr[0] != null){
@@ -135,15 +135,19 @@ public class ExtensionUpdateSite {
 			}			
 			
 			return list;
-		} catch (Exception e) {
+		} catch (ProvisionException e) {
 			Trace.trace(Trace.WARNING, "Error getting update info", e); //$NON-NLS-1$
-			return new ArrayList<Extension>(0);
+			throw e;
+		}catch (Exception e) {
+			Trace.trace(Trace.WARNING, "Error getting update info", e); //$NON-NLS-1$
+			
+			return new ArrayList<IServerExtension>(0);
 		}
 	}
 	
 	// Get the list of InstallableUnits and all its requirements
-	protected List<Extension> getInstallableUnits(IMetadataRepository repo, IQuery<IInstallableUnit> query, URI url, IProgressMonitor monitor){
-		List<Extension> list = new ArrayList<Extension>();
+	protected List<IServerExtension> getInstallableUnits(IMetadataRepository repo, IQuery<IInstallableUnit> query, URI url, IProgressMonitor monitor){
+		List<IServerExtension> list = new ArrayList<IServerExtension>();
 		IQueryResult<IInstallableUnit> collector = repo.query(query, monitor);
 
 		for (IInstallableUnit iu: collector.toUnmodifiableSet()) {

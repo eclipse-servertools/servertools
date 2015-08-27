@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,8 +25,11 @@ public class LicenseWizardFragment extends WizardFragment {
 	public static final String LICENSE_UNKNOWN = "unknown";
 	public static final String LICENSE_ACCEPT = "accept";
 	public static final String LICENSE_SERVER = "license_server";
-
+	public static final String LICENSE_ERROR = "license_error";
+	
 	protected LicenseComposite comp;
+	protected IWizardHandle wizardHandle;
+	
 
 	public LicenseWizardFragment() {
 		// do nothing
@@ -47,6 +50,7 @@ public class LicenseWizardFragment extends WizardFragment {
 	public Composite createComposite(Composite parent, IWizardHandle wizard) {
 		comp = new LicenseComposite(parent, getTaskModel(), wizard);
 		
+		this.wizardHandle = wizard;
 		wizard.setTitle(Messages.wizLicenseTitle);
 		wizard.setDescription(Messages.wizLicenseDescription);
 		wizard.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_WIZBAN_NEW_SERVER));

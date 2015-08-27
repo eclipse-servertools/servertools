@@ -42,6 +42,7 @@ import org.eclipse.wst.server.core.TaskModel;
 public abstract class WizardFragment {
 	private TaskModel taskModel;
 	private boolean isComplete = true;
+	private boolean isforceLastFragment = false;
 	private List<WizardFragment> listImpl;
 
 	/**
@@ -218,5 +219,29 @@ public abstract class WizardFragment {
 	 */
 	protected void setComplete(boolean complete) {
 		this.isComplete = complete;
+	}
+	
+	/**
+	 * Returns true if this fragment is forced to be the last fragment. If it is
+	 * not forceLastFragment the user will be allowed to go to the next fragment.
+	 * If the fragment is isForceLastFragment, the Next button
+	 * will be enabled if more fragment exists. If forceLastFragment, clicking Finish
+	 * will still execute the finish of remaining fragments.
+	 * 
+	 * @return <code>true</code> if the fragment is forceLastFragment, and
+	 *    <code>false</code> otherwise
+	 */
+	public boolean isForceLastFragment() {
+		return isforceLastFragment;
+	}
+	
+	/**
+	 * Set the isforceLastFragment state.
+	 * 
+	 * @param isforceLastFragment <code>true</code> if the fragment is forced to be last fragment, and
+	 *    <code>false</code> otherwise
+	 */
+	protected void setForceLastFragment(boolean isforceLastFragment) {
+		this.isforceLastFragment = isforceLastFragment;
 	}
 }

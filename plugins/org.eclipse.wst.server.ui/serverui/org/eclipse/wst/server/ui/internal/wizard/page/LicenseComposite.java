@@ -132,4 +132,9 @@ public class LicenseComposite extends Composite {
 		}
 		taskModel.putObject(LicenseWizardFragment.LICENSE_ACCEPT, new Boolean(accepted));
 	}
+	
+	public void setVisibleAcceptReject(boolean visible){
+		accept.setVisible(visible);
+		decline.setVisible(visible);
+	}
 }

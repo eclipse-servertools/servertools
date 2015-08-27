@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,8 +13,11 @@ package org.eclipse.wst.server.ui.internal.viewers;
 import java.util.*;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 /**
  * Runtime type content provider.
@@ -47,6 +50,20 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 	}
 
 	protected abstract void fillTree();
+	
+	protected void fillAdapterTree(final TreeViewer treeViewer, final IProgressMonitor monitor){
+		final Thread t = new Thread(Messages.jobInitializingServersView) {
+		public void run() {
+			deferredAdapterInitialize(treeViewer, monitor);
+		}
+		};
+		t.setDaemon(true);
+		t.start();
+	}
+	
+	protected void deferredAdapterInitialize(final TreeViewer treeViewer, IProgressMonitor monitor){
+		// do nothing
+	}
 
 	protected void clean() {
 		elements = null;

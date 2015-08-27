@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,21 +14,16 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.LabelProviderChangedEvent;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-
 import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.IServerType;
+import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.discovery.Discovery;
 import org.eclipse.wst.server.ui.internal.Messages;
+import org.eclipse.wst.server.ui.internal.ProgressUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 /**
  * 
@@ -36,7 +31,6 @@ import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 public class ServerTypeComposite extends AbstractTreeComposite {
 	protected IServerType selection;
 	protected ServerTypeSelectionListener listener;
-	protected ServerTypeTreeContentProvider contentProvider;
 	protected boolean initialSelection = true;
 
 	protected IModuleType moduleType;
@@ -80,19 +74,29 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 			public void selectionChanged(SelectionChangedEvent event) {
 				Object obj = getSelection(event.getSelection());
 				if (obj instanceof IServerType) {
-					selection = (IServerType) obj;
-					setDescription(selection.getDescription());
-				} else {
-					selection = null;
-					setDescription("");
-				}
-				listener.serverTypeSelected(selection);
+					handleTreeSelectionChange((IServerType)obj);
 			}
-		});
+		}});
+		
 		
 		treeViewer.setSorter(new DefaultViewerSorter());
 	}
 
+	public void handleTreeSelectionChange(IServerType serverSelection){
+		if (serverSelection != null) {
+			selection = serverSelection;
+			setDescription(selection.getDescription());
+		} else {
+			selection = null;
+			setDescription("");
+		}
+		
+		listener.serverTypeSelected(selection);
+	}
+	
+	public void setSelection(IServerType server){
+		treeViewer.setSelection(new StructuredSelection(server), true);
+	}
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		if (visible && initialSelection) {
@@ -101,35 +105,13 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 		}
 	}
 
-	protected void deferInitialization() {
-		Job job = new Job(Messages.jobInitializingServersView) {
-			public IStatus run(IProgressMonitor monitor) {
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						try {
-							if (contentProvider.getInitialSelection() != null)
-								treeViewer.setSelection(new StructuredSelection(contentProvider.getInitialSelection()), true);
-						} catch (Exception e) {
-							// ignore - wizard has already been closed
-						}
-					}
-				});
-				return Status.OK_STATUS;
-			}
-		};
-		
-		job.setSystem(true);
-		job.setPriority(Job.SHORT);
-		job.schedule();
-	}
-
 	public boolean setHost(boolean newHost) {
 		if (isLocalhost == newHost)
 			return false;
 		
 		isLocalhost = newHost;
 		ISelection sel = treeViewer.getSelection();
-		contentProvider.setLocalhost(isLocalhost);
+		((ServerTypeTreeContentProvider)contentProvider).setLocalhost(isLocalhost);
 		treeViewer.refresh();
 		//treeViewer.expandToLevel(2);
 		treeViewer.setSelection(sel, true);
@@ -139,7 +121,7 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 	public void setIncludeIncompatibleVersions(boolean b) {
 		includeIncompatibleVersions = b;
 		ISelection sel = treeViewer.getSelection();
-		contentProvider.setIncludeIncompatibleVersions(b);
+		((ServerTypeTreeContentProvider)contentProvider).setIncludeIncompatibleVersions(b);
 		treeViewer.refresh();
 		treeViewer.setSelection(sel, true);
 	}
@@ -166,6 +148,10 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 		return Messages.installableServerLink;
 	}
 
+	protected boolean getDetailsLink() {
+		return true;
+	}
+	
 	private void closeWizard(Composite comp) {
 		if (comp == null || comp.isDisposed())
 			return;
@@ -183,5 +169,103 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 			//refresh();
 			closeWizard(this);
 		}
+	}
+
+	protected void refreshServerNode(){
+		class RefreshJob extends Job{
+			public RefreshJob() {
+				super(Messages.jobRefreshingServerAdapter);
+			}
+			
+			public boolean belongsTo(Object family) {
+				return "org.eclipse.wst.server.ui.family".equals(family);
+			}
+			protected IStatus run(IProgressMonitor monitor) {
+				monitor = ProgressUtil.getMonitorFor(monitor);
+				monitor.beginTask("", 1000);
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						contentProvider.fillTree();
+						refresh("root");
+						if (contentProvider.getInitialSelection() != null && !treeViewer.getTree().isDisposed()){
+							treeViewer.setSelection(new StructuredSelection(contentProvider.getInitialSelection()), true);
+						}
+					}
+				});
+				monitor.worked(200);
+				if (monitor.isCanceled())
+					return Status.CANCEL_STATUS;
+				Discovery.refreshServerAdapters(ProgressUtil.getSubMonitorFor(monitor, 500));
+				monitor.worked(700);
+				if (monitor.isCanceled())
+					return Status.CANCEL_STATUS;
+				ServerCore.resetDownloadableServers();
+				final IProgressMonitor finalMonitor = monitor;
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+
+							if (ServerUIPlugin.getPreferences().getExtAdapter()){
+								handleShowAdapters(ProgressUtil.getSubMonitorFor(finalMonitor, 200));
+							}
+					}
+				});
+				monitor.worked(900);
+				Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+							enableRefresh();
+						}
+					});
+				return Status.OK_STATUS;
+			}
+			
+		}
+		RefreshJob job = new RefreshJob();
+		job.setUser(true);
+		job.schedule();
+		job.setPriority(Job.SHORT);
+		/*Job job = new Job(Messages.jobRefreshingServerAdapter) {
+			@SuppressWarnings("restriction")
+			@Override
+			public IStatus run(IProgressMonitor monitor) {
+				monitor = ProgressUtil.getMonitorFor(monitor);
+				monitor.beginTask("", 1000);
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						contentProvider.fillTree();
+						refresh("root");
+						if (contentProvider.getInitialSelection() != null && !treeViewer.getTree().isDisposed()){
+							treeViewer.setSelection(new StructuredSelection(contentProvider.getInitialSelection()), true);
+						}
+					}
+				});
+				monitor.worked(200);
+				if (monitor.isCanceled())
+					return Status.CANCEL_STATUS;
+				Discovery.refreshServerAdapters(ProgressUtil.getSubMonitorFor(monitor, 500));
+				monitor.worked(700);
+				if (monitor.isCanceled())
+					return Status.CANCEL_STATUS;
+				ServerCore.resetDownloadableServers();
+				final IProgressMonitor finalMonitor = monitor;
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+
+							if (ServerUIPlugin.getPreferences().getExtAdapter()){
+								handleShowAdapters(ProgressUtil.getSubMonitorFor(finalMonitor, 200));
+							}
+					}
+				});
+				monitor.worked(900);
+				Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+							enableRefresh();
+						}
+					});
+				return Status.OK_STATUS;
+			}
+			
+		};*/
+		
+
 	}
 }

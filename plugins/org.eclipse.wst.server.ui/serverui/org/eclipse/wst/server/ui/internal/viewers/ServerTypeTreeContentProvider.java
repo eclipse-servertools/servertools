@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2014 IBM Corporation and others.
+ * Copyright (c) 2003, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,11 +10,17 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.ServerType;
+import org.eclipse.wst.server.core.internal.ServerTypeProxy;
+import org.eclipse.wst.server.discovery.internal.Activator;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 /**
@@ -68,8 +74,25 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 		}
 		elements = list.toArray();
 	}
+	
+	public void cleanAdapterTree(final TreeViewer treeViewer){
+		fillTree();
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				try {
+					treeViewer.refresh("root");
+				} catch (Exception e) {
+					// ignore - wizard has already been closed
+				}
+			}
+		});
+	}
+	
+
 
 	protected boolean include(IServerType serverType) {
+		if (serverType instanceof ServerTypeProxy)
+			return true;
 		if (serverTypeId != null && !serverType.getId().startsWith(serverTypeId))
 			return false;
 		
@@ -105,6 +128,54 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 		return false;
 	}
 
+	@SuppressWarnings("restriction")
+	private boolean compareServers(List serverList, ServerTypeProxy server){
+		for (Iterator iterator = serverList.iterator(); iterator.hasNext();) {
+			IServerType existingServer = (IServerType) iterator.next();
+			if (existingServer.getId().equals(server.getProxyServerId())){
+				Activator.getDefault().getLog().log(new Status(IStatus.INFO, Activator.PLUGIN_ID,"already installed: " + server.getProxyServerId(), null));
+				return true;
+			}
+	
+		}
+		return false;
+	}
+	protected void deferredAdapterInitialize(final TreeViewer treeViewer, IProgressMonitor monitor) {
+		List<TreeElement> list = new ArrayList<TreeElement>();
+		IServerType[] serverTypes = ServerCore.getDownloadableServers(monitor);
+		if (serverTypes != null) {
+			int size = serverTypes.length;
+			for (int i = 0; i < size; i++) {
+				IServerType serverType = serverTypes[i];
+				try {
+					IRuntimeType runtimeType = serverType.getRuntimeType();
+					TreeElement ele = getOrCreate(list, runtimeType.getVendor());
+					if (!compareServers(ele.contents, (ServerTypeProxy)serverType)){
+						ele.contents.add(serverType);
+						elementToParentMap.put(serverType, ele);
+					}
+				} catch (Exception e) {
+					if (Trace.WARNING) {
+						Trace.trace(Trace.STRING_WARNING, "Error in server configuration content provider", e);
+					}
+				}
+			}
+		}
+		if (list.size() >0) {
+			List<Object> newList = new ArrayList<Object>();
+			newList.addAll(Arrays.asList(elements));
+			newList.addAll(list);
+			elements = newList.toArray();
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					if (!treeViewer.getTree().isDisposed())
+						treeViewer.refresh("root");
+				}
+			});
+		}
+	}
+
+	
 	protected boolean checkForNonStubEnvironmentRuntime(IServerType serverType) {
 		IRuntimeType runtimeType = serverType.getRuntimeType();
 		IRuntime[] runtimes = ServerUIPlugin.getRuntimes(runtimeType);

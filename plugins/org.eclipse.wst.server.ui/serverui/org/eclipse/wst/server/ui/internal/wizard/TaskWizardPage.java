@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardContainer;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -71,6 +72,12 @@ class TaskWizardPage extends WizardPage implements IWizardHandle {
 		return true;
 	}
 
+	public IWizardPage getNextPage(){
+		if (fragment.isForceLastFragment())
+			return null;
+		return super.getNextPage();
+	}
+	
 	public boolean canFlipToNextPage() {
 		if (getNextPage() == null)
 			return false;
@@ -83,6 +90,7 @@ class TaskWizardPage extends WizardPage implements IWizardHandle {
 		return true;
 	}
 
+	
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		

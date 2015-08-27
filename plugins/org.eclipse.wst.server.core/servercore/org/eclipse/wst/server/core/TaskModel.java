@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -66,7 +66,16 @@ public class TaskModel {
 	 * @see #putObject(String, Object)
 	 */
 	public static final String TASK_LAUNCH_MODE = "launch-mode";
-
+	
+	/**
+	 * Task model id for downloadable server adapter extension.
+	 * 
+	 * @see #getObject(String)
+	 * @see #putObject(String, Object)
+	 * @since 1.7
+	 */
+	public static final String TASK_EXTENSION = "extension";
+	
 	private Map<String, Object> map = new HashMap<String, Object>();
 
 	/**

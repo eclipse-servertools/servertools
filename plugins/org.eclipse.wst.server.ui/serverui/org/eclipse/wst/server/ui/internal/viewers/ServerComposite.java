@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2013 IBM Corporation and others.
+ * Copyright (c) 2003, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,7 +44,6 @@ import org.eclipse.wst.server.ui.internal.view.servers.ServerTableLabelProvider;
 public class ServerComposite extends AbstractTreeComposite implements IShellProvider {
 	protected IServer selection;
 	protected ServerSelectionListener listener;
-	protected ServerTreeContentProvider contentProvider;
 	protected boolean initialSelection = true;
 
 	protected IModule module;
@@ -116,7 +115,7 @@ public class ServerComposite extends AbstractTreeComposite implements IShellProv
 	public void setIncludeIncompatibleVersions(boolean b) {
 		includeIncompatibleVersions = b;
 		ISelection sel = treeViewer.getSelection();
-		contentProvider.setIncludeIncompatibleVersions(b);
+		((ServerTreeContentProvider)contentProvider).setIncludeIncompatibleVersions(b);
 		treeViewer.refresh();
 		treeViewer.setSelection(sel, true);
 	}
@@ -132,7 +131,7 @@ public class ServerComposite extends AbstractTreeComposite implements IShellProv
 	public void refreshAll() {
 		ISelection sel = treeViewer.getSelection();
 		contentProvider = new ServerTreeContentProvider(module, launchMode);
-		contentProvider.setIncludeIncompatibleVersions(includeIncompatibleVersions);
+		((ServerTreeContentProvider)contentProvider).setIncludeIncompatibleVersions(includeIncompatibleVersions);
 		treeViewer.setContentProvider(contentProvider);
 		treeViewer.setSelection(sel);
 	}

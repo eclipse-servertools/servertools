@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,9 @@ public class DefaultServerImageDescriptor extends CompositeImageDescriptor {
 	private Image fBaseImage;
 	private Point fSize;
 	private Image overlay;
+	private int fFlags;
+	
+	public static final int BOTTOM_RIGHT = 0x001;
 	
 	/**
 	 * Create a new OverlayImageDescriptor.
@@ -89,8 +92,14 @@ public class DefaultServerImageDescriptor extends CompositeImageDescriptor {
 	 */
 	protected void drawOverlays() {
 		ImageData data = overlay.getImageData();
-		int x = getSize().x - data.width;
-		drawImage(data, x, 0);
+		Point size = getSize();
+		int x = size.x - data.width;
+		int y = 0;
+		if ((fFlags & BOTTOM_RIGHT) != 0) {
+			y = size.y - data.height;
+		}
+
+		drawImage(data, x, y);
 	}
 	
 	protected Image getBaseImage() {
@@ -104,4 +113,9 @@ public class DefaultServerImageDescriptor extends CompositeImageDescriptor {
 	protected void setSize(Point size) {
 		fSize = size;
 	}
+	
+	public void setFlags(int flags) {
+		fFlags = flags;
+	}
+
 }
