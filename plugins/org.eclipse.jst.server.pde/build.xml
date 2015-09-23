@@ -71,7 +71,6 @@
 				<pathelement path="..\..\..\..\eclipse3\target-0.7\eclipse\plugins\org.eclipse.core.resources_3.1.0.jar"/>
 				<pathelement path="..\..\..\..\eclipse3\target-0.7\eclipse\plugins\org.eclipse.core.resources.compatibility_3.1.0.jar"/>
 				<pathelement path="..\..\..\..\eclipse3\target-0.7\eclipse\plugins\org.eclipse.core.resources.win32_3.1.0.jar"/>
-				<pathelement path="..\..\..\..\eclipse3\target-0.7\eclipse\plugins\org.eclipse.core.runtime.compatibility_3.1.0.jar"/>
 				<pathelement path="..\..\..\..\eclipse3\target-0.7\eclipse\plugins\org.eclipse.update.configurator_3.1.0.jar"/>
 				<pathelement path="..\..\..\..\eclipse3\target-0.7\eclipse\plugins\org.eclipse.ant.core_3.1.0.jar"/>
 				<pathelement path="..\..\..\..\eclipse3\target-0.7\eclipse\plugins\org.eclipse.core.variables_3.1.0.jar"/>
