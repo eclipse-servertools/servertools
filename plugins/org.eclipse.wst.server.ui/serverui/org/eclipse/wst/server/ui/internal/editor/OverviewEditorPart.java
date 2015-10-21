@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2014 IBM Corporation and others.
+ * Copyright (c) 2003, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,11 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -30,11 +26,7 @@ import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.fieldassist.AutoCompleteField;
-import org.eclipse.jface.fieldassist.ControlDecoration;
-import org.eclipse.jface.fieldassist.FieldDecoration;
-import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
-import org.eclipse.jface.fieldassist.TextContentAdapter;
+import org.eclipse.jface.fieldassist.*;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -46,19 +38,8 @@ import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.*;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
@@ -69,20 +50,15 @@ import org.eclipse.ui.forms.widgets.*;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.MultiPageEditorSite;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.internal.Publisher;
-import org.eclipse.wst.server.core.internal.Server;
-import org.eclipse.wst.server.core.internal.ServerPlugin;
-import org.eclipse.wst.server.core.internal.ServerType;
+import org.eclipse.wst.server.core.internal.*;
 import org.eclipse.wst.server.core.util.SocketUtil;
 import org.eclipse.wst.server.ui.AbstractUIControl;
-import org.eclipse.wst.server.ui.AbstractUIControl.UIControlEntry;
 import org.eclipse.wst.server.ui.AbstractUIControl.IUIControlListener;
-import org.eclipse.wst.server.ui.editor.*;
-import org.eclipse.wst.server.ui.internal.ContextIds;
-import org.eclipse.wst.server.ui.internal.ImageResource;
+import org.eclipse.wst.server.ui.AbstractUIControl.UIControlEntry;
+import org.eclipse.wst.server.ui.editor.ServerEditorOverviewPageModifier;
+import org.eclipse.wst.server.ui.editor.ServerEditorPart;
+import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.Messages;
-import org.eclipse.wst.server.ui.internal.SWTUtil;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.command.*;
 import org.eclipse.wst.server.ui.internal.viewers.BaseContentProvider;
@@ -121,6 +97,8 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 	protected IRuntimeLifecycleListener runtimeListener;
 
 	private IServerType oldServerType;
+	
+	final int MAX_SPINNER_TIME = 60*60*24; // 24 hours in seconds
 	
 	class PublisherContentProvider extends BaseContentProvider {
 		protected Publisher[] pubs;
@@ -682,10 +660,10 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 			autoPublishTime = new Spinner(composite, SWT.BORDER);
 			autoPublishTime.setMinimum(0);
 			autoPublishTime.setIncrement(5);
-			autoPublishTime.setMaximum(120);
-			autoPublishTime.setSelection(svr.getAutoPublishTime());
+			autoPublishTime.setMaximum(MAX_SPINNER_TIME);
+			autoPublishTime.setSelection(svr.getAutoPublishTime());						
 			data = new GridData(GridData.HORIZONTAL_ALIGN_END);
-			data.widthHint = 30;
+			data.widthHint = SWT.DEFAULT;
 			autoPublishTime.setLayoutData(data);
 			autoPublishTime.setEnabled(!autoPublishDisable.getSelection());
 			SWTUtil.setSpinnerTooltip(autoPublishTime);
@@ -819,12 +797,12 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 			startTimeoutSpinner = new Spinner(composite, SWT.BORDER);
 			startTimeoutSpinner.setEnabled(true);
 			startTimeoutSpinner.setMinimum(1);
-			startTimeoutSpinner.setMaximum(60*60*24); // 24 hours
+			startTimeoutSpinner.setMaximum(MAX_SPINNER_TIME);
 			startTimeoutSpinner.setIncrement(5);
 			startTimeoutSpinner.setSelection(svr.getStartTimeout());
 			SWTUtil.setSpinnerTooltip(startTimeoutSpinner);
 			data = new GridData(GridData.HORIZONTAL_ALIGN_END);
-			data.widthHint = 30;
+			data.widthHint = SWT.DEFAULT;
 			startTimeoutSpinner.setLayoutData(data);
 			whs.setHelp(startTimeoutSpinner, ContextIds.EDITOR_TIMEOUT_START);
 			
@@ -837,12 +815,12 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 			stopTimeoutSpinner = new Spinner(composite, SWT.BORDER);
 			stopTimeoutSpinner.setEnabled(true);
 			stopTimeoutSpinner.setMinimum(1);
-			stopTimeoutSpinner.setMaximum(60*60*24); // 24 hours
+			stopTimeoutSpinner.setMaximum(MAX_SPINNER_TIME);
 			stopTimeoutSpinner.setIncrement(5);
 			stopTimeoutSpinner.setSelection(svr.getStopTimeout());
 			SWTUtil.setSpinnerTooltip(stopTimeoutSpinner);
 			data = new GridData(GridData.HORIZONTAL_ALIGN_END);
-			data.widthHint = 30;
+			data.widthHint = SWT.DEFAULT;
 			stopTimeoutSpinner.setLayoutData(data);
 			whs.setHelp(stopTimeoutSpinner, ContextIds.EDITOR_TIMEOUT_STOP);
 			
