@@ -631,4 +631,17 @@ M4 = Platform-specific fourth key
          id="org.eclipse.wst.server.ui.saveEditorPrompter1">
    </saveEditorPrompter>
 </extension>
+<extension point="org.eclipse.wst.server.ui.serverImages">
+		<image 
+			id="com.eclipse.wst.server.downloadableserver.image" 
+			icon="icons/obj16/server.gif"
+			typeIds="com.eclipse.server.proxy" />
+	</extension>
+<extension point="org.eclipse.wst.server.ui.wizardFragments">
+	<fragment
+		id="com.eclipse.wst.server.downloadableserver"
+		typeIds="com.eclipse.server.proxy"
+		class="org.eclipse.wst.server.ui.internal.wizard.fragment.DownloadableAdapterLicenseWizardFragment"/>
+</extension>
+       
 </plugin>

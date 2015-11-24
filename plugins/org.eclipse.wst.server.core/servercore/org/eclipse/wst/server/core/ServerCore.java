@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.*;
 import org.eclipse.wst.server.core.internal.*;
+import org.eclipse.wst.server.discovery.Discovery;
+import org.eclipse.wst.server.discovery.ServerProxy;
 /**
  * Main class for server core API.
  * <p>
@@ -39,6 +41,7 @@ public final class ServerCore {
 
 	//	cached copy of all server and configuration types
 	private static List<IServerType> serverTypes;
+	private static List<IServerType> DAServerTypes;
 
 	private static IRegistryChangeListener registryListener;
 
@@ -152,6 +155,34 @@ public final class ServerCore {
 		serverTypes.toArray(st);
 		return st;
 	}
+	
+	/**
+	 * @since 1.7
+	 */
+	public static IServerType[] getDownloadableServers(IProgressMonitor monitor){
+		if (DAServerTypes == null || DAServerTypes.isEmpty())
+			loadDAServerTypes(monitor);
+		IServerType[] servers2 = new IServerType[DAServerTypes.size()];
+		DAServerTypes.toArray(servers2);
+		
+		return servers2;
+	}
+	
+	/**
+	 * @since 1.7
+	 */
+	public static void resetDownloadableServers(){
+		DAServerTypes = null;
+	}
+	
+	/**
+	 * @since 1.7
+	 */
+	public static boolean isDownloadableServerLoaded(){
+		if (DAServerTypes != null && !DAServerTypes.isEmpty())
+			return true;
+		return false;
+	}
 
 	/**
 	 * Returns the server type with the given id, or <code>null</code>
@@ -242,7 +273,26 @@ public final class ServerCore {
 			Trace.trace(Trace.STRING_EXTENSION_POINT, "-<- Done loading .serverTypes extension point -<-");
 		}
 	}
+	
+	/**
+	 * Load the server types.
+	 */
+	private static synchronized void loadDAServerTypes(IProgressMonitor monitor) {
+		DAServerTypes = new ArrayList<IServerType>();
+		
+		// fetch from site and add
+		DAServerTypes.addAll(createProxyServers(monitor));
+		
+	}
 
+	private static List<ServerTypeProxy> createProxyServers(IProgressMonitor monitor){
+		List<ServerProxy> serverProxyList = Discovery.getExtensionsWithServer(monitor);
+		List<ServerTypeProxy> serverTypeProxyList = new ArrayList<ServerTypeProxy>();
+		for (Iterator iterator = serverProxyList.iterator(); iterator.hasNext();) {
+			serverTypeProxyList.add(new ServerTypeProxy((ServerProxy) iterator.next()));
+		}
+		return serverTypeProxyList;
+	}
 	/**
 	 * Load the server types.
 	 */
@@ -315,6 +365,7 @@ public final class ServerCore {
 	public static IServer[] getServers() {
 		return getResourceManager().getServers();
 	}
+	
 
 	/**
 	 * Adds a new runtime lifecycle listener.

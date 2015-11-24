@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,11 +11,7 @@
 package org.eclipse.wst.server.ui.internal.wizard;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.*;
@@ -25,7 +21,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
-
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
@@ -34,6 +29,7 @@ import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
+import org.eclipse.wst.server.ui.internal.wizard.fragment.DownloadableAdapterLicenseWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.page.WorkspaceRunnableAdapter;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
@@ -319,7 +315,7 @@ public class TaskWizard implements IWizard {
 		Iterator iterator = list.iterator();
 		while (iterator.hasNext()) {
 			WizardFragment fragment = (WizardFragment) iterator.next();
-			if (!taskModel.equals(fragment.getTaskModel()))
+			if ((!(fragment instanceof DownloadableAdapterLicenseWizardFragment))&& !taskModel.equals(fragment.getTaskModel()))
 				fragment.setTaskModel(taskModel);
 		}
 		return list;

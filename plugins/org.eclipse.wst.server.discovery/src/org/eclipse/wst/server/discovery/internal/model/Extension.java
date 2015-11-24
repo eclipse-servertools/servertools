@@ -29,7 +29,7 @@ import org.eclipse.wst.server.discovery.internal.Activator;
 import org.eclipse.wst.server.discovery.internal.ExtensionUtility;
 import org.osgi.framework.BundleContext;
 
-public class Extension {
+public class Extension implements IServerExtension{
 	private IInstallableUnit iu;
 	private URI uri;
 
@@ -99,6 +99,18 @@ public class Extension {
 
 		IProfileRegistry profileRegistry = (IProfileRegistry) ExtensionUtility.getService(bundleContext, IProfileRegistry.SERVICE_NAME);
 		IProfile profile = profileRegistry.getProfile(IProfileRegistry.SELF);
+		IProfile[] profiles = profileRegistry.getProfiles();
+		if (profile == null ) {//it happens sometime , possibility of bug in profileRegistry
+			for (int i = 0; i < profiles.length; i++) {
+				if (profiles[i].getProfileId().equals(IProfileRegistry.SELF)){
+					profile = profiles[i];
+					break;
+				}
+				
+			}
+		}
+		if (profile == null)
+			return null;
 		IProfileChangeRequest pcr = planner.createChangeRequest(profile);
 		pcr.add(iu);
 		IProvisioningAgent agent = ExtensionUtility.getAgent(bundleContext);
@@ -141,5 +153,13 @@ public class Extension {
 		plan = planner.getProvisioningPlan(pcr, provContext, monitor);
 		//System.out.println("Time: " + (System.currentTimeMillis() - time)); // TODO
 		return plan;
+	}
+
+	public String getURI() {
+		return uri.toString();
+	}
+	
+	public String getServerId() {
+		return iu.getProperty("serverId", null);
 	}
 }

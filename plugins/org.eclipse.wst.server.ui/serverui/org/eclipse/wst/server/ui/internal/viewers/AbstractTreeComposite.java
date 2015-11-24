@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2013 IBM Corporation and others.
+ * Copyright (c) 2003, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,23 +10,22 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.dialogs.FilteredTree;
+import org.eclipse.wst.server.ui.internal.Messages;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 /**
  * 
  */
@@ -34,6 +33,11 @@ public abstract class AbstractTreeComposite extends Composite {
 	protected FilteredTree tree;
 	protected TreeViewer treeViewer;
 	protected Label description;
+	protected Button showAdapters;
+	protected Link prefLink;
+	protected Button refreshButton;
+	protected AbstractTreeContentProvider contentProvider;
+	
 
 	public AbstractTreeComposite(Composite parent) {
 		super(parent, SWT.NONE);
@@ -61,16 +65,43 @@ public abstract class AbstractTreeComposite extends Composite {
 		
 		String details = getDetailsLabel();
 		if (details != null) {
-			Link prefLink = new Link(this, SWT.NONE);
+			Composite comp = new Composite(this,  SWT.NONE);
+			layout = new GridLayout();
+			layout.numColumns = 3;
+			comp.setLayout(layout);
 			GridData data = new GridData(GridData.HORIZONTAL_ALIGN_END);
 			data.horizontalSpan = 2;
-			prefLink.setLayoutData(data);
+			comp.setLayoutData(data);
+			Dialog.applyDialogFont(comp);
+			if (getDetailsLink()){
+				showAdapters = new Button(comp,  SWT.CHECK);
+				
+				showAdapters.addSelectionListener(new SelectionAdapter() {
+					public void widgetSelected(SelectionEvent e) {
+						handleShowAdapterSelection(showAdapters.getSelection());
+					}
+				});
+				showAdapters.setSelection(ServerUIPlugin.getPreferences().getExtAdapter());
+			}
+			prefLink = new Link(comp, SWT.NONE);
 			prefLink.setText("<a>" + details + "</a>");
 			prefLink.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					detailsSelected();
 				}
 			});
+			if (getDetailsLink()){
+				prefLink.setEnabled(!ServerUIPlugin.getPreferences().getExtAdapter());
+				refreshButton = new Button(comp, SWT.PUSH);
+				refreshButton.setText(Messages.refreshButton);
+				refreshButton.setEnabled(ServerUIPlugin.getPreferences().getExtAdapter());
+				refreshButton.addSelectionListener(new SelectionAdapter() {
+					public void widgetSelected(SelectionEvent e) {
+						refreshButton.setEnabled(false);
+						refreshServerNode();
+					}
+				});
+			}
 		}
 		
 		Label label = new Label(this, SWT.WRAP);
@@ -156,8 +187,96 @@ public abstract class AbstractTreeComposite extends Composite {
 	protected String getDetailsLabel() {
 		return null;
 	}
+	
+	protected boolean getDetailsLink() {
+		return false;
+	}
 
 	protected void detailsSelected() {
 		// do nothing
+	}
+
+	protected void refreshServerNode(){
+		// class implementing will provide the details if required
+	}
+	protected void downloadAdaptersSelectionChanged(boolean action) {
+		ServerUIPlugin.getPreferences().setExtAdapter(action);
+		Job job = new Job(Messages.jobInitializingServersView) {
+			public IStatus run(final IProgressMonitor monitor) {
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						try {
+							if (ServerUIPlugin.getPreferences().getExtAdapter()){
+								handleShowAdapters(monitor);
+							}
+							else {
+								contentProvider.fillTree();
+								refresh("root");
+								if (contentProvider.getInitialSelection() != null){
+									treeViewer.setSelection(new StructuredSelection(contentProvider.getInitialSelection()), true);
+								}
+							}
+								
+						} catch (Exception e) {
+							// ignore - wizard has already been closed
+						}
+					}
+				});
+				return Status.OK_STATUS;
+			}
+		};
+		job.setSystem(true);
+		job.setPriority(Job.SHORT);
+		job.schedule();
+	}
+	
+	protected void handleShowAdapterSelection(boolean selection){
+		showAdapters.setSelection(selection);
+		prefLink.setEnabled(!selection);
+		refreshButton.setEnabled(selection);
+		downloadAdaptersSelectionChanged(selection);
+	}
+
+	protected void deferInitialization() {
+		Job job = new Job(Messages.jobInitializingServersView) {
+			public IStatus run(final IProgressMonitor monitor) {
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						try {
+							if (ServerUIPlugin.getPreferences().getExtAdapter()){
+								handleShowAdapters(monitor);
+							}
+							else if (contentProvider.getInitialSelection() != null){
+								treeViewer.setSelection(new StructuredSelection(contentProvider.getInitialSelection()), true);
+							}
+						} catch (Exception e) {
+							// ignore - wizard has already been closed
+						}
+					}
+				});
+				return Status.OK_STATUS;
+			}
+		};
+		
+		job.setSystem(true);
+		job.setPriority(Job.SHORT);
+		job.schedule();
+	}
+
+	protected void handleShowAdapters(IProgressMonitor monitor){
+		contentProvider.fillAdapterTree(treeViewer, monitor);
+		if (contentProvider.getInitialSelection() != null && !treeViewer.getTree().isDisposed()){
+			treeViewer.setSelection(new StructuredSelection(contentProvider.getInitialSelection()), true);
+		}
+		
+	}
+	
+	protected void enableRefresh(){
+		if ( !showAdapters.isDisposed() && showAdapters.getSelection() )
+			refreshButton.setEnabled(true);
+	}
+	
+	protected void disableRefresh(){
+		refreshButton.setEnabled(false);
 	}
 }

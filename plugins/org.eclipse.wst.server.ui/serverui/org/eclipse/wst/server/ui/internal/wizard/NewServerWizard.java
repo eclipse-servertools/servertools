@@ -13,15 +13,14 @@ package org.eclipse.wst.server.ui.internal.wizard;
 import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-
+import org.eclipse.ui.INewWizard;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewServerWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
-import org.eclipse.ui.INewWizard;
-import org.eclipse.ui.IWorkbench;
 /**
  * A wizard to create a new server and server configuration.
  */
@@ -40,7 +39,6 @@ public class NewServerWizard extends TaskWizard implements INewWizard {
 				
 				list.add(WizardTaskUtil.TempSaveRuntimeFragment);
 				list.add(WizardTaskUtil.TempSaveServerFragment);
-				
 				list.add(new ModifyModulesWizardFragment());
 				list.add(new TasksWizardFragment());
 				

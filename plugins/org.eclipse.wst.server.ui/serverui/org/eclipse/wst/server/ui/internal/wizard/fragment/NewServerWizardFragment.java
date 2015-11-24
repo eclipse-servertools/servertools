@@ -10,10 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.wizard.fragment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -21,13 +18,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
+import org.eclipse.wst.server.core.util.SocketUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
-import org.eclipse.wst.server.ui.internal.wizard.page.NewServerComposite;
 import org.eclipse.wst.server.ui.internal.wizard.page.NewManualServerComposite;
-import org.eclipse.wst.server.ui.wizard.WizardFragment;
+import org.eclipse.wst.server.ui.internal.wizard.page.NewServerComposite;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
-import org.eclipse.wst.server.core.util.SocketUtil;
+import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * 
  */
@@ -107,31 +104,32 @@ public class NewServerWizardFragment extends WizardFragment {
 		
 		Byte b = getMode();
 		if (b != null && b.byteValue() == MODE_MANUAL) {
-			IRuntime runtime = (IRuntime) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
+			Object runtime = getTaskModel().getObject(TaskModel.TASK_RUNTIME);
 			if (runtime != null && runtime instanceof IRuntimeWorkingCopy) {
-				WizardFragment sub = getWizardFragment(runtime.getRuntimeType().getId());
+				WizardFragment sub = getWizardFragment(((IRuntime)runtime).getRuntimeType().getId());
 				if (sub != null)
 					list.add(sub);
-			}
-			
+			} 			
 			IServerAttributes server = (IServerAttributes) getTaskModel().getObject(TaskModel.TASK_SERVER);
 			if (server != null) {
-				if (server.getServerType().hasServerConfiguration() && server instanceof ServerWorkingCopy) {
+				if (server.getServerType().hasServerConfiguration() && server instanceof ServerWorkingCopy && runtime instanceof IRuntime) {
 					ServerWorkingCopy swc = (ServerWorkingCopy) server;
-					if (runtime != null && runtime.getLocation() != null && !runtime.getLocation().isEmpty()) {
-						if (runtimeLocation == null || !runtimeLocation.equals(runtime.getLocation()))
+					IRuntime runtime1 = (IRuntime)runtime;
+					if (runtime != null && runtime1.getLocation() != null && !runtime1.getLocation().isEmpty()) {
+						if (runtimeLocation == null || !runtimeLocation.equals(runtime1.getLocation()))
 							try {
-								swc.importRuntimeConfiguration(runtime, null);
+								swc.importRuntimeConfiguration(runtime1, null);
 							} catch (CoreException ce) {
 								// ignore
 							}
-						runtimeLocation = runtime.getLocation();
+						runtimeLocation = runtime1.getLocation();
 					} else
 						runtimeLocation = null;
 				}
 				WizardFragment sub = getWizardFragment(server.getServerType().getId());
-				if (sub != null)
+				if (sub != null){
 					list.add(sub);
+				}
 			}
 		} else if (b != null && b.byteValue() == MODE_EXISTING) {
 			/*if (comp != null) {
@@ -177,6 +175,8 @@ public class NewServerWizardFragment extends WizardFragment {
 					return false;
 				}
 				
+				if (!manualComp.canProceed())
+					return false;
 				boolean supportsRemote = getServer().getServerType().supportsRemoteHosts();
 				if (manualComp.getCurrentHostname().trim().length() == 0){
 					isComplete = false;
@@ -220,5 +220,13 @@ public class NewServerWizardFragment extends WizardFragment {
 			comp.getNewManualServerComposite().dispose();
 		}
 		super.performFinish(monitor);
+	}
+	
+	public void exit() {
+		Composite composite = comp.getNewManualServerComposite();
+		if(composite != null && composite instanceof NewManualServerComposite){
+			NewManualServerComposite manualComp = (NewManualServerComposite) composite;
+			manualComp.refreshExtension();
+		}
 	}
 }
