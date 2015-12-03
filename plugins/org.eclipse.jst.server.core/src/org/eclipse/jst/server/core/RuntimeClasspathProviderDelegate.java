@@ -60,7 +60,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 
 	private Map<String, IPath> runtimePathMap = Collections.synchronizedMap(new HashMap<String, IPath>());
 
-	private Map<String, Integer> previousClasspath = Collections.synchronizedMap(new HashMap<String, Integer>());
+	private Map<String, IClasspathEntry[]> previousClasspath = Collections.synchronizedMap(new HashMap<String, IClasspathEntry[]>());
 
 	public RuntimeClasspathProviderDelegate() {
 		// default constructor
@@ -160,15 +160,17 @@ public abstract class RuntimeClasspathProviderDelegate {
 		
 		String key = project.getName() + "/" + runtime.getId();
 		if (!previousClasspath.containsKey(key))
-			previousClasspath.put(key, new Integer(entries.length));
+			previousClasspath.put(key, entries);
 		else {
-			Integer previousEntries = previousClasspath.get(key);
+			IClasspathEntry[] previousClasspathEntries = previousClasspath.get(key);
 			
-			if ((previousEntries == null) || (previousEntries.intValue() != entries.length)) {
+			if (previousClasspathEntries == null 
+					|| previousClasspathEntries.length != entries.length 
+					|| entriesChanged(previousClasspathEntries,entries)) {
 				if (Trace.FINEST) {
 					Trace.trace(Trace.STRING_FINEST, "Classpath update: " + key + " " + entries);
 				}
-				previousClasspath.put(key, new Integer(entries.length));
+				previousClasspath.put(key, entries);
 				
 				IPath path = new Path(RuntimeClasspathContainer.SERVER_CONTAINER);
 				path = path.append(extensionId).append(runtime.getId());
@@ -185,6 +187,20 @@ public abstract class RuntimeClasspathProviderDelegate {
 		}
 		
 		return entries;
+	}
+
+	private boolean entriesChanged(IClasspathEntry[] previousEntries, IClasspathEntry[] entries) {
+		if (previousEntries.length != entries.length) {
+			return true;
+		}
+		for (int i=0; i<previousEntries.length; i++) {
+			if ((previousEntries[i] == null && entries[i] != null)
+					|| (previousEntries[i].getPath() == null && entries[i].getPath() != null)
+					|| !previousEntries[i].getPath().equals(entries[i].getPath())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/*
