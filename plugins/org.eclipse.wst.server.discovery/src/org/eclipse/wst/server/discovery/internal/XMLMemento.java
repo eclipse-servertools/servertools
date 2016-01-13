@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,6 +38,7 @@ import javax.xml.transform.stream.StreamResult;
 public final class XMLMemento implements IMemento {
 	private Document factory;
 	private Element element;
+	private ProcessingInstruction processInstrn;
 
 	/**
 	 * Answer a memento for the document and element.  For simplicity
@@ -69,8 +70,19 @@ public final class XMLMemento implements IMemento {
 			DocumentBuilder parser = factory.newDocumentBuilder();
 			document = parser.parse(new InputSource(in));
 			Node node = document.getFirstChild();
-			if (node instanceof Element)
-				return new XMLMemento(document, (Element) node);
+			ProcessingInstruction newPI = null;
+			if (node instanceof ProcessingInstruction){
+				newPI = (ProcessingInstruction)node;
+				node = node.getNextSibling();
+				if (node instanceof Comment)
+					node = node.getNextSibling();
+			}
+			if (node instanceof Element){
+				XMLMemento memento = new XMLMemento(document, (Element) node);
+				if (newPI != null)
+					memento.setProcessingInstruction(newPI);
+				return memento;
+			}
 		} catch (Exception e) {
 			// ignore
 		} finally {
@@ -93,6 +105,30 @@ public final class XMLMemento implements IMemento {
 		Document document;
 		try {
 			document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+			Element element = document.createElement(type);
+			document.appendChild(element);
+			return new XMLMemento(document, element);            
+		} catch (ParserConfigurationException e) {
+			throw new Error(e);
+		}
+	}
+	
+	/**
+	 * Answer a root memento for writing a document.
+	 * 
+	 * @param type a type
+	 * @param target a processingInstruction target
+	 * @param data a processingInstruction data
+	 * @return a memento
+	 */
+	public static XMLMemento createWriteRoot(String type, String target, String data, String commentString) {
+		Document document;
+		try {
+			document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+			ProcessingInstruction newProcessInstrn = document.createProcessingInstruction(target, data);
+			document.appendChild(newProcessInstrn);
+			Comment comment =document.createComment(commentString);
+			document.appendChild(comment);
 			Element element = document.createElement(type);
 			document.appendChild(element);
 			return new XMLMemento(document, element);            
@@ -386,5 +422,13 @@ public final class XMLMemento implements IMemento {
        } else {
            textNode.setData(data);
        }
+   }
+   
+   public ProcessingInstruction getProcessingInstruction(){
+	   return processInstrn;
+   }
+   
+   protected void setProcessingInstruction(ProcessingInstruction processInstrn){
+	   this.processInstrn = processInstrn;
    }
 }

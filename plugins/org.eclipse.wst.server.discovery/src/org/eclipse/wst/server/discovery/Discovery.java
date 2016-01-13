@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2015 IBM Corporation and others.
+ * Copyright (c) 2008, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.wst.server.discovery.internal.DiscoveryPreferences;
 import org.eclipse.wst.server.discovery.internal.ExtensionUtility;
 
 public class Discovery {
@@ -63,5 +64,26 @@ public class Discovery {
 	 */
 	public static void refreshServerAdapters(IProgressMonitor monitor) {
 		ExtensionUtility.refreshServerAdapters(monitor);
+	}
+	
+	/**
+	 * @since 1.2
+	 */
+	public static String getLastUpdatedDate(){
+		return DiscoveryPreferences.getInstance().getCacheLastUpdatedDate();
+	}
+	
+	/**
+	 * @since 1.2
+	 */
+	public static int  getCacheUpdateFrequency(){
+		return DiscoveryPreferences.getInstance().getCacheFrequency();
+	}
+	
+	/**
+	 * @since 1.2
+	 */
+	public static void  setCacheUpdateFrequency(int frequency){
+		DiscoveryPreferences.getInstance().setCacheFrequency(frequency);
 	}
 }

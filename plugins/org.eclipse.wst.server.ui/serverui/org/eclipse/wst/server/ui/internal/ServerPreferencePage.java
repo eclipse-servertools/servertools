@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,19 +10,24 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal;
 
+
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.wst.server.core.internal.ServerPreferences;
+import org.eclipse.wst.server.discovery.Discovery;
+import org.eclipse.wst.server.ui.ICacheUpdateListener;
+import org.eclipse.wst.server.ui.ServerUIUtil;
 /**
  * The preference page that holds server properties.
  */
@@ -31,6 +36,9 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	protected ServerUIPreferences uiPreferences;
 
 	protected Button showOnActivity;
+	protected Button refreshNow;
+	protected Text updateTime;
+	protected Combo updateCacheFrequencyCombo;
 
 	/**
 	 * ServerPreferencesPage constructor comment.
@@ -72,9 +80,96 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		showOnActivity.setSelection(uiPreferences.getShowOnActivity());
 		whs.setHelp(showOnActivity, ContextIds.PREF_GENERAL_SHOW_ON_ACTIVITY);
 		
+		Label label = new Label(composite, SWT.NONE);
+		data = new GridData();
+		data.horizontalSpan = 3;
+		label.setLayoutData(data);
+				
+		Group cacheGroup = new Group(composite, SWT.NONE);
+		cacheGroup.setText(Messages.cacheUpdate_boxTitle);
+		layout = new GridLayout();
+		layout.numColumns = 3;
+		cacheGroup.setLayout(layout);
+		data = new GridData(GridData.FILL_HORIZONTAL);
+		data.horizontalSpan = 3;
+		cacheGroup.setLayoutData(data);
+		Label updateCacheLabel = new Label(cacheGroup, SWT.NONE);
+		updateCacheLabel.setText(Messages.cacheUpdate_frequencyLabel);
+
+		
+		updateCacheFrequencyCombo = new Combo(cacheGroup, SWT.READ_ONLY);
+		String[] frequency = new String[5];
+		frequency[0] = Messages.cacheFrequency_manual;
+		frequency[1] = Messages.cacheFrequency_daily;
+		frequency[2] = Messages.cacheFrequency_weekly;
+		frequency[3] = Messages.cacheFrequency_monthly;
+		frequency[4] = Messages.cacheFrequency_quarterly;
+		
+		updateCacheFrequencyCombo.setItems(frequency);
+			
+		int cacheFrequency = uiPreferences.getCacheFrequency();
+		updateCacheFrequencyCombo.select(cacheFrequency);
+		
+		refreshNow = new Button(cacheGroup, SWT.PUSH);
+		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
+		refreshNow.setLayoutData(data);
+		String refreshButtonText = ServerUIUtil.refreshButtonText;
+		ServerUIUtil.setListener(new UpdateJobChangeListener());
+		if (refreshButtonText.equals(Messages.cacheUpdate_refreshNow))
+			refreshNow.setEnabled(true);
+		else
+			refreshNow.setEnabled(false);
+		refreshNow.setText(refreshButtonText);
+		
+		refreshNow.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				refreshNow.setEnabled(false);
+				updateRefreshText(Messages.cacheUpdate_refreshing);
+				updateJob = ServerUIUtil.refreshServerNode(true);
+			}
+		});
+		
+		Label lastUpdatedLabel = new Label(cacheGroup, SWT.NONE);
+		lastUpdatedLabel.setText(Messages.cacheUpdate_lastUpdatedOn);
+		updateTime = new Text(cacheGroup, SWT.READ_ONLY);
+		updateTime.setText(Discovery.getLastUpdatedDate());
 		Dialog.applyDialogFont(composite);
 		
+		
 		return composite;
+	}
+	Job updateJob = null;
+	
+	private class UpdateJobChangeListener implements ICacheUpdateListener {
+		public UpdateJobChangeListener() {
+		}
+		public void start(){
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					 if (refreshNow != null && !refreshNow.isDisposed()){
+						 refreshNow.setText(Messages.cacheUpdate_refreshing);
+						 refreshNow.setEnabled(false);
+					 }
+				}
+			});
+		}
+
+		public void done() {
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					 if (refreshNow != null && !refreshNow.isDisposed()){
+						 refreshNow.setEnabled(true);
+						 refreshNow.setText(Messages.cacheUpdate_refreshNow);
+						 updateTime.setText(Discovery.getLastUpdatedDate());
+					 }
+				}
+			});
+
+		}
+
+	}
+	public void updateRefreshText(String refreshText){
+		refreshNow.setText(refreshText);
 	}
 
 	/**
@@ -91,6 +186,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	 */
 	protected void performDefaults() {
 		showOnActivity.setSelection(uiPreferences.getDefaultShowOnActivity());
+		updateCacheFrequencyCombo.select(/*Weekly*/2);
 		
 		super.performDefaults();
 	}
@@ -100,7 +196,11 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	 */
 	public boolean performOk() {
 		uiPreferences.setShowOnActivity(showOnActivity.getSelection());
-		
+		uiPreferences.setCacheFrequency(updateCacheFrequencyCombo.getSelectionIndex());
 		return true;
+	}
+	
+	public void dispose(){
+		ServerUIUtil.setListener(null);
 	}
 }

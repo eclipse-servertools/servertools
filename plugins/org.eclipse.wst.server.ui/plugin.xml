@@ -637,6 +637,13 @@ M4 = Platform-specific fourth key
 			icon="icons/obj16/server.gif"
 			typeIds="com.eclipse.server.proxy" />
 	</extension>
+<extension point="org.eclipse.wst.server.ui.serverImages">
+		<image 
+			id="com.eclipse.wst.server.downloadableserver.image" 
+			icon="icons/obj16/server.gif"
+			typeIds="com.eclipse.runtime.proxy" />
+	</extension>	
+	
 <extension point="org.eclipse.wst.server.ui.wizardFragments">
 	<fragment
 		id="com.eclipse.wst.server.downloadableserver"

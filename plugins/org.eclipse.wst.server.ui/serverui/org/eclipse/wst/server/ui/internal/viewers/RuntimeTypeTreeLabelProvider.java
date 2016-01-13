@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2006 IBM Corporation and others.
+ * Copyright (c) 2003, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,10 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
-import org.eclipse.wst.server.core.IRuntimeType;
-import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.server.core.IRuntimeType;
+import org.eclipse.wst.server.core.internal.RuntimeTypeWithServerProxy;
+import org.eclipse.wst.server.ui.internal.DefaultServerImageDescriptor;
+import org.eclipse.wst.server.ui.internal.ImageResource;
 /**
  * Runtime type label provider.
  */
@@ -39,7 +41,16 @@ public class RuntimeTypeTreeLabelProvider extends AbstractTreeLabelProvider {
 	 */
 	protected Image getImageImpl(Object element) {
 		IRuntimeType runtimeType = (IRuntimeType) element;
-		return ImageResource.getImage(runtimeType.getId());
+		Image image = ImageResource.getImage(runtimeType.getId());
+		DefaultServerImageDescriptor dsid = null;
+		if (element instanceof RuntimeTypeWithServerProxy) {
+			Image image1 = ImageResource.getImage(ImageResource.IMG_DOWN_ARROW);
+			dsid = new DefaultServerImageDescriptor(image, image1);
+			dsid.setFlags(DefaultServerImageDescriptor.BOTTOM_RIGHT);
+			image = dsid.createImage();
+		}
+
+		return image;
 	}
 
 	/**

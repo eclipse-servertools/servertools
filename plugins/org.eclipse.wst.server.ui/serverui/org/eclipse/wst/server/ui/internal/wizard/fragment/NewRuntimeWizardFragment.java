@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2012 IBM Corporation and others.
+ * Copyright (c) 2003, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,23 +10,21 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.wizard.fragment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.TaskModel;
+import org.eclipse.wst.server.core.internal.RuntimeTypeWithServerProxy;
+import org.eclipse.wst.server.core.internal.RuntimeWorkingCopy;
 import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
 import org.eclipse.wst.server.ui.internal.wizard.page.NewRuntimeComposite;
-import org.eclipse.wst.server.ui.wizard.WizardFragment;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.swt.widgets.Composite;
+import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * 
  */
@@ -76,21 +74,28 @@ public class NewRuntimeWizardFragment extends WizardFragment {
 		if (getTaskModel() == null)
 			return;
 		
-		IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
+		Object runtime =  getTaskModel().getObject(TaskModel.TASK_RUNTIME);
 		if (runtime == null)
 			return;
-		
-		WizardFragment sub = getWizardFragment(runtime.getRuntimeType().getId());
+		WizardFragment sub = null;
+		if (runtime instanceof IRuntimeWorkingCopy)
+		 sub = getWizardFragment(((RuntimeWorkingCopy)runtime).getRuntimeType().getId());
+		else if (runtime instanceof RuntimeTypeWithServerProxy)
+			sub = getWizardFragment(((RuntimeTypeWithServerProxy)runtime).getId());
 		if (sub != null)
 			list.add(sub);
 		
-		IServerWorkingCopy server = (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
-		if (server != null) {
+		Object serverObj =  getTaskModel().getObject(TaskModel.TASK_SERVER);
+		if (serverObj != null && serverObj instanceof IServerWorkingCopy) {
+			IServerWorkingCopy server = (IServerWorkingCopy)serverObj;
 			if (server.getServerType().hasServerConfiguration() && server instanceof ServerWorkingCopy) {
 				ServerWorkingCopy swc = (ServerWorkingCopy) server;
 				try {
-					if (runtime.getLocation() != null && !runtime.getLocation().isEmpty())
-						swc.importRuntimeConfiguration(runtime, null);
+					if (runtime instanceof IRuntimeWorkingCopy){
+						RuntimeWorkingCopy runtimeWorkingCopy = (RuntimeWorkingCopy)runtime;
+						if (runtimeWorkingCopy.getLocation() != null && !runtimeWorkingCopy.getLocation().isEmpty())
+							swc.importRuntimeConfiguration(runtimeWorkingCopy, null);
+					}
 				} catch (CoreException ce) {
 					// ignore
 				}
@@ -135,4 +140,10 @@ public class NewRuntimeWizardFragment extends WizardFragment {
 		}
 		return false;
 	}	
+	
+
+	public void exit() {
+		comp.refreshExtension();
+		
+	}
 }

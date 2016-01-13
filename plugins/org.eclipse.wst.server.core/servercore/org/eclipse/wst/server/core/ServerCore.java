@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2015 IBM Corporation and others.
+ * Copyright (c) 2003, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,9 @@
  **********************************************************************/
 package org.eclipse.wst.server.core;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceDelta;
@@ -42,6 +44,7 @@ public final class ServerCore {
 	//	cached copy of all server and configuration types
 	private static List<IServerType> serverTypes;
 	private static List<IServerType> DAServerTypes;
+	private static List<IRuntimeType> DARuntimeTypes;
 
 	private static IRegistryChangeListener registryListener;
 
@@ -169,6 +172,18 @@ public final class ServerCore {
 	}
 	
 	/**
+	 * @since 1.8
+	 */
+	public static IRuntimeType[] getDownloadableRuntimeTypes(IProgressMonitor monitor){
+		if (DARuntimeTypes == null || DARuntimeTypes.isEmpty())
+			loadDARuntimeTypes(monitor);
+		IRuntimeType[] runtimesTypes2 = new IRuntimeType[DARuntimeTypes.size()];
+		DARuntimeTypes.toArray(runtimesTypes2);
+		
+		return runtimesTypes2;
+	}
+	
+	/**
 	 * @since 1.7
 	 */
 	public static void resetDownloadableServers(){
@@ -283,6 +298,27 @@ public final class ServerCore {
 		// fetch from site and add
 		DAServerTypes.addAll(createProxyServers(monitor));
 		
+	}
+	
+	/**
+	 * Load the server types.
+	 */
+	private static synchronized void loadDARuntimeTypes(IProgressMonitor monitor) {
+		DARuntimeTypes = new ArrayList<IRuntimeType>();
+		
+		// fetch from site and add
+		DARuntimeTypes.addAll(createProxyRuntimeTypes(monitor));
+		
+	}
+
+	private static List<RuntimeTypeWithServerProxy> createProxyRuntimeTypes(IProgressMonitor monitor){
+		List<ServerProxy> serverProxyList = Discovery.getExtensionsWithServer(monitor);
+		List<RuntimeTypeWithServerProxy> serverTypeProxyList = new ArrayList<RuntimeTypeWithServerProxy>();
+		for (Iterator iterator = serverProxyList.iterator(); iterator.hasNext();) {
+			ServerProxy serverProxy = (ServerProxy) iterator.next();
+			serverTypeProxyList.add(new RuntimeTypeWithServerProxy(serverProxy.getRuntimeType(), new ServerTypeProxy(serverProxy)));
+		}
+		return serverTypeProxyList;
 	}
 
 	private static List<ServerTypeProxy> createProxyServers(IProgressMonitor monitor){

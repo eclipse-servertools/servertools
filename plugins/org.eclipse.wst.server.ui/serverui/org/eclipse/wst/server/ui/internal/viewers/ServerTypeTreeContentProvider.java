@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2015 IBM Corporation and others.
+ * Copyright (c) 2003, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -91,7 +91,7 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 
 
 	protected boolean include(IServerType serverType) {
-		if (serverType instanceof ServerTypeProxy)
+		if (serverType != null && serverType instanceof ServerTypeProxy)
 			return true;
 		if (serverTypeId != null && !serverType.getId().startsWith(serverTypeId))
 			return false;
@@ -147,16 +147,18 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 			int size = serverTypes.length;
 			for (int i = 0; i < size; i++) {
 				IServerType serverType = serverTypes[i];
-				try {
-					IRuntimeType runtimeType = serverType.getRuntimeType();
-					TreeElement ele = getOrCreate(list, runtimeType.getVendor());
-					if (!compareServers(ele.contents, (ServerTypeProxy)serverType)){
-						ele.contents.add(serverType);
-						elementToParentMap.put(serverType, ele);
-					}
-				} catch (Exception e) {
-					if (Trace.WARNING) {
-						Trace.trace(Trace.STRING_WARNING, "Error in server configuration content provider", e);
+				if (include(serverType)){
+					try {
+						IRuntimeType runtimeType = serverType.getRuntimeType();
+						TreeElement ele = getOrCreate(list, runtimeType.getVendor());
+						if (!compareServers(ele.contents, (ServerTypeProxy)serverType)){
+							ele.contents.add(serverType);
+							elementToParentMap.put(serverType, ele);
+						}
+					} catch (Exception e) {
+						if (Trace.WARNING) {
+							Trace.trace(Trace.STRING_WARNING, "Error in server configuration content provider", e);
+						}
 					}
 				}
 			}
