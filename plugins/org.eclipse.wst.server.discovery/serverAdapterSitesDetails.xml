@@ -72,7 +72,7 @@
 		provider="Resin" version="4.0.27">
 	</feature>
 	<feature
-		uri="http://download.jboss.org/jbosstools/updates/webtools/mars/"
+		uri="http://download.jboss.org/jbosstools/updates/webtools/neon/"
 		id="org.jboss.ide.eclipse.as.feature.feature.group" name="JBoss AS, WildFly, &amp; EAP Server Tools"
 		description="Provides WTP server adapters for JBoss installations. These adapters are capable of deployment and providing classpaths for projects. Zipped or exploded deployments, JMX integration, and other extensions are included."
 		provider="Red Hat JBoss Middleware" version="3.1.0.Beta2-v20150723-0026-B29">

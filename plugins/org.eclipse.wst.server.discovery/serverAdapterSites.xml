@@ -5,7 +5,7 @@
    <site url="http://jope.ow2.org/update/jope/"/>
    <site url="http://download.eclipse.org/jetty/updates/jetty-wtp/"/>
    <site url="http://www.caucho.com/eclipse/"/>   
-   <site url="http://download.jboss.org/jbosstools/updates/webtools/mars/"/>
+   <site url="http://download.jboss.org/jbosstools/updates/webtools/neon/"/>
    <site url="http://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/updates/libertyAdapter/mars/"/>
    <site url="http://dist.springsource.com/release/TOOLS/cloudfoundry/"/>
    <site url="http://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/updates/bluemixAdapter/mars/"/>
