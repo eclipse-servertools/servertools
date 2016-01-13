@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2015 IBM Corporation and others.
+ * Copyright (c) 2003, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.dialogs.FilteredTree;
+import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 /**
@@ -35,7 +36,6 @@ public abstract class AbstractTreeComposite extends Composite {
 	protected Label description;
 	protected Button showAdapters;
 	protected Link prefLink;
-	protected Button refreshButton;
 	protected AbstractTreeContentProvider contentProvider;
 	
 
@@ -92,15 +92,6 @@ public abstract class AbstractTreeComposite extends Composite {
 			});
 			if (getDetailsLink()){
 				prefLink.setEnabled(!ServerUIPlugin.getPreferences().getExtAdapter());
-				refreshButton = new Button(comp, SWT.PUSH);
-				refreshButton.setText(Messages.refreshButton);
-				refreshButton.setEnabled(ServerUIPlugin.getPreferences().getExtAdapter());
-				refreshButton.addSelectionListener(new SelectionAdapter() {
-					public void widgetSelected(SelectionEvent e) {
-						refreshButton.setEnabled(false);
-						refreshServerNode();
-					}
-				});
 			}
 		}
 		
@@ -233,11 +224,11 @@ public abstract class AbstractTreeComposite extends Composite {
 	protected void handleShowAdapterSelection(boolean selection){
 		showAdapters.setSelection(selection);
 		prefLink.setEnabled(!selection);
-		refreshButton.setEnabled(selection);
 		downloadAdaptersSelectionChanged(selection);
 	}
 
 	protected void deferInitialization() {
+		ServerUIUtil.refreshServerNode(false);
 		Job job = new Job(Messages.jobInitializingServersView) {
 			public IStatus run(final IProgressMonitor monitor) {
 				Display.getDefault().asyncExec(new Runnable() {
@@ -271,12 +262,4 @@ public abstract class AbstractTreeComposite extends Composite {
 		
 	}
 	
-	protected void enableRefresh(){
-		if ( !showAdapters.isDisposed() && showAdapters.getSelection() )
-			refreshButton.setEnabled(true);
-	}
-	
-	protected void disableRefresh(){
-		refreshButton.setEnabled(false);
-	}
 }

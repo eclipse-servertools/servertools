@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2012 IBM Corporation and others.
+ * Copyright (c) 2003, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,33 +10,36 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.wizard.page;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.help.IWorkbenchHelpSystem;
-import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.ui.internal.ContextIds;
-import org.eclipse.wst.server.ui.internal.ImageResource;
-import org.eclipse.wst.server.ui.internal.Messages;
-import org.eclipse.wst.server.ui.internal.SWTUtil;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-import org.eclipse.wst.server.ui.internal.Trace;
-import org.eclipse.wst.server.ui.internal.viewers.RuntimeTypeComposite;
-import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.help.IWorkbenchHelpSystem;
+import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.*;
+import org.eclipse.wst.server.discovery.Discovery;
+import org.eclipse.wst.server.discovery.ErrorMessage;
+import org.eclipse.wst.server.ui.internal.*;
+import org.eclipse.wst.server.ui.internal.Messages;
+import org.eclipse.wst.server.ui.internal.Trace;
+import org.eclipse.wst.server.ui.internal.viewers.RuntimeTypeComposite;
+import org.eclipse.wst.server.ui.internal.wizard.fragment.LicenseWizardFragment;
+import org.eclipse.wst.server.ui.wizard.IWizardHandle;
+import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * 
  */
@@ -106,11 +109,33 @@ public class NewRuntimeComposite extends Composite {
 			}
 		});
 	}
-
+	boolean success ;
 	protected void handleSelection(IRuntimeType runtimeType) {
+		wizard.setMessage(null, IMessageProvider.NONE);
 		if (runtimeType == null)
 			runtime = null;
 		else {
+			if (runtimeType instanceof RuntimeTypeWithServerProxy){
+				success = false;
+				final RuntimeTypeWithServerProxy runtimeTypeFinal = (RuntimeTypeWithServerProxy)runtimeType;
+				try {
+					wizard.run(true, true, new IRunnableWithProgress() {
+						
+						public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+							success = showDownloadableServerWizard(runtimeTypeFinal, monitor);
+					}
+					});
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				}
+				if (!success){
+					return;
+					
+				}
+				wizard.update();
+			}
 			try {
 				runtime = null;
 				runtime = cache.get(runtimeType);
@@ -122,15 +147,40 @@ public class NewRuntimeComposite extends Composite {
 					runtime = runtimeType.createRuntime(null, null);
 					if (runtime != null)
 						cache.put(runtimeType, runtime);
+					else if (runtimeType instanceof RuntimeTypeWithServerProxy){
+						serverType = ((RuntimeTypeWithServerProxy)runtimeType).getServerTypeProxy();
+						runtime = new RuntimeWorkingCopy(new RuntimeProxy((RuntimeTypeProxy)(serverType.getRuntimeType())));
+					}
 				} catch (Exception e) {
 					// ignore
 				}
 			}
 		}
-		serverType = getCompatibleServerType(runtimeType);
+		if (! (runtimeType instanceof RuntimeTypeWithServerProxy))
+				serverType = getCompatibleServerType(runtimeType);
 		handleServer();
 	}
 
+	protected boolean showDownloadableServerWizard(RuntimeTypeWithServerProxy runtimeType, IProgressMonitor monitor) {
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				wizard.setMessage(Messages.downLoadableAdapterDescription, IMessageProvider.INFORMATION);
+			}
+		});
+		
+		serverType = runtimeType.getServerTypeProxy();
+		WizardFragment fragment2 = ServerUIPlugin.getWizardFragment(serverType.getRuntimeType().getId());
+		if (fragment2 == null)
+			return false;
+		TaskModel fragmentTaskModel = fragment2.getTaskModel();
+		if (fragmentTaskModel == null)
+			fragmentTaskModel = new TaskModel();
+		fragmentTaskModel.putObject(TaskModel.TASK_EXTENSION, runtimeType.getServerTypeProxy().getExtension());
+		fragmentTaskModel.putObject(TaskModel.TASK_RUNTIME, serverType.getRuntimeType());
+		fragmentTaskModel.putObject(TaskModel.TASK_SERVER, serverType);
+		fragment2.setTaskModel(fragmentTaskModel);
+		return true;
+	}
 	protected void handleServer() {
 		boolean option = false;
 		if (serverType != null && serverType.hasRuntime())
@@ -140,9 +190,10 @@ public class NewRuntimeComposite extends Composite {
 		if (option && createServer.getSelection()) {
 			IServerWorkingCopy server = getServer();
 			taskModel.putObject(TaskModel.TASK_SERVER, server);
-		} else
+		} else if (!(serverType instanceof ServerTypeProxy))
 			taskModel.putObject(TaskModel.TASK_SERVER, null);
-		
+		else
+			taskModel.putObject(TaskModel.TASK_SERVER, serverType);
 		taskModel.putObject(TaskModel.TASK_RUNTIME, runtime);
 		wizard.update();
 	}
@@ -213,6 +264,52 @@ public class NewRuntimeComposite extends Composite {
 		if (runtime == null){
 			return false;
 		}
+		return true;
+	}
+	
+	public boolean refreshExtension(){
+		if (!(serverType instanceof ServerTypeProxy))
+			return true;
+		final ServerTypeProxy finalServerType = (ServerTypeProxy)serverType;
+		try {
+			wizard.run(true, true, new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					ErrorMessage errorMsg = Discovery.refreshExtension(finalServerType.getExtension(), finalServerType.getURI(), monitor);
+					if (errorMsg != null){
+						final ErrorMessage errorMsgFinal = errorMsg;
+						Display.getDefault().asyncExec(new Runnable() {
+							public void run() {
+								wizard.setMessage(errorMsgFinal.getErrorTitle(), IMessageProvider.ERROR);
+								WizardFragment fragment2 = ServerUIPlugin.getWizardFragment(finalServerType.getRuntimeType().getId());
+								if (fragment2 != null){
+									TaskModel fragmentTaskModel = fragment2.getTaskModel();
+									fragmentTaskModel.putObject(LicenseWizardFragment.LICENSE, errorMsgFinal.getErrorDescription());
+									fragmentTaskModel.putObject(LicenseWizardFragment.LICENSE_ERROR, new Integer(IMessageProvider.ERROR));
+								}
+								wizard.update();
+							}
+						});
+					}
+					else{
+						WizardFragment fragment2 = ServerUIPlugin.getWizardFragment(finalServerType.getRuntimeType().getId());
+						if (fragment2 != null){
+							TaskModel fragmentTaskModel = fragment2.getTaskModel();
+							fragmentTaskModel.putObject(LicenseWizardFragment.LICENSE, Discovery.getLicenseText(finalServerType.getExtension()));
+							fragmentTaskModel.putObject(LicenseWizardFragment.LICENSE_ERROR, new Integer(IMessageProvider.NONE));
+						}
+					}
+				}
+			});
+		} catch (InvocationTargetException e) {
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Error refreshing extension", e);
+			}
+		} catch (InterruptedException e) {
+			if (Trace.WARNING) {
+				Trace.trace(Trace.STRING_WARNING, "Error refreshing extension", e);
+			}
+		}
+		
 		return true;
 	}
 }

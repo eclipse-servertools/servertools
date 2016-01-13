@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2015 IBM Corporation and others.
+ * Copyright (c) 2003, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,6 +31,8 @@ public class ServerUIPreferences {
 	private static final String PREF_CREATE_SERVER_WITH_RUNTIME = "create-server";
 	private static final String PREF_PUBLISH_ON_ADD_REMOVE = "publish-on-add-remove";
 	private static final String PREF_EXT_ADAPTER = "external-adapter";
+	private static final String PREF_CACHE_FREQUENCY = "cache-frequency";
+	private static final String PREF_CACHE_LAST_UPDATED_DATE = "cache-lastUpdatedDate";
 
 	public static final byte SAVE_EDITORS_ALWAYS = 2;
 	public static final byte SAVE_EDITORS_NEVER = 0;
@@ -85,6 +87,7 @@ public class ServerUIPreferences {
 		preferences.setDefault(PREF_CREATE_SERVER_WITH_RUNTIME, false);
 		preferences.setDefault(PREF_PUBLISH_ON_ADD_REMOVE, true);
 		preferences.setDefault(PREF_EXT_ADAPTER, true);
+		preferences.setDefault(PREF_CACHE_FREQUENCY, 2);
 	}
 
 	/**
@@ -391,6 +394,44 @@ public class ServerUIPreferences {
 	 */
 	public void setExtAdapter(boolean b) {
 		preferences.setValue(PREF_EXT_ADAPTER, b);
+		ServerUIPlugin.getInstance().savePluginPreferences();
+	}
+	
+	/**
+	 * Returns the frequency for cache update.
+	 * 
+	 * @return String
+	 */
+	public int getCacheFrequency() {
+		return preferences.getInt(PREF_CACHE_FREQUENCY);
+	}
+
+	/**
+	 * Sets the frequency for cache update.
+	 *
+	 * @param frequency - 0-Manual, 1-Fortnightly, 2-Monthly and 3-Quarterly 
+	 */
+	public void setCacheFrequency(int frequency) {
+		preferences.setValue(PREF_CACHE_FREQUENCY, frequency);
+		ServerUIPlugin.getInstance().savePluginPreferences();
+	}
+
+	/**
+	 * Returns the cache last updated date.
+	 * 
+	 * @return String
+	 */
+	public String getPrefCacheLastUpdatedDate() {
+		return preferences.getString(PREF_CACHE_LAST_UPDATED_DATE);
+	}
+	
+	/**
+	 * Sets the frequency for cache update.
+	 *
+	 * @param frequency - 0-Manual, 1-Fortnightly, 2-Monthly and 3-Quarterly 
+	 */
+	public void setPrefCacheLastUpdatedDate(int frequency) {
+		preferences.setValue(PREF_CACHE_FREQUENCY, frequency);
 		ServerUIPlugin.getInstance().savePluginPreferences();
 	}
 }

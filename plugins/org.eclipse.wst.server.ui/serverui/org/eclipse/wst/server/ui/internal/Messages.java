@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005, 2015 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -373,8 +373,19 @@ public class Messages extends NLS {
 	public static String downLoadableAdapterDescription;
 	public static String errorTitle;
 	public static String jobRefreshingServerAdapter;
-	public static String refreshButton;
-
+	
+	public static String cacheFrequency_manual;
+	public static String cacheFrequency_weekly;
+	public static String cacheFrequency_monthly;
+	public static String cacheFrequency_quarterly;
+	public static String cacheFrequency_daily;
+	public static String cacheUpdate_boxTitle;
+	public static String cacheUpdate_refreshNow;
+	public static String cacheUpdate_refreshing;
+	public static String cacheUpdate_never;
+	public static String cacheUpdate_frequencyLabel;
+	public static String cacheUpdate_lastUpdatedOn;	
+	
 	static {
 		NLS.initializeMessages(ServerUIPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);
 	}

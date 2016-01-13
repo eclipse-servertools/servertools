@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2015 IBM Corporation and others.
+ * Copyright (c) 2003, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,15 +11,12 @@
 package org.eclipse.wst.server.ui.internal.viewers;
 
 import org.eclipse.jface.viewers.*;
-import org.eclipse.swt.SWTException;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
-
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.discovery.Discovery;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-import org.eclipse.wst.server.ui.internal.Trace;
 /**
  * 
  */
@@ -86,17 +83,7 @@ public class RuntimeTypeComposite extends AbstractTreeComposite {
 		super.setVisible(visible);
 		if (visible && initialSelection) {
 			initialSelection = false;
-			if (contentProvider.getInitialSelection() != null) {
-				try {
-					getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							treeViewer.setSelection(new StructuredSelection(contentProvider.getInitialSelection()), true);
-						}
-					});
-				} catch (SWTException e) {
-					Trace.trace(Trace.STRING_INFO, "Failed to set the default selection on the runtime type tree.", e);
-				}
-			}
+			deferInitialization();
 		}
 	}
 
@@ -140,5 +127,9 @@ public class RuntimeTypeComposite extends AbstractTreeComposite {
 			//refresh();
 			closeWizard(this);
 		}
+	}
+	
+	protected boolean getDetailsLink() {
+		return true;
 	}
 }

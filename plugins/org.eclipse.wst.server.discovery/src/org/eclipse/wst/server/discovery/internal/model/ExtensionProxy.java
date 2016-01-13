@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 IBM Corporation and others.
+ * Copyright (c) 2015, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,9 +23,10 @@ public class ExtensionProxy implements  IServerExtension{
 	private String uri;
 	private String version;
 	private String serverId;
+	private String vendor;
 
 
-	public ExtensionProxy(String id, String name, String description, String provider, String uri, String version, String serverId) {
+	public ExtensionProxy(String id, String name, String description, String provider, String uri, String version, String serverId, String vendor) {
 		this.id= id;
 		this.name= name;
 		this.description= description;
@@ -33,6 +34,7 @@ public class ExtensionProxy implements  IServerExtension{
 		this.uri = uri;
 		this.version = version;
 		this.serverId = serverId;
+		this.vendor = vendor;
 	}
 
 	public String getName() {
@@ -65,6 +67,10 @@ public class ExtensionProxy implements  IServerExtension{
 	
 	public String getServerId() {
 		return serverId;
+	}
+	
+	public String getRuntimeVendor() {
+		return vendor;
 	}
 
 }
