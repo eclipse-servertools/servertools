@@ -650,5 +650,12 @@ M4 = Platform-specific fourth key
 		typeIds="com.eclipse.server.proxy"
 		class="org.eclipse.wst.server.ui.internal.wizard.fragment.DownloadableAdapterLicenseWizardFragment"/>
 </extension>
+<extension point="org.eclipse.wst.server.ui.wizardFragments">
+	<fragment
+		id="com.eclipse.wst.server.downloadableserver"
+		typeIds="com.eclipse.runtime.proxy"
+		class="org.eclipse.wst.server.ui.internal.wizard.fragment.DownloadableAdapterLicenseWizardFragment"/>
+</extension>
+
        
 </plugin>
