@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2013 IBM Corporation and others.
+ * Copyright (c) 2003, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -118,6 +118,8 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 					tcConfig = new Tomcat70Configuration(folder);
 				else if (id.indexOf("80") > 0)
 					tcConfig = new Tomcat80Configuration(folder);
+				else if (id.indexOf("90") > 0)
+					tcConfig = new Tomcat90Configuration(folder);
 				else {
 					throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorUnknownVersion, null));
 				}
@@ -171,6 +173,8 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 			tcConfig = new Tomcat70Configuration(folder);
 		else if (id.indexOf("80") > 0)
 			tcConfig = new Tomcat80Configuration(folder);
+		else if (id.indexOf("90") > 0)
+			tcConfig = new Tomcat90Configuration(folder);
 		else {
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorUnknownVersion, null));
 		}

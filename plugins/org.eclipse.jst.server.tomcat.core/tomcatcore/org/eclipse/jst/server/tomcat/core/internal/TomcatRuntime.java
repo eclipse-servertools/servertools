@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2013 IBM Corporation and others.
+ * Copyright (c) 2003, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -135,8 +135,10 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 		// on Tomcat 5.5 and later, the Eclipse JDT compiler is used for JSP's
 		String id = getRuntime().getRuntimeType().getId();
 		if (!found) {
-			if (id != null && (id.indexOf("55") > 0 || id.indexOf("60") > 0 || id.indexOf("70") > 0 || id.indexOf("80") > 0))
+			if (id != null && (id.indexOf("55") > 0 || id.indexOf("60") > 0 || id.indexOf("70") > 0 || id.indexOf("80") > 0
+					|| id.indexOf("90") > 0)) {
 				found = true;
+			}
 		}
 		
 		// on Mac, tools.jar is merged into classes.zip. if tools.jar wasn't found,
@@ -187,6 +189,17 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 				String javaVersion = ((IVMInstall2)vmInstall).getJavaVersion();
 				if (javaVersion != null && !isVMMinimumVersion(javaVersion, 107)) {
 					return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorJRETomcat80, null);
+				}
+			}
+		}
+
+		// Else for Tomcat 9.0, ensure we have J2SE 8.0
+		else if (id != null && id.indexOf("90") > 0) {
+			IVMInstall vmInstall = getVMInstall();
+			if (vmInstall instanceof IVMInstall2) {
+				String javaVersion = ((IVMInstall2)vmInstall).getJavaVersion();
+				if (javaVersion != null && !isVMMinimumVersion(javaVersion, 108)) {
+					return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorJRETomcat90, null);
 				}
 			}
 		}

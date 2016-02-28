@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2013 IBM Corporation and others.
+ * Copyright (c) 2003, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,6 +42,7 @@ public class TomcatPlugin extends Plugin {
 	public static final String TOMCAT_60 = "org.eclipse.jst.server.tomcat.60";
 	public static final String TOMCAT_70 = "org.eclipse.jst.server.tomcat.70";
 	public static final String TOMCAT_80 = "org.eclipse.jst.server.tomcat.80";
+	public static final String TOMCAT_90 = "org.eclipse.jst.server.tomcat.90";
 
 	protected static final String VERIFY_INSTALL_FILE = "verifyInstall.properties";
 	protected static VerifyResourceSpec[] verify32;
@@ -155,6 +156,8 @@ public class TomcatPlugin extends Plugin {
 			return new Tomcat70Handler();
 		else if (TOMCAT_80.equals(id))
 			return new Tomcat80Handler();
+		else if (TOMCAT_90.equals(id))
+			return new Tomcat90Handler();
 		else
 			return null;
 	}
