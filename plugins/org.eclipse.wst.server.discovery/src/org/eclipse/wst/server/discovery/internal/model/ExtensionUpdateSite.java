@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2015 IBM Corporation and others.
+ * Copyright (c) 2008, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -65,7 +65,12 @@ public class ExtensionUpdateSite {
 		return categories;
 	}
 
-	public List<IServerExtension> getExtensions(IProgressMonitor monitor) throws CoreException , ProvisionException{
+    public List<IServerExtension> getExtensions(IProgressMonitor monitor) throws CoreException , ProvisionException{
+		URI url2 = null;
+		IMetadataRepositoryManager manager = null;
+		IProvisioningAgent agent = null;
+		List<IServerExtension> list = new ArrayList<IServerExtension>();
+		URI[] existingSites = null;
 		try {
 			/*
 			 * To discovery the server adapter, there are three methods:
@@ -78,15 +83,28 @@ public class ExtensionUpdateSite {
 			 *    to use category.xml)
 			 */	
 			BundleContext bd = org.eclipse.wst.server.discovery.internal.Activator.getDefault().getBundle().getBundleContext();			
-			IProvisioningAgent agent = ExtensionUtility.getAgent(bd);
+			agent = ExtensionUtility.getAgent(bd);
 			
-			URI url2 = new URI(url);
+			url2 = new URI(url);
 			
 			// Method 1: Looking at the site.xml
 			UpdateSiteMetadataRepositoryFactory mrf = new UpdateSiteMetadataRepositoryFactory();
 			mrf.setAgent(ExtensionUtility.getAgent(bd));
+			manager = (IMetadataRepositoryManager) agent.getService(IMetadataRepositoryManager.SERVICE_NAME);
+			// Sites already existing for both enabled and disabled
+			URI[] existingSitesAll = manager.getKnownRepositories(IMetadataRepositoryManager.REPOSITORIES_ALL);
+			URI[] existingSitesDisabled = manager.getKnownRepositories(IMetadataRepositoryManager.REPOSITORIES_DISABLED);
+			int existingSitesAllLen = existingSitesAll == null ? 0 : existingSitesAll.length;
+			int existingSitesDisabledLen = existingSitesDisabled == null ? 0 : existingSitesDisabled.length;
+			existingSites = new URI[existingSitesAllLen + existingSitesDisabledLen];
+			if (existingSitesAllLen > 0) {
+				System.arraycopy(existingSitesAll, 0, existingSites, 0, existingSitesAllLen);
+			}
+			if (existingSitesDisabledLen > 0) {
+				System.arraycopy(existingSitesDisabled, 0, existingSites, existingSitesAllLen, existingSitesDisabledLen);
+			}
+			
 			// If the site.xml does not exist, the load will throw a org.eclipse.equinox.p2.core.ProvisionException
-			List<IServerExtension> list = new ArrayList<IServerExtension>();
 			try {
 				IMetadataRepository repo = mrf.load(url2, IRepositoryManager.REPOSITORIES_ALL, monitor);
 				IQuery<IInstallableUnit> query = QueryUtil.createMatchQuery("id ~=/*org.eclipse.wst.server.core.serverAdapter/"); //$NON-NLS-1$
@@ -100,7 +118,6 @@ public class ExtensionUpdateSite {
 			// Call Method 2 if there are no results from Method 1 (e.g. if the site.xml exists without
 			// specifying any server adapters there or no site.xml exists)
 			if (list.isEmpty()){
-				IMetadataRepositoryManager manager = (IMetadataRepositoryManager) agent.getService(IMetadataRepositoryManager.SERVICE_NAME);
 				manager.addRepository(url2);
 				// Need to query for all IUs
 				IQuery<IInstallableUnit> query = QueryUtil.createIUAnyQuery();
@@ -126,7 +143,7 @@ public class ExtensionUpdateSite {
 			// Call Method 3 if no results from Method 2. Creating the p2 update site using the category.xml will generate
 			// a provider property with org.eclipse.wst.server.core.serverAdapter
 			if (list.isEmpty()){
-				IMetadataRepositoryManager manager = (IMetadataRepositoryManager) agent.getService(IMetadataRepositoryManager.SERVICE_NAME);
+				manager = (IMetadataRepositoryManager) agent.getService(IMetadataRepositoryManager.SERVICE_NAME);
 				manager.addRepository(url2);
 				IQuery<IInstallableUnit> query = QueryUtil.createMatchQuery("id ~=/*org.eclipse.wst.server.core.serverAdapter/"); //$NON-NLS-1$
 				
@@ -142,6 +159,23 @@ public class ExtensionUpdateSite {
 			Trace.trace(Trace.WARNING, "Error getting update info", e); //$NON-NLS-1$
 			
 			return new ArrayList<IServerExtension>(0);
+		}
+		finally {
+			if (url2 != null && url2.getPath().length() != 0 && manager != null) {
+				if (existingSites != null && existingSites.length > 0) {
+					boolean urlExists = false;
+					for (URI uri : existingSites) {
+						if (uri.getPath().equals(url2.getPath())){
+							urlExists = true;
+							break;
+						}
+					} 
+					// If site did not exist before, remove it as it was added with load
+					if (!urlExists) {
+						manager.removeRepository(url2);
+					}
+				}
+			}
 		}
 	}
 	

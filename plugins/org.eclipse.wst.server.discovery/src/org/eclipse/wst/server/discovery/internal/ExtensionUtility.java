@@ -236,7 +236,7 @@ public class ExtensionUtility {
 							configFileAreaExists = configDir.mkdirs();					
 						} catch (Exception e) {
 							// Could fail if user has no write permission
-							printLog("Cannot write to configuration", e);
+							Trace.trace(Trace.WARNING, "Cannot write to configuration", e);
 							configFileAreaExists = false;
 						}
 					}
@@ -245,7 +245,7 @@ public class ExtensionUtility {
 							copyFileUsingFileStreams(masterCopyUrl.openStream(), configFile);
 							cacheFileUrl = configFile.toURI().toURL();
 						} catch (IOException e) {
-							printLog("Cannot write to configuration", e);
+							Trace.trace(Trace.WARNING, "Cannot write to configuration", e);
 						}
 					}
 					if (cacheFileUrl == null) {
@@ -276,7 +276,7 @@ public class ExtensionUtility {
 					}
 				}
 			}
-			printLog("cacheFile=" + cacheFileUrl, null);
+			Trace.trace(Trace.INFO, "cacheFile=" + cacheFileUrl);
 			return getExtensionUpdateSitesDetails(cacheFileUrl, extenList);
 		} catch (CoreException ce) {
 			Trace.trace(Trace.SEVERE, "Could not get extension items details", ce);
@@ -295,11 +295,6 @@ public class ExtensionUtility {
 		URL cfgDataUrl = cfgLoc.getDataArea(Activator.PLUGIN_ID);
 		return new File(cfgDataUrl.getFile());
 	}
-	
-	private static void printLog(String msg, Exception ex) {
-		Activator.getDefault().getLog().log(new Status(Status.INFO, Activator.PLUGIN_ID, msg, ex));
-	}
-
 	
 	/**
 	 * Returns an array of all known extension update sites.
