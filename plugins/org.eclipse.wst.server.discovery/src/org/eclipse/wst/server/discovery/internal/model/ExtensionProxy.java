@@ -24,9 +24,10 @@ public class ExtensionProxy implements  IServerExtension{
 	private String version;
 	private String serverId;
 	private String vendor;
+	private String runtimeId;
 
 
-	public ExtensionProxy(String id, String name, String description, String provider, String uri, String version, String serverId, String vendor) {
+	public ExtensionProxy(String id, String name, String description, String provider, String uri, String version, String serverId, String vendor, String runtimeId) {
 		this.id= id;
 		this.name= name;
 		this.description= description;
@@ -35,6 +36,7 @@ public class ExtensionProxy implements  IServerExtension{
 		this.version = version;
 		this.serverId = serverId;
 		this.vendor = vendor;
+		this.runtimeId = runtimeId;
 	}
 
 	public String getName() {
@@ -73,4 +75,7 @@ public class ExtensionProxy implements  IServerExtension{
 		return vendor;
 	}
 
+	public String getRuntimeId() {
+		return runtimeId;
+	}
 }

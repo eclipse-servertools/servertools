@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 IBM Corporation and others.
+ * Copyright (c) 2015, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,11 @@ public class RuntimeProxy {
 	private String name;
 	private String vendor;
 	private String description;
+	private String proxyRuntimeId;
+
+	/**
+	 * @since 1.2
+	 */
 
 	public RuntimeProxy(String id, String name, String description, String vendor) {
 		super();
@@ -58,6 +63,23 @@ public class RuntimeProxy {
 	
 	public String getVersion() {
 		return null;
+	}
+
+	/**
+	 * @since 1.3 Returns the runtime id for downloadable adapter if specified
+	 *        by the site This helps identifying the installed runtimes This is
+	 *        important because one downloadable adapter can install more than
+	 *        one server/runtime
+	 */
+	public String getProxyRuntimeId() {
+		return proxyRuntimeId;
+	}
+
+	/**
+	 * @since 1.3
+	 */
+	public void setProxyRuntimeId(String proxyRuntimeId) {
+		this.proxyRuntimeId = proxyRuntimeId;
 	}
 
 	public String toString() {
