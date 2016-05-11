@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007,2011 IBM Corporation and others.
+ * Copyright (c) 2007, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.wst.server.ui.internal.view.servers;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISharedImages;
@@ -55,8 +56,20 @@ public class PasteAction extends SelectionProviderAction {
 	 */
 	public void selectionChanged(IStructuredSelection sel) {
 		ServerTransfer serverTransfer = ServerTransfer.getInstance();
-		IServer[] servers = (IServer[]) clipboard.getContents(serverTransfer);
+		
+		IServer[] servers = null;
+		try {
+			 servers = (IServer[]) clipboard.getContents(serverTransfer);
+		} catch(SWTException exception) {
+			// If we are not able to resolve the clipboard contents into a server XML, then paste is not supported: we should not throw an exception, just log it.
+			if(Trace.INFO) {
+				Trace.trace(Trace.STRING_INFO, "Failure to acquire clipboard contents on selection change", exception);
+			}
+		}
+		
 		setEnabled(servers != null && servers.length > 0);
+		
+		
 	}
 
 	/**
