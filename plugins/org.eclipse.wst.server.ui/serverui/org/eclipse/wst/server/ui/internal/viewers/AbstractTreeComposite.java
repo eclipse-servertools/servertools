@@ -37,6 +37,7 @@ public abstract class AbstractTreeComposite extends Composite {
 	protected Button showAdapters;
 	protected Link prefLink;
 	protected AbstractTreeContentProvider contentProvider;
+	boolean showAdaptersLink = false; // To control the display of Show Downloadable Adpaters Link
 	
 
 	public AbstractTreeComposite(Composite parent) {
@@ -81,7 +82,10 @@ public abstract class AbstractTreeComposite extends Composite {
 						handleShowAdapterSelection(showAdapters.getSelection());
 					}
 				});
+				if (!showAdaptersLink && !ServerUIPlugin.getPreferences().getExtAdapter())
+					ServerUIPlugin.getPreferences().setExtAdapter(true); // If the preference was changed in previous version
 				showAdapters.setSelection(ServerUIPlugin.getPreferences().getExtAdapter());
+				showAdapters.setVisible(showAdaptersLink);
 			}
 			prefLink = new Link(comp, SWT.NONE);
 			prefLink.setText("<a>" + details + "</a>");
@@ -93,6 +97,7 @@ public abstract class AbstractTreeComposite extends Composite {
 			if (getDetailsLink()){
 				prefLink.setEnabled(!ServerUIPlugin.getPreferences().getExtAdapter());
 			}
+			prefLink.setVisible(showAdaptersLink);
 		}
 		
 		Label label = new Label(this, SWT.WRAP);
