@@ -314,8 +314,8 @@ public final class ServerCore {
 	private static List<RuntimeTypeWithServerProxy> createProxyRuntimeTypes(IProgressMonitor monitor){
 		List<ServerProxy> serverProxyList = Discovery.getExtensionsWithServer(monitor);
 		List<RuntimeTypeWithServerProxy> serverTypeProxyList = new ArrayList<RuntimeTypeWithServerProxy>();
-		for (Iterator iterator = serverProxyList.iterator(); iterator.hasNext();) {
-			ServerProxy serverProxy = (ServerProxy) iterator.next();
+		for (int i=0; i< serverProxyList.size(); i++) {
+			ServerProxy serverProxy = serverProxyList.get(i);
 			serverTypeProxyList.add(new RuntimeTypeWithServerProxy(serverProxy.getRuntimeType(), new ServerTypeProxy(serverProxy)));
 		}
 		return serverTypeProxyList;

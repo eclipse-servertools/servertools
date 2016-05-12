@@ -12,6 +12,7 @@ package org.eclipse.wst.server.ui.internal.viewers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -21,6 +22,8 @@ import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.internal.RuntimeType;
+import org.eclipse.wst.server.core.internal.RuntimeTypeWithServerProxy;
+import org.eclipse.wst.server.ui.internal.Trace;
 /**
  * Runtime type content provider.
  */
@@ -29,6 +32,7 @@ public class RuntimeTypeTreeContentProvider extends AbstractTreeContentProvider 
 	protected String type;
 	protected String version;
 	protected String runtimeTypeId;
+	List<IRuntimeType> runtimeInstalledList;
 
 	/**
 	 * RuntimeTypeContentProvider constructor.
@@ -52,6 +56,7 @@ public class RuntimeTypeTreeContentProvider extends AbstractTreeContentProvider 
 
 	public void fillTree() {
 		clean();
+		runtimeInstalledList = new ArrayList<IRuntimeType>();
 		List<TreeElement> list = new ArrayList<TreeElement>();
 		IRuntimeType[] runtimeTypes = ServerUtil.getRuntimeTypes(type, version, runtimeTypeId);
 		if (runtimeTypes != null) {
@@ -71,6 +76,7 @@ public class RuntimeTypeTreeContentProvider extends AbstractTreeContentProvider 
 					TreeElement ele = getOrCreate(list, runtimeType.getVendor());
 					ele.contents.add(runtimeType);
 					elementToParentMap.put(runtimeType, ele);
+					runtimeInstalledList.add(runtimeType);
 				}
 			}
 		}
@@ -94,8 +100,20 @@ public class RuntimeTypeTreeContentProvider extends AbstractTreeContentProvider 
 				}
 				
 				TreeElement ele = getOrCreate(list, runtimeType.getVendor());
-				ele.contents.add(runtimeType);
-				elementToParentMap.put(runtimeType, ele);
+				if (compareRuntimes(ele.contents, (RuntimeTypeWithServerProxy)runtimeType) )
+					continue;
+				if (!compareRuntimes(runtimeInstalledList, (RuntimeTypeWithServerProxy)runtimeType)){
+					// Sometime vendor name is different so need to search the entire list
+					ele.contents.add(runtimeType);
+					elementToParentMap.put(runtimeType, ele);
+				}
+				else {
+					// Remove the empty node
+					if (ele.contents.isEmpty()) {
+						list.remove(ele);
+						elementToParentMap.remove(ele);
+					}
+				}
 			}
 		}
 		if (list.size() >0) {
@@ -110,5 +128,19 @@ public class RuntimeTypeTreeContentProvider extends AbstractTreeContentProvider 
 				}
 			});
 		}
+	}
+	
+	private boolean compareRuntimes(List runtimeList, RuntimeTypeWithServerProxy runtimeType) {
+		for (Iterator iterator = runtimeList.iterator(); iterator.hasNext();) {
+			IRuntimeType existingRuntime = (IRuntimeType) iterator.next();
+			if (existingRuntime.getId().equals(runtimeType.getProxyRuntimeId())) {
+				if (Trace.INFO) {
+					Trace.trace(Trace.STRING_INFO, "already installed: " + runtimeType.getProxyRuntimeId(), null);
+				}
+				return true;
+			}
+
+		}
+		return false;
 	}
 }

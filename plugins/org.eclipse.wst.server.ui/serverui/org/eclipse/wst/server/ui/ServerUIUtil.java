@@ -117,6 +117,8 @@ public final class ServerUIUtil {
 			}
 		}
 		if (!userInitiated){
+			if (!ServerUIPlugin.getPreferences().getExtAdapter())
+				return null;
 			int cacheFrequency = ServerUIPlugin.getPreferences().getCacheFrequency();
 			if (cacheFrequency == 0 /*Manual*/){
 				// User will explicitly refresh

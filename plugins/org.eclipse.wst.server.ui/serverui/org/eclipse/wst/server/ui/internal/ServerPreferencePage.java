@@ -115,7 +115,8 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		refreshNow.setLayoutData(data);
 		String refreshButtonText = ServerUIUtil.refreshButtonText;
 		ServerUIUtil.setListener(new UpdateJobChangeListener());
-		if (refreshButtonText.equals(Messages.cacheUpdate_refreshNow))
+		 // Manual refresh is allowed if Downloadable adapters are shown in server/runtime wizard and refresh not active
+		if (refreshButtonText.equals(Messages.cacheUpdate_refreshNow) && ServerUIPlugin.getPreferences().getExtAdapter())
 			refreshNow.setEnabled(true);
 		else
 			refreshNow.setEnabled(false);

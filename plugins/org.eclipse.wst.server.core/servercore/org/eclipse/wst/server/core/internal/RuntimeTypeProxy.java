@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 IBM Corporation and others.
+ * Copyright (c) 2015, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,13 +24,15 @@ public class RuntimeTypeProxy implements IRuntimeType {
 	private String name;
 	private String vendor;
 	private String description;
+	private String proxyRuntimeId;
 
-	public RuntimeTypeProxy(String id, String name, String description, String vendor) {
+	public RuntimeTypeProxy(String id, String name, String description, String vendor, String proxyRuntimeId) {
 		super();
 		this.runtimTypeId = id;
 		this.name = name;
 		this.description = description;
 		this.vendor = vendor;
+		this.proxyRuntimeId = proxyRuntimeId;
 	}
 	public RuntimeTypeProxy(RuntimeProxy runtimeProxy) {
 		super();
@@ -38,6 +40,7 @@ public class RuntimeTypeProxy implements IRuntimeType {
 		this.name = runtimeProxy.getName();
 		this.description = runtimeProxy.getDescription();
 		this.vendor = runtimeProxy.getVendor();
+		this.proxyRuntimeId = runtimeProxy.getProxyRuntimeId();
 	}
 
 	/**
@@ -89,6 +92,10 @@ public class RuntimeTypeProxy implements IRuntimeType {
 		return null;
 	}
 
+	public String getProxyRuntimeId() {
+		return proxyRuntimeId;
+	}
+	
 	public String toString() {
 		return "RuntimeType[" + getId() + ", " + getName() + "]";
 	}

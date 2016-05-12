@@ -32,6 +32,7 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 	protected IModuleType moduleType;
 	protected String serverTypeId;
 	protected boolean includeIncompatibleVersions;
+	List<IServerType> serverInstalledList;
 
 	/**
 	 * ServerTypeTreeContentProvider constructor.
@@ -51,7 +52,7 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 	
 	public void fillTree() {
 		clean();
-
+		serverInstalledList = new ArrayList<IServerType>();
 		List<TreeElement> list = new ArrayList<TreeElement>();
 		IServerType[] serverTypes = ServerCore.getServerTypes();
 		if (serverTypes != null) {
@@ -64,6 +65,7 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 						TreeElement ele = getOrCreate(list, runtimeType.getVendor());
 						ele.contents.add(serverType);
 						elementToParentMap.put(serverType, ele);
+						serverInstalledList.add(serverType);
 					} catch (Exception e) {
 						if (Trace.WARNING) {
 							Trace.trace(Trace.STRING_WARNING, "Error in server configuration content provider", e);
@@ -151,9 +153,18 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 					try {
 						IRuntimeType runtimeType = serverType.getRuntimeType();
 						TreeElement ele = getOrCreate(list, runtimeType.getVendor());
-						if (!compareServers(ele.contents, (ServerTypeProxy)serverType)){
-							ele.contents.add(serverType);
-							elementToParentMap.put(serverType, ele);
+						if (compareServers(ele.contents, (ServerTypeProxy)serverType))
+							continue;
+						if ( !compareServers(serverInstalledList, (ServerTypeProxy)serverType)){ 
+							// Sometime vendor name is different so need to search the entire list
+								ele.contents.add(serverType);
+								elementToParentMap.put(serverType, ele);
+						}
+						else {
+							if (ele.contents.isEmpty()) {
+								list.remove(ele);
+								elementToParentMap.remove(ele);
+							}
 						}
 					} catch (Exception e) {
 						if (Trace.WARNING) {

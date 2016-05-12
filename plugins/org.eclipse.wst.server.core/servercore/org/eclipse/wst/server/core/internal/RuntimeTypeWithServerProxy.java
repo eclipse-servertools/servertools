@@ -25,13 +25,15 @@ public class RuntimeTypeWithServerProxy implements IRuntimeType {
 	private String vendor;
 	private String description;
 	private ServerTypeProxy serverTypeProxy;
+	private String proxyRuntimeId;
 
-	public RuntimeTypeWithServerProxy(String id, String name, String description, String vendor) {
+	public RuntimeTypeWithServerProxy(String id, String name, String description, String vendor, String proxyRuntimeId) {
 		super();
 		this.runtimTypeId = id;
 		this.name = name;
 		this.description = description;
 		this.vendor = vendor;
+		this.proxyRuntimeId = proxyRuntimeId;
 	}
 	public RuntimeTypeWithServerProxy(RuntimeProxy runtimeProxy, ServerTypeProxy server) {
 		super();
@@ -40,6 +42,7 @@ public class RuntimeTypeWithServerProxy implements IRuntimeType {
 		this.description = runtimeProxy.getDescription();
 		this.vendor = runtimeProxy.getVendor();
 		this.serverTypeProxy = server;
+		this.proxyRuntimeId = runtimeProxy.getProxyRuntimeId();
 	}
 
 	/**
@@ -96,6 +99,10 @@ public class RuntimeTypeWithServerProxy implements IRuntimeType {
 	}
 	public ServerTypeProxy getServerTypeProxy() {
 		return serverTypeProxy;
+	}
+	
+	public String getProxyRuntimeId() {
+		return proxyRuntimeId;
 	}
 	
 }
