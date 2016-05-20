@@ -188,6 +188,7 @@ public final class ServerCore {
 	 */
 	public static void resetDownloadableServers(){
 		DAServerTypes = null;
+		DARuntimeTypes = null;
 	}
 	
 	/**
