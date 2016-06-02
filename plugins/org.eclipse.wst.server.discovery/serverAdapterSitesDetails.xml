@@ -86,21 +86,21 @@
 		provider="Red Hat JBoss Middleware" version="3.1.0.Beta2-v20150723-0026-B29" serverId="org.jboss.ide.eclipse.as.eap.70"
 		runtime-vendor="Red Hat JBoss Middleware" runtimeId="org.jboss.ide.eclipse.as.runtime.eap.70">
 	</feature>
-	<feature uri="http://download.oracle.com/otn_software/oepe/mars/"
+	<feature uri="http://download.oracle.com/otn_software/oepe/neon/"
 		id="oracle.eclipse.tools.cloud.feature.group"
 		name="Oracle Cloud Tools"
 		description="Additional tools for developing Oracle Cloud applications."
 		provider="Oracle" version="8.2.0.201507100122" serverId="oracle.cloud.server" 
 		runtime-vendor="Oracle" runtimeId="oracle.cloud">
 	</feature>
-	<feature uri="http://download.oracle.com/otn_software/oepe/mars/"
+	<feature uri="http://download.oracle.com/otn_software/oepe/neon/"
 		id="oracle.eclipse.tools.weblogic.feature.group"
 		name="Oracle WebLogic Server Tools"
 		description="Tools for developing applications for Oracle WebLogic Server (versions 12.1.x, 10.3.x, 10.0 and 9.2)."
 		provider="Oracle" version="8.2.0.201507100122" serverId="com.bea.weblogic1221.server"
 		runtime-vendor="Oracle" runtimeId="com.bea.weblogic1221">
 	</feature>
-	<feature uri="http://download.oracle.com/otn_software/oepe/mars/"
+	<feature uri="http://download.oracle.com/otn_software/oepe/neon/"
 		id="oracle.eclipse.tools.glassfish.feature.group"
 		name="GlassFish Tools"
 		description="Tools for developing applications for GlassFish."
