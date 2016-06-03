@@ -7,7 +7,6 @@
    <site url="http://www.caucho.com/eclipse/"/>   
    <site url="http://download.jboss.org/jbosstools/updates/webtools/neon/"/>
    <site url="http://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/updates/libertyAdapter/neon/"/>
-   <site url="http://dist.springsource.com/release/TOOLS/cloudfoundry/"/>
    <site url="http://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/updates/bluemixAdapter/neon/"/>
    <site url="http://download.oracle.com/otn_software/oepe/neon/"/>
 </extensions>
