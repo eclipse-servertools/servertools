@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.server.preview.internal;
 
-import java.net.MalformedURLException;
-
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.util.resource.Resource;
 
@@ -22,7 +20,7 @@ public class ContextResourceHandler extends ResourceHandler {
 		this.context = context;
 	}
 
-	public Resource getResource(String path) throws MalformedURLException {
+	public Resource getResource(String path) {
 		if (path == null || !path.startsWith(context + "/"))
 			return null;
 		
