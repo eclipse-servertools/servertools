@@ -143,7 +143,7 @@ public abstract class AbstractTreeComposite extends Composite {
 	}
 
 	protected void createTree() {
-		tree = new FilteredTree(this, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE, new ServerPatternFilter());
+		tree = new FilteredTree(this, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE, new ServerPatternFilter(), true);
 	}
 
 	protected abstract String getDescriptionLabel();
