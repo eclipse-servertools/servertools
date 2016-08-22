@@ -20,17 +20,17 @@ import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.wst.server.core.IModule;
 /**
- * Tomcat 80 handler.
+ * Tomcat 85 handler.
  */
-public class Tomcat90Handler implements ITomcatVersionHandler {
+public class Tomcat85Handler implements ITomcatVersionHandler {
 	/**
 	 * @see ITomcatVersionHandler#verifyInstallPath(IPath)
 	 */
 	public IStatus verifyInstallPath(IPath installPath) {
-		IStatus result = TomcatVersionHelper.checkCatalinaVersion(installPath, TomcatPlugin.TOMCAT_90);
+		IStatus result = TomcatVersionHelper.checkCatalinaVersion(installPath, TomcatPlugin.TOMCAT_85);
 		// If check was canceled, use folder check
 		if (result.getSeverity() == IStatus.CANCEL) {
-			result = TomcatPlugin.verifyInstallPathWithFolderCheck(installPath, TomcatPlugin.TOMCAT_90);
+			result = TomcatPlugin.verifyInstallPathWithFolderCheck(installPath, TomcatPlugin.TOMCAT_85);
 		}
 		return result;
 	}
@@ -48,7 +48,7 @@ public class Tomcat90Handler implements ITomcatVersionHandler {
 	public List getRuntimeClasspath(IPath installPath, IPath configPath) {
 		List<IRuntimeClasspathEntry> cp = new ArrayList<IRuntimeClasspathEntry>();
 		
-		// 9.0 - add bootstrap.jar and tomcat-juli.jar from the Tomcat bin directory
+		// 8.5 - add bootstrap.jar and tomcat-juli.jar from the Tomcat bin directory
 		IPath binPath = installPath.append("bin");
 		if (binPath.toFile().exists()) {
 			IPath path = binPath.append("bootstrap.jar");
@@ -116,7 +116,7 @@ public class Tomcat90Handler implements ITomcatVersionHandler {
 				|| "3.0".equals(version) || "3.1".equals(version))
 			return Status.OK_STATUS;
 		
-		return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorSpec90, null);
+		return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorSpec85, null);
 	}
 
 	/**
@@ -145,7 +145,7 @@ public class Tomcat90Handler implements ITomcatVersionHandler {
 	 * @see ITomcatVersionHandler#prepareForServingDirectly(IPath, TomcatServer)
 	 */
 	public IStatus prepareForServingDirectly(IPath baseDir, TomcatServer server, String tomcatVersion) {
-		// Nothing beyond configuration required for Tomcat 9
+		// Nothing beyond configuration required for Tomcat 8
 		return Status.OK_STATUS;
 	}
 
@@ -157,7 +157,7 @@ public class Tomcat90Handler implements ITomcatVersionHandler {
 	}
 	
 	/**
-	 * Returns true since Tomcat 9.x supports this feature.
+	 * Returns true since Tomcat 8.5 supports this feature.
 	 * 
 	 * @return true since feature is supported
 	 */

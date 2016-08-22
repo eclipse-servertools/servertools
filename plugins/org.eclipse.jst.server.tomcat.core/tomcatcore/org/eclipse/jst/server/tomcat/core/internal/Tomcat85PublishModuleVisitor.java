@@ -35,18 +35,18 @@ import org.eclipse.wst.common.componentcore.resources.IVirtualResource;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
 
-public class Tomcat90PublishModuleVisitor extends TomcatPublishModuleVisitor {
+public class Tomcat85PublishModuleVisitor extends TomcatPublishModuleVisitor {
 
 	/**
-	 * Instantiate a new Tomcat90PublishModuleVisitor
+	 * Instantiate a new Tomcat85PublishModuleVisitor
 	 * 
 	 * @param baseDir catalina base path
 	 * @param tomcatVersion tomcat version
 	 * @param serverInstance ServerInstance containing server.xml contents
 	 * @param sharedLoader string value for shared.loader catalina configuration property
-	 * @param enableMetaInfResources flag to indicate if Servlet 3.0 or greater "META-INF/resources" feature should be supported
+	 * @param enableMetaInfResources flag to indicate if Servlet 3.0 "META-INF/resources" feature should be supported
 	 */
-	Tomcat90PublishModuleVisitor(IPath baseDir, String tomcatVersion, ServerInstance serverInstance, String sharedLoader, boolean enableMetaInfResources) {
+	Tomcat85PublishModuleVisitor(IPath baseDir, String tomcatVersion, ServerInstance serverInstance, String sharedLoader, boolean enableMetaInfResources) {
 		super(baseDir, tomcatVersion, serverInstance, sharedLoader, enableMetaInfResources);
 	}
 

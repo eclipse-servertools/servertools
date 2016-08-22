@@ -33,6 +33,7 @@ public class TomcatRuntimeLocator extends RuntimeLocatorDelegate {
 		"org.eclipse.jst.server.tomcat.runtime.60",
 		"org.eclipse.jst.server.tomcat.runtime.70",
 		"org.eclipse.jst.server.tomcat.runtime.80",
+		"org.eclipse.jst.server.tomcat.runtime.85",
 		"org.eclipse.jst.server.tomcat.runtime.90"};
 
 	/* (non-Javadoc)

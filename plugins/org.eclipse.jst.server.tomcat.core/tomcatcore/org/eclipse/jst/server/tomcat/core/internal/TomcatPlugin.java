@@ -42,8 +42,10 @@ public class TomcatPlugin extends Plugin {
 	public static final String TOMCAT_60 = "org.eclipse.jst.server.tomcat.60";
 	public static final String TOMCAT_70 = "org.eclipse.jst.server.tomcat.70";
 	public static final String TOMCAT_80 = "org.eclipse.jst.server.tomcat.80";
+	public static final String TOMCAT_85 = "org.eclipse.jst.server.tomcat.85";
 	public static final String TOMCAT_90 = "org.eclipse.jst.server.tomcat.90";
 
+	// Beyond 8.0, this verification approach is not effective and actually isn't currently used for 7.0 and beyond (see verifyInstallPath method).
 	protected static final String VERIFY_INSTALL_FILE = "verifyInstall.properties";
 	protected static VerifyResourceSpec[] verify32;
 	protected static VerifyResourceSpec[] verify40;
@@ -156,6 +158,8 @@ public class TomcatPlugin extends Plugin {
 			return new Tomcat70Handler();
 		else if (TOMCAT_80.equals(id))
 			return new Tomcat80Handler();
+		else if (TOMCAT_85.equals(id))
+			return new Tomcat85Handler();
 		else if (TOMCAT_90.equals(id))
 			return new Tomcat90Handler();
 		else

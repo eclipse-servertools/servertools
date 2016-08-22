@@ -107,6 +107,7 @@ public class TomcatVersionHelper {
 		versionStringMap.put(TomcatPlugin.TOMCAT_60, "6.0.");
 		versionStringMap.put(TomcatPlugin.TOMCAT_70, "7.0.");
 		versionStringMap.put(TomcatPlugin.TOMCAT_80, "8.0.");
+		versionStringMap.put(TomcatPlugin.TOMCAT_85, "8.5.");
 		versionStringMap.put(TomcatPlugin.TOMCAT_90, "9.0.");
 	}
 
@@ -918,12 +919,17 @@ public class TomcatVersionHelper {
 
 			boolean modified = false;
 
-			boolean isTomcat8 = tomcatVersion.startsWith("8.");
+			boolean isTomcat80 = tomcatVersion.startsWith("8.0");
+			boolean isTomcat85 = tomcatVersion.startsWith("8.5");
 			boolean isTomcat9 = tomcatVersion.startsWith("9.");
 			// care about top-level modules only
 			TomcatPublishModuleVisitor visitor;
-			if (isTomcat8) {
+			if (isTomcat80) {
 				visitor = new Tomcat80PublishModuleVisitor(
+						baseDir, tomcatVersion, publishedInstance, loader, enableMetaInfResources);
+			}
+			else if (isTomcat85) {
+				visitor = new Tomcat85PublishModuleVisitor(
 						baseDir, tomcatVersion, publishedInstance, loader, enableMetaInfResources);
 			}
 			else if (isTomcat9) {
@@ -1143,7 +1149,7 @@ public class TomcatVersionHelper {
 		File jarFile = null;
 		
 		if (TomcatPlugin.TOMCAT_60.equals(serverType) || TomcatPlugin.TOMCAT_70.equals(serverType) || TomcatPlugin.TOMCAT_80.equals(serverType)
-				|| TomcatPlugin.TOMCAT_90.equals(serverType)) {
+				|| TomcatPlugin.TOMCAT_85.equals(serverType) || TomcatPlugin.TOMCAT_90.equals(serverType)) {
 			catalinaJarPath = installPath.append("lib").append("catalina.jar");
 			jarFile = catalinaJarPath.toFile();
 			// If jar is not at expected location, try alternate location
