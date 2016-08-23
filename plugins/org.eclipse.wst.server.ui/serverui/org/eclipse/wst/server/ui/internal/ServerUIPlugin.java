@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2014 IBM Corporation and others.
+ * Copyright (c) 2003, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,6 +33,7 @@ import org.eclipse.wst.server.core.internal.*;
 import org.eclipse.wst.server.core.model.LaunchableAdapterDelegate;
 import org.eclipse.wst.server.core.util.PublishAdapter;
 import org.eclipse.wst.server.ui.DeleteServerDialogExtension;
+import org.eclipse.wst.server.ui.RemoveModuleMessageExtension;
 import org.eclipse.wst.server.ui.editor.ServerEditorOverviewPageModifier;
 import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
 import org.eclipse.wst.server.ui.internal.editor.IServerEditorInput;
@@ -89,6 +90,9 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	
 	// Cached copy of all delete dialog UI modifier
 	private static List<DeleteServerDialogExtension> deleteServerDialogExtensions;
+	
+	// Cached copy of all the remove module message customization extensions
+	private static List<RemoveModuleMessageExtension> removeModuleMessageExtensions;
 	
 	// Cached copy of server state label provider
 	private static HashMap<String,AbstractServerLabelProvider> serverLabelProviders;
@@ -864,6 +868,17 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 
 		return deleteServerDialogExtensions;
 	}
+	
+	/**
+	 * Returns the list of remove module message confirmation extensions
+	 * @return the list of remove module message confirmation extensions, or an empty list if none could be found
+	 */
+	public static List<RemoveModuleMessageExtension> getRemoveModuleMessageExtensions() {
+		if (removeModuleMessageExtensions == null) {
+		    loadRemoveModuleMessageExtensions();
+		}
+		return removeModuleMessageExtensions;
+	}
 
 	/**
 	 * Load the Server creation wizard page modifiers.
@@ -977,6 +992,49 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		
 		if (Trace.CONFIG) {
 			Trace.trace(Trace.STRING_CONFIG, "-<- Done loading .deleteServerDialogExtension extension point -<-");
+		}
+	}
+	
+	/**
+	 * Load the remove module message customization extensions.
+	 */
+	private static synchronized void loadRemoveModuleMessageExtensions() {
+		if (removeModuleMessageExtensions != null)
+			return;
+		
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "->- Loading .removeModuleMessageExtensions extension point ->-");
+		}
+		removeModuleMessageExtensions = new ArrayList<RemoveModuleMessageExtension>();
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "removeModuleMessageExtension");
+		
+		for (IConfigurationElement curConfigElement: cf) {
+			try {
+				RemoveModuleMessageExtension curExtension = (RemoveModuleMessageExtension)curConfigElement.createExecutableExtension("class");
+				String serverTypeId = curConfigElement.getAttribute("serverTypeId");
+				if (serverTypeId != null) {
+					curExtension.setServerTypeId(serverTypeId);
+				}
+				
+				if (Trace.CONFIG) {
+					Trace.trace(Trace.STRING_CONFIG,
+							"  Loaded .removeModuleMessageExtension: " + curConfigElement.getAttribute("id")
+									+ ", loaded class=" + curExtension);
+				}
+				if (curExtension != null)
+					removeModuleMessageExtensions.add(curExtension);
+
+			} catch (Throwable t) {
+				if (Trace.SEVERE) {
+					Trace.trace(Trace.STRING_SEVERE,
+							"  Could not load .removeModuleMessageExtension: " + curConfigElement.getAttribute("id"), t);
+				}
+			}
+		}
+		
+		if (Trace.CONFIG) {
+			Trace.trace(Trace.STRING_CONFIG, "-<- Done loading .removeModuleMessageExtension extension point -<-");
 		}
 	}
 	
@@ -1255,5 +1313,22 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		Object[] o = new Object[list.size()];
 		list.toArray(o);
 		return o;
+	}
+	
+	public static RemoveModuleMessageExtension getRemoveModuleMessageExtension(String targetServerTypeId) {
+		List<RemoveModuleMessageExtension> extensions = getRemoveModuleMessageExtensions();
+		for (RemoveModuleMessageExtension messageExtension : extensions) {
+			String serverTypeId = messageExtension.getServerTypeId();
+			// regex support serverTypeIdValue.* and also support serverTypeIdValue* 
+			if (serverTypeId != null) {
+				int length = serverTypeId.length();
+				if (serverTypeId.equals(targetServerTypeId) || targetServerTypeId.matches(serverTypeId)
+					|| (serverTypeId.endsWith("*") && length > 1 && targetServerTypeId.startsWith(serverTypeId.substring(0, length - 1)))) {
+					// We found the extension for this server type
+					return messageExtension;
+				}
+			}
+		}
+		return null;
 	}
 }

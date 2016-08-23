@@ -33,6 +33,7 @@ public class ServerUIPreferences {
 	private static final String PREF_EXT_ADAPTER = "external-adapter";
 	private static final String PREF_CACHE_FREQUENCY = "cache-frequency";
 	private static final String PREF_CACHE_LAST_UPDATED_DATE = "cache-lastUpdatedDate";
+	private static final String PREF_DO_NOT_SHOW_REMOVE_MODULE_WARNING = "do-not-show-remove-module-warning";
 
 	public static final byte SAVE_EDITORS_ALWAYS = 2;
 	public static final byte SAVE_EDITORS_NEVER = 0;
@@ -88,6 +89,7 @@ public class ServerUIPreferences {
 		preferences.setDefault(PREF_PUBLISH_ON_ADD_REMOVE, true);
 		preferences.setDefault(PREF_EXT_ADAPTER, true);
 		preferences.setDefault(PREF_CACHE_FREQUENCY, 2);
+		preferences.setDefault(PREF_DO_NOT_SHOW_REMOVE_MODULE_WARNING, false);
 	}
 
 	/**
@@ -432,6 +434,26 @@ public class ServerUIPreferences {
 	 */
 	public void setPrefCacheLastUpdatedDate(int frequency) {
 		preferences.setValue(PREF_CACHE_FREQUENCY, frequency);
+		ServerUIPlugin.getInstance().savePluginPreferences();
+	}
+	
+	/**
+	 * Returns the option to show the warning dialog if a module or modules are to be removed from the server.
+	 * 
+	 * @return boolean - false: will show the dialog; true: will not show the dialog
+	 */
+	public boolean getDoNotShowRemoveModuleWarning() {
+		return preferences.getBoolean(PREF_DO_NOT_SHOW_REMOVE_MODULE_WARNING);
+	}
+
+	/**
+	 * Sets the preference to show whether the warning dialog will appear or not when a module or modules are to
+	 * be removed from the server
+	 * 
+	 * @param b - false: will show the dialog; true: will not show the dialog
+	 */
+	public void setDoNotShowRemoveModuleWarning(boolean b) {
+		preferences.setValue(PREF_DO_NOT_SHOW_REMOVE_MODULE_WARNING, b);
 		ServerUIPlugin.getInstance().savePluginPreferences();
 	}
 }

@@ -14,6 +14,7 @@
   <extension-point id="serverEditorOverviewPageModifier" name="%extensionPointServerEditorOverviewPageExtension" schema="schema/serverEditorOverviewPageModifier.exsd"/>
   <extension-point id="serverLabelProvider" name="%serverLabelProvider" schema="schema/serverLabelProvider.exsd"/>
   <extension-point id="deleteServerDialogExtension" name="%deleteServerDialogExtension" schema="schema/deleteServerDialogExtension.exsd"/>
+  <extension-point id="removeModuleMessageExtension" name="%extensionPointRemoveModuleMessageExtension" schema="schema/removeModuleMessageExtension.exsd"/>
 
 <extension point="org.eclipse.ui.newWizards">
   <category

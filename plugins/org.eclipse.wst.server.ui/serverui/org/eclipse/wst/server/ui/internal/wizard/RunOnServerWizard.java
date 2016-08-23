@@ -11,12 +11,14 @@
 package org.eclipse.wst.server.ui.internal.wizard;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.IClient;
 import org.eclipse.wst.server.core.internal.ILaunchableAdapter;
 import org.eclipse.wst.server.ui.internal.Messages;
+import org.eclipse.wst.server.ui.internal.PreferenceUtil;
 import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.RunOnServerWizardFragment;
 /**
@@ -24,6 +26,7 @@ import org.eclipse.wst.server.ui.internal.wizard.fragment.RunOnServerWizardFragm
  */
 public class RunOnServerWizard extends TaskWizard {
 	
+	private static RunOnServerWizardFragment fragment;
 	/**
 	 * RunOnServerWizard constructor comment.
 	 * 
@@ -57,13 +60,13 @@ public class RunOnServerWizard extends TaskWizard {
 	}
 
 	private static RunOnServerWizardFragment createRootWizard(IModule module, String launchMode, IModuleArtifact moduleArtifact, HashMap properties){
-		RunOnServerWizardFragment fragment = new RunOnServerWizardFragment(module, launchMode, moduleArtifact);
+		fragment = new RunOnServerWizardFragment(module, launchMode, moduleArtifact);
 		setFragmentProperties(fragment, properties);
 		return fragment;
 	}
 	
 	private static RunOnServerWizardFragment createRootWizard	(IServer server, String launchMode, IModuleArtifact moduleArtifact,HashMap properties) {
-		RunOnServerWizardFragment fragment = new RunOnServerWizardFragment(server, launchMode, moduleArtifact);
+		fragment = new RunOnServerWizardFragment(server, launchMode, moduleArtifact);
 		setFragmentProperties(fragment, properties);		
 		return fragment;
 	}
@@ -195,5 +198,27 @@ public class RunOnServerWizard extends TaskWizard {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+	
+	/**
+	 * This is not intended to be used by extenders.  The prompt to remove modules dialog appears there are modules to be removed.
+	 * 
+	 */
+	@Override
+	public boolean performFinish() {
+		// This code should instead be done in the RunOnServerWizardFragment.  However, we need to do this prompt up-front
+		// prior to any fragments being executed in another thread.  If this prompt is moved to the fragment, then we need a 
+		// a way to get access to the UI shell even though the fragments are run on a non-UI thread.  Secondly, the TaskWizard
+		// needs to support cancel to undo previously run fragments and stop later fragments from running.  This is because the
+		// prompt dialog allows the user to cancel.  See also ModifyModulesWizard.
+		List<IModule> modulesToRemove = fragment.getModulesToRemove();
+		if (modulesToRemove.size() > 0) {
+			IServerAttributes server = (IServerAttributes) getTaskModel().getObject(TaskModel.TASK_SERVER);
+			boolean doRemove = PreferenceUtil.confirmModuleRemoval(server, getContainer().getShell(), modulesToRemove);
+			if (!doRemove) {
+				return false;
+			}
+		}
+		return super.performFinish();
 	}
 }

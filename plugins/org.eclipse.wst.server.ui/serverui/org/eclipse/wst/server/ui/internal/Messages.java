@@ -141,6 +141,7 @@ public class Messages extends NLS {
 	public static String actionColumns;
 	public static String dialogRemoveModuleConfirm;
 	public static String dialogRemoveModulesConfirm;
+	public static String doNotShowAgain;
 	public static String terminateServerDialogTitle;
 	public static String actionDebugOnServer;
 	public static String actionProfileOnServer;

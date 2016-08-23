@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.wizard.fragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.wst.server.core.IModule;
@@ -29,6 +30,8 @@ public class RunOnServerWizardFragment extends WizardFragment {
 	
 	protected IClient client;
 	protected ILaunchableAdapter launchable;
+	
+	private ModifyModulesWizardFragment modifyModulesWizardFragment;
 
 	/**
 	 * Create the Run on Server wizard with all pages.
@@ -62,8 +65,8 @@ public class RunOnServerWizardFragment extends WizardFragment {
 			
 			list.add(WizardTaskUtil.TempSaveRuntimeFragment);
 			list.add(WizardTaskUtil.TempSaveServerFragment);
-			
-			list.add(new ModifyModulesWizardFragment(module));
+			modifyModulesWizardFragment = new ModifyModulesWizardFragment(module);
+			list.add(modifyModulesWizardFragment);
 		}
 		
 		list.add(new TasksWizardFragment());
@@ -83,5 +86,16 @@ public class RunOnServerWizardFragment extends WizardFragment {
 
 	public void setLaunchable(ILaunchableAdapter launchable) {
 		this.launchable = launchable;	
+	}
+	
+	/**
+	 * Expose this to wizard.  For internal use.  Extenders are not expected to override or call.
+	 * @return
+	 */
+	public List<IModule> getModulesToRemove() {
+		if (modifyModulesWizardFragment != null) {
+			return modifyModulesWizardFragment.getModulesToRemove();
+		}
+		return new ArrayList<IModule>();
 	}
 }
