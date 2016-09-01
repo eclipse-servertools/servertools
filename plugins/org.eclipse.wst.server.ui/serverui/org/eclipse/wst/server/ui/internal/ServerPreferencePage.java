@@ -11,6 +11,12 @@
 package org.eclipse.wst.server.ui.internal;
 
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferencePage;
@@ -39,6 +45,8 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	protected Button refreshNow;
 	protected Text updateTime;
 	protected Combo updateCacheFrequencyCombo;
+	
+	public static final String CACHE_LAST_UPDATED_DATE_FORMAT = "EEE MMM dd yyyy kk:mm:ss zzz";
 
 	/**
 	 * ServerPreferencesPage constructor comment.
@@ -133,7 +141,23 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		Label lastUpdatedLabel = new Label(cacheGroup, SWT.NONE);
 		lastUpdatedLabel.setText(Messages.cacheUpdate_lastUpdatedOn);
 		updateTime = new Text(cacheGroup, SWT.READ_ONLY);
-		updateTime.setText(Discovery.getLastUpdatedDate());
+		
+		String lastUpdatedDate = Discovery.getLastUpdatedDate();
+		lastUpdatedDate = lastUpdatedDate.trim();
+		// The cache's date is in English
+		DateFormat dfCached = new SimpleDateFormat(CACHE_LAST_UPDATED_DATE_FORMAT, Locale.ENGLISH);
+		// Need to covert the English date to the current locale's format
+		DateFormat dfCurrLocale = new SimpleDateFormat(Messages.cacheUpdate_lastUpdatedFormat, Locale.getDefault());
+		
+		Date d;
+		try {
+			d = dfCached.parse(lastUpdatedDate);
+			updateTime.setText(dfCurrLocale.format(d));
+		} catch (ParseException e1) {
+			// In case of failure, display what was cached
+			updateTime.setText(lastUpdatedDate);
+		}
+		
 		Dialog.applyDialogFont(composite);
 		
 		

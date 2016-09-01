@@ -386,6 +386,7 @@ public class Messages extends NLS {
 	public static String cacheUpdate_never;
 	public static String cacheUpdate_frequencyLabel;
 	public static String cacheUpdate_lastUpdatedOn;	
+	public static String cacheUpdate_lastUpdatedFormat;
 	
 	static {
 		NLS.initializeMessages(ServerUIPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);
