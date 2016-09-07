@@ -36,6 +36,10 @@
          icon="icons/obj16/tomcat.gif"
          typeIds="org.eclipse.jst.server.tomcat.runtime.80"/>
       <image
+         id="org.eclipse.jst.server.tomcat.85"
+         icon="icons/obj16/tomcat.gif"
+         typeIds="org.eclipse.jst.server.tomcat.runtime.85"/>
+      <image
          id="org.eclipse.jst.server.tomcat.90"
          icon="icons/obj16/tomcat.gif"
          typeIds="org.eclipse.jst.server.tomcat.runtime.90"/>
@@ -72,6 +76,10 @@
          id="org.eclipse.jst.server.tomcat.80"
          icon="icons/obj16/tomcat.gif"
          typeIds="org.eclipse.jst.server.tomcat.80"/>
+      <image
+         id="org.eclipse.jst.server.tomcat.85"
+         icon="icons/obj16/tomcat.gif"
+         typeIds="org.eclipse.jst.server.tomcat.85"/>
       <image
          id="org.eclipse.jst.server.tomcat.90"
          icon="icons/obj16/tomcat.gif"
@@ -168,6 +176,10 @@
       <fragment
          id="org.eclipse.jst.server.tomcat.runtime.80"
          typeIds="org.eclipse.jst.server.tomcat.runtime.80"
+         class="org.eclipse.jst.server.tomcat.ui.internal.TomcatRuntimeWizardFragment"/>
+      <fragment
+         id="org.eclipse.jst.server.tomcat.runtime.85"
+         typeIds="org.eclipse.jst.server.tomcat.runtime.85"
          class="org.eclipse.jst.server.tomcat.ui.internal.TomcatRuntimeWizardFragment"/>
       <fragment
          id="org.eclipse.jst.server.tomcat.runtime.90"

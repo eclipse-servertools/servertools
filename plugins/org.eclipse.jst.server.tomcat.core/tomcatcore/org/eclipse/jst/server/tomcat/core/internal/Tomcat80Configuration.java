@@ -72,7 +72,7 @@ public class Tomcat80Configuration extends TomcatConfiguration {
 	}
 	
 	/**
-	 * Tomcat60Configuration constructor.
+	 * Tomcat80Configuration constructor.
 	 * 
 	 * @param path a path
 	 */
@@ -240,7 +240,7 @@ public class Tomcat80Configuration extends TomcatConfiguration {
 			monitor = ProgressUtil.getMonitorFor(monitor);
 			monitor.beginTask(Messages.loadingTask, 7);
 			
-			// check for catalina.policy to verify that this is a v5.5 config
+			// check for catalina.policy to verify that this is a v8.0 config
 			InputStream in = new FileInputStream(path.append("catalina.policy").toFile());
 			in.read();
 			in.close();
@@ -279,7 +279,7 @@ public class Tomcat80Configuration extends TomcatConfiguration {
 				return;
 			monitor.done();
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not load Tomcat v5.5 configuration from " + path.toOSString() + ": " + e.getMessage());
+			Trace.trace(Trace.WARNING, "Could not load Tomcat v8.0 configuration from " + path.toOSString() + ": " + e.getMessage());
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotLoadConfiguration, path.toOSString()), e));
 		}
 	}
@@ -363,7 +363,7 @@ public class Tomcat80Configuration extends TomcatConfiguration {
 				throw new Exception("Cancelled");
 			monitor.done();
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not reload Tomcat v5.5 configuration from: " + folder.getFullPath() + ": " + e.getMessage());
+			Trace.trace(Trace.WARNING, "Could not reload Tomcat v8.0 configuration from: " + folder.getFullPath() + ": " + e.getMessage());
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotLoadConfiguration, folder.getFullPath().toOSString()), e));
 		}
 	}
@@ -422,7 +422,7 @@ public class Tomcat80Configuration extends TomcatConfiguration {
 				return;
 			monitor.done();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not save Tomcat v5.5 configuration to " + path, e);
+			Trace.trace(Trace.SEVERE, "Could not save Tomcat v8.0 configuration to " + path, e);
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotSaveConfiguration, new String[] {e.getLocalizedMessage()}), e));
 		}
 	}
@@ -514,7 +514,7 @@ public class Tomcat80Configuration extends TomcatConfiguration {
 				return;
 			monitor.done();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not save Tomcat v5.5 configuration to " + folder.toString(), e);
+			Trace.trace(Trace.SEVERE, "Could not save Tomcat v8.0 configuration to " + folder.toString(), e);
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotSaveConfiguration, new String[] {e.getLocalizedMessage()}), e));
 		}
 	}
