@@ -37,7 +37,7 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 		if (runtimeId.indexOf("32") > 0) {
 			IPath path = installPath.append("lib");
 			addLibraryEntries(list, path.toFile(), true);
-		} else if (runtimeId.indexOf("60") > 0 || runtimeId.indexOf("70") > 0 || runtimeId.indexOf("80") > 0) {
+		} else if (runtimeId.indexOf("60") > 0 || runtimeId.indexOf("70") > 0 || runtimeId.indexOf("80") > 0 || runtimeId.indexOf("85") > 0 || runtimeId.indexOf("90") > 0) {
 			// TODO May need some flexibility in case the installation has been configured differently
 			// This lib "simplification" may cause issues for some.
 			// Not known yet whether packaged Linux installs will go along.

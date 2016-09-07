@@ -42,9 +42,9 @@ import org.eclipse.wst.server.core.ServerPort;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 /**
- * Tomcat v9.0 server configuration.
+ * Tomcat v8.5 server configuration.
  */
-public class Tomcat90Configuration extends TomcatConfiguration {
+public class Tomcat85Configuration extends TomcatConfiguration {
 	protected static final String DEFAULT_SERVICE = "Catalina";
 	protected static final String EOL = System.getProperty("line.separator");
 	protected Server server;
@@ -72,11 +72,11 @@ public class Tomcat90Configuration extends TomcatConfiguration {
 	}
 	
 	/**
-	 * Tomcat90Configuration constructor.
+	 * Tomcat85Configuration constructor.
 	 * 
 	 * @param path a path
 	 */
-	public Tomcat90Configuration(IFolder path) {
+	public Tomcat85Configuration(IFolder path) {
 		super(path);
 	}
 
@@ -240,7 +240,7 @@ public class Tomcat90Configuration extends TomcatConfiguration {
 			monitor = ProgressUtil.getMonitorFor(monitor);
 			monitor.beginTask(Messages.loadingTask, 7);
 			
-			// check for catalina.policy to verify that this is a v9.0 config
+			// check for catalina.policy to verify that this is a v5.5 config
 			InputStream in = new FileInputStream(path.append("catalina.policy").toFile());
 			in.read();
 			in.close();
@@ -279,7 +279,7 @@ public class Tomcat90Configuration extends TomcatConfiguration {
 				return;
 			monitor.done();
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not load Tomcat v9.0 configuration from " + path.toOSString() + ": " + e.getMessage());
+			Trace.trace(Trace.WARNING, "Could not load Tomcat v8.5 configuration from " + path.toOSString() + ": " + e.getMessage());
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotLoadConfiguration, path.toOSString()), e));
 		}
 	}
@@ -363,7 +363,7 @@ public class Tomcat90Configuration extends TomcatConfiguration {
 				throw new Exception("Cancelled");
 			monitor.done();
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not reload Tomcat v9.0 configuration from: " + folder.getFullPath() + ": " + e.getMessage());
+			Trace.trace(Trace.WARNING, "Could not reload Tomcat v8.5 configuration from: " + folder.getFullPath() + ": " + e.getMessage());
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotLoadConfiguration, folder.getFullPath().toOSString()), e));
 		}
 	}
@@ -422,7 +422,7 @@ public class Tomcat90Configuration extends TomcatConfiguration {
 				return;
 			monitor.done();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not save Tomcat v9.0 configuration to " + path, e);
+			Trace.trace(Trace.SEVERE, "Could not save Tomcat v8.5 configuration to " + path, e);
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotSaveConfiguration, new String[] {e.getLocalizedMessage()}), e));
 		}
 	}
@@ -514,7 +514,7 @@ public class Tomcat90Configuration extends TomcatConfiguration {
 				return;
 			monitor.done();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not save Tomcat v9.0 configuration to " + folder.toString(), e);
+			Trace.trace(Trace.SEVERE, "Could not save Tomcat v8.5 configuration to " + folder.toString(), e);
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotSaveConfiguration, new String[] {e.getLocalizedMessage()}), e));
 		}
 	}

@@ -118,6 +118,8 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 					tcConfig = new Tomcat70Configuration(folder);
 				else if (id.indexOf("80") > 0)
 					tcConfig = new Tomcat80Configuration(folder);
+				else if (id.indexOf("85") > 0)
+					tcConfig = new Tomcat85Configuration(folder);
 				else if (id.indexOf("90") > 0)
 					tcConfig = new Tomcat90Configuration(folder);
 				else {
@@ -173,6 +175,8 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 			tcConfig = new Tomcat70Configuration(folder);
 		else if (id.indexOf("80") > 0)
 			tcConfig = new Tomcat80Configuration(folder);
+		else if (id.indexOf("85") > 0)
+			tcConfig = new Tomcat85Configuration(folder);
 		else if (id.indexOf("90") > 0)
 			tcConfig = new Tomcat90Configuration(folder);
 		else {
