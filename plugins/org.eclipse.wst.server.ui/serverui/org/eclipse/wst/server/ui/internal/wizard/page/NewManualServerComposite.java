@@ -15,12 +15,15 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
@@ -121,6 +124,8 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 	// These variables deal with caching server name checks
 	private boolean isServerNameInUse=false;
 	private String cacheServerNameCheck="";
+	
+	private HashMap<String,IStatus> serverTypeCriticalFailure = new HashMap<String, IStatus>();
 	
 	/**
 	 * Creates a new server and server configuration.  If the initial
@@ -475,7 +480,15 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 	
 	protected boolean validate(IServerType selectedServerType){
 		wizard.setMessage(null, IMessageProvider.NONE);
-		return (checkHostAndServerType(selectedServerType) & checkServerName());
+		boolean ret = (checkHostAndServerType(selectedServerType) & checkServerName());
+		if( selectedServerType != null && serverTypeCriticalFailure.get(selectedServerType.getId()) != null ) {
+			IStatus stat = serverTypeCriticalFailure.get(selectedServerType.getId());
+			int msgProviderSev = stat.getSeverity();
+			if( msgProviderSev == IStatus.ERROR)
+				msgProviderSev = IMessageProvider.ERROR;
+			wizard.setMessage(stat.getMessage(), msgProviderSev);
+		}
+		return ret;
 	}
 	
 	/**
@@ -529,11 +542,15 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			}
 			server = null;
 			runtime = null;
+			serverTypeCriticalFailure.put(serverType.getId(), new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, ce.getLocalizedMessage(), ce));
 			wizard.setMessage(ce.getLocalizedMessage(), IMessageProvider.ERROR);
+			return; // Return to preserve this error message for clarity
 		}
 			
-		if (server == null)
+		if (server == null) {
+			serverTypeCriticalFailure.put(serverType.getId(), new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, Messages.wizErrorServerCreationError, null));
 			wizard.setMessage(Messages.wizErrorServerCreationError, IMessageProvider.ERROR);
+		}
 	}
 
 	/**
@@ -568,7 +585,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			int size = runtimes.length;
 			for (int i = 0; i < size; i++) {
 				IRuntime runtime2 = runtimes[i];
-				if (isLocalhost || !runtime2.isStub())
+				if ((isLocalhost || !runtime2.isStub()) && (runtime2.validate(new NullProgressMonitor()).getSeverity() < IStatus.ERROR))
 					runtimes2.add(runtime2);
 			}
 			runtimes = new IRuntime[runtimes2.size()];
