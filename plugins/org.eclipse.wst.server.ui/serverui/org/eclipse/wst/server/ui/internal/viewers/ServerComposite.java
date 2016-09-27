@@ -109,7 +109,7 @@ public class ServerComposite extends AbstractTreeComposite implements IShellProv
 	}
 
 	protected void createTree() {
-		tree = new FilteredTree(this, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION, new ServerPatternFilter());
+		tree = new FilteredTree(this, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION, new ServerPatternFilter(), true);
 	}
 
 	public void setIncludeIncompatibleVersions(boolean b) {
