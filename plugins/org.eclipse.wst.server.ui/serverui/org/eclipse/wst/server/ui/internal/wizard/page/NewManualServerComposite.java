@@ -832,7 +832,9 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		boolean wrong = false;
 		if (serverType != null && moduleType != null) {
 			IRuntimeType runtimeType = serverType.getRuntimeType();
-			if (!ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), moduleType)) {
+			// dummy module type means matches all module types
+			boolean dummyModule = moduleType.getId() == null && moduleType.getVersion() == null;
+			if (!dummyModule && !ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), moduleType)) {
 				serverType = null;
 				wrong = true;
 				//wizard.setMessage("Not the right spec level2", IMessageProvider.ERROR);
