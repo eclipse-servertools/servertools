@@ -822,10 +822,13 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			serverNameLabel.setVisible(true);
 			serverName.setVisible(true);
 			hostnameLabel.setVisible(true);
-			runtimeLabel.setVisible(true);
-			runtimeCombo.setVisible(true);
-			configureRuntimes.setVisible(true);
-			addRuntime.setVisible(true);
+			if (serverType.hasRuntime() && server != null
+					&& ServerUIPlugin.getRuntimes(serverType.getRuntimeType()).length >= 1) {
+				runtimeLabel.setVisible(true);
+				runtimeCombo.setVisible(true);
+				configureRuntimes.setVisible(true);
+				addRuntime.setVisible(true);
+			}
 			hostnameDecoration.setImage(fd.getImage());
 			hostnameDecoration.setDescriptionText(fd.getDescription());
 		}
