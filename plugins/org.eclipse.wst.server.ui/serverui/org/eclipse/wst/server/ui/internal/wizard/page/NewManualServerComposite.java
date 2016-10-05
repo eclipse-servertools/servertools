@@ -491,7 +491,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		server = cache.getCachedServer(serverType, isLocalhost);
 		if (server != null) {
 			server.setHost(host);
-			((ServerWorkingCopy)server).setDefaults(null);
+			((ServerWorkingCopy)server).newServerDetailsChanged(null);
 			runtime = server.getRuntime();
 			listener.runtimeSelected(runtime);
 			fireServerWorkingCopyChanged();
@@ -654,7 +654,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		runtime = runtime2;
 		if (server != null) {
 			server.setRuntime(runtime);
-			((ServerWorkingCopy)server).setDefaults(null);
+			((ServerWorkingCopy)server).newServerDetailsChanged(null);
 			if (!serverNameModified) {
 				updatingServerName = true;
 				serverName.setText(server.getName());
