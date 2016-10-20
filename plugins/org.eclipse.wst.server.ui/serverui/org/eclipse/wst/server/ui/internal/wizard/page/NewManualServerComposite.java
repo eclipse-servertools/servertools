@@ -182,6 +182,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		serverTypeComposite.setIncludeIncompatibleVersions(includeIncompatible);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
 		data.horizontalSpan = 3;
+		data.minimumHeight = 150;
 		serverTypeComposite.setLayoutData(data);
 		whs.setHelp(serverTypeComposite, ContextIds.NEW_SERVER_TYPE);
 		
