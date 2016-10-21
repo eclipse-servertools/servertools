@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2015 IBM Corporation and others.
+ * Copyright (c) 2003, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,7 @@ import org.eclipse.wst.server.core.model.InternalInitializer;
 import org.eclipse.wst.server.core.model.PublishOperation;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.eclipse.wst.server.core.model.ServerDelegate;
+
 /**
  * 
  */
@@ -659,9 +660,9 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	}
 
 	/**
-	 * Sets the defaults for this server, including the name. This method should be
-	 * called when creating a server, or when any major settings (e.g. runtime, host)
-	 * change.
+	 * Sets the defaults for this server, including the name. 
+	 * 
+	 * This method will only be called when creating a new server.
 	 * 
 	 * @param monitor a progress monitor, or null
 	 */
@@ -675,6 +676,27 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			}
 		}
 	}
+	
+	/**
+	 * The new server's host or runtime has changed. 
+	 * 
+	 * This method allows delegates to reset the default values 
+	 * for the server in the context of the new runtime and host combination. 
+	 * 
+	 * This method should only be called when creating a new server.
+	 *  
+	 * @param monitor a progress monitor, or null
+	 */
+	public void newServerDetailsChanged(IProgressMonitor monitor) {
+		try {
+			getWorkingCopyDelegate(monitor).newServerDetailsChanged(monitor);
+		} catch (Exception e) {
+			if (Trace.SEVERE) {
+				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate newServerDetailsChanged() " + toString(), e);
+			}
+		}
+	}
+	
 
 	public void renameFiles(IProgressMonitor monitor) throws CoreException {
 		if (getServerConfiguration() != null) {

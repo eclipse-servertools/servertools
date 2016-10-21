@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -272,6 +272,21 @@ public abstract class ServerDelegate {
 	 */
 	public void setDefaults(IProgressMonitor monitor) {
 		// do nothing
+	}
+	
+	/**
+	 * The new server's host or runtime has changed. 
+	 * 
+	 * This method allows subclasses to reset the default values 
+	 * for the server in the context of the new runtime and host combination. 
+	 * 
+	 * This method should only be called when creating a new server.
+	 * 
+	 * @param monitor a progress monitor, or null
+	 * @since 1.9
+	 */
+	public void newServerDetailsChanged(IProgressMonitor monitor) {
+		setDefaults(monitor);
 	}
 	
 	/**
