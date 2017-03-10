@@ -902,7 +902,7 @@ public abstract class ServerBehaviourDelegate {
 			Trace.trace(Trace.STRING_FINEST, "-->-- Publishing to server: " + getServer().toString() + " -->--");
 		}
 		
-		if (getServer().getServerType().hasRuntime() && getServer().getRuntime() == null)
+		if (getServer().getServerType().requiresRuntime() && getServer().getRuntime() == null)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishNoRuntime, null);
 		
 		final List<IModule[]> moduleList = getAllModules();

@@ -114,14 +114,19 @@ public class ServerType implements IServerType {
 	}
 
 	public boolean hasRuntime() {
+		return getRuntimeType() != null;
+	}
+
+	public boolean requiresRuntime() {
 		try {
 			String s = element.getAttribute("runtime");
-			return "true".equals(s);
+			return "true".equals(s) && getRuntimeType() != null;
 		} catch (Exception e) {
 			return false;
 		}
 	}
 
+	
 	public ILaunchConfigurationType getLaunchConfigurationType() {
 		try {
 			String launchConfigId = element.getAttribute("launchConfigId");
