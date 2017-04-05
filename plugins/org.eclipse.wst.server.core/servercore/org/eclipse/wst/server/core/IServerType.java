@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -118,10 +118,9 @@ public interface IServerType {
 	 * @return <code>true</code> if this type of server requires
 	 * a server runtime, and <code>false</code> if it does not
 	 * @see #getRuntimeType()
-	 * @since 1.9
+	 * @since 1.10
 	 */
 	public boolean requiresRuntime();
-	
 	
 	/**
 	 * Returns whether this type of server supports the given launch mode.

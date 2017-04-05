@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component id="org.eclipse.wst.server.core" version="2">
+    <resource path="servercore/org/eclipse/wst/server/core/IServerType.java" type="org.eclipse.wst.server.core.IServerType">
+        <filter comment="The addition of this method is not considered as API breakage since IServerType is not meant to be implemented by adopters." id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.server.core.IServerType"/>
+                <message_argument value="requiresRuntime()"/>
+            </message_arguments>
+        </filter>
+    </resource>
+</component>
