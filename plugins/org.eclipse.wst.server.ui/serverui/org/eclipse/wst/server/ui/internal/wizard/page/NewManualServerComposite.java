@@ -502,7 +502,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		try {
 			// try to create runtime first
 			IRuntime run = null;
-			if (serverType.hasRuntime()) {
+			if (serverType.requiresRuntime()) {
 				runtime = null;
 				updateRuntimes(serverType, isLocalhost);
 				run = getDefaultRuntime();
@@ -511,7 +511,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			if (server != null) {
 				server.setHost(host);
 				
-				if (serverType.hasRuntime() && server.getRuntime() == null) {
+				if (serverType.requiresRuntime() && server.getRuntime() == null) {
 					runtime = null;
 					updateRuntimes(serverType, isLocalhost);
 					setRuntime(getDefaultRuntime());
@@ -591,7 +591,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 	}
 
 	protected void updateRuntimeCombo(IServerType serverType) {
-		if (serverType == null || !serverType.hasRuntime() || server == null) {
+		if (serverType == null || !serverType.requiresRuntime() || server == null) {
 			if (runtimeLabel != null) {
 				runtimeLabel.setEnabled(false);
 				runtimeCombo.setItems(new String[0]);
@@ -823,7 +823,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			serverNameLabel.setVisible(true);
 			serverName.setVisible(true);
 			hostnameLabel.setVisible(true);
-			if (serverType.hasRuntime() && server != null
+			if (serverType.requiresRuntime() && server != null
 					&& ServerUIPlugin.getRuntimes(serverType.getRuntimeType()).length >= 1) {
 				runtimeLabel.setVisible(true);
 				runtimeCombo.setVisible(true);

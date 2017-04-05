@@ -100,19 +100,28 @@ public interface IServerType {
 	public IRuntimeType getRuntimeType();
 	
 	/**
-	 * Returns whether this type of server requires a server
-	 * runtime.
-	 * <p>
-	 * [issue: See issues on getRuntimeType(). I suspect this
-	 * method is unnecessary, and that 
-	 * this.getRuntimeType() != null will do.]
-	 * </p>
+	 * Returns whether this type of server has support for
+	 * a server runtime.
 	 * 
-	 * @return <code>true</code> if this type of server requires
+	 * This method is equivalent to this.getRuntimeType() != null
+	 * 
+	 * @return <code>true</code> if this type of server supports
 	 * a server runtime, and <code>false</code> if it does not
 	 * @see #getRuntimeType()
 	 */
 	public boolean hasRuntime();
+	
+	/**
+	 * Returns whether this type of server requires a server
+	 * runtime.
+	 * 
+	 * @return <code>true</code> if this type of server requires
+	 * a server runtime, and <code>false</code> if it does not
+	 * @see #getRuntimeType()
+	 * @since 1.9
+	 */
+	public boolean requiresRuntime();
+	
 	
 	/**
 	 * Returns whether this type of server supports the given launch mode.

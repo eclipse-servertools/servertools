@@ -77,6 +77,10 @@ public class ServerTypeProxy  implements IServerType{
 	public boolean hasRuntime() {
 		return false;
 	}
+	
+	public boolean requiresRuntime() {
+		return false;
+	}
 
 	public void dispose() {
 		runtimeType = null;
