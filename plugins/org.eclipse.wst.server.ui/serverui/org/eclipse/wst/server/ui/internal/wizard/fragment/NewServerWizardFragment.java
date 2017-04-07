@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2014 IBM Corporation and others.
+ * Copyright (c) 2003, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -104,13 +104,18 @@ public class NewServerWizardFragment extends WizardFragment {
 		
 		Byte b = getMode();
 		if (b != null && b.byteValue() == MODE_MANUAL) {
+			IServerAttributes server = (IServerAttributes) getTaskModel().getObject(TaskModel.TASK_SERVER);
 			Object runtime = getTaskModel().getObject(TaskModel.TASK_RUNTIME);
 			if (runtime != null && runtime instanceof IRuntimeWorkingCopy) {
-				WizardFragment sub = getWizardFragment(((IRuntime)runtime).getRuntimeType().getId());
-				if (sub != null)
-					list.add(sub);
-			} 			
-			IServerAttributes server = (IServerAttributes) getTaskModel().getObject(TaskModel.TASK_SERVER);
+				IServerType st = server == null ? null : server.getServerType();
+				// Server types that have optional runtime types should not have their fragment added here.
+				// It should be assumed that the optional runtime fragment is added by the adopter later
+				if( st != null && st.requiresRuntime()) { 
+					WizardFragment sub = getWizardFragment(((IRuntime)runtime).getRuntimeType().getId());
+					if (sub != null)
+						list.add(sub);
+				}
+			}
 			if (server != null) {
 				if (server.getServerType().hasServerConfiguration() && server instanceof ServerWorkingCopy && runtime instanceof IRuntime) {
 					ServerWorkingCopy swc = (ServerWorkingCopy) server;
