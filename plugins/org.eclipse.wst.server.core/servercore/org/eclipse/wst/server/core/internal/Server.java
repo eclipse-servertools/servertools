@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2015 IBM Corporation and others.
+ * Copyright (c) 2003, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -216,8 +216,13 @@ public class Server extends Base implements IServer {
 					if (getModule().equals(m)) {
 						if (hasPublishedResourceDelta(module2)) {
 							changed[0] = true;
-							int newState = getModulePublishState(module2) == IServer.PUBLISH_STATE_FULL ? IServer.PUBLISH_STATE_FULL : IServer.PUBLISH_STATE_INCREMENTAL;
-							setModulePublishState(module2, newState);
+							int oldState = getModulePublishState(module2);
+							// if the old state is unknown, we have no basis to decide between full or incremental, so leave at unknown
+							if( oldState != IServer.PUBLISH_STATE_UNKNOWN) {
+								// do not downgrade a module that requires full publish to one that requires incremental
+								int newState = oldState  == IServer.PUBLISH_STATE_FULL ? IServer.PUBLISH_STATE_FULL : IServer.PUBLISH_STATE_INCREMENTAL;
+								setModulePublishState(module2, newState);
+							}
 						}
 					}
 					return true;
@@ -228,9 +233,14 @@ public class Server extends Base implements IServer {
 			visit(visitor, null);
 			
 			if (getServerPublishInfo().hasStructureChanged(modules2)) {
-				int newState = getServerPublishState() == IServer.PUBLISH_STATE_FULL ? IServer.PUBLISH_STATE_FULL : IServer.PUBLISH_STATE_INCREMENTAL;
-				setServerPublishState(newState);
-				changed[0] = true;
+				int oldState = getServerPublishState();
+				// if the old state is unknown, we have no basis to decide between full or incremental, so leave at unknown
+				if( oldState != IServer.PUBLISH_STATE_UNKNOWN) {
+					// do not downgrade a module that requires full publish to one that requires incremental
+					int newState = oldState == IServer.PUBLISH_STATE_FULL ? IServer.PUBLISH_STATE_FULL : IServer.PUBLISH_STATE_INCREMENTAL;
+					setServerPublishState(newState);
+					changed[0] = true;
+				}
 			}
 			
 			if (!changed[0])
