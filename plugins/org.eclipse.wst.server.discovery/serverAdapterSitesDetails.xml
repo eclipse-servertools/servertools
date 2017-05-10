@@ -1,13 +1,13 @@
 <extensionDetails>
 	<feature
-		uri="http://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/updates/bluemixAdapter/neon/"
+		uri="http://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/updates/bluemixAdapter/oxygen/"
 		id="com.ibm.cftools.wtp.serveradapter.feature.feature.group"
 		name="IBM Bluemix Tools Server Adapter"
 		description="Cloud Tools for IBM Bluemix" provider="IBM"
 		version="1.0.0.v20150801_1001" serverId="com.ibm.cftools.server"
 		runtime-vendor="IBM" runtimeId="com.ibm.cftools.runtime" />
 	<feature
-		uri="http://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/updates/libertyAdapter/neon/"
+		uri="http://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/updates/libertyAdapter/oxygen/"
 		id="com.ibm.ws.st.tools.base.feature.group"
 		name="WebSphere Application Server Liberty Profile Tools"
 		description="Tools for developing and administering WebSphere Application Server Liberty Profile"
