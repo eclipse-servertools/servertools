@@ -235,6 +235,8 @@ public interface IServer extends IServerAttributes, ISchedulingRule {
 	 * state changes to this server. The listener continues to receive
 	 * notifications until it is removed.
 	 * Has no effect if an identical listener is already registered.
+	 * Note: This method should not be called on the startup of the 
+	 * server implementation; otherwise, deadlock may occur.
 	 *
 	 * @param listener the server listener
 	 * @see #removeServerListener(IServerListener)
@@ -247,6 +249,8 @@ public interface IServer extends IServerAttributes, ISchedulingRule {
 	 * state changes to this server. The listener continues to receive
 	 * notifications until it is removed.
 	 * Has no effect if an identical listener is already registered.
+	 * Note: This method should not be called on the startup of the 
+	 * server implementation; otherwise, deadlock may occur.
 	 *
 	 * @param listener the server listener
 	 * @param eventMask the bit-wise OR of all event types of interest to the
