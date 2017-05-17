@@ -692,5 +692,21 @@
         archiveSize="8234674"
         fileCount="629"
         os="linux"/>
+    <runtime
+        id="org.eclipse.jst.server.tomcat.runtime.80"
+        licenseUrl="http://www.apache.org/licenses/LICENSE-2.0.txt"
+        archiveUrl="http://archive.apache.org/dist/tomcat/tomcat-8/v8.0.36/bin/apache-tomcat-8.0.36-windows-x86.zip"
+        archivePath="apache-tomcat-8.0.36"
+        archiveSize="10562332"
+        fileCount="645"
+        os="win32"/>
+    <runtime
+        id="org.eclipse.jst.server.tomcat.runtime.80"
+        licenseUrl="http://www.apache.org/licenses/LICENSE-2.0.txt"
+        archiveUrl="http://archive.apache.org/dist/tomcat/tomcat-8/v8.0.36/bin/apache-tomcat-8.0.36.tar.gz"
+        archivePath="apache-tomcat-8.0.36"
+        archiveSize="9277365"
+        fileCount="641"
+        os="linux"/>
   </extension>
 </plugin>
