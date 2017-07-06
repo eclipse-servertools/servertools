@@ -39,14 +39,14 @@
         <configuration>
           <useUIHarness>true</useUIHarness>
           <useUIThread>true</useUIThread>
-          <skipTests>${skipWithIssues}</skipTests>        
+<!--           <skipTests>${skipWithIssues}</skipTests>        
           <dependencies>
             <dependency>
               <type>p2-installable-unit</type>
               <artifactId>org.eclipse.jst.j2ee.ui</artifactId>
               <version>0.0.0</version>
             </dependency>
-          </dependencies>
+          </dependencies> -->
         </configuration>
       </plugin>
     </plugins>

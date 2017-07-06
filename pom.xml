@@ -28,6 +28,8 @@
 
   <properties>
     <tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/servertools/webtools.servertools.git</tycho.scmUrl>
+    <tycho.version>1.0.0</tycho.version>
+    <tycho-extras.version>1.0.0</tycho-extras.version>
   </properties>
 
   <modules>
@@ -100,6 +102,26 @@
         <module>features/org.eclipse.wst.server_tests.feature</module>
         <module>features/org.eclipse.jst.server_tests.feature</module>
       </modules>
+<!--       <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>target-platform-configuration</artifactId>
+            <configuration>
+              <skip>${skipITests}</skip>
+              <dependency-resolution>
+                  <extraRequirements>
+                  <requirement>
+                    <type>p2-installable-unit</type>
+                    <id>org.eclipse.wst.server.ui</id>
+                    <versionRange>0.0.0</versionRange>
+                  </requirement>
+                  </extraRequirements>
+              </dependency-resolution>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build> -->
     </profile>
   </profiles>
 </project>

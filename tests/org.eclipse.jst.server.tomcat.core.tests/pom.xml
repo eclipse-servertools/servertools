@@ -30,7 +30,7 @@
     <testClass>org.eclipse.jst.server.tomcat.core.tests.AllTests</testClass>
   </properties>
 
-  <build>
+<!--   <build>
     <plugins>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
@@ -47,5 +47,5 @@
         </configuration>
       </plugin>
     </plugins>
-  </build>
+  </build> -->
 </project>
