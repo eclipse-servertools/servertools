@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,6 +42,8 @@ public class SocketUtil {
 	private static Map<String, CacheThread> threadMap = new HashMap<String, CacheThread>();
 
 	private static Set<InetAddress> addressCache;
+	
+	private static Set<String> networkIntefacesAddressCache = null;
 
 	static class CacheThread extends Thread {
 		private Set<InetAddress> currentAddresses;
@@ -390,6 +392,16 @@ public class SocketUtil {
 							localHostCache.add(a);
 					}
 					
+					networkIntefacesAddressCache = new HashSet<String>();
+					
+					Iterator<InetAddress> ias = addressCache.iterator();
+					while (ias.hasNext()){
+						InetAddress curr = ias.next();
+						if (curr != null){
+							networkIntefacesAddressCache.add(curr.getHostAddress());
+						}
+					}
+					
 					cacheThread = new CacheThread(host, currentAddresses, localHostCache, notLocalHostCache, threadMap);
 					threadMap.put(host, cacheThread);
 					cacheThread.setDaemon(true);
@@ -403,6 +415,27 @@ public class SocketUtil {
 				Trace.trace(Trace.STRING_WARNING, "Localhost caching failure", e);
 			}
 		}
+		
+		// Check for IP address over all network interfaces. This is to handle the case where
+		// multiple network interfaces are used and the normal InetAddress.getLocalHost() returns
+		// an ambiguous address
+		if (networkIntefacesAddressCache != null){
+			try {
+				InetAddress hostHostaddr = InetAddress.getByName(host);
+				if (networkIntefacesAddressCache.contains(hostHostaddr.getHostAddress())){
+					synchronized (lock) {
+						localHostCache.add(host);
+					}
+					return true;
+				}
+			}
+			catch (Exception e){
+				if (Trace.WARNING) {
+					Trace.trace(Trace.STRING_WARNING, "Failed to compare IP addresses across all network interfaces", e);
+				}			
+			}
+		}		
+		
 		
 		synchronized (lock) {
 			if (localHostCache.contains(host))
