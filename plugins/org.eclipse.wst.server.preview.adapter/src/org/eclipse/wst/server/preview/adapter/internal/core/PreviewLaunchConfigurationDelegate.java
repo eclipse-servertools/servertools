@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 IBM Corporation and others.
+ * Copyright (c) 2007, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,10 +24,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.core.Launch;
 import org.eclipse.debug.core.model.IProcess;
+import org.eclipse.debug.core.model.IStreamsProxy;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.osgi.service.environment.Constants;
-
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
@@ -130,7 +132,7 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 				previewServer.addProcessListener(pr);
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Problem creating preview process");
+			Trace.trace(Trace.SEVERE, "Problem creating preview process", e);
 		}
 	}
 
@@ -169,15 +171,63 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 		return buf.toString();
 	}
 
+	/**
+	 * @return the File representing the Java Runtime's executable. A
+	 *         heuristic is used to avoid a hard dependency on JDT and its
+	 *         "Installed JREs" preferences. page.
+	 */
 	protected static File getJavaExecutable() {
-		// set the 'java.home' system property on the Mac OS
-		if (Platform.getOS().equals(Constants.OS_MACOSX))
-			System.setProperty("java.home", "/Library/Java/Home");
+		String home = System.getProperty("java.home"); //$NON-NLS-1$
+
+		if (Platform.getOS().equals(Constants.OS_MACOSX)) {
+			/*
+			 * See "Important Java Directories on Mac OS X", at
+			 * https://developer.apple.com/library/content/qa/qa1170/_index.
+			 * html
+			 *
+			 * The following is liberally borrowed from
+			 * org.eclipse.jdt.internal.launching.LaunchingPlugin
+			 */
+			Process p = null;
+			try {
+				p = DebugPlugin.exec(new String[]{"/usr/libexec/java_home"}, null, new String[0]); //$NON-NLS-1$
+				IProcess process = DebugPlugin.newProcess(new Launch(null, ILaunchManager.RUN_MODE, null), p, "Looking for the user's enabled and preferred JVMs"); //$NON-NLS-1$
+				for (int i = 0; i < 600; i++) {
+					// Wait no more than 30 seconds (600 * 50 milliseconds)
+					if (process.isTerminated()) {
+						break;
+					}
+					try {
+						Thread.sleep(50);
+					}
+					catch (InterruptedException e) {
+						// just keep sleeping
+					}
+				}
+				IStreamsProxy streamsProxy = process.getStreamsProxy();
+				String text = null;
+				if (streamsProxy != null) {
+					text = streamsProxy.getOutputStreamMonitor().getContents().trim();
+				}
+				if (text != null && text.length() > 0) {
+					home = text;
+				}
+			} catch (CoreException ioe) {
+				// fall through
+			} finally {
+				if (p != null) {
+					p.destroy();
+				}
+			}
+			if (home == null) {
+				home = "/Library/Java/Home"; //$NON-NLS-1$
+			}
+		}
 		
 		// retrieve the 'java.home' system property. If that directory doesn't exist, return null
 		File javaHome;
 		try {
-			javaHome = new File(System.getProperty("java.home")).getCanonicalFile();
+			javaHome = new File(home).getCanonicalFile();
 		} catch (IOException e) {
 			return null;
 		}
