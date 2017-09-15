@@ -59,6 +59,7 @@ public class NewServerAction extends NewWizardAction {
 			wizard = new NewServerWizard(ids, values);
 		wizard.init(workbench, selection);
 		WizardDialog dialog = new WizardDialog(workbench.getActiveWorkbenchWindow().getShell(), wizard);
+		dialog.setMinimumPageSize(300, 480);
 		dialog.open();
 	}
 }
