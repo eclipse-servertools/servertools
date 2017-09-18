@@ -54,6 +54,7 @@ abstract class LaunchWizardAction extends Action {
 		IWorkbenchWizard wizard = getWizard();
 		wizard.init(workbench, selectionToPass);
 		WizardDialog dialog = new WizardDialog(workbench.getActiveWorkbenchWindow().getShell(), wizard);
+		dialog.setMinimumPageSize(300, 480);
 		dialog.open();
 	}
 }
