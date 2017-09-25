@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2016 IBM Corporation and others.
+ * Copyright (c) 2003, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -141,22 +141,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		Label lastUpdatedLabel = new Label(cacheGroup, SWT.NONE);
 		lastUpdatedLabel.setText(Messages.cacheUpdate_lastUpdatedOn);
 		updateTime = new Text(cacheGroup, SWT.READ_ONLY);
-		
-		String lastUpdatedDate = Discovery.getLastUpdatedDate();
-		lastUpdatedDate = lastUpdatedDate.trim();
-		// The cache's date is in English
-		DateFormat dfCached = new SimpleDateFormat(CACHE_LAST_UPDATED_DATE_FORMAT, Locale.ENGLISH);
-		// Need to covert the English date to the current locale's format
-		DateFormat dfCurrLocale = new SimpleDateFormat(Messages.cacheUpdate_lastUpdatedFormat, Locale.getDefault());
-		
-		Date d;
-		try {
-			d = dfCached.parse(lastUpdatedDate);
-			updateTime.setText(dfCurrLocale.format(d));
-		} catch (ParseException e1) {
-			// In case of failure, display what was cached
-			updateTime.setText(lastUpdatedDate);
-		}
+		updateTime.setText(getLastUpdateDate());
 		
 		Dialog.applyDialogFont(composite);
 		
@@ -185,7 +170,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 					 if (refreshNow != null && !refreshNow.isDisposed()){
 						 refreshNow.setEnabled(true);
 						 refreshNow.setText(Messages.cacheUpdate_refreshNow);
-						 updateTime.setText(Discovery.getLastUpdatedDate());
+						 updateTime.setText(getLastUpdateDate());
 					 }
 				}
 			});
@@ -227,5 +212,23 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	
 	public void dispose(){
 		ServerUIUtil.setListener(null);
+	}
+	
+	public String getLastUpdateDate() {
+		String lastUpdatedDate = Discovery.getLastUpdatedDate();
+		lastUpdatedDate = lastUpdatedDate.trim();
+		// The cache's date is in English
+		DateFormat dfCached = new SimpleDateFormat(CACHE_LAST_UPDATED_DATE_FORMAT, Locale.ENGLISH);
+		// Need to covert the English date to the current locale's format
+		DateFormat dfCurrLocale = new SimpleDateFormat(Messages.cacheUpdate_lastUpdatedFormat, Locale.getDefault());
+		
+		Date d;
+		try {
+			d = dfCached.parse(lastUpdatedDate);
+			lastUpdatedDate = dfCurrLocale.format(d);
+		} catch (ParseException e1) {
+			// In case of failure, display what was cached, so do nothing.
+		}
+		return lastUpdatedDate;
 	}
 }
