@@ -67,7 +67,7 @@ public interface ITomcatVersionHandler {
 	public String[] getExcludedRuntimeProgramArguments(boolean debug, boolean starting);
 	
 	/**
-	 * Gets the startup VM arguments for the Tomcat server.
+	 * Gets the subset of the startup VM arguments for the Tomcat server that apply to all compatible JVM versions.
 	 * 
 	 * @param installPath installation path for the server
 	 * @param configPath configuration path for the server

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2007, 2016 SAS Institute, Inc and others.
+ * Copyright (c) 2007, 2017 SAS Institute, Inc and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -177,7 +177,7 @@ public class TomcatVersionHelper {
 	 * @param isTestEnv test environment flag
 	 * @return array of strings containing VM arguments
 	 */
-	public static String[] getCatalinaVMArguments(IPath installPath, IPath instancePath, IPath deployPath, String endorsedDirs, boolean isTestEnv) {
+	public static String[] getCatalinaVMArguments(IPath installPath, IPath instancePath, IPath deployPath, boolean isTestEnv) {
 		List<String> list = new ArrayList<String>();
 		if (isTestEnv)
 			list.add("-Dcatalina.base=\"" + instancePath.toOSString() + "\"");
@@ -186,7 +186,6 @@ public class TomcatVersionHelper {
 		list.add("-Dcatalina.home=\"" + installPath.toOSString() + "\"");
 		// Include a system property for the configurable deploy location
 		list.add("-Dwtp.deploy=\"" + deployPath.toOSString() + "\"");
-		list.add("-Djava.endorsed.dirs=\"" + endorsedDirs + "\"");
 		
 		String[] s = new String[list.size()];
 		list.toArray(s);
