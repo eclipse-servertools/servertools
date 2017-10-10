@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
+ "concept.dtd">
+<concept id="cwres_wst" xml:lang="en-us">
+<title id="cwres_title">Resources used to test and publish on your server</title>
+<shortdesc id="cwres_shortdesc">To test and publish on your server, you need
+to define one or more of the following resources:</shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm keyref="cwres|1|preferencesinstalledserverruntimeenvironments"
+status="changed">preferences<indexterm>server runtime environments<indexterm>resources</indexterm></indexterm></indexterm>
+<indexterm keyref="cwres|2|runtimeenvironmentsdescription" status="new">runtime
+environments<indexterm>description</indexterm></indexterm><indexterm keyref="cwres|3|serverstestingapplications"
+status="new">servers<indexterm>testing applications</indexterm></indexterm>
+</keywords>
+</metadata></prolog>
+<conbody>
+<ul id="cwres_ul">
+<li>A server</li>
+<li>A server runtime environment</li>
+</ul>
+<p id="cwres_p1">If a server has server configuration files, in most situations,
+these server configuration files are created for you automatically and contained
+in a server project.</p>
+<section id="cwres_server_project"><title>Server Project</title><p>A <i>server
+project</i> contains servers and server configuration files. When a server
+project is created automatically by the workbench, the name given to the project
+is <uicontrol>Servers</uicontrol> and is available in the Project Explorer
+view.</p></section>
+<section id="cwres_servers"><title id="cwres_servers_title">Server</title><p
+id="cwres_servers_p1">A <i>server</i> identifies where you want to test or
+publish your application. A server points to a specific runtime environment
+such as a local test environment, a full installation of a server, or a server
+on another machine. A server contains the logic of how to publish to the server;
+and what application projects and configurations to run.</p><p id="cwres_servers_p2">On
+the workbench, when the metadata of the server is automatically created, it
+is stored in a <i>serverName</i>.server file, where <i>serverName</i> is the
+name assigned to the server. For details on the metadata of the server, refer
+to the <i>Displaying or hiding the metadata of the server</i> link at the
+bottom of this topic.</p></section>
+<section><title id="cwres_serverconfig_title">Server configurations</title><p
+id="cwres_serverconfig_p1"><ph>Server configurations are files that contain
+information to set up and publish to a server. For example, these files may
+include information about what port to run the server, security preferences
+and other vendor-specific server settings.</ph></p><p id="cwres_serverconfig_p2">On
+the workbench, the metadata of the server configurations is automatically
+created and stored in a <i>configuration data folder</i> under a server project.
+The naming convention of the configuration data folder is dependant on the
+vendor, typically it has the following convention: <i>serverName</i>@<i>hostname</i>-config,
+where <i>serverName</i> is the name assigned to the server, and <i>hostname</i> is
+the fully qualified DNS name or IP address of the host machine where the server
+is running.</p></section>
+<section id="cwres_installed_runtime"><title>Server Runtime Environment</title>You
+need to define the runtime environment of an application server for compiling
+your application. A server contains a reference to a server runtime environment
+it is currently using. For details on how to define a server runtime environment,
+refer to the <i>Defining the server runtime environments <?Pub Caret?>preference</i> link
+at the bottom of this topic.</section>
+<section id="cwres_relationship"><title>Relationship between the resources</title><p>For
+each server, you can specify the server configuration and server runtime environment
+that should be used for that server. A server can only point to one or no
+server configuration. However, a server configuration can be pointed from
+one or more servers.</p><p>A relationship between a server configuration and
+an application project, for example an EAR project, is created when a project
+is added to the server configuration. A server can point to one or more projects.
+A project can be pointed from one or more server configurations.</p></section>
+</conbody>
+</concept>
+<?Pub *0000004416?>

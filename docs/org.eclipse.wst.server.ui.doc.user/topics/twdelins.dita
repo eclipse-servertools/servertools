@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<task id="twdelins_wst" xml:lang="en-us">
+<title id="title">Deleting a server</title>
+<shortdesc id="shortdesc">You may delete a server from the Servers view.</shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm>servers<indexterm>deleting</indexterm></indexterm>
+</keywords>
+</metadata></prolog>
+<taskbody>
+<context id="context">To delete a server:</context>
+<steps id="steps">
+<step><cmd>In the Servers view, right-click on the server that you want to
+delete.</cmd></step>
+<step><cmd>Select  <b>Delete</b>. </cmd><info>The Delete Server dialog box
+opens.</info></step>
+<step><cmd>The Delete Server dialog box opens and prompts different options
+depending on the status of the server in the Servers view:</cmd>
+<choicetable>
+<chrow><choption>Delete unused server configurations</choption><chdesc>If
+server configuration files were created in the workspace under a server project,
+this option becomes available. Select this check box to remove the server
+configuration files from the workspace.</chdesc></chrow>
+<chrow><choption>Delete running servers</choption><chdesc>This option specifies
+to delete servers that are still running. </chdesc></chrow>
+<chrow><choption>Stop servers before deleting</choption><chdesc>This option
+is only available if the <b>Delete running servers</b> option is selected.
+This option specifies to stop running servers prior to removing them from
+the Servers view. If this option is cleared and the <b>Delete running servers</b> option
+is selected, no stop command is issued against the server, and as a result
+the server is left running after removing the server from the Servers view.</chdesc>
+</chrow>
+</choicetable>
+</step>
+<step><cmd>Select the <uicontrol>OK</uicontrol> button to apply your delete
+options.</cmd></step>
+</steps>
+</taskbody>
+</task>
+<?Pub *0000002082?>

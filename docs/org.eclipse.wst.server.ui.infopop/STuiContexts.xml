@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS type="org.eclipse.help.contexts"?>
+<!-- /*******************************************************************************
+ * Copyright (c) 2000, 2010 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/ -->
+<contexts>
+<context id="sdpd0000">
+<description>This dialog box displays the status of the projects that were published. For more detailed information, click <b>Details</b>. A scrollable box appears at the bottom of this dialog box.
+
+</description>
+</context>
+<context id="sdpd0002">
+<description>This dialog box displays the status of the projects that were published. For more detailed information, click <b>Details</b>. A scrollable box appears at the bottom of this dialog box.
+
+</description>
+</context>
+<context id="sdpd0004">
+<description>This dialog box displays the status of the projects that were published. For more detailed information, click <b>Details</b>. A scrollable box appears at the bottom of this dialog box.
+
+</description>
+</context>
+<context id="sdpd0006">
+<description>This dialog box displays the status of the projects that were published. For more detailed information, click <b>Details</b>. A scrollable box appears at the bottom of this dialog box.
+
+</description>
+</context>
+
+<context id="sdpi0000">
+<description>This change cannot be undone.
+
+</description>
+</context>
+<context id="sdti0000">
+<description>Informational message indicating that server is not responding and that you may want to terminate it by clicking <b>OK</b>.
+
+</description>
+</context>
+<context id="spge0000">
+<description>Use this page to define a list of server runtime environments available for selection in the current workspace.
+
+A server runtime environment is composed of the following definitions:
+-a name to identify the server runtime environment
+-the type of server that specifies the vendor and version-level of the server
+-the directory path to a local installation of the server
+-In some cases, also includes a reference to a Java runtime environment
+
+If a server runtime environment is referencing a stub directory of the server, you can only compile your application against the stub server.  However, if referencing a full installation of the server, you can compile, test, and run your application against the installation of the server.
+</description>
+</context>
+
+<context id="spge0002">
+<description>Specifies that all the files should automatically be published to the local server at every <b>seconds</b> intervals, where <b>seconds</b> is the number of seconds you have specified in the control.
+</description>
+</context>
+<context id="spge0006">
+<description>Specifies that all the files should automatically be published to the remote server at every <b>seconds</b> intervals, where <b>seconds</b> is the number of seconds you have specified in the control.
+</description>
+</context>
+<context id="spge0012">
+<description>Specifies that all the files should automatically be published before starting the server.
+</description>
+</context>
+<context id="spge0022">
+<description>The Servers view is displayed on the workbench when there are any activities in the Servers view.
+</description>
+</context>
+
+<context id="spge0024">
+<description>Specifies the preferences for saving the changes in any open server editors before starting the server. Select <b>Never</b> to never save the changes in any open editors before starting the server. Select <b>Prompt</b> to have the server tools prompt you before saving any changes in an open server editor. Select <b>Always</b> to have the server tools automatically save any changes in an open server editor before starting the server.
+</description>
+</context>
+
+<context id="spge0026">
+<description>Specify the number of seconds allowed to elapse, before the workbench cancels the process to start the server. 
+<b>Tip</b>:  If you have a fast processing machine, you can try to set a short timeout interval. If you have a slow processing machine, you can try to set a long timeout interval.
+</description>
+</context>
+
+<context id="spge0027">
+<description>Specify the number of seconds allowed to elapse, before the workbench prompts you for an action. The prompt requests from you to either click <b>OK</b> to end the server or click <b>Cancel</b> to continue waiting for the server to stop.   
+<b>Tip</b>:  If you have a fast processing machine, you can try to set a short timeout interval. If you have a slow processing machine, you can try to set a long timeout interval.
+</description>
+</context>
+
+<context id="spge0028">
+<description>This option specifies that each time you start the workbench, it will try to update the status of the server defined in the Servers view with the actual state of the server, such as Started or Stopped.
+</description>
+</context>
+
+<context id="spge0030">
+<description>When switching the server to run in a different mode, for example using the <b>Run As</b> > <b>Run on Server</b>, <b>Profile As</b> > <b>Profile on Server</b>, or <b>Debug As</b> > <b>Debug on Server</b>, specify the next action of the server by selecting one of the following options:
+
+<b>Restart</b> - specifies the workbench to stop and restart the server
+
+<b>Continue</b> - specifies to continue running the server in previous mode and ignore the change request of running in a different server mode
+
+<b>Prompt</b> - specifies the workbench to prompt you for the next server action when you switch the server to run in a different mode
+</description>
+</context>
+
+<context id="spge0031">
+<description>When you finish running the server in debug mode and switch out, for example using the <b>Run As</b> > <b>Run on Server</b> or <b>Profile As</b> > <b>Profile on Server</b> command, specify the next action of the server by selecting one of the following options:
+
+<b>Restart</b> - specifies the workbench to stop and restart the server
+
+<b>Disable breakpoints</b> - specifies to clear all previously set breakpoints from the application and continue running the application in the newly selected server mode
+
+<b>Continue</b> - specifies to continue running the server in debug mode and ignore the change request of running in a different server mode
+
+<b>Prompt</b> - specifies the workbench to prompt you for the next server action when switching the server out of debug mode
+</description>
+</context>
+
+<context id="spge0032">
+<description>When you change the server mode into debug mode, for example using the <b>Debug As</b> > <b>Debug on Server</b> command, specify how to handle the breakpoints currently set in your application by selecting one of the following options:
+
+<b>Always</b> - specifies to enable all the currently set breakpoints in your application and break at them
+
+<b>Never</b> - specifies the workbench to ignore all the breakpoints previously set in your application and continue running the application on the server in debug mode. When the workbench ignores all the breakpoints in your application, the behavior of the server mode is similar to using the <b>Run on Server</b> command. However, because the server is running in debug mode, you have the opportunity to enable or re-enable breakpoints in your application.
+
+<b>Prompt</b> - specifies the workbench will prompt you on how to handle the breakpoints set in your applications
+</description>
+</context>
+
+<context id="svcp0000">
+<description>The Servers view allows you to manage servers. This view displays a list of all your servers and the server configurations that are associated with each server. You can use this view to start, start in debug mode, restart, and stop servers.
+To edit a server open its server editor by going into the Servers view and double-click the server; or right-click the server and select <b>Open</b> in the pop-up menu.
+</description>
+</context>
+<context id="svcp0002">
+<description>
+This dialog box prompts different options depending on the status of the server in the Servers view:
+
+<b>Delete unused server configurations</b>: If server configuration files were created in the workspace under a server project, this option becomes available. Select this check box to remove the server configuration files from the workspace. 
+<b>Delete running servers</b> This option specifies to delete servers that are still running.  
+<b>Stop servers before deleting</b> This option is only available if the Delete running servers option is selected. This option specifies to stop running servers prior to removing them from the Servers view. If this option is cleared and the Delete running servers option is selected, no stop command is issued against the server, and as a result the server is left running after removing the server from the Servers view.
+
+Select the <b>OK</b> button to apply your delete options.
+</description>
+</context>
+
+<!-- In Servers View, right-click a server and select Properties > General Information
+<context id="svcp0004">
+<description>
+</description>
+</context>
+-->
+<context id="swns0000">
+<description>This wizard creates a new server and a new server configuration. A server contains information required to point to a specific run-time environment for local or remote testing, or for deployment to an application server. A server configuration contains information required to set up and deploy to a server.
+
+</description>
+</context>
+
+<context id="swns0006">
+<description>The type of environment that you want to use for this server. A list of available server types is shown. For more details on each of the supported server types, select a type from the list and read the description that appears in the <b>Description</b> area of this wizard page.
+
+</description>
+</context>
+<context id="swsc0000">
+<description>If a resource can run on several server clients, this dialog box will display them allowing you to select which one will be used.
+
+</description>
+</context>
+<context id="swsc0002">
+<description>If a resource can run on several server clients, this dialog box will display them allowing you to select which one will be used.
+
+</description>
+</context>
+<context id="swsi0000">
+<description>Select a server to launch.
+
+</description>
+</context>
+<context id="swsi0002">
+<description>Select an existing server.
+
+</description>
+</context>
+<context id="swsi0004">
+<description>List of existing servers that can be launched.
+
+</description>
+</context>
+<context id="swsi0010">
+<description>Create a new server to launch.
+
+</description>
+</context>
+<context id="swsi0012">
+<description>List of types of servers that can be launched.
+
+</description>
+</context>
+<context id="swsi0014">
+<description>A preferred server is the server that you want to use when a project has more than one server defined. Click to set the selected server as your preferred server.
+
+</description>
+</context>
+<context id="swsl0000">
+<description>To confirm that you want to launch the selected object, click <b>Finish</b>.
+
+</description>
+</context>
+
+<context id="seop0000">
+<description>Specify the host name and other server settings.
+</description>
+</context>
+
+<context id="seop0002">
+<description>Specify the name assign to the server.  This name is displayed in the Servers view.
+</description>
+</context>
+
+<context id="seop0004">
+<description>Specifies the location where the server configuration files are stored on the workbench.  
+For example, if you specified the Configuration path to be <b>/Servers/Tomcat v4.1 Server at localhost-config</b>, the files are available in the Navigator view, expand the folders: Servers > Tomcat v4.1 Server at localhost-config.
+</description>
+</context>
+
+<context id="seop0006">
+<description>The fully qualified DNS name or IP address of the host machine where the server is running.
+</description>
+</context>
+
+<context id="seop0008">
+<description>Specifies the name of the server runtime environment as defined in the Preferences page (Window > Preferences > Server > Runtime Environments).
+The server runtime environments define the runtime environment of an application server for compiling your application.
+To change the server runtime environment, select the <b>Runtime Environment</b> link.
+</description>
+
+</context>
+<context id="seop0010">
+<description>Specify to use the publishing settings as defined in the Preferences page (Windows > Preferences > Server).
+</description>
+</context>
+
+<context id="seop0012">
+<description>Specifies the workbench to issue a publish after changes on a file that is associated to the server are saved and a full time interval has passed in the <b>Publishing interval</b> setting.</description>
+</context>
+
+<context id="seop0014">
+<description>Specifies the workbench to issue a publish after changes on a file that requires a build and is associated to the server are saved, and a full time interval has passed in the <b>Publishing interval</b> setting.</description>
+</context>
+
+<context id="seop0016">
+<description>Specifies the workbench should never publish files to the server.
+</description>
+</context>
+
+<context id="seop0018">
+<description>Specifies the number of <b>seconds</b> that needs to pass before the workbench calls a publish to happen on the server. However, if you make a subsequent change to the files before this time interval has completed, the publish is delayed as the timer is reset. The workbench makes a publish to the server only after the full time interval has passed.  If you set the publishing interval to 0 seconds, an immediate publish should happen after changes on a file are saved.
+</description>
+</context>
+
+<context id="seop0020">
+<description>Select the tasks you want to run during publishing.
+</description>
+</context>
+
+<context id="swmm0000">
+<description>In the Available projects list, specify the projects that you want to add to the server by clicking the <b>Add</b> button. When you select a project to add to the server, only the projects that are applicable to the type of server will appear. To remove a project from the Configured projects list, click the <b>Remove</b> button.
+</description>
+</context>
+
+<context id="swnr0000">
+<description>Under the <b>Select the type of runtime environment</b> list, select a server and version-level as the target server runtime environment. 
+<b>Tip:</b> In the text field under the <b>Select the type of runtime environment</b> label, you can replace the text <b>type filter text</b> with keywords to filter the list of available application servers. The following are examples of filter keywords, see the help topic for details: Apache, WebSphere, ejb, web, 5.0, or 1.2.  
+When you add a server runtime environment, by default a server is created and added as an entry in the Servers view. If you want to only add the server runtime environment and not create the server in the Servers view, clear the <b>Create a new local server</b> check box. 
+To continue, click <b>Next</b>.
+</description>
+</context>
+
+<context id="svcp0004">
+<description>Select the <b>Switch location</b> button to toggle between displaying and hiding the metadata of the server on the workbench.  For details about the server metadata, see the <b>Displaying or hiding the metadata of the server</b> help topic.
+
+If the value of the <b>Location</b> field contains [workspace metadata], this means the workbench is hiding the metadata. To display the metadata on the workbench, select the <b>Switch location</b> button again until the [workspace metadata] changes to a file path directory. The file path directory specifies the location where the server metadata file is stored on the workbench.  You can find the server metadata file in the Project Explorer view, expand the <b>Servers</b> folder and then expand your server project to locate the serverName.server file, where serverName is the name assigned to your server.
+
+Optionally, you can double-click the serverName.server file to edit the data in the server editor.
+</description>
+</context>
+
+</contexts>

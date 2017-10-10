@@ -1,0 +1,4 @@
+/org.eclipse.wst.server.core/servercore/;
+/org.eclipse.wst.server.ui/serverui;
+/org.eclipse.jst.server.core/src;
+/org.eclipse.jst.server.ui/src;

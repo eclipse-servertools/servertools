@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Server Tools Reference" link_to="../org.eclipse.wst.doc.user/reference_toc.xml#javadoc_servertools"> 
+	<topic label="Server Tools API Reference" href="html/api_reference/overview-summary.html">
+    <link toc="javadoctoc.xml"/>
+	</topic>
+	
+	<topic label="Server Tools Extension Points Reference" href="html/extpts_reference/index.html">
+		<link toc="topics_ExtPoint_Reference.xml" />
+	</topic>
+</toc>

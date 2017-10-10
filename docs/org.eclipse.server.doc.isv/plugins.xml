@@ -1,0 +1,9 @@
+org.eclipse.wst.internet.monitor.core;
+org.eclipse.wst.server.core;
+org.eclipse.wst.server.http.core;
+org.eclipse.wst.server.preview;
+org.eclipse.wst.server.preview.adapter;
+org.eclipse.wst.server.ui;
+org.eclipse.jst.server.core;
+org.eclipse.jst.server.ui;
+org.eclipse.jst.server.installable;

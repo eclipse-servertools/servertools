@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<index>
+  <entry keyword="testing">
+    <entry keyword="Web projects">
+      <topic href="topics/tomcat.html#tomcat_jst" title="Creating a Tomcat server"/>
+    </entry>
+  </entry>
+  <entry keyword="servers">
+    <entry keyword="Apache Tomcat">
+      <topic href="topics/tomcat.html#tomcat_jst" title="Creating a Tomcat server"/>
+      <topic href="topics/twtomprf.html#twtomprf_jst" title="Adding the Apache Tomcat runtimes"/>
+    </entry>
+  </entry>
+  <entry keyword="Web projects">
+    <entry keyword="testing with Apache Tomcat">
+      <topic href="topics/tomcat.html#tomcat_jst" title="Creating a Tomcat server"/>
+    </entry>
+  </entry>
+  <entry keyword="Apache Tomcat">
+    <entry keyword="defining runtime environment">
+      <topic href="topics/twtomprf.html#twtomprf_jst" title="Adding the Apache Tomcat runtimes"/>
+    </entry>
+  </entry>
+  <entry keyword="runtime environments">
+    <entry keyword="Apache Tomcat">
+      <topic href="topics/twtomprf.html#twtomprf_jst" title="Adding the Apache Tomcat runtimes"/>
+    </entry>
+  </entry>
+  <entry keyword="workbench">
+    <entry keyword="Apache Tomcat server runtime environment">
+      <topic href="topics/twtomprf.html#twtomprf_jst" title="Adding the Apache Tomcat runtimes"/>
+    </entry>
+  </entry>
+</index>

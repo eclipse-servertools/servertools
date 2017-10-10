@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-us" xml:lang="en-us">
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<meta name="copyright" content="Copyright (c) 2000, 2009 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
+<meta name="DC.rights.owner" content="(C) Copyright 2000, 2009" />
+<meta content="public" name="security" />
+<meta content="index,follow" name="Robots" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta content="task" name="DC.Type" />
+<meta name="DC.Title" content="Starting a server" />
+<meta name="abstract" content="When you are ready to test your projects, you must start a server. In some situations, listed below, the server tools start a server for you automatically. For more information on which test server will start, refer to the list of related topics at the end of this topic." />
+<meta name="description" content="When you are ready to test your projects, you must start a server. In some situations, listed below, the server tools start a server for you automatically. For more information on which test server will start, refer to the list of related topics at the end of this topic." />
+<meta content="applications, starting servers for testing, projects, starting servers for testing, servers, starting for testing" name="DC.subject" />
+<meta content="applications, starting servers for testing, projects, starting servers for testing, servers, starting for testing" name="keywords" />
+<meta scheme="URI" name="DC.Relation" content="../topics/cwflow.html" />
+<meta scheme="URI" name="DC.Relation" content="../topics/ttimeout.html" />
+<meta scheme="URI" name="DC.Relation" content="../topics/twmanage.html" />
+<meta content="XHTML" name="DC.Format" />
+<meta content="twsrtins_wst" name="DC.Identifier" />
+<meta content="en-us" name="DC.Language" />
+<link href="../../org.eclipse.wst.doc.user/common.css" type="text/css" rel="stylesheet" />
+<title>Starting a server</title>
+</head>
+<body id="twsrtins_wst"><a name="twsrtins_wst"><!-- --></a>
+
+
+<h1 class="topictitle1">Starting a server</h1>
+
+
+
+<div><p>When you are ready to test your
+projects, you must start a server. In some situations, listed below,
+the server tools start a server for you automatically. For more information
+on which test server will start, refer to the list of related topics
+at the end of this topic.</p>
+
+<div class="p"><strong id="twsrtins_wst__twsrtins_prereq"><a name="twsrtins_wst__twsrtins_prereq"><!-- --></a>Prerequisites:</strong><ul>
+<li id="twsrtins_wst__twsrtins_prereq_li1"><a name="twsrtins_wst__twsrtins_prereq_li1"><!-- --></a><a href="twcrtins.html">Create a server.</a></li>
+
+</ul>
+</div>
+
+<div class="section" id="twsrtins_wst__twrstins_context"><a name="twsrtins_wst__twrstins_context"><!-- --></a><p>Once you have started the server
+you can test the projects that are associated with the server. You
+can stop and restart the server at any time. The status of the server
+is displayed in the  <span class="uicontrol">Status</span> column of the Servers
+view.</p>
+<p>To manually start a server:</p>
+</div>
+
+<a name="twsrtins_wst__twrtins_steps"><!-- --></a><ol id="twsrtins_wst__twrtins_steps">
+<li class="stepexpand"><span>Switch to the Servers view.</span></li>
+
+<li class="stepexpand"><span>In the Servers view, right-click the server you want to
+start.</span></li>
+
+<li class="stepexpand"><span>Select  <span class="uicontrol">Start</span>. </span> The following
+events happen:<ul>
+<li>If you have selected the  <span class="uicontrol">Automatically publish when
+starting servers</span> check box on the Server preferences page
+(<span class="menucascade"><span class="uicontrol">Window</span> &gt; <span class="uicontrol"> Preferences</span>
+ &gt; <span class="uicontrol">Server</span> &gt; <span class="uicontrol">Launching</span>
+</span> ), the workbench checks to see if your project and
+files on the server are synchronized prior to starting the server.
+If they are not, the project and the files are automatically updated
+on the remote server when it is started.</li>
+
+<li>A Console view opens in the workbench. It will take a minute to
+start the server. If the server fails to start, check for the reason
+that it failed in the Console.</li>
+
+<li>In the Servers view, the status of the server changes to  <tt class="sysout">Started</tt>.</li>
+
+</ul>
+</li>
+
+</ol>
+
+<div class="section" id="twsrtins_wst__twsrtins_result"><a name="twsrtins_wst__twsrtins_result"><!-- --></a><div class="tip"><span class="tiptitle">Tip:</span> The server is automatically
+started when you right-click on a file and then select  <span class="uicontrol">Run
+As &gt; Run on Server</span>.</div>
+</div>
+
+</div>
+
+<div>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/twmanage.html" title="You can use the server tools views to manage servers. The following tasks may be included as part of the development path:">Managing servers</a></div>
+</div>
+<div class="relconcepts"><strong>Related concepts</strong><br />
+<div><a href="../topics/cwflow.html" title="You can start the server automatically as part of running a selected resource on the server, or you can simply start the server without running resources on the server. For example, the server is automatically started when you right-click a project or an application resource in the Project Explorer view and select Run As &gt; Run on Server. If you want to start the server without running resources on the server, in the Servers view select a server and select the Start the server This is an image of the Run on Server icon icon, the Start the server in debug mode This is an image of the Debug on server icon. icon , or the Start the server in profiling mode This is an image of the Start the server in profiling mode icon. icon.">Which server will start</a></div>
+</div>
+<div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/ttimeout.html" title="You can specify the length of time you can wait, before the workbench cancels the process to start or stop the server.">Setting timeout on the start or stop of the server</a></div>
+</div>
+</div>
+
+</body>
+</html>

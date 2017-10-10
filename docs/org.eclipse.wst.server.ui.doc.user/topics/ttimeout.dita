@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2009, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<?Pub Sty _display FontColor="red"?>
+<?Pub Inc?>
+<task id="ttimeout_wst" xml:lang="en-us">
+<title id="title">Setting timeout on the start or stop of the server</title>
+<shortdesc id="shortdesc">You can specify the length of time you can
+wait, before the workbench cancels the process to start or stop the
+server.</shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm>starting servers<indexterm>timeout</indexterm></indexterm>
+<indexterm>stopping servers<indexterm>timeout</indexterm></indexterm>
+</keywords>
+</metadata></prolog>
+<taskbody>
+<context id="context"><p><note type="tip"> If you have a fast processing
+machine, you can try to set a short timeout interval.  If you have
+a slow processing machine, you can try to set a long timeout interval.</note></p>To
+set the timeout for starting or stopping the server:</context>
+<steps id="steps">
+<step><cmd>In the Servers view, right-click the server you want to
+modify its timeout and select <uicontrol>Open</uicontrol>. </cmd><info>The
+server editor opens.</info></step>
+<step><cmd>Under the <uicontrol>Timeouts</uicontrol> section, you
+have the following options:</cmd>
+<choices>
+<choice>Use the <uicontrol>Start</uicontrol> controls to specify the
+number of seconds allowed to elapse, before the workbench cancels
+the process to start the server.</choice>
+<choice>Use the <uicontrol>Stop</uicontrol> controls to specify the
+number of seconds allowed to elapse, before the workbench prompts
+you for an action. The prompt requests from you to either click <uicontrol>OK</uicontrol> to
+end the server or click <uicontrol>Cancel</uicontrol> to continue
+waiting for the server to stop. See the below <i>Results</i> section,
+for the text of the prompt.</choice>
+</choices>
+</step>
+</steps>
+<result><b>Results</b><!--Added the "Results" title because WTP does not auto-generate the titles.--><p
+id="result_p1">If the timeout interval for starting the server has
+elapsed, the workbench displays the following message:<msgblock>Server <varname>server_name</varname> was unable to start within <varname>x</varname> seconds.  If the server requires more time, try increasing the timeout in the server editor.</msgblock>Where <varname>server_name</varname> is
+the name of the server to identify its entry in the Servers view and <varname>x</varname> is
+the number of seconds specified in the <uicontrol>Start</uicontrol> control.</p><p
+id="result_p2">If the timeout interval for stopping the server has
+elapsed, the workbench displays the following prompt: <msgblock>Terminate Server
+Server <varname>server_name</varname> is not responding.  Do you want to terminate this server?  Click OK to terminate the server or click Cancel to continue waiting.</msgblock></p><note
+id="result_tip" type="tip">If you are frequently encountering any
+of these messages, try following the steps in this topic to set longer
+timeout intervals. This may help resolve the messages.</note><?Pub
+Caret 0?></result>
+</taskbody>
+</task>
+<?Pub *0000003131?>

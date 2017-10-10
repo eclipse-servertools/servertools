@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<task id="twinstprf_wst" xml:lang="en-us">
+<title id="title">Defining the server runtime environments preferences</title>
+<shortdesc id="shortdesc">Using the Preferences page, you can direct the workbench
+to use a specific runtime environment of an application server for compiling,
+testing, or running your application.</shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm keyref="twinstprf|1|preferencesinstalledserverruntimeenvironmentsdefining"
+status="new">preferences<indexterm>installed server runtime environments<indexterm>defining</indexterm></indexterm></indexterm>
+<indexterm keyref="twinstprf|2|serversruntimeenvironmentdefining" status="new">servers<indexterm>runtime
+environment<indexterm>defining</indexterm></indexterm></indexterm><indexterm
+keyref="twinstprf|3|runtimeenvironmentdefining" status="changed">runtime environments<indexterm>defining</indexterm></indexterm>
+<indexterm keyref="twinstprf|4|workbenchdefiningserverruntimeenvironment"
+status="changed">workbench<indexterm>server runtime environment</indexterm></indexterm>
+<indexterm keyref="twinstprf|6|applicationsdefiningserverruntimeenvironment"
+status="new">applications<indexterm>defining server runtime environment</indexterm></indexterm>
+<indexterm keyref="twinstprf|8|installedserverruntimeenvironmentssettingpreferences"
+status="changed">server runtime environments<indexterm>preferences</indexterm></indexterm>
+</keywords>
+</metadata></prolog>
+<taskbody>
+<context id="context"><p>A <i>server runtime environment</i> is composed of
+the following definitions:  <ul>
+<li>a name to identify the server runtime environment</li>
+<li>the type of server that specifies the vendor and version-level of the
+server</li>
+<li>the directory path to a local installation of the server</li>
+<li>in some cases, also includes a reference to a Java runtime environment</li>
+</ul>If a server runtime environment is referencing a stub directory of the
+server, you can only compile your application against the stub server.  However,
+if referencing a full installation of the server, you can compile, test, and
+run your application against the installation of the server.</p>To define
+a server runtime environment, complete the following steps:</context>
+<steps id="steps">
+<step><cmd>From the Window menu, select  <uicontrol>Preferences</uicontrol>.</cmd>
+</step>
+<step><cmd>In the Preferences window, expand the <uicontrol>Server</uicontrol> folder
+and then select  <uicontrol>Runtime Environments</uicontrol>.</cmd><info>The
+Server Runtime Environments section of the Preferences dialog is displayed.</info>
+</step>
+<step><cmd importance="optional"><b>Optional: </b>Click the <uicontrol>Search</uicontrol> button.
+This searches your local directory for server runtime environments. Searching
+on a remote host is not supported.</cmd>
+<substeps>
+<substep><cmd>The Search for Runtime Environments dialog box opens. In the <uicontrol>Folder</uicontrol> field,
+browse or type the directory where you would like the workbench to start searching
+for server runtime environments. Click <uicontrol>OK</uicontrol>.</cmd></substep>
+<substep><cmd>If a list of installations is displayed, select the desired
+target server and click <uicontrol>OK</uicontrol> in the displayed dialog;
+then click <uicontrol>OK</uicontrol> in the Preferences dialog. If no installations
+of any application servers are found, continue completing the steps for this
+task.</cmd></substep>
+</substeps>
+</step>
+<step><cmd>Click <uicontrol>Add</uicontrol>.</cmd><info>The New Server Runtime
+Environments wizard opens.</info>
+<substeps>
+<substep><cmd>Under the <uicontrol>Select the type of runtime environment</uicontrol> list,
+select a server and version level as the target server runtime environment.</cmd>
+<info><note type="tip">In the text field under the <uicontrol>Select the type
+of runtime environment</uicontrol> label, you can replace the text <userinput>type
+filter text</userinput> with keywords to filter the list of available application
+servers. The following are examples of filter keywords:<dl><dlentry>
+<dt><userinput>Apache</userinput></dt>
+<dd>Filters the list of available servers where the vendor is Apache</dd>
+</dlentry><dlentry>
+<dt><userinput>WebSphere</userinput></dt>
+<dd>Filters the list of available servers where the name is WebSphere</dd>
+</dlentry><dlentry>
+<dt><userinput>ejb</userinput></dt>
+<dd>Filters the list of available servers that support ejb modules.</dd>
+</dlentry><dlentry>
+<dt><userinput>web</userinput></dt>
+<dd>Filters the list of available servers that support Web modules</dd>
+</dlentry><dlentry>
+<dt><userinput>5.0</userinput></dt>
+<dd>Filters the list of available servers that are at version, 5.0 or supports
+JEE 5 specification level.</dd>
+</dlentry><dlentry>
+<dt><userinput>1.2</userinput></dt>
+<dd>Filters the list of available servers that supports J2EE 1.2 specification
+level or any servers that may have a version-level of 1.2.</dd>
+</dlentry></dl></note></info></substep>
+<substep><cmd>When you add a server runtime environment, by default a server
+is created and added as an entry in the Servers view. If you want to only
+add the server runtime environment and not create the server in the Servers
+view, clear the <uicontrol>Create a new local server</uicontrol> check box.</cmd>
+</substep>
+<substep><cmd>Click <uicontrol>Next</uicontrol>. A panel for the server is
+displayed.</cmd></substep>
+<substep><cmd>For <uicontrol>Installation directory</uicontrol> or <uicontrol>Location</uicontrol> field,
+type or browse to the location of the target server.</cmd><info><note type="tip">If
+you specify a false location for the target server, use the workbench to assemble
+modules and then use the application server to deploy the modules.</note></info>
+<info>If you selected the target server as <b>J2EE Runtime Library</b> (a
+generic J2EE container), specify a directory that contains <tt>.jar</tt> files
+such a <tt>\bin\lib</tt> directory for a <tm tmclass="special" tmowner="Sun Microsystems, Inc."
+tmtype="tm" trademark="Java">Java</tm> developer kit (JDK) <?Pub Caret?>installation.</info>
+</substep>
+<substep><cmd>Click <uicontrol>Finish</uicontrol>.</cmd><info>The target server
+name and type is added to the table in the Server Runtime Environment section.</info>
+</substep>
+<substep><cmd>In the Preferences dialog, click <uicontrol>OK</uicontrol>.</cmd>
+</substep>
+</substeps>
+</step>
+</steps>
+<postreq id="postreq"><p id="postreq_p1">To change the list of available target
+servers, click <b>Window > Preferences > Server > Runtime Environments</b> to
+go to the Server Runtime Environments section of the Preferences dialog. Use
+the <b>Add</b>, <b>Edit</b>, <b>Remove</b> or <b>Search</b> options to change
+the list of target servers as needed.</p><p id="postreq_p2">To change the
+target server for a module:<ol>
+<li>Right-click on the module in the Project Explorer view and click <b>Properties
+> Project Facets</b>. The Project Facets page opens.</li>
+<li>Select the <uicontrol>Runtimes</uicontrol> tab.</li>
+<li>Under the <b>Runtimes</b> table, select the target servers for the module.</li>
+</ol> </p></postreq>
+</taskbody>
+</task>
+<?Pub *0000007308?>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<task id="tmetasrv_wst" xml:lang="en-us">
+<title id="tmetasrv_wst_title">Displaying or hiding the metadata of the server</title>
+<shortdesc id="tmetasrv_wst_shortdesc">On the workbench, you have the option
+to display or hide the metadata of the server.</shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm keyref="tmetasrv|1|serversdisplayingmetadata"
+status="new">servers<indexterm>displaying metadata</indexterm></indexterm>
+<indexterm keyref="tmetasrv|2|servershidingmetadata" status="new">servers<indexterm>hiding
+metadata</indexterm></indexterm><indexterm keyref="tmetasrv|3|workbenchdisplayingservermetadata"
+status="changed">workbench<indexterm>server metadata</indexterm></indexterm>
+<indexterm keyref="tmetasrv|5|serverName.serverfiledisplayingonworkbench"
+status="changed">serverName.server file<indexterm>displaying</indexterm></indexterm>
+<indexterm keyref="tmetasrv|6|serverName.serverfilehidingfromworkbench" status="changed">serverName.server
+file<indexterm>hiding</indexterm></indexterm></keywords>
+</metadata></prolog>
+<taskbody>
+<context id="tmetasrv_wst_context"><p id="tmetasrv_wst_p1">The <i>metadata</i> contains
+a variety of information about the server such as:<ul>
+<li>The location where the server configuration files are stored on the workbench.</li>
+<li>The fully qualified DNS name or IP address of the host machine where the
+server is running.</li>
+<li>The name assigned to the server.</li>
+<li>The name of the installed server runtime environment which defines the
+runtime environment of an application server for compiling your application.</li>
+</ul></p><p id="tmetasrv_wst_p2">By default, the workbench hides the metadata
+of the server to keep the development workspace clean. Displaying the metadata
+of the server on the workbench, allows you to persist<?Pub Caret?> the data
+of the server in a <i>serverName</i>.server file, where <i>serverName</i> is
+the name assigned to the server. The <i>serverName</i>.server file is useful
+when you are working in a team development environment and you are required
+to maintain the metadata of the server in a source control repository.</p>To
+display or hide the metadata of the server:</context>
+<steps id="tmetasrv_wst_steps">
+<step id="tmetasrv_step1"><cmd>In the Servers view, right-click the server
+you want to display or hide the metadata and select <b>Properties</b>.</cmd>
+</step>
+<step id="tmetasrv_step2"><cmd><draft-comment>Modified the steps according
+to the GUI changes.</draft-comment>In the <uicontrol>General</uicontrol> page
+there is a <uicontrol>Location</uicontrol> field, select the <uicontrol>Switch
+location</uicontrol> button to toggle between displaying and hiding the metadata
+on the workbench.</cmd><info><note type="tip">If the value of the <uicontrol>Location</uicontrol> field
+contains <userinput>[workspace metadata]</userinput>, this means the workbench
+is hiding the metadata. To display the metadata on the workbench, select the <uicontrol>Switch
+location</uicontrol> button again until the <userinput>[workspace metadata]</userinput> changes
+to a file path directory. The file path directory specifies the location where
+the server metadata file is stored on the workbench. The next step describes
+where you can find the server metadata file in the workbench.</note></info>
+</step>
+<step id="tmetasrv_step3"><cmd>In the Project Explorer view, expand the <b>Servers</b> folder
+and then expand your server project to locate the <i>serverName</i>.server
+file, where <i>serverName</i> is the name assigned to your server.</cmd></step>
+<step id="tmetasrv_step4"><cmd>(<b>Optional</b>) You can double-click <i>serverName</i>.server
+file to edit the data in the server editor.</cmd></step>
+</steps>
+</taskbody>
+</task>
+<?Pub *0000003897?>

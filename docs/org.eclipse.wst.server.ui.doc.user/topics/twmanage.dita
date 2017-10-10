@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<task id="twmanage_wst" xml:lang="en-us">
+<title id="title">Managing servers </title>
+<shortdesc id="shortdesc">You can use the server tools views to manage servers.
+The following tasks may be included as part of the development path:</shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm>servers<indexterm>managing</indexterm></indexterm>
+</keywords>
+</metadata></prolog>
+<taskbody></taskbody>
+</task>
+<?Pub *0000000597?>

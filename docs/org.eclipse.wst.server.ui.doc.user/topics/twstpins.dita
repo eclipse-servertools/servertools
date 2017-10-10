@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2011, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<task id="twstpins_wst" xml:lang="en-us">
+<title id="twstpins_title">Stopping a server</title>
+<shortdesc id="twstpins_shortdesc">You can stop the server from the
+Servers view.</shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm>servers<indexterm>stopping</indexterm
+></indexterm></keywords>
+</metadata></prolog>
+<taskbody>
+<context id="twstpins_context">To stop the server:</context>
+<steps>
+<step id="twstpins_step1"><cmd>In the Servers view ( <menucascade>
+<uicontrol></uicontrol><uicontrol>Window</uicontrol><uicontrol>Show
+View</uicontrol><uicontrol>Other</uicontrol><uicontrol>Server</uicontrol>
+<uicontrol>Servers</uicontrol></menucascade>and click <uicontrol>OK</uicontrol
+>, and select the server that you want to stop.</cmd></step>
+<step><cmd><ph id="twstpins_steps_ph1">Click the  <uicontrol>Stop
+the server</uicontrol></ph>  <image
+alt="This is an image of the Stop icon." href="../images/launch_stop.gif">
+<alt>This is an image of the Stop icon.</alt></image> <ph
+id="twstpins_steps_ph2">icon in the toolbar.</ph></cmd><info><ph
+id="twstpins_steps_ph3"> In the Servers view, the status of the server
+changes to  <i>Stopped</i>.</ph></info></step>
+<step><cmd><ph id="twstpins_steps_ph4">If for some reason the server
+fails to stop, you can terminate the process as follows:</ph></cmd>
+<substeps>
+<substep id="twstpins_steps_substep1"><cmd>Switch to the Debug perspective.</cmd>
+</substep>
+<substep id="twstpins_steps_substep2"><cmd>In the Process view, select
+the server process that you want to stop.</cmd></substep>
+<substep><cmd><ph id="twstpins_steps_ph6">Click the  <uicontrol>Terminate</uicontrol
+></ph>  <image alt="Image of the Terminate icon."
+href="../images/launch_stop.gif"><alt>Image of the Terminate icon</alt>
+</image> <ph id="twstpins_steps_ph7"> icon in the toolbar.</ph></cmd>
+</substep><?Pub Caret 28?>
+</substeps>
+</step>
+</steps>
+<result id="twstpins_result"><note>When terminating a server, the
+server process will end and the server will not go through the normal
+routine of stopping, for example calling the destroy() method on a
+servlet.</note></result>
+</taskbody>
+</task>
+<?Pub *0000002288?>

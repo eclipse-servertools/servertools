@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc link_to="../org.eclipse.wst.server.ui.doc.user/wtp_create.xml#tomcat_pref" label="tomcat_tasks" topic="topics/twtomprf.html">
+<topic label="...for Apache Tomcat runtimes" href="topics/twtomprf.html"/>
+</toc>

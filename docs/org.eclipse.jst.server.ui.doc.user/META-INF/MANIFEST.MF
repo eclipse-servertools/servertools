@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.jst.server.ui.doc.user; singleton:=true
+Bundle-Version: 1.0.600.qualifier
+Bundle-Vendor: %pluginProvider
+Bundle-Localization: plugin
+Eclipse-LazyStart: true

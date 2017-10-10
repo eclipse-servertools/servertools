@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS type="org.eclipse.help.contexts"?>
+<!-- /*******************************************************************************
+ * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/ -->
+<contexts>
+<context id="tdmm0000">
+<description>Use this window to either add a new MIME type with a new extension, or to change the MIME type or extension for an existing MIME type.
+
+</description>
+</context>
+<context id="tdmm0002">
+<description>The name of the MIME type. A MIME is a type of resource that the browser uses to determine how to display the information.
+
+</description>
+</context>
+<context id="tdmm0004">
+<description>The extension of the MIME type.
+
+</description>
+</context>
+<context id="tdpr0000">
+<description>This wizard allows you to add a Web module to this server configuration. This wizard appears if you had clicked <b>Add Web Module</b> on the Modules page of the Tomcat Server Configuration Editor.
+
+</description>
+</context>
+<context id="tdpr0002">
+<description>List of available Web modules for this Tomcat server configuration.
+
+</description>
+</context>
+<context id="tdpr0004">
+<description>The Tomcat path which specifies the module's URL. Typically, this might be the name of the project.
+
+</description>
+</context>
+<context id="tdpr0006">
+<description>Specifies the path where the Web module is located.
+
+</description>
+</context>
+<context id="tdpr0008">
+<description>Specifies whether to pick up the changes made to the module while the server is running.
+
+</description>
+</context>
+<context id="tdwm0000">
+<description>This wizard allows you to add a Web module for this server configuration. This wizard appears if you had clicked <b>Add Web module</b> on the Modules page of the Tomcat Server Configuration Editor.
+
+</description>
+</context>
+<context id="tecm0000">
+<description>This editor allows you to edit Tomcat server configuration files. To move between the pages, click on the tabs that are located at the bottom of the Tomcat Configuration Editor.
+
+</description>
+</context>
+<context id="tecm0002">
+<description>List of available MIME types and the extensions that it maps to for a specific server configuration. For example: text, image, or application.
+
+</description>
+</context>
+<context id="tecm0004">
+<description>Add, change, and remove a MIME type and extension. To add a MIME type with a new extension to the MIME Types list, click <b>Add</b>. The Add MIME Mapping window opens. To remove an existing MIME type with its extension from the MIME Types list, select the MIME type and then click <b>Remove</b>. The MIME type and its extension are no longer shown in the list. To change the name of the MIME type, or the extension of an existing MIME type shown in the MIME Types list, select the MIME type and then click <b>Edit</b>. The Edit MIME Mapping window opens.
+
+</description>
+</context>
+<context id="tecm0006">
+<description>Add, change, and remove a MIME type and extension. To add a MIME type with a new extension to the MIME Types list, click <b>Add</b>. The Add MIME Mapping window opens. To remove an existing MIME type with its extension from the MIME Types list, select the MIME type and then click <b>Remove</b>. The MIME type and its extension are no longer shown in the list. To change the name of the MIME type, or the extension of an existing MIME type shown in the MIME Types list, select the MIME type and then click <b>Edit</b>. The Edit MIME Mapping window opens.
+
+</description>
+</context>
+<context id="tecm0008">
+<description>Add, change, and remove a MIME type and extension. To add a MIME type with a new extension to the MIME Types list, click <b>Add</b>. The Add MIME Mapping window opens. To remove an existing MIME type with its extension from the MIME Types list, select the MIME type and then click <b>Remove</b>. The MIME type and its extension are no longer shown in the list. To change the name of the MIME type, or the extension of an existing MIME type shown in the MIME Types list, select the MIME type and then click <b>Edit</b>. The Edit MIME Mapping window opens.
+
+</description>
+</context>
+<context id="tecp0000">
+<description>This editor allows you to edit Tomcat server configuration files. To move between the pages, click on the tabs that are located at the bottom of the Tomcat Configuration Editor.
+
+</description>
+</context>
+<context id="tecp0002">
+<description>List of available ports used by Tomcat and their respective port numbers. To change an existing port number in the list, select the port number and type the new number over it.
+
+</description>
+</context>
+<context id="tecw0000">
+<description>This editor allows you to edit Tomcat server configuration files. To move between the pages, click on the tabs that are located at the bottom of the Tomcat Configuration Editor.
+
+</description>
+</context>
+<context id="tecw0002">
+<description>List of available Web modules for this Tomcat server configuration.
+
+</description>
+</context>
+<context id="tecw0004">
+<description>Adds a Web project to the list.
+
+</description>
+</context>
+<context id="tecw0006">
+<description>Adds a Web module located externally to the list.
+
+</description>
+</context>
+<context id="tecw0008">
+<description>Edits a Web module in the list. For example, you may want to disable the <b>Auto reload</b> function.
+
+</description>
+</context>
+<context id="tecw0010">
+<description>Remove a Web module from the list.
+
+</description>
+</context>
+<context id="teig0000">
+<description>This editor allows you to edit Tomcat server files. To move between the pages, click on the tabs that are located at the bottom of the Tomcat Server Editor.
+
+</description>
+</context>
+<context id="teig0002">
+<description>The name of the Tomcat server.
+
+</description>
+</context>
+<context id="teig0004">
+<description>The directory where Apache Tomcat is installed. For example, d:\tomcat\jakarta-tomcat-3.2.3. You can either type the path of the directory or click <b>Browse</b> to select it.
+
+</description>
+</context>
+<context id="teig0006">
+<description>The directory where Apache Tomcat is installed. For example, d:\tomcat\jakarta-tomcat-3.2.3. You can either type the path of the directory or click <b>Browse</b> to select it.
+
+</description>
+</context>
+<context id="twnr0000">
+<description>This wizard allows you to provide additional installation directory information required for using Apache Tomcat.
+
+In the <b>Name</b> field, specify the name that you want to assign to your Tomcat Server.
+
+In the <b>Tomcat installation directory</b> field, specify the directory where Apache Tomcat is installed. For example, d:\tomcat\jakarta-tomcat-3.2.3. You can either type the path of the 
+directory or click <b>Browse</b> to select it.
+
+Under <b>JRE</b> list, select an environment variable that specify where your JDK is installed.  For example, Workbench default JRE.  You can either select the appropriate value from the JRE list or click <b>Installed JRE</b> to define a new JRE environment variable.
+</description>
+</context>
+
+<context id="tvcp0000">
+<description>This dialog prompts for confirmation to clean the work directory on a Tomcat server. The dialog will indicate if the entire work directory or the work directory for an individual module will be cleaned.
+
+If the server is currently running, the server will be stopped prior to cleaning, and then restarted.
+</description>
+</context>
+</contexts>

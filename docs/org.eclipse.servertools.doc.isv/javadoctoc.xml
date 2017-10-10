@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+	 <toc label="Javadoc Packages Reference">
+<topic label="org.eclipse.jst.server.core" href="html/api_reference/org/eclipse/jst/server/core/package-summary.html"/>
+<topic label="org.eclipse.wst.server.core" href="html/api_reference/org/eclipse/wst/server/core/package-summary.html"/>
+<topic label="org.eclipse.wst.server.core.model" href="html/api_reference/org/eclipse/wst/server/core/model/package-summary.html"/>
+<topic label="org.eclipse.wst.server.core.util" href="html/api_reference/org/eclipse/wst/server/core/util/package-summary.html"/>
+<topic label="org.eclipse.wst.server.ui" href="html/api_reference/org/eclipse/wst/server/ui/package-summary.html"/>
+<topic label="org.eclipse.wst.server.ui.actions" href="html/api_reference/org/eclipse/wst/server/ui/actions/package-summary.html"/>
+<topic label="org.eclipse.wst.server.ui.editor" href="html/api_reference/org/eclipse/wst/server/ui/editor/package-summary.html"/>
+<topic label="org.eclipse.wst.server.ui.wizard" href="html/api_reference/org/eclipse/wst/server/ui/wizard/package-summary.html"/>
+</toc>

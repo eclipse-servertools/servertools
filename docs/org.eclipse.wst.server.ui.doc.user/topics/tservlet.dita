@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2009, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<task id="tservlet_wst" xml:lang="en-us">
+<title id="tservlet_title">Debugging a servlet on a server</title>
+<shortdesc id="tservlet_shortdesc">The debugger enables you to detect
+and diagnose errors in your application. It allows you to control
+the execution of your program by setting breakpoints, suspending threads,
+stepping through the code, and examining the contents of the variables.
+You can debug a servlet on a server without losing the state of your
+application.</shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm
+keyref="tservlet|1|breakpointsaddingtoservlets" status="changed">breakpoints<indexterm>servlets</indexterm></indexterm>
+<indexterm keyref="tservlet|2|serversdebuggingservlets" status="new">servers<indexterm>debugging
+servlets</indexterm></indexterm><indexterm
+keyref="tservlet|3|servletsdebuggingonservers" status="new">servlets<indexterm>debugging
+on servers</indexterm></indexterm><indexterm
+keyref="tservlet|4|threadssuspendinginservlets" status="new">threads<indexterm>suspending
+in servlets</indexterm></indexterm></keywords>
+</metadata></prolog>
+<taskbody>
+<context id="tservlet_context">To debug a servlet on a server:</context>
+<steps>
+<step id="tservlet_step1"><cmd>In the Project Explorer view, open
+your servlet.</cmd><info>In a Web project, servlets are located in
+the JavaSource folder. The servlet opens in an editor.</info></step>
+<step id="tservlet_step2"><cmd>To set one or more breakpoints in the
+editor, double-click in the margin beside the line of code that you
+want to set as a breakpoint.</cmd></step>
+<step id="tservlet_step3"><cmd>Ensure the project is associated to
+run on a server.</cmd></step>
+<step id="tservlet_step4"><cmd>Select the servlet and from the servlet's
+context menu in the Project Explorer view, click  <uicontrol>Debug
+As > Debug on Server</uicontrol>.</cmd><info>Open the Servers view
+to see that the server is launched.</info></step>
+<step id="tservlet_step5"><cmd>When the breakpoint is hit, the Debug
+view opens.</cmd><info>Step through the code, inspect and display
+variables, and make any necessary changes to the servlet. For detailed
+information on debugging, refer to the online help.</info></step>
+<step id="tservlet_step6"><cmd>When you are finished debugging, save
+the servlet.</cmd><info> Wait for the debugger to refresh and pick
+up the changes. When the debugger refresh is complete, the execution
+of the code resumes at the beginning of the method that was currently
+running.</info></step><?Pub Caret 33?>
+<step id="tservlet_step7"><cmd>Click the  <uicontrol>Resume</uicontrol> icon
+on the Debug toolbar to execute the servlet.</cmd></step>
+<step id="tservlet_step8"><cmd>If you have hot method replace enabled,
+your changes are already in the running application.</cmd></step>
+<step id="tservlet_step9"><cmd>If you have automatic class reloading
+enabled, which is the default setting, click the  <uicontrol>Refresh</uicontrol> icon
+in the Web Browser to update the changes.</cmd><info>You do not lose
+the state of your application.</info></step>
+<step><cmd id="tservlet_cmd10">If you do not have automatic class
+reloading enabled, you lose the state of the application.</cmd><info
+id="tservlet_info10">To update the changes, restart the server.</info>
+</step>
+</steps>
+<result id="tservlet_result"><p>The result is the server recognizes
+your changes.</p></result>
+</taskbody>
+</task>
+<?Pub *0000003546?>

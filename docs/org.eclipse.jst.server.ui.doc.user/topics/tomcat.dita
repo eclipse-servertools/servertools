@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<task id="tomcat_jst" xml:lang="en-us">
+<title id="title">Creating a Tomcat server</title>
+<shortdesc id="shortdesc">The server tools feature supports the Apache Tomcat
+runtime environment, running locally. With Tomcat, you can only test Web projects
+that contain servlets and JSPs. To set up a server to test projects on Apache
+Tomcat, complete the following: </shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm keyref="tomcat|1|ApacheTomcattestingWebprojects"
+status="changed">testing<indexterm>Web projects</indexterm></indexterm><indexterm
+keyref="tomcat|3|serversApacheTomcat" status="new">servers<indexterm>Apache
+Tomcat</indexterm></indexterm></keywords>
+</metadata><metadata>
+<keywords><indexterm keyref="tomcat|10|WebprojectstestingwithApacheTomcat"
+status="new">Web projects<indexterm>testing with Apache Tomcat</indexterm></indexterm>
+</keywords>
+</metadata></prolog>
+<taskbody>
+<prereq id="prereq"><b>Prerequisites</b><p><ul>
+<li>Download Apache Tomcat from  <xref format="html" href="http://jakarta.apache.org/tomcat"
+scope="external">jakarta.apache.org/tomcat</xref></li>
+<li>Extract the compressed file containing Apache Tomcat on your local file
+system.</li>
+<li>Add the Apache Tomcat runtimes. For details on how to do this, refer to
+the <i>Add the Apache Tomcat runtimes</i> link on the bottom of this topic.</li>
+</ul></p><p>To create a Apache Tomcat server:</p></prereq>
+<steps id="steps">
+<step><cmd>In the Servers view, right-click and select <uicontrol>New</uicontrol> > <uicontrol>Server</uicontrol>.
+The Define a New Server wizard opens.</cmd></step>
+<step><cmd>In the <uicontrol>Select the server type</uicontrol> list, select
+the Tomcat server defined in the previous step.</cmd><info><note type="tip">If
+you did not specify the Tomcat install directory, the Define a New Server
+wizard will prompt you for this information.</note></info></step>
+<step><cmd>Start the Tomcat server.</cmd><info>In the Servers view, right-click
+the Tomcat server and select <uicontrol>Start</uicontrol>.</info></step>
+<step><cmd>Test your setup of the Tomcat server.</cmd>
+<substeps>
+<substep><cmd>Open a Web browser.</cmd></substep>
+<substep><cmd>Type the Web address <codeph>http://localhost:8080/</codeph>.
+If you see the Apache Tomcat start page, you have successfully set up your
+Tomcat server.</cmd></substep>
+</substeps>
+</step>
+</steps>
+</taskbody>
+<related-links id="relatedlinks">
+<link href="http://wiki.eclipse.org/WTP_Tomcat_FAQ" scope="external"><linktext>WTP
+Tomcat FAQ</linktext>
+<desc>See this link for additional information about using the Apache Tomcat
+server with the workbench.</desc>
+</link>
+</related-links>
+</task>

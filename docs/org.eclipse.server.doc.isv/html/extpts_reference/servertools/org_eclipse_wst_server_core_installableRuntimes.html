@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Installable Runtimes</title>
+<style type="text/css">@import url("../../book.css");</style>
+<style type="text/css">@import url("../../schema.css");</style>
+</HEAD>
+<BODY>
+<H1 style="text-align:center">Installable Runtimes</H1>
+<p></p>
+<h6 class="CaptionFigColumn SchemaHeader">Identifier: </h6>org.eclipse.wst.server.core.installableRuntimes<p></p>
+<h6 class="CaptionFigColumn SchemaHeader">Since: </h6><b>This extension point is part of an interim API that is still under development and expected to change significantly before reaching stability. It is being made available at this early stage to solicit feedback from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken (repeatedly) as the API evolves.</b>
+<p></p>
+
+<h6 class="CaptionFigColumn SchemaHeader">Description: </h6>This extension point is used to install new runtimes (i.e. server installations) from a remote server.
+
+New users should use the 'runtime' element (which allows you to point to any zip file on any server) and not the original 'installableRuntime' element (which requires a remote update manager site).<p></p>
+<h6 class="CaptionFigColumn SchemaHeader">Configuration Markup:</h6>
+<p></p>
+<p class="code SchemaDtd">&lt;!ELEMENT <a name="e.extension">extension</a> (<a href="#e.installableRuntime">installableRuntime</a>* , <a href="#e.runtime">runtime</a>*)&gt;</p>
+<p class="code SchemaDtd">&lt;!ATTLIST extension</p>
+<p class="code SchemaDtdAttlist">point&nbsp;CDATA #REQUIRED<p class="code SchemaDtdAttlist">id&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED<p class="code SchemaDtdAttlist">name&nbsp;&nbsp;CDATA #IMPLIED&gt;</p>
+<p></p>
+<ul class="ConfigMarkupAttlistDesc">
+<li><b>point</b> - a fully qualified identifier of the target extension point</li>
+<li><b>id</b> - an optional identifier of the extension instance</li>
+<li><b>name</b> - an optional name of the extension instance</li>
+</ul>
+<br><div style="color: red; font-style: italic;">The <b>installableRuntime</b> element is deprecated</div> <p class="code SchemaDtd">&lt;!ELEMENT <a name="e.installableRuntime">installableRuntime</a> EMPTY&gt;</p>
+<p class="code SchemaDtd">&lt;!ATTLIST installableRuntime</p>
+<p class="code SchemaDtdAttlist">id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED<p class="code SchemaDtdAttlist">featureId&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED<p class="code SchemaDtdAttlist">featureVersion&nbsp;CDATA #REQUIRED<p class="code SchemaDtdAttlist">featureSite&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED<p class="code SchemaDtdAttlist">bundleId&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED<p class="code SchemaDtdAttlist">bundleVersion&nbsp;&nbsp;CDATA #IMPLIED<p class="code SchemaDtdAttlist">path&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED&gt;</p>
+<p></p>
+<ul class="ConfigMarkupAttlistDesc">
+<li><b>id</b> - specifies a unique identifier for this extension point</li>
+<li><b>featureId</b> - the id of the feature containing the runtime bundle</li>
+<li><b>featureVersion</b> - the version of the feature containing the runtime bundle</li>
+<li><b>featureSite</b> - the feature (update manager) site URL</li>
+<li><i style="color: red;">Deprecated</i> <b>bundleId</b> - the id of the bundle in which the runtime zip is in</li>
+<li><i style="color: red;">Deprecated</i> <b>bundleVersion</b> - the optional version of the bundle in which the runtime zip is in</li>
+<li><i style="color: red;">Deprecated</i> <b>path</b> - if bundleId is specified then represents the relative path of the runtime zip inside the bundle, otherwise it assumes a relative path of the runtime archive inside the feature directory</li>
+</ul>
+<br><p class="code SchemaDtd">&lt;!ELEMENT <a name="e.runtime">runtime</a> EMPTY&gt;</p>
+<p class="code SchemaDtd">&lt;!ATTLIST runtime</p>
+<p class="code SchemaDtdAttlist">id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED<p class="code SchemaDtdAttlist">archiveUrl&nbsp;&nbsp;CDATA #REQUIRED<p class="code SchemaDtdAttlist">archivePath&nbsp;CDATA #IMPLIED<p class="code SchemaDtdAttlist">licenseUrl&nbsp;&nbsp;CDATA #IMPLIED<p class="code SchemaDtdAttlist">os&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED&gt;</p>
+<p></p>
+<ul class="ConfigMarkupAttlistDesc">
+<li><b>id</b> - specifies a unique identifier for this extension point</li>
+<li><b>archiveUrl</b> - a URL to the runtime archive download</li>
+<li><b>archivePath</b> - optional path within the archive to the root of the runtime</li>
+<li><b>licenseUrl</b> - a URL to the runtime license</li>
+<li><b>os</b> - optional operating system specification. A comma-separated list of operating system designators defined by Eclipse (see Javadoc for org.eclipse.core.runtime.Platform). Indicates this installable runtime should only be used on one of the specified OS systems. If this attribute is not specified, the feature can be installed on all systems (portable implementation)</li>
+</ul>
+<br><h6 class="CaptionFigColumn SchemaHeader">Examples: </h6>The following is an example of an installable runtime extension point:
+
+<pre class="Example"><span class="code SchemaTag">
+   &lt;extension 
+         point=</span><span class="code SchemaCstring">&quot;org.eclipse.wst.server.core.installableRuntimes&quot;</span><span class="code SchemaTag">&gt;
+      &lt;installableRuntime
+            id=</span><span class="code SchemaCstring">&quot;com.myruntime.id&quot;</span><span class="code SchemaTag">
+            featureVersion=</span><span class="code SchemaCstring">&quot;1.0.0&quot;</span><span class="code SchemaTag">
+            featureId=</span><span class="code SchemaCstring">&quot;com.myfeature&quot;</span><span class="code SchemaTag">
+            featureSite=</span><span class="code SchemaCstring">&quot;xyz&quot;</span><span class="code SchemaTag">
+            bundleId=</span><span class="code SchemaCstring">&quot;com.ibm.mybundle&quot;</span><span class="code SchemaTag">
+            path=</span><span class="code SchemaCstring">&quot;/zips/myRuntime.zip&quot;</span><span class="code SchemaTag">/&gt;
+   &lt;/extension&gt;
+</span></pre>
+
+The following is an example of using the installable runtime extension point but having the runtime archive as a data archive in the feature.
+
+<pre class="Example"><span class="code SchemaTag">
+   &lt;extension 
+         point=</span><span class="code SchemaCstring">&quot;org.eclipse.wst.server.core.installableRuntimes&quot;</span><span class="code SchemaTag">&gt;
+      &lt;installableRuntime
+            id=</span><span class="code SchemaCstring">&quot;com.myruntime.id&quot;</span><span class="code SchemaTag">
+            featureVersion=</span><span class="code SchemaCstring">&quot;1.0.0&quot;</span><span class="code SchemaTag">
+            featureId=</span><span class="code SchemaCstring">&quot;com.myfeature&quot;</span><span class="code SchemaTag">
+            featureSite=</span><span class="code SchemaCstring">&quot;xyz&quot;</span><span class="code SchemaTag">
+            path=</span><span class="code SchemaCstring">&quot;myRuntime-1.0.zip&quot;</span><span class="code SchemaTag">/&gt;
+   &lt;/extension&gt;
+</span></pre>
+
+In the feature manifest and data entry should be entered for the runtime archive as well as an installhandler. The default install handler can be used which will install the data archive inside the feature.
+
+<data
+    id="myRuntime-1.0.zip"
+    download-size="0"
+    install-size="0"/>
+
+<install-handler handler="org.eclipse.update.core.DefaultInstallHandler"/>
+
+If the runtime archive is not packaged within the feature, then you need to map the archive path to a relative or absolute url to the site.xml
+
+<archive path="features/com.myfeature_1.0.0/myRuntime-1.0.zip" url="../../1.0/myRuntime-1.0.zip"/>
+<p></p>
+
+<br>
+<p class="note SchemaCopyright">
+Copyright (c) 2005 IBM Corporation and others.<br>
+All rights reserved. This program and the accompanying materials are made 
+available under the terms of the Eclipse Public License v1.0 which accompanies 
+this distribution, and is available at 
+<a href="http://www.eclipse.org/legal/epl-v10.html">http://www.eclipse.org/legal/epl-v10.html</a>
+
+</p>
+</BODY>
+</HTML>

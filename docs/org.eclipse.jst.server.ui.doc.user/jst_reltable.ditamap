@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2009, v.4002-->
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
+ "map.dtd">
+<map id="relationship" xml:lang="en-us">
+<reltable>
+<relheader>
+<relcolspec type="concept"></relcolspec>
+<relcolspec type="task"></relcolspec>
+<relcolspec type="reference"></relcolspec>
+<relcolspec></relcolspec>
+</relheader>
+<relrow>
+<relcell></relcell>
+<relcell collection-type="family">
+<topicref href="topics/tomcat.dita" navtitle="Creating a Tomcat server">
+</topicref>
+<topicref href="topics/twtomprf.dita"
+navtitle="Adding the Apache Tomcat runtimes"></topicref>
+</relcell>
+<relcell></relcell>
+<relcell></relcell>
+</relrow>
+</reltable>
+</map>

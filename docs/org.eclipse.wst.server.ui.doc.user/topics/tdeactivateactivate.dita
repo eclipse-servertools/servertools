@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2011, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<task id="deactivateactivate" xml:lang="en-us">
+<title id="title">Deactivate and activate server</title>
+<shortdesc id="shortdesc">You can deactivate and activate your server
+using the context menu in the servers view.</shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm>servers<indexterm>debugging applications</indexterm
+></indexterm></keywords>
+</metadata></prolog>
+<taskbody>
+<context><p>You can deactivate servers that you do not currently use
+on the Servers view in order to reduce memory consumption and network
+traffic used by the tool. To deactivate your server:</p></context>
+<steps>
+<step><cmd>In the Servers view, Right-click your server and select <uicontrol
+>Deactivate server</uicontrol>.</cmd></step><?Pub Caret 77?>
+<step><cmd>The status bar will indicate that the application is <uicontrol
+>Deactivating server</uicontrol>. The state of the server is <uicontrol
+>Inactive</uicontrol>.</cmd></step>
+</steps>
+<postreq><p>To activate an inactive server:</p><ol>
+<li>In the Servers view, Right-click your server and select <uicontrol
+>Activate server</uicontrol>.</li>
+</ol></postreq>
+</taskbody>
+</task>
+<?Pub *0000001296?>

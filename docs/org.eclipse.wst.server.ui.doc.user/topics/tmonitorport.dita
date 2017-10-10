@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<task id="tmonitorport_wst" xml:lang="en-us">
+<title id="title">Monitoring server ports</title>
+<shortdesc id="shortdesc">You can monitor server ports to view data sent and
+received over the ports of the server. Using the Properties page of a server,
+you can select from a list of the available types of server ports to monitor.
+Examples of types of server ports you can monitor are Hypertext Transfer Protocol
+(HTTP), the administrative port of the server, proxy and many other vendor-specific
+ports.</shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm keyref="tmonitorport|1|propertiesmonitoringserverports"
+status="new">properties<indexterm>monitoring server ports</indexterm></indexterm>
+<indexterm keyref="tmonitorport|2|portsservers" status="new">ports<indexterm>servers</indexterm></indexterm>
+<indexterm keyref="tmonitorport|3|viewsServermonitoringserverports" status="changed">views<indexterm>servers<indexterm>monitoring
+server ports</indexterm></indexterm></indexterm></keywords>
+</metadata></prolog>
+<taskbody>
+<context id="context"><p><b>Prerequisite:</b><ul>
+<li>Start the server you want to monitor.</li>
+</ul></p>To define the ports you want to monitor, complete the following steps:</context>
+<steps id="steps">
+<step><cmd>In the Servers view, right-click a server and select <menucascade>
+<uicontrol>Properties</uicontrol><uicontrol>Monitoring</uicontrol></menucascade>.</cmd>
+</step>
+<step><cmd>To add a port for monitoring the server, complete the following
+steps:</cmd>
+<substeps>
+<substep><cmd>Click the <uicontrol>Add</uicontrol> button.</cmd></substep>
+<substep><cmd>The <uicontrol>Monitoring Ports</uicontrol> dialog box opens
+that displays a list of available server ports that you can monitor. In this
+list, select the server port that you want to monitor.</cmd></substep>
+<substep><cmd>In the <uicontrol>Monitor port</uicontrol>, specify a unique
+port number on your local machine for monitoring purpose. By default this
+field is completed with a number where its value is the assigned port number
+with an increment of one. </cmd></substep>
+<substep><cmd>In the <uicontrol>Type</uicontrol> drop-down list, select the
+content type you want to monitor. If you select <uicontrol>All</uicontrol>,
+you are going to monitor all data sent and received on the server port you
+have selected. If there are other options available in this drop-down list,
+you can filter the type of data you want to monitor.</cmd></substep>
+<substep><cmd>Click <uicontrol>OK</uicontrol>.</cmd></substep>
+</substeps>
+</step>
+<step><cmd>Use the <uicontrol>Start</uicontrol> and <uicontrol>Stop</uicontrol> buttons
+to manage the server ports.</cmd><info>The Monitor Port table lists the available
+port monitoring servers. You can add, edit, remove, start or stop the available
+port monitoring servers from the Monitor Port table. The <b>Status</b> column
+shows if the port monitoring server is started or stopped. The <b>Type</b> 
+column shows the protocol of the server port you are monitoring. The <b>Server
+Port</b>  column shows the port number the port is running on the server.
+The <b>Monitor Port</b> column shows the port number you are using monitoring
+purpose. The <uicontrol>Content type</uicontrol> shows the type of data being
+sent and received over the server port.</info></step>
+<step><cmd>Click  <uicontrol>Apply</uicontrol> and then  <uicontrol>OK</uicontrol> to
+save your changes.</cmd></step>
+</steps>
+<result id="result">When you run the application on the server, the data is
+going to display in the <xref href="rwtcpvw.dita">TCP/IP Monitor view</xref>.</result>
+</taskbody>
+</task>

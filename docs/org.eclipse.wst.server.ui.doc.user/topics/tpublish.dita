@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<task id="tpublish_wst" xml:lang="en-us">
+<title id="title">Publishing applications to a server</title>
+<shortdesc></shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm>servers<indexterm>publishing applications</indexterm></indexterm>
+</keywords>
+</metadata></prolog>
+<taskbody></taskbody>
+</task>
+<?Pub *0000000573?>

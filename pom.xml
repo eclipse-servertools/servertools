@@ -32,22 +32,21 @@
 
   <modules>
     <module>features/org.eclipse.jst.server_adapters.ext.feature</module>
-    <module>features/org.eclipse.jst.server_adapters.ext.sdk.feature</module>
-    <module>features/org.eclipse.jst.server_adapters.ext_tests.feature</module>
     <module>features/org.eclipse.jst.server_adapters.feature</module>
     <module>features/org.eclipse.jst.server_adapters.sdk.feature</module>
     <module>features/org.eclipse.jst.server_core.feature</module>
-    <module>features/org.eclipse.jst.server_sdk.feature</module>
-    <module>features/org.eclipse.jst.server_tests.feature</module>
     <module>features/org.eclipse.jst.server_ui.feature</module>
     <module>features/org.eclipse.jst.server_userdoc.feature</module>
     <module>features/org.eclipse.wst.server_adapters.feature</module>
-    <module>features/org.eclipse.wst.server_adapters.sdk.feature</module>
     <module>features/org.eclipse.wst.server_core.feature</module>
-    <module>features/org.eclipse.wst.server_sdk.feature</module>
-    <module>features/org.eclipse.wst.server_tests.feature</module>
     <module>features/org.eclipse.wst.server_ui.feature</module>
     <module>features/org.eclipse.wst.server_userdoc.feature</module>
+
+    <module>docs/org.eclipse.jst.server.ui.doc.user</module>
+    <module>docs/org.eclipse.jst.server.ui.infopop</module>
+    <module>docs/org.eclipse.servertools.doc.isv</module>
+    <module>docs/org.eclipse.wst.server.ui.doc.user</module>
+    <module>docs/org.eclipse.wst.server.ui.infopop</module>
 
     <module>plugins/org.eclipse.jst.server.core</module>
     <module>plugins/org.eclipse.jst.server.generic.core</module>
@@ -73,4 +72,34 @@
     <module>plugins/org.eclipse.wst.server.preview.adapter</module>
     <module>plugins/org.eclipse.wst.server.ui</module>
   </modules>
+
+  <profiles>
+    <profile>
+      <id>integration</id>
+      <properties>
+        <skipITests>false</skipITests>
+      </properties>
+      <modules>
+        <module>tests/org.eclipse.jst.server.tomcat.core.tests</module>
+        <module>tests/org.eclipse.jst.server.tomcat.ui.tests</module>
+        <module>tests/org.eclipse.jst.server.core.tests</module>
+        <module>tests/org.eclipse.jst.server.generic.tests</module>
+        <module>tests/org.eclipse.jst.server.ui.tests</module>
+        <module>tests/org.eclipse.wst.internet.monitor.core.tests</module>
+        <module>tests/org.eclipse.wst.internet.monitor.ui.tests</module>
+        <module>tests/org.eclipse.wst.server.core.tests</module>
+        <module>tests/org.eclipse.wst.server.http.core.tests</module>
+        <module>tests/org.eclipse.wst.server.ui.tests</module>
+        <module>tests/org.eclipse.wst.server.util.tests</module>
+
+        <module>features/org.eclipse.jst.server_adapters.ext_tests.feature</module>
+        <module>features/org.eclipse.jst.server_adapters.ext.sdk.feature</module>
+        <module>features/org.eclipse.jst.server_sdk.feature</module>
+        <module>features/org.eclipse.wst.server_adapters.sdk.feature</module>
+        <module>features/org.eclipse.wst.server_sdk.feature</module>
+        <module>features/org.eclipse.wst.server_tests.feature</module>
+        <module>features/org.eclipse.jst.server_tests.feature</module>
+      </modules>
+    </profile>
+  </profiles>
 </project>

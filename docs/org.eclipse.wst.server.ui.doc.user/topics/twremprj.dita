@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<task id="twremprj_wst" xml:lang="en-us">
+<title id="title">Removing a project from a server</title>
+<shortdesc id="shortdesc">To remove a project from a server:</shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm>servers<indexterm>removing projects</indexterm></indexterm>
+<indexterm>projects<indexterm>removing from a server</indexterm></indexterm>
+</keywords>
+</metadata></prolog>
+<taskbody>
+<context></context>
+<steps id="steps">
+<step><cmd>In the Servers view, right-click on the server containing the project
+you want to remove and select  <uicontrol>Add and remove projects</uicontrol>.</cmd>
+</step>
+<step><cmd>In the Configured projects list, select the project and click the <uicontrol>Remove</uicontrol> button.</cmd>
+</step>
+<step><cmd>The project appears in the Available projects list. Click  <uicontrol>Finish</uicontrol>.</cmd>
+</step>
+</steps>
+</taskbody>
+</task>
+<?Pub *0000001077?>

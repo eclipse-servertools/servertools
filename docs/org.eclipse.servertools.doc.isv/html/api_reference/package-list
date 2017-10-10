@@ -1,0 +1,8 @@
+org.eclipse.jst.server.core
+org.eclipse.wst.server.core
+org.eclipse.wst.server.core.model
+org.eclipse.wst.server.core.util
+org.eclipse.wst.server.ui
+org.eclipse.wst.server.ui.actions
+org.eclipse.wst.server.ui.editor
+org.eclipse.wst.server.ui.wizard

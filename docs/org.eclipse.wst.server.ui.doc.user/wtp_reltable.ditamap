@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2009, v.4002-->
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
+ "map.dtd">
+<?Pub Sty _display FontColor="red"?>
+<map id="relationship" xml:lang="en-us">
+<reltable>
+<relheader>
+<relcolspec type="concept"></relcolspec>
+<relcolspec type="task"></relcolspec>
+<relcolspec type="reference"></relcolspec>
+<relcolspec></relcolspec>
+</relheader>
+<!--Related links at the bottom of each topic.-->
+<relrow>
+<relcell>
+<topicref href="topics/cwflow.dita"
+navtitle="Which test server will start"></topicref>
+</relcell>
+<relcell>
+<topicref href="topics/twsrtins.dita" navtitle="Starting a server">
+</topicref>
+</relcell>
+<relcell></relcell>
+<relcell></relcell>
+</relrow>
+<relrow>
+<relcell></relcell>
+<relcell>
+<topicref href="topics/twtcpprf.dita"
+navtitle="Defining the TCP/IP Monitor preference"></topicref>
+</relcell>
+<relcell>
+<topicref href="topics/rwtcpvw.dita" navtitle="TCP/IP Monitor view">
+</topicref>
+</relcell>
+<relcell></relcell>
+</relrow>
+<relrow>
+<relcell>
+<topicref href="topics/cwres.dita"
+navtitle="Resources used by the Server Tools"></topicref>
+</relcell>
+<relcell>
+<topicref href="topics/tmetasrv.dita" linking="targetonly"
+navtitle="Displaying or hiding the metadata of the server"></topicref>
+<topicref href="topics/twinstprf.dita" linking="targetonly"
+navtitle="Defining the server runtime environments preference">
+</topicref>
+</relcell>
+<relcell></relcell>
+<relcell></relcell>
+</relrow>
+<relrow>
+<relcell></relcell>
+<relcell collection-type="family">
+<topicref href="topics/twsrvprf.dita"
+navtitle="Defining the server preferences"></topicref>
+<topicref href="topics/twpub.dita" navtitle="Publishing your application">
+</topicref>
+</relcell>
+<relcell></relcell>
+<relcell></relcell>
+</relrow>
+<relrow>
+<relcell></relcell>
+<relcell>
+<topicref href="topics/twtcpprf.dita"
+navtitle="Defining the TCP/IP monitor preferences"></topicref>
+</relcell>
+<relcell>
+<topicref href="topics/rwtcpvw.dita" navtitle="TCP/IP monitor view">
+</topicref>
+</relcell>
+<relcell></relcell>
+</relrow>
+<relrow>
+<relcell></relcell>
+<relcell collection-type="family">
+<topicref href="topics/twcrtins.dita" navtitle="Creating a server">
+</topicref>
+<topicref href="topics/twinstprf.dita" linking="targetonly"
+navtitle="Defining the server runtime environments preference">
+</topicref>
+</relcell>
+<relcell></relcell>
+<relcell></relcell>
+</relrow>
+<relrow>
+<relcell></relcell>
+<relcell>
+<topicref href="topics/tdecor.dita"
+navtitle="Enabling the server state decorator"></topicref>
+</relcell>
+<relcell>
+<topicref href="topics/rwrcview.dita" navtitle="Severs view"></topicref>
+</relcell>
+<relcell></relcell>
+</relrow>
+<relrow>
+<relcell></relcell>
+<relcell collection-type="family">
+<topicref href="topics/ttimeout.dita"
+navtitle="Setting timeout on the start or stop of the server">
+</topicref>
+<topicref href="topics/twstpins.dita" locktitle="yes"
+navtitle="Stopping a server"></topicref>
+</relcell>
+<relcell></relcell>
+<relcell></relcell>
+</relrow>
+<relrow>
+<relcell></relcell>
+<relcell collection-type="family">
+<topicref href="topics/ttimeout.dita"
+navtitle="Setting timeout on the start or stop of the server">
+</topicref>
+<topicref href="topics/twsrtins.dita" locktitle="yes"
+navtitle="Starting a server"></topicref>
+</relcell>
+<relcell></relcell>
+<relcell></relcell>
+</relrow>
+<!--Testing-->
+<relrow>
+<relcell></relcell>
+<relcell>
+<topicref href="topics/tj2ee.dita"
+navtitle="Testing applications on a server">
+<topicref href="topics/testing.dita"
+navtitle="Testing artifacts on a server"></topicref>
+<topicref href="topics/thttppreview.dita" locktitle="yes"
+navtitle="Testing on a HTTP Preview server" scope="local">
+<topicmeta>
+<shortdesc>Use the HTTP Preview server when you want to quickly test
+resources in a static Web project.  The HTTP Preview server is a Hypertext
+Transfer Protocol (HTTP) embedded test server that is integrated with
+the workbench.  It is intended for preliminary testing and saves you
+time to download, install, and set up an HTTP server.  However, as
+your static Web project progresses through its development cycle you
+are encourage to test and run on an external HTTP server.  You can
+use the HTTP Preview server as a convenient way to check for errors
+before you do a final test on an external HTTP server.</shortdesc>
+</topicmeta>
+</topicref>
+<topicref href="topics/tj2eepreview.dita" locktitle="yes"
+navtitle="Testing on a J2EE Preview server" scope="local">
+<topicmeta>
+<shortdesc>Use the J2EE Preview server when you want to quickly compile,
+test and run resources in a J2EE Web project. The J2EE Web projects
+you can test on a J2EE Preview server are static Web projects, dynamic
+Web projects and utility projects.  Hereafter, the term J2EE Web project
+refers to any of these previously mentioned projects.</shortdesc>
+</topicmeta>
+</topicref>
+</topicref>
+</relcell>
+<relcell></relcell>
+<relcell></relcell>
+</relrow>
+<!--Debugging-->
+<relrow>
+<relcell></relcell>
+<relcell>
+<topicref href="topics/tdebug.dita"
+navtitle="Debugging applications on a server">
+<topicref href="topics/tservlet.dita"
+navtitle="Debugging a servlet on a server"></topicref>
+<topicref href="topics/tdbgjsp.dita"
+navtitle="Debugging a JSP file on a server"></topicref>
+<topicref href="topics/tmonitorport.dita"
+navtitle="Monitoring server ports"></topicref>
+</topicref>
+</relcell>
+<relcell></relcell>
+<relcell></relcell>
+</relrow>
+<!--Publishing-->
+<relrow>
+<relcell></relcell>
+<relcell>
+<topicref href="topics/tpublish.dita" id="publish_server"
+navtitle="Publishing applications to a server">
+<topicref href="topics/twpub.dita" navtitle="Publishing your application">
+</topicref>
+</topicref>
+</relcell>
+<relcell></relcell>
+<relcell></relcell>
+</relrow>
+<!--Creating-->
+<relrow>
+<relcell></relcell>
+<relcell collection-type="family">
+<topicref href="topics/tcreate.dita" type="topic">
+<topicref href="topics/twcrtins.dita" locktitle="yes"
+navtitle="Creating a server" type="task"></topicref>
+<topicref href="topics/twedtins.dita" locktitle="yes"
+navtitle="Editing a server" type="task"></topicref>
+<topicref href="topics/twdelins.dita" locktitle="yes"
+navtitle="Deleting a server" type="task"></topicref>
+</topicref>
+</relcell>
+<relcell></relcell>
+<relcell></relcell>
+</relrow>
+<relrow>
+<relcell></relcell>
+<relcell>
+<topicref href="topics/twcrtins.dita" locktitle="yes"
+navtitle="Creating a server " scope="local">
+<topicref href="../org.eclipse.jst.server.ui.doc.user/topics/tomcat.dita"
+locktitle="yes" navtitle="...Apache Tomcat server" scope="peer">
+<topicmeta>
+<linktext>...Apache Tomcat server</linktext>
+<shortdesc></shortdesc>
+</topicmeta><?Pub Caret -2?>
+</topicref>
+<topicref href="topics/thttppreview.dita" locktitle="yes"
+navtitle="...HTTP Preview server" scope="local">
+<topicmeta>
+<linktext>...HTTP Preview server</linktext>
+<shortdesc></shortdesc>
+</topicmeta>
+</topicref>
+<topicref href="topics/tj2eepreview.dita" locktitle="yes"
+navtitle="...J2EE Preview server" scope="local">
+<topicmeta>
+<linktext>...J2EE Preview server</linktext>
+<shortdesc></shortdesc>
+</topicmeta>
+</topicref>
+</topicref>
+</relcell>
+<relcell></relcell>
+<relcell></relcell>
+</relrow>
+<!--Managing-->
+<relrow>
+<relcell></relcell>
+<relcell>
+<topicref href="topics/twmanage.dita" id="manage_server"
+navtitle="Managing servers ">
+<topicref href="topics/twaddprj.dita" locktitle="yes"
+navtitle="Adding projects to a server "></topicref>
+<topicref href="topics/twremprj.dita" locktitle="yes"
+navtitle="Removing a project from a server"></topicref>
+<topicref href="topics/twsrtins.dita" locktitle="yes"
+navtitle="Starting a server"></topicref>
+<topicref href="topics/twstpins.dita" locktitle="yes"
+navtitle="Stopping a server"></topicref>
+<topicref href="topics/ttimeout.dita"
+navtitle="Setting timeout on the start or stop of the server">
+</topicref>
+<topicref href="topics/twprefin.dita" locktitle="yes"
+navtitle="Setting a default server"></topicref>
+<topicref href="topics/tmetasrv.dita" locktitle="yes"
+navtitle="Displaying or hiding the metadata of the server"></topicref>
+<topicref href="topics/tclean.dita" locktitle="yes"
+navtitle="Cleaning projects published on the server"></topicref>
+</topicref>
+</relcell>
+<relcell></relcell>
+<relcell></relcell>
+</relrow>
+<!--Preferences-->
+<relrow>
+<relcell></relcell>
+<relcell>
+<topicref href="topics/tpref.dita" navtitle="Defining server preferences">
+<topicref href="topics/twsrvprf.dita"
+navtitle="Defining the server preferences"></topicref>
+<topicref href="topics/tprefaud.dita"
+navtitle="Defining the audio preferences"></topicref>
+<topicref href="topics/twlaunchpref.dita"
+navtitle="Defining the launching preferences"></topicref>
+<topicref href="topics/twinstprf.dita"
+navtitle="Defining the server runtime environments preferences">
+<topicmeta>
+<shortdesc>Using the Preferences page, you can direct the workbench
+to use a specific runtime environment of an application server for
+compiling, testing, or running your application.</shortdesc>
+</topicmeta>
+</topicref>
+<topicref href="topics/twtcpprf.dita"
+navtitle="Defining the TCP/IP Monitor preferences"></topicref>
+<topicref href="topics/tdecor.dita"
+navtitle="Enabling server state decorator"></topicref>
+</topicref>
+</relcell>
+<relcell></relcell>
+<relcell></relcell>
+</relrow>
+<!--Local build purpose-->
+<relrow>
+<relcell>
+<topicref href="topics/cwover.dita" linking="none"></topicref>
+</relcell>
+<relcell>
+<topicref href="topics/twsrtdbg.dita" linking="none"></topicref>
+</relcell>
+<relcell>
+<topicref href="topics/raccessserver.dita" linking="none"></topicref>
+<topicref href="topics/rwrcview.dita" linking="none"></topicref>
+</relcell>
+<relcell></relcell>
+</relrow>
+</reltable>
+</map>
+<?Pub *0000009666?>
