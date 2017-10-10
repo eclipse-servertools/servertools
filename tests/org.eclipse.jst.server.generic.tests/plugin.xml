@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+   <!-- Extensions for unit testing Generic Server -->
+
+	<extension point="org.eclipse.wst.server.core.runtimeTypes">
+	
+    	<runtimeType
+         	id="bar.runtime.id"
+         	name="Bar Runtime Type" 
+         	description="The Bar Runtime Type"
+         	vendor="Bar"
+			version="0"
+			class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
+				<moduleType
+					types="bar.module"
+					versions="1.0"/>       
+      	</runtimeType>
+
+    	<runtimeType
+         	id="foo.serverdefonly.runtime.id"
+         	name="Foo ServerOnly Runtime Type" 
+         	description="The Foo ServerOnly Runtime Type"
+         	vendor="Bar"
+			version="0"
+			class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
+				<moduleType
+					types="foo.module"
+					versions="1.0"/>       
+      	</runtimeType>
+      	
+    </extension>   
+
+	<extension point="org.eclipse.wst.server.core.serverTypes">
+	
+       	<serverType
+        	runtime="true"
+	        class="org.eclipse.jst.server.generic.core.internal.GenericServer"
+	        id="bar.server.id"
+	        initialState="stopped"
+	        startBeforePublish="true"
+	        supportsRemoteHosts="false"
+	        runtimeTypeId="bar.runtime.id"
+	        description="Bar Server"
+	        launchConfigId="org.eclipse.jst.server.generic.core.launchConfigurationType"
+	        behaviourClass="org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour"
+	        name="Bar Server"
+	        hasConfiguration="false"
+	        startTimeout="60000"
+		    stopTimeout="30000"
+	        launchModes="run,debug">
+    	</serverType>
+
+       	<serverType
+        	runtime="true"
+	        class="org.eclipse.jst.server.generic.core.internal.GenericServer"
+	        id="foo.serverdefonly.server.id"
+	        initialState="stopped"
+	        startBeforePublish="true"
+	        supportsRemoteHosts="false"
+	        runtimeTypeId="foo.serverdefonly.runtime.id"
+	        description="Foo Server"
+	        launchConfigId="org.eclipse.jst.server.generic.core.launchConfigurationType"
+	        behaviourClass="org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour"
+	        name="Foo Server"
+	        hasConfiguration="false"
+	        startTimeout="60000"
+		    stopTimeout="30000"
+	        launchModes="run,debug">
+    	</serverType>
+    	
+    </extension>   
+
+    <extension point="org.eclipse.jst.server.generic.core.serverdefinition">
+   
+   	  <serverdefinition id="foo.serverdefonly.runtime.id" 
+          definitionfile="/defs/fooallinone.serverdef">
+      </serverdefinition>
+
+   	  <serverdefinition id="bar.server.id" 
+          definitionfile="/defs/barserveronly.serverdef">
+      </serverdefinition>
+      
+   </extension>
+
+   <extension point="org.eclipse.jst.server.generic.core.runtimedefinition">
+   
+   	  <serverdefinition id="bar.runtime.id" 
+          definitionfile="/defs/barruntimeonly.runtimedef">
+      </serverdefinition>
+      
+   </extension>
+    
+</plugin>

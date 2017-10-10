@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Vendor: Eclipse.org
+Bundle-Name: Server Tomcat Performance Plug-in
+Bundle-SymbolicName: org.eclipse.jst.server.tomcat.tests.performance
+Bundle-Version: 1.0.400.qualifier
+Bundle-ClassPath: performance.jar
+Export-Package: org.eclipse.jst.server.tomcat.tests.performance.tomcat50
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.junit;bundle-version="[3.8.0,4.0.0)",
+ org.eclipse.jdt.launching,
+ org.eclipse.test.performance,
+ org.eclipse.wst.server.core,
+ org.eclipse.jst.server.tomcat.core,
+ org.eclipse.wst.server.tests.performance,
+ org.eclipse.wst.server.ui.tests,
+ org.eclipse.jst.server.tomcat.core.tests,
+ org.eclipse.core.resources,
+ org.eclipse.wst.server.ui,
+ org.eclipse.jst.server.core
+Bundle-RequiredExecutionEnvironment: J2SE-1.4

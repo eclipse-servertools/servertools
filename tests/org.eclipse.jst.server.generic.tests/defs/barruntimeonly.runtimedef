@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:ServerRuntime
+	xmlns:tns="http://eclipse.org/jst/server/generic/ServerTypeDefinition"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://eclipse.org/jst/server/generic/ServerTypeDefinition ServerTypeDefinitionSchema.xsd"
+	name="Bar Runtime" version="v1">
+
+	<property id="foo.prop.a"
+		label="Foo property A"
+		type="string"
+		context="runtime"
+		default="a runtime property value" />
+	
+	<module>
+		<type>foo.module</type>
+		<publishDir>/pub</publishDir>
+		<publisherReference>foo.FooPublisher</publisherReference>
+	</module>
+	
+	<project>
+		<classpathReference>foo.runtime.classpath</classpathReference>
+	</project>
+	
+	<start>
+		<mainClass>foo.Main</mainClass>
+		<workingDirectory>/bin</workingDirectory>
+		<programArguments>-c default</programArguments>
+		<vmParameters></vmParameters>
+		<classpathReference>foo.classpath</classpathReference>
+	</start>
+
+	<stop>
+		<mainClass>foo.Shutdown</mainClass>
+		<workingDirectory>/bin</workingDirectory>
+		<programArguments>-S</programArguments>
+		<vmParameters></vmParameters>
+		<classpathReference>foo.classpath</classpathReference>
+	</stop>
+		
+	<publisher id="foo.Publisher">
+		<publisherdata>
+			<dataname>XXXXXXXX</dataname>
+			<datavalue>YYYYYYYYYY</datavalue>
+		</publisherdata>
+	</publisher>
+
+	<classpath id="foo.runtime.classpath">
+		<archive path="foo.jar" />
+	</classpath>
+	
+	<jndiConnection>
+		<providerUrl>jnp://hostfoo:1099</providerUrl>
+		<initialContextFactory>org.jnp.interfaces.NamingContextFactory</initialContextFactory>
+		<jndiProperty>
+			<name></name>
+			<value></value>
+		</jndiProperty>
+	</jndiConnection>
+	
+</tns:ServerRuntime>

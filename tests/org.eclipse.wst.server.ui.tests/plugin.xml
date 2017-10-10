@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+ <extension
+       point="org.eclipse.wst.server.ui.deleteServerDialogExtension">
+    <deleteServerDialogExtension
+          class="org.eclipse.wst.server.ui.tests.dialog.DeleteServerDialogTestExtension"
+          id="org.eclipse.wst.server.ui.tests.dialog.deleteServerDialogTestExtension">
+    </deleteServerDialogExtension>
+ </extension>
+ 
+	<extension
+       point="org.eclipse.wst.server.ui.removeModuleMessageExtension">
+      <removeModuleMessageExtension
+          id="org.eclipse.wst.server.ui.tests.removeModuleMessageExtensionTestA"
+          serverTypeId="org.eclipse.wst.server.testA*"
+          class="org.eclipse.wst.server.ui.tests.RemoveModuleMessageTestExtension">
+      </removeModuleMessageExtension>
+    </extension>
+    
+    <extension
+       point="org.eclipse.wst.server.ui.removeModuleMessageExtension">
+      <removeModuleMessageExtension
+          id="org.eclipse.wst.server.ui.tests.removeModuleMessageExtensionTestB"
+          serverTypeId="org.eclipse.wst.server.testB.*"
+          class="org.eclipse.wst.server.ui.tests.RemoveModuleMessageTestExtension">
+      </removeModuleMessageExtension>
+    </extension>
+    
+    <extension
+       point="org.eclipse.wst.server.ui.removeModuleMessageExtension">
+      <removeModuleMessageExtension
+          id="org.eclipse.wst.server.ui.tests.removeModuleMessageExtensionTestB"
+          serverTypeId="org.eclipse.wst.server.testC"
+          class="org.eclipse.wst.server.ui.tests.RemoveModuleMessageTestExtension">
+      </removeModuleMessageExtension>
+    </extension>
+</plugin>
