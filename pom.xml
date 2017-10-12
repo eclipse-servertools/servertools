@@ -30,7 +30,16 @@
     <tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/servertools/webtools.servertools.git</tycho.scmUrl>
     <tycho.version>1.0.0</tycho.version>
     <tycho-extras.version>1.0.0</tycho-extras.version>
+    <webtools-common-site>https://hudson.eclipse.org/webtools/job/webtools-common_R3_10/lastSuccessfulBuild/artifact/site/target/repository/</webtools-common-site>
   </properties>
+
+  <repositories>
+		<repository>
+			<id>webtools-common-site</id>
+			<layout>p2</layout>
+			<url>${webtools-common-site}</url>
+		</repository>
+  </repositories>
 
   <modules>
     <module>features/org.eclipse.jst.server_adapters.ext.feature</module>
@@ -124,4 +133,5 @@
       </build> -->
     </profile>
   </profiles>
+
 </project>
