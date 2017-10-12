@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+
+    <feature id="org.eclipse.jst.server_adapters.ext.feature"><category name="site"/></feature>
+    <feature id="org.eclipse.jst.server_adapters.feature"><category name="site"/></feature>
+    <feature id="org.eclipse.jst.server_adapters.sdk.feature"><category name="site"/></feature>
+    <feature id="org.eclipse.jst.server_core.feature"><category name="site"/></feature>
+    <feature id="org.eclipse.jst.server_ui.feature"><category name="site"/></feature>
+    <feature id="org.eclipse.jst.server_userdoc.feature"><category name="site"/></feature>
+    <feature id="org.eclipse.wst.server_adapters.feature"><category name="site"/></feature>
+    <feature id="org.eclipse.wst.server_core.feature"><category name="site"/></feature>
+    <feature id="org.eclipse.wst.server_ui.feature"><category name="site"/></feature>
+    <feature id="org.eclipse.wst.server_userdoc.feature"><category name="site"/></feature>
+
+    <bundle id="org.eclipse.jst.server.ui.doc.user"><category name="site"/></bundle>
+    <bundle id="org.eclipse.jst.server.ui.infopop"><category name="site"/></bundle>
+    <bundle id="org.eclipse.servertools.doc.isv"><category name="site"/></bundle>
+    <bundle id="org.eclipse.wst.server.ui.doc.user"><category name="site"/></bundle>
+    <bundle id="org.eclipse.wst.server.ui.infopop"><category name="site"/></bundle>
+
+    <bundle id="org.eclipse.jst.server.core"><category name="site"/></bundle>
+    <bundle id="org.eclipse.jst.server.generic.core"><category name="site"/></bundle>
+    <bundle id="org.eclipse.jst.server.generic.jonas"><category name="site"/></bundle>
+    <bundle id="org.eclipse.jst.server.generic.ui"><category name="site"/></bundle>
+    <bundle id="org.eclipse.jst.server.preview.adapter"><category name="site"/></bundle>
+    <bundle id="org.eclipse.jst.server.tomcat.core"><category name="site"/></bundle>
+    <bundle id="org.eclipse.jst.server.tomcat.ui"><category name="site"/></bundle>
+    <bundle id="org.eclipse.jst.server.ui"><category name="site"/></bundle>
+    <bundle id="org.eclipse.wst.internet.monitor.core"><category name="site"/></bundle>
+    <bundle id="org.eclipse.wst.internet.monitor.ui"><category name="site"/></bundle>
+    <bundle id="org.eclipse.wst.server.core"><category name="site"/></bundle>
+    <bundle id="org.eclipse.wst.server.discovery"><category name="site"/></bundle>
+    <bundle id="org.eclipse.wst.server.http.core"><category name="site"/></bundle>
+    <bundle id="org.eclipse.wst.server.http.ui"><category name="site"/></bundle>
+    <bundle id="org.eclipse.wst.server.preview"><category name="site"/></bundle>
+    <bundle id="org.eclipse.wst.server.preview.adapter"><category name="site"/></bundle>
+    <bundle id="org.eclipse.wst.server.ui"><category name="site"/></bundle>
+
+    <bundle id="org.eclipse.wst.internet.monitor.core.tests"><category name="site"/></bundle>
+    <bundle id="org.eclipse.wst.server.core.tests"><category name="site"/></bundle>
+    <bundle id="org.eclipse.wst.server.http.core.tests"><category name="site"/></bundle>
+    <bundle id="org.eclipse.wst.server.util.tests"><category name="site"/></bundle>
+
+    <category-def name="site" label="Web Tools (WTP) Server Tools"><description/></category-def>
+
+</site>

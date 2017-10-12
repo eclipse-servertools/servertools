@@ -87,6 +87,8 @@
     <module>tests/org.eclipse.wst.server.core.tests</module>
     <module>tests/org.eclipse.wst.server.http.core.tests</module>
     <module>tests/org.eclipse.wst.server.util.tests</module>
+
+    <module>site</module>
   </modules>
 
   <profiles>
