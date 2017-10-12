@@ -82,6 +82,11 @@
     <module>plugins/org.eclipse.wst.server.preview</module>
     <module>plugins/org.eclipse.wst.server.preview.adapter</module>
     <module>plugins/org.eclipse.wst.server.ui</module>
+
+    <module>tests/org.eclipse.wst.internet.monitor.core.tests</module>
+    <module>tests/org.eclipse.wst.server.core.tests</module>
+    <module>tests/org.eclipse.wst.server.http.core.tests</module>
+    <module>tests/org.eclipse.wst.server.util.tests</module>
   </modules>
 
   <profiles>
@@ -91,17 +96,13 @@
         <skipITests>false</skipITests>
       </properties>
       <modules>
-        <module>tests/org.eclipse.jst.server.tomcat.core.tests</module>
-        <module>tests/org.eclipse.jst.server.tomcat.ui.tests</module>
         <module>tests/org.eclipse.jst.server.core.tests</module>
         <module>tests/org.eclipse.jst.server.generic.tests</module>
+        <module>tests/org.eclipse.jst.server.tomcat.core.tests</module>
+        <module>tests/org.eclipse.jst.server.tomcat.ui.tests</module>
         <module>tests/org.eclipse.jst.server.ui.tests</module>
-        <module>tests/org.eclipse.wst.internet.monitor.core.tests</module>
         <module>tests/org.eclipse.wst.internet.monitor.ui.tests</module>
-        <module>tests/org.eclipse.wst.server.core.tests</module>
-        <module>tests/org.eclipse.wst.server.http.core.tests</module>
         <module>tests/org.eclipse.wst.server.ui.tests</module>
-        <module>tests/org.eclipse.wst.server.util.tests</module>
 
         <module>features/org.eclipse.jst.server_adapters.ext_tests.feature</module>
         <module>features/org.eclipse.jst.server_adapters.ext.sdk.feature</module>
