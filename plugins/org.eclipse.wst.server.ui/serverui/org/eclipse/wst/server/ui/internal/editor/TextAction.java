@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.wst.server.ui.internal.editor;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.wst.server.ui.internal.Trace;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -112,6 +113,15 @@ public class TextAction extends Action {
 	 */
 	public void copy() {
 		Point selection = getControlSelection();
+		Control control = getControl();
+		if (control == null)
+			return;
+
+		if (control instanceof Text) {
+			Text textcontrol = (Text) control;
+			if ((textcontrol.getStyle() & SWT.PASSWORD) != 0) return;
+		}
+		
 		String text = getControlText();
 		if (selection == null || text == null)
 			return;
@@ -139,6 +149,15 @@ public class TextAction extends Action {
 		if (selection == null)
 			return;
 
+		Control control = getControl();
+		if (control == null)
+			return;
+
+		if (control instanceof Text) {
+			Text textcontrol = (Text) control;
+			if ((textcontrol.getStyle() & SWT.PASSWORD) != 0) return;
+		}
+		
 		if (selection.y > selection.x) {
 			copy();
 			delete();
