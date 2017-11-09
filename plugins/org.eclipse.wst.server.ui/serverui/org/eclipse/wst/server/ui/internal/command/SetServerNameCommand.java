@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,16 +18,22 @@ import org.eclipse.wst.server.ui.internal.Messages;
 public class SetServerNameCommand extends ServerCommand {
 	protected String name;
 	protected String oldName;
+	protected Validator validator;
 
+	public static interface Validator {
+		public void validate();
+	}
+	
 	/**
 	 * SetServerNameCommand constructor.
 	 * 
 	 * @param server a server
 	 * @param name a name for the server
 	 */
-	public SetServerNameCommand(IServerWorkingCopy server, String name) {
+	public SetServerNameCommand(IServerWorkingCopy server, String name, Validator validator) {
 		super(server, Messages.serverEditorOverviewServerNameCommand);
 		this.name = name;
+		this.validator = validator;
 	}
 
 	/**
@@ -36,6 +42,8 @@ public class SetServerNameCommand extends ServerCommand {
 	public void execute() {
 		oldName = server.getName();
 		server.setName(name);
+		if( validator != null )
+			validator.validate();
 	}
 
 	/**
@@ -43,5 +51,7 @@ public class SetServerNameCommand extends ServerCommand {
 	 */
 	public void undo() {
 		server.setName(oldName);
+		if( validator != null )
+			validator.validate();
 	}
 }

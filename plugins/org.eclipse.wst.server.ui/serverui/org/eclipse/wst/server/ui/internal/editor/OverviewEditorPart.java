@@ -12,15 +12,11 @@ package org.eclipse.wst.server.ui.internal.editor;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchManager;
@@ -340,9 +336,12 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 					if (updating)
 						return;
 					updating = true;
-					execute(new SetServerNameCommand(getServer(), serverName.getText()));
+					execute(new SetServerNameCommand(getServer(), serverName.getText(), new SetServerNameCommand.Validator() {
+						public void validate() {
+							OverviewEditorPart.this.validate();
+						}
+					}));
 					updating = false;
-					validate();
 				}
 			});
 			whs.setHelp(serverName, ContextIds.EDITOR_SERVER);
@@ -1026,15 +1025,18 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 		return pageModifiersList;
 	}
 
+	IStatus validationStatus = null;
 	protected void validate() {
 		IManagedForm mForm = getManagedForm();
 		if (mForm == null)
 			return;
-		
+		MultiStatus ms = new MultiStatus(ServerUIPlugin.PLUGIN_ID, 0, "Validating Overview Part", null);
 		mForm.getMessageManager().removeMessage("name", serverName);
 		if (server != null && serverName != null) {
-			if (ServerPlugin.isNameInUse(server, serverName.getText().trim()))
+			if (ServerPlugin.isNameInUse(server, serverName.getText().trim())) {
 				mForm.getMessageManager().addMessage("name", Messages.errorDuplicateName, null, IMessageProvider.ERROR, serverName);
+				ms.add(new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID,  Messages.errorDuplicateName));
+			}
 		}
 		
 		if (serverConfiguration != null) {
@@ -1046,17 +1048,29 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 					IProject project = null;
 					if (folder != null)
 						project = folder.getProject();
-					if (project != null && project.exists() && !project.isOpen())
+					if (project != null && project.exists() && !project.isOpen()) {
 						mForm.getMessageManager().addMessage("config", NLS.bind(Messages.errorConfigurationNotAccessible, project.getName()), null, IMessageProvider.ERROR, serverConfiguration);
-					else
+						ms.add(new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID,  NLS.bind(Messages.errorConfigurationNotAccessible, project.getName())));
+					} else {
 						mForm.getMessageManager().addMessage("config", Messages.errorMissingConfiguration, null, IMessageProvider.ERROR, serverConfiguration);
+						ms.add(new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID,  Messages.errorMissingConfiguration));
+					}
 	 			}
 			}
 		}
-		
+		validationStatus = (ms.isOK() ? Status.OK_STATUS : ms);
 		mForm.getMessageManager().update();
 	}
 
+	public IStatus[] getSaveStatus() {
+		IStatus[] all = super.getSaveStatus();
+		if( validationStatus == null )
+			return all;
+		List<IStatus> all2 = new ArrayList<IStatus>(Arrays.asList(all));
+		all2.addAll(Arrays.asList(validationStatus.getChildren()));
+		return all2.toArray(new IStatus[all2.size()]);
+	}
+	
 	protected void updateDecoration(ControlDecoration decoration, IStatus status) {
 		if (status != null) {
 			Image newImage = null;
