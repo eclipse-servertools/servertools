@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2011 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -100,12 +100,18 @@ public class LaunchClientJob extends ChainedJob {
 					}
 					try {
 						resultingStatus[0] = client.launch(server, launchable[0], launchMode, server.getLaunch());
-						if (resultingStatus[0] != null && resultingStatus[0].getSeverity() == IStatus.ERROR)
+						if (resultingStatus[0] != null && resultingStatus[0].getSeverity() == IStatus.ERROR) {
 							EclipseUtil.openError(null, resultingStatus[0]);
+						} else if (resultingStatus[0] == null) {
+							resultingStatus[0] = Status.OK_STATUS;
+						}
 					}
 					catch (Exception e) {
 						if (Trace.SEVERE) {
 							Trace.trace(Trace.STRING_SEVERE, "Server client failed", e);
+						}
+						if (resultingStatus[0] == null) {
+							resultingStatus[0] = new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, e.getMessage(), e);
 						}
 					}
 				}

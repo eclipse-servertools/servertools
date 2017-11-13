@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunch;
 
 import org.eclipse.wst.server.core.IServer;
@@ -120,8 +121,8 @@ public class Client implements IClient {
 			if (Trace.SEVERE) {
 				Trace.trace(Trace.STRING_SEVERE, "Error calling delegate " + toString(), e);
 			}
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, e.getMessage(), e);
 		}
-		return null;
 	}
 
 	/**
