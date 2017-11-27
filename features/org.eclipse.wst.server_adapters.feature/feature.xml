@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.server_adapters.feature"
       label="%featureName"
-      version="3.2.600.qualifier"
+      version="3.2.601.qualifier"
       provider-name="%providerName"
       license-feature="org.eclipse.license"
       license-feature-version="1.0.1.qualifier">
@@ -18,6 +18,19 @@
    <license url="%licenseURL">
       %license
    </license>
+
+   <!-- 
+      https://bugs.eclipse.org/bugs/show_bug.cgi?id=527813 
+      These two jetty plugins are already required by 
+      org.eclipse.wst.server.preview/META-INF/MANIFEST.MF, 
+      so no need to include or require them here
+   <requires>
+     <import plugin="org.eclipse.jetty.webapp"/>
+     <import plugin="org.eclipse.jetty.http"/>
+     <import plugin="org.eclipse.jetty.io"/>
+     <import plugin="org.eclipse.jetty.xml"/>
+   </requires>
+   -->
 
    <plugin
          id="org.eclipse.wst.server.preview.adapter"
@@ -42,20 +55,6 @@
 
    <plugin
          id="org.eclipse.wst.server.http.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.jetty.webapp"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.jetty.xml"
          download-size="0"
          install-size="0"
          version="0.0.0"
