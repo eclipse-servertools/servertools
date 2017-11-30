@@ -47,13 +47,15 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 	// corresponds to CLASSPATH_BIN_INDEX_PREVIEW_SERVER	
 	private static final String[] REQUIRED_BUNDLE_IDS = new String[] {
 		"javax.servlet",
-		"org.eclipse.jetty.server",
-		"org.eclipse.jetty.util",
 		"org.eclipse.jetty.continuation",
 		"org.eclipse.jetty.http",
 		"org.eclipse.jetty.io",
-		"org.eclipse.jetty.webapp",
+		"org.eclipse.jetty.security",
+		"org.eclipse.jetty.server",
 		"org.eclipse.jetty.servlet",
+		"org.eclipse.jetty.util",
+		"org.eclipse.jetty.webapp",
+		"org.eclipse.jetty.xml",
 		"org.eclipse.wst.server.preview"
 	};
 	
