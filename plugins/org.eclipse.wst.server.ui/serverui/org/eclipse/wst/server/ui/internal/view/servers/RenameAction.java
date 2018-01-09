@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -259,7 +259,7 @@ public class RenameAction extends AbstractServerAction {
 			public void run() {
 				try {
 					if (!newName.equals(editedServer.getName())) {
-						if (ServerPlugin.isNameInUse(editedServer, newName)) {
+						if (ServerPlugin.isNameOnlyInUse(editedServer, newName)) {
 							MessageDialog.openError(shell, Messages.defaultDialogTitle, Messages.errorDuplicateName);
 						} else {
 							try {

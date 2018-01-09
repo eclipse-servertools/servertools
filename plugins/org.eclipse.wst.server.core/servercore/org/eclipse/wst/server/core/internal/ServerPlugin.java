@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -424,18 +424,7 @@ public class ServerPlugin extends Plugin {
 		}
 	}
 
-	/**
-	 * Returns true if a server or runtime exists with the given name.
-	 *
-	 * @param element an object
-	 * @param name a name
-	 * @return <code>true</code> if the name is in use, and <code>false</code>
-	 *    otherwise
-	 */
-	public static boolean isNameInUse(Object element, String name) {
-		if (name == null)
-			return true;
-		
+	private static List<Object> generateIsNameInUseList(Object element, String name) {
 		List<Object> list = new ArrayList<Object>();
 		
 		if (element == null || element instanceof IRuntime)
@@ -451,20 +440,96 @@ public class ServerPlugin extends Plugin {
 			if (list.contains(element))
 				list.remove(element);
 		}
-		
+		return list;
+	}
+	
+	private static final int CHECK_ID = 0;
+	private static final int CHECK_NAME = 1;
+	private static final int CHECK_BOTH = 2;
+	
+	
+	/**
+	 * Returns true if a server or runtime exists with the given name.
+	 *
+	 * @param element an object
+	 * @param name a name
+	 * @return <code>true</code> if the name is in use, and <code>false</code>
+	 *    otherwise
+	 */
+	public static boolean isNameInUse(Object element, String name) {
+		return isNameInUse(element, name, CHECK_BOTH);
+	}
+	
+	/**
+	 * Returns true if a server or runtime exists with the given ID.
+	 *
+	 * @param element an object
+	 * @param name a name
+	 * @return <code>true</code> if the name is in use, and <code>false</code>
+	 *    otherwise
+	 */
+	public static boolean isIdInUse(Object element, String id) {
+		return isNameInUse(element, id, CHECK_ID);
+	}
+	
+	/**
+	 * Returns true if a server or runtime exists with the given name.
+	 *
+	 * @param element an object
+	 * @param name a name
+	 * @return <code>true</code> if the name is in use, and <code>false</code>
+	 *    otherwise
+	 */
+	public static boolean isNameOnlyInUse(Object element, String id) {
+		return isNameInUse(element, id, CHECK_NAME);
+	}
+	
+	/**
+	 * Returns true if a server or runtime exists with the given name only (ignoring id).
+	 *
+	 * @param element an object
+	 * @param name a name
+	 * @return <code>true</code> if the name is in use, and <code>false</code>
+	 *    otherwise
+	 */
+	private static boolean isNameInUse(Object element, String name, int type) {
+		if (name == null)
+			return true;
+		List<Object> list = generateIsNameInUseList(element, name);
 		Iterator iterator = list.iterator();
 		while (iterator.hasNext()) {
 			Object obj = iterator.next();
-			if (obj instanceof IServerAttributes && 
-					(name.equalsIgnoreCase(((IServerAttributes)obj).getName()) || name.equalsIgnoreCase(((IServerAttributes)obj).getId()))) 
-				return true;
-			if (obj instanceof IRuntime && name.equalsIgnoreCase(((IRuntime)obj).getName()))
-				return true;
+			if (obj instanceof IServerAttributes) {
+				if( type == CHECK_NAME ) {
+					if( name.equalsIgnoreCase(((IServerAttributes)obj).getName()) )
+						return true;
+				} else if( type == CHECK_ID) {
+					if( name.equalsIgnoreCase(((IServerAttributes)obj).getId()) ) 
+						return true;
+				} else { 
+					if( name.equalsIgnoreCase(((IServerAttributes)obj).getName()) || 
+							name.equalsIgnoreCase(((IServerAttributes)obj).getId()) ) 
+						return true;
+				}
+			}
+			if (obj instanceof IRuntime ) {
+				if( type == CHECK_NAME ) {
+					if( name.equalsIgnoreCase(((IRuntime)obj).getName()) )
+						return true;
+				} else if( type == CHECK_ID) {
+					if( name.equalsIgnoreCase(((IRuntime)obj).getId()) ) 
+						return true;
+				} else { /*if( type == CHECK_BOTH ) {*/
+					if( name.equalsIgnoreCase(((IRuntime)obj).getName()) || 
+							name.equalsIgnoreCase(((IRuntime)obj).getId()) )
+						return true;
+				}
+			}
 		}
 		
 		return false;
 	}
-
+	
 	/**
 	 * Utility method to tokenize a string into an array.
 	 * 

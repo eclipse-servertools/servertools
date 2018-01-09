@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2017 IBM Corporation and others.
+ * Copyright (c) 2003, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -263,6 +263,10 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 				
 				if (server != null) {
 					server.setName(name);
+					String base = serverName.getText().trim();
+					if( ServerPlugin.isIdInUse(server, base) ) {
+						server.setAttribute("id", generateUniqueId(base));
+					}
 					IRuntime runtime2 = server.getRuntime();
 					if (runtime2 != null && runtime2 instanceof IRuntimeWorkingCopy) {
 						IRuntimeWorkingCopy rwc = (IRuntimeWorkingCopy) runtime2;
@@ -353,6 +357,17 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		Dialog.applyDialogFont(this);
 	}
 
+	String generateUniqueId(String base) {
+		// generate a temporary unique id
+		long time = System.currentTimeMillis();
+		String toTest = new StringBuilder(base).append("_").append(time).toString();
+		int num = 1;
+		while(ServerPlugin.isIdInUse(server, toTest) ) {
+			toTest = new StringBuilder(base).append("_").append(time).append("_").append(num++).toString();
+		}
+		return toTest;
+	}
+	
 	protected boolean showPreferencePage() {
 		String id = "org.eclipse.wst.server.ui.preferencePage";
 		String id2 = "org.eclipse.wst.server.ui.runtime.preferencePage";
@@ -1094,7 +1109,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			// server name, check to see if the name is in use
 			if (!cacheServerNameCheck.equals(myServerName)){
 				cacheServerNameCheck = myServerName;
-				isServerNameInUse = ServerPlugin.isNameInUse(server, serverName.getText().trim());				
+				isServerNameInUse = ServerPlugin.isNameOnlyInUse(server, serverName.getText().trim());				
 			}
 			return isServerNameInUse;			
 		}

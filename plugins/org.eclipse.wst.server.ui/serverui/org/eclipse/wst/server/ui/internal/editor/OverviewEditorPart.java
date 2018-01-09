@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2017 IBM Corporation and others.
+ * Copyright (c) 2003, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1033,7 +1033,7 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 		MultiStatus ms = new MultiStatus(ServerUIPlugin.PLUGIN_ID, 0, "Validating Overview Part", null);
 		mForm.getMessageManager().removeMessage("name", serverName);
 		if (server != null && serverName != null) {
-			if (ServerPlugin.isNameInUse(server, serverName.getText().trim())) {
+			if (ServerPlugin.isNameOnlyInUse(server, serverName.getText().trim())) {
 				mForm.getMessageManager().addMessage("name", Messages.errorDuplicateName, null, IMessageProvider.ERROR, serverName);
 				ms.add(new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID,  Messages.errorDuplicateName));
 			}
