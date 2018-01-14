@@ -79,11 +79,11 @@
 		runtime-vendor="Resin" runtimeId="org.eclipse.jst.server.generic.runtime.resin40">
 	</feature>
 	<feature
-		uri="http://download.jboss.org/jbosstools/updates/webtools/oxygen/"
+		uri="http://download.jboss.org/jbosstools/updates/webtools/photon/"
 		id="org.jboss.ide.eclipse.as.feature.feature.group"
 		name="JBoss AS, WildFly, &amp; EAP Server Tools"
 		description="Provides WTP server adapters for JBoss installations. These adapters are capable of deployment and providing classpaths for projects. Zipped or exploded deployments, JMX integration, and other extensions are included."
-		provider="Red Hat JBoss Middleware" version="3.3.0" serverId="org.jboss.ide.eclipse.as.eap.70"
+		provider="Red Hat JBoss Middleware" version="3.4.0" serverId="org.jboss.ide.eclipse.as.eap.70"
 		runtime-vendor="Red Hat JBoss Middleware" runtimeId="org.jboss.ide.eclipse.as.runtime.eap.70">
 	</feature>
 	<feature uri="http://download.oracle.com/otn_software/oepe/oxygen/"
