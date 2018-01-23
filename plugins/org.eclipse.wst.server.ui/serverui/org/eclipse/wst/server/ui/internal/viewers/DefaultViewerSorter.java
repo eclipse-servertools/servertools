@@ -11,6 +11,7 @@
 package org.eclipse.wst.server.ui.internal.viewers;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -23,6 +24,8 @@ import org.eclipse.wst.server.core.IServerType;
  * New wizards.
  */
 public class DefaultViewerSorter extends ViewerSorter {
+	private static AlphanumComparator alphanum = new AlphanumComparator();
+	
 	public static class Version implements Comparable {
 		private static final String SEPARATORS = ".,";
 
@@ -181,8 +184,8 @@ public class DefaultViewerSorter extends ViewerSorter {
 	protected static int compareRuntimeTypes(IRuntimeType r1, IRuntimeType r2) {
 		if (isSameFamily(r1.getName(), r1.getVersion(), r2.getName(), r2.getVersion()))
 			return compareVersions(r1.getVersion(), r2.getVersion());
-		
-		return r1.getName().compareToIgnoreCase(r2.getName());
+
+		return alphanum.compare(r1.getName(),r2.getName());
 	}
 
 	/**
@@ -202,7 +205,94 @@ public class DefaultViewerSorter extends ViewerSorter {
 			if (isSameFamily(s1.getName(), r1.getVersion(), s2.getName(), r2.getVersion()))
 				return compareVersions(r1.getVersion(), r2.getVersion());
 		}
-		
-		return s1.getName().compareToIgnoreCase(s2.getName());
+
+		return alphanum.compare(s1.getName(), s2.getName());
 	}
+
+	/**
+	 * Split strings into blocks of numerics and non-numerics, and compare those blocks. 
+	 * This will allow a list containing "SomeServer 9.0" and "SomeServer 10.0" to have 
+	 * proper numeric sorting for the numeric portions.  
+	 */
+	private static class AlphanumComparator implements Comparator<String> {
+		public AlphanumComparator() {
+		}
+
+		private final boolean isDigit(char ch) {
+			return ((ch >= 48) && (ch <= 57));
+		}
+
+		/**
+		 * Length of string is passed in for improved efficiency (only need to calculate
+		 * it once)
+		 **/
+		private final String getChunk(String s, int slength, int marker) {
+			StringBuilder chunk = new StringBuilder();
+			char c = s.charAt(marker);
+			chunk.append(c);
+			marker++;
+			if (isDigit(c)) {
+				while (marker < slength) {
+					c = s.charAt(marker);
+					if (!isDigit(c))
+						break;
+					chunk.append(c);
+					marker++;
+				}
+			} else {
+				while (marker < slength) {
+					c = s.charAt(marker);
+					if (isDigit(c))
+						break;
+					chunk.append(c);
+					marker++;
+				}
+			}
+			return chunk.toString();
+		}
+
+		public int compare(String s1, String s2) {
+			if ((s1 == null) || (s2 == null)) {
+				return 0;
+			}
+
+			int thisMarker = 0;
+			int thatMarker = 0;
+			int s1Length = s1.length();
+			int s2Length = s2.length();
+
+			while (thisMarker < s1Length && thatMarker < s2Length) {
+				String thisChunk = getChunk(s1, s1Length, thisMarker);
+				thisMarker += thisChunk.length();
+
+				String thatChunk = getChunk(s2, s2Length, thatMarker);
+				thatMarker += thatChunk.length();
+
+				// If both chunks contain numeric characters, sort them numerically
+				int result = 0;
+				if (isDigit(thisChunk.charAt(0)) && isDigit(thatChunk.charAt(0))) {
+					// Simple chunk comparison by length.
+					int thisChunkLength = thisChunk.length();
+					result = thisChunkLength - thatChunk.length();
+					// If equal, the first different number counts
+					if (result == 0) {
+						for (int i = 0; i < thisChunkLength; i++) {
+							result = thisChunk.charAt(i) - thatChunk.charAt(i);
+							if (result != 0) {
+								return result;
+							}
+						}
+					}
+				} else {
+					result = thisChunk.compareTo(thatChunk);
+				}
+
+				if (result != 0)
+					return result;
+			}
+
+			return s1Length - s2Length;
+		}
+	}
+
 }
