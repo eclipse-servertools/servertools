@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+
+    <bundle id="org.eclipse.jst.server.core.tests"><category name="site-integration"/></bundle>
+    <bundle id="org.eclipse.jst.server.generic.tests"><category name="site-integration"/></bundle>
+    <bundle id="org.eclipse.jst.server.tomcat.core.tests"><category name="site-integration"/></bundle>
+    <bundle id="org.eclipse.jst.server.tomcat.ui.tests"><category name="site-integration"/></bundle>
+    <bundle id="org.eclipse.jst.server.ui.tests"><category name="site-integration"/></bundle>
+    <bundle id="org.eclipse.wst.internet.monitor.ui.tests"><category name="site-integration"/></bundle>
+    <bundle id="org.eclipse.wst.server.ui.tests"><category name="site-integration"/></bundle>
+
+    <feature id="org.eclipse.jst.server_adapters.ext_tests.feature"><category name="site-integration"/></feature>
+    <feature id="org.eclipse.wst.server_tests.feature"><category name="site-integration"/></feature>
+    <feature id="org.eclipse.jst.server_tests.feature"><category name="site-integration"/></feature>
+
+    <category-def name="site-integration" label="Web Tools (WTP) Server Tools - Integration"><description/></category-def>
+
+</site>
