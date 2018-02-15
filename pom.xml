@@ -52,21 +52,7 @@
   </repositories>
 
   <modules>
-    <module>features/org.eclipse.jst.server_adapters.ext.feature</module>
-    <module>features/org.eclipse.jst.server_adapters.ext.sdk.feature</module>
-    <module>features/org.eclipse.jst.server_adapters.feature</module>
-    <module>features/org.eclipse.jst.server_adapters.sdk.feature</module>
-    <module>features/org.eclipse.jst.server_core.feature</module>
-    <module>features/org.eclipse.jst.server_ui.feature</module>
-    <module>features/org.eclipse.jst.server_userdoc.feature</module>
-    <module>features/org.eclipse.jst.server_sdk.feature</module>
-
-    <module>features/org.eclipse.wst.server_adapters.feature</module>
-    <module>features/org.eclipse.wst.server_adapters.sdk.feature</module>
-    <module>features/org.eclipse.wst.server_core.feature</module>
-    <module>features/org.eclipse.wst.server_ui.feature</module>
-    <module>features/org.eclipse.wst.server_userdoc.feature</module>
-    <module>features/org.eclipse.wst.server_sdk.feature</module>
+    <module>features</module>
 
     <module>docs/org.eclipse.jst.server.ui.doc.user</module>
     <module>docs/org.eclipse.jst.server.ui.infopop</module>
@@ -117,11 +103,6 @@
         <module>tests/org.eclipse.jst.server.ui.tests</module>
         <module>tests/org.eclipse.wst.internet.monitor.ui.tests</module>
         <module>tests/org.eclipse.wst.server.ui.tests</module>
-
-        <!-- need these three features aggregated in repositoryunittests repo -->
-        <module>features/org.eclipse.jst.server_adapters.ext_tests.feature</module>
-        <module>features/org.eclipse.jst.server_tests.feature</module>
-        <module>features/org.eclipse.wst.server_tests.feature</module>
 
         <module>site-integration</module>
       </modules>

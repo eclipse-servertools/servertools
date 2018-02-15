@@ -13,6 +13,20 @@
     <feature id="org.eclipse.wst.server_tests.feature"><category name="site-integration"/></feature>
     <feature id="org.eclipse.jst.server_tests.feature"><category name="site-integration"/></feature>
 
+    <!-- sources -->
+    
+    <bundle id="org.eclipse.jst.server.core.tests.source"/>
+    <bundle id="org.eclipse.jst.server.generic.tests.source"/>
+    <bundle id="org.eclipse.jst.server.tomcat.core.tests.source"/>
+    <bundle id="org.eclipse.jst.server.tomcat.ui.tests.source"/>
+    <bundle id="org.eclipse.jst.server.ui.tests.source"/>
+    <bundle id="org.eclipse.wst.internet.monitor.ui.tests.source"/>
+    <bundle id="org.eclipse.wst.server.ui.tests.source"/>
+
+    <!-- <feature id="org.eclipse.jst.server_adapters.ext_tests.feature.source"/> -->
+    <!-- <feature id="org.eclipse.wst.server_tests.feature.source"/> -->
+    <!-- <feature id="org.eclipse.jst.server_tests.feature.source"/> -->
+
     <category-def name="site-integration" label="Web Tools (WTP) Server Tools - Integration"><description/></category-def>
 
 </site>

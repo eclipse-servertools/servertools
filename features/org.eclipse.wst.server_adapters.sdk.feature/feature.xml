@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.server_adapters.sdk.feature"
       label="%featureName"
-      version="3.2.600.qualifier"
+      version="3.2.601.qualifier"
       provider-name="%providerName"
       license-feature="org.eclipse.license"
       license-feature-version="1.0.1.qualifier">
@@ -19,12 +19,8 @@
       %license
    </license>
 
-   <includes
-         id="org.eclipse.wst.server_adapters.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.wst.server_adapters.feature.source"
-         version="0.0.0"/>
+   <requires>
+      <import feature="org.eclipse.wst.server_adapters.feature"/>
+   </requires>
 
 </feature>

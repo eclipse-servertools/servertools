@@ -47,6 +47,48 @@
     <bundle id="org.eclipse.wst.server.http.core.tests"><category name="site"/></bundle>
     <bundle id="org.eclipse.wst.server.util.tests"><category name="site"/></bundle>
 
+    <!-- sources - note that sdk.features have no sources because they mostly contain nothing but other features -->
+
+    <feature id="org.eclipse.jst.server_adapters.ext.feature.source"/>
+    <feature id="org.eclipse.jst.server_adapters.feature.source"/>
+    <feature id="org.eclipse.jst.server_core.feature.source"/>
+    <feature id="org.eclipse.jst.server_ui.feature.source"/>
+    <feature id="org.eclipse.jst.server_userdoc.feature.source"/>
+
+    <feature id="org.eclipse.wst.server_adapters.feature.source"/>
+    <feature id="org.eclipse.wst.server_core.feature.source"/>
+    <feature id="org.eclipse.wst.server_ui.feature.source"/>
+    <feature id="org.eclipse.wst.server_userdoc.feature.source"/>
+
+    <bundle id="org.eclipse.jst.server.ui.doc.user.source"/>
+    <bundle id="org.eclipse.jst.server.ui.infopop.source"/>
+    <bundle id="org.eclipse.servertools.doc.isv.source"/>
+    <bundle id="org.eclipse.wst.server.ui.doc.user.source"/>
+    <bundle id="org.eclipse.wst.server.ui.infopop.source"/>
+
+    <bundle id="org.eclipse.jst.server.core.source"/>
+    <bundle id="org.eclipse.jst.server.generic.core.source"/>
+    <bundle id="org.eclipse.jst.server.generic.jonas.source"/>
+    <bundle id="org.eclipse.jst.server.generic.ui.source"/>
+    <bundle id="org.eclipse.jst.server.preview.adapter.source"/>
+    <bundle id="org.eclipse.jst.server.tomcat.core.source"/>
+    <bundle id="org.eclipse.jst.server.tomcat.ui.source"/>
+    <bundle id="org.eclipse.jst.server.ui.source"/>
+    <bundle id="org.eclipse.wst.internet.monitor.core.source"/>
+    <bundle id="org.eclipse.wst.internet.monitor.ui.source"/>
+    <bundle id="org.eclipse.wst.server.core.source"/>
+    <bundle id="org.eclipse.wst.server.discovery.source"/>
+    <bundle id="org.eclipse.wst.server.http.core.source"/>
+    <bundle id="org.eclipse.wst.server.http.ui.source"/>
+    <bundle id="org.eclipse.wst.server.preview.source"/>
+    <bundle id="org.eclipse.wst.server.preview.adapter.source"/>
+    <bundle id="org.eclipse.wst.server.ui.source"/>
+
+    <bundle id="org.eclipse.wst.internet.monitor.core.tests.source"/>
+    <bundle id="org.eclipse.wst.server.core.tests.source"/>
+    <bundle id="org.eclipse.wst.server.http.core.tests.source"/>
+    <bundle id="org.eclipse.wst.server.util.tests.source"/>
+
     <category-def name="site" label="Web Tools (WTP) Server Tools"><description/></category-def>
 
 </site>
