@@ -29,8 +29,6 @@
 
   <properties>
     <tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/servertools/webtools.servertools.git</tycho.scmUrl>
-    <tycho.version>1.0.0</tycho.version>
-    <tycho-extras.version>1.0.0</tycho-extras.version>
   </properties>
 
   <repositories>
@@ -80,16 +78,11 @@
     <module>plugins/org.eclipse.jst.server.generic.core</module>
     <module>plugins/org.eclipse.jst.server.generic.jonas</module>
     <module>plugins/org.eclipse.jst.server.generic.ui</module>
-
-    <!-- per bug 412464 this module is not required for the build
-         https://bugs.eclipse.org/412464
-    <module>plugins/org.eclipse.jst.server.pde</module>
-    -->
-
     <module>plugins/org.eclipse.jst.server.preview.adapter</module>
     <module>plugins/org.eclipse.jst.server.tomcat.core</module>
     <module>plugins/org.eclipse.jst.server.tomcat.ui</module>
     <module>plugins/org.eclipse.jst.server.ui</module>
+
     <module>plugins/org.eclipse.wst.internet.monitor.core</module>
     <module>plugins/org.eclipse.wst.internet.monitor.ui</module>
     <module>plugins/org.eclipse.wst.server.core</module>
@@ -108,6 +101,7 @@
     <module>site</module>
   </modules>
 
+  <!-- TODO: move these features/plugins to a downstream repo such as webtools.repositories -->
   <profiles>
     <profile>
       <id>integration</id>
@@ -115,6 +109,7 @@
         <skipITests>false</skipITests>
       </properties>
       <modules>
+        <!-- need these seven features aggregated in repositoryunittests repo -->
         <module>tests/org.eclipse.jst.server.core.tests</module>
         <module>tests/org.eclipse.jst.server.generic.tests</module>
         <module>tests/org.eclipse.jst.server.tomcat.core.tests</module>
@@ -123,32 +118,13 @@
         <module>tests/org.eclipse.wst.internet.monitor.ui.tests</module>
         <module>tests/org.eclipse.wst.server.ui.tests</module>
 
-        <module>features/org.eclipse.jst.server_tests.feature</module>
+        <!-- need these three features aggregated in repositoryunittests repo -->
         <module>features/org.eclipse.jst.server_adapters.ext_tests.feature</module>
+        <module>features/org.eclipse.jst.server_tests.feature</module>
         <module>features/org.eclipse.wst.server_tests.feature</module>
 
         <module>site-integration</module>
       </modules>
-<!--       <build>
-        <plugins>
-          <plugin>
-            <groupId>org.eclipse.tycho</groupId>
-            <artifactId>target-platform-configuration</artifactId>
-            <configuration>
-              <skip>${skipITests}</skip>
-              <dependency-resolution>
-                  <extraRequirements>
-                  <requirement>
-                    <type>p2-installable-unit</type>
-                    <id>org.eclipse.wst.server.ui</id>
-                    <versionRange>0.0.0</versionRange>
-                  </requirement>
-                  </extraRequirements>
-              </dependency-resolution>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build> -->
     </profile>
   </profiles>
 
