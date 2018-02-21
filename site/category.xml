@@ -54,7 +54,9 @@
     <bundle id="org.eclipse.jst.server.tomcat.tests.performance"><category name="site"/></bundle>
     <bundle id="org.eclipse.wst.server.tests.performance"><category name="site"/></bundle>
 
-    <!-- sources - note that sdk.features have no sources because they mostly contain nothing but other features -->
+    <!-- sources -->
+
+    <!-- Bug 531426 - sdk.features contain no plugins (just other features) so won't produce .source bundles -->
 
     <feature id="org.eclipse.jst.server_adapters.ext.feature.source"/>
     <feature id="org.eclipse.jst.server_adapters.feature.source"/>
