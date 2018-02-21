@@ -56,14 +56,19 @@
 
     <module>docs/org.eclipse.jst.server.ui.doc.user</module>
     <module>docs/org.eclipse.jst.server.ui.infopop</module>
+    <module>docs/org.eclipse.server.doc.isv</module>
     <module>docs/org.eclipse.servertools.doc.isv</module>
     <module>docs/org.eclipse.wst.server.ui.doc.user</module>
     <module>docs/org.eclipse.wst.server.ui.infopop</module>
 
     <module>plugins/org.eclipse.jst.server.core</module>
     <module>plugins/org.eclipse.jst.server.generic.core</module>
+    <module>plugins/org.eclipse.jst.server.generic.jboss</module>
     <module>plugins/org.eclipse.jst.server.generic.jonas</module>
+    <module>plugins/org.eclipse.jst.server.generic.oc4j</module>
     <module>plugins/org.eclipse.jst.server.generic.ui</module>
+    <module>plugins/org.eclipse.jst.server.websphere.core</module>
+
     <module>plugins/org.eclipse.jst.server.preview.adapter</module>
     <module>plugins/org.eclipse.jst.server.tomcat.core</module>
     <module>plugins/org.eclipse.jst.server.tomcat.ui</module>
@@ -83,6 +88,9 @@
     <module>tests/org.eclipse.wst.server.core.tests</module>
     <module>tests/org.eclipse.wst.server.http.core.tests</module>
     <module>tests/org.eclipse.wst.server.util.tests</module>
+
+    <module>tests/org.eclipse.jst.server.tomcat.tests.performance</module>
+    <module>tests/org.eclipse.wst.server.tests.performance</module>
 
     <module>site</module>
   </modules>

@@ -8,7 +8,7 @@ Bundle-ClassPath: performance.jar
 Export-Package: org.eclipse.jst.server.tomcat.tests.performance.tomcat50
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.junit;bundle-version="[3.8.0,4.0.0)",
+ org.junit;bundle-version="[3.8.0,5.0.0)",
  org.eclipse.jdt.launching,
  org.eclipse.test.performance,
  org.eclipse.wst.server.core,

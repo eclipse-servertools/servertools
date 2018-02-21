@@ -20,18 +20,22 @@
 
     <bundle id="org.eclipse.jst.server.ui.doc.user"><category name="site"/></bundle>
     <bundle id="org.eclipse.jst.server.ui.infopop"><category name="site"/></bundle>
+    <bundle id="org.eclipse.server.doc.isv"><category name="site"/></bundle>
     <bundle id="org.eclipse.servertools.doc.isv"><category name="site"/></bundle>
     <bundle id="org.eclipse.wst.server.ui.doc.user"><category name="site"/></bundle>
     <bundle id="org.eclipse.wst.server.ui.infopop"><category name="site"/></bundle>
 
     <bundle id="org.eclipse.jst.server.core"><category name="site"/></bundle>
     <bundle id="org.eclipse.jst.server.generic.core"><category name="site"/></bundle>
+    <bundle id="org.eclipse.jst.server.generic.jboss"><category name="site"/></bundle>
     <bundle id="org.eclipse.jst.server.generic.jonas"><category name="site"/></bundle>
+    <bundle id="org.eclipse.jst.server.generic.oc4j"><category name="site"/></bundle>
     <bundle id="org.eclipse.jst.server.generic.ui"><category name="site"/></bundle>
     <bundle id="org.eclipse.jst.server.preview.adapter"><category name="site"/></bundle>
     <bundle id="org.eclipse.jst.server.tomcat.core"><category name="site"/></bundle>
     <bundle id="org.eclipse.jst.server.tomcat.ui"><category name="site"/></bundle>
     <bundle id="org.eclipse.jst.server.ui"><category name="site"/></bundle>
+    <bundle id="org.eclipse.jst.server.websphere.core"><category name="site"/></bundle>
     <bundle id="org.eclipse.wst.internet.monitor.core"><category name="site"/></bundle>
     <bundle id="org.eclipse.wst.internet.monitor.ui"><category name="site"/></bundle>
     <bundle id="org.eclipse.wst.server.core"><category name="site"/></bundle>
@@ -46,6 +50,9 @@
     <bundle id="org.eclipse.wst.server.core.tests"><category name="site"/></bundle>
     <bundle id="org.eclipse.wst.server.http.core.tests"><category name="site"/></bundle>
     <bundle id="org.eclipse.wst.server.util.tests"><category name="site"/></bundle>
+
+    <bundle id="org.eclipse.jst.server.tomcat.tests.performance"><category name="site"/></bundle>
+    <bundle id="org.eclipse.wst.server.tests.performance"><category name="site"/></bundle>
 
     <!-- sources - note that sdk.features have no sources because they mostly contain nothing but other features -->
 
@@ -62,18 +69,22 @@
 
     <bundle id="org.eclipse.jst.server.ui.doc.user.source"/>
     <bundle id="org.eclipse.jst.server.ui.infopop.source"/>
+    <bundle id="org.eclipse.server.doc.isv.source"/>
     <bundle id="org.eclipse.servertools.doc.isv.source"/>
     <bundle id="org.eclipse.wst.server.ui.doc.user.source"/>
     <bundle id="org.eclipse.wst.server.ui.infopop.source"/>
 
     <bundle id="org.eclipse.jst.server.core.source"/>
     <bundle id="org.eclipse.jst.server.generic.core.source"/>
+    <bundle id="org.eclipse.jst.server.generic.jboss.source"/>
     <bundle id="org.eclipse.jst.server.generic.jonas.source"/>
+    <bundle id="org.eclipse.jst.server.generic.oc4j.source"/>
     <bundle id="org.eclipse.jst.server.generic.ui.source"/>
     <bundle id="org.eclipse.jst.server.preview.adapter.source"/>
     <bundle id="org.eclipse.jst.server.tomcat.core.source"/>
     <bundle id="org.eclipse.jst.server.tomcat.ui.source"/>
     <bundle id="org.eclipse.jst.server.ui.source"/>
+    <bundle id="org.eclipse.jst.server.websphere.core.source"/>
     <bundle id="org.eclipse.wst.internet.monitor.core.source"/>
     <bundle id="org.eclipse.wst.internet.monitor.ui.source"/>
     <bundle id="org.eclipse.wst.server.core.source"/>
@@ -88,6 +99,9 @@
     <bundle id="org.eclipse.wst.server.core.tests.source"/>
     <bundle id="org.eclipse.wst.server.http.core.tests.source"/>
     <bundle id="org.eclipse.wst.server.util.tests.source"/>
+
+    <bundle id="org.eclipse.jst.server.tomcat.tests.performance.source"/>
+    <bundle id="org.eclipse.wst.server.tests.performance.source"/>
 
     <category-def name="site" label="Web Tools (WTP) Server Tools"><description/></category-def>
 
