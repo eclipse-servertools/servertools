@@ -55,6 +55,7 @@
     <profile>
       <id>normal</id>
       <activation>
+        <activeByDefault>true</activeByDefault>
         <property>
           <name>skipITests</name>
           <value>true</value>
