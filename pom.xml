@@ -92,15 +92,15 @@
     <module>site</module>
   </modules>
 
-  <!-- TODO: move these features/plugins to a downstream repo such as webtools.repositories -->
   <profiles>
+    <!-- NOTE: you must enable the CI profile to resolve dependencies -->
     <profile>
-      <id>integration</id>
+      <id>integration-tests</id>
       <properties>
         <skipITests>false</skipITests>
       </properties>
       <modules>
-        <!-- need these seven features aggregated in repositoryunittests repo -->
+        <!-- need these 7 features & 2 plugins are aggregated in repositoryunittests repo -->
         <module>tests/org.eclipse.jst.server.core.tests</module>
         <module>tests/org.eclipse.jst.server.generic.tests</module>
         <module>tests/org.eclipse.jst.server.tomcat.core.tests</module>
