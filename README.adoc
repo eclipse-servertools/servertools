@@ -1,0 +1,17 @@
+## Building this repo
+
+1. fetch sources from http://git.eclipse.org/c/servertools/webtools.servertools.git/
+
+    git clone http://git.eclipse.org/gitroot/servertools/webtools.servertools.git
+
+2. build the normal repo
+
+    mvn clean install
+
+3. build the integration tests repo
+
+    mvn clean install -P integration-tests,CI
+
+4. or, build both at the same time
+
+    mvn clean install -P normal,integration-tests,CI
