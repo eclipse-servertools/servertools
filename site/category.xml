@@ -10,7 +10,6 @@
     <feature id="org.eclipse.jst.server_userdoc.feature"><category name="site"/></feature>
     <feature id="org.eclipse.jst.server_sdk.feature"><category name="site"/></feature>
 
-
     <feature id="org.eclipse.wst.server_adapters.feature"><category name="site"/></feature>
     <feature id="org.eclipse.wst.server_adapters.sdk.feature"><category name="site"/></feature>
     <feature id="org.eclipse.wst.server_core.feature"><category name="site"/></feature>
@@ -50,9 +49,6 @@
     <bundle id="org.eclipse.wst.server.core.tests"><category name="site"/></bundle>
     <bundle id="org.eclipse.wst.server.http.core.tests"><category name="site"/></bundle>
     <bundle id="org.eclipse.wst.server.util.tests"><category name="site"/></bundle>
-
-    <bundle id="org.eclipse.jst.server.tomcat.tests.performance"><category name="site"/></bundle>
-    <bundle id="org.eclipse.wst.server.tests.performance"><category name="site"/></bundle>
 
     <!-- sources -->
 
@@ -101,9 +97,6 @@
     <bundle id="org.eclipse.wst.server.core.tests.source"/>
     <bundle id="org.eclipse.wst.server.http.core.tests.source"/>
     <bundle id="org.eclipse.wst.server.util.tests.source"/>
-
-    <bundle id="org.eclipse.jst.server.tomcat.tests.performance.source"/>
-    <bundle id="org.eclipse.wst.server.tests.performance.source"/>
 
     <category-def name="site" label="Web Tools (WTP) Server Tools"><description/></category-def>
 

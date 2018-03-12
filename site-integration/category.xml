@@ -9,6 +9,9 @@
     <bundle id="org.eclipse.wst.internet.monitor.ui.tests"><category name="site-integration"/></bundle>
     <bundle id="org.eclipse.wst.server.ui.tests"><category name="site-integration"/></bundle>
 
+    <bundle id="org.eclipse.jst.server.tomcat.tests.performance"><category name="site"/></bundle>
+    <bundle id="org.eclipse.wst.server.tests.performance"><category name="site"/></bundle>
+
     <feature id="org.eclipse.jst.server_adapters.ext_tests.feature"><category name="site-integration"/></feature>
     <feature id="org.eclipse.wst.server_tests.feature"><category name="site-integration"/></feature>
     <feature id="org.eclipse.jst.server_tests.feature"><category name="site-integration"/></feature>
@@ -22,6 +25,9 @@
     <bundle id="org.eclipse.jst.server.ui.tests.source"/>
     <bundle id="org.eclipse.wst.internet.monitor.ui.tests.source"/>
     <bundle id="org.eclipse.wst.server.ui.tests.source"/>
+
+    <bundle id="org.eclipse.jst.server.tomcat.tests.performance.source"/>
+    <bundle id="org.eclipse.wst.server.tests.performance.source"/>
 
     <!-- <feature id="org.eclipse.jst.server_adapters.ext_tests.feature.source"/> -->
     <!-- <feature id="org.eclipse.wst.server_tests.feature.source"/> -->

@@ -89,9 +89,6 @@
     <module>tests/org.eclipse.wst.server.http.core.tests</module>
     <module>tests/org.eclipse.wst.server.util.tests</module>
 
-    <module>tests/org.eclipse.jst.server.tomcat.tests.performance</module>
-    <module>tests/org.eclipse.wst.server.tests.performance</module>
-
     <module>site</module>
   </modules>
 
@@ -111,6 +108,8 @@
         <module>tests/org.eclipse.jst.server.ui.tests</module>
         <module>tests/org.eclipse.wst.internet.monitor.ui.tests</module>
         <module>tests/org.eclipse.wst.server.ui.tests</module>
+        <module>tests/org.eclipse.jst.server.tomcat.tests.performance</module>
+        <module>tests/org.eclipse.wst.server.tests.performance</module>
 
         <module>site-integration</module>
       </modules>
