@@ -43,19 +43,6 @@
     <module>org.eclipse.wst.server_sdk.feature</module>
   </modules>
 
-  <!-- TODO: move these features to a downstream repo such as webtools.repositories -->
-  <profiles>
-    <profile>
-      <id>integration</id>
-      <modules>
-        <!-- need these three features aggregated in repositoryunittests repo -->
-        <module>org.eclipse.jst.server_adapters.ext_tests.feature</module>
-        <module>org.eclipse.jst.server_tests.feature</module>
-        <module>org.eclipse.wst.server_tests.feature</module>
-      </modules>
-    </profile>
-  </profiles>
-
   <build>
         <plugins>
                 <plugin>

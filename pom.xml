@@ -51,56 +51,82 @@
     </repository>
   </repositories>
 
-  <modules>
-    <module>features</module>
-
-    <module>docs/org.eclipse.jst.server.ui.doc.user</module>
-    <module>docs/org.eclipse.jst.server.ui.infopop</module>
-    <module>docs/org.eclipse.server.doc.isv</module>
-    <module>docs/org.eclipse.servertools.doc.isv</module>
-    <module>docs/org.eclipse.wst.server.ui.doc.user</module>
-    <module>docs/org.eclipse.wst.server.ui.infopop</module>
-
-    <module>plugins/org.eclipse.jst.server.core</module>
-    <module>plugins/org.eclipse.jst.server.generic.core</module>
-    <module>plugins/org.eclipse.jst.server.generic.jboss</module>
-    <module>plugins/org.eclipse.jst.server.generic.jonas</module>
-    <module>plugins/org.eclipse.jst.server.generic.oc4j</module>
-    <module>plugins/org.eclipse.jst.server.generic.ui</module>
-    <module>plugins/org.eclipse.jst.server.websphere.core</module>
-
-    <module>plugins/org.eclipse.jst.server.preview.adapter</module>
-    <module>plugins/org.eclipse.jst.server.tomcat.core</module>
-    <module>plugins/org.eclipse.jst.server.tomcat.ui</module>
-    <module>plugins/org.eclipse.jst.server.ui</module>
-
-    <module>plugins/org.eclipse.wst.internet.monitor.core</module>
-    <module>plugins/org.eclipse.wst.internet.monitor.ui</module>
-    <module>plugins/org.eclipse.wst.server.core</module>
-    <module>plugins/org.eclipse.wst.server.discovery</module>
-    <module>plugins/org.eclipse.wst.server.http.core</module>
-    <module>plugins/org.eclipse.wst.server.http.ui</module>
-    <module>plugins/org.eclipse.wst.server.preview</module>
-    <module>plugins/org.eclipse.wst.server.preview.adapter</module>
-    <module>plugins/org.eclipse.wst.server.ui</module>
-
-    <module>tests/org.eclipse.wst.internet.monitor.core.tests</module>
-    <module>tests/org.eclipse.wst.server.core.tests</module>
-    <module>tests/org.eclipse.wst.server.http.core.tests</module>
-    <module>tests/org.eclipse.wst.server.util.tests</module>
-
-    <module>site</module>
-  </modules>
-
   <profiles>
+    <profile>
+      <id>normal</id>
+      <activation>
+        <property>
+          <name>skipITests</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <properties>
+        <skipITests>true</skipITests>
+        <!-- prevent resolving stuff in this repo from upstream CI build of this repo, to avoid source build problems -->
+        <webtools-servertools-site>${webtools-common-site}</webtools-servertools-site>
+        <webtools-servertools-integration-site>${webtools-common-site}</webtools-servertools-integration-site>
+      </properties>
+      <modules>
+        <module>features</module>
+
+        <module>docs/org.eclipse.jst.server.ui.doc.user</module>
+        <module>docs/org.eclipse.jst.server.ui.infopop</module>
+        <module>docs/org.eclipse.server.doc.isv</module>
+        <module>docs/org.eclipse.servertools.doc.isv</module>
+        <module>docs/org.eclipse.wst.server.ui.doc.user</module>
+        <module>docs/org.eclipse.wst.server.ui.infopop</module>
+
+        <module>plugins/org.eclipse.jst.server.core</module>
+        <module>plugins/org.eclipse.jst.server.generic.core</module>
+        <module>plugins/org.eclipse.jst.server.generic.jboss</module>
+        <module>plugins/org.eclipse.jst.server.generic.jonas</module>
+        <module>plugins/org.eclipse.jst.server.generic.oc4j</module>
+        <module>plugins/org.eclipse.jst.server.generic.ui</module>
+        <module>plugins/org.eclipse.jst.server.websphere.core</module>
+
+        <module>plugins/org.eclipse.jst.server.preview.adapter</module>
+        <module>plugins/org.eclipse.jst.server.tomcat.core</module>
+        <module>plugins/org.eclipse.jst.server.tomcat.ui</module>
+        <module>plugins/org.eclipse.jst.server.ui</module>
+
+        <module>plugins/org.eclipse.wst.internet.monitor.core</module>
+        <module>plugins/org.eclipse.wst.internet.monitor.ui</module>
+        <module>plugins/org.eclipse.wst.server.core</module>
+        <module>plugins/org.eclipse.wst.server.discovery</module>
+        <module>plugins/org.eclipse.wst.server.http.core</module>
+        <module>plugins/org.eclipse.wst.server.http.ui</module>
+        <module>plugins/org.eclipse.wst.server.preview</module>
+        <module>plugins/org.eclipse.wst.server.preview.adapter</module>
+        <module>plugins/org.eclipse.wst.server.ui</module>
+
+        <module>tests/org.eclipse.wst.internet.monitor.core.tests</module>
+        <module>tests/org.eclipse.wst.server.core.tests</module>
+        <module>tests/org.eclipse.wst.server.http.core.tests</module>
+        <module>tests/org.eclipse.wst.server.util.tests</module>
+
+        <module>site</module>
+      </modules>
+    </profile>
+
     <!-- NOTE: you must enable the CI profile to resolve dependencies -->
     <profile>
       <id>integration-tests</id>
+      <activation>
+        <property>
+          <name>skipITests</name>
+          <value>false</value>
+        </property>
+      </activation>
       <properties>
         <skipITests>false</skipITests>
+        <!-- prevent resolving stuff in this repo from upstream CI build of this repo, to avoid source build problems -->
+        <webtools-servertools-integration-site>${webtools-common-site}</webtools-servertools-integration-site>
       </properties>
       <modules>
-        <!-- need these 7 features & 2 plugins are aggregated in repositoryunittests repo -->
+        <!-- aggregated in repositoryunittests repo -->
+        <module>features/org.eclipse.jst.server_adapters.ext_tests.feature</module>
+        <module>features/org.eclipse.wst.server_tests.feature</module>
+        <module>features/org.eclipse.jst.server_tests.feature</module>
         <module>tests/org.eclipse.jst.server.core.tests</module>
         <module>tests/org.eclipse.jst.server.generic.tests</module>
         <module>tests/org.eclipse.jst.server.tomcat.core.tests</module>
@@ -108,6 +134,8 @@
         <module>tests/org.eclipse.jst.server.ui.tests</module>
         <module>tests/org.eclipse.wst.internet.monitor.ui.tests</module>
         <module>tests/org.eclipse.wst.server.ui.tests</module>
+
+        <!-- performance tests, not yet in the repositoryunittests repo -->
         <module>tests/org.eclipse.jst.server.tomcat.tests.performance</module>
         <module>tests/org.eclipse.wst.server.tests.performance</module>
 
