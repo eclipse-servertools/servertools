@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2017 IBM Corporation and others.
+ * Copyright (c) 2003, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -939,7 +939,13 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 				if (vmInstall instanceof IVMInstall2) {
 					version = ((IVMInstall2) vmInstall).getJavaVersion();
 				}
-				if (version == null || !version.startsWith("9")) {
+
+				int version_num = 8;
+				if(version!=null)
+					version_num = Integer.parseInt(version.split("\\.")[0]);
+
+				
+				if (version == null || version_num < 9) {
 					String endorsedDirectories = getTomcatVersionHandler().getEndorsedDirectories(getServer().getRuntime().getLocation());
 					if (endorsedDirectories.length() > 0) {
 						String[] endorsements = new String[]{"-Djava.endorsed.dirs=\"" + endorsedDirectories + "\""};
