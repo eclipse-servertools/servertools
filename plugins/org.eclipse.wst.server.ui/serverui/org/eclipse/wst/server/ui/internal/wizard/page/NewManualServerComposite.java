@@ -523,6 +523,9 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			((ServerWorkingCopy)server).newServerDetailsChanged(null);
 			runtime = server.getRuntime();
 			listener.runtimeSelected(runtime);
+			if( ServerPlugin.isIdInUse(server, server.getName()) ) {
+				server.setAttribute("id", generateUniqueId(server.getName()));
+			}
 			fireServerWorkingCopyChanged();
 			return;
 		}
@@ -538,7 +541,6 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			server = cache.createServer(serverType, run, isLocalhost, null);
 			if (server != null) {
 				server.setHost(host);
-				
 				if (serverType.requiresRuntime() && server.getRuntime() == null) {
 					runtime = null;
 					updateRuntimes(serverType, isLocalhost);
@@ -549,6 +551,10 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 				}
 				
 				((ServerWorkingCopy)server).setDefaults(null);
+				if( ServerPlugin.isIdInUse(server, server.getName()) ) {
+					server.setAttribute("id", generateUniqueId(server.getName()));
+				}
+
 				fireServerWorkingCopyChanged();
 			}
 		} catch (CoreException ce) {
@@ -696,6 +702,13 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			else {
 				server.setName(serverName.getText());
 			}
+			
+			if( ServerPlugin.isIdInUse(server, server.getName()) ) {
+				server.setAttribute("id", generateUniqueId(server.getName()));
+			}
+
+
+			
 			// Validate if selected module is supported with the selected runtime
 			wizard.setMessage(null, IMessageProvider.NONE);
 			if( module!=null ){
