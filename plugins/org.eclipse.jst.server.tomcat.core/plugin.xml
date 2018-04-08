@@ -144,7 +144,7 @@
        class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime">
        <moduleType
          types="jst.web"
-         versions="2.2, 2.3, 2.4, 2.5, 3.0, 3.1"/>
+         versions="2.2, 2.3, 2.4, 2.5, 3.0, 3.1, 4.0"/>
        <moduleType
          types="jst.utility"
          versions="1.0"/>
@@ -531,10 +531,10 @@
          version="9.0"/>
       <facet
          id="jst.web"
-         version="2.2,2.3,2.4,2.5,3.0,3.1"/>
+         version="2.2,2.3,2.4,2.5,3.0,3.1,4.0"/>
       <facet
          id="jst.webfragment"
-         version="3.0,3.1"/>
+         version="3.0,3.1,4.0"/>
       <facet
          id="jst.utility"
          version="1.0"/>

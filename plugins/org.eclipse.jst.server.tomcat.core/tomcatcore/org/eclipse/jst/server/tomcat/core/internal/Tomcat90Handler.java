@@ -113,7 +113,7 @@ public class Tomcat90Handler implements ITomcatVersionHandler {
 	public IStatus canAddModule(IModule module) {
 		String version = module.getModuleType().getVersion();
 		if ("2.2".equals(version) || "2.3".equals(version) || "2.4".equals(version) || "2.5".equals(version)
-				|| "3.0".equals(version) || "3.1".equals(version))
+				|| "3.0".equals(version) || "3.1".equals(version) || "4.0".equals(version))
 			return Status.OK_STATUS;
 		
 		return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorSpec90, null);
