@@ -14,3 +14,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.wst.server.preview.adapter.internal.core;x-internal:=true,
  org.eclipse.wst.server.preview.adapter.internal.ui;x-internal:=true
+Import-Package: javax.servlet;version="3.1.0"

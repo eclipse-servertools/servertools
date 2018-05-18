@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 IBM Corporation and others.
+ * Copyright (c) 2007, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,6 +31,7 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 /**
  * 
  */
@@ -43,9 +44,12 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 	// this array, please ensure the index of org.eclipse.wst.server.preview 
 	// corresponds to CLASSPATH_BIN_INDEX_PREVIEW_SERVER
 	private static final String[] REQUIRED_BUNDLE_IDS = new String[] {
+		getBundleForClass(javax.servlet.ServletContext.class),
+		getBundleForClass(javax.servlet.jsp.JspContext.class),
+		getBundleForClass(org.apache.jasper.JspCompilationContext.class),
+		getBundleForClass(javax.el.ELContext.class),
+		getBundleForClass(com.sun.el.ExpressionFactoryImpl.class),
 		"org.apache.commons.logging",
-		"javax.servlet",
-		"javax.servlet.jsp",
 		"org.eclipse.jetty.continuation",
 		"org.eclipse.jetty.http",
 		"org.eclipse.jetty.io",
@@ -55,16 +59,21 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 		"org.eclipse.jetty.util",
 		"org.eclipse.jetty.webapp",
 		"org.eclipse.jetty.xml",
-		"javax.el",
-		"com.sun.el",
-		"org.apache.jasper.glassfish",
 		"org.eclipse.wst.server.preview"
 	};
 
-	private static final String MAIN_CLASS = "org.eclipse.wst.server.preview.internal.PreviewStarter";
 	// The index of org.eclipse.wst.server.preview in REQUIRED_BUNDLE_IDS, for supporting
 	// running on the workbench when the plug-in is checked out
 	private static final int CLASSPATH_BIN_INDEX_PREVIEW_SERVER = REQUIRED_BUNDLE_IDS.length-1;
+
+	/**
+	 * Gets the symbolic name of the bundle that supplies the given class.
+	 */
+	private static String getBundleForClass(Class<?> cls) {
+		return FrameworkUtil.getBundle(cls).getSymbolicName();
+	}
+
+	private static final String MAIN_CLASS = "org.eclipse.wst.server.preview.internal.PreviewStarter";
 
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		IServer server = ServerUtil.getServer(configuration);

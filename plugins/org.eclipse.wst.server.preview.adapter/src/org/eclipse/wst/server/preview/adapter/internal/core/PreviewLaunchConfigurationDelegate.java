@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2017 IBM Corporation and others.
+ * Copyright (c) 2007, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,7 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 /**
  * 
  */
@@ -46,7 +47,7 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 	// this array, please ensure the index of org.eclipse.wst.server.preview 
 	// corresponds to CLASSPATH_BIN_INDEX_PREVIEW_SERVER	
 	private static final String[] REQUIRED_BUNDLE_IDS = new String[] {
-		"javax.servlet",
+		getBundleForClass(javax.servlet.ServletContext.class),
 		"org.eclipse.jetty.continuation",
 		"org.eclipse.jetty.http",
 		"org.eclipse.jetty.io",
@@ -62,6 +63,13 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 	// The index of org.eclipse.wst.server.preview in REQUIRED_BUNDLE_IDS, for supporting
 	// running on the workbench when the plug-in is checked out
 	private static final int CLASSPATH_BIN_INDEX_PREVIEW_SERVER = REQUIRED_BUNDLE_IDS.length-1;	
+
+	/**
+	 * Gets the symbolic name of the bundle that supplies the given class.
+	 */
+	private static String getBundleForClass(Class<?> cls) {
+		return FrameworkUtil.getBundle(cls).getSymbolicName();
+	}
 
 	private static final String[] fgCandidateJavaFiles = {"javaw", "javaw.exe", "java",
 		"java.exe", "j9w", "j9w.exe", "j9", "j9.exe"};
