@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,18 +22,25 @@ import org.eclipse.jst.server.core.RuntimeClasspathProviderDelegate;
 
 import org.eclipse.wst.server.core.IRuntime;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
+
 /**
  * 
  */
 public class PreviewRuntimeClasspathProvider extends RuntimeClasspathProviderDelegate {
 	private static final String[] REQUIRED_BUNDLE_IDS = new String[] {
-		"javax.servlet",
-		"javax.servlet.jsp"
+		getBundleForClass(javax.servlet.ServletContext.class),
+		getBundleForClass(javax.servlet.jsp.JspContext.class),
 	};
 
-	/** (non-Javadoc)
-	 * @see RuntimeClasspathProviderDelegate#resolveClasspathContainer(IProject, IRuntime)
+	/**
+	 * Gets the symbolic name of the bundle that supplies the given class.
 	 */
+	private static String getBundleForClass(Class<?> cls) {
+		return FrameworkUtil.getBundle(cls).getSymbolicName();
+	}
+
+	@Override
 	public IClasspathEntry[] resolveClasspathContainer(IProject project, IRuntime runtime) {
 		List<IClasspathEntry> list = new ArrayList<IClasspathEntry>();
 		
