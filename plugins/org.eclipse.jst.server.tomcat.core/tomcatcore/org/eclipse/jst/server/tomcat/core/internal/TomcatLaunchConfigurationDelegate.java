@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2009 IBM Corporation and others.
+ * Copyright (c) 2003, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,10 +11,14 @@
 package org.eclipse.jst.server.tomcat.core.internal;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
@@ -28,6 +32,11 @@ import org.eclipse.wst.server.core.ServerUtil;
  * 
  */
 public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigurationDelegate {
+	
+	public TomcatLaunchConfigurationDelegate() {
+		super();
+		allowAdvancedSourcelookup();
+	}
 
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		IServer server = ServerUtil.getServer(configuration);
@@ -71,7 +80,12 @@ public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 		// Create VM config
 		VMRunnerConfiguration runConfig = new VMRunnerConfiguration(mainTypeName, classpath);
 		runConfig.setProgramArguments(execArgs.getProgramArgumentsArray());
-		runConfig.setVMArguments(execArgs.getVMArgumentsArray());
+		
+		List<String> vmArguments = new ArrayList<String>();
+		// Enable source lookup java agent, if allowAdvancedSourcelookup() was invoked
+		vmArguments.addAll(Arrays.asList(DebugPlugin.parseArguments(getVMArguments(configuration, mode))));
+		vmArguments.addAll(Arrays.asList(execArgs.getVMArgumentsArray()));
+		runConfig.setVMArguments(vmArguments.toArray(new String[vmArguments.size()]));
 		runConfig.setWorkingDirectory(workingDirName);
 		runConfig.setEnvironment(envp);
 		runConfig.setVMSpecificAttributesMap(vmAttributesMap);
