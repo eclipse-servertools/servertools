@@ -772,7 +772,7 @@ public class Server extends Base implements IServer {
 			return;
 		
 		notificationManager.broadcastChange(
-			new ServerEvent(ServerEvent.SERVER_CHANGE, this, getServerState(), 
+			new ServerEvent(ServerEvent.SERVER_CHANGE | ServerEvent.ATTRIBUTE_CHANGE, this, getServerState(), 
 				getServerPublishState(), getServerRestartState()));
 	}
 

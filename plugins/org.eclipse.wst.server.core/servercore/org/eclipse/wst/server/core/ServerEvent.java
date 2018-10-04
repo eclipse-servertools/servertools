@@ -77,6 +77,13 @@ public class ServerEvent {
 	 * @see #getKind()
 	 */
 	public static final int MODULE_CHANGE = 0x0020;
+	
+	/**
+	 *  For event on server saves.
+	 *  
+     * @see #getKind()
+	 * **/	
+	public static final int ATTRIBUTE_CHANGE = 0x0040;
 
 	/**
 	 * Create a new server event for server change events.

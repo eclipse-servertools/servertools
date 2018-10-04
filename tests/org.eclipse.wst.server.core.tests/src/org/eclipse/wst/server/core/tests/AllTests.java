@@ -78,6 +78,7 @@ public class AllTests {
 		suite.addTestSuite(PublishListenerTestCase.class);
 		suite.addTestSuite(ServerListenerTestCase.class);
 		suite.addTestSuite(ServerEventTestCase.class);
+		suite.addTestSuite(ServerTestCase.class);
 		
 		suite.addTestSuite(ClientDelegateTestCase.class);
 		suite.addTestSuite(RuntimeLocatorDelegateTestCase.class);
