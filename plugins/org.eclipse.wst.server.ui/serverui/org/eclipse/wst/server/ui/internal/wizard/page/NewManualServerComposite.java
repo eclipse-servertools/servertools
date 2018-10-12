@@ -437,6 +437,11 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			return;// Host name validation failed, so there is no need to continue handling hostname change event			
 		}
 		loadServerImpl(serverType);
+		if (!serverNameModified) {
+		    server.setHost(hostname.getText());
+		    ServerUtil.setServerDefaultName(server);
+            fireServerWorkingCopyChanged();
+		}
 		
 		if (serverName != null && !serverNameModified) {
 			updatingServerName = true;
