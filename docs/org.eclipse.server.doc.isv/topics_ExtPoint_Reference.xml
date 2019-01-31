@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
-	 	<toc label="Extension Points Reference">
+	 
+<!--
+    Copyright (c) 2008, 2019 IBM Corporation and others.
+    This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License 2.0
+    which accompanies this distribution, and is available at
+    https://www.eclipse.org/legal/epl-2.0/
+
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+        IBM Corporation - initial API and implementation
+ -->
+	<toc label="Extension Points Reference">
 <topic label="org.eclipse.jst.server.core.internalRuntimeComponentProviders" href="html/extpts_reference/servertools/org_eclipse_jst_server_core_internalRuntimeComponentProviders.html"/>
 <topic label="org.eclipse.jst.server.core.runtimeClasspathProviders" href="html/extpts_reference/servertools/org_eclipse_jst_server_core_runtimeClasspathProviders.html"/>
 <topic label="org.eclipse.jst.server.core.runtimeFacetMappings" href="html/extpts_reference/servertools/org_eclipse_jst_server_core_runtimeFacetMappings.html"/>

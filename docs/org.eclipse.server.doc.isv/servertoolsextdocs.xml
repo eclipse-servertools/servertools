@@ -1,1 +1,13 @@
+<!--
+    Copyright (c) 2008, 2019 IBM Corporation and others.
+    This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License 2.0
+    which accompanies this distribution, and is available at
+    https://www.eclipse.org/legal/epl-2.0/
+
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+        IBM Corporation - initial API and implementation
+ -->
 <files component="servertools"><file>org_eclipse_jst_server_core_internalRuntimeComponentProviders.html</file>/n/n<file>org_eclipse_jst_server_core_runtimeClasspathProviders.html</file>/n/n<file>org_eclipse_jst_server_core_runtimeFacetMappings.html</file>/n/n<file>org_eclipse_jst_server_core_serverProfilers.html</file>/n/n<file>org_eclipse_wst_server_core_clients.html</file>/n/n<file>org_eclipse_wst_server_core_installableRuntimes.html</file>/n/n<file>org_eclipse_wst_server_core_installableServers.html</file>/n/n<file>org_eclipse_wst_server_core_internalServerMonitors.html</file>/n/n<file>org_eclipse_wst_server_core_internalStartup.html</file>/n/n<file>org_eclipse_wst_server_core_launchableAdapters.html</file>/n/n<file>org_eclipse_wst_server_core_moduleArtifactAdapters.html</file>/n/n<file>org_eclipse_wst_server_core_moduleFactories.html</file>/n/n<file>org_eclipse_wst_server_core_moduleTypes.html</file>/n/n<file>org_eclipse_wst_server_core_publishTasks.html</file>/n/n<file>org_eclipse_wst_server_core_publishers.html</file>/n/n<file>org_eclipse_wst_server_core_runtimeFacetComponentProviders.html</file>/n/n<file>org_eclipse_wst_server_core_runtimeLocators.html</file>/n/n<file>org_eclipse_wst_server_core_runtimeTargetHandlers.html</file>/n/n<file>org_eclipse_wst_server_core_runtimeTypes.html</file>/n/n<file>org_eclipse_wst_server_core_serverLocators.html</file>/n/n<file>org_eclipse_wst_server_core_serverTypes.html</file>/n/n<file>org_eclipse_wst_server_ui_audio.html</file>/n/n<file>org_eclipse_wst_server_ui_editorActions.html</file>/n/n<file>org_eclipse_wst_server_ui_editorPageSections.html</file>/n/n<file>org_eclipse_wst_server_ui_editorPages.html</file>/n/n<file>org_eclipse_wst_server_ui_initialSelectionProvider.html</file>/n/n<file>org_eclipse_wst_server_ui_serverImages.html</file>/n/n<file>org_eclipse_wst_server_ui_serverToolTip.html</file>/n/n<file>org_eclipse_wst_server_ui_wizardFragments.html</file></files>
