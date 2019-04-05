@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2017 IBM Corporation and others.
+ * Copyright (c) 2003, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -13,15 +13,14 @@
 package org.eclipse.wst.server.ui.internal;
 
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -219,18 +218,76 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	public String getLastUpdateDate() {
 		String lastUpdatedDate = Discovery.getLastUpdatedDate();
 		lastUpdatedDate = lastUpdatedDate.trim();
-		// The cache's date is in English
-		DateFormat dfCached = new SimpleDateFormat(CACHE_LAST_UPDATED_DATE_FORMAT, Locale.ENGLISH);
-		// Need to covert the English date to the current locale's format
-		DateFormat dfCurrLocale = new SimpleDateFormat(Messages.cacheUpdate_lastUpdatedFormat, Locale.getDefault());
-		
-		Date d;
+		SimpleDateFormat format = new SimpleDateFormat(CACHE_LAST_UPDATED_DATE_FORMAT, Locale.ENGLISH);
+		Date oldDate;
 		try {
-			d = dfCached.parse(lastUpdatedDate);
-			lastUpdatedDate = dfCurrLocale.format(d);
+			oldDate = format.parse(lastUpdatedDate);
+			Date now = new Date();
+			long diffInMillies = now.getTime() - oldDate.getTime();
+			
+			long msPerMinute = 60 * 1000;
+		    long msPerHour = msPerMinute * 60;
+		    long msPerDay = msPerHour * 24;
+		    long msPerWeek = msPerDay * 7;
+		    long msPerMonth = msPerDay * 30;
+		    long msPerYear = msPerDay * 365;
+		    int value;
+		    if (diffInMillies < msPerMinute) {
+	    	    value = (int)diffInMillies/1000;
+	    	    if (value > 1) {
+	    	    	lastUpdatedDate = NLS.bind(Messages.secondsAgo, value);
+	    	    } else {
+	    	    	lastUpdatedDate = Messages.secondAgo;
+	    	    }
+		    }else if (diffInMillies < msPerHour) {
+			    	value =(int)(diffInMillies/msPerMinute);
+			    	if (value > 1) {
+		    	    	lastUpdatedDate = NLS.bind(Messages.minutesAgo, value);
+		    	    } else {
+		    	    	lastUpdatedDate = Messages.minuteAgo;
+		    	    }
+		    } else if (diffInMillies < msPerDay ) {
+			    	value = (int)(diffInMillies/msPerHour);
+			    	if (value > 1) {
+		    	    	lastUpdatedDate = NLS.bind(Messages.hoursAgo, value);
+		    	    } else {
+		    	    	lastUpdatedDate = Messages.hourAgo;
+		    	    }
+		    } else if (diffInMillies < msPerWeek) {
+			    	value = (int)(diffInMillies/msPerDay);
+			    	if (value > 1) {
+		    	    	lastUpdatedDate = NLS.bind(Messages.daysAgo, value);
+		    	    } else {
+		    	    	lastUpdatedDate = Messages.dayAgo;
+		    	    }
+		    } else if (diffInMillies < msPerMonth) {
+			    	value = (int)(diffInMillies/msPerWeek);
+			    	if (value > 1) {
+		    	    	lastUpdatedDate = NLS.bind(Messages.weeksAgo, value);
+		    	    } else {
+		    	    	lastUpdatedDate = Messages.weekAgo;
+		    	    }
+		    } else if (diffInMillies < msPerYear) {
+			    	value = (int)(diffInMillies/msPerMonth);
+			    	if (value > 1) {
+		    	    	lastUpdatedDate = NLS.bind(Messages.monthsAgo, value);
+		    	    } else {
+		    	    	lastUpdatedDate = Messages.monthAgo;
+		    	    }
+		    }else {
+		    	value = (int)(diffInMillies/msPerYear);
+		    	if (value > 1) {
+	    	    	lastUpdatedDate = NLS.bind(Messages.yearsAgo, value);
+	    	    } else {
+	    	    	lastUpdatedDate =Messages.yearAgo;
+	    	    }
+	    	    
+		    }
+
 		} catch (ParseException e1) {
 			// In case of failure, display what was cached, so do nothing.
 		}
+
 		return lastUpdatedDate;
 	}
 }

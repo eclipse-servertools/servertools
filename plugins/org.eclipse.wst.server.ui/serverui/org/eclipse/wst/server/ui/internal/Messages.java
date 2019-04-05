@@ -390,6 +390,22 @@ public class Messages extends NLS {
 	public static String cacheUpdate_lastUpdatedOn;	
 	public static String cacheUpdate_lastUpdatedFormat;
 	
+	public static String secondsAgo;
+	public static String minutesAgo;
+	public static String hoursAgo;
+	public static String daysAgo;
+	public static String weeksAgo;
+	public static String monthsAgo;
+	public static String yearsAgo;
+	public static String secondAgo;
+	public static String minuteAgo;
+	public static String hourAgo;
+	public static String dayAgo;
+	public static String weekAgo;
+	public static String monthAgo;
+	public static String yearAgo;
+
+	
 	static {
 		NLS.initializeMessages(ServerUIPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);
 	}
