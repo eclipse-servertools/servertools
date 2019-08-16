@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2007,2012 IBM Corporation and others.
+ * Copyright (c) 2007,2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -32,7 +32,11 @@ public class GeneralToolTip implements IServerToolTip {
 		String s = "";
 		if (server.getRuntime() != null)
 			s += server.getRuntime().getName() + " - ";
-		s += NLS.bind(Messages.modules, server.getModules().length + "");
+		if (server.getModules().length > 1) {
+			s += NLS.bind(Messages.modules, server.getModules().length + "");
+		} else {
+			s += NLS.bind(Messages.module, server.getModules().length + "");
+		}
 		text.setText(s);
 	}
 }
