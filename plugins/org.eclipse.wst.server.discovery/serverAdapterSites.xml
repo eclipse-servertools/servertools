@@ -6,6 +6,6 @@
    <site url="http://download.eclipse.org/jetty/updates/jetty-wtp/"/>
    <site url="http://www.caucho.com/eclipse/"/>   
    <site url="http://download.jboss.org/jbosstools/updates/webtools/photon/"/>
-   <site url="http://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/updates/libertyAdapter/photon/"/>
+   <site url="http://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/updates/libertyAdapter/2019-06/"/>
    <site url="http://download.oracle.com/otn_software/oepe/oxygen/"/>
 </extensions>
