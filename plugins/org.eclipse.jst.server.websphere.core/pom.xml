@@ -22,6 +22,6 @@
 
   <groupId>org.eclipse.webtools.servertools</groupId>
   <artifactId>org.eclipse.jst.server.websphere.core</artifactId>
-  <version>1.0.400-SNAPSHOT</version>
+  <version>1.0.500-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 </project>

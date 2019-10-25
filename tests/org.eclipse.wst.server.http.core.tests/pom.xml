@@ -22,6 +22,6 @@
 
   <groupId>org.eclipse.webtools.servertools</groupId>
   <artifactId>org.eclipse.wst.server.http.core.tests</artifactId>
-  <version>1.0.200-SNAPSHOT</version>
+  <version>1.0.300-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 </project>

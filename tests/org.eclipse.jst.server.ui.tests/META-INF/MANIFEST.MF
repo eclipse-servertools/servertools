@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.jst.server.ui.tests
 Bundle-SymbolicName: org.eclipse.jst.server.ui.tests
-Bundle-Version: 1.1.100.qualifier
+Bundle-Version: 1.1.200.qualifier
 Bundle-ClassPath: tests.jar
 Bundle-Activator: org.eclipse.jst.server.ui.tests.TestsPlugin
 Bundle-Vendor: Eclipse.org
@@ -13,4 +13,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jst.server.ui,
  org.eclipse.wst.common.project.facet.core
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

@@ -22,6 +22,6 @@
 
   <groupId>org.eclipse.webtools.servertools</groupId>
   <artifactId>org.eclipse.jst.server.generic.jboss</artifactId>
-  <version>1.6.300-SNAPSHOT</version>
+  <version>1.6.400-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 </project>

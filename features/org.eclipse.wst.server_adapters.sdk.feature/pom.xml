@@ -22,6 +22,6 @@
 
   <groupId>org.eclipse.webtools.servertools</groupId>
   <artifactId>org.eclipse.wst.server_adapters.sdk.feature</artifactId>
-  <version>3.2.601-SNAPSHOT</version>
+  <version>3.2.700-SNAPSHOT</version>
   <packaging>eclipse-feature</packaging>
 </project>

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.wst.server.core.tests
 Bundle-SymbolicName: org.eclipse.wst.server.core.tests;singleton:=true
-Bundle-Version: 1.1.200.qualifier
+Bundle-Version: 1.1.300.qualifier
 Bundle-ClassPath: servertests.jar
 Bundle-Activator: org.eclipse.wst.server.core.tests.TestsPlugin
 Bundle-Vendor: Eclipse.org
@@ -18,4 +18,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.junit;bundle-version="3.8.0",
  org.eclipse.wst.server.core
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

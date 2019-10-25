@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.wst.internet.monitor.core.tests
 Bundle-SymbolicName: org.eclipse.wst.internet.monitor.core.tests
-Bundle-Version: 1.1.100.qualifier
+Bundle-Version: 1.1.200.qualifier
 Bundle-ClassPath: monitortests.jar
 Bundle-Activator: org.eclipse.wst.internet.monitor.core.tests.TestsPlugin
 Bundle-Vendor: Eclipse.org
@@ -12,4 +12,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.junit;bundle-version="3.8.0",
  org.eclipse.wst.internet.monitor.core
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

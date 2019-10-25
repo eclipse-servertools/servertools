@@ -22,6 +22,6 @@
 
   <groupId>org.eclipse.webtools.servertools</groupId>
   <artifactId>org.eclipse.jst.server_adapters.ext_tests.feature</artifactId>
-  <version>3.3.201-SNAPSHOT</version>
+  <version>3.3.300-SNAPSHOT</version>
   <packaging>eclipse-feature</packaging>
 </project>
