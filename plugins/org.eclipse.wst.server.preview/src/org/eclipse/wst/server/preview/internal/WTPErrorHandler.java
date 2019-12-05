@@ -15,6 +15,7 @@ package org.eclipse.wst.server.preview.internal;
 import java.io.IOException;
 import java.io.Writer;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -24,7 +25,7 @@ import org.eclipse.jetty.util.StringUtil;
 
 public class WTPErrorHandler extends ErrorHandler {
 
-  public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
+  public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		super.handle(target, baseRequest, request, response);
 		baseRequest.setHandled(true);
 	}
