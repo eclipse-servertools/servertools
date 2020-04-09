@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 public class AllTests {
+	static String PLUGIN_ID = "org.eclipse.jst.server.tomcat.tests.performance";
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.jst.server.tomcat.tests.performance.tomcat50");
 		//$JUnit-BEGIN$		

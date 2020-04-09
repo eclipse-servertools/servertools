@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -63,7 +63,7 @@ public abstract class AbstractTomcatServerTestCase extends TestCase {
 		IServerWorkingCopy wc = st.createServer(null, null, runtime, null);
 		
 		ServerPort[] ports = wc.getServerPorts(null);
-		TomcatServer tomcatServer = (TomcatServer) wc.getAdapter(TomcatServer.class);
+		TomcatServer tomcatServer = wc.getAdapter(TomcatServer.class);
 		ITomcatConfigurationWorkingCopy configuration = (ITomcatConfigurationWorkingCopy) tomcatServer.getServerConfiguration();
 		// if no ports from the server, use the configuration
 		if (ports == null || ports.length == 0) {

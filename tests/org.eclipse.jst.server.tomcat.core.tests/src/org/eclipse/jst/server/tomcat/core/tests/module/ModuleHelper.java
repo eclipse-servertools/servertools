@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
@@ -45,7 +46,7 @@ public class ModuleHelper {
 	// the buffer
 	private static byte[] buf = new byte[BUFFER];
 
-	public static void createModule(String name) throws Exception {
+	public static void createModule(String name) throws ExecutionException {
 		IDataModel dataModel = DataModelFactory.createDataModel(new WebFacetProjectCreationDataModelProvider());
       dataModel.setProperty(IFacetDataModelProperties.FACET_PROJECT_NAME, name);
       dataModel.setBooleanProperty(IJ2EEFacetProjectCreationDataModelProperties.ADD_TO_EAR, false);
@@ -58,7 +59,7 @@ public class ModuleHelper {
 		dataModel.dispose();
 	}
 
-	public static void createWebContent(String name, int i) throws Exception {
+	public static void createWebContent(String name, int i) throws CoreException  {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
 		IFile file = project.getFile(new Path("WebContent").append("test" + i + ".html"));
 		String content = "Hello!";
@@ -66,7 +67,7 @@ public class ModuleHelper {
 		file.create(in, true, null);
 	}
 
-	public static void createXMLContent(String name, int i) throws Exception {
+	public static void createXMLContent(String name, int i) throws CoreException {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
 		IFile file = project.getFile(new Path("WebContent").append("test" + i + ".xml"));
 		String content = "<book name='test'><isbn>299827698</isbn></book>";
@@ -74,7 +75,7 @@ public class ModuleHelper {
 		file.create(in, true, null);
 	}
 
-	public static void createJavaContent(String name, int i) throws Exception {
+	public static void createJavaContent(String name, int i) throws CoreException  {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
 		IFile file = project.getFile(new Path("src").append("Test" + i + ".java"));
 		String content = "public class Test" + i + " { }";
@@ -82,7 +83,7 @@ public class ModuleHelper {
 		file.create(in, true, null);
 	}
 
-	public static void createJarContent(String name, int num, IPath path) throws Exception {
+	public static void createJarContent(String name, int num, IPath path) throws IOException, CoreException {
 		if (!path.toFile().exists())
 			path.toFile().mkdirs();
 		
@@ -133,7 +134,7 @@ public class ModuleHelper {
 		file.setContents(in, true, true, null);
 	}
 
-	public static void deleteModule(String name) throws Exception {
+	public static void deleteModule(String name) throws CoreException  {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
 		project.delete(true, null);
 	}
@@ -278,18 +279,12 @@ public class ModuleHelper {
 	 * @param to java.lang.String
 	 */
 	private static void copyFile(InputStream in, String to) throws IOException {
-		OutputStream out = null;
-		
-		try {
-			out = new FileOutputStream(to);
-	
+		try (OutputStream out = new FileOutputStream(to)) {
 			int avail = in.read(buf);
 			while (avail > 0) {
 				out.write(buf, 0, avail);
 				avail = in.read(buf);
 			}
-		} catch (Exception e) {
-			throw new IOException("Error copying file");
 		} finally {
 			try {
 				if (in != null)
@@ -297,15 +292,9 @@ public class ModuleHelper {
 			} catch (Exception ex) {
 				// ignore
 			}
-			try {
-				if (out != null)
-					out.close();
-			} catch (Exception ex) {
-				// ignore
-			}
 		}
 	}
-	
+
 	public static void createClosedProject(String name) throws Exception {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
 		project.create(null);
