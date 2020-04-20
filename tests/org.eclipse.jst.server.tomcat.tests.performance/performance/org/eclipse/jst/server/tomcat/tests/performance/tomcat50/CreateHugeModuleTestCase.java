@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -12,8 +12,9 @@
  *******************************************************************************/
 package org.eclipse.jst.server.tomcat.tests.performance.tomcat50;
 
-import junit.framework.TestCase;
+import java.io.IOException;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -23,6 +24,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.tomcat.core.tests.module.ModuleHelper;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
+
+import junit.framework.TestCase;
 
 public class CreateHugeModuleTestCase extends TestCase {
 	protected static final String WEB_MODULE_NAME = "HugeModule";
@@ -44,9 +47,12 @@ public class CreateHugeModuleTestCase extends TestCase {
 					// add external jars
 					IPath path = ServerPlugin.getInstance().getStateLocation().append("jars");
 					ModuleHelper.createJarContent(WEB_MODULE_NAME, NUM_EXTERNAL_JARS, path);
-				} catch (Exception e) {
+				} catch (ExecutionException e) {
 					e.printStackTrace();
-					throw new CoreException(new Status(IStatus.ERROR, null, 0, "Error creating resources", e));
+					throw new CoreException(new Status(IStatus.ERROR, "org.eclipse.jst.server.tomcat.tests.performance", 0, "ExecutionException creating resources", e));
+				} catch (IOException e) {
+					e.printStackTrace();
+					throw new CoreException(new Status(IStatus.ERROR, "org.eclipse.jst.server.tomcat.tests.performance", 0, "IOException creating resources", e));
 				}
 			}
 		}, null);
