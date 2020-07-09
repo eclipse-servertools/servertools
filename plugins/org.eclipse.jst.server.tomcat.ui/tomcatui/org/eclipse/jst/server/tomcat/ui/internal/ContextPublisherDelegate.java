@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -41,7 +41,7 @@ public class ContextPublisherDelegate extends PublisherDelegate {
 		if (info == null)
 			return Status.OK_STATUS;
 		
-		final Shell shell = (Shell) info.getAdapter(Shell.class);
+		final Shell shell = info.getAdapter(Shell.class);
 		if (shell == null)
 			return Status.OK_STATUS;
 		

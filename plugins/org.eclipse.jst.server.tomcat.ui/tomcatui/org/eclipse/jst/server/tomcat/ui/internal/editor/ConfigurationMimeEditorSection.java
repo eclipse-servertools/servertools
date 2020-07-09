@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2017 IBM Corporation and others.
+ * Copyright (c) 2003, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -189,7 +189,7 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
 		
-		TomcatServer ts = (TomcatServer) server.getAdapter(TomcatServer.class);
+		TomcatServer ts = server.getAdapter(TomcatServer.class);
 		try {
 			tomcatConfiguration = ts.getTomcatConfiguration();
 		} catch (Exception e) {
