@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2018 IBM Corporation and others.
+ * Copyright (c) 2003, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -15,18 +15,24 @@ package org.eclipse.jst.server.tomcat.core.internal;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.jdt.launching.*;
+import org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate;
+import org.eclipse.jdt.launching.ExecutionArguments;
+import org.eclipse.jdt.launching.IVMInstall;
+import org.eclipse.jdt.launching.IVMInstall2;
+import org.eclipse.jdt.launching.IVMRunner;
+import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.eclipse.jst.server.core.ServerProfilerDelegate;
-
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
@@ -84,9 +90,34 @@ public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 		runConfig.setProgramArguments(execArgs.getProgramArgumentsArray());
 		
 		List<String> vmArguments = new ArrayList<String>();
-		// Enable source lookup java agent, if allowAdvancedSourcelookup() was invoked
+		/*
+		 * Strip any previously set endorsed directories if needed, and enable
+		 * source lookup java agent if allowAdvancedSourcelookup() was
+		 * invoked
+		 */
 		vmArguments.addAll(Arrays.asList(DebugPlugin.parseArguments(getVMArguments(configuration, mode))));
 		vmArguments.addAll(Arrays.asList(execArgs.getVMArgumentsArray()));
+		if (vm instanceof IVMInstall2) {
+			String version = ((IVMInstall2) vm).getJavaVersion();
+			if (version != null) {
+				int versionForComparison = Integer.parseInt(version.split("\\.")[0]);
+				if (versionForComparison > 8) {
+					Iterator<String> argsIterator = vmArguments.iterator();
+					while (argsIterator.hasNext()) {
+						String vmArg = argsIterator.next();
+						if (vmArg.startsWith("-Djava.endorsed.dirs=")) {
+							argsIterator.remove();
+							StringBuilder builder = new StringBuilder();
+							builder.append("Skipping argument '");
+							builder.append(vmArg);
+							builder.append("' while launching ");
+							builder.append(server.getName());
+							Platform.getLog(Platform.getBundle(TomcatPlugin.PLUGIN_ID)).info(builder.toString());
+						}
+					}
+				}
+			}
+		}
 		runConfig.setVMArguments(vmArguments.toArray(new String[vmArguments.size()]));
 		runConfig.setWorkingDirectory(workingDirName);
 		runConfig.setEnvironment(envp);
