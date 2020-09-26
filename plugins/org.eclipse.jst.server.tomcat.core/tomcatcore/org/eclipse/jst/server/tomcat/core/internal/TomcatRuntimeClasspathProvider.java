@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2018 IBM Corporation and others.
+ * Copyright (c) 2003, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -33,14 +33,16 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 	private static final String JST_WEB_FACET_ID = "jst.web";
 
 	private final String getEEJavadocLocation(IProject project) {
-		int eeVersion = 8;
+		int eeVersion = 9;
 		try {
 			IFacetedProject faceted = ProjectFacetsManager.create(project);
 			if (faceted != null && ProjectFacetsManager.isProjectFacetDefined(JST_WEB_FACET_ID)) {
 				IProjectFacet webModuleFacet = ProjectFacetsManager.getProjectFacet(JST_WEB_FACET_ID);
 				if (faceted.hasProjectFacet(webModuleFacet)) {
 					String servletVersionStr = faceted.getInstalledVersion(webModuleFacet).getVersionString();
-					if (servletVersionStr.equals("4.0")) {
+					if (servletVersionStr.equals("5.0")) {
+						eeVersion = 9;
+					} else if (servletVersionStr.equals("4.0")) {
 						eeVersion = 8;
 					} else if (servletVersionStr.equals("3.1")) {
 						eeVersion = 7;
@@ -63,7 +65,7 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 			// default to the latest
 		}
 
-		String url = "https://javaee.github.io/javaee-spec/javadocs/";
+		String url = "https://jakarta.ee/specifications/servlet/5.0/apidocs/";
 		switch (eeVersion) {
 		case 3:
 			url = "https://docs.oracle.com/javaee/3/api/";
@@ -84,7 +86,8 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 			url = "https://javaee.github.io/javaee-spec/javadocs/";
 			break;
 		default:
-			url = "https://javaee.github.io/javaee-spec/javadocs/";
+			// Servlet Javadoc. Jakarta EE 9 doesn't appear to have a central URL for all Javadoc.
+			url = "https://jakarta.ee/specifications/servlet/5.0/apidocs/";
 			break;
 		}
 
@@ -92,9 +95,12 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 	}
 
 	private String getTomcatJavadocLocation(IRuntime runtime) {
-		/* Default to v9.0 doc. v7.0 is currently the oldest advertised version on the front page */
-		String tomcatDocURL = "https://tomcat.apache.org/tomcat-9.0-doc/api/";
+		/* Default to v10.0 doc. v7.0 is currently the oldest advertised version on the front page */
+		String tomcatDocURL = "http://tomcat.apache.org/tomcat-10.0-doc/api/";
 		String runtimeTypeId = runtime.getRuntimeType().getId();
+		if (runtimeTypeId.indexOf("90") > 0) {
+			tomcatDocURL = "https://tomcat.apache.org/tomcat-9.0-doc/api/";
+		}
 		if (runtimeTypeId.indexOf("85") > 0) {
 			tomcatDocURL = "https://tomcat.apache.org/tomcat-8.5-doc/api/";
 		}
@@ -120,7 +126,7 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 		if (runtimeId.indexOf("32") > 0) {
 			IPath path = installPath.append("lib");
 			addLibraryEntries(list, path.toFile(), true);
-		} else if (runtimeId.indexOf("60") > 0 || runtimeId.indexOf("70") > 0 || runtimeId.indexOf("80") > 0 || runtimeId.indexOf("85") > 0 || runtimeId.indexOf("90") > 0) {
+		} else if (runtimeId.indexOf("60") > 0 || runtimeId.indexOf("70") > 0 || runtimeId.indexOf("80") > 0 || runtimeId.indexOf("85") > 0 || runtimeId.indexOf("90") > 0 || runtimeId.indexOf("100") > 0) {
 			// TODO May need some flexibility in case the installation has been configured differently
 			// This lib "simplification" may cause issues for some.
 			// Not known yet whether packaged Linux installs will go along.
