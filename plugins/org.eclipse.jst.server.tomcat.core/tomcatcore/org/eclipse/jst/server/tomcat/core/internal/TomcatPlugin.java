@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2016 IBM Corporation and others.
+ * Copyright (c) 2003, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -46,6 +46,7 @@ public class TomcatPlugin extends Plugin {
 	public static final String TOMCAT_80 = "org.eclipse.jst.server.tomcat.80";
 	public static final String TOMCAT_85 = "org.eclipse.jst.server.tomcat.85";
 	public static final String TOMCAT_90 = "org.eclipse.jst.server.tomcat.90";
+	public static final String TOMCAT_100 = "org.eclipse.jst.server.tomcat.100";
 
 	// Beyond 8.0, this verification approach is not effective and actually isn't currently used for 7.0 and beyond (see verifyInstallPath method).
 	protected static final String VERIFY_INSTALL_FILE = "verifyInstall.properties";
@@ -164,6 +165,8 @@ public class TomcatPlugin extends Plugin {
 			return new Tomcat85Handler();
 		else if (TOMCAT_90.equals(id))
 			return new Tomcat90Handler();
+		else if (TOMCAT_100.equals(id))
+			return new Tomcat100Handler();
 		else
 			return null;
 	}

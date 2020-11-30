@@ -43,6 +43,10 @@
          id="org.eclipse.jst.server.tomcat.90"
          icon="icons/obj16/tomcat.gif"
          typeIds="org.eclipse.jst.server.tomcat.runtime.90"/>
+      <image
+         id="org.eclipse.jst.server.tomcat.100"
+         icon="icons/obj16/tomcat.gif"
+         typeIds="org.eclipse.jst.server.tomcat.runtime.100"/>
 
       <image
          id="org.eclipse.jst.server.tomcat.32"
@@ -84,6 +88,10 @@
          id="org.eclipse.jst.server.tomcat.90"
          icon="icons/obj16/tomcat.gif"
          typeIds="org.eclipse.jst.server.tomcat.90"/>
+      <image
+         id="org.eclipse.jst.server.tomcat.100"
+         icon="icons/obj16/tomcat.gif"
+         typeIds="org.eclipse.jst.server.tomcat.100"/>
    </extension>
    
    <extension point="org.eclipse.core.expressions.propertyTesters">
@@ -184,6 +192,10 @@
       <fragment
          id="org.eclipse.jst.server.tomcat.runtime.90"
          typeIds="org.eclipse.jst.server.tomcat.runtime.90"
+         class="org.eclipse.jst.server.tomcat.ui.internal.TomcatRuntimeWizardFragment"/>
+      <fragment
+         id="org.eclipse.jst.server.tomcat.runtime.100"
+         typeIds="org.eclipse.jst.server.tomcat.runtime.100"
          class="org.eclipse.jst.server.tomcat.ui.internal.TomcatRuntimeWizardFragment"/>
    </extension>
 
