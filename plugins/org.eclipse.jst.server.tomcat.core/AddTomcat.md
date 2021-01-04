@@ -39,3 +39,7 @@ When modifying files, specify the current year in the copyright headers where pr
 1. Modify **plugin.xml** to add new configuration elements.
     1. Add a new **image** to the **org.eclipse.wst.server.ui.serverImages** extension for new runtime and server ids.
     2. Add a new **fragment** to the **org.eclipse.wst.server.ui.wizardFragments** extension.
+
+### Determining values for installable runtimes:
+    1. For ostype linux: filecount = tar tvzf apache-tomcat-8.0.53.tar.gz|grep -v '\/$'|wc -l
+    1. For ostype win32: filecount = unzip -l apache-tomcat-8.0.36-windows-x86.zip|grep -v '\/$'|grep 'apache-tomcat-8.0.36/'|wc -l
