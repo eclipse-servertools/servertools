@@ -20,9 +20,18 @@ import java.io.OutputStream;
 import java.net.URL;
 
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.jst.j2ee.internal.web.archive.operations.WebFacetProjectCreationDataModelProvider;
 import org.eclipse.jst.j2ee.project.facet.IJ2EEFacetConstants;
 import org.eclipse.jst.j2ee.project.facet.IJ2EEFacetProjectCreationDataModelProperties;
@@ -31,11 +40,17 @@ import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetProjectCr
 import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetProjectCreationDataModelProperties.FacetDataModelMap;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelFactory;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
+import org.eclipse.wst.common.project.facet.core.internal.FacetCorePlugin;
+import org.eclipse.wst.project.facet.IProductConstants;
+import org.eclipse.wst.project.facet.ProductManager;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.internal.IMemento;
 import org.eclipse.wst.server.core.internal.XMLMemento;
-import org.eclipse.wst.server.core.model.*;
+import org.eclipse.wst.server.core.model.IModuleFile;
+import org.eclipse.wst.server.core.model.IModuleFolder;
+import org.eclipse.wst.server.core.model.IModuleResource;
+import org.eclipse.wst.server.core.model.IModuleResourceDelta;
 import org.eclipse.wst.server.core.util.ProjectModule;
 import org.osgi.framework.Bundle;
 
@@ -61,7 +76,7 @@ public class ModuleHelper {
 
 	public static void createWebContent(String name, int i) throws CoreException  {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
-		IFile file = project.getFile(new Path("WebContent").append("test" + i + ".html"));
+		IFile file = project.getFile(new Path(ProductManager.getProperty(IProductConstants.WEB_CONTENT_FOLDER)).append("test" + i + ".html"));
 		String content = "Hello!";
 		ByteArrayInputStream in = new ByteArrayInputStream(content.getBytes());
 		file.create(in, true, null);
@@ -69,7 +84,7 @@ public class ModuleHelper {
 
 	public static void createXMLContent(String name, int i) throws CoreException {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
-		IFile file = project.getFile(new Path("WebContent").append("test" + i + ".xml"));
+		IFile file = project.getFile(new Path(ProductManager.getProperty(IProductConstants.WEB_CONTENT_FOLDER)).append("test" + i + ".xml"));
 		String content = "<book name='test'><isbn>299827698</isbn></book>";
 		ByteArrayInputStream in = new ByteArrayInputStream(content.getBytes());
 		file.create(in, true, null);
@@ -77,7 +92,7 @@ public class ModuleHelper {
 
 	public static void createJavaContent(String name, int i) throws CoreException  {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
-		IFile file = project.getFile(new Path("src").append("Test" + i + ".java"));
+		IFile file = project.getFile(new Path(org.eclipse.jst.common.project.facet.core.internal.FacetCorePlugin.DEFAULT_SOURCE_FOLDER).append("Test" + i + ".java"));
 		String content = "public class Test" + i + " { }";
 		ByteArrayInputStream in = new ByteArrayInputStream(content.getBytes());
 		file.create(in, true, null);
