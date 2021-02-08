@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -56,6 +56,15 @@ public class InstallableRuntime implements IInstallableRuntime {
 	public String getFeatureId() {
 		try {
 			return element.getAttribute("featureId");
+		} catch (Exception e) {
+			// ignore
+		}
+		return null;
+	}
+
+	public String getArchivePath() {
+		try {
+			return element.getAttribute("archivePath");
 		} catch (Exception e) {
 			// ignore
 		}

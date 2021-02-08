@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2010 IBM Corporation and others.
+ * Copyright (c) 2003, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -234,8 +234,13 @@ public class TomcatRuntimeComposite extends Composite {
 							return Status.OK_STATUS;
 						}
 					};
-					
-					installDir.setText(selectedDirectory);
+					if (ir.getArchivePath() != null) {
+						installDir.setText(new Path(selectedDirectory).addTrailingSeparator().append(ir.getArchivePath()).toString());
+					}
+					else {
+						installDir.setText(selectedDirectory);
+					}
+
 					jobListener = new JobChangeAdapter() {
 						public void done(IJobChangeEvent event) {
 							installRuntimeJob.removeJobChangeListener(this);
