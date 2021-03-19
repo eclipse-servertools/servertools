@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -101,9 +101,9 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 		if (curRuntime != null) {
 			IRuntimeType runtimeType = curRuntime.getRuntimeType();
 			if (runtimeType != null)
-				return NLS.bind(Messages.classpathContainer, runtimeType.getName(), curRuntime.getName());
+				return NLS.bind(Messages.classpathContainer, curRuntime.getName());
 		}
-		return NLS.bind(Messages.classpathContainerUnbound, Messages.classpathContainerDescription, runtimeId);
+		return NLS.bind(Messages.classpathContainerUnbound, runtimeId);
 	}
 
 	/** (non-Javadoc)
