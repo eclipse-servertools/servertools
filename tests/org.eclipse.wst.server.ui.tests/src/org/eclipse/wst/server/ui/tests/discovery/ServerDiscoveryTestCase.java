@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2018 IBM Corporation and others.
+ * Copyright (c) 2015, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,6 @@ package org.eclipse.wst.server.ui.tests.discovery;
 import java.io.File;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.wst.server.discovery.internal.model.ExtensionUpdateSite;
@@ -48,7 +47,6 @@ public class ServerDiscoveryTestCase extends TestCase {
 	protected List<IServerExtension> getExtensions(File filePath){
 		try {
 			String finalPath = filePath.toString();
-			String os = System.getProperty("os.name"); //$NON-NLS-1$
 			
 			finalPath = filePath.toURI().toURL().toString();
 			
