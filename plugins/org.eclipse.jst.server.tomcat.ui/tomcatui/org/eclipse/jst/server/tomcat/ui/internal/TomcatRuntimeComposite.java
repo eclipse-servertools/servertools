@@ -37,6 +37,7 @@ import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatRuntimeWorkingCopy;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -53,7 +54,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.core.internal.IInstallableRuntime;
@@ -219,7 +219,7 @@ public class TomcatRuntimeComposite extends Composite {
 				if (selectedDirectory != null) {
 //					ir.install(new Path(selectedDirectory));
 					final IPath installPath = new Path(selectedDirectory);
-					installRuntimeJob = new Job("Installing server runtime environment") {
+					installRuntimeJob = new Job(NLS.bind(Messages.installing, ir.getArchivePath())) {
 						public boolean belongsTo(Object family) {
 							return ServerPlugin.PLUGIN_ID.equals(family);
 						}
@@ -244,10 +244,15 @@ public class TomcatRuntimeComposite extends Composite {
 					jobListener = new JobChangeAdapter() {
 						public void done(IJobChangeEvent event) {
 							installRuntimeJob.removeJobChangeListener(this);
+							final IStatus status = event.getResult();
 							installRuntimeJob = null;
 							Display.getDefault().asyncExec(new Runnable() {
 								public void run() {
 									if (!isDisposed()) {
+										if (status.isOK() && ir.getArchivePath() != null) {
+											name.setText(ir.getArchivePath());
+											runtimeWC.setName(name.getText());
+										}
 										validate();
 									}
 								}
@@ -255,6 +260,7 @@ public class TomcatRuntimeComposite extends Composite {
 						}
 					};
 					installRuntimeJob.addJobChangeListener(jobListener);
+					installRuntimeJob.setUser(true);
 					installRuntimeJob.schedule();
 				}
 			}

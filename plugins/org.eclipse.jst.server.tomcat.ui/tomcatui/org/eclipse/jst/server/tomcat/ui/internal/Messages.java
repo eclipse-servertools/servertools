@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2012 IBM Corporation and others.
+ * Copyright (c) 2005, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ public class Messages extends NLS {
 	public static String install;
 	public static String installDialogTitle;
 	public static String selectInstallDir;
+	public static String installing;
 	public static String installedJRE;
 	public static String installedJREs;
 	public static String runtimeDefaultJRE;
