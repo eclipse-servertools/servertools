@@ -40,8 +40,8 @@
                             <artifacts>
                                 <!-- specify your dependencies here -->
                                 <!-- groupId:artifactId:version -->
-                                <artifact><id>org.eclipse.jetty:jetty-webapp:10.0.2</id></artifact>
-                                <artifact><id>org.eclipse.jetty:jetty-xml:10.0.2</id></artifact>
+                                <artifact><id>org.eclipse.jetty:jetty-webapp:${jetty-version}</id></artifact>
+                                <artifact><id>org.eclipse.jetty:jetty-xml:${jetty-version}</id></artifact>
                             </artifacts>
                         </configuration>
                     </execution>
