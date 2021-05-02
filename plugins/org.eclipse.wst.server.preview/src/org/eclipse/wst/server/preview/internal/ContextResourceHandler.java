@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2016 IBM Corporation and others.
+ * Copyright (c) 2008, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.eclipse.wst.server.preview.internal;
 
+import java.io.IOException;
+
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.util.resource.Resource;
 
@@ -22,7 +24,8 @@ public class ContextResourceHandler extends ResourceHandler {
 		this.context = context;
 	}
 
-	public Resource getResource(String path) {
+	@Override
+	public Resource getResource(String path) throws IOException {
 		if (path == null || !path.startsWith(context + "/"))
 			return null;
 		

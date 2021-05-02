@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2018 IBM Corporation and others.
+ * Copyright (c) 2007, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -50,9 +50,10 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 	// corresponds to CLASSPATH_BIN_INDEX_PREVIEW_SERVER	
 	private static final String[] REQUIRED_BUNDLE_IDS = new String[] {
 		getBundleForClass(javax.servlet.ServletContext.class),
-		"org.eclipse.jetty.continuation",
+		"org.slf4j.api",
 		"org.eclipse.jetty.http",
 		"org.eclipse.jetty.io",
+		"org.eclipse.jetty.osgi.boot",
 		"org.eclipse.jetty.security",
 		"org.eclipse.jetty.server",
 		"org.eclipse.jetty.servlet",

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008,2014 IBM Corporation and others.
+ * Copyright (c) 2008, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -43,34 +43,36 @@ public class WTPDefaultHandler extends AbstractHandler {
 		response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 		response.setContentType(MimeTypes.Type.TEXT_HTML.toString());
 		
-		ByteArrayISO8859Writer writer = new ByteArrayISO8859Writer(1500);
+		try (ByteArrayISO8859Writer writer = new ByteArrayISO8859Writer(1500)) {
 		
-		String uri = request.getRequestURI();
-		uri = StringUtil.replace(uri, "<", "&lt;");
-		uri = StringUtil.replace(uri, ">", "&gt;");
-		
-		writer.write("<HTML>\n<HEAD>\n<TITLE>Error 404 - Not Found");
-		writer.write("</TITLE>\n<BODY>\n<H2>Error 404 - Not Found</H2>\n");
-		writer.write("No context on this server matched or handled this request.<BR>");
-		writer.write("Contexts known to this server are: <ul>");
-		
-		for (Module module : modules) {
-			writer.write("<li>");
-			writer.write(module.getName());
-			writer.write("(<a href=\"http://localhost:" + port + module.getContext() + "\">");
-			writer.write(module.getContext());
-			writer.write("</a>)</li>");
+			String uri = request.getRequestURI();
+			uri = StringUtil.replace(uri, "<", "&lt;");
+			uri = StringUtil.replace(uri, ">", "&gt;");
+			
+			writer.write("<HTML>\n<HEAD>\n<TITLE>Error 404 - Not Found");
+			writer.write("</TITLE>\n<BODY>\n<H2>Error 404 - Not Found</H2>\n");
+			writer.write("No context on this server matched or handled this request.<BR>");
+			writer.write("Contexts known to this server are: <ul>");
+			
+			for (Module module : modules) {
+				writer.write("<li>");
+				writer.write(module.getName());
+				writer.write("(<a href=\"http://localhost:" + port + module.getContext() + "\">");
+				writer.write(module.getContext());
+				writer.write("</a>)</li>");
+			}
+			
+			for (int i = 0; i < 10; i++) {
+				writer.write("\n<!-- Padding for IE                  -->");
+			}
+			
+			writer.write("\n</BODY>\n</HTML>\n");
+			writer.flush();
+			response.setContentLength(writer.size());
+			OutputStream out = response.getOutputStream();
+			writer.writeTo(out);
+			out.close();
 		}
-		
-		for (int i = 0; i < 10; i++)
-			writer.write("\n<!-- Padding for IE                  -->");
-		
-		writer.write("\n</BODY>\n</HTML>\n");
-		writer.flush();
-		response.setContentLength(writer.size());
-		OutputStream out = response.getOutputStream();
-		writer.writeTo(out);
-		out.close();
 	}
 
 }
