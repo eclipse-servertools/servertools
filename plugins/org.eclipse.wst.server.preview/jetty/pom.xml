@@ -1,53 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001 XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001 XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.eclipse.webtools.jetty</groupId>
-    <artifactId>p2-repository</artifactId>
-    <packaging>pom</packaging>
-    <version>1.0.0-SNAPSHOT</version>
+  <groupId>org.eclipse.webtools.jetty</groupId>
+  <artifactId>p2-repository</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0.0-SNAPSHOT</version>
 
-    <properties>
-	<maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
-	<maven.compiler.target>1.8</maven.compiler.target>
-	<maven.compiler.source>1.8</maven.compiler.source>
-	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+  <properties>
+    <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
-    <repositories>
-        <repository>
-            <id>central</id>
-            <name>Maven Repository Switchboard</name>
-            <layout>default</layout>
-            <url>https://repo1.maven.org/maven2</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+  <repositories>
+    <repository>
+      <id>central</id>
+      <name>Maven Repository Switchboard</name>
+      <layout>default</layout>
+      <url>https://repo1.maven.org/maven2</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.reficio</groupId>
-                <artifactId>p2-maven-plugin</artifactId>
-                <version>1.3.0</version>
-                <executions>
-                    <execution>
-                        <id>default-cli</id>
-                        <configuration>
-                            <artifacts>
-                                <!-- specify your dependencies here -->
-                                <!-- groupId:artifactId:version -->
-                                <artifact><id>org.eclipse.jetty:jetty-webapp:${jetty-version}</id></artifact>
-                                <artifact><id>org.eclipse.jetty:jetty-xml:${jetty-version}</id></artifact>
-                            </artifacts>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.reficio</groupId>
+        <artifactId>p2-maven-plugin</artifactId>
+        <version>1.3.0</version>
+        <executions>
+          <execution>
+            <id>default-cli</id>
+            <configuration>
+              <artifacts>
+                <!-- specify your dependencies here -->
+                <!-- groupId:artifactId:version -->
+                <artifact>
+                  <id>org.eclipse.jetty:jetty-plus:${jettyVersion}</id>
+                  <source>true</source>
+                </artifact>
+                <artifact>
+                  <id>org.eclipse.jetty.osgi:jetty-osgi-boot:${jettyVersion}</id>
+                  <source>true</source>
+                  <excludes>
+                    <exclude>*:org.eclipse.osgi:*:*</exclude>
+                    <exclude>*:org.eclipse.osgi.services:*:*</exclude>
+                    <exclude>*:jakarta.annotation-api:*:*</exclude>
+                  </excludes>
+                </artifact>
+                <artifact>
+                  <id>jakarta.enterprise:jakarta.enterprise.cdi-api:2.0.2</id>
+                </artifact>
+                <artifact>
+                  <id>jakarta.transaction:jakarta.transaction-api:1.3.2</id>
+                </artifact>
+              </artifacts>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
