@@ -53,7 +53,6 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 		"org.slf4j.api",
 		"org.eclipse.jetty.http",
 		"org.eclipse.jetty.io",
-		"org.eclipse.jetty.osgi.boot",
 		"org.eclipse.jetty.security",
 		"org.eclipse.jetty.server",
 		"org.eclipse.jetty.servlet",
