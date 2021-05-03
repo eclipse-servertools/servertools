@@ -53,20 +53,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.jetty.annotations"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.jetty.osgi.boot"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.jetty.plus"
          download-size="0"
          install-size="0"
@@ -74,7 +60,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.jetty.plus"
+         id="org.eclipse.jetty.xml"
          download-size="0"
          install-size="0"
          version="0.0.0"
