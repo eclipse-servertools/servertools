@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2018 IBM Corporation and others.
+ * Copyright (c) 2007, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -52,7 +52,6 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 		getBundleForClass(javax.el.ELContext.class),
 		getBundleForClass(com.sun.el.ExpressionFactoryImpl.class),
 		"org.apache.commons.logging",
-		"org.eclipse.jetty.continuation",
 		"org.eclipse.jetty.http",
 		"org.eclipse.jetty.io",
 		"org.eclipse.jetty.security",
