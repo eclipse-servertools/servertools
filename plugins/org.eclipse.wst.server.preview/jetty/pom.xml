@@ -46,6 +46,10 @@
                   <source>true</source>
                 </artifact>
                 <artifact>
+                  <id>org.eclipse.jetty:jetty-util-ajax:${jettyVersion}</id>
+                  <source>true</source>
+                </artifact>
+                <artifact>
                   <id>jakarta.enterprise:jakarta.enterprise.cdi-api:2.0.2</id>
                 </artifact>
                 <artifact>
