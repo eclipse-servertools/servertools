@@ -1,7 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.server.doc.isv;singleton:=true
-Bundle-Version: 1.0.100.qualifier
+Bundle-Version: 1.0.101.qualifier
 Bundle-Vendor: %pluginProvider
 Require-Bundle: org.eclipse.help;bundle-version="[3.2.0,4.0.0)"
 Bundle-Name: %pluginName
+Bundle-Localization: plugin
