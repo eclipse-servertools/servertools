@@ -1709,7 +1709,7 @@ public class Server extends Base implements IServer {
 		try {
 			launchConfigs = launchManager.getLaunchConfigurations(launchConfigType);
 		} catch (CoreException e) {
-			// ignore
+			Trace.trace(Trace.STRING_SEVERE, "Error configuring launch", e);
 		}
 		
 		if (launchConfigs != null) {

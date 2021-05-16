@@ -51,7 +51,7 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 		getBundleForClass(org.apache.jasper.JspCompilationContext.class),
 		getBundleForClass(javax.el.ELContext.class),
 		getBundleForClass(com.sun.el.ExpressionFactoryImpl.class),
-		"org.apache.commons.logging",
+		"slf4j.api",
 		"org.eclipse.jetty.http",
 		"org.eclipse.jetty.io",
 		"org.eclipse.jetty.security",
