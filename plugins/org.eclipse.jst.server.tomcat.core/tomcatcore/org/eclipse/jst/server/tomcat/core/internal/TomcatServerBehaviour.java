@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2018 IBM Corporation and others.
+ * Copyright (c) 2003, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -52,6 +52,12 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		"-Dcom.sun.management.jmxremote.ssl=",
 		"-Dcom.sun.management.jmxremote.authenticate="
 	};
+	private static final String[] ALLOW_REFLECTION_ARGS = new String[] {
+				"--add-opens=java.base/java.lang=ALL-UNNAMED",
+				"--add-opens=java.base/java.io=ALL-UNNAMED",
+				"--add-opens=java.base/java.util=ALL-UNNAMED",
+				"--add-opens=java.base/java.util.concurrent=ALL-UNNAMED",
+				"--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED"};
 
 	// the thread used to ping the server to check for startup
 	protected transient PingThread ping = null;
@@ -954,6 +960,10 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 						mergedVMArguments = mergeArguments(mergedVMArguments, endorsements, null, false);
 						workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, mergedVMArguments);
 					}
+				}
+				if (version != null && version_num >= 9) {
+					mergedVMArguments = mergeArguments(mergedVMArguments, ALLOW_REFLECTION_ARGS, null, false);
+					workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, mergedVMArguments);
 				}
 			}
 		}
