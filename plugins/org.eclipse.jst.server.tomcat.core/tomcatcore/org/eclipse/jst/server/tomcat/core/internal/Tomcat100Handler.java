@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2020 IBM Corporation and others.
+ * Copyright (c) 2020, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -55,6 +55,11 @@ public class Tomcat100Handler implements ITomcatVersionHandler {
 		if (binPath.toFile().exists()) {
 			IPath path = binPath.append("bootstrap.jar");
 			cp.add(JavaRuntime.newArchiveRuntimeClasspathEntry(path));
+			// Add commons-daemon.jar if it exists
+			path = binPath.append("commons-daemon.jar");
+			if (path.toFile().exists()) {
+				cp.add(JavaRuntime.newArchiveRuntimeClasspathEntry(path));
+			}
 			// Add tomcat-juli.jar if it exists
 			path = binPath.append("tomcat-juli.jar");
 			if (path.toFile().exists()) {
@@ -115,7 +120,7 @@ public class Tomcat100Handler implements ITomcatVersionHandler {
 	public IStatus canAddModule(IModule module) {
 		String version = module.getModuleType().getVersion();
 		if ("2.2".equals(version) || "2.3".equals(version) || "2.4".equals(version) || "2.5".equals(version)
-				|| "3.0".equals(version) || "3.1".equals(version) || "4.0".equals(version))
+				|| "3.0".equals(version) || "3.1".equals(version) || "4.0".equals(version) || "5.0".equals(version))
 			return Status.OK_STATUS;
 		
 		return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorSpec100, null);

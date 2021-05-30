@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2016, 2017 IBM Corporation and others.
+ * Copyright (c) 2016, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -55,6 +55,11 @@ public class Tomcat85Handler implements ITomcatVersionHandler {
 		if (binPath.toFile().exists()) {
 			IPath path = binPath.append("bootstrap.jar");
 			cp.add(JavaRuntime.newArchiveRuntimeClasspathEntry(path));
+			// Add commons-daemon.jar if it exists
+			path = binPath.append("commons-daemon.jar");
+			if (path.toFile().exists()) {
+				cp.add(JavaRuntime.newArchiveRuntimeClasspathEntry(path));
+			}
 			// Add tomcat-juli.jar if it exists
 			path = binPath.append("tomcat-juli.jar");
 			if (path.toFile().exists()) {

@@ -14,6 +14,7 @@ package org.eclipse.wst.server.core.internal;
 
 import java.io.*;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -114,7 +115,13 @@ public class InstallableRuntime2 implements IInstallableRuntime {
 				return null;
 			
 			url = new URL(licenseURL);
-			InputStream in = url.openStream();
+			URLConnection connection = url.openConnection();
+			String possibleNewURL = connection.getHeaderField("Location");
+			while (possibleNewURL != null) {
+				connection = new URL(possibleNewURL).openConnection();
+				possibleNewURL = connection.getHeaderField("Location");
+			}
+			InputStream in = connection.getInputStream();
 			out = new ByteArrayOutputStream();
 			copyWithSize(in, out, null, 0);
 			return new String(out.toByteArray());
