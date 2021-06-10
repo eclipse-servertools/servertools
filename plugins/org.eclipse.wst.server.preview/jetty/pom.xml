@@ -26,6 +26,15 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>
+    <repository>
+      <id>Jetty</id>
+      <name>Jetty at Sonatype</name>
+      <layout>default</layout>
+      <url>https://oss.sonatype.org/content/repositories/jetty-snapshots/</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
   </repositories>
 
   <build>
@@ -44,10 +53,20 @@
                 <artifact>
                   <id>org.eclipse.jetty:jetty-plus:${jettyVersion}</id>
                   <source>true</source>
+                  <!--
+                  <excludes>
+                    <exclude>org.slf4j:*</exclude>
+                  </excludes>
+                  -->
                 </artifact>
                 <artifact>
                   <id>org.eclipse.jetty:jetty-util-ajax:${jettyVersion}</id>
+                  <!--
                   <source>true</source>
+                  <excludes>
+                    <exclude>org.slf4j:*</exclude>
+                  </excludes>
+                  -->
                 </artifact>
                 <artifact>
                   <id>jakarta.enterprise:jakarta.enterprise.cdi-api:2.0.2</id>
