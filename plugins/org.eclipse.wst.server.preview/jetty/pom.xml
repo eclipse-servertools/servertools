@@ -26,15 +26,6 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>
-    <repository>
-      <id>Jetty</id>
-      <name>Jetty at Sonatype</name>
-      <layout>default</layout>
-      <url>https://oss.sonatype.org/content/repositories/jetty-snapshots/</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
   </repositories>
 
   <build>
