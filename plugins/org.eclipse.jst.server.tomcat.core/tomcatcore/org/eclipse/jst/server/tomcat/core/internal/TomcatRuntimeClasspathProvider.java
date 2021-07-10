@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2020 IBM Corporation and others.
+ * Copyright (c) 2003, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -27,68 +27,50 @@ import org.eclipse.wst.common.project.facet.core.IProjectFacet;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 import org.eclipse.wst.server.core.IRuntime;
 /**
- * Classpath provider for the Tomcat runtime.
+ * Classpath provider for the Apache Tomcat runtime.
  */
 public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDelegate {
 	private static final String JST_WEB_FACET_ID = "jst.web";
 
-	private final String getEEJavadocLocation(IProject project) {
-		int eeVersion = 9;
-		try {
-			IFacetedProject faceted = ProjectFacetsManager.create(project);
-			if (faceted != null && ProjectFacetsManager.isProjectFacetDefined(JST_WEB_FACET_ID)) {
-				IProjectFacet webModuleFacet = ProjectFacetsManager.getProjectFacet(JST_WEB_FACET_ID);
-				if (faceted.hasProjectFacet(webModuleFacet)) {
-					String servletVersionStr = faceted.getInstalledVersion(webModuleFacet).getVersionString();
-					if (servletVersionStr.equals("5.0")) {
-						eeVersion = 9;
-					} else if (servletVersionStr.equals("4.0")) {
-						eeVersion = 8;
-					} else if (servletVersionStr.equals("3.1")) {
-						eeVersion = 7;
-					} else if (servletVersionStr.equals("3.0")) {
-						eeVersion = 6;
-					} else if (servletVersionStr.equals("2.5")) {
-						eeVersion = 5;
-					} else if (servletVersionStr.equals("2.4")) {
-						eeVersion = 4;
-					} else if (servletVersionStr.equals("2.3")) {
-						eeVersion = 3;
-					}
-				}
-			}
-		}
-		catch (NumberFormatException e) {
-			// default to the latest
-		}
-		catch (CoreException e) {
-			// default to the latest
-		}
-
+	private final String getStandardsJavadocLocation(int eeVersion, String jarName) {
 		String url = "https://jakarta.ee/specifications/servlet/5.0/apidocs/";
 		switch (eeVersion) {
-		case 3:
-			url = "https://docs.oracle.com/javaee/3/api/";
-			break;
-		case 4:
-			url = "https://docs.oracle.com/javaee/4/api/";
-			break;
-		case 5:
-			url = "https://docs.oracle.com/javaee/5/api/";
-			break;
-		case 6:
-			url = "https://docs.oracle.com/javaee/6/api/";
-			break;
-		case 7:
-			url = "https://docs.oracle.com/javaee/7/api/";
-			break;
-		case 8:
-			url = "https://javaee.github.io/javaee-spec/javadocs/";
-			break;
-		default:
-			// Servlet Javadoc. Jakarta EE 9 doesn't appear to have a central URL for all Javadoc.
-			url = "https://jakarta.ee/specifications/servlet/5.0/apidocs/";
-			break;
+			case 3 :
+				url = "https://docs.oracle.com/javaee/3/api/";
+				break;
+			case 4 :
+				url = "https://docs.oracle.com/javaee/4/api/";
+				break;
+			case 5 :
+				url = "https://docs.oracle.com/javaee/5/api/";
+				break;
+			case 6 :
+				url = "https://docs.oracle.com/javaee/6/api/";
+				break;
+			case 7 :
+				url = "https://docs.oracle.com/javaee/7/api/";
+				break;
+			case 8 :
+				url = "https://javaee.github.io/javaee-spec/javadocs/";
+				break;
+			default :
+				// Jakarta EE uses a different URL for each component specification
+				url = "https://jakarta.ee/specifications/servlet/5.0/apidocs/";
+				if (jarName.contains("jsp")) {
+					url = "https://jakarta.ee/specifications/pages/3.0/apidocs/";
+				}
+				else if (jarName.contains("websocket")) {
+					url = "https://jakarta.ee/specifications/websocket/2.0/apidocs/";
+				}
+				else if (jarName.contains("annotation")) {
+					url = "https://jakarta.ee/specifications/annotations/2.0/apidocs/jakarta.annotation/";
+				}
+				else if (jarName.equals("el-api.jar")) {
+					url = "https://jakarta.ee/specifications/expression-language/4.0/apidocs/";
+				}
+				else if (jarName.contains("jaspic")) {
+					url = "https://jakarta.ee/specifications/authentication/2.0/apidocs/";
+				}
 		}
 
 		return url;
@@ -110,6 +92,9 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 		else if (runtimeTypeId.indexOf("70") > 0) {
 			tomcatDocURL = "https://tomcat.apache.org/tomcat-7.0-doc/api/";
 		}
+		else if (runtimeTypeId.indexOf("60") > 0) {
+			tomcatDocURL = "https://tomcat.apache.org/tomcat-6.0-doc/api/";
+		}
 		return tomcatDocURL;
 	}
 
@@ -120,7 +105,7 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 		IPath installPath = runtime.getLocation();
 		if (installPath == null)
 			return new IClasspathEntry[0];
-		
+
 		List<IClasspathEntry> list = new ArrayList<IClasspathEntry>();
 		String runtimeId = runtime.getRuntimeType().getId();
 		if (runtimeId.indexOf("32") > 0) {
@@ -139,18 +124,81 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 		}
 
 		IClasspathEntry[] entries = list.toArray(new IClasspathEntry[list.size()]);
-		String apiJavadocLocation = getEEJavadocLocation(project);
-		String tomcatDocLocation = getTomcatJavadocLocation(runtime);
+		String tomcatJavadocLocation = getTomcatJavadocLocation(runtime);
+
+		/*
+		 * The URL for the EE API can vary based on the project jst.web facet
+		 * version and jar name, or the Tomcat version (preferred, as it is
+		 * more concrete). Find the first value, as it is the same for the
+		 * entire project. -1 represents unknown.
+		 */
+		int eeVersion = -1;
+		if (runtimeId.indexOf("100") > 0) {
+			eeVersion = 9;
+		}
+		else if (runtimeId.indexOf("90") > 0) {
+			eeVersion = 8;
+		}
+		else if (runtimeId.indexOf("85") > 0 || runtimeId.indexOf("80") > 0) {
+			eeVersion = 7;
+		}
+		else if (runtimeId.indexOf("70") > 0) {
+			eeVersion = 6;
+		}
+		else if (runtimeId.indexOf("60") > 0) {
+			eeVersion = 5;
+		}
+		else {
+			try {
+				IFacetedProject faceted = ProjectFacetsManager.create(project);
+				if (faceted != null && ProjectFacetsManager.isProjectFacetDefined(JST_WEB_FACET_ID)) {
+					IProjectFacet webModuleFacet = ProjectFacetsManager.getProjectFacet(JST_WEB_FACET_ID);
+					if (faceted.hasProjectFacet(webModuleFacet)) {
+						String servletVersionStr = faceted.getInstalledVersion(webModuleFacet).getVersionString();
+						if (servletVersionStr.equals("5.0")) {
+							eeVersion = 9;
+						}
+						else if (servletVersionStr.equals("4.0")) {
+							eeVersion = 8;
+						}
+						else if (servletVersionStr.equals("3.1")) {
+							eeVersion = 7;
+						}
+						else if (servletVersionStr.equals("3.0")) {
+							eeVersion = 6;
+						}
+						else if (servletVersionStr.equals("2.5")) {
+							eeVersion = 5;
+						}
+						else if (servletVersionStr.equals("2.4")) {
+							eeVersion = 4;
+						}
+						else if (servletVersionStr.equals("2.3")) {
+							eeVersion = 3;
+						}
+					}
+				}
+			}
+			catch (NumberFormatException e) {
+				// default to the latest
+				eeVersion = 9;
+			}
+			catch (CoreException e) {
+				// default to the latest
+				eeVersion = 9;
+			}
+		}
+
 		for (int i = 0; i < entries.length; i++) {
 			IClasspathEntry entry = entries[i];
 			String jarName = entry.getPath().lastSegment();
 			if (jarName.endsWith("-api.jar") && !jarName.startsWith("tomcat")) {
-				// these are assumed to be the API jars for the runtime standards
-				IClasspathEntry apiLibraryEntry = JavaCore.newLibraryEntry(entry.getPath(), entry.getSourceAttachmentPath(), entry.getSourceAttachmentRootPath(), entry.getAccessRules(), new IClasspathAttribute[]{JavaCore.newClasspathAttribute(IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME, apiJavadocLocation)}, entry.isExported());
+				// these are assumed to be the API jars for the EE runtime standards
+				IClasspathEntry apiLibraryEntry = JavaCore.newLibraryEntry(entry.getPath(), entry.getSourceAttachmentPath(), entry.getSourceAttachmentRootPath(), entry.getAccessRules(), new IClasspathAttribute[]{JavaCore.newClasspathAttribute(IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME, getStandardsJavadocLocation(eeVersion, entry.getPath().lastSegment()))}, entry.isExported());
 				entries[i] = apiLibraryEntry;
 			}
 			else {
-				IClasspathEntry tomcatLibraryEntry = JavaCore.newLibraryEntry(entry.getPath(), entry.getSourceAttachmentPath(), entry.getSourceAttachmentRootPath(), entry.getAccessRules(), new IClasspathAttribute[]{JavaCore.newClasspathAttribute(IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME, tomcatDocLocation)}, entry.isExported());
+				IClasspathEntry tomcatLibraryEntry = JavaCore.newLibraryEntry(entry.getPath(), entry.getSourceAttachmentPath(), entry.getSourceAttachmentRootPath(), entry.getAccessRules(), new IClasspathAttribute[]{JavaCore.newClasspathAttribute(IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME, tomcatJavadocLocation)}, entry.isExported());
 				entries[i] = tomcatLibraryEntry;
 			}
 		}

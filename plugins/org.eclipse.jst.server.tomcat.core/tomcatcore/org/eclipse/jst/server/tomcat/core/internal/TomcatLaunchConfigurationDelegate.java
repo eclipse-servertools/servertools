@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2020 IBM Corporation and others.
+ * Copyright (c) 2003, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -147,6 +147,16 @@ public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 		} catch (Exception e) {
 			// Ensure we don't continue to think the server is starting
 			tomcatServer.stopImpl();
+			StringBuilder builder = new StringBuilder();
+			builder.append("Exception while launching using ");
+			builder.append(vm.getInstallLocation());
+			builder.append("with VM args '");
+			builder.append(String.join(" ", runConfig.getVMArguments()));
+			builder.append("' and program args'");
+			builder.append(String.join(" ", runConfig.getProgramArguments()));
+			builder.append("'");
+			builder.append(server.getName());
+			Platform.getLog(Platform.getBundle(TomcatPlugin.PLUGIN_ID)).error(builder.toString(), e);
 		}
 	}
 }
