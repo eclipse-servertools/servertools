@@ -52,12 +52,6 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		"-Dcom.sun.management.jmxremote.ssl=",
 		"-Dcom.sun.management.jmxremote.authenticate="
 	};
-	private static final String[] ALLOW_REFLECTION_ARGS = new String[] {
-				"--add-opens=java.base/java.lang=ALL-UNNAMED",
-				"--add-opens=java.base/java.io=ALL-UNNAMED",
-				"--add-opens=java.base/java.util=ALL-UNNAMED",
-				"--add-opens=java.base/java.util.concurrent=ALL-UNNAMED",
-				"--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED"};
 
 	// the thread used to ping the server to check for startup
 	protected transient PingThread ping = null;
@@ -664,7 +658,8 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 * to be the last argument in the merged string.
 	 * 
 	 * @param originalArg String of original arguments.
-	 * @param vmArgs Arguments to merge into the original arguments string
+	 * @param vmArgs Arguments to merge into the original arguments string, <b>array
+	 * elements will be nulled</b>
 	 * @param excludeArgs Arguments to exclude from the original arguments string
 	 * @param keepActionLast If <b>true</b> the vmArguments are assumed to be Tomcat
 	 * program arguments, the last of which is the action to perform which must
@@ -697,6 +692,10 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 					vmArgs[i] = null;
 				}
 			} else if (ind2 >= 0) { // a=b style
+				//* Check for two '=' variant, e.g. --add-opens=java.base/java.lang=ALL-UNNAMED */
+				if (ind2 >= 0 && ind2 < vmArgs[i].length() && vmArgs[i].indexOf("=", ind2 + 1) > 0) {
+					ind2 = vmArgs[i].indexOf("=", ind2 + 1);
+				}
 				int index = originalArg.indexOf(vmArgs[i].substring(0, ind2 + 1));
 				if (index == 0 || (index > 0 && Character.isWhitespace(originalArg.charAt(index - 1)))) {
 					// replace
@@ -962,7 +961,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 					}
 				}
 				if (version != null && version_num >= 9) {
-					mergedVMArguments = mergeArguments(mergedVMArguments, ALLOW_REFLECTION_ARGS, null, false);
+					mergedVMArguments = mergeArguments(mergedVMArguments, getAllowReflectionArguments(), null, false);
 					workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, mergedVMArguments);
 				}
 			}
@@ -1139,6 +1138,15 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		return getTomcatServer().getServerDeployDirectory();
 	}
 	
+	public static String[] getAllowReflectionArguments() {
+		return new String[] {
+			"--add-opens=java.base/java.lang=ALL-UNNAMED",
+			"--add-opens=java.base/java.io=ALL-UNNAMED",
+			"--add-opens=java.base/java.util=ALL-UNNAMED",
+			"--add-opens=java.base/java.util.concurrent=ALL-UNNAMED",
+			"--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED"};
+	}
+
 	/**
 	 * Gets the directory to which to deploy a module's web application.
 	 * 

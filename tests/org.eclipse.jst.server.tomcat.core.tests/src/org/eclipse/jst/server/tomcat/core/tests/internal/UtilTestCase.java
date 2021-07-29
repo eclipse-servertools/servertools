@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2013 IBM Corporation and others.
+ * Copyright (c) 2004, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -13,8 +13,12 @@
 package org.eclipse.jst.server.tomcat.core.tests.internal;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServerBehaviour;
 import org.eclipse.jst.server.tomcat.core.internal.VerifyResourceSpec;
 import org.eclipse.jst.server.tomcat.core.tests.RuntimeLocation;
@@ -166,5 +170,27 @@ public class UtilTestCase extends TestCase {
 			IStatus status = spec.checkResource(RuntimeLocation.runtimeLocation);
 			assertFalse(status.isOK());
 		}
+	}
+
+	public void testArgParsing() {
+		String[] parsedArguments = DebugPlugin.parseArguments(String.join(" ", TomcatServerBehaviour.getAllowReflectionArguments()));
+		for (int i = 0; i < parsedArguments.length; i++) {
+			assertEquals(TomcatServerBehaviour.getAllowReflectionArguments()[i], parsedArguments[i]);
+		}
+	}
+
+	public void testBug574268() throws IOException {
+		Properties props = new Properties();
+		props.load(new InputStreamReader(getClass().getResourceAsStream("UtilTestCase.properties"), "utf8"));
+		// irrevocably strips the quotes from the argument values
+		String[] before = DebugPlugin.parseArguments(props.getProperty("before"));
+		String mergedVMArguments = TomcatServerBehaviour.mergeArguments(String.join(" ", before), TomcatServerBehaviour.getAllowReflectionArguments(), null, false);
+		for (int i = 0; i < before.length; i++) {
+			assertTrue("missing " + before[i], mergedVMArguments.contains(before[i]));
+		}
+		for (int i = 0; i < TomcatServerBehaviour.getAllowReflectionArguments().length; i++) {
+			assertTrue("missing " + TomcatServerBehaviour.getAllowReflectionArguments()[i], mergedVMArguments.contains(TomcatServerBehaviour.getAllowReflectionArguments()[i]));
+		}
+		assertFalse("still broken", mergedVMArguments.equals(props.get("after")));
 	}
 }

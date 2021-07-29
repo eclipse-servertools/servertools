@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.jst.server.tomcat.core.tests
 Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core.tests
-Bundle-Version: 1.1.500.qualifier
+Bundle-Version: 1.1.600.qualifier
 Bundle-ClassPath: tests.jar
 Bundle-Activator: org.eclipse.jst.server.tomcat.core.tests.TestsPlugin
 Bundle-Vendor: Eclipse.org
@@ -26,5 +26,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jst.server.core,
  org.eclipse.debug.ui,
  org.eclipse.wst.web
+Import-Package: javax.servlet
 Eclipse-LazyStart: true
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
