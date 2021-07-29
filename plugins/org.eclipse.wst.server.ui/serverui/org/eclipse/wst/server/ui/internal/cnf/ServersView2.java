@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008,2012 IBM Corporation and others.
+ * Copyright (c) 2008, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -48,6 +48,7 @@ import org.eclipse.wst.server.core.util.PublishAdapter;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerToolTip;
 import org.eclipse.wst.server.ui.internal.Trace;
+import org.eclipse.wst.server.ui.internal.viewers.DefaultViewerSorter;
 import org.eclipse.wst.server.ui.internal.wizard.NewServerWizard;
 /**
  * A view of servers, their modules, and status.
@@ -85,6 +86,7 @@ public class ServersView2 extends CommonNavigator {
 		super.createPartControl(book);
 		// Main page for the Servers tableViewer
 		mainPage = getCommonViewer().getControl();
+		getCommonViewer().setSorter(new DefaultViewerSorter());
 		// Page prompting to define a new server
 		noServersPage = createDefaultPage(toolkit); 
 		book.showPage(mainPage);
@@ -103,9 +105,9 @@ public class ServersView2 extends CommonNavigator {
 	private Control createDefaultPage(FormToolkit kit){
 		Form form = kit.createForm(book);
 		Composite body = form.getBody();
-    GridLayout layout = new GridLayout(2, false);
-    body.setLayout(layout);
-    
+		GridLayout layout = new GridLayout(2, false);
+		body.setLayout(layout);
+
 		Link hlink = new Link(body, SWT.NONE);
 		hlink.setText(Messages.ServersView2_noServers); 
 		hlink.setBackground(book.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
@@ -116,7 +118,7 @@ public class ServersView2 extends CommonNavigator {
 				NewServerWizard wizard = new NewServerWizard();
 				WizardDialog wd = new WizardDialog(book.getShell(), wizard);
 				if( wd.open() == Window.OK){
-					toggleDefultPage();
+					toggleDefaultPage();
 				}
 			}
 		});
@@ -170,7 +172,7 @@ public class ServersView2 extends CommonNavigator {
 	 * Switch between the servers and default/empty page. 
 	 * 
 	 */
-	void toggleDefultPage(){
+	void toggleDefaultPage(){
 		if(tableViewer.getTree().getItemCount() < 1){
 			book.showPage(noServersPage);
 		} else{
@@ -233,7 +235,7 @@ public class ServersView2 extends CommonNavigator {
 								Object obj = tableViewer.getTree().getItem(0).getData();
 								tableViewer.setSelection(new StructuredSelection(obj));
 							} else{
-								toggleDefultPage();
+								toggleDefaultPage();
 							}
 						}
 						catch (Exception e){
@@ -386,7 +388,7 @@ public class ServersView2 extends CommonNavigator {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				tableViewer.add(tableViewer.getInput(), server);
-				toggleDefultPage();
+				toggleDefaultPage();
 			}
 		});
 	}
@@ -395,7 +397,7 @@ public class ServersView2 extends CommonNavigator {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				tableViewer.remove(server);
-				toggleDefultPage();
+				toggleDefaultPage();
 			}
 		});
 	}

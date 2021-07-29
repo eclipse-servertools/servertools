@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2018 IBM Corporation and others.
+ * Copyright (c) 2005, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -21,9 +22,11 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.IServerType;
+import org.eclipse.wst.server.core.internal.Base;
+
 /**
- * Class used to sort categories, runtime types, and server types in the
- * New wizards.
+ * Class used to sort categories, runtime and server types, and server instances
+ * in the New wizards and Servers View.
  */
 public class DefaultViewerSorter extends ViewerSorter {
 	private static AlphanumComparator alphanum = new AlphanumComparator();
@@ -111,6 +114,10 @@ public class DefaultViewerSorter extends ViewerSorter {
 		if (o1 instanceof IServerType && o2 instanceof IServerType)
 			return compareServerTypes((IServerType) o1, (IServerType) o2);
 		
+		if (o1 instanceof Base && o2 instanceof Base) {
+			return Collator.getInstance().compare(((Base)o1).getName(), ((Base)o2).getName());
+		}
+
 		return 0;
 	}
 

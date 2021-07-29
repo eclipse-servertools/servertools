@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -12,12 +12,16 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 /**
  * Runtime table label provider.
  */
@@ -44,6 +48,10 @@ public class RuntimeTableLabelProvider extends BaseLabelProvider implements ITab
 	public Image getColumnImage(Object element, int columnIndex) {
 		if (columnIndex == 0) {
 			IRuntime runtime = (IRuntime) element;
+			IStatus status = runtime.validate(new NullProgressMonitor());
+			if (status != null && status.getSeverity() == IStatus.ERROR) {
+				return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
+			}
 			IRuntimeType runtimeType = runtime.getRuntimeType();
 			if (runtimeType != null) {
 				Image image = ImageResource.getImage(runtimeType.getId());
