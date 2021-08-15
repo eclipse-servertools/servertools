@@ -797,17 +797,17 @@
     <runtime
         id="org.eclipse.jst.server.tomcat.runtime.100"
         licenseUrl="https://www.apache.org/licenses/LICENSE-2.0.txt"
-        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-10/v10.0.8/bin/apache-tomcat-10.0.8.tar.gz"
-        archivePath="apache-tomcat-10.0.8"
-        archiveSize="11849843"
+        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-10/v10.0.10/bin/apache-tomcat-10.0.10.tar.gz"
+        archivePath="apache-tomcat-10.0.10"
+        archiveSize="11865907"
         fileCount="642"
         os="linux,macosx"/>
     <runtime
         id="org.eclipse.jst.server.tomcat.runtime.100"
         licenseUrl="https://www.apache.org/licenses/LICENSE-2.0.txt"
-        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-10/v10.0.8/bin/apache-tomcat-10.0.8.zip"
-        archivePath="apache-tomcat-10.0.8"
-        archiveSize="12395383"
+        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-10/v10.0.10/bin/apache-tomcat-10.0.10.zip"
+        archivePath="apache-tomcat-10.0.10"
+        archiveSize="12412971"
         fileCount="642"
         os="win32"/>
   </extension>
