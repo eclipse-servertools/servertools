@@ -56,12 +56,15 @@
                   </excludes>
                 </artifact>
                 <artifact>
-                  <id>jakarta.enterprise:jakarta.enterprise.cdi-api:2.0.2</id>
+                  <id>jakarta.transaction:jakarta.transaction-api:1.3.3</id>
                   <source>true</source>
                 </artifact>
                 <artifact>
-                  <id>jakarta.transaction:jakarta.transaction-api:1.3.2</id>
+                  <id>jakarta.enterprise:jakarta.enterprise.cdi-api:2.0.2</id>
                   <source>true</source>
+                  <excludes>
+                    <exclude>jakarta.transaction:*:*</exclude>
+                  </excludes>
                 </artifact>
               </artifacts>
             </configuration>
