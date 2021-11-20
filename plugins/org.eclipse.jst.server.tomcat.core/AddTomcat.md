@@ -41,5 +41,5 @@ When modifying files, specify the current year in the copyright headers where pr
     2. Add a new **fragment** to the **org.eclipse.wst.server.ui.wizardFragments** extension.
 
 ### Determining values for installable runtimes:
-    1. For ostype win32:  filecount = unzip -l apache-tomcat-10.0.10.zip|grep -v '\/$'|grep 'apache-tomcat-'|grep -v ^Archive|wc -l
-    1. For other ostypes: filecount = tar tvzf apache-tomcat-10.0.10.tar.gz|grep -v '\/$'|wc -l
+    1. For ostype win32:  filecount = unzip -l apache-tomcat-10.0.13.zip|grep -v '\/$'|grep 'apache-tomcat-'|grep -v ^Archive|wc -l
+    1. For other ostypes: filecount = tar tvzf apache-tomcat-10.0.13.tar.gz|grep -v '\/$'|wc -l
