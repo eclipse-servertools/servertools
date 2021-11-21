@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2016 IBM Corporation and others.
+ * Copyright (c) 2003, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -744,9 +744,15 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns the initial selection provider.
+	 * @deprecated - A computed default new runtime type based on what's
+	 *             installed ends up being more annoying than useful (e.g.
+	 *             always selection the Preview Server even if you never use
+	 *             it).
+	 * 
+	 *             Returns the initial selection provider.
 	 *
-	 * @return an initial selection provider, or <code>null</code> if none could be found
+	 * @return an initial selection provider, or <code>null</code> if none
+	 *         could be found
 	 */
 	public static InitialSelectionProvider getInitialSelectionProvider() {
 		if (selectionProvider == null)

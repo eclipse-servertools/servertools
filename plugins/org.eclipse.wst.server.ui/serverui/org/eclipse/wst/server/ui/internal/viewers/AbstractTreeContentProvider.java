@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2015 IBM Corporation and others.
+ * Copyright (c) 2003, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -20,7 +20,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.wst.server.ui.internal.Messages;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 /**
  * Runtime type content provider.
  */
@@ -183,7 +182,7 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 		// do nothing
 	}
 
-	private Object[] getAllObjects() {
+	Object[] getAllObjects() {
 		List<Object> list = new ArrayList<Object>();
 		Object[] obj = getElements(null);
 		if (obj != null) {
@@ -210,18 +209,10 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 	}
 
 	public Object getInitialSelection() {
-		if (initialSelection == null) {
-			InitialSelectionProvider isp = ServerUIPlugin.getInitialSelectionProvider();
-			initialSelection = isp.getInitialSelection(getAllObjects());
-		}
 		return initialSelection;
 	}
 	
 	public Object getInitialSelection(IProject project){
-		if (initialSelection == null) {
-			InitialSelectionProvider isp = ServerUIPlugin.getInitialSelectionProvider();
-			initialSelection = isp.getInitialSelection(getAllObjects(),project);
-		}
 		return initialSelection;
 	}
 }
