@@ -1,9 +1,10 @@
 <extensions>
-   <site url="http://www.apache.org/dist/geronimo/eclipse/updates/"/>
-   <site url="http://master.dl.sourceforge.net/project/sapnweclipse/updates/"/>
-   <site url="http://download.eclipse.org/jetty/updates/jetty-wtp/"/>
-   <site url="http://www.caucho.com/eclipse/"/>   
-   <site url="http://download.jboss.org/jbosstools/updates/webtools/photon/"/>
-   <site url="http://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/updates/libertyAdapter/2020-09/"/>
-   <site url="http://download.oracle.com/otn_software/oepe/oxygen/"/>
+  <site url="https://downloads.apache.org/geronimo/eclipse/updates/" />
+  <site url="https://sourceforge.net/projects/sapnweclipse/files/updates/" />
+  <site url="https://download.eclipse.org/jetty/updates/jetty-wtp/" />
+  <site url="https://www.caucho.com/eclipse/" />
+  <site url="https://download.jboss.org/jbosstools/updates/webtools/photon/" />
+  <site url="https://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/updates/libertyAdapter/2020-09/" />
+  <!-- <site url="https://download.oracle.com/otn_software/oepe/oxygen/"/> -->
+  <site url="https://download.oracle.com/otn_software/oepe/12.2.1.10/photon/repository/" />
 </extensions>
