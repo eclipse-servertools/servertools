@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2020 SAS Institute and others.
+ * Copyright (c) 2020, 2022 SAS Institute and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
