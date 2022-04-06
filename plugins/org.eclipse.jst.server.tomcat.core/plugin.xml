@@ -763,52 +763,52 @@
     <runtime
         id="org.eclipse.jst.server.tomcat.runtime.85"
         licenseUrl="https://www.apache.org/licenses/LICENSE-2.0.txt"
-        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.73/bin/apache-tomcat-8.5.73.tar.gz"
-        archivePath="apache-tomcat-8.5.73"
-        archiveSize="10581990"
+        archiveUrl="https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.77/bin/apache-tomcat-8.5.77.tar.gz"
+        archivePath="apache-tomcat-8.5.77"
+        archiveSize="10559655"
         fileCount="625"
         os="linux,macosx"/>
     <runtime
         id="org.eclipse.jst.server.tomcat.runtime.85"
         licenseUrl="https://www.apache.org/licenses/LICENSE-2.0.txt"
-        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.73/bin/apache-tomcat-8.5.73-windows-x86.zip"
-        archivePath="apache-tomcat-8.5.73"
-        archiveSize="11625330"
-        fileCount="627"
+        archiveUrl="https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.77/bin/apache-tomcat-8.5.77.zip"
+        archivePath="apache-tomcat-8.5.77"
+        archiveSize="11073862"
+        fileCount="619"
         os="win32"/>
 
     <runtime
         id="org.eclipse.jst.server.tomcat.runtime.90"
         licenseUrl="https://www.apache.org/licenses/LICENSE-2.0.txt"
-        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.55/bin/apache-tomcat-9.0.55.tar.gz"
-        archivePath="apache-tomcat-9.0.55"
-        archiveSize="11579748"
-        fileCount="639"
+        archiveUrl="https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.60/bin/apache-tomcat-9.0.60.tar.gz"
+        archivePath="apache-tomcat-9.0.60"
+        archiveSize="11543791"
+        fileCount="633"
         os="linux,macosx"/>
     <runtime
         id="org.eclipse.jst.server.tomcat.runtime.90"
         licenseUrl="https://www.apache.org/licenses/LICENSE-2.0.txt"
-        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.55/bin/apache-tomcat-9.0.55.zip"
-        archivePath="apache-tomcat-9.0.55"
-        archiveSize="12123853"
-        fileCount="639"
+        archiveUrl="https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.60/bin/apache-tomcat-9.0.60.zip"
+        archivePath="apache-tomcat-9.0.60"
+        archiveSize="12083665"
+        fileCount="633"
         os="win32"/>
 
     <runtime
         id="org.eclipse.jst.server.tomcat.runtime.100"
         licenseUrl="https://www.apache.org/licenses/LICENSE-2.0.txt"
-        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-10/v10.0.13/bin/apache-tomcat-10.0.13.tar.gz"
-        archivePath="apache-tomcat-10.0.13"
-        archiveSize="11927066"
-        fileCount="642"
+        archiveUrl="https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.18/bin/apache-tomcat-10.0.18.tar.gz"
+        archivePath="apache-tomcat-10.0.18"
+        archiveSize="11898821"
+        fileCount="636"
         os="linux,macosx"/>
     <runtime
         id="org.eclipse.jst.server.tomcat.runtime.100"
         licenseUrl="https://www.apache.org/licenses/LICENSE-2.0.txt"
-        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-10/v10.0.13/bin/apache-tomcat-10.0.13.zip"
-        archivePath="apache-tomcat-10.0.13"
-        archiveSize="12471922"
-        fileCount="642"
+        archiveUrl="https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.18/bin/apache-tomcat-10.0.18.zip"
+        archivePath="apache-tomcat-10.0.18"
+        archiveSize="12441230"
+        fileCount="636"
         os="win32"/>
   </extension>
 </plugin>
