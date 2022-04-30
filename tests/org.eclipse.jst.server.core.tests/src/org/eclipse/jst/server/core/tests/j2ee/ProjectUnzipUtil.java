@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -21,20 +21,18 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.eclipse.core.internal.resources.ProjectDescription;
-import org.eclipse.core.internal.resources.ProjectDescriptionReader;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 
 public class ProjectUnzipUtil {
 	private IPath zipLocation;
 	private String[] projectNames;
-	private static final String META_PROJECT_NAME = ".project";
 
 	public ProjectUnzipUtil(IPath aZipLocation, String[] aProjectNames) {
 		zipLocation = aZipLocation;
@@ -43,9 +41,9 @@ public class ProjectUnzipUtil {
 
 	public boolean createProjects() {
 		try {
+			buildProjects();
 			expandZip();
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
-			buildProjects();
 		} catch (CoreException e) {
 			e.printStackTrace();
 			return false;
@@ -53,7 +51,6 @@ public class ProjectUnzipUtil {
 			e.printStackTrace();
 			return false;
 		}
-
 		return true;
 	}
 
@@ -106,20 +103,16 @@ public class ProjectUnzipUtil {
 		}
 	}
 
-	private void buildProjects() throws IOException, CoreException {
-		for (String projectName : projectNames) {
-			ProjectDescriptionReader pd = new ProjectDescriptionReader();
-			IPath projectPath = new Path("/" + projectName + "/" + META_PROJECT_NAME);
-			IPath path = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(projectPath);
-			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-			ProjectDescription description;
+	private void buildProjects() throws CoreException {
+		for (int i = 0; i < projectNames.length; i++) {
+			IWorkspace workspace = ResourcesPlugin.getWorkspace();
+			IProjectDescription description = workspace.newProjectDescription(projectNames[i]);
+			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectNames[i]);
 			try {
-				description = pd.read(path);
 				project.create(description, new NullProgressMonitor());
 				project.open(new NullProgressMonitor());
-			} catch (IOException e) {
-				throw e;
-			} catch (CoreException e) {
+			}
+			catch (CoreException e) {
 				throw e;
 			}
 		}
