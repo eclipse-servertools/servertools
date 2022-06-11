@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2015 IBM Corporation and others.
+ * Copyright (c) 2003, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -239,9 +239,12 @@ public abstract class RuntimeClasspathProviderDelegate {
 		File[] files = dir.listFiles();
 		if (files != null) {
 			for (File file : files) {
+				String filename = file.getName().toLowerCase();
+				if (filename.startsWith("."))
+					continue;
 				if (file.isDirectory() && depth > 0) {
 					addJarFiles(file, list, depth - 1);
-				} else if (file.getAbsolutePath().endsWith(".jar") || file.getAbsolutePath().endsWith(".zip")) {
+				} else if (filename.endsWith(".jar") || filename.endsWith(".zip")) {
 					IPath path = new Path(file.getAbsolutePath());
 					list.add(JavaCore.newLibraryEntry(path, null, null));
 				}
