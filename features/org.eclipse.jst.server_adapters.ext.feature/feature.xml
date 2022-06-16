@@ -14,10 +14,10 @@
 <feature
       id="org.eclipse.jst.server_adapters.ext.feature"
       label="%featureName"
-      version="3.4.400.qualifier"
+      version="3.4.500.qualifier"
       provider-name="%providerName"
       license-feature="org.eclipse.license"
-      license-feature-version="1.0.1.qualifier">
+      license-feature-version="0.0.0">
 
    <description>
       %description
