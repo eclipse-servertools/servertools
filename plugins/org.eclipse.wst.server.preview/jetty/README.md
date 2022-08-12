@@ -5,3 +5,5 @@ leaves us with, as it doesn't require P2 resolution in its processing.
 Since Jetty already builds its jars as bundles, the current setup
 mainly renames the jars and should leave the bundle headers unchanged,
 at least until the signing happens.
+
+To build, run Maven with e.g.: -DjettyVersion=10.0.11 clean p2:site install
