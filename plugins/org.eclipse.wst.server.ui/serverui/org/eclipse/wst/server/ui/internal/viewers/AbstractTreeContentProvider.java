@@ -52,11 +52,11 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 
 	protected abstract void fillTree();
 	
-	protected void fillAdapterTree(final TreeViewer treeViewer, final IProgressMonitor monitor){
+	protected void fillAdapterTree(final TreeViewer treeViewer, final IProgressMonitor monitor) {
 		final Thread t = new Thread(Messages.jobInitializingServersView) {
-		public void run() {
-			deferredAdapterInitialize(treeViewer, monitor);
-		}
+			public void run() {
+				deferredAdapterInitialize(treeViewer, monitor);
+			}
 		};
 		t.setDaemon(true);
 		t.start();

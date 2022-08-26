@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2016 IBM Corporation and others.
+ * Copyright (c) 2003, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -39,7 +39,7 @@ public abstract class AbstractTreeComposite extends Composite {
 	protected Button showAdapters;
 	protected Link prefLink;
 	protected AbstractTreeContentProvider contentProvider;
-	boolean showAdaptersLink = false; // To control the display of Show Downloadable Adpaters Link
+	boolean showAdaptersLink = false; // To control the display of Show Downloadable Adapters Link
 	
 
 	public AbstractTreeComposite(Composite parent) {
@@ -145,7 +145,7 @@ public abstract class AbstractTreeComposite extends Composite {
 	}
 
 	protected void createTree() {
-		tree = new FilteredTree(this, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE, new ServerPatternFilter(), true);
+		tree = new FilteredTree(this, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE, new ServerPatternFilter(), true, true);
 	}
 
 	protected abstract String getDescriptionLabel();

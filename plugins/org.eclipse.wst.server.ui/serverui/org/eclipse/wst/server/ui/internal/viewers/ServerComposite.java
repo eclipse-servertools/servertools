@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2016 IBM Corporation and others.
+ * Copyright (c) 2003, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.util.ConfigureColumns;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -23,17 +24,17 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.IShellProvider;
-import org.eclipse.jface.util.ConfigureColumns;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
@@ -93,7 +94,7 @@ public class ServerComposite extends AbstractTreeComposite implements IShellProv
 		});
 		treeViewer.setLabelProvider(labelProvider);
 		treeViewer.setInput(AbstractTreeContentProvider.ROOT);
-		treeViewer.expandToLevel(1);
+		treeViewer.expandToLevel(2);
 		
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -163,8 +164,10 @@ public class ServerComposite extends AbstractTreeComposite implements IShellProv
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
 						try {
-							if (contentProvider.getInitialSelection(module.getProject()) != null)
-								treeViewer.setSelection(new StructuredSelection(contentProvider.getInitialSelection(module.getProject())), true);
+							Object initial = contentProvider.getInitialSelection(module.getProject());
+							if (initial != null) {
+								treeViewer.setSelection(new StructuredSelection(initial), true);
+							}
 						} catch (Exception e) {
 							// ignore - wizard has already been closed
 						}
@@ -194,5 +197,9 @@ public class ServerComposite extends AbstractTreeComposite implements IShellProv
 		GridData data = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
 		data.horizontalSpan = 1;
 		columnsButton.setLayoutData(data);		
-	}	
+	}
+	@Override
+	public TreeViewer getTreeViewer() {
+		return super.getTreeViewer();
+	}
 }
