@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -270,6 +270,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 				return;
 			monitor.done();
 		} catch (Exception e) {
+			TomcatPlugin.log(e);
 			Trace.trace(Trace.WARNING, "Could not load Tomcat v5.0 configuration from " + path.toOSString() + ": " + e.getMessage());
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotLoadConfiguration, path.toOSString()), e));
 		}
@@ -301,7 +302,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 			// check for catalina.policy to verify that this is a v4.0 config
 			IFile file = folder.getFile("catalina.policy");
 			if (!file.exists())
-				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotLoadConfiguration, folder.getFullPath().toOSString()), null));
+				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotLoadConfigurationMissingFile, folder.getFullPath().toOSString(), file.getFullPath().toOSString()), null));
 	
 			// load server.xml
 			file = folder.getFile("server.xml");
@@ -344,6 +345,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 				throw new Exception("Cancelled");
 			monitor.done();
 		} catch (Exception e) {
+			TomcatPlugin.log(e);
 			Trace.trace(Trace.WARNING, "Could not reload Tomcat v5.0 configuration from: " + folder.getFullPath() + ": " + e.getMessage());
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotLoadConfiguration, folder.getFullPath().toOSString()), e));
 		}
