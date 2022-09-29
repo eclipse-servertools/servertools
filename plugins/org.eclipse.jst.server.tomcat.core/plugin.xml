@@ -780,17 +780,17 @@
     <runtime
         id="org.eclipse.jst.server.tomcat.runtime.90"
         licenseUrl="https://www.apache.org/licenses/LICENSE-2.0.txt"
-        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.62/bin/apache-tomcat-9.0.62.tar.gz"
-        archivePath="apache-tomcat-9.0.62"
-        archiveSize="11560971"
+        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.65/bin/apache-tomcat-9.0.65.tar.gz"
+        archivePath="apache-tomcat-9.0.65"
+        archiveSize="11593900"
         fileCount="633"
         os="linux,macosx"/>
     <runtime
         id="org.eclipse.jst.server.tomcat.runtime.90"
         licenseUrl="https://www.apache.org/licenses/LICENSE-2.0.txt"
-        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.62/bin/apache-tomcat-9.0.62.zip"
-        archivePath="apache-tomcat-9.0.62"
-        archiveSize="12102301"
+        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.65/bin/apache-tomcat-9.0.65.zip"
+        archivePath="apache-tomcat-9.0.65"
+        archiveSize="12131126"
         fileCount="633"
         os="win32"/>
 

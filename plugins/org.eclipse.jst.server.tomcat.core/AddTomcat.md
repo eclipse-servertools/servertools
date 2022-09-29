@@ -42,6 +42,6 @@ When modifying files, specify the current year in the copyright headers where pr
 
 ### Determining values for installable runtimes:
     1. For ostype win32:  filecount = unzip -l apache-tomcat-10.0.13.zip|grep -v '\/$'|grep 'apache-tomcat-'|grep -v ^Archive|wc -l
-                          for A in apache-tomcat*zip ; do echo $A ; unzip -l $A|grep -v '\/$'|grep 'apache-tomcat-'|grep -v ^Archive|wc -l ; done
+                          for A in apache-tomcat*zip ; do ls -l $A ; unzip -l $A|grep -v '\/$'|grep 'apache-tomcat-'|grep -v ^Archive|wc -l ; done
     1. For other ostypes: filecount = tar tvzf apache-tomcat-10.0.13.tar.gz|grep -v '\/$'|wc -l
-                          for A in apache-tomcat*.tar.gz ; do echo $A ; tar tvzf $A|grep -v '\/$'|wc -l;done
+                          for A in apache-tomcat*.tar.gz ; do ls -l $A ; tar tvzf $A|grep -v '\/$'|wc -l;done
