@@ -12,6 +12,9 @@
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.core.internal;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -26,6 +29,7 @@ import org.eclipse.wst.server.core.internal.ServerType;
 public class ConfigurationResourceListener implements IResourceChangeListener {
 
 	private IProject serversProject;
+	private List<String> errorLogged = new ArrayList<>();
 	
 	/**
 	 * Currently, only changes to Tomcat configuration files are detected and the associated
@@ -51,7 +55,13 @@ public class ConfigurationResourceListener implements IResourceChangeListener {
 									IServerType serverType = servers[j].getServerType();
 									String tomcatServerTypePrefix = "org.eclipse.jst.server.tomcat.";
 									// potential NPE arises if the runtime is renamed
-									if (serverType.getId() != null && serverType.getId().length() > tomcatServerTypePrefix.length() && tomcatServerTypePrefix.equals(serverType.getId().substring(0, tomcatServerTypePrefix.length()))) {
+									if (serverType == null) {
+										if (!errorLogged.contains(servers[j].getName())) {
+											errorLogged.add(servers[j].getName());
+											TomcatPlugin.log("Could not determine server type for " + servers[j].getName());
+										}
+									}
+									else if (serverType.getId() != null && serverType.getId().length() > tomcatServerTypePrefix.length() && tomcatServerTypePrefix.equals(serverType.getId().substring(0, tomcatServerTypePrefix.length()))) {
 										IFolder configFolder = servers[j].getServerConfiguration();
 										if (configFolder != null) {
 											if (childDelta[i].getFullPath().equals(configFolder.getFullPath())) {
