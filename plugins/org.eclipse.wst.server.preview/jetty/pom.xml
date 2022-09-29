@@ -42,9 +42,42 @@
                 <!-- specify your dependencies here -->
                 <!-- groupId:artifactId:version -->
                 <artifact>
+                  <id>org.eclipse.jetty:jetty-jndi:${jettyVersion}</id>
+                  <source>true</source>
+                  <excludes>
+                    <exclude>org.eclipse.jetty:*</exclude>
+                    <exclude>org.slf4j:*</exclude>
+                  </excludes>
+                </artifact>
+                <artifact>
                   <id>org.eclipse.jetty:jetty-plus:${jettyVersion}</id>
                   <source>true</source>
                   <excludes>
+                    <exclude>org.eclipse.jetty:*</exclude>
+                    <exclude>org.slf4j:*</exclude>
+                  </excludes>
+                </artifact>
+                <artifact>
+                  <id>org.eclipse.jetty:jetty-webapp:${jettyVersion}</id>
+                  <source>true</source>
+                  <excludes>
+                    <exclude>org.eclipse.jetty:*</exclude>
+                    <exclude>org.slf4j:*</exclude>
+                  </excludes>
+                </artifact>
+                <artifact>
+                  <id>org.eclipse.jetty:jetty-xml:${jettyVersion}</id>
+                  <source>true</source>
+                  <excludes>
+                    <exclude>org.eclipse.jetty:*</exclude>
+                    <exclude>org.slf4j:*</exclude>
+                  </excludes>
+                </artifact>
+                <artifact>
+                  <id>org.eclipse.jetty:jetty-util:${jettyVersion}</id>
+                  <source>true</source>
+                  <excludes>
+                    <exclude>org.eclipse.jetty:*</exclude>
                     <exclude>org.slf4j:*</exclude>
                   </excludes>
                 </artifact>
@@ -52,6 +85,7 @@
                   <id>org.eclipse.jetty:jetty-util-ajax:${jettyVersion}</id>
                   <source>true</source>
                   <excludes>
+                    <exclude>org.eclipse.jetty:*</exclude>
                     <exclude>org.slf4j:*</exclude>
                   </excludes>
                 </artifact>
