@@ -126,6 +126,8 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 					tcConfig = new Tomcat90Configuration(folder);
 				else if (id.indexOf("100") > 0)
 					tcConfig = new Tomcat100Configuration(folder);
+				else if (id.indexOf("101") > 0)
+					tcConfig = new Tomcat101Configuration(folder);
 				else {
 					throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorUnknownVersion, null));
 				}
@@ -185,6 +187,8 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 			tcConfig = new Tomcat90Configuration(folder);
 		else if (id.indexOf("100") > 0)
 			tcConfig = new Tomcat100Configuration(folder);
+		else if (id.indexOf("101") > 0)
+			tcConfig = new Tomcat101Configuration(folder);
 		else {
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorUnknownVersion, null));
 		}

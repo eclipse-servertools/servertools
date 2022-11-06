@@ -37,6 +37,7 @@ public class Messages extends NLS {
 	public static String errorJRETomcat85;
 	public static String errorJRETomcat90;
 	public static String errorJRETomcat100;
+	public static String errorJRETomcat101;
 	public static String warningJRE;
 	public static String warningCantReadConfig;
 	public static String target32runtime;
@@ -64,6 +65,7 @@ public class Messages extends NLS {
 	public static String errorSpec85;
 	public static String errorSpec90;
 	public static String errorSpec100;
+	public static String errorSpec101;
 	public static String portServer;
 	public static String runtimeDirPrepared;
 	public static String publishConfigurationTask;

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2007, 2020 SAS Institute, Inc and others.
+ * Copyright (c) 2007, 2022 SAS Institute, Inc and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -112,6 +112,7 @@ public class TomcatVersionHelper {
 		versionStringMap.put(TomcatPlugin.TOMCAT_85, "8.5.");
 		versionStringMap.put(TomcatPlugin.TOMCAT_90, "9.0.");
 		versionStringMap.put(TomcatPlugin.TOMCAT_100, "10.0.");
+		versionStringMap.put(TomcatPlugin.TOMCAT_101, "10.1.");
 	}
 
 	/**
@@ -924,7 +925,8 @@ public class TomcatVersionHelper {
 			boolean isTomcat80 = tomcatVersion.startsWith("8.0");
 			boolean isTomcat85 = tomcatVersion.startsWith("8.5");
 			boolean isTomcat9 = tomcatVersion.startsWith("9.");
-			boolean isTomcat10 = tomcatVersion.startsWith("10.");
+			boolean isTomcat100 = tomcatVersion.startsWith("10.0");
+			boolean isTomcat101 = tomcatVersion.startsWith("10.1");
 			// care about top-level modules only
 			TomcatPublishModuleVisitor visitor;
 			if (isTomcat80) {
@@ -939,8 +941,12 @@ public class TomcatVersionHelper {
 				visitor = new Tomcat90PublishModuleVisitor(
 						baseDir, tomcatVersion, publishedInstance, loader, enableMetaInfResources);
 			}
-			else if (isTomcat10) {
+			else if (isTomcat100) {
 				visitor = new Tomcat100PublishModuleVisitor(
+						baseDir, tomcatVersion, publishedInstance, loader, enableMetaInfResources);
+			}
+			else if (isTomcat101) {
+				visitor = new Tomcat101PublishModuleVisitor(
 						baseDir, tomcatVersion, publishedInstance, loader, enableMetaInfResources);
 			}
 			else {
@@ -1156,7 +1162,7 @@ public class TomcatVersionHelper {
 		File jarFile = null;
 		
 		if (TomcatPlugin.TOMCAT_60.equals(serverType) || TomcatPlugin.TOMCAT_70.equals(serverType) || TomcatPlugin.TOMCAT_80.equals(serverType)
-				|| TomcatPlugin.TOMCAT_85.equals(serverType) || TomcatPlugin.TOMCAT_90.equals(serverType) || TomcatPlugin.TOMCAT_100.equals(serverType)) {
+				|| TomcatPlugin.TOMCAT_85.equals(serverType) || TomcatPlugin.TOMCAT_90.equals(serverType) || TomcatPlugin.TOMCAT_100.equals(serverType) || TomcatPlugin.TOMCAT_101.equals(serverType)) {
 			catalinaJarPath = installPath.append("lib").append("catalina.jar");
 			jarFile = catalinaJarPath.toFile();
 			// If jar is not at expected location, try alternate location

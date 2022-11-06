@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2021 IBM Corporation and others.
+ * Copyright (c) 2003, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -53,17 +53,17 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 			case 8 :
 				url = "https://javaee.github.io/javaee-spec/javadocs/";
 				break;
-			default :
-				// Jakarta EE uses a different URL for each component specification
+			case 9 :
+				// Jakarta EE 9 uses a different URL for each component specification
 				url = "https://jakarta.ee/specifications/servlet/5.0/apidocs/";
 				if (jarName.contains("jsp")) {
 					url = "https://jakarta.ee/specifications/pages/3.0/apidocs/";
 				}
 				else if (jarName.contains("websocket")) {
-					url = "https://jakarta.ee/specifications/websocket/2.0/apidocs/";
+					url = "https://jakarta.ee/specifications/websocket/2.0/apidocs/"; // URL doesn't currently work
 				}
 				else if (jarName.contains("annotation")) {
-					url = "https://jakarta.ee/specifications/annotations/2.0/apidocs/jakarta.annotation/";
+					url = "https://jakarta.ee/specifications/annotations/2.0/apidocs/jakarta.annotation/"; // URL doesn't currently work
 				}
 				else if (jarName.equals("el-api.jar")) {
 					url = "https://jakarta.ee/specifications/expression-language/4.0/apidocs/";
@@ -71,19 +71,41 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 				else if (jarName.contains("jaspic")) {
 					url = "https://jakarta.ee/specifications/authentication/2.0/apidocs/";
 				}
+				break;
+			default :
+				// Jakarta EE 10 uses a different URL for each component specification
+				url = "https://jakarta.ee/specifications/servlet/6.0/apidocs/";
+				if (jarName.contains("jsp")) {
+					url = "https://jakarta.ee/specifications/pages/3.1/apidocs/";
+				}
+				else if (jarName.contains("websocket")) {
+					url = "https://jakarta.ee/specifications/websocket/2.1/apidocs/"; // URL doesn't currently work
+				}
+				else if (jarName.contains("annotation")) {
+					url = "https://jakarta.ee/specifications/annotations/2.1/apidocs/jakarta.annotation/"; // URL doesn't currently work
+				}
+				else if (jarName.equals("el-api.jar")) {
+					url = "https://jakarta.ee/specifications/expression-language/5.0/apidocs/";
+				}
+				else if (jarName.contains("jaspic")) {
+					url = "https://jakarta.ee/specifications/authentication/3.0/apidocs/";
+				}
 		}
 
 		return url;
 	}
 
 	private String getTomcatJavadocLocation(IRuntime runtime) {
-		/* Default to v10.0 doc. v7.0 is currently the oldest advertised version on the front page */
-		String tomcatDocURL = "http://tomcat.apache.org/tomcat-10.0-doc/api/";
+		/* Default to v10.1 doc. v7.0 is currently the oldest advertised version on the front page */
+		String tomcatDocURL = "http://tomcat.apache.org/tomcat-10.1-doc/api/";
 		String runtimeTypeId = runtime.getRuntimeType().getId();
-		if (runtimeTypeId.indexOf("90") > 0) {
+		if (runtimeTypeId.indexOf("100") > 0) {
+			tomcatDocURL = "http://tomcat.apache.org/tomcat-10.0-doc/api/";
+		}
+		else if (runtimeTypeId.indexOf("90") > 0) {
 			tomcatDocURL = "https://tomcat.apache.org/tomcat-9.0-doc/api/";
 		}
-		if (runtimeTypeId.indexOf("85") > 0) {
+		else if (runtimeTypeId.indexOf("85") > 0) {
 			tomcatDocURL = "https://tomcat.apache.org/tomcat-8.5-doc/api/";
 		}
 		else if (runtimeTypeId.indexOf("80") > 0) {
@@ -111,7 +133,7 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 		if (runtimeId.indexOf("32") > 0) {
 			IPath path = installPath.append("lib");
 			addLibraryEntries(list, path.toFile(), true);
-		} else if (runtimeId.indexOf("60") > 0 || runtimeId.indexOf("70") > 0 || runtimeId.indexOf("80") > 0 || runtimeId.indexOf("85") > 0 || runtimeId.indexOf("90") > 0 || runtimeId.indexOf("100") > 0) {
+		} else if (runtimeId.indexOf("60") > 0 || runtimeId.indexOf("70") > 0 || runtimeId.indexOf("80") > 0 || runtimeId.indexOf("85") > 0 || runtimeId.indexOf("90") > 0 || runtimeId.indexOf("100") > 0 || runtimeId.indexOf("101") > 0) {
 			// TODO May need some flexibility in case the installation has been configured differently
 			// This lib "simplification" may cause issues for some.
 			// Not known yet whether packaged Linux installs will go along.
@@ -133,7 +155,10 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 		 * entire project. -1 represents unknown.
 		 */
 		int eeVersion = -1;
-		if (runtimeId.indexOf("100") > 0) {
+		if (runtimeId.indexOf("101") > 0) {
+			eeVersion = 10;
+		}
+		else if (runtimeId.indexOf("100") > 0) {
 			eeVersion = 9;
 		}
 		else if (runtimeId.indexOf("90") > 0) {
@@ -155,7 +180,10 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 					IProjectFacet webModuleFacet = ProjectFacetsManager.getProjectFacet(JST_WEB_FACET_ID);
 					if (faceted.hasProjectFacet(webModuleFacet)) {
 						String servletVersionStr = faceted.getInstalledVersion(webModuleFacet).getVersionString();
-						if (servletVersionStr.equals("5.0")) {
+						if (servletVersionStr.equals("6.0")) {
+							eeVersion = 10;
+						}
+						else if (servletVersionStr.equals("5.0")) {
 							eeVersion = 9;
 						}
 						else if (servletVersionStr.equals("4.0")) {
@@ -181,11 +209,11 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 			}
 			catch (NumberFormatException e) {
 				// default to the latest
-				eeVersion = 9;
+				eeVersion = 10;
 			}
 			catch (CoreException e) {
 				// default to the latest
-				eeVersion = 9;
+				eeVersion = 10;
 			}
 		}
 
