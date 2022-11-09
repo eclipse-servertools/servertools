@@ -53,27 +53,6 @@
          unpack="false"/>
 
    <plugin
-         id="jakarta.enterprise.cdi-api"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="jakarta.interceptor-api"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="jakarta.transaction-api"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.jetty.jndi"
          download-size="0"
          install-size="0"
@@ -96,13 +75,6 @@
 
    <plugin
          id="org.eclipse.jetty.webapp"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.slf4j.api"
          download-size="0"
          install-size="0"
          version="0.0.0"
