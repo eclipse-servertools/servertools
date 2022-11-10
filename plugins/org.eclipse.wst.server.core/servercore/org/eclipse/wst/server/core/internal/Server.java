@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2018 IBM Corporation and others.
+ * Copyright (c) 2003, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -2429,10 +2429,13 @@ public class Server extends Base implements IServer {
 	protected void resolve() {
 		IServerType oldServerType = serverType;
 		String serverTypeId = getAttribute("server-type-id", (String)null);
-		if (serverTypeId != null)
+		if (serverTypeId != null) {
 			serverType = ServerCore.findServerType(serverTypeId);
-		else
+		}
+		else {
 			serverType = null;
+			ServerPlugin.log(Status.error("No server type was previously recorded for " + getName()));
+		}
 		if (serverType != null && !serverType.equals(oldServerType))
 			serverState = ((ServerType)serverType).getInitialState();
 		

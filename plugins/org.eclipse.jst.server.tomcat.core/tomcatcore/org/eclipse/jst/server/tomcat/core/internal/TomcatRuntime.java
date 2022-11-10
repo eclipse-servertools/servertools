@@ -15,6 +15,7 @@ package org.eclipse.jst.server.tomcat.core.internal;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,7 +94,11 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 				// Ignore if there is a problem
 			}
 		}
-		return getVersionHandler().getRuntimeClasspath(installPath, configPath);
+		ITomcatVersionHandler versionHandler = getVersionHandler();
+		if (versionHandler == null) {
+			return new ArrayList(0);
+		}
+		return versionHandler.getRuntimeClasspath(installPath, configPath);
 	}
 
 	/**
@@ -107,7 +112,11 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 	}
 	
 	private IStatus verifyLocation(IPath loc) {
-		return getVersionHandler().verifyInstallPath(loc);
+		ITomcatVersionHandler versionHandler = getVersionHandler();
+		if (versionHandler == null) {
+			return new Status(IStatus.ERROR, getClass(), "No version handler able to handle location " + loc.toString());
+		}
+		return versionHandler.verifyInstallPath(loc);
 	}
 	
 	/*

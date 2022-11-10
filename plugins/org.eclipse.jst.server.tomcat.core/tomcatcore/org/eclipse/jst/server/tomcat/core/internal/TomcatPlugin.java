@@ -140,36 +140,36 @@ public class TomcatPlugin extends Plugin {
 	 * Return the Tomcat version handler.
 	 * 
 	 * @param id
-	 * @return a version handler
+	 * @return a version handler or <code>null</code> if the version strung is not understood
 	 */
 	public static ITomcatVersionHandler getTomcatVersionHandler(String id) {
 		if (id.indexOf("runtime") > 0)
 			id = id.substring(0, 30) + id.substring(38);
 		//id = id.substring(0, id.length() - 8);
-		if (TOMCAT_32.equals(id))
-			return new Tomcat32Handler();
-		else if (TOMCAT_40.equals(id))
-			return new Tomcat40Handler();
-		else if (TOMCAT_41.equals(id))
-			return new Tomcat41Handler();
-		else if (TOMCAT_50.equals(id))
-			return new Tomcat50Handler();
-		else if (TOMCAT_55.equals(id))
-			return new Tomcat55Handler();
-		else if (TOMCAT_60.equals(id))
-			return new Tomcat60Handler();
-		else if (TOMCAT_70.equals(id))
-			return new Tomcat70Handler();
-		else if (TOMCAT_80.equals(id))
-			return new Tomcat80Handler();
-		else if (TOMCAT_85.equals(id))
-			return new Tomcat85Handler();
-		else if (TOMCAT_90.equals(id))
-			return new Tomcat90Handler();
+		if (TOMCAT_101.equals(id))
+			return new Tomcat101Handler();
 		else if (TOMCAT_100.equals(id))
 			return new Tomcat100Handler();
-		else if (TOMCAT_101.equals(id))
-			return new Tomcat101Handler();
+		else if (TOMCAT_90.equals(id))
+			return new Tomcat90Handler();
+		else if (TOMCAT_85.equals(id))
+			return new Tomcat85Handler();
+		else if (TOMCAT_80.equals(id))
+			return new Tomcat80Handler();
+		else if (TOMCAT_70.equals(id))
+			return new Tomcat70Handler();
+		else if (TOMCAT_60.equals(id))
+			return new Tomcat60Handler();
+		else if (TOMCAT_55.equals(id))
+			return new Tomcat55Handler();
+		else if (TOMCAT_50.equals(id))
+			return new Tomcat50Handler();
+		else if (TOMCAT_41.equals(id))
+			return new Tomcat41Handler();
+		else if (TOMCAT_40.equals(id))
+			return new Tomcat40Handler();
+		else if (TOMCAT_32.equals(id))
+			return new Tomcat32Handler();
 		else
 			return null;
 	}

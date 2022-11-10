@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2018 IBM Corporation and others.
+ * Copyright (c) 2003, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,8 @@ package org.eclipse.wst.server.ui.internal.editor;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.List;
 
@@ -28,6 +30,8 @@ import org.eclipse.jface.fieldassist.*;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.osgi.util.NLS;
@@ -398,8 +402,9 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 			link.addHyperlinkListener(new HyperlinkAdapter() {
 				public void linkActivated(HyperlinkEvent e) {
 					IRuntime runtime = server2.getRuntime();
-					if (runtime != null && ServerUIPlugin.hasWizardFragment(runtime.getRuntimeType().getId()))
+					if (runtime != null && ServerUIPlugin.hasWizardFragment(runtime.getRuntimeType().getId())) {
 						editRuntime(runtime);
+					}
 				}
 			});
 			
@@ -512,13 +517,143 @@ public class OverviewEditorPart extends ServerEditorPart implements IUIControlLi
 		
 		// server configuration path
 		if (server != null && server.getServerType() != null && server.getServerType().hasServerConfiguration()) {
-			createLabel(toolkit, composite, Messages.serverEditorOverviewServerConfigurationPath);
-			
+			Hyperlink openConfigurationLink = toolkit.createHyperlink(composite, Messages.serverEditorOverviewServerConfigurationPath, SWT.NONE);
+			final IServerWorkingCopy server2 = server;
+			openConfigurationLink.addHyperlinkListener(new HyperlinkAdapter() {
+				@Override
+				public void linkActivated(HyperlinkEvent e) {
+					super.linkActivated(e);
+					if (server2.getServerConfiguration() == null || server2.getServerConfiguration().getFullPath() == null) {
+						return;
+					}
+
+					IWorkbenchWindow window = getSite().getWorkbenchWindow();
+					if (window != null) {
+						IWorkbenchPage page = window.getActivePage();
+						if (page != null) {
+							IViewReference[] viewReferences = page.getViewReferences();
+							String[] targetIDs = new String[]{IPageLayout.ID_PROJECT_EXPLORER, "org.eclipse.jdt.ui.PackageExplorer", "org.eclipse.ui.views.ResourceNavigator"};
+							IPath path = server2.getServerConfiguration().getFullPath();
+							IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(path);
+							IResource[] resources = new IResource[]{folder};
+							try {
+								resources = folder.members();
+							}
+							catch (CoreException e2) {
+								// fall back on the folder itself
+							}
+							boolean shown = false;
+							for (int i = 0; i < targetIDs.length && !shown; i++) {
+								for (int j = 0; j < viewReferences.length && !shown; j++) {
+									if (targetIDs[i].equals(viewReferences[j].getId())) {
+										IViewPart view = viewReferences[j].getView(true);
+										if (view != null) {
+											IWorkbenchPart part = view.getViewSite().getPart();
+											try {
+												if (!shown) {
+													try {
+														Method getViewer = part.getClass().getMethod("getViewer", new Class[0]);
+														if (getViewer != null && TreeViewer.class.isAssignableFrom(getViewer.getReturnType())) {
+															view.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(resources));
+															page.activate(view);
+															((TreeViewer) getViewer.invoke(part, new Object[0])).reveal(folder);
+															view.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(folder));
+															shown = true;
+														}
+													}
+													catch (NoSuchMethodException e1) {
+													}
+												}
+												if (!shown) {
+													try {
+														Method getTreeViewer = part.getClass().getMethod("getTreeViewer", null);
+														if (getTreeViewer != null && TreeViewer.class.isAssignableFrom(getTreeViewer.getReturnType())) {
+															view.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(resources));
+															page.activate(view);
+															((TreeViewer) getTreeViewer.invoke(part, new Object[0])).reveal(folder);
+															view.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(folder));
+															shown = true;
+														}
+													}
+													catch (NoSuchMethodException e1) {
+													}
+												}
+												if (!shown) {
+													try {
+														Method getCommonViewer = part.getClass().getMethod("getCommonViewer", null);
+														if (getCommonViewer != null && TreeViewer.class.isAssignableFrom(getCommonViewer.getReturnType())) {
+															view.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(resources));
+															page.activate(view);
+															((TreeViewer) getCommonViewer.invoke(part, new Object[0])).reveal(folder);
+															view.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(folder));
+															shown = true;
+														}
+													}
+													catch (NoSuchMethodException e1) {
+													}
+												}
+											}
+											catch (SecurityException e1) {
+												// ignore
+											}
+											catch (IllegalAccessException e1) {
+												// ignore
+											}
+											catch (IllegalArgumentException e1) {
+												// ignore
+											}
+											catch (InvocationTargetException e1) {
+												// ignore
+											}
+											if (!shown) {
+												view.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(resources));
+												page.activate(view);
+												shown = true;
+											}
+										}
+									}
+								}
+							}
+							if (!shown) {
+								try {
+									IViewPart part = page.showView(IPageLayout.ID_PROJECT_EXPLORER);
+
+									try {
+										Method getCommonViewer = part.getClass().getMethod("getCommonViewer", null);
+										if (getCommonViewer != null && TreeViewer.class.isAssignableFrom(getCommonViewer.getReturnType())) {
+											part.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(resources));
+											page.activate(part);
+											((TreeViewer) getCommonViewer.invoke(part, new Object[0])).reveal(folder);
+											part.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(folder));
+											shown = true;
+										}
+									}
+									catch (NoSuchMethodException e1) {
+									}
+									catch (InvocationTargetException e1) {
+									}
+									catch (IllegalAccessException e1) {
+									}
+									catch (IllegalArgumentException e1) {
+									}
+									part.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(resources));
+								}
+								catch (PartInitException e1) {
+									ServerPlugin.log(Status.error("Could not open view to show server configuration", e1));
+								}
+							}
+						}
+					}
+				}
+			});
+
 			IFolder folder = server.getServerConfiguration();
-			if (folder == null)
+			if (folder == null) {
 				serverConfiguration = toolkit.createText(composite, Messages.elementUnknownName);
-			else
+			}
+			else {
 				serverConfiguration = toolkit.createText(composite, "" + server.getServerConfiguration().getFullPath());
+			}
 			
 			serverConfiguration.setEditable(false);
 			GridData data = new GridData(GridData.FILL_HORIZONTAL);
