@@ -6,7 +6,7 @@
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
@@ -35,15 +35,15 @@ import org.eclipse.wst.server.core.ServerUtil;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 /**
- * 
+ *
  */
 public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfigurationDelegate {
-	// To support running from the workbench, be careful when adding and removing 
-	// bundles to this array. For instance, org.eclipse.wst.server.preview is a 
+	// To support running from the workbench, be careful when adding and removing
+	// bundles to this array. For instance, org.eclipse.wst.server.preview is a
 	// plug-in that can be checked out in the workbench. If it is, the classpath
 	// needs to point to the bin directory of this plug-in. This plug-in is tracked
 	// in the array with CLASSPATH_BIN_INDEX_PREVIEW_SERVER. Therefore, when updating
-	// this array, please ensure the index of org.eclipse.wst.server.preview 
+	// this array, please ensure the index of org.eclipse.wst.server.preview
 	// corresponds to CLASSPATH_BIN_INDEX_PREVIEW_SERVER
 	private static final String[] REQUIRED_BUNDLE_IDS = new String[] {
 		getBundleForClass(javax.servlet.ServletContext.class),
@@ -83,12 +83,12 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 			// throw CoreException();
 			return;
 		}
-		
+
 		if (server.shouldPublish() && ServerCore.isAutoPublishing())
 			server.publish(IServer.PUBLISH_INCREMENTAL, monitor);
-		
+
 		PreviewServerBehaviour previewServer = (PreviewServerBehaviour) server.loadAdapter(PreviewServerBehaviour.class, null);
-		
+
 		int size = REQUIRED_BUNDLE_IDS.length;
 		String[] jars = new String[size];
 		for (int i = 0; i < size; i++) {
@@ -100,41 +100,41 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 				throw new CoreException(new Status(IStatus.ERROR, PreviewPlugin.PLUGIN_ID, "Could not find required bundle " + REQUIRED_BUNDLE_IDS[i]));
 			jars[i] = path.toOSString();
 		}
-		
+
 		// Appending the bin onto the classpath is to support running from the workbench
 		// when org.eclipse.wst.server.preview is checked out
 		Trace.trace(Trace.FINEST,jars[CLASSPATH_BIN_INDEX_PREVIEW_SERVER] + File.separator + "bin");
 		if (new File(jars[CLASSPATH_BIN_INDEX_PREVIEW_SERVER] + File.separator + "bin").exists())
 			jars[CLASSPATH_BIN_INDEX_PREVIEW_SERVER] = jars[CLASSPATH_BIN_INDEX_PREVIEW_SERVER] + File.separator + "bin";
-		
+
 		IVMInstall vm = verifyVMInstall(configuration);
-		
+
 		IVMRunner runner = vm.getVMRunner(mode);
 		if (runner == null)
 			runner = vm.getVMRunner(ILaunchManager.RUN_MODE);
-		
+
 		File workingDir = verifyWorkingDirectory(configuration);
 		String workingDirName = null;
 		if (workingDir != null)
 			workingDirName = workingDir.getAbsolutePath();
-		
+
 		// Program & VM args
-		String pgmArgs = "\"" + previewServer.getTempDirectory().append("preview.xml").toOSString() + "\""; 
+		String pgmArgs = "\"" + previewServer.getTempDirectory().append("preview.xml").toOSString() + "\"";
 			//getProgramArguments(configuration);
 		String vmArgs = getVMArguments(configuration);
 		String[] envp = getEnvironment(configuration);
-		
+
 		ExecutionArguments execArgs = new ExecutionArguments(vmArgs, pgmArgs);
-		
+
 		// VM-specific attributes
 		Map vmAttributesMap = getVMSpecificAttributesMap(configuration);
-		
+
 		// Classpath
 		String[] classpath2 = getClasspath(configuration);
 		String[] classpath = new String[classpath2.length + REQUIRED_BUNDLE_IDS.length];
 		System.arraycopy(jars, 0, classpath, 0, REQUIRED_BUNDLE_IDS.length);
 		System.arraycopy(classpath2, 0, classpath, REQUIRED_BUNDLE_IDS.length, classpath2.length);
-		
+
 		// Create VM config
 		VMRunnerConfiguration runConfig = new VMRunnerConfiguration(MAIN_CLASS, classpath);
 		runConfig.setProgramArguments(execArgs.getProgramArgumentsArray());
@@ -142,20 +142,20 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 		runConfig.setWorkingDirectory(workingDirName);
 		runConfig.setEnvironment(envp);
 		runConfig.setVMSpecificAttributesMap(vmAttributesMap);
-		
+
 		// Bootpath
 		String[] bootpath = getBootpath(configuration);
 		if (bootpath != null && bootpath.length > 0)
 			runConfig.setBootClassPath(bootpath);
-		
+
 		setDefaultSourceLocator(launch, configuration);
-		
+
 		// Launch the configuration
 		previewServer.setupLaunch(launch, mode, monitor);
-		
+
 		if (ILaunchManager.PROFILE_MODE.equals(mode))
 			ServerProfilerDelegate.configureProfiling(launch, vm, runConfig, monitor);
-		
+
 		try {
 			runner.run(runConfig, launch, monitor);
 			previewServer.addProcessListener(launch.getProcesses()[0]);
