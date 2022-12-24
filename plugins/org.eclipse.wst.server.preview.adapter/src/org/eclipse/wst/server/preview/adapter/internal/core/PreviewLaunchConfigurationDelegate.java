@@ -6,7 +6,7 @@
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
@@ -38,16 +38,16 @@ import org.eclipse.wst.server.core.ServerUtil;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 /**
- * 
+ *
  */
 public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
-	// To support running from the workbench, be careful when adding and removing 
-	// bundles to this array. For instance, org.eclipse.wst.server.preview is a 
+	// To support running from the workbench, be careful when adding and removing
+	// bundles to this array. For instance, org.eclipse.wst.server.preview is a
 	// plug-in that can be checked out in the workbench. If it is, the classpath
 	// needs to point to the bin directory of this plug-in. This plug-in is tracked
 	// in the array with CLASSPATH_BIN_INDEX_PREVIEW_SERVER. Therefore, when updating
-	// this array, please ensure the index of org.eclipse.wst.server.preview 
-	// corresponds to CLASSPATH_BIN_INDEX_PREVIEW_SERVER	
+	// this array, please ensure the index of org.eclipse.wst.server.preview
+	// corresponds to CLASSPATH_BIN_INDEX_PREVIEW_SERVER
 	private static final String[] REQUIRED_BUNDLE_IDS = new String[] {
 		getBundleForClass(javax.servlet.ServletContext.class),
 		"org.slf4j.api",
@@ -61,10 +61,10 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 		"org.eclipse.jetty.xml",
 		"org.eclipse.wst.server.preview"
 	};
-	
+
 	// The index of org.eclipse.wst.server.preview in REQUIRED_BUNDLE_IDS, for supporting
 	// running on the workbench when the plug-in is checked out
-	private static final int CLASSPATH_BIN_INDEX_PREVIEW_SERVER = REQUIRED_BUNDLE_IDS.length-1;	
+	private static final int CLASSPATH_BIN_INDEX_PREVIEW_SERVER = REQUIRED_BUNDLE_IDS.length-1;
 
 	/**
 	 * Gets the symbolic name of the bundle that supplies the given class.
@@ -87,12 +87,12 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 			// throw CoreException();
 			return;
 		}
-		
+
 		if (server.shouldPublish() && ServerCore.isAutoPublishing())
 			server.publish(IServer.PUBLISH_INCREMENTAL, monitor);
-		
+
 		PreviewServerBehaviour previewServer = (PreviewServerBehaviour) server.loadAdapter(PreviewServerBehaviour.class, null);
-		
+
 		StringBuffer cp = new StringBuffer();
 		int size = REQUIRED_BUNDLE_IDS.length;
 		for (int i = 0; i < size; i++) {
@@ -102,37 +102,37 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 				path = PreviewRuntime.getJarredPluginPath(b);
 			if (path == null)
 				throw new CoreException(new Status(IStatus.ERROR, PreviewPlugin.PLUGIN_ID, "Could not find required bundle " + REQUIRED_BUNDLE_IDS[i]));
-			
+
 			// run from workbench support
 			if (i == CLASSPATH_BIN_INDEX_PREVIEW_SERVER && path.append("bin").toFile().exists())
 				path = path.append("bin");
-			
+
 			if (i > 0)
 				cp.append(File.pathSeparator);
 			cp.append(path.toOSString());
 		}
-		
+
 		List<String> cmds = new ArrayList<String>();
-		
+
 		// jre
 		File java = getJavaExecutable();
 		if (java == null)
 			throw new CoreException(new Status(IStatus.ERROR, PreviewPlugin.PLUGIN_ID, "Could not find JRE executable"));
-		
+
 		cmds.add(java.getAbsolutePath());
-		
+
 		cmds.add("-classpath");
 		cmds.add(cp.toString());
-		
+
 		cmds.add(MAIN_CLASS);
-		
+
 		cmds.add(previewServer.getTempDirectory().append("preview.xml").toOSString());
-		
+
 		//setDefaultSourceLocator(launch, configuration);
-		
+
 		// launch the configuration
 		previewServer.setupLaunch(launch, mode, monitor);
-		
+
 		try {
 			String[] cmdLine = new String[cmds.size()];
 			cmds.toArray(cmdLine);
@@ -150,7 +150,7 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 
 	/**
 	 * Prepares the command line from the specified array of strings.
-	 * 
+	 *
 	 * @param commandLine
 	 * @return the command line string
 	 */
@@ -179,7 +179,7 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 			} else {
 				buf.append(command.toString());
 			}
-		}	
+		}
 		return buf.toString();
 	}
 
@@ -235,7 +235,7 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 				home = "/Library/Java/Home"; //$NON-NLS-1$
 			}
 		}
-		
+
 		// retrieve the 'java.home' system property. If that directory doesn't exist, return null
 		File javaHome;
 		try {
@@ -245,7 +245,7 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 		}
 		if (!javaHome.exists())
 			return null;
-		
+
 		// find the 'java' executable file under the java home directory. If it can't be
 		// found, return null
 		return findJavaExecutable(javaHome);
@@ -259,9 +259,9 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 				File javaFile = new File(vmInstallLocation, fgCandidateJavaLocations[j] + fgCandidateJavaFiles[i]);
 				if (javaFile.isFile()) {
 					return javaFile;
-				}				
+				}
 			}
-		}		
-		return null;							
+		}
+		return null;
 	}
 }
