@@ -15,4 +15,5 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.wst.server.preview.adapter.internal.core;x-internal:=true,
  org.eclipse.wst.server.preview.adapter.internal.ui;x-internal:=true
-Import-Package: javax.servlet;version="3.1.0"
+Import-Package: javax.servlet;version="3.1.0",
+ org.slf4j;version="[1.7.0, 3)"

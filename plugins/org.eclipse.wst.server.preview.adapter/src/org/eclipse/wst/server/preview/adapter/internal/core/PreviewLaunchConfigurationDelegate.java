@@ -50,7 +50,7 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 	// corresponds to CLASSPATH_BIN_INDEX_PREVIEW_SERVER
 	private static final String[] REQUIRED_BUNDLE_IDS = new String[] {
 		getBundleForClass(javax.servlet.ServletContext.class),
-		"org.slf4j.api",
+		getBundleForClass(org.slf4j.LoggerFactory.class),
 		"org.eclipse.jetty.http",
 		"org.eclipse.jetty.io",
 		"org.eclipse.jetty.security",
