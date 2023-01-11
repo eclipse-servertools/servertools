@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2014 IBM Corporation and others.
+ * Copyright (c) 2003, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -153,8 +153,12 @@ public class RuntimeType implements IRuntimeType {
 
 	public boolean canCreate() {
 		try {
-			String a = element.getAttribute("class");
-			return a != null && a.length() > 0;
+			String a = element.getAttribute("allowCreation");
+			if (a != null && !Boolean.parseBoolean(a))
+				return false;
+
+			String c = element.getAttribute("class");
+			return c != null && c.length() > 0;
 		} catch (Exception e) {
 			return false;
 		}

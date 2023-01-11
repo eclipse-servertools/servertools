@@ -134,6 +134,16 @@ Runtime instances of this type will delegate to instances of this class. Delegat
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="allowCreation" type="boolean">
+            <annotation>
+               <documentation>
+                  While all existing runtimes should remain usable, setting this to &quot;false&quot; will hide it from the New Server Runtime Environment wizard. Useful for cases where the vendor itself no longer supports, or even offers, an older runtime version. Defaults to &quot;true&quot; when absent.
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 
@@ -191,6 +201,15 @@ Runtime instances of this type will delegate to instances of this class. Delegat
       </documentation>
    </annotation>
 
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;code&gt;org.eclipse.wst.server.core.model.RuntimeDelegate&lt;/code&gt; and contains a public 0-arg constructor.
+      </documentation>
+   </annotation>
+
 
    <annotation>
       <appInfo>
@@ -202,15 +221,6 @@ All rights reserved. This program and the accompanying materials are made
 available under the terms of the Eclipse Public License 2.0 which accompanies 
 this distribution, and is available at 
 &lt;a href=&quot;https://www.eclipse.org/legal/epl-2.0/&quot;&gt;https://www.eclipse.org/legal/epl-2.0/&lt;/a&gt;
-      </documentation>
-   </annotation>
-
-   <annotation>
-      <appInfo>
-         <meta.section type="apiInfo"/>
-      </appInfo>
-      <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;code&gt;org.eclipse.wst.server.core.model.RuntimeDelegate&lt;/code&gt; and contains a public 0-arg constructor.
       </documentation>
    </annotation>
 
