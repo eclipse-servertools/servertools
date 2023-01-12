@@ -28,4 +28,4 @@ Import-Package: com.sun.el;version="2.2.0",
  javax.servlet;version="3.1.0",
  javax.servlet.jsp;version="2.2.0",
  org.apache.jasper;version="2.2.2",
- org.slf4j;version="[1.7.0, 3)"
+ slf4j.api;version="[1.7.36, 3)"
