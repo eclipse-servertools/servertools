@@ -768,7 +768,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 								if (fragment2 != null){
 									TaskModel taskModel = fragment2.getTaskModel();
 									taskModel.putObject(LicenseWizardFragment.LICENSE, errorMsgFinal.getErrorDescription());
-									taskModel.putObject(LicenseWizardFragment.LICENSE_ERROR, new Integer(IMessageProvider.ERROR));
+									taskModel.putObject(LicenseWizardFragment.LICENSE_ERROR, Integer.valueOf(IMessageProvider.ERROR));
 								}
 								wizard.update();
 							}
@@ -779,7 +779,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 						if (fragment2 != null){
 							TaskModel taskModel = fragment2.getTaskModel();
 							taskModel.putObject(LicenseWizardFragment.LICENSE, Discovery.getLicenseText(finalServerType.getExtension()));
-							taskModel.putObject(LicenseWizardFragment.LICENSE_ERROR, new Integer(IMessageProvider.NONE));
+							taskModel.putObject(LicenseWizardFragment.LICENSE_ERROR, Integer.valueOf(IMessageProvider.NONE));
 						}
 					}
 				}
