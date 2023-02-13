@@ -6,7 +6,7 @@
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
@@ -106,7 +106,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 	protected IModule module;
 	protected String serverTypeId;
 	protected boolean includeIncompatible;
-	
+
 	protected HostnameComposite manualHostComp;
 	IHostnameSelectionListener hostnameListener;
 	protected Label hostnameLabel;
@@ -115,20 +115,20 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 	protected FieldDecoration fd;
 
 	protected ServerCreationCache cache = new ServerCreationCache();
-	
+
 	private IServerType oldServerType;
-	
+
 	HostnameChangedAction hostnameChangeAction;
 	Timer timer = null;
-	
+
 	private boolean canSupportModule=true;
 
 	// These variables deal with caching server name checks
 	private boolean isServerNameInUse=false;
 	private String cacheServerNameCheck="";
-	
+
 	private HashMap<String,IStatus> serverTypeCriticalFailure = new HashMap<String, IStatus>();
-	
+
 	/**
 	 * Creates a new server and server configuration.  If the initial
 	 * resource selection contains exactly one container resource then it will be
@@ -146,12 +146,12 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		super(parent, SWT.NONE);
 		this.wizard = wizard;
 		this.listener = listener;
-		
+
 		this.moduleType = moduleType;
 		this.module = module;
 		this.serverTypeId = serverTypeId;
 		this.includeIncompatible = includeIncompatible;
-		
+
 		createControl();
 		wizard.setMessage("", IMessageProvider.ERROR); //$NON-NLS-1$
 	}
@@ -172,14 +172,14 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		this.setFont(getParent().getFont());
 		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
 		whs.setHelp(this, ContextIds.NEW_SERVER_WIZARD);
-		
+
 		List<ServerCreationWizardPageExtension> pageExtensionLst = ServerUIPlugin.getServerCreationWizardPageExtensions();
-		// Add the page modifier top section UI. 
+		// Add the page modifier top section UI.
 		for (ServerCreationWizardPageExtension curPageExtension : pageExtensionLst) {
 			curPageExtension.createControl(ServerCreationWizardPageExtension.UI_POSITION.TOP, this);
 			curPageExtension.setUIControlListener(this);
 		}
-		
+
 		serverTypeComposite = new ServerTypeComposite(this, moduleType, serverTypeId, new ServerTypeComposite.ServerTypeSelectionListener() {
 			public void serverTypeSelected(IServerType type2) {
 				handleTypeSelection(type2);
@@ -192,38 +192,38 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		data.minimumHeight = 150;
 		serverTypeComposite.setLayoutData(data);
 		whs.setHelp(serverTypeComposite, ContextIds.NEW_SERVER_TYPE);
-		
-		// Add the page modifier middle section UI. 
+
+		// Add the page modifier middle section UI.
 		for (ServerCreationWizardPageExtension curPageExtension : pageExtensionLst) {
 			curPageExtension.createControl(ServerCreationWizardPageExtension.UI_POSITION.MIDDLE, this);
 		}
-		
+
 		hostnameListener = 	new IHostnameSelectionListener() {
 			public void hostnameSelected(String selectedHostname) {
 				setHost(selectedHostname);
 			}
-	    };		
+	    };
 		hostnameLabel = new Label(this, SWT.NONE);
 		hostnameLabel.setText(Messages.hostname);
 		hostname = new Text(this, SWT.SINGLE | SWT.BORDER | SWT.CANCEL);
 		hostname.setText(HostnameComposite.LOCALHOST);
 		hostnameDecoration = new ControlDecoration(hostname, SWT.TOP | SWT.LEAD);
-		
+
 		GridData data2 = new GridData(GridData.HORIZONTAL_ALIGN_FILL );
 		hostname.setLayoutData(data2);
 		new Label(this, SWT.NONE);
-		
+
 		hostname.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				setHostnameChangeTimer(hostname.getText());
 			}
 		});
-		
+
 		FieldDecorationRegistry registry = FieldDecorationRegistry.getDefault();
 		fd = registry.getFieldDecoration(FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
 		hostnameDecoration.setImage(fd.getImage());
 		hostnameDecoration.setDescriptionText(fd.getDescription());
-		
+
 		hostname.addFocusListener(new FocusListener() {
 			public void focusGained(FocusEvent e) {
 				hostnameDecoration.show();
@@ -233,36 +233,36 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 				hostnameDecoration.hide();
 			}
 		});
-		
+
 		List<String> hosts = ServerUIPlugin.getPreferences().getHostnames();
 		String[] hosts2 = hosts.toArray(new String[hosts.size()]);
 		new AutoCompleteField(hostname, new TextContentAdapter(), hosts2);
-		
+
 		serverNameLabel = new Label(this, SWT.NONE);
 		serverNameLabel.setText(Messages.serverName);
-		
+
 		serverName = new Text(this, SWT.SINGLE | SWT.BORDER | SWT.CANCEL);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		if ((serverName.getStyle() & SWT.CANCEL) != 0)
 			data.horizontalSpan = 2;
 		serverName.setLayoutData(data);
-		
+
 		if (server != null)
 			serverName.setText(server.getName());
-		
+
 		serverName.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				if (updatingServerName)
 					return;
-				
+
 				String name = serverName.getText();
-								
+
 				IServerType selectedServerType = serverTypeComposite.getSelectedServerType();
 				if (!validate(selectedServerType)) {
 					// Do not set the server name if it is invalid
-					return;			
+					return;
 				}
-				
+
 				if (server != null) {
 					server.setName(name);
 					String base = serverName.getText().trim();
@@ -275,20 +275,20 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 						rwc.setName(name);
 					}
 				}
-				
+
 				if (serverNameModified)
 					return;
-				
+
 				serverNameModified = true;
 				if (serverNameToolBar != null)
 					serverNameToolBar.getControl().setVisible(true);
 			}
 		});
-		
+
 		if ((serverName.getStyle() & SWT.CANCEL) == 0) {
 			serverNameToolBar = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL);
 			serverNameToolBar.createControl(this);
-			
+
 			IAction resetDefaultAction = new Action("", IAction.AS_PUSH_BUTTON) {//$NON-NLS-1$
 				public void run() {
 					((ServerWorkingCopy)server).setDefaults(null);
@@ -298,19 +298,19 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 						serverNameToolBar.getControl().setVisible(false);
 				}
 			};
-			
+
 			resetDefaultAction.setToolTipText(Messages.serverNameDefault);
 			resetDefaultAction.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ETOOL_RESET_DEFAULT));
 			resetDefaultAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DTOOL_RESET_DEFAULT));
-			
+
 			serverNameToolBar.add(resetDefaultAction);
 			serverNameToolBar.update(false);
 			serverNameToolBar.getControl().setVisible(false);
 		}
-		
+
 		runtimeLabel = new Label(this, SWT.NONE);
 		runtimeLabel.setText(Messages.wizNewServerRuntime);
-		
+
 		runtimeCombo = new Combo(this, SWT.READ_ONLY);
 		runtimeCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		runtimeCombo.addSelectionListener(new SelectionListener() {
@@ -325,7 +325,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 				widgetSelected(e);
 			}
 		});
-		
+
 		addRuntime = new Link(this, SWT.NONE);
 		addRuntime.setText("<a>" + Messages.addRuntime + "</a>");
 		addRuntime.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
@@ -335,7 +335,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 				showRuntimeWizard(serverType);
 			}
 		});
-		
+
 		configureRuntimes = new Link(this, SWT.NONE);
 		configureRuntimes.setText("<a>" + Messages.configureRuntimes + "</a>");
 		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
@@ -350,12 +350,12 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 				}
 			}
 		});
-		
-		// Add the page modifier bottom section UI. 
+
+		// Add the page modifier bottom section UI.
 		for (ServerCreationWizardPageExtension curPageExtension : pageExtensionLst) {
 			curPageExtension.createControl(ServerCreationWizardPageExtension.UI_POSITION.BOTTOM, this);
 		}
-		
+
 		Dialog.applyDialogFont(this);
 	}
 
@@ -369,7 +369,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		}
 		return toTest;
 	}
-	
+
 	protected boolean showPreferencePage() {
 		String id = "org.eclipse.wst.server.ui.preferencePage";
 		String id2 = "org.eclipse.wst.server.ui.runtime.preferencePage";
@@ -384,7 +384,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		final WizardFragment fragment2 = ServerUIPlugin.getWizardFragment(runtimeType.getId());
 		if (fragment2 == null)
 			return Window.CANCEL;
-		
+
 		try {
 			IRuntimeWorkingCopy runtimeWorkingCopy = runtimeType.createRuntime(null, null);
 			taskModel.putObject(TaskModel.TASK_RUNTIME, runtimeWorkingCopy);
@@ -418,25 +418,25 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 	public String getControlStringValue(String controlId) {
 		if (controlId != null && AbstractUIControl.PROP_HOSTNAME.equals(controlId)) {
 			return host;
-		}	
+		}
 		return null;
 	}
-	
+
 	public void setHost(String host) {
 		this.host = host;
 		if (serverTypeComposite == null)
 			return;
-		
+
 		IServerType selectedServerType = serverTypeComposite.getSelectedServerType();
 		handleHostnameChange(selectedServerType);
 	}
-	
+
 	protected void handleHostnameChange(IServerType serverType) {
 		wizard.setMessage(null, IMessageProvider.NONE);
 		if (serverType instanceof ServerTypeProxy)
 			return;
 		if (!validate(serverType)) {
-			return;// Host name validation failed, so there is no need to continue handling hostname change event			
+			return;// Host name validation failed, so there is no need to continue handling hostname change event
 		}
 		loadServerImpl(serverType);
 		if (!serverNameModified) {
@@ -444,7 +444,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		    ServerUtil.setServerDefaultName(server);
             fireServerWorkingCopyChanged();
 		}
-		
+
 		if (serverName != null && !serverNameModified) {
 			updatingServerName = true;
 			if (server == null)
@@ -453,7 +453,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 				serverName.setText(server.getName());
 			updatingServerName = false;
 		}
-		
+
 		updateRuntimeCombo(serverType);
 		if (serverName != null) {
 			if (server == null) {
@@ -470,8 +470,8 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 	 * Validates the server's host name<br/>
 	 * @param selectedServerType
 	 * @return The results of validation: <br/>
-	 * <b>false</b> in case when the selected server type does not support remote host and the field "hostname" is not recognized as localhost one.  This method will also return false on an invalid server type.<br/> 
-	 * <b>true</b> in any other case   
+	 * <b>false</b> in case when the selected server type does not support remote host and the field "hostname" is not recognized as localhost one.  This method will also return false on an invalid server type.<br/>
+	 * <b>true</b> in any other case
 	 */
 	protected boolean checkHostAndServerType(IServerType selectedServerType){
 		if(selectedServerType == null){
@@ -491,15 +491,15 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 
 		return true;
 	}
-	
-	protected boolean checkServerName(){		
+
+	protected boolean checkServerName(){
 		if (isServerNameInUse()){
 			wizard.setMessage(Messages.errorDuplicateServerName, IMessageProvider.ERROR);
-			return false;			
+			return false;
 		}
 		return true;
 	}
-	
+
 	protected boolean validate(IServerType selectedServerType){
 		wizard.setMessage(null, IMessageProvider.NONE);
 		boolean ret = (checkHostAndServerType(selectedServerType) & checkServerName());
@@ -512,18 +512,18 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * Load a server of the given type.
 	 */
 	protected void loadServerImpl(IServerType serverType) {
 		server = null;
-		
+
 		if (serverType == null)
 			return;
-		
+
 		boolean isLocalhost = SocketUtil.isLocalhost(host);
-		
+
 		server = cache.getCachedServer(serverType, isLocalhost);
 		if (server != null) {
 			server.setHost(host);
@@ -536,7 +536,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			fireServerWorkingCopyChanged();
 			return;
 		}
-		
+
 		try {
 			// try to create runtime first
 			IRuntime run = null;
@@ -552,11 +552,11 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 					runtime = null;
 					updateRuntimes(serverType, isLocalhost);
 					setRuntime(getDefaultRuntime());
-					
+
 					if (server.getServerType() != null && server.getServerType().hasServerConfiguration() && !runtime.getLocation().isEmpty())
 						((ServerWorkingCopy)server).importRuntimeConfiguration(runtime, null);
 				}
-				
+
 				((ServerWorkingCopy)server).setDefaults(null);
 				if( ServerPlugin.isIdInUse(server, server.getName()) ) {
 					server.setAttribute("id", generateUniqueId(server.getName()));
@@ -574,7 +574,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			wizard.setMessage(ce.getLocalizedMessage(), IMessageProvider.ERROR);
 			return; // Return to preserve this error message for clarity
 		}
-			
+
 		if (server == null) {
 			serverTypeCriticalFailure.put(serverType.getId(), new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, Messages.wizErrorServerCreationError, null));
 			wizard.setMessage(Messages.wizErrorServerCreationError, IMessageProvider.ERROR);
@@ -583,13 +583,13 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 
 	/**
 	 * Pick the first non-stub runtime first. Otherwise, just pick the first runtime.
-	 * 
+	 *
 	 * @return the default runtime
 	 */
 	protected IRuntime getDefaultRuntime() {
 		if (runtimes == null || runtimes.length == 0)
 			return null;
-		
+
 		if (runtimes != null) {
 			int size = runtimes.length;
 			for (int i = 0; i < size; i++) {
@@ -603,11 +603,11 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 	protected void updateRuntimes(IServerType serverType, boolean isLocalhost) {
 		if (serverType == null)
 			return;
-		
+
 		IRuntimeType runtimeType = serverType.getRuntimeType();
 		runtimes = ServerUIPlugin.getRuntimes(runtimeType);
 		newRuntime = null;
-		
+
 		if (runtimes != null) {
 			List<IRuntime> runtimes2 = new ArrayList<IRuntime>();
 			int size = runtimes.length;
@@ -621,7 +621,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			if (runtimes.length > 0)
 				return;
 		}
-		
+
 		// create a new runtime
 		try {
 			IRuntimeWorkingCopy runtimeWC = runtimeType.createRuntime(null, null);
@@ -652,9 +652,9 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			setRuntime(null);
 			return;
 		}
-		
+
 		updateRuntimes(serverType, !SocketUtil.isLocalhost(server.getHost()));
-		
+
 		int size = runtimes.length;
 		String[] items = new String[size];
 		for (int i = 0; i < size; i++) {
@@ -663,10 +663,10 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			else
 				items[i] = runtimes[i].getName();
 		}
-		
+
 		if (runtime == null)
 			setRuntime(getDefaultRuntime());
-		
+
 		if (runtimeCombo != null) {
 			runtimeCombo.setItems(items);
 			if (runtimes.length > 0) {
@@ -678,11 +678,11 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 				if (sel < 0) {
 					sel = 0;
 				}
-				
+
 				runtimeCombo.select(sel);
 				setRuntime(runtimes[sel]);
 			}
-			
+
 			IRuntimeType runtimeType = serverType.getRuntimeType();
 			boolean showRuntime = ServerUIPlugin.getRuntimes(runtimeType).length >=1;
 			runtimeCombo.setEnabled(showRuntime);
@@ -709,13 +709,13 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			else {
 				server.setName(serverName.getText());
 			}
-			
+
 			if( ServerPlugin.isIdInUse(server, server.getName()) ) {
 				server.setAttribute("id", generateUniqueId(server.getName()));
 			}
 
 
-			
+
 			// Validate if selected module is supported with the selected runtime
 			wizard.setMessage(null, IMessageProvider.NONE);
 			if( module!=null ){
@@ -736,10 +736,10 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		listener.runtimeSelected(runtime);
 
 	}
-	
+
 	protected void fireServerWorkingCopyChanged() {
 		List<ServerCreationWizardPageExtension> pageExtensionLst = ServerUIPlugin.getServerCreationWizardPageExtensions();
-		// Add the page modifier top section UI. 
+		// Add the page modifier top section UI.
 		for (ServerCreationWizardPageExtension curPageExtension : pageExtensionLst) {
 			curPageExtension.setServerWorkingCopy(getServer());
 		}
@@ -749,7 +749,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 	public boolean canProceed(){
 		return canProceed;
 	}
-	
+
 	public boolean refreshExtension(){
 		if (!(oldServerType instanceof ServerTypeProxy))
 			return true;
@@ -789,17 +789,17 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+
 		return true;
 	}
-	
+
 	protected boolean showDownloadableServerWizard(ServerTypeProxy serverType, IProgressMonitor monitor) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				wizard.setMessage(Messages.downLoadableAdapterDescription, IMessageProvider.INFORMATION);
 			}
 		});
-		
+
 		WizardFragment fragment2 = ServerUIPlugin.getWizardFragment(serverType.getId());
 		if (fragment2 == null)
 			return false;
@@ -812,7 +812,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		fragment2.setTaskModel(taskModel);
 		return true;
 	}
-	
+
 	boolean success ;
 	/**
 	 * Handle the server type selection.
@@ -837,10 +837,10 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			RuntimeTypeProxy runtimeProxy = (RuntimeTypeProxy)serverProxy.getRuntimeType();
 			runtime = new RuntimeProxy(runtimeProxy);
 			server = new ServerWorkingCopy(serverProxy.getId(), null, runtime,serverProxy );
-			
+
 			fireServerWorkingCopyChanged();
 			listener.serverSelected(server);
-			// Fire the property change event. 
+			// Fire the property change event.
 			List<ServerCreationWizardPageExtension> pageExtensionLst = ServerUIPlugin.getServerCreationWizardPageExtensions();
 			for (ServerCreationWizardPageExtension curPageExtension : pageExtensionLst) {
 				curPageExtension.handlePropertyChanged(new PropertyChangeEvent(this, AbstractUIControl.PROP_SERVER_TYPE, oldServerType, serverType));
@@ -848,7 +848,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			wizard.update();
 			try {
 				wizard.run(true, true, new IRunnableWithProgress() {
-					
+
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 						success = showDownloadableServerWizard(serverTypeFinal, monitor);
 				}
@@ -858,11 +858,11 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();
 			}
-			
+
 			if (success){
 				// Update the old server type value.
 				oldServerType = serverTypeFinal;
-				
+
 			}
 			wizard.update();
 
@@ -896,7 +896,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 				//wizard.setMessage("Not the right spec level2", IMessageProvider.ERROR);
 			}
 		}
-		
+
 		if (wrong) {
 			server = null;
 			runtime = null;
@@ -920,7 +920,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 				}
 			}
 		}
-		
+
 		if (serverName != null && !serverNameModified) {
 			updatingServerName = true;
 			if (server == null)
@@ -929,7 +929,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 				serverName.setText(server.getName());
 			updatingServerName = false;
 		}
-		
+
 		updateRuntimeCombo(serverType);
 		if (serverName != null) {
 			if (server == null) {
@@ -940,12 +940,12 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 				serverNameToolBar.getControl().setVisible(serverNameModified);
 			}
 		}
-		
+
 		if (hostname != null && server != null) {
 			hostname.setText(server.getHost());
 		}
 		listener.serverSelected(server);
-		// Fire the property change event. 
+		// Fire the property change event.
 		List<ServerCreationWizardPageExtension> pageExtensionLst = ServerUIPlugin.getServerCreationWizardPageExtensions();
 		for (ServerCreationWizardPageExtension curPageExtension : pageExtensionLst) {
 			curPageExtension.handlePropertyChanged(new PropertyChangeEvent(this, AbstractUIControl.PROP_SERVER_TYPE, oldServerType, serverType));
@@ -959,7 +959,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
-	
+
 		if (visible) {
 			/*if (defaultServerFactory != null) {
 				tree.setSelection(new TreeItem[] { defaultServerFactory });
@@ -968,7 +968,7 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			// force the focus to initially validate the fields
 			handleTypeSelection(null);
 		}
-		
+
 		Control[] c = getChildren();
 		if (c != null) {
 			int size = c.length;
@@ -996,10 +996,10 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		if (newHost == null)
 			return;
 		/*
-		 * Bug 349434, with the fix in Timer.runTimer, the chance that a new 
-		 * host name is the same as the host name will be very rare. In some  
-		 * cases, it still needs to go through processes such as loadServerImpl. 
-		 * It doesn't worth to handle it differently. Therefore, we are not checking 
+		 * Bug 349434, with the fix in Timer.runTimer, the chance that a new
+		 * host name is the same as the host name will be very rare. In some
+		 * cases, it still needs to go through processes such as loadServerImpl.
+		 * It doesn't worth to handle it differently. Therefore, we are not checking
 		 * for the same host name in here.
 		 */
 
@@ -1011,20 +1011,20 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 		if (controlMap == null) {
 			return;
 		}
-		
+
 		for (String curControlId : controlMap.keySet()) {
 			if (AbstractUIControl.PROP_HOSTNAME.equals(curControlId)) {
 				UIControlEntry curControlEntry = controlMap.get(curControlId);
 				if (hostnameLabel != null)
 					hostnameLabel.setEnabled(curControlEntry.isEnabled());
-				
+
 				if (hostname != null){
 					if (curControlEntry.getNewTextValue() != null)
 						hostname.setText(curControlEntry.getNewTextValue());
-					
+
 					hostname.setEnabled(curControlEntry.isEnabled());
 				}
-				
+
 				if (hostnameDecoration != null){
 					if(curControlEntry.isEnabled())
 						hostnameDecoration.show();
@@ -1113,11 +1113,11 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			hostName = host;
 		}
 	}
-	
+
 	/**
 	 * Determines if the server name is in use. The server name that is checked
-	 * is cached to increase performance on multiple calls. 
-	 * 
+	 * is cached to increase performance on multiple calls.
+	 *
 	 * @return true if name is in use, false otherwise
 	 */
 	public boolean isServerNameInUse(){
@@ -1129,13 +1129,13 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			// server name, check to see if the name is in use
 			if (!cacheServerNameCheck.equals(myServerName)){
 				cacheServerNameCheck = myServerName;
-				isServerNameInUse = ServerPlugin.isNameOnlyInUse(server, serverName.getText().trim());				
+				isServerNameInUse = ServerPlugin.isNameOnlyInUse(server, serverName.getText().trim());
 			}
-			return isServerNameInUse;			
+			return isServerNameInUse;
 		}
 
 		// If the widget is null, return false
 		return false;
-	}	
-	
+	}
+
 }
