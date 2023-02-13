@@ -304,7 +304,6 @@ public class NewManualServerComposite extends Composite implements IUIControlLis
 			resetDefaultAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DTOOL_RESET_DEFAULT));
 
 			serverNameToolBar.add(resetDefaultAction);
-			serverNameToolBar.update(false);
 			serverNameToolBar.getControl().setVisible(false);
 		}
 
