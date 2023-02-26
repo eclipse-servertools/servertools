@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.internet.monitor.core.tests;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -25,6 +26,7 @@ import junit.framework.TestSuite;
  * Note: use ports between 22100-22200 to ensure they are free on the build machine.
  */
 public class RequestTestCase extends TestCase {
+	private static final int PORT_ON_BUILD_MACHINE = 22152;
 	private static final String CONNECT_TIMEOUT = "sun.net.client.defaultConnectTimeout";
 	private static final String READ_TIMEOUT = "sun.net.client.defaultReadTimeout";
 
@@ -56,7 +58,7 @@ public class RequestTestCase extends TestCase {
 	protected IMonitor getMonitor() throws CoreException {
 		if (monitor == null) {
 			IMonitorWorkingCopy wc = MonitorCore.createMonitor();
-			wc.setLocalPort(22152);
+			wc.setLocalPort(PORT_ON_BUILD_MACHINE);
 			wc.setRemoteHost("www.eclipse.org");
 			wc.setRemotePort(80);
 			monitor = wc.save();
@@ -134,30 +136,48 @@ public class RequestTestCase extends TestCase {
 		System.setProperty(CONNECT_TIMEOUT, "10000"); // 10000ms = 10s
 		System.setProperty(READ_TIMEOUT, "10000");
 
-		URL url = new URL("http://localhost:22152/");
+		URL url = new URL("http://localhost:" + PORT_ON_BUILD_MACHINE);
 		//URL url = new URL("http://www.eclipse.org/");
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.connect();
 
+		int responseCode = conn.getResponseCode();
+		if (responseCode != 200) {
+			System.out.println("Response code and response message: " + responseCode + " " + conn.getResponseMessage());
+			InputStream errorIn = conn.getErrorStream();
+			if (errorIn != null) {
+				System.out.println("Error Response from www.eclipse.org ----------------------------------");
+				printResponse(errorIn);
+				System.out.println("End of error response from www.eclipse.org ---------------------------");
+			}
+		}
 		// read the server's response
 		System.out.println("Response from www.eclipse.org ----------------------------------");
 		InputStream in = conn.getInputStream();
-		byte[] b = new byte[256];
-		int n = in.read(b);
-		System.out.println(new String(b));
-		while (n >= 0) {
-			n = in.read(b);
-			System.out.println(new String(b));
-		}
-		in.close();
+		printResponse(in);
 		System.out.println("End of response from www.eclipse.org ---------------------------");
 
-		try {
-			System.setProperty(CONNECT_TIMEOUT, connectTimeout);
-			System.setProperty(READ_TIMEOUT, readTimeout);
-		} catch (Exception e) {
-			// ignore - JDK bug on some systems doesn't allow null
+		resetSystemProperty(CONNECT_TIMEOUT, connectTimeout);
+		resetSystemProperty(READ_TIMEOUT, readTimeout);
+	}
+
+	private void resetSystemProperty(String propertyName, String propertyValueToResetTo) {
+		if (propertyValueToResetTo != null) {
+			System.setProperty(propertyName, propertyValueToResetTo);
+		} else {
+			System.clearProperty(propertyName);
 		}
+	}
+
+	private void printResponse(InputStream responseStream) throws IOException {
+		byte[] b = new byte[256];
+		int n = responseStream.read(b);
+		System.out.println(new String(b));
+		while (n >= 0) {
+			n = responseStream.read(b);
+			System.out.println(new String(b));
+		}
+		responseStream.close();
 	}
 
 	public void checkListener() throws Exception {
