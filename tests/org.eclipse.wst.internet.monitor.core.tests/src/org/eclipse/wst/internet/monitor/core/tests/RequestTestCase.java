@@ -6,7 +6,7 @@
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
@@ -29,7 +29,7 @@ public class RequestTestCase extends TestCase {
 	private static final String READ_TIMEOUT = "sun.net.client.defaultReadTimeout";
 
 	private static IMonitor monitor;
-	
+
 	protected static IMonitor monitorEvent;
 	protected static Request requestEvent;
 	protected static int addCount;
@@ -130,15 +130,15 @@ public class RequestTestCase extends TestCase {
 	public void pingMonitor() throws Exception {
 		String connectTimeout = System.getProperty(CONNECT_TIMEOUT);
 		String readTimeout = System.getProperty(READ_TIMEOUT);
-		
+
 		System.setProperty(CONNECT_TIMEOUT, "10000"); // 10000ms = 10s
 		System.setProperty(READ_TIMEOUT, "10000");
-		
+
 		URL url = new URL("http://localhost:22152/");
 		//URL url = new URL("http://www.eclipse.org/");
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.connect();
-		
+
 		// read the server's response
 		System.out.println("Response from www.eclipse.org ----------------------------------");
 		InputStream in = conn.getInputStream();
@@ -151,7 +151,7 @@ public class RequestTestCase extends TestCase {
 		}
 		in.close();
 		System.out.println("End of response from www.eclipse.org ---------------------------");
-		
+
 		try {
 			System.setProperty(CONNECT_TIMEOUT, connectTimeout);
 			System.setProperty(READ_TIMEOUT, readTimeout);
@@ -178,35 +178,35 @@ public class RequestTestCase extends TestCase {
 		// within a minute
 		assertTrue(Math.abs(requestEvent.getDate().getTime() - System.currentTimeMillis()) < 1000 * 60);
 	}
-	
+
 	public void verifyLocalPort() throws Exception {
 		assertEquals(requestEvent.getLocalPort(), 22152);
 	}
-	
+
 	public void verifyRemoteHost() throws Exception {
 		assertEquals(requestEvent.getRemoteHost(), "www.eclipse.org");
 	}
-	
+
 	public void verifyRemotePort() throws Exception {
 		assertEquals(requestEvent.getRemotePort(), 80);
 	}
-	
+
 	public void verifyRequest() throws Exception {
 		assertNotNull(requestEvent.getRequest(Request.ALL));
 	}
-	
+
 	public void verifyResponse() throws Exception {
 		assertNotNull(requestEvent.getResponse(Request.ALL));
 	}
-	
+
 	public void verifyResponseTime() throws Exception {
 		assertTrue("ResponseTime was " + requestEvent.getResponseTime(), requestEvent.getResponseTime() > 0);
 	}
-	
+
 	public void checkRequest() throws Exception {
 		assertNotNull(requestEvent.getName());
 	}
-	
+
 	public void checkRequest2() throws Exception {
 		assertNull(requestEvent.getProperty("test"));
 	}
@@ -214,19 +214,19 @@ public class RequestTestCase extends TestCase {
 	/*public void test19CheckRequest() throws Exception {
 		assert(requestEvent.getProperty(""));
 	}*/
-	
+
 	public void addToRequest() throws Exception {
 		requestEvent.addToRequest(new byte[0]);
 	}
-	
+
 	public void addToResponse() throws Exception {
 		requestEvent.addToResponse(new byte[0]);
 	}
-	
+
 	public void setProperty() throws Exception {
 		requestEvent.setProperty("test", null);
 	}
-	
+
 	public void getAdapter() throws Exception {
 		assertNull(requestEvent.getAdapter(String.class));
 	}
@@ -236,17 +236,17 @@ public class RequestTestCase extends TestCase {
 		monitor.stop();
 		assertTrue(!monitor.isRunning());
 	}
-	
+
 	public void removeListener() throws Exception {
 		monitor.removeRequestListener(listener);
 	}
-	
+
 	public void testCreateRequest() {
 		new Request(null, null, 0, null, 0);
 	}
-	
+
 	public void testTestProtectedMethods() {
-		Request mr = new Request(null, null, 0, null, 0) {			
+		Request mr = new Request(null, null, 0, null, 0) {
 			public Object getAdapter(Class c) {
 				setName("test");
 				setRequest(null);
