@@ -52,24 +52,24 @@ public class AcceptThread {
 				}
 				return;
 			}
-			
+
 			while (alive) {
 				try {
 					// accept the connection from the client
 					Socket localSocket = serverSocket.accept();
-					
+
 					int timeout = monitor.getTimeout();
 					if (timeout != 0)
 						localSocket.setSoTimeout(timeout);
-					
+
 					try {
 						// connect to the remote server
 						Socket remoteSocket = new Socket();
 						if (timeout != 0)
 							remoteSocket.setSoTimeout(timeout);
-						
+
 						remoteSocket.connect(new InetSocketAddress(monitor.getRemoteHost(), monitor.getRemotePort()), timeout);
-						
+
 						// relay the call through
 						String protocolId = monitor.getProtocol();
 						ProtocolAdapter adapter = MonitorPlugin.getInstance().getProtocolAdapter(protocolId);
@@ -95,14 +95,14 @@ public class AcceptThread {
 
 	/**
 	 * AcceptThread constructor.
-	 * 
+	 *
 	 * @param monitor a monitor
 	 */
 	public AcceptThread(IMonitor monitor) {
 		super();
 		this.monitor = monitor;
 	}
-	
+
 	/**
 	 * Start the server.
 	 */
@@ -113,9 +113,9 @@ public class AcceptThread {
 		thread.setDaemon(true);
 		thread.setPriority(Thread.NORM_PRIORITY + 1);
 		thread.start();
-		
+
 		Thread.yield();
-		
+
 		// wait up to 2 seconds for initialization
 		int i = 0;
 		while (serverSocket == null && i < 10) {
@@ -130,7 +130,7 @@ public class AcceptThread {
 
 	/**
 	 * Returns <code>true</code> if the server is running.
-	 * 
+	 *
 	 * @return <code>true</code> if the server is running, and <code>false</code>
 	 *    otherwise
 	 */
@@ -145,7 +145,7 @@ public class AcceptThread {
 		try {
 			alive = false;
 			thread = null;
-			
+
 			String protocolId = monitor.getProtocol();
 		   ProtocolAdapter adapter = MonitorPlugin.getInstance().getProtocolAdapter(protocolId);
 			adapter.disconnect(monitor);
@@ -157,7 +157,7 @@ public class AcceptThread {
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns true if this port is in use.
 	 *

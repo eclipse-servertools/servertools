@@ -6,7 +6,7 @@
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
@@ -17,7 +17,7 @@ import java.net.Socket;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitor;
 /**
- * 
+ *
  */
 public class ProtocolAdapter implements IProtocolAdapter {
 	protected IConfigurationElement element;
@@ -44,7 +44,7 @@ public class ProtocolAdapter implements IProtocolAdapter {
 	protected ProtocolAdapterDelegate getDelegate() {
 		if (delegate != null)
 			return delegate;
-		
+
 		try {
 			delegate = (ProtocolAdapterDelegate) element.createExecutableExtension("class");
 		} catch (Exception e) {
@@ -57,7 +57,7 @@ public class ProtocolAdapter implements IProtocolAdapter {
 
 	/**
 	 * Connect with the protocol.
-	 * 
+	 *
 	 * @param monitor a monitor
 	 * @param in an inbound socket
 	 * @param out an outbound socket
@@ -69,7 +69,7 @@ public class ProtocolAdapter implements IProtocolAdapter {
 
 	/**
 	 * Disconnect from the sockets.
-	 * 
+	 *
 	 * @param monitor a monitor
 	 * @throws IOException
 	 */
