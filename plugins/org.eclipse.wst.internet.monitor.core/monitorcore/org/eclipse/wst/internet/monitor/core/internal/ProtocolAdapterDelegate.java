@@ -14,6 +14,7 @@ package org.eclipse.wst.internet.monitor.core.internal;
 
 import java.io.IOException;
 import java.net.Socket;
+
 import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitor;
 /**
  * Abstract base class for protocol adapter delegates, which provide the
@@ -85,4 +86,8 @@ public abstract class ProtocolAdapterDelegate {
 	 * @throws IOException
 	 */
 	public abstract void disconnect(IMonitor monitor) throws IOException;
+
+	public Socket createRemoteSocket() throws IOException {
+		return new Socket();
+	}
 }

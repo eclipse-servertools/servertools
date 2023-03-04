@@ -16,6 +16,10 @@
     id="HTTP"
     class="org.eclipse.wst.internet.monitor.core.internal.http.HTTPProtocolAdapter"
     name="%HTTP"/>
+  <protocolAdapter
+    id="HTTPS"
+    class="org.eclipse.wst.internet.monitor.core.internal.http.HTTPSProtocolAdapter"
+    name="%HTTPS"/>
 </extension>
 
 </plugin>

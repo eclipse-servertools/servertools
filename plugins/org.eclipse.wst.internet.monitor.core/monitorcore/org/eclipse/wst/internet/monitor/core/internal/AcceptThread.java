@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -29,8 +29,11 @@ public class AcceptThread {
 	protected Thread thread;
 
 	class ServerThread extends Thread {
-		public ServerThread() {
+		private ProtocolAdapter protocolAdapter;
+
+		public ServerThread(ProtocolAdapter protocolAdapter) {
 			super("TCP/IP Monitor");
+			this.protocolAdapter = protocolAdapter;
 		}
 
 		/**
@@ -64,7 +67,7 @@ public class AcceptThread {
 
 					try {
 						// connect to the remote server
-						Socket remoteSocket = new Socket();
+						Socket remoteSocket = protocolAdapter.createRemoteSocket();
 						if (timeout != 0)
 							remoteSocket.setSoTimeout(timeout);
 
@@ -109,7 +112,8 @@ public class AcceptThread {
 	public void startServer() {
 		if (thread != null)
 			return;
-		thread = new ServerThread();
+		ProtocolAdapter protocolAdapter = getProtocolAdapter();
+		thread = new ServerThread(protocolAdapter);
 		thread.setDaemon(true);
 		thread.setPriority(Thread.NORM_PRIORITY + 1);
 		thread.start();
@@ -146,8 +150,7 @@ public class AcceptThread {
 			alive = false;
 			thread = null;
 
-			String protocolId = monitor.getProtocol();
-		   ProtocolAdapter adapter = MonitorPlugin.getInstance().getProtocolAdapter(protocolId);
+			ProtocolAdapter adapter = getProtocolAdapter();
 			adapter.disconnect(monitor);
 			if (serverSocket != null)
 				serverSocket.close();
@@ -183,5 +186,12 @@ public class AcceptThread {
 		}
 
 		return false;
+	}
+
+
+	private ProtocolAdapter getProtocolAdapter() {
+		String protocolId = monitor.getProtocol();
+		ProtocolAdapter adapter = MonitorPlugin.getInstance().getProtocolAdapter(protocolId);
+		return adapter;
 	}
 }

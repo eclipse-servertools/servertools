@@ -14,6 +14,7 @@ package org.eclipse.wst.internet.monitor.core.internal;
 
 import java.io.IOException;
 import java.net.Socket;
+
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitor;
 /**
@@ -75,5 +76,9 @@ public class ProtocolAdapter implements IProtocolAdapter {
 	 */
 	public void disconnect(IMonitor monitor) throws IOException {
 		getDelegate().disconnect(monitor);
+	}
+
+	public Socket createRemoteSocket() throws IOException {
+		return getDelegate().createRemoteSocket();
 	}
 }
