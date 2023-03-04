@@ -27,6 +27,7 @@ import junit.framework.TestSuite;
  */
 public class RequestTestCase extends TestCase {
 	private static final int PORT_ON_BUILD_MACHINE = 22152;
+	private static final int REMOTE_PORT = 443;
 	private static final String CONNECT_TIMEOUT = "sun.net.client.defaultConnectTimeout";
 	private static final String READ_TIMEOUT = "sun.net.client.defaultReadTimeout";
 
@@ -60,7 +61,8 @@ public class RequestTestCase extends TestCase {
 			IMonitorWorkingCopy wc = MonitorCore.createMonitor();
 			wc.setLocalPort(PORT_ON_BUILD_MACHINE);
 			wc.setRemoteHost("www.eclipse.org");
-			wc.setRemotePort(80);
+			wc.setProtocol("HTTPS");
+			wc.setRemotePort(REMOTE_PORT);
 			monitor = wc.save();
 		}
 		return monitor;
@@ -208,7 +210,7 @@ public class RequestTestCase extends TestCase {
 	}
 
 	public void verifyRemotePort() throws Exception {
-		assertEquals(requestEvent.getRemotePort(), 80);
+		assertEquals(requestEvent.getRemotePort(), REMOTE_PORT);
 	}
 
 	public void verifyRequest() throws Exception {
