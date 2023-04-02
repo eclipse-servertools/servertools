@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Automatic-Module-Name: org.eclipse.wst.server.ui
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.server.ui; singleton:=true
-Bundle-Version: 1.6.0.qualifier
+Bundle-Version: 1.6.100.qualifier
 Bundle-Activator: org.eclipse.wst.server.ui.internal.ServerUIPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin

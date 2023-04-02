@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2011 IBM Corporation and others.
+ * Copyright (c) 2005, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
@@ -30,7 +31,6 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ResourceTransfer;
-import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.IServer;
@@ -84,7 +84,7 @@ public class ServersViewDropAdapter extends ViewerDropAdapter {
 
 	protected boolean doSel(IServer server, Object data) {
 		// check if the selection is a project (module) that we can add to the server
-		IProject project = (IProject) Platform.getAdapterManager().getAdapter(data, IProject.class);
+		IProject project = Platform.getAdapterManager().getAdapter(data, IProject.class);
 		if (project != null) {
 			IModule[] modules = ServerUtil.getModules(project);
 			if (modules != null && modules.length == 1) {
@@ -164,7 +164,7 @@ public class ServersViewDropAdapter extends ViewerDropAdapter {
 			return true;
 		if (ResourceTransfer.getInstance().isSupportedType(transferType))
 			return true;
-		if (LocalSelectionTransfer.getInstance().isSupportedType(transferType))
+		if (LocalSelectionTransfer.getTransfer().isSupportedType(transferType))
 			return true;
 		
 		return false;

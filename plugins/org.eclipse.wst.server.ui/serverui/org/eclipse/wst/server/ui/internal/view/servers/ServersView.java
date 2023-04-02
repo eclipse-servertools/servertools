@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.bindings.TriggerSequence;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -38,7 +39,6 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.model.ServerDelegate;
@@ -118,7 +118,7 @@ public class ServersView extends ViewPart {
 		column3.setWidth(cols[2]);
 		column3.addSelectionListener(getHeaderListener(2));
 		
-		IContextService contextSupport = (IContextService)getSite().getService(IContextService.class);
+		IContextService contextSupport = getSite().getService(IContextService.class);
 		contextSupport.activateContext(SERVERS_VIEW_CONTEXT);
 		
 		deferInitialization();
@@ -285,7 +285,7 @@ public class ServersView extends ViewPart {
 		// create copy, paste, and delete actions
 		pasteAction = new PasteAction(shell, provider, tableViewer.clipboard);
 		copyAction = new CopyAction(provider, tableViewer.clipboard, pasteAction);
-		deleteAction = new DeleteAction(shell, provider);
+		deleteAction = new GlobalDeleteAction(shell, provider);
 		// Create a second delete action that can act in modules, when the delete key is pressed
 		// the old DeleteAction only works for servers see bug# 286960
 		globalDeleteAction = new GlobalDeleteAction(shell, provider);
@@ -452,7 +452,7 @@ public class ServersView extends ViewPart {
     */
    protected void initDragAndDrop() {
 		int ops = DND.DROP_COPY;
-		Transfer[] transfers = new Transfer[] { LocalSelectionTransfer.getInstance(),
+		Transfer[] transfers = new Transfer[] { LocalSelectionTransfer.getTransfer(),
 			ResourceTransfer.getInstance(), FileTransfer.getInstance() };
 		//tableViewer.addDragSupport(ops, transfers, new ServersViewDragAdapter(viewer));
 		tableViewer.addDropSupport(ops | DND.DROP_DEFAULT, transfers, new ServersViewDropAdapter(tableViewer));
