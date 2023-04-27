@@ -15,7 +15,7 @@
 <feature
       id="org.eclipse.wst.server_adapters.feature"
       label="%featureName"
-      version="3.2.1200.qualifier"
+      version="3.2.1300.qualifier"
       provider-name="%providerName"
       license-feature="org.eclipse.license"
       license-feature-version="1.0.1.qualifier">
@@ -42,6 +42,7 @@
      <import plugin="org.eclipse.jetty.http"/>
      <import plugin="org.eclipse.jetty.io"/>
      <import plugin="org.eclipse.jetty.xml"/>
+     <import plugin="jakarta.transaction-api"/>
    </requires>
    -->
 
