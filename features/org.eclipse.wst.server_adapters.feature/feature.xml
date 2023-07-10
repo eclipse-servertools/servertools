@@ -15,7 +15,7 @@
 <feature
       id="org.eclipse.wst.server_adapters.feature"
       label="%featureName"
-      version="3.2.1300.qualifier"
+      version="3.2.1400.qualifier"
       provider-name="%providerName"
       license-feature="org.eclipse.license"
       license-feature-version="1.0.1.qualifier">
@@ -69,6 +69,20 @@
 
    <plugin
          id="jakarta.transaction-api"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="jakarta.enterprise.cdi-api"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="jakarta.interceptor-api"
          download-size="0"
          install-size="0"
          version="0.0.0"
