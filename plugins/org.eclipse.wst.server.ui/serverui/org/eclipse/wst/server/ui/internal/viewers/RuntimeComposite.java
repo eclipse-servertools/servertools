@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2013 IBM Corporation and others.
+ * Copyright (c) 2003, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -35,6 +35,7 @@ public class RuntimeComposite extends AbstractTableComposite {
 	
 	public interface RuntimeSelectionListener {
 		public void runtimeSelected(IRuntime runtime);
+		public void runtimeDoubleClicked(IRuntime runtime);
 	}
 	
 	class RuntimeViewerSorter extends ViewerSorter {
@@ -127,6 +128,17 @@ public class RuntimeComposite extends AbstractTableComposite {
 				else
 					selection = null;
 				listener.runtimeSelected(selection);
+			}
+		});
+
+		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				Object obj = getSelection(event.getSelection());
+				if (obj instanceof IRuntime) {
+					selection = (IRuntime) obj;
+					listener.runtimeDoubleClicked(selection);
+				}
 			}
 		});
 		

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2013 IBM Corporation and others.
+ * Copyright (c) 2003, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -98,6 +98,17 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		label.setText(Messages.preferenceRuntimesTable);
 		
 		runtimeComp = new RuntimeComposite(composite, SWT.NONE, new RuntimeComposite.RuntimeSelectionListener() {
+			@Override
+			public void runtimeDoubleClicked(IRuntime runtime) {
+				IRuntimeWorkingCopy runtimeWorkingCopy = runtime.createWorkingCopy();
+				if (showWizard(runtimeWorkingCopy) != Window.CANCEL) {
+					try {
+						runtimeComp.refresh(runtime);
+					} catch (Exception ex) {
+						// ignore
+					}
+				}
+			}
 			public void runtimeSelected(IRuntime runtime) {
 				if (runtime == null) {
 					edit.setEnabled(false);
