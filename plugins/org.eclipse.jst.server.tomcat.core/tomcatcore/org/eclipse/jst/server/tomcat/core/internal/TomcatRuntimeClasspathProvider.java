@@ -33,7 +33,7 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 	private static final String JST_WEB_FACET_ID = "jst.web";
 
 	private final String getStandardsJavadocLocation(int eeVersion, String jarName) {
-		String url = "https://jakarta.ee/specifications/servlet/5.0/apidocs/";
+		String url = "https://jakarta.ee/specifications/servlet/6.0/apidocs/";
 		switch (eeVersion) {
 			case 3 :
 				url = "https://docs.oracle.com/javaee/3/api/";
@@ -72,6 +72,7 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 					url = "https://jakarta.ee/specifications/authentication/2.0/apidocs/";
 				}
 				break;
+			case 10:
 			default :
 				// Jakarta EE 10 uses a different URL for each component specification
 				url = "https://jakarta.ee/specifications/servlet/6.0/apidocs/";
@@ -99,7 +100,10 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 		/* Default to v10.1 doc. v7.0 is currently the oldest advertised version on the front page */
 		String tomcatDocURL = "http://tomcat.apache.org/tomcat-10.1-doc/api/";
 		String runtimeTypeId = runtime.getRuntimeType().getId();
-		if (runtimeTypeId.indexOf("100") > 0) {
+		if (runtimeTypeId.indexOf("101") > 0) {
+			tomcatDocURL = "http://tomcat.apache.org/tomcat-10.1-doc/api/";
+		}
+		else if (runtimeTypeId.indexOf("100") > 0) {
 			tomcatDocURL = "http://tomcat.apache.org/tomcat-10.0-doc/api/";
 		}
 		else if (runtimeTypeId.indexOf("90") > 0) {

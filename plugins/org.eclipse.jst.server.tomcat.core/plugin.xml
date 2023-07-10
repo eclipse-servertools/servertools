@@ -871,17 +871,17 @@
     <runtime
         id="org.eclipse.jst.server.tomcat.runtime.101"
         licenseUrl="https://www.apache.org/licenses/LICENSE-2.0.txt"
-        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.8/bin/apache-tomcat-10.1.8.tar.gz"
-        archivePath="apache-tomcat-10.1.8"
-        archiveSize="12088035"
+        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.10/bin/apache-tomcat-10.1.10.tar.gz"
+        archivePath="apache-tomcat-10.1.10"
+        archiveSize="12139568"
         fileCount="636"
         os="linux,macosx"/>
     <runtime
         id="org.eclipse.jst.server.tomcat.runtime.101"
         licenseUrl="https://www.apache.org/licenses/LICENSE-2.0.txt"
-        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.8/bin/apache-tomcat-10.1.8.zip"
-        archivePath="apache-tomcat-10.1.8"
-        archiveSize="12643379"
+        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.10/bin/apache-tomcat-10.1.10.zip"
+        archivePath="apache-tomcat-10.1.10"
+        archiveSize="12695268"
         fileCount="636"
         os="win32"/>
   </extension>
