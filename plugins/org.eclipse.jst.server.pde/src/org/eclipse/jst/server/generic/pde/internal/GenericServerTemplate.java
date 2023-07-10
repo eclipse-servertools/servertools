@@ -1,14 +1,15 @@
-/***************************************************************************************************
- * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
- * accompanying materials are made available under the terms of the Eclipse Public License 2.0
- * which accompanies this distribution, and is available at
+/********************************************************************************
+ * Copyright (c) 2005, 2023 Eteration A.S., Gorkem Ercan, and others.
+ * All rights reserved. This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0 which
+ * accompanies this distribution, and is available at
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
  * 
  * Contributors: Gorkem Ercan - initial API and implementation
  *               
- **************************************************************************************************/
+ *******************************************************************************/
 package org.eclipse.jst.server.generic.pde.internal;
 
 import java.net.URL;
@@ -24,7 +25,7 @@ import org.eclipse.pde.core.plugin.IPluginElement;
 import org.eclipse.pde.core.plugin.IPluginExtension;
 import org.eclipse.pde.core.plugin.IPluginModelFactory;
 import org.eclipse.pde.core.plugin.IPluginReference;
-import org.eclipse.pde.internal.ui.wizards.templates.PluginReference;
+import org.eclipse.pde.ui.templates.PluginReference;
 import org.eclipse.pde.ui.templates.OptionTemplateSection;
 import org.eclipse.pde.ui.templates.TemplateOption;
 /**
