@@ -34,7 +34,7 @@
         <executions>
           <execution>
             <phase>package</phase>
-            <id>source-feature</id>
+            <id>feature-source</id>
             <goals>
               <goal>feature-source</goal>
             </goals>
