@@ -90,6 +90,14 @@
                   </excludes>
                 </artifact>
                 <artifact>
+                  <id>org.eclipse.jetty:jetty-logging:${jettyVersion}</id>
+                  <source>true</source>
+                  <excludes>
+                    <exclude>org.eclipse.jetty:*</exclude>
+                    <exclude>org.slf4j:*</exclude>
+                  </excludes>
+                </artifact>
+                <artifact>
                   <id>jakarta.transaction:jakarta.transaction-api:1.3.3</id>
                   <source>true</source>
                 </artifact>

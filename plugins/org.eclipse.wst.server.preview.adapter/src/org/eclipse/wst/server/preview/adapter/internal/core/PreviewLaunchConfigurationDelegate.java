@@ -15,6 +15,7 @@ package org.eclipse.wst.server.preview.adapter.internal.core;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -59,6 +60,7 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 		"org.eclipse.jetty.util",
 		"org.eclipse.jetty.webapp",
 		"org.eclipse.jetty.xml",
+		"org.apache.aries.spifly.dynamic.bundle",
 		"org.eclipse.wst.server.preview"
 	};
 
@@ -70,7 +72,8 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 	 * Gets the symbolic name of the bundle that supplies the given class.
 	 */
 	private static String getBundleForClass(Class<?> cls) {
-		return FrameworkUtil.getBundle(cls).getSymbolicName();
+		Bundle bundle = FrameworkUtil.getBundle(cls);
+		return bundle.getSymbolicName() + ":" + bundle.getVersion();
 	}
 
 	private static final String[] fgCandidateJavaFiles = {"javaw", "javaw.exe", "java",
@@ -96,7 +99,15 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 		StringBuffer cp = new StringBuffer();
 		int size = REQUIRED_BUNDLE_IDS.length;
 		for (int i = 0; i < size; i++) {
-			Bundle b = Platform.getBundle(REQUIRED_BUNDLE_IDS[i]);
+			String[] bundleInfo = REQUIRED_BUNDLE_IDS[i].split(":");
+			String version = null;
+			if (bundleInfo.length > 1) {
+				version = bundleInfo[1];
+			}
+			Bundle[] bundles = Platform.getBundles(bundleInfo[0], version);
+			// to use the lowest/exact version match
+			Arrays.sort(bundles, (bundle1, bundle2) -> bundle1.getVersion().compareTo(bundle2.getVersion()));
+			Bundle b = bundles[0];
 			IPath path = null;
 			if (b != null)
 				path = PreviewRuntime.getJarredPluginPath(b);

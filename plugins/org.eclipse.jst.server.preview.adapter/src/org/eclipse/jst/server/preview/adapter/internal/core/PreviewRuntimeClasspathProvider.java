@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2018 IBM Corporation and others.
+ * Copyright (c) 2007, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@
 package org.eclipse.jst.server.preview.adapter.internal.core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -44,7 +45,8 @@ public class PreviewRuntimeClasspathProvider extends RuntimeClasspathProviderDel
 	 * Gets the symbolic name of the bundle that supplies the given class.
 	 */
 	private static String getBundleForClass(Class<?> cls) {
-		return FrameworkUtil.getBundle(cls).getSymbolicName();
+		Bundle bundle = FrameworkUtil.getBundle(cls);
+		return bundle.getSymbolicName() + ":" + bundle.getVersion().toString();
 	}
 
 	private String getJavadocLocation(IProject project) {
@@ -55,7 +57,11 @@ public class PreviewRuntimeClasspathProvider extends RuntimeClasspathProviderDel
 				IProjectFacet webModuleFacet = ProjectFacetsManager.getProjectFacet("jst.web");
 				if (faceted.hasProjectFacet(webModuleFacet)) {
 					String servletVersionStr = faceted.getInstalledVersion(webModuleFacet).getVersionString();
-					if (servletVersionStr.equals("4.0")) {
+					if (servletVersionStr.equals("6.0")) {
+						eeVersion = 10;
+					} else if (servletVersionStr.equals("5.0")) {
+						eeVersion = 9;
+					} else if (servletVersionStr.equals("4.0")) {
 						eeVersion = 8;
 					} else if (servletVersionStr.equals("3.1")) {
 						eeVersion = 7;
@@ -98,6 +104,8 @@ public class PreviewRuntimeClasspathProvider extends RuntimeClasspathProviderDel
 		case 8:
 			url = "https://javaee.github.io/javaee-spec/javadocs/";
 			break;
+		case 9:
+		case 10:
 		default:
 			url = "https://javaee.github.io/javaee-spec/javadocs/";
 			break;
@@ -112,7 +120,15 @@ public class PreviewRuntimeClasspathProvider extends RuntimeClasspathProviderDel
 
 		int size = REQUIRED_BUNDLE_IDS.length;
 		for (int i = 0; i < size; i++) {
-			Bundle b = Platform.getBundle(REQUIRED_BUNDLE_IDS[i]);
+			String[] bundleInfo = REQUIRED_BUNDLE_IDS[i].split(":");
+			String version = null;
+			if (bundleInfo.length > 1) {
+				version = bundleInfo[1];
+			}
+			Bundle[] bundles = Platform.getBundles(bundleInfo[0], version);
+			// to use the lowest/exact version match
+			Arrays.sort(bundles, (bundle1, bundle2) -> bundle1.getVersion().compareTo(bundle2.getVersion()));
+			Bundle b = bundles[0];
 			IPath path = PreviewRuntime.getJarredPluginPath(b);
 			if (path != null) {
 				IClasspathEntry libraryEntry = JavaCore.newLibraryEntry(path, null, null, new IAccessRule[0], new IClasspathAttribute[]{JavaCore.newClasspathAttribute(IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME, docUrl)}, false);

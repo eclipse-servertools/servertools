@@ -13,6 +13,7 @@
 package org.eclipse.jst.server.preview.adapter.internal.core;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
@@ -24,11 +25,14 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.jdt.launching.*;
+import org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate;
+import org.eclipse.jdt.launching.ExecutionArguments;
+import org.eclipse.jdt.launching.IVMInstall;
+import org.eclipse.jdt.launching.IVMRunner;
+import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.eclipse.jst.server.core.ServerProfilerDelegate;
 import org.eclipse.jst.server.preview.adapter.internal.PreviewPlugin;
 import org.eclipse.jst.server.preview.adapter.internal.Trace;
-
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
@@ -46,7 +50,8 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 	// this array, please ensure the index of org.eclipse.wst.server.preview
 	// corresponds to CLASSPATH_BIN_INDEX_PREVIEW_SERVER
 	private static final String[] REQUIRED_BUNDLE_IDS = new String[] {
-		getBundleForClass(javax.servlet.ServletContext.class),
+		getBundleForClass(javax.servlet.ServletResponse.class),
+//		getBundleForClass(javax.servlet.http.HttpServletResponse.class),
 		getBundleForClass(javax.servlet.jsp.JspContext.class),
 		getBundleForClass(org.apache.jasper.JspCompilationContext.class),
 		getBundleForClass(javax.el.ELContext.class),
@@ -60,6 +65,7 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 		"org.eclipse.jetty.util",
 		"org.eclipse.jetty.webapp",
 		"org.eclipse.jetty.xml",
+		"org.apache.aries.spifly.dynamic.bundle",
 		"org.eclipse.wst.server.preview"
 	};
 
@@ -71,7 +77,8 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 	 * Gets the symbolic name of the bundle that supplies the given class.
 	 */
 	private static String getBundleForClass(Class<?> cls) {
-		return FrameworkUtil.getBundle(cls).getSymbolicName();
+		Bundle bundle = FrameworkUtil.getBundle(cls);
+		return bundle.getSymbolicName() + ":" + bundle.getVersion();
 	}
 
 	private static final String MAIN_CLASS = "org.eclipse.wst.server.preview.internal.PreviewStarter";
@@ -92,7 +99,15 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 		int size = REQUIRED_BUNDLE_IDS.length;
 		String[] jars = new String[size];
 		for (int i = 0; i < size; i++) {
-			Bundle b = Platform.getBundle(REQUIRED_BUNDLE_IDS[i]);
+			String[] bundleInfo = REQUIRED_BUNDLE_IDS[i].split(":");
+			String version = null;
+			if (bundleInfo.length > 1) {
+				version = bundleInfo[1];
+			}
+			Bundle[] bundles = Platform.getBundles(bundleInfo[0], version);
+			// to use the lowest/exact version match
+			Arrays.sort(bundles, (bundle1, bundle2) -> bundle1.getVersion().compareTo(bundle2.getVersion()));
+			Bundle b = bundles[0];
 			IPath path = null;
 			if (b != null)
 				path = PreviewRuntime.getJarredPluginPath(b);

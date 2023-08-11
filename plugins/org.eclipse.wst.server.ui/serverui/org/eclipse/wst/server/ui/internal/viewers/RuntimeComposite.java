@@ -38,9 +38,9 @@ public class RuntimeComposite extends AbstractTableComposite {
 		public void runtimeDoubleClicked(IRuntime runtime);
 	}
 	
-	class RuntimeViewerSorter extends ViewerSorter {
+	class RuntimeViewerComparator extends ViewerComparator {
 		boolean sortByName;
-		public RuntimeViewerSorter(boolean sortByName) {
+		public RuntimeViewerComparator(boolean sortByName) {
 			this.sortByName = sortByName;
 		}
 		
@@ -77,7 +77,7 @@ public class RuntimeComposite extends AbstractTableComposite {
 		col.setText(Messages.columnName);
 		col.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-				tableViewer.setSorter(new RuntimeViewerSorter(true));
+				tableViewer.setComparator(new RuntimeViewerComparator(true));
 			}
 
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -90,7 +90,7 @@ public class RuntimeComposite extends AbstractTableComposite {
 		col.setText(Messages.columnType);
 		col.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-				tableViewer.setSorter(new RuntimeViewerSorter(false));
+				tableViewer.setComparator(new RuntimeViewerComparator(false));
 			}
 
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -118,7 +118,7 @@ public class RuntimeComposite extends AbstractTableComposite {
 		
 		tableViewer.setInput(AbstractTreeContentProvider.ROOT);
 		tableViewer.setColumnProperties(new String[] {"name", "type"});
-		tableViewer.setSorter(new RuntimeViewerSorter(true));
+		tableViewer.setComparator(new RuntimeViewerComparator(true));
 		
 		tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
