@@ -3,8 +3,9 @@ Bundle-ManifestVersion: 2
 Automatic-Module-Name: org.eclipse.jst.server.generic.pde
 Bundle-ActivationPolicy: lazy
 Bundle-Name: %Generic server PDE Template
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-SymbolicName: org.eclipse.jst.server.generic.pde; singleton:=true
-Bundle-Version: 1.0.102.qualifier
+Bundle-Version: 1.0.103.qualifier
 Bundle-Activator: org.eclipse.jst.server.generic.pde.ServerPdePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
