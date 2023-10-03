@@ -39,12 +39,12 @@ import org.eclipse.wst.server.core.IRuntime;
  * to extend the <code>runtimeClasspathProviders</code> extension point.
  * </p>
  * <p>
- * <b>Provisional API:</b> This class/interface is part of an interim API that is still under development and expected to 
- * change significantly before reaching stability. It is being made available at this early stage to solicit feedback 
- * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
+ * <b>Provisional API:</b> This class/interface is part of an interim API that is still under development and expected to
+ * change significantly before reaching stability. It is being made available at this early stage to solicit feedback
+ * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken
  * (repeatedly) as the API evolves.
  * </p>
- * 
+ *
  * @plannedfor 3.0
  */
 public abstract class RuntimeClasspathProviderDelegate {
@@ -85,12 +85,13 @@ public abstract class RuntimeClasspathProviderDelegate {
 	 * the given runtime and the given classpath container id (returned from
 	 * getClasspathEntryIds()). If the classpath container cannot be resolved
 	 * (for instance, if the runtime does not exist), return null.
-	 * 
+	 *
 	 * @param runtime the runtime to resolve the container for
 	 * @return an array of classpath entries for the container, or null if the
 	 *   container could not be resolved
 	 * @deprecated use resolveClasspathContainer(IProject, IRuntime) instead
 	 */
+	@Deprecated
 	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime) {
 		return null;
 	}
@@ -100,7 +101,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 	 * the given runtime and the given classpath container id (returned from
 	 * getClasspathEntryIds()). If the classpath container cannot be resolved
 	 * (for instance, if the runtime does not exist), return null.
-	 * 
+	 *
 	 * @param project the project to resolve
 	 * @param runtime the runtime to resolve the container for
 	 * @return an array of classpath entries for the container, or null if the
@@ -112,18 +113,19 @@ public abstract class RuntimeClasspathProviderDelegate {
 
 	/**
 	 * Resolve the classpath container.
-	 * 
+	 *
 	 * @param runtime a runtime
 	 * @return a possibly empty array of classpath entries
 	 * @deprecated should use resolveClasspathContainerImpl(IProject, IRuntime) instead
 	 */
+	@Deprecated
 	public IClasspathEntry[] resolveClasspathContainerImpl(IRuntime runtime) {
 		return resolveClasspathContainerImpl(null, runtime);
 	}
 
 	/**
 	 * Resolve the classpath container.
-	 * 
+	 *
 	 * @param project a project
 	 * @param runtime a runtime
 	 * @return a possibly empty array of classpath entries
@@ -135,10 +137,10 @@ public abstract class RuntimeClasspathProviderDelegate {
 		IClasspathEntry[] entries = resolveClasspathContainer(project, runtime);
 		if (entries == null)
 			entries = resolveClasspathContainer(runtime);
-		
+
 		if (entries == null)
 			entries = new IClasspathEntry[0];
-		
+
 		synchronized (this) {
 			if (sourceAttachments == null)
 				load();
@@ -159,21 +161,21 @@ public abstract class RuntimeClasspathProviderDelegate {
 				}
 			}
 		}
-		
+
 		String key = project.getName() + "/" + runtime.getId();
 		if (!previousClasspath.containsKey(key))
 			previousClasspath.put(key, entries);
 		else {
 			IClasspathEntry[] previousClasspathEntries = previousClasspath.get(key);
-			
-			if (previousClasspathEntries == null 
-					|| previousClasspathEntries.length != entries.length 
+
+			if (previousClasspathEntries == null
+					|| previousClasspathEntries.length != entries.length
 					|| entriesChanged(previousClasspathEntries,entries)) {
 				if (Trace.FINEST) {
 					Trace.trace(Trace.STRING_FINEST, "Classpath update: " + key + " " + entries);
 				}
 				previousClasspath.put(key, entries);
-				
+
 				IPath path = new Path(RuntimeClasspathContainer.SERVER_CONTAINER);
 				path = path.append(extensionId).append(runtime.getId());
 				try {
@@ -187,7 +189,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 				}
 			}
 		}
-		
+
 		return entries;
 	}
 
@@ -210,7 +212,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 	 * classpath was resolved which may affect the classpath, and false otherwise. This
 	 * method is used to check projects when a runtime changes and automatically rebuild
 	 * them if necessary.
-	 * 
+	 *
 	 * @param runtime a runtime
 	 * @return <code>true</code> if the classpath may change due to a change in the runtime,
 	 *    and <code>false</code> if there are no changes
@@ -235,7 +237,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 	private static void addJarFiles(File dir, List<IClasspathEntry> list, int depth) {
 		if (dir == null)
 			throw new IllegalArgumentException();
-		
+
 		File[] files = dir.listFiles();
 		if (files != null) {
 			for (File file : files) {
@@ -255,7 +257,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 	/**
 	 * Add library entries to the given list for every jar file found in the
 	 * given directory. Optionally search subdirectories as well.
-	 * 
+	 *
 	 * @param list a list
 	 * @param dir a directory
 	 * @param includeSubdirectories <code>true</code> to include subdirectories, and
@@ -270,7 +272,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 	/**
 	 * Request that the classpath container for the given runtime and id be updated
 	 * with the given classpath container entries.
-	 * 
+	 *
 	 * @param runtime a runtime
 	 * @param entries an array of classpath entries
 	 */
@@ -278,10 +280,10 @@ public abstract class RuntimeClasspathProviderDelegate {
 		// default behaviour is to save the source path entries
 		if (runtime == null || entries == null)
 			return;
-		
+
 		// find the source attachments
 		List<SourceAttachmentUpdate> srcAttachments = new ArrayList<SourceAttachmentUpdate>();
-		
+
 		for (IClasspathEntry entry : entries) {
 			if (entry.getSourceAttachmentPath() != null || (entry.getExtraAttributes() != null && entry.getExtraAttributes().length > 0)) {
 				SourceAttachmentUpdate sau = new SourceAttachmentUpdate();
@@ -302,15 +304,15 @@ public abstract class RuntimeClasspathProviderDelegate {
 	 */
 	private void load() {
 		List<SourceAttachmentUpdate> srcAttachments = new ArrayList<SourceAttachmentUpdate>();
-		
+
 		String id = extensionId;
 		String filename = JavaServerPlugin.getInstance().getStateLocation().append(id + ".xml").toOSString();
 		if (!(new File(filename)).exists())
 			return;
-		
+
 		try {
 			IMemento memento = XMLMemento.loadMemento(filename);
-			
+
 			IMemento[] children = memento.getChildren("source-attachment");
 			for (IMemento child : children) {
 				try {
@@ -381,7 +383,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 					}
 				}
 			}
-			
+
 			memento.saveToFile(filename);
 		} catch (Exception e) {
 			if (Trace.SEVERE) {
@@ -389,7 +391,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 			}
 		}
 	}
-	
+
 	public IClasspathAttribute[] consolidateClasspathAttributes(IClasspathAttribute[] sourceAttachmentAttributes, IClasspathAttribute[] classpathEntryAttributes) {
 		List classpathAttributeList = new ArrayList();
 		classpathAttributeList.addAll(Arrays.asList(sourceAttachmentAttributes));
