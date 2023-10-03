@@ -55,7 +55,7 @@ public class ProfilerPreferences {
 	 * @param profilerId the id of the server profiler
 	 */
 	public void setServerProfilerId( String profilerId ) {
-		Preferences node = new InstanceScope().getNode( PREF_PROFILER_QUALIFIER );
+		Preferences node = InstanceScope.INSTANCE.getNode( PREF_PROFILER_QUALIFIER );
 		node.put( PREF_SELECTED_PROFILER, profilerId );
 		try {
 			node.flush();
