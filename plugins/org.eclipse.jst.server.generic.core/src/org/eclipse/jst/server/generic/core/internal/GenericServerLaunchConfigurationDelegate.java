@@ -87,7 +87,7 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 			ExecutionArguments execArgs = new ExecutionArguments(vmArgs, pgmArgs);
 
 			// VM-specific attributes
-			Map vmAttributesMap = getVMSpecificAttributesMap(configuration);
+			Map<String, Object> vmAttributesMap = getVMSpecificAttributesMap(configuration);
 
 			// Classpath
 			String[] classpath = getClasspath(configuration);
