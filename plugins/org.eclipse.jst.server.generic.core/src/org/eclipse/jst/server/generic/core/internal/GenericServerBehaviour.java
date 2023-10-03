@@ -163,7 +163,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 			ILaunchManager mgr = DebugPlugin.getDefault().getLaunchManager();
 			ILaunchConfigurationType type = mgr.getLaunchConfigurationType(configTypeID);
 			String launchName = getStopLaunchName();
-			String uniqueLaunchName = mgr.generateUniqueLaunchConfigurationNameFrom(launchName);
+			String uniqueLaunchName = mgr.generateLaunchConfigurationName(launchName);
 			ILaunchConfiguration conf = null;
 			ILaunchConfiguration[] lch = mgr.getLaunchConfigurations(type);
 			for (int i = 0; i < lch.length; i++) {
