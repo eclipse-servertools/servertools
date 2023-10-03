@@ -19,7 +19,7 @@ import junit.framework.TestCase;
 public class RuntimeClasspathProviderDelegateTestCase extends TestCase {
 	protected static RuntimeClasspathProviderDelegate handler;
 
-	protected RuntimeClasspathProviderDelegate getHander() {
+	protected RuntimeClasspathProviderDelegate getHandler() {
 		if (handler == null) {
 			handler = new TestRuntimeClasspathProviderDelegate();
 		}
@@ -27,34 +27,34 @@ public class RuntimeClasspathProviderDelegateTestCase extends TestCase {
 	}
 
 	public void testCreate() {
-		getHander();
+		getHandler();
 	}
 
 	public void testResolveClasspathContainer() {
-		getHander().resolveClasspathContainer(null);
+		getHandler().resolveClasspathContainer(null);
 	}
 
 	public void testResolveClasspathContainer2() {
-		getHander().resolveClasspathContainer(null, null);
+		getHandler().resolveClasspathContainer(null, null);
 	}
 
 	public void testResolveClasspathContainerImpl() {
-		getHander().resolveClasspathContainerImpl(null);
+		getHandler().resolveClasspathContainerImpl(null);
 	}
 
 	public void testResolveClasspathContainerImpl2() {
-		getHander().resolveClasspathContainerImpl(null, null);
+		getHandler().resolveClasspathContainerImpl(null, null);
 	}
 
 	public void testTestAddMethods() {
-		((TestRuntimeClasspathProviderDelegate) getHander()).testAddMethods();
+		((TestRuntimeClasspathProviderDelegate) getHandler()).testAddMethods();
 	}
 
 	public void testRequestClasspathContainerUpdate() {
-		getHander().requestClasspathContainerUpdate(null, null);
+		getHandler().requestClasspathContainerUpdate(null, null);
 	}
 
 	public void testHasRuntimeClasspathChanged() {
-		getHander().hasRuntimeClasspathChanged(null);
+		getHandler().hasRuntimeClasspathChanged(null);
 	}
 }
