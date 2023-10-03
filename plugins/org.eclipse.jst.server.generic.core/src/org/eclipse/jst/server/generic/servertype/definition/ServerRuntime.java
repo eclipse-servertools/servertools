@@ -5,10 +5,10 @@
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors: Gorkem Ercan
  * Contributors: Naci Dai
- *               
+ *
  **************************************************************************************************/
 
 package org.eclipse.jst.server.generic.servertype.definition;
@@ -26,10 +26,10 @@ import org.eclipse.jst.server.generic.internal.xml.Resolver;
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * 
+ *
  * 				Generic Server Type Definition. It must have a list of
  * 				properties.
- * 			
+ *
  * <!-- end-model-doc -->
  *
  * <p>
@@ -405,27 +405,27 @@ public interface ServerRuntime extends EObject {
 	 */
 	Classpath getClasspath(String cpRef);
 
-    
+
     /**
      * @generated NOT
      */
     String getId();
-    
+
     /**
      * @generated NOT
      * @param id
      */
     void setId(String id);
-    
-    
-    
-    
+
+
+
+
 	/**
 	 * @generated NOT
 	 */
 	String getFilename();
 
-    
+
 	/**
 	 * @generated NOT
  */
@@ -440,7 +440,7 @@ public interface ServerRuntime extends EObject {
 	 * @generated NOT
 	 */
 	Resolver getResolver();
-	
+
     /**
      * @generated NOT
      */

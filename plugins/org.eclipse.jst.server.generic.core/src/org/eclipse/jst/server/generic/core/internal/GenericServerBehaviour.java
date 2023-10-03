@@ -5,9 +5,9 @@
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors: Gorkem Ercan - initial API and implementation
- *               
+ *
  **************************************************************************************************/
 package org.eclipse.jst.server.generic.core.internal;
 
@@ -53,15 +53,15 @@ import org.eclipse.wst.server.core.util.SocketUtil;
  * @author Gorkem Ercan
  */
 public class GenericServerBehaviour extends ServerBehaviourDelegate {
-	
+
 	public static final String ATTR_STOP = "stop-server"; //$NON-NLS-1$
 	public static final String ATTR_SERVER_ID = "server-id"; //$NON-NLS-1$
-	
+
 	// the thread used to ping the server to check for startup
 	protected transient PingThread ping;
     protected transient IDebugEventSetListener processListener;
     protected transient IProcess process;
-    
+
     /* (non-Javadoc)
      * @see org.eclipse.wst.server.core.model.ServerBehaviourDelegate#publishServer(org.eclipse.core.runtime.IProgressMonitor)
      */
@@ -93,10 +93,10 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
         {
             if(status == null ||
                     status.length < i ||
-                    status[i]==null || 
+                    status[i]==null ||
                     status[i].getSeverity() == IStatus.OK )
             {
-            setModulePublishState(module, IServer.PUBLISH_STATE_NONE);    
+            setModulePublishState(module, IServer.PUBLISH_STATE_NONE);
             }
             else
             {
@@ -111,7 +111,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     private void checkClosed(IModule[] module) throws CoreException
     {
     	for( int i=0; i < module.length; i++ ){
-    		if( !module[i].exists() ){	
+    		if( !module[i].exists() ){
                 IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0, NLS.bind(GenericServerCoreMessages.canNotPublishDeletedModule,module[i].getName()),null);
                 throw new CoreException(status);
     		}
@@ -120,7 +120,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 
     private GenericPublisher initializePublisher(int kind, int deltaKind, IModule[] module ) throws CoreException {
         String publisherId = ServerTypeDefinitionUtil.getPublisherID(module[0], getServerDefinition());
-        GenericPublisher publisher = PublishManager.getPublisher(publisherId);  
+        GenericPublisher publisher = PublishManager.getPublisher(publisherId);
         if(publisher==null){
             IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,NLS.bind(GenericServerCoreMessages.unableToCreatePublisher,publisherId),null);
             throw new CoreException(status);
@@ -128,8 +128,8 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
         publisher.initialize( module,getServer(), kind, deltaKind );
         return publisher;
     }
-    
-    
+
+
     /* (non-Javadoc)
      * @see org.eclipse.wst.server.core.model.ServerBehaviourDelegate#stop(boolean)
      */
@@ -146,10 +146,10 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 			terminate();
 			return;
 		}
-		
+
 		shutdown(state);
     }
-    
+
     /**
      * Shuts down the server via the launch configuration.
      */
@@ -159,7 +159,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 			Trace.trace(Trace.FINEST, "Stopping Server"); //$NON-NLS-1$
 			if (state != IServer.STATE_STOPPED)
 				setServerState(IServer.STATE_STOPPING);
-			String configTypeID = getConfigTypeID(); 
+			String configTypeID = getConfigTypeID();
 			ILaunchManager mgr = DebugPlugin.getDefault().getLaunchManager();
 			ILaunchConfigurationType type = mgr.getLaunchConfigurationType(configTypeID);
 			String launchName = getStopLaunchName();
@@ -179,16 +179,16 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 			} else {
 				wc = type.newInstance(null, uniqueLaunchName);
 			}
-			
+
 			// To stop from appearing in history lists
-			wc.setAttribute(IDebugUIConstants.ATTR_PRIVATE, true);		
+			wc.setAttribute(IDebugUIConstants.ATTR_PRIVATE, true);
 			// Set the stop attribute so that we know we are stopping
 			wc.setAttribute(ATTR_STOP, "true"); //$NON-NLS-1$
 			// Set the server ID so that we can distinguish stops
 			wc.setAttribute( ATTR_SERVER_ID, this.getServer().getId());
 			// Setup the launch config for stopping the server
 			setupStopLaunchConfiguration(runtime, wc);
-			
+
 			// Launch the stop launch config
 			wc.launch(ILaunchManager.RUN_MODE, new NullProgressMonitor());
 
@@ -212,17 +212,17 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 	protected String getStopLaunchName() {
 		return "GenericServerStopper"; //$NON-NLS-1$
 	}
-	
+
 	private boolean isRemote(){
 		return (getServer().getServerType().supportsRemoteHosts()&& !SocketUtil.isLocalhost(getServer().getHost()) );
-	}	
+	}
 	/**
 	 * Sets up the launch configuration for stopping the server.
 	 */
 	protected void setupStopLaunchConfiguration(GenericServerRuntime runtime, ILaunchConfigurationWorkingCopy wc) {
 		if(isRemote())// Do not launch for remote servers.
 			return;
-		
+
 		wc.setAttribute(
 				IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
 				getServerDefinition().getResolver().resolveProperties(this.getServerDefinition().getStop().getMainClass()));
@@ -241,7 +241,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
         if(!environVars.isEmpty()){
         	wc.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES,environVars);
         }
-        
+
 		wc.setAttribute(
 				IJavaLaunchConfigurationConstants.ATTR_WORKING_DIRECTORY,
 				getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStop().getWorkingDirectory()));
@@ -250,7 +250,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 				getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStop().getProgramArgumentsAsString()));
 		wc.setAttribute(
 				IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
-				getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStop().getVmParametersAsString()));				
+				getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStop().getVmParametersAsString()));
 	}
 
     /**
@@ -261,7 +261,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     	return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getMainClass());
     }
 
-    /** 
+    /**
      * Server definition
      * @return serverdef
      */
@@ -269,7 +269,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
         GenericServer server = (GenericServer)getServer().loadAdapter(ServerDelegate.class, null);
         return server.getServerDefinition();
     }
-    
+
     protected GenericServerRuntime getRuntimeDelegate() {
        return (GenericServerRuntime)getServer().getRuntime().loadAdapter(GenericServerRuntime.class,null);
     }
@@ -297,14 +297,14 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 		try {
 			IRuntimeClasspathEntry[] existingCps = JavaRuntime.computeUnresolvedRuntimeClasspath(wc);
 			for (int i = 0; i < existingCps.length; i++) {
-				if(cp.contains(existingCps[i])==false){ 
+				if(cp.contains(existingCps[i])==false){
 					cp.add(existingCps[i]);
 				}
 			}
 		} catch (CoreException e) {
 			// ignore
 		}
-		
+
     	wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, convertCPEntryToMemento(cp));
     	wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH,false);
     }
@@ -343,7 +343,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
         }
         return varsMap;
     }
-    
+
     private String getVmArguments() {
     	return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getVmParametersAsString());
     }
@@ -351,7 +351,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) throws CoreException {
 		if(isRemote())// No launch for remote servers.
 			return;
-    	
+
     	workingCopy.setAttribute(
                 IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
                 getStartClassName());
@@ -369,13 +369,13 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
         workingCopy.setAttribute(
                 IJavaLaunchConfigurationConstants.ATTR_WORKING_DIRECTORY,
                 getWorkingDirectory());
-        
+
 
         Map environVars = getEnvironmentVariables(getServerDefinition().getStart());
         if(!environVars.isEmpty()){
         	workingCopy.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES,environVars);
         }
-        
+
         String existingProgArgs  = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, (String)null);
         String serverProgArgs =  getProgramArguments();
         if( existingProgArgs==null ) {
@@ -387,11 +387,11 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
             workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,serverVMArgs);
         }
 	}
-    
+
     /**
-     * Setup for starting the server. Checks all ports available 
+     * Setup for starting the server. Checks all ports available
      * and sets server state and mode.
-     * 
+     *
      * @param launch ILaunch
      * @param launchMode String
      * @param monitor IProgressMonitor
@@ -438,9 +438,9 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     		ping = new PingThread(getServer(), url, this);
     	} catch (Exception e) {
     		Trace.trace(Trace.SEVERE, "Can't ping for server startup."); //$NON-NLS-1$
-    	}  	
+    	}
     }
-   
+
     protected void setProcess(final IProcess newProcess) {
     	if (process != null)
     		return;
@@ -480,19 +480,19 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 
     /**
      * Terminates the server.
-     * This method may be called before a process created while setting up the 
-     * launch config. 
+     * This method may be called before a process created while setting up the
+     * launch config.
      */
     protected void terminate() {
     	if (getServer().getServerState() == IServer.STATE_STOPPED)
     		return;
-    
+
     	try {
     		setServerState(IServer.STATE_STOPPING);
     		Trace.trace(Trace.FINEST, "Killing the Server process"); //$NON-NLS-1$
     		if (process != null && !process.isTerminated()) {
     			process.terminate();
-    			
+
     		}
     		stopImpl();
     	} catch (Exception e) {
@@ -515,11 +515,11 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
         if(allpublished)
             setServerPublishState(IServer.PUBLISH_STATE_NONE);
     }
-    
+
  	protected void setServerStarted() {
  		setServerState(IServer.STATE_STARTED);
  	}
- 	
+
  	public IPath getTempDirectory(){
  		return super.getTempDirectory();
  	}

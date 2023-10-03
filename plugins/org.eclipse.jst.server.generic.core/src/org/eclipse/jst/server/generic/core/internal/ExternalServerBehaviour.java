@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 BEA Systems, Inc. 
+ * Copyright (c) 2005, 2009 BEA Systems, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *
  * Contributors:
  *    rfrost@bea.com - initial API and implementation
- *    
+ *
  *    Based on GenericServerBehavior by Gorkem Ercan
  *******************************************************************************/
 package org.eclipse.jst.server.generic.core.internal;
@@ -35,20 +35,20 @@ import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.util.SocketUtil;
 
 /**
- * Subclass of <code>GenericServerBehavior</code> that supports 
+ * Subclass of <code>GenericServerBehavior</code> that supports
  * servers which are started/stopped via external executables (e.g. scripts).
  */
 public class ExternalServerBehaviour extends GenericServerBehaviour {
-	
+
 	// config for debugging session
 	private ILaunchConfigurationWorkingCopy fLaunchConfigurationWC;
     private String fMode;
-    private ILaunch fLaunch; 
+    private ILaunch fLaunch;
     private IProgressMonitor fProgressMonitor;
-    
+
     /**
      * Override to reset the status if the state was unknown
-     * @param force 
+     * @param force
      */
     public void stop(boolean force) {
     	resetStatus(getServer().getServerState());
@@ -56,9 +56,9 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
     }
 
     /**
-     * Override to set status to unknown if the port was in use and to reset the status if the state was 
+     * Override to set status to unknown if the port was in use and to reset the status if the state was
      * unknown and an exception was not thrown. Will want to change logic once external generic server pings
-     * server process to determine state instead of maintaining handle to process. 
+     * server process to determine state instead of maintaining handle to process.
      */
     protected void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor) throws CoreException {
     	int state = getServer().getServerState();
@@ -68,7 +68,7 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
     		ServerPort portInUse = portInUse();
     		if (portInUse != null) {
     			Trace.trace(Trace.WARNING, "Port " + portInUse.getPort() + " is currently in use");  //$NON-NLS-1$//$NON-NLS-2$
-				Status status = new Status(IStatus.WARNING, CorePlugin.PLUGIN_ID, IStatus.OK, 
+				Status status = new Status(IStatus.WARNING, CorePlugin.PLUGIN_ID, IStatus.OK,
 							NLS.bind(GenericServerCoreMessages.errorPortInUse,Integer.toString(portInUse.getPort()),portInUse.getName()), null);
 				setServerStatus(status);
 				setServerState(IServer.STATE_UNKNOWN);
@@ -77,7 +77,7 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
     	}
     	resetStatus(state);
     }
-    
+
     private ServerPort portInUse() {
     	ServerPort[] ports = getServer().getServerPorts(null);
     	ServerPort sp;
@@ -89,7 +89,7 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
     	}
     	return null;
 	}
-    
+
 	/**
 	 * Override to trigger the launch of the debugging session (if appropriate).
 	 */
@@ -102,7 +102,7 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 				// failed to start debugging, so set mode to run
 				setMode(ILaunchManager.RUN_MODE);
 				final Status status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 1,
-							GenericServerCoreMessages.errorStartingExternalDebugging, ce); 
+							GenericServerCoreMessages.errorStartingExternalDebugging, ce);
 				CorePlugin.getDefault().getLog().log(status);
 				Trace.trace(Trace.SEVERE, GenericServerCoreMessages.errorStartingExternalDebugging, ce);
 			} finally {
@@ -111,10 +111,10 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 		}
 		setServerState(IServer.STATE_STARTED);
  	}
-	
+
 	/**
 	 * Subclasses may override this method to replace default source locator or add additional
-	 * sourceLookupParticipant, if necessary 
+	 * sourceLookupParticipant, if necessary
 	 * @param launch 	the ILaunch object of the debug session
 	 */
 	protected void setupSourceLocator(ILaunch launch) {
@@ -129,16 +129,16 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 			setServerStatus(null);
 		}
 	}
-	
+
 	/**
 	 * Since terminate() is called during restart, need to override to
 	 * call shutdown instead of just killing the original process.
 	 */
 	protected void terminate() {
 		int state = getServer().getServerState();
-		if (state == IServer.STATE_STOPPED) 
+		if (state == IServer.STATE_STOPPED)
     		return;
-    
+
 		// cache a ref to the current process
 		IProcess currentProcess = process;
 		// set the process var to null so that GenericServerBehavior.setProcess()
@@ -147,7 +147,7 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 
 		// execute the standard shutdown
 		shutdown(state);
-		
+
 		// if the shutdown did not terminate the process, forcibly terminate it
 		try {
     		if (currentProcess != null && !currentProcess.isTerminated()) {
@@ -159,13 +159,13 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
     		Trace.trace(Trace.SEVERE, "Error killing the process", e); //$NON-NLS-1$
     	}
 	}
-	
+
 	/**
 	 * Override superclass method to correctly setup the launch configuration for starting an external
 	 * server.
 	 * @param workingCopy
 	 * @param monitor
-	 * @throws CoreException 
+	 * @throws CoreException
 	 */
 	public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy,
 										 IProgressMonitor monitor) throws CoreException {
@@ -176,10 +176,10 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 					resolver.resolveProperties(serverDef.getStart().getWorkingDirectory()));
 		String external = resolver.resolveProperties(getExternalForOS(serverDef.getStart().getExternal()));
 		workingCopy.setAttribute(ExternalLaunchConfigurationDelegate.COMMANDLINE, external);
-		workingCopy.setAttribute(ExternalLaunchConfigurationDelegate.DEBUG_PORT, 
+		workingCopy.setAttribute(ExternalLaunchConfigurationDelegate.DEBUG_PORT,
 					resolver.resolveProperties(serverDef.getStart().getDebugPort()));
 		workingCopy.setAttribute(ExternalLaunchConfigurationDelegate.HOST, getServer().getHost());
-		
+
 		// just use the commandline for now
 		workingCopy.setAttribute(ExternalLaunchConfigurationDelegate.EXECUTABLE_NAME, external);
         Map environVars = getEnvironmentVariables(getServerDefinition().getStart());
@@ -194,7 +194,7 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 	}
 
 	/*
-	 * Returns the first external whose "os" attribute matches (case insensitive) the beginning 
+	 * Returns the first external whose "os" attribute matches (case insensitive) the beginning
 	 * of the name of the current OS (as determined by the System "os.name" property). If
 	 * no such match is found, returns the first external that does not have an OS attribute.
 	 */
@@ -234,15 +234,15 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 	protected String getStopLaunchName() {
 		return GenericServerCoreMessages.externalStopLauncher;
 	}
-	
+
 	/**
 	 * Sets up the launch configuration for stopping the server.
-	 * 
+	 *
 	 */
 	protected void setupStopLaunchConfiguration(GenericServerRuntime runtime, ILaunchConfigurationWorkingCopy wc) {
 		clearDebuggingConfig();
 		ServerRuntime serverDef = getServerDefinition();
-		Resolver resolver = serverDef.getResolver(); 
+		Resolver resolver = serverDef.getResolver();
 		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_WORKING_DIRECTORY,
 					resolver.resolveProperties(serverDef.getStop().getWorkingDirectory()));
 		String external = resolver.resolveProperties(getExternalForOS(serverDef.getStop().getExternal()));
@@ -255,29 +255,29 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 		wc.setAttribute(
 				IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
 				resolver.resolveProperties(serverDef.getStop().getProgramArgumentsAsString()));
-		wc.setAttribute(ExternalLaunchConfigurationDelegate.EXECUTABLE_NAME, external); 	
+		wc.setAttribute(ExternalLaunchConfigurationDelegate.EXECUTABLE_NAME, external);
 		wc.setAttribute(ATTR_SERVER_ID, getServer().getId());
 	}
-	
+
 	/**
 	 * Sets the configuration to use for launching a debugging session
 	 */
 	protected synchronized void setDebuggingConfig(ILaunchConfigurationWorkingCopy wc,
 					 			      String mode,
-					 			      ILaunch launch, 
+					 			      ILaunch launch,
 					 			      IProgressMonitor monitor) {
 		this.fLaunchConfigurationWC = wc;
 		this.fMode = mode;
 		this.fLaunch = launch;
 		this.fProgressMonitor = monitor;
 	}
-	
+
 	private synchronized void clearDebuggingConfig() {
 		this.fLaunchConfigurationWC = null;
 		this.fMode = null;
 		this.fLaunch = null;
 		this.fProgressMonitor = null;
 	}
-	
-	
+
+
 }

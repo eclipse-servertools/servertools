@@ -5,9 +5,9 @@
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors: Gorkem Ercan - initial API and implementation
- *               
+ *
  **************************************************************************************************/
 package org.eclipse.jst.server.generic.core.internal.publishers;
 
@@ -72,22 +72,22 @@ import org.osgi.framework.Bundle;
  * <li>project.working.dir: the working dir of the project that deployed module
  * is in</li>
  * </ul>
- * 
+ *
  * @author Gorkem Ercan
  */
 
 public class AntPublisher extends GenericPublisher {
-	
+
 	/**
-	 * Copy of IExternalToolConstants.ATTR_LOCATION 
+	 * Copy of IExternalToolConstants.ATTR_LOCATION
 	 */
 	private static final String ATTR_LOCATION = "org.eclipse.ui.externaltools.ATTR_LOCATION"; //$NON-NLS-1$
 	/**
-	 *  Copy of the IAntUIConstants.REMOTE_ANT_PROCESS_FACTORY_ID 
+	 *  Copy of the IAntUIConstants.REMOTE_ANT_PROCESS_FACTORY_ID
 	 */
 	private static final String REMOTE_ANT_PROCESS_FACTORY_ID= "org.eclipse.ant.ui.remoteAntProcessFactory"; //$NON-NLS-1$
-	
-	
+
+
 	private static final String JAR_PROTOCOL_PREFIX = "jar"; //$NON-NLS-1$
 
 	/**
@@ -106,7 +106,7 @@ public class AntPublisher extends GenericPublisher {
 	protected static final String PROP_CONTEXT_ROOT = "contextRoot";//$NON-NLS-1$
 
 	protected static final String PROP_PROJECT_NAME = "project.name";//$NON-NLS-1$
-	
+
 	protected static final String PROP_PROJECT_LOCATION = "project.location"; //$NON-NLS-1$
 
 	protected static final String MODULE_PUBLISH_TARGET_PREFIX = "target.publish."; //$NON-NLS-1$
@@ -119,16 +119,16 @@ public class AntPublisher extends GenericPublisher {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.wtp.server.core.model.IPublisher#publish(org.eclipse.wtp.server.core.resources.IModuleResource[],
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public IStatus[] publish(IModuleArtifact[] resource, IProgressMonitor monitor) {
-		
+
 		if (getModule().length > 1 || // only respond to root module calls.
 				!publishNeeded() ||
-				monitor.isCanceled()) return null; 	
-		try {	
+				monitor.isCanceled()) return null;
+		try {
 			assembleModule(monitor);
 			File file = getCustomBuildFile();
 			if ( file == null){// no user selected build file use the adapter default.
@@ -143,7 +143,7 @@ public class AntPublisher extends GenericPublisher {
 		return null;
 	}
 	/**
-	 * Checks if the Ant publisher actually needs to publish. 
+	 * Checks if the Ant publisher actually needs to publish.
 	 * For ear modules it also checks if any of the children modules requires publishing.
 	 * @return true if ant publisher needs to publish.
 	 */
@@ -162,7 +162,7 @@ public class AntPublisher extends GenericPublisher {
 			    	return true;
 			}
 		}
-		return false;	
+		return false;
 	}
 
 	protected void assembleModule(IProgressMonitor monitor) throws CoreException {
@@ -175,7 +175,7 @@ public class AntPublisher extends GenericPublisher {
 	/**
 	 * Returns the custom build file that user selected. Or returns null;
 	 * @return
-	 * @throws CoreException 
+	 * @throws CoreException
 	 */
 	private File getCustomBuildFile() throws CoreException {
 		String filename = (String)getServer().getServerInstanceProperties().get( GenericServer.PROP_CUSTOM_BUILD_SCRIPT );
@@ -191,7 +191,7 @@ public class AntPublisher extends GenericPublisher {
 		return null;
 	}
 	/**
-	 * 
+	 *
 	 * @return file
 	 * @throws CoreException
 	 */
@@ -231,9 +231,9 @@ public class AntPublisher extends GenericPublisher {
 					// ignore
 				}
 			}
-		} 
+		}
 		return FileUtil.resolveFile(fileURL);
-	
+
 	}
 
 	private String getPublishTargetsForModule() {
@@ -296,7 +296,7 @@ public class AntPublisher extends GenericPublisher {
 		props.put(PROP_PROJECT_WORKING_DIR, getProjectWorkingLocation().toString());
 		props.put(PROP_MODULE_NAME, moduleName);
 		props.put(PROP_CONTEXT_ROOT, contextRoot);
-			
+
 		if (isModuleType(webModule, "jst.ear")) {//$NON-NLS-1$
 			props.put(PROP_MODULE_ARCHIVE_NAME, moduleName + ".ear"); //$NON-NLS-1$
 		} else if (isModuleType(webModule, "jst.web")) { //$NON-NLS-1$
@@ -323,7 +323,7 @@ public class AntPublisher extends GenericPublisher {
 	}
 
 	private String guessModuleName(IModule module) {
-		String deployName = ServerUtil.getModuleDisplayName(module); 
+		String deployName = ServerUtil.getModuleDisplayName(module);
 		if ("jst.web".equals(getModuleTypeId())) { //$NON-NLS-1$
 			IWebModule webModule = (IWebModule) getModule()[0].loadAdapter(IWebModule.class, null);
 			if (webModule == null) {
@@ -370,7 +370,7 @@ public class AntPublisher extends GenericPublisher {
 		wc.setAttribute(IDebugUIConstants.ATTR_PRIVATE, true);
 
 		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_SOURCE_PATH_PROVIDER, "org.eclipse.ant.ui.AntClasspathProvider"); //$NON-NLS-1$
-		
+
 		IVMInstall vmInstall = getServerRuntime().getVMInstall();
 		if(vmInstall == null )//fallback to default VM if null.
 			vmInstall = JavaRuntime.getDefaultVMInstall();
@@ -388,13 +388,13 @@ public class AntPublisher extends GenericPublisher {
             launchConfig.launch(ILaunchManager.RUN_MODE, monitor, false, true);
             Trace.trace(Trace.PERFORMANCE, "AntPublisher.runAnt():<" + (System.currentTimeMillis()-time) + "ms> module: "+getModule()[0] ); //$NON-NLS-1$ //$NON-NLS-2$
         }
-        
-        
+
+
 	}
 
 	/**
 	 * Hook method for subclasses.
-	 * 
+	 *
 	 * @param wc
 	 */
 	protected void setupAntLaunchConfiguration(ILaunchConfigurationWorkingCopy wc) {
@@ -409,7 +409,7 @@ public class AntPublisher extends GenericPublisher {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.jst.server.generic.internal.core.GenericPublisher#unpublish(org.eclipse.wst.server.core.IModule,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */

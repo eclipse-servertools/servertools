@@ -28,9 +28,9 @@ import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.osgi.util.NLS;
 
 /**
- * <p>Extension of <code>AbstractJavaLaunchConfigurationDelegate</code> that supports 
+ * <p>Extension of <code>AbstractJavaLaunchConfigurationDelegate</code> that supports
  * the connection to remote JVMs for external servers. Used for debugging.</p>
- * 
+ *
  * <p>Based on JavaRemoteApplicationLaunchConfigurationDelegate</p>
  */
 public class ExternalDebugLaunchConfigurationDelegate extends AbstractJavaLaunchConfigurationDelegate {
@@ -46,14 +46,14 @@ public class ExternalDebugLaunchConfigurationDelegate extends AbstractJavaLaunch
         }
 
         monitor.beginTask(NLS.bind(GenericServerCoreMessages.attachingToExternalGenericServer,new String[]{configuration.getName()}), 3);
-        
+
         // check for cancellation
         if (monitor.isCanceled()) {
             return;
-        }                       
-                    
+        }
+
         monitor.subTask(GenericServerCoreMessages.verifyingExternalServerDebuggingLaunchAttributes);
-                        
+
         String connectorId = getVMConnectorId(configuration);
         IVMConnector connector = null;
         if (connectorId == null) {
@@ -63,11 +63,11 @@ public class ExternalDebugLaunchConfigurationDelegate extends AbstractJavaLaunch
         }
         if (connector == null) {
             abort(GenericServerCoreMessages.externalServerDebugConnectorNotSpecified,
-                    null, IJavaLaunchConfigurationConstants.ERR_CONNECTOR_NOT_AVAILABLE); 
+                    null, IJavaLaunchConfigurationConstants.ERR_CONNECTOR_NOT_AVAILABLE);
         }
-        
+
         Map argMap = configuration.getAttribute(IJavaLaunchConfigurationConstants.ATTR_CONNECT_MAP, (Map)null);
-        
+
         int connectTimeout = JavaRuntime.getPreferences().getInt(JavaRuntime.PREF_CONNECT_TIMEOUT);
         argMap.put("timeout", ""+connectTimeout);  //$NON-NLS-1$//$NON-NLS-2$
 
@@ -75,17 +75,17 @@ public class ExternalDebugLaunchConfigurationDelegate extends AbstractJavaLaunch
         if (monitor.isCanceled()) {
             return;
         }
-        
+
         monitor.worked(1);
-        
+
         monitor.subTask(GenericServerCoreMessages.creatingExternalServerDebuggingSourceLocator);
         // set the default source locator if required
         setDefaultSourceLocator(launch, configuration);
-        monitor.worked(1);      
-        
+        monitor.worked(1);
+
         // connect to remote VM
         connector.connect(argMap, monitor, launch);
-        
+
         // check for cancellation
         if (monitor.isCanceled()) {
             IDebugTarget[] debugTargets = launch.getDebugTargets();
@@ -97,7 +97,7 @@ public class ExternalDebugLaunchConfigurationDelegate extends AbstractJavaLaunch
             }
             return;
         }
-        
+
         monitor.done();
     }
 }
