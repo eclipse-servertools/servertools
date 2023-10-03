@@ -5,12 +5,12 @@
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors: Gorkem Ercan - initial API and implementation
- *               
+ *
  **************************************************************************************************/
 package org.eclipse.jst.server.generic.core.internal.publishers;
-			
+
 import java.io.File;
 import java.io.IOException;
 
@@ -34,17 +34,17 @@ import org.eclipse.wst.server.core.util.PublishHelper;
 
 /**
  * Base class for module assemblers
- * 
+ *
  * @author Gorkem Ercan
  */
 public abstract class AbstractModuleAssembler {
 
 	protected ServerRuntime fServerdefinition;
-	protected IModule fModule; 
+	protected IModule fModule;
 	protected GenericServer fServer;
 	protected IPath fAssembleRoot;
 	protected PublishHelper publishHelper;
-	
+
 	protected AbstractModuleAssembler(IModule module, GenericServer server, IPath assembleRoot)
 	{
 		fModule=module;
@@ -54,37 +54,37 @@ public abstract class AbstractModuleAssembler {
 		//TODO: Verify the temporary directory location.
 		publishHelper = new PublishHelper(CorePlugin.getDefault().getStateLocation().append("tmp").toFile()); //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * Assemble the module.
-	 * 
+	 *
 	 * @param monitor
 	 * @throws CoreException
 	 */
 	public abstract IPath assemble(IProgressMonitor monitor) throws CoreException;
 
-	
+
 	/**
-	 * Factory for creating concrete module assemblers for 
+	 * Factory for creating concrete module assemblers for
 	 * corresponding module types.
 	 *
 	 */
-	public static class Factory {		
-		
+	public static class Factory {
+
 		public static IPath getDefaultAssembleRoot(IModule module, GenericServer server) {
 			ProjectModule pm =(ProjectModule)module.loadAdapter(ProjectModule.class, new NullProgressMonitor());
 			GenericServerBehaviour genericServer = (GenericServerBehaviour) server.getServer().loadAdapter(ServerBehaviourDelegate.class, new NullProgressMonitor());
 			if ( genericServer == null ) {
-				CorePlugin.getDefault().getLog().log(new Status(IStatus.INFO, 
+				CorePlugin.getDefault().getLog().log(new Status(IStatus.INFO,
 						CorePlugin.PLUGIN_ID, "GenericServerBehavior was not loaded when determining assembly root. Falling back to state location"));  //$NON-NLS-1$
-				return CorePlugin.getDefault().getStateLocation().append(pm.getId());	
+				return CorePlugin.getDefault().getStateLocation().append(pm.getId());
 			}
 			return genericServer.getTempDirectory().append(pm.getId());
 		}
-		
+
 		/**
 		 * Returns a concrete module assembler
-		 * 
+		 *
 		 * @param module
 		 * @param server
 		 * @return assembler
@@ -93,10 +93,10 @@ public abstract class AbstractModuleAssembler {
 		{
 			return getModuleAssembler(module, server, getDefaultAssembleRoot(module, server));
 		}
-		
+
 		/**
 		 * Returns a concrete module assembler that assembles under the specified root path
-		 * 
+		 *
 		 * @param module
 		 * @param server
 		 * @param assembleRoot
@@ -110,17 +110,17 @@ public abstract class AbstractModuleAssembler {
 				return new EarModuleAssembler(module,server,assembleRoot);
 			return new DefaultModuleAssembler(module,server,assembleRoot);
 		}
-		
-		private static boolean isModuleType(IModule module, String moduleTypeId){	
+
+		private static boolean isModuleType(IModule module, String moduleTypeId){
 			if(module.getModuleType()!=null && moduleTypeId.equals(module.getModuleType().getId()))
 				return true;
 			return false;
 		}
 	}
-	
+
 	protected void packModule(IModule module, String deploymentUnitName, IPath destination)throws CoreException {
-		
-	
+
+
 		String dest = destination.append(deploymentUnitName).toString();
 		ModulePackager packager = null;
 		try {
@@ -157,11 +157,11 @@ public abstract class AbstractModuleAssembler {
 				}
 			} else {
 				String destination = resource.getModuleRelativePath().append(resource.getName()).toPortableString();
-				IFile file = (IFile) resource.getAdapter(IFile.class);
+				IFile file = resource.getAdapter(IFile.class);
 				if (file != null)
 					packager.write(file, destination);
 				else {
-					File file2 = (File) resource.getAdapter(File.class);
+					File file2 = resource.getAdapter(File.class);
 					packager.write(file2, destination);
 				}
 			}

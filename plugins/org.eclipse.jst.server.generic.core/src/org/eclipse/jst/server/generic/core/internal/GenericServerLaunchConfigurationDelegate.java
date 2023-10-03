@@ -5,9 +5,9 @@
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors: Gorkem Ercan - initial API and implementation
- *               
+ *
  **************************************************************************************************/
 package org.eclipse.jst.server.generic.core.internal;
 
@@ -49,11 +49,11 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 			abort(GenericServerCoreMessages.missingServer, null,
 					IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
 		}
-		
+
 //		Commented until bug 210859 is resolved
 //		if (server.shouldPublish() && ServerCore.isAutoPublishing())
 //			server.publish(IServer.PUBLISH_INCREMENTAL, monitor);
-		
+
 		@SuppressWarnings("null")
 		GenericServerBehaviour genericServer = (GenericServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
 
@@ -67,7 +67,7 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 			String mainTypeName = genericServer.getStartClassName();
 			IVMInstall vm = verifyVMInstall(configuration);
 			IVMRunner runner = vm.getVMRunner(mode);
-			
+
 			if(runner == null && ILaunchManager.PROFILE_MODE.equals(mode)){
 				runner = vm.getVMRunner(ILaunchManager.RUN_MODE);
 			}
@@ -83,7 +83,7 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 			String pgmArgs = getProgramArguments(configuration);
 			String vmArgs = getVMArguments(configuration);
 			String[] envp = getEnvironment(configuration);
-			
+
 			ExecutionArguments execArgs = new ExecutionArguments(vmArgs, pgmArgs);
 
 			// VM-specific attributes
@@ -100,14 +100,14 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 			runConfig.setWorkingDirectory(workingDirName);
 			runConfig.setEnvironment(envp);
 			runConfig.setVMSpecificAttributesMap(vmAttributesMap);
-			
+
 			// Bootpath
 			String[] bootpath = getBootpath(configuration);
 			if (bootpath != null && bootpath.length > 0)
 				runConfig.setBootClassPath(bootpath);
-			
+
 			setDefaultSourceLocator(launch, configuration);
-			
+
 			if (ILaunchManager.PROFILE_MODE.equals(mode)) {
 				try {
 					ServerProfilerDelegate.configureProfiling(launch, vm, runConfig, monitor);
@@ -116,7 +116,7 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 					throw ce;
 				}
 			}
-			
+
 			// Launch the configuration
 			genericServer.startPingThread();
 			runner.run(runConfig, launch, monitor);
@@ -131,7 +131,7 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 	/**
 	 * Throws a core exception with the given message and optional
 	 * exception. The exception's status code will indicate an error.
-	 * 
+	 *
 	 * @param message error message
 	 * @param exception cause of the error, or <code>null</code>
 	 * @exception CoreException with the given message and underlying
@@ -140,5 +140,5 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 	protected void abort(String message, Throwable exception, int code) throws CoreException {
 		throw new CoreException(new Status(IStatus.ERROR, CorePlugin.getDefault().getBundle().getSymbolicName(), code, message, exception));
 	}
-	
+
 }
