@@ -207,16 +207,17 @@ public class AntPublisher extends GenericPublisher {
 				String jarname = fileURL.getFile().substring(0, filename.indexOf('!'));
 
 				File jarFile = new File(new URL(jarname).getFile());
-				JarFile jar = new JarFile(jarFile);
-				File tmpFile = FileUtil.createTempFile(getBuildFile(), CorePlugin.getDefault().getStateLocation().toOSString());
-				os = new FileOutputStream(tmpFile);
-				String entryname = getBuildFile();
-				if (entryname.startsWith("/"))//$NON-NLS-1$
-					entryname = entryname.substring(1);
-				JarEntry entry = jar.getJarEntry(entryname);
-				is = jar.getInputStream(entry);
-				FileUtil.copy(is, os);
-				return tmpFile;
+				try (JarFile jar = new JarFile(jarFile)) {
+					File tmpFile = FileUtil.createTempFile(getBuildFile(), CorePlugin.getDefault().getStateLocation().toOSString());
+					os = new FileOutputStream(tmpFile);
+					String entryname = getBuildFile();
+					if (entryname.startsWith("/"))//$NON-NLS-1$
+						entryname = entryname.substring(1);
+					JarEntry entry = jar.getJarEntry(entryname);
+					is = jar.getInputStream(entry);
+					FileUtil.copy(is, os);
+					return tmpFile;
+				}
 			} catch (IOException e) {
 				IStatus s = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, "error creating temporary build file", e);//$NON-NLS-1$
 				CorePlugin.getDefault().getLog().log(s);
