@@ -27,7 +27,7 @@ import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponent;
 /**
- * 
+ *
  */
 public class RuntimeClasspathProvider implements IClasspathProvider {
 	private static final IProjectFacet WEB_FACET = ProjectFacetsManager.getProjectFacet("jst.web");
@@ -48,7 +48,7 @@ public class RuntimeClasspathProvider implements IClasspathProvider {
 		IProjectFacet pf = fv.getProjectFacet();
 		if (pf == null)
 			return null;
-		
+
 		if (pf.equals(WEB_FACET) || pf.equals(EJB_FACET) || pf.equals(EAR_FACET) ||
 				pf.equals(UTILITY_FACET) || pf.equals(CONNECTOR_FACET) || pf.equals(APP_CLIENT_FACET) ||
 				pf.equals(WEBFRAGMENT_FACET)) {
@@ -64,7 +64,7 @@ public class RuntimeClasspathProvider implements IClasspathProvider {
 				return Collections.singletonList(cpentry);
 			}
 		}
-		
+
 		return null;
 	}
 
