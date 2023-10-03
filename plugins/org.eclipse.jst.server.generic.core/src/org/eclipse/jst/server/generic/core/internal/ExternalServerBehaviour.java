@@ -182,7 +182,7 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 
 		// just use the commandline for now
 		workingCopy.setAttribute(ExternalLaunchConfigurationDelegate.EXECUTABLE_NAME, external);
-        Map environVars = getEnvironmentVariables(getServerDefinition().getStart());
+        Map<String, String> environVars = getEnvironmentVariables(getServerDefinition().getStart());
         if(!environVars.isEmpty()){
         	workingCopy.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES,environVars);
         }
@@ -248,7 +248,7 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 		String external = resolver.resolveProperties(getExternalForOS(serverDef.getStop().getExternal()));
 		wc.setAttribute(ExternalLaunchConfigurationDelegate.COMMANDLINE, external);
 		// just use commandline for now
-        Map environVars = getEnvironmentVariables(getServerDefinition().getStop());
+        Map<String, String> environVars = getEnvironmentVariables(getServerDefinition().getStop());
         if(!environVars.isEmpty()){
         	wc.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES,environVars);
         }
