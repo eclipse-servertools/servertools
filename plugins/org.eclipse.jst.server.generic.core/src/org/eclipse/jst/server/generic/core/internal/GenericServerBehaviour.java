@@ -237,7 +237,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 
 		setupLaunchClasspath(wc, vmInstall, getStopClasspath());
 
-        Map environVars = getEnvironmentVariables(getServerDefinition().getStop());
+        Map<String, String> environVars = getEnvironmentVariables(getServerDefinition().getStop());
         if(!environVars.isEmpty()){
         	wc.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES,environVars);
         }
@@ -333,9 +333,9 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     	return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getProgramArgumentsAsString());
     }
 
-    protected Map getEnvironmentVariables(LaunchConfiguration config){
+    protected Map<String, String>  getEnvironmentVariables(LaunchConfiguration config){
         List variables = config.getEnvironmentVariable();
-        Map<String, String> varsMap = new HashMap<String, String>(variables.size());
+        Map<String, String> varsMap = new HashMap<>(variables.size());
         Iterator iterator= variables.iterator();
         while(iterator.hasNext()){
         	ArgumentPair pair = (ArgumentPair)iterator.next();
@@ -371,7 +371,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
                 getWorkingDirectory());
 
 
-        Map environVars = getEnvironmentVariables(getServerDefinition().getStart());
+        Map<String, String> environVars = getEnvironmentVariables(getServerDefinition().getStart());
         if(!environVars.isEmpty()){
         	workingCopy.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES,environVars);
         }
