@@ -393,7 +393,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 	}
 
 	public IClasspathAttribute[] consolidateClasspathAttributes(IClasspathAttribute[] sourceAttachmentAttributes, IClasspathAttribute[] classpathEntryAttributes) {
-		List classpathAttributeList = new ArrayList();
+		List<IClasspathAttribute> classpathAttributeList = new ArrayList<>();
 		classpathAttributeList.addAll(Arrays.asList(sourceAttachmentAttributes));
 		for (int i = 0; i < classpathEntryAttributes.length; i++) {
 			boolean attributeCollision = false;
@@ -408,6 +408,6 @@ public abstract class RuntimeClasspathProviderDelegate {
 				classpathAttributeList.add(classpathEntryAttributes[i]);
 			}
 		}
-		return (IClasspathAttribute[]) classpathAttributeList.toArray(new IClasspathAttribute[classpathAttributeList.size()]);
+		return classpathAttributeList.toArray(new IClasspathAttribute[classpathAttributeList.size()]);
 	}
 }

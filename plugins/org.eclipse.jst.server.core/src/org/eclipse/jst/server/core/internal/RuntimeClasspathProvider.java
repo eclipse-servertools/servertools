@@ -44,7 +44,7 @@ public class RuntimeClasspathProvider implements IClasspathProvider {
 		this.rc = rc;
 	}
 
-	public List getClasspathEntries(IProjectFacetVersion fv) {
+	public List<IClasspathEntry> getClasspathEntries(IProjectFacetVersion fv) {
 		IProjectFacet pf = fv.getProjectFacet();
 		if (pf == null)
 			return null;
