@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.eclipse.ant.ui.launching.IAntLaunchConfigurationConstants;
+import org.eclipse.ant.launching.IAntLaunchConstants;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -355,7 +355,7 @@ public class AntPublisher extends GenericPublisher {
 		long time = System.currentTimeMillis();
 		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
 		ILaunchConfigurationType type = launchManager
-				.getLaunchConfigurationType(IAntLaunchConfigurationConstants.ID_ANT_LAUNCH_CONFIGURATION_TYPE);
+				.getLaunchConfigurationType(IAntLaunchConstants.ID_ANT_LAUNCH_CONFIGURATION_TYPE);
 		if (type == null) {
 			IStatus s = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.antLauncherMissing, null);
 			throw new CoreException(s);
@@ -364,8 +364,8 @@ public class AntPublisher extends GenericPublisher {
 		wc.setContainer(null);
 		wc.setAttribute(ATTR_LOCATION, buildFile);
 		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH_PROVIDER, "org.eclipse.ant.ui.AntClasspathProvider"); //$NON-NLS-1$
-		wc.setAttribute(IAntLaunchConfigurationConstants.ATTR_ANT_TARGETS, targets);
-		wc.setAttribute(IAntLaunchConfigurationConstants.ATTR_ANT_PROPERTIES, properties);
+		wc.setAttribute(IAntLaunchConstants.ATTR_ANT_TARGETS, targets);
+		wc.setAttribute(IAntLaunchConstants.ATTR_ANT_PROPERTIES, properties);
 		wc.setAttribute(IDebugUIConstants.ATTR_LAUNCH_IN_BACKGROUND, false);
 		wc.setAttribute(IDebugUIConstants.ATTR_CAPTURE_IN_CONSOLE, true);
 		wc.setAttribute(IDebugUIConstants.ATTR_PRIVATE, true);
