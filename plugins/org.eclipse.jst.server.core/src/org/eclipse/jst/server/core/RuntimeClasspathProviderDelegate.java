@@ -91,7 +91,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 	 *   container could not be resolved
 	 * @deprecated use resolveClasspathContainer(IProject, IRuntime) instead
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime) {
 		return null;
 	}
@@ -118,7 +118,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 	 * @return a possibly empty array of classpath entries
 	 * @deprecated should use resolveClasspathContainerImpl(IProject, IRuntime) instead
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	public IClasspathEntry[] resolveClasspathContainerImpl(IRuntime runtime) {
 		return resolveClasspathContainerImpl(null, runtime);
 	}
