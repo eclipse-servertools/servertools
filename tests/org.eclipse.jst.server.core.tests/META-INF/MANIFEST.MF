@@ -1,5 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
+Automatic-Module-Name: org.eclipse.jst.server.core.tests
 Bundle-Name: org.eclipse.jst.server.core.tests
 Bundle-SymbolicName: org.eclipse.jst.server.core.tests
 Bundle-Version: 1.1.500.qualifier
@@ -19,4 +20,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jst.standard.schemas,
  org.eclipse.jst.j2ee.ui
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
