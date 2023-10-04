@@ -1,5 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
+Automatic-Module-Name: org.eclipse.jst.server.generic.tests
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.jst.server.generic.tests;singleton:=true
 Bundle-Version: 1.0.300.qualifier
@@ -21,4 +22,4 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jst.server.core,
  org.eclipse.jst.server.generic.jonas
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
