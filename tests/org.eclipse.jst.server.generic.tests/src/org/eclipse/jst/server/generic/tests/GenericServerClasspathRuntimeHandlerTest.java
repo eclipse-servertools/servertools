@@ -42,7 +42,7 @@ public class GenericServerClasspathRuntimeHandlerTest extends TestCase {
         IRuntimeType type =ServerCore.findRuntimeType("org.eclipse.jst.server.generic.runtime.jonas4");
         IRuntimeWorkingCopy wc = type.createRuntime("testRuntime",null);
         GenericServerRuntime delegate = (GenericServerRuntime)wc.loadAdapter(GenericServerRuntime.class, new NullProgressMonitor());
-		HashMap props = new HashMap();
+		HashMap<String, String> props = new HashMap<>();
 		props.put("mappernames", "");
 		props.put("classPathVariableName", "JONAS");
 		props.put("serverAddress", "127.0.0.1");
