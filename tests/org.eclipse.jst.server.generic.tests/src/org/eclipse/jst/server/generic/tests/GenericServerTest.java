@@ -27,37 +27,37 @@ public class GenericServerTest extends TestCase implements TestConstants {
     /**
      * serverTypeId used as a key to the .serverdef file, then
      * the runtimeTypeId used as key to .runtimedef
-     * 
-     * @throws Exception 
+     *
+     * @throws Exception
      */
     public void testServerAndRuntimeInfoForServerDefAndRuntimeDef() throws Exception {
-        
+
         GenericServerRuntime runtime = ServerRuntimeUtils.getGenericServerRuntime(TEST_RUNTIMETYPE_ID);
         GenericServer server = ServerRuntimeUtils.getGenericServer(TEST_SERVERTYPE_ID, runtime.getRuntime());
         assertNotNull(server);
-        
+
         ServerRuntime serverRuntime = server.getServerDefinition();
-        
+
         // Verify Server and Runtime info: properties from runtimedef and serverdef are available
         ServerRuntimeUtils.verifyProperty(serverRuntime.getProperty(), "foo.prop.a", "a runtime property value");
         ServerRuntimeUtils.verifyProperty(serverRuntime.getProperty(), "foo.prop.b", "a server property value");
-        
+
         ServerRuntimeUtils.verifyClasspath(serverRuntime.getClasspath(), "foo.runtime.classpath");
         ServerRuntimeUtils.verifyClasspath(serverRuntime.getClasspath(), "foo.server.classpath");
     }
 
     public void testServerAndRuntimeInfoForServerDefOnly() throws Exception {
-        
+
         GenericServerRuntime runtime = ServerRuntimeUtils.getGenericServerRuntime(TEST_SERVERDEFONLY_RUNTIMETYPE_ID);
         GenericServer server = ServerRuntimeUtils.getGenericServer(TEST_SERVERDEFONLY_SERVERTYPE_ID, runtime.getRuntime());
         assertNotNull(server);
-        
+
         ServerRuntime serverRuntime = server.getServerDefinition();
-        
+
         // Verify Server and Runtime info
         ServerRuntimeUtils.verifyProperty(serverRuntime.getProperty(), "foo.prop.a", "a runtime property value");
         ServerRuntimeUtils.verifyProperty(serverRuntime.getProperty(), "foo.prop.b", "a server property value");
         ServerRuntimeUtils.verifyClasspath(serverRuntime.getClasspath(), "foo.classpath");
     }
-    
+
 }

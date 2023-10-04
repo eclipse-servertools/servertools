@@ -4,10 +4,10 @@
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
- * 
+ *
  * Contributors:
  *     Naci M. Dai - initial API and implementation
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -75,7 +75,7 @@ public class ServerCreationTest extends TestCase {
 
 	/**
 	 * Constructor for PluginIntegrityTest.
-	 * 
+	 *
 	 * @param name
 	 */
 	public ServerCreationTest(String name) {
@@ -87,7 +87,7 @@ public class ServerCreationTest extends TestCase {
 	}
 
 	public void testCreateServer() throws Exception {
-		
+
 		// Finds the generic server type
 		IServerType[] sTypes = ServerCore.getServerTypes();
 		IServerType serverType = null;
@@ -106,28 +106,28 @@ public class ServerCreationTest extends TestCase {
 
 		assertNotNull("Could not create runtime",runtime);
 
-		
 
-		
+
+
 		//Create a new server instance from the type
 		IServerWorkingCopy server = serverType.createServer(ID+".Jonas.Server", null, runtime, null);
 		assertNotNull("Could not create server",server);
-	
+
 		//Save the server
 		server.save(false,null);
-		
+
 		// Set properties for the runtime
 		IRuntimeWorkingCopy runtimeWorkingCopy = runtime.createWorkingCopy();
 		assertNotNull("Could not create runtime working copy",runtimeWorkingCopy);
-		
+
 		// Set the JONAS runtime as the default runtime
 		ServerUtil.setRuntimeDefaultName(runtimeWorkingCopy);
 		assertNotNull("Runtime working copy has no name",runtimeWorkingCopy.getName());
-		
+
 		// Set properties for the JONAS runtime
 		GenericServerRuntime runtimeDelegate = (GenericServerRuntime)runtimeWorkingCopy.loadAdapter(GenericServerRuntime.class,new NullProgressMonitor());
 		assertNotNull("Could not obtain runtime delegate",runtimeDelegate);
-		
+
 		HashMap props = new HashMap();
 		props.put("mappernames", "");
 		props.put("classPathVariableName", "JONAS");
@@ -136,15 +136,15 @@ public class ServerCreationTest extends TestCase {
 		props.put("jonasRoot", "C:\\nmd\\dev\\java\\appservers\\JOnAS-4.1.4");
 		props.put("classPath", "C:\\nmd\\dev\\java\\appservers\\JOnAS-4.1.4");
 		props.put("protocols", "C:\\nmd\\dev\\java\\appservers\\JOnAS-4.1.4");
-		props.put("port", "9000");		
+		props.put("port", "9000");
 	    runtimeDelegate.setServerInstanceProperties(props);
-	    
-	    //Save the runtime working copy 
+
+	    //Save the runtime working copy
 		runtimeWorkingCopy.save(false,null);
-		
+
 	}
 
-	
+
 
 
 	public void testGetWebTypes() {

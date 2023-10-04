@@ -43,7 +43,7 @@ public class ServerTypeDefinitionModelTest extends TestCase {
        }
     }
 
-	
+
 	public void testServerTypeFactory(){
 		ServerTypeFactory factory = ServerTypeFactory.eINSTANCE;
 		assertNotNull(factory.createArchiveType());
@@ -58,7 +58,7 @@ public class ServerTypeDefinitionModelTest extends TestCase {
 		assertNotNull(factory.createPublisherData());
 		assertNotNull(factory.createServerRuntime());
 		assertNotNull(factory.getServerTypePackage());
-		
+
 	}
     public void testServerRuntime(){
         assertTrue(subject.getClasspath()!=null && subject.getClasspath().size()>0);
@@ -91,7 +91,7 @@ public class ServerTypeDefinitionModelTest extends TestCase {
 		assertEquals("test.filename",subject.getFilename());
 	}
 
-	
+
     public void testClasspath()
     {
         Classpath cp =(Classpath)subject.getClasspath().get(0);
@@ -99,9 +99,9 @@ public class ServerTypeDefinitionModelTest extends TestCase {
         assertTrue(cp.getArchive()!=null && cp.getArchive().size()>0);
 		ArchiveType archiveType = (ArchiveType)cp.getArchive().get(0);
         assertTrue(archiveType.getPath()!=null && archiveType.getPath().length()>0);
-		
+
     }
-    
+
     public void testLaunchConfiguration()
     {
        LaunchConfiguration lcfg = subject.getStart();
@@ -145,7 +145,7 @@ public class ServerTypeDefinitionModelTest extends TestCase {
         assertTrue(property.getId()!=null && property.getId().length()>0);
         assertTrue(property.getLabel()!= null && property.getLabel().length()>0);
         assertTrue(property.getType()!= null && property.getType().length()>0);
-        
+
     }
     public void testPublisher()
     {
@@ -172,7 +172,7 @@ public class ServerTypeDefinitionModelTest extends TestCase {
             assertNotNull(property.getValue());
         }
     }
-    
-    
-    
+
+
+
 }

@@ -37,18 +37,18 @@ public final class ServerRuntimeUtils extends Assert {
     private ServerRuntimeUtils() {
         // utility
     }
-    
+
     public static GenericServer getGenericServer(String serverTypeId, IRuntime runtime) throws Exception {
         GenericServer serverDelegate = null;
-        
+
         IServerType[] sTypes = ServerCore.getServerTypes();
         for (int i = 0; i < sTypes.length; i++) {
             IServerType serverType = sTypes[i];
             if (serverTypeId.equals(serverType.getId())) {
                 IServerWorkingCopy serverWorkingCopy = serverType.createServer(serverTypeId, null, runtime, null);
                 assertNotNull("Could not create server", serverWorkingCopy);
-                
-                serverDelegate = 
+
+                serverDelegate =
                     (GenericServer)serverWorkingCopy.loadAdapter(
                             GenericServer.class,
                             new NullProgressMonitor());
@@ -57,27 +57,27 @@ public final class ServerRuntimeUtils extends Assert {
 
         return serverDelegate;
     }
-    
-    
+
+
     public static GenericServerRuntime getGenericServerRuntime(String runtimeTypeId) throws CoreException {
         GenericServerRuntime runtimeDelegate = null;
-        
+
         IRuntimeType[] runtimesTypes = ServerCore.getRuntimeTypes();
         for (int i = 0; i < runtimesTypes.length; i++) {
             IRuntimeType runtimeType = runtimesTypes[i];
             if (runtimeType.getId().equals(runtimeTypeId)) {
                 IRuntime runtimeWorkingCopy = runtimeType.createRuntime(runtimeTypeId, null);
-                runtimeDelegate = 
+                runtimeDelegate =
                     (GenericServerRuntime)runtimeWorkingCopy.loadAdapter(
                             GenericServerRuntime.class,
                             new NullProgressMonitor());
                 break;
             }
         }
-        
+
         return runtimeDelegate;
     }
-    
+
     public static void verifyProperty(List property, String id, String value) {
         boolean found = false;
         int count = 0;
@@ -121,5 +121,5 @@ public final class ServerRuntimeUtils extends Assert {
         assertTrue("Classpath not found", found);
         assertEquals("More than one classpath found", 1, count);
     }
-    
+
 }
