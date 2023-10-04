@@ -128,7 +128,7 @@ public class ServerCreationTest extends TestCase {
 		GenericServerRuntime runtimeDelegate = (GenericServerRuntime)runtimeWorkingCopy.loadAdapter(GenericServerRuntime.class,new NullProgressMonitor());
 		assertNotNull("Could not obtain runtime delegate",runtimeDelegate);
 
-		HashMap props = new HashMap();
+		HashMap<String, String> props = new HashMap<>();
 		props.put("mappernames", "");
 		props.put("classPathVariableName", "JONAS");
 		props.put("serverAddress", "127.0.0.1");
