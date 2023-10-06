@@ -56,9 +56,9 @@ public class Resolver {
 	 */
 	public String resolveProperties(String proppedString) {
 		HashMap<String, String> cache = new HashMap<String, String>(getProperties().size());
-		Iterator itr = getProperties().iterator();
+		Iterator<Property> itr = getProperties().iterator();
 		while (itr.hasNext()) {
-			Property element =(Property) itr.next();
+			Property element =itr.next();
 			String value = element.getDefault();
 			if(fPropertyValues != null && fPropertyValues.containsKey(element.getId()))
 			    value=(String)fPropertyValues.get(element.getId());
@@ -72,7 +72,7 @@ public class Resolver {
 		return str;
 	}
 
-	private List getProperties() {
+	private List<Property> getProperties() {
 		return this.server.getProperty();
 	}
 
