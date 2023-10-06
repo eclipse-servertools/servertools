@@ -5,9 +5,9 @@
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors: Gorkem Ercan - initial API and implementation
- *               
+ *
  **************************************************************************************************/
 package org.eclipse.jst.server.generic.core.internal;
 
@@ -44,7 +44,7 @@ public class GenericServerRuntime extends RuntimeDelegate implements IJavaRuntim
 	/**
 	 * Server instance properties attribute id on server attributes
 	 */
-	public static final String SERVER_INSTANCE_PROPERTIES = "generic_server_instance_properties"; //$NON-NLS-1$	
+	public static final String SERVER_INSTANCE_PROPERTIES = "generic_server_instance_properties"; //$NON-NLS-1$
 	private static final String PROP_VM_INSTALL_TYPE_ID = "vm-install-type-id"; //$NON-NLS-1$
 	private static final String PROP_VM_INSTALL_ID = "vm-install-id"; //$NON-NLS-1$
 
@@ -56,7 +56,7 @@ public class GenericServerRuntime extends RuntimeDelegate implements IJavaRuntim
 	public String getVMInstallTypeId() {
 		return getAttribute(PROP_VM_INSTALL_TYPE_ID, (String)null);
 	}
-	
+
 	/**
 	 * Is use default VM selected
 	 * @return boolean
@@ -93,7 +93,7 @@ public class GenericServerRuntime extends RuntimeDelegate implements IJavaRuntim
 			// ignore
 		}
 		return null;
-	
+
 	}
 
 	/* (non-Javadoc)
@@ -128,16 +128,16 @@ public class GenericServerRuntime extends RuntimeDelegate implements IJavaRuntim
 				String arcPath = serverTypeDefinition.getResolver().resolveProperties(arch.getPath());
 		           File f = new File(arcPath);
 		            if(f.exists()==false)
-		                return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0 ,NLS.bind(GenericServerCoreMessages.errorMissingClasspathEntry,f.getPath()),null);	
+		                return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0 ,NLS.bind(GenericServerCoreMessages.errorMissingClasspathEntry,f.getPath()),null);
 			}
 		}
         return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
 	}
-	
+
 	/**
-	 * Returns the ServerTypeDefinition for this runtime. 
-	 * Populated with the user properties if exists. 
-	 * 
+	 * Returns the ServerTypeDefinition for this runtime.
+	 * Populated with the user properties if exists.
+	 *
 	 * @return populated ServerTypeDefinition
 	 */
 	public ServerRuntime getServerTypeDefinition()
@@ -148,7 +148,7 @@ public class GenericServerRuntime extends RuntimeDelegate implements IJavaRuntim
 	       return null;
 	   return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(id,properties);
 	}
-	
+
 	/**
 	 * SetVM to be used
 	 * @param vmInstall
@@ -159,20 +159,20 @@ public class GenericServerRuntime extends RuntimeDelegate implements IJavaRuntim
 		} else
 			setVMInstall(vmInstall.getVMInstallType().getId(), vmInstall.getId());
 	}
-	
+
 	private void setVMInstall(String typeId, String id) {
 		if (typeId == null)
 			setAttribute(PROP_VM_INSTALL_TYPE_ID, (String)null);
 		else
 			setAttribute(PROP_VM_INSTALL_TYPE_ID, typeId);
-		
+
 		if (id == null)
 			setAttribute(PROP_VM_INSTALL_ID, (String)null);
 		else
 			setAttribute(PROP_VM_INSTALL_ID, id);
 	}
-	
-	
+
+
 	/**
 	 * Return instance proerties
 	 * @return property map
@@ -180,7 +180,7 @@ public class GenericServerRuntime extends RuntimeDelegate implements IJavaRuntim
 	public Map getServerInstanceProperties() {
 		return getAttribute(SERVER_INSTANCE_PROPERTIES, new HashMap());
 	}
-	
+
 	/**
 	 * Returns serverdef id
 	 * @return serverdef id
@@ -188,7 +188,7 @@ public class GenericServerRuntime extends RuntimeDelegate implements IJavaRuntim
 	public String getServerDefinitionId() {
 		return getAttribute(SERVER_DEFINITION_ID, (String) null);
 	}
-	
+
 	/**
 	 * set instance properties
 	 * @param map
@@ -196,7 +196,7 @@ public class GenericServerRuntime extends RuntimeDelegate implements IJavaRuntim
 	public void setServerInstanceProperties(Map map) {
 		setAttribute(SERVER_INSTANCE_PROPERTIES, map);
 	}
-	
+
 	/**
 	 * Set serverdef id
 	 * @param s
@@ -204,7 +204,7 @@ public class GenericServerRuntime extends RuntimeDelegate implements IJavaRuntim
 	public void setServerDefinitionId(String s) {
 		setAttribute(SERVER_DEFINITION_ID, s);
 	}
-	
+
 	public void setDefaults(IProgressMonitor monitor) {
 		List props = this.getServerTypeDefinition().getProperty();
  		Map<String, String> instancePropsMap = new HashMap<String, String>();
@@ -215,6 +215,6 @@ public class GenericServerRuntime extends RuntimeDelegate implements IJavaRuntim
 		}
  		setServerInstanceProperties(instancePropsMap);
 
-		
+
 	}
 }

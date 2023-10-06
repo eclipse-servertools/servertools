@@ -17,35 +17,35 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 
 /**
  * Combines a runtimedef files
- * 
+ *
  * - properties
  * - classpaths
- * 
- * entries with a serverdef, if the serverdef does not already have 
+ *
+ * entries with a serverdef, if the serverdef does not already have
  * them - contains check is done by id.
- * 
+ *
  * @author <a href="mailto:david.black@capeclear.com">David Black</a>
  */
 public class ServerRuntimeMergeUtil {
 
     /**
-     * Combines a runtime definition and a server definition 
+     * Combines a runtime definition and a server definition
      * into a single logical <code>ServerRuntime</code>.
-     * 
+     *
      * @param serverdef
      * @param runtimedef
      * @return serverdef
      */
     public static ServerRuntime combine(ServerRuntime serverdef, ServerRuntime runtimedef) {
-        /** 
+        /**
          * Add properties from runtimedef to serverdef if not already present,
          * this ensures that:
-         * 
+         *
          * (1) while we are affecting the cached copy of serverdef, it is always
          *     required to be combined with its runtimedef (if there is one), and
          *     we check that the property has not already been added
-         *     
-         * (2) serverdef properties can override runtimedef properties    
+         *
+         * (2) serverdef properties can override runtimedef properties
          */
         List properties = runtimedef.getProperty();
         if (properties != null) {
@@ -55,16 +55,16 @@ public class ServerRuntimeMergeUtil {
                 addPropertyIfNotPresent(serverdef.getProperty(), prop);
             }
         }
-        
-        /** 
+
+        /**
          * Add classpaths from runtimedef to serverdef if not already present,
          * this ensures that:
-         * 
+         *
          * (1) while we are affecting the cached copy of serverdef, it is always
          *     required to be combined with its runtimedef (if there is one), and
          *     we check that the classpath has not already been added (by id)
-         *     
-         * (2) serverdef classpath can override runtimedef classpath by id    
+         *
+         * (2) serverdef classpath can override runtimedef classpath by id
          */
         List classpaths = runtimedef.getClasspath();
         if (classpaths != null) {
@@ -74,7 +74,7 @@ public class ServerRuntimeMergeUtil {
                 addClasspathIfNotPresent(serverdef.getClasspath(), classpath);
             }
         }
-        
+
         return serverdef;
     }
 
@@ -97,7 +97,7 @@ public class ServerRuntimeMergeUtil {
         }
         return found;
     }
-    
+
     @SuppressWarnings("unchecked")
 	private static void addPropertyIfNotPresent(List properties, Property prop) {
         if (!containsProperty(properties, prop.getId())) {
