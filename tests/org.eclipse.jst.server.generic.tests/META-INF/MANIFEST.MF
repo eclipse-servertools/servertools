@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Automatic-Module-Name: org.eclipse.jst.server.generic.tests
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.jst.server.generic.tests;singleton:=true
-Bundle-Version: 1.0.300.qualifier
+Bundle-Version: 1.1.0.qualifier
 Bundle-ClassPath: genericServerTests.jar
 Bundle-Activator: org.eclipse.jst.server.generic.tests.TestsPlugin
 Bundle-Vendor: %Bundle-Vendor.0
