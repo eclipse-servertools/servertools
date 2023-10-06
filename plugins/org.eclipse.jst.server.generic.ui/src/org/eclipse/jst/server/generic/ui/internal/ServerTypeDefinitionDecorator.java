@@ -5,9 +5,9 @@
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors: Gorkem Ercan - initial API and implementation
- *               
+ *
  **************************************************************************************************/
 package org.eclipse.jst.server.generic.ui.internal;
 
@@ -33,7 +33,7 @@ import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 /**
  * Provides the UI objects for gathering user information
  * for server properties.
- * 
+ *
  * @author Gorkem Ercan
  */
 public abstract class ServerTypeDefinitionDecorator implements GenericServerCompositeDecorator {
@@ -50,7 +50,7 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
 	private final class PathModifyListener implements ModifyListener {
 		public void modifyText(ModifyEvent e) {
 			String path = ((Text) e.widget).getText();
-			
+
 			if(path.length()<1)
 			{
 				fLastMessage = GenericServerUIMessages.emptyPath;
@@ -75,7 +75,7 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param definition
 	 * @param initialProperties
 	 * @param context
@@ -94,7 +94,7 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
 	 */
 	public void decorate(GenericServerComposite composite) {
 
-		List properties =null; 
+		List properties =null;
 		if(fDefinition==null){
 			properties= new ArrayList(0);
 		}
@@ -109,7 +109,7 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
 		Dialog.applyDialogFont(composite);
 	}
 
-	
+
     private void createPropertyControl(Composite parent, Property property){
     	if( Property.TYPE_DIRECTORY.equals(property.getType())) {
     		Text path = SWTUtil.createLabeledPath(property.getLabel(),getPropertyValue(property),parent);
@@ -161,12 +161,12 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
     {
     	fPropertyControls.add(control);
     }
-	
-    private String getPropertyValue(Property property){	
+
+    private String getPropertyValue(Property property){
 		if(fProperties!=null && fProperties.isEmpty()==false){
 		//user properties exist use those
 			return fDefinition.getResolver().resolveProperties((String)fProperties.get(property.getId()));
-		}	
+		}
 		if(Property.TYPE_SELECT_EDIT.equals(property.getType())){
 			StringTokenizer tokenizer = new StringTokenizer(property.getDefault(),","); //$NON-NLS-1$
 			if( tokenizer.hasMoreTokens()){
@@ -174,8 +174,8 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
 			}
 			return ""; //$NON-NLS-1$
 		}
-		return fDefinition.getResolver().resolveProperties(property.getDefault());	
-	}	
+		return fDefinition.getResolver().resolveProperties(property.getDefault());
+	}
 
    /**
     * Returns the property name/value pairs.
@@ -198,7 +198,7 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
      			else{
      			   propertyMap.put(prop.getId(),combo.getText());
      			}
-     			
+
     		}else{
     			Text text = (Text)fPropertyControls.get(i);
     			propertyMap.put(prop.getId(),text.getText());
