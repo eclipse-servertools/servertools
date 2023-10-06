@@ -181,8 +181,8 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
     * Returns the property name/value pairs.
     * @return Map containing the values collected from the user
     */
-	public Map getValues(){
-		Map propertyMap = new HashMap();
+	public Map<String, String> getValues(){
+		Map<String, String> propertyMap = new HashMap<>();
     	for(int i=0; i<fPropertyControls.size();i++){
     		Property prop = (Property)fPropertyControls.get(i).getData();
     		if(fPropertyControls.get(i)instanceof Button){
