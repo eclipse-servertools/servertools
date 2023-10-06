@@ -5,9 +5,9 @@
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors: Gorkem Ercan - initial API and implementation
- *               
+ *
  **************************************************************************************************/
 package org.eclipse.jst.server.generic.ui.internal;
 
@@ -41,7 +41,7 @@ public class AntPublisherPropertyTester extends PropertyTester {
 					}
 				}
 			}
-			
+
 		};
 		return false;
 	}
