@@ -5,9 +5,9 @@
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors: Gorkem Ercan - initial API and implementation
- *               
+ *
  **************************************************************************************************/
 
 package org.eclipse.jst.server.generic.internal.xml;
@@ -28,29 +28,29 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 
 /**
  * Utility to resolve serverdef/runtimedef properties with the user provided data.
- * Resolver also looks through eclipse platform provided dynamic variables to 
- * resolve a property. 
+ * Resolver also looks through eclipse platform provided dynamic variables to
+ * resolve a property.
  *
  * @author Gorkem Ercan
  */
 public class Resolver {
-	
+
 	private static final String PROP_START2 = "%{"; //$NON-NLS-1$
 	private static final String PROP_END = "}"; //$NON-NLS-1$
 	private static final String PROP_START = "${"; //$NON-NLS-1$
 	private Map fPropertyValues = new HashMap();
 	private ServerRuntime server;
-	
+
     /**
-	 * @param runtime 
+	 * @param runtime
 	 */
 	public Resolver(ServerRuntime runtime) {
 		this.server = runtime;
 	}
-	
+
 	/**
 	 * Returns a resolved string.
-     * 
+     *
 	 * @param proppedString
 	 * @return resolved string
 	 */
@@ -99,7 +99,7 @@ public class Resolver {
 
 	private int skipToProperty(String str,HashMap cache) {
 		if (str == null )return -1;
-		int start = -1; 
+		int start = -1;
 		int end =  0;
 		String key=""; //$NON-NLS-1$
 		do {
@@ -112,7 +112,7 @@ public class Resolver {
 		while( !cache.containsKey( key ) && VariablesPlugin.getDefault().getStringVariableManager().getDynamicVariable( key ) == null );
 		return start;
 	}
-	
+
 	private boolean isPassPropertyLeft(String str) {
 		return str.indexOf(PROP_START2) >= 0;
 	}
@@ -128,7 +128,7 @@ public class Resolver {
             if (dv != null ){
                 try {
                     value = dv.getValue( null );
-                } 
+                }
                 catch( CoreException e ){
                     CorePlugin.getDefault().getLog().log(
                     new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 1,
@@ -140,7 +140,7 @@ public class Resolver {
 			return str.toString();
 		return str.replace( start, end+1, value ).toString();
 	}
-	
+
 	private String fixParam(String proppedString) {
 		String str = proppedString;
 		int start = str.indexOf(PROP_START2);
@@ -148,11 +148,11 @@ public class Resolver {
 			+ PROP_START
 			+ str.substring(start+2);
 	}
-    
+
 	/**
      * Set the name value pairs that the receiver resolver instance
      * uses to resolve serverdef/runtimedef properties.
-     * 
+     *
 	 * @param propertyValues The fPropertyValues to set.
 	 */
 	public void setPropertyValues(Map propertyValues) {

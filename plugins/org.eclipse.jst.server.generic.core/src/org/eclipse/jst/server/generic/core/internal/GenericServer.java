@@ -5,9 +5,9 @@
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors: Gorkem Ercan - initial API and implementation
- *               
+ *
  **************************************************************************************************/
 package org.eclipse.jst.server.generic.core.internal;
 
@@ -42,7 +42,7 @@ import org.eclipse.wst.server.core.model.ServerDelegate;
 
 /**
  * Generic XML based server implementation.
- * 
+ *
  * @author Gorkem Ercan
  */
 public class GenericServer extends ServerDelegate implements IURLProvider {
@@ -51,7 +51,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	 * Property key for the custom build file. Selected by user.
 	 */
 	public static final String PROP_CUSTOM_BUILD_SCRIPT = CorePlugin.PLUGIN_ID+".custom_build_file"; //$NON-NLS-1$
-	
+
     private static final String ATTR_GENERIC_SERVER_MODULES = "Generic_Server_Modules_List"; //$NON-NLS-1$
 
 	public IStatus canModifyModules( IModule[] add, IModule[] remove ) {
@@ -75,7 +75,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
         }
         return Status.OK_STATUS;
     }
-	
+
     private boolean isSupportedModule(IModule module){
         if( module == null )
             return false;
@@ -88,22 +88,22 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
         }
          return false;
     }
-    
+
     /* (non-Javadoc)
      * @see org.eclipse.wst.server.core.model.ServerDelegate#modifyModules(org.eclipse.wst.server.core.IModule[], org.eclipse.wst.server.core.IModule[], org.eclipse.core.runtime.IProgressMonitor)
      */
     @SuppressWarnings("unchecked")
 	public void modifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException {
-      
+
         List modules = this.getAttribute(ATTR_GENERIC_SERVER_MODULES,(List)null);
-        
+
         if(add!=null&& add.length>0)
         {
             if(modules==null) {
                modules=new ArrayList(add.length);
             }
             for (int i = 0; i < add.length; i++) {
-               
+
                if(modules.contains(add[i].getId())==false)
                     modules.add(add[i].getId());
             }
@@ -114,14 +114,14 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
                 modules.remove(remove[i].getId());
              }
         }
-        if(modules!=null)    
+        if(modules!=null)
             setAttribute(ATTR_GENERIC_SERVER_MODULES,modules);
-        
+
     }
 
  	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.wst.server.core.model.IServerDelegate#getChildModules(org.eclipse.wst.server.core.model.IModule[])
 	 */
 	public IModule[] getChildModules(IModule[] module) {
@@ -132,7 +132,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 					IEnterpriseApplication enterpriseApplication = (IEnterpriseApplication) module[0]
 							.loadAdapter(IEnterpriseApplication.class, null);
 					if (enterpriseApplication != null) {
-						IModule[] earModules = enterpriseApplication.getModules(); 
+						IModule[] earModules = enterpriseApplication.getModules();
 						if ( earModules != null) {
 							return earModules;
 						}
@@ -151,8 +151,8 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	}
 
 	/**
-	 * Returns the server instance properties including runtime properties. 
-	 * 
+	 * Returns the server instance properties including runtime properties.
+	 *
 	 * @return server instance properties.
 	 */
 	@SuppressWarnings("unchecked")
@@ -164,11 +164,11 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 		instanceProperties.putAll(serverProperties);
 		return instanceProperties;
 	}
-	
- 	
+
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.wst.server.core.model.IMonitorableServer#getServerPorts()
 	 */
 	public org.eclipse.wst.server.core.ServerPort[] getServerPorts() {
@@ -179,7 +179,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 			int port = Integer.parseInt(getServerDefinition().getResolver().resolveProperties(element.getNo()));
 			ports.add(new ServerPort("server", element.getName(), port, element.getProtocol()));		 //$NON-NLS-1$
 		}
-	
+
 		return ports.toArray(new org.eclipse.wst.server.core.ServerPort[ports.size()]);
 	}
 
@@ -192,12 +192,12 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 		try {
             if (module == null || module.loadAdapter(IWebModule.class,null)==null )
 				return null;
-            
+
             IWebModule webModule =(IWebModule)module.loadAdapter(IWebModule.class,null);
             String host = getServer().getHost();
 			String url = "http://"+host; //$NON-NLS-1$
 			int port = 0;
-			
+
 			port = getHttpPort();
 			port =ServerUtil.getMonitoredPort(getServer(), port, "web"); //$NON-NLS-1$
 			if (port != 80)
@@ -232,7 +232,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 			if(port== -1)
 				port = Integer.parseInt(getServerDefinition().getResolver().resolveProperties(aPort.getNo()));
 			else if( "http".equals(aPort.getProtocol() ) ) //$NON-NLS-1$
-				port = Integer.parseInt(aPort.getNo());	
+				port = Integer.parseInt(aPort.getNo());
 		}
 		if( port == -1)
 			port = 8080;
@@ -241,7 +241,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 
 	/**
 	 * Returns the ServerRuntime that represents the .serverdef
-	 * file for this server. 
+	 * file for this server.
 	 * @return server runtime
 	 */
     public ServerRuntime getServerDefinition(){
@@ -250,17 +250,17 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
         {
         	throw new IllegalStateException("No server determeined. Server definition can not be determined without a server"); //$NON-NLS-1$
         }
-        
+
         String rtTypeId=null;
         if ( server.getRuntime() != null &&
         		server.getRuntime().getRuntimeType() != null )
         {
         	rtTypeId = server.getRuntime().getRuntimeType().getId();
         }
-		
+
         String serverTypeId = server.getServerType().getId();
         /**
-         * Pass both the serverType id and runtimeType id and ServerTypeDefinitionManager 
+         * Pass both the serverType id and runtimeType id and ServerTypeDefinitionManager
          * will figure out how to give us back the correct ServerRuntime.
          */
 		return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(
@@ -274,7 +274,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.wst.server.core.model.ServerDelegate#getRootModules(org.eclipse.wst.server.core.IModule)
      */
     public IModule[] getRootModules(IModule module) throws CoreException {
@@ -312,14 +312,14 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
  	}
  	/**
  	 * Change the server instance properties.
- 	 * 
+ 	 *
  	 * @param map
  	 */
  	public void setServerInstanceProperties(Map map) {
  		setAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES, map);
  	}
  	/**
- 	 * Checks if the properties set for this server is valid. 
+ 	 * Checks if the properties set for this server is valid.
  	 * @return status
  	 */
  	public IStatus validate() {
@@ -340,11 +340,11 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 		File f = new File(path);
 		return f.exists();
 	}
- 
+
 	@SuppressWarnings("unchecked")
 	public void setDefaults(IProgressMonitor monitor) {
-		ServerRuntime serverRuntime =  this.getServerDefinition(); 
-		// although a server should always have a serverdefinition in some cases 
+		ServerRuntime serverRuntime =  this.getServerDefinition();
+		// although a server should always have a serverdefinition in some cases
 		// the runtime is not created yet and serverdef can not be determined.
 		if (serverRuntime == null ){
 			return ;
@@ -370,5 +370,5 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 		}
  		setServerInstanceProperties(instancePropsMap);
  	}
- 	
+
 }
