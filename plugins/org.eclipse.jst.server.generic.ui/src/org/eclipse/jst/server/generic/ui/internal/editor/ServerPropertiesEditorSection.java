@@ -5,9 +5,9 @@
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors: Gorkem Ercan - initial API and implementation
- *               
+ *
  **************************************************************************************************/
 package org.eclipse.jst.server.generic.ui.internal.editor;
 
@@ -62,8 +62,8 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 	private ILaunchesListener2 fLaunchListener;
 	private Map fControls = new HashMap();
     protected boolean fUpdating;
-   
-    
+
+
 	public void init(final IEditorSite site, IEditorInput input) {
 		super.init(site, input);
 		if(server!=null){
@@ -72,7 +72,7 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 		fPropertyChangeListener = new PropertyChangeListener(){
 
 			public void propertyChange( PropertyChangeEvent evt ) {
-				if(evt.getPropertyName().equals( GenericServerRuntime.SERVER_INSTANCE_PROPERTIES )) 
+				if(evt.getPropertyName().equals( GenericServerRuntime.SERVER_INSTANCE_PROPERTIES ))
                 {
                     if ( !fUpdating ){
                         fUpdating = true;
@@ -84,11 +84,11 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 		};
 		server.addPropertyChangeListener( fPropertyChangeListener );
 		fLaunchListener = new ILaunchesListener2() {
-		
+
 			public void launchesRemoved(ILaunch[] launches) {
 				//Nothing to do
 			}
-			
+
 			private ILaunchConfiguration getServerLaunchConfig(ILaunch[] launches){
 				for (int i=0; i< launches.length; i++)
 				{
@@ -112,59 +112,59 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 			public void launchesChanged(ILaunch[] launches) {
 				//Nothing to do
 			}
-		
+
 			public void launchesAdded(ILaunch[] launches) {
 				ILaunchConfiguration lc = getServerLaunchConfig(launches);
 				try {
 					if( lc  != null){
-						if ("true".equals(lc.getAttribute(GenericServerBehaviour.ATTR_STOP, "false"))){ //$NON-NLS-1$ //$NON-NLS-2$						
-						site.getWorkbenchWindow().getWorkbench().getDisplay().asyncExec( new Runnable() {						
+						if ("true".equals(lc.getAttribute(GenericServerBehaviour.ATTR_STOP, "false"))){ //$NON-NLS-1$ //$NON-NLS-2$
+						site.getWorkbenchWindow().getWorkbench().getDisplay().asyncExec( new Runnable() {
 								public void run() {
 									IManagedForm managedForm = getManagedForm();
 									managedForm.getMessageManager().removeMessage(MESSAGE_ID_SERVER_RUNNING);
 									managedForm.getMessageManager().update();
-							
+
 								}
-							
+
 							});
 						}
 						else{
-							site.getWorkbenchWindow().getWorkbench().getDisplay().asyncExec( new Runnable() {						
+							site.getWorkbenchWindow().getWorkbench().getDisplay().asyncExec( new Runnable() {
 								public void run() {
 									getManagedForm().getMessageManager().addMessage(MESSAGE_ID_SERVER_RUNNING,GenericServerUIMessages.serverRunningCanNotSave , null, IMessageProvider.WARNING);
-							
+
 								}
-							
+
 							});
-							
+
 						}
 					}
 				} catch (CoreException e) {
 					GenericUiPlugin.getDefault().getLog().log(e.getStatus());
-				}					
+				}
 			}
-		
+
 			public void launchesTerminated(ILaunch[] launches) {
 				if(getServerLaunchConfig(launches) != null )
 				{
 					site.getWorkbenchWindow().getWorkbench().getDisplay().asyncExec( new Runnable() {
-						
+
 						public void run() {
 							getManagedForm().getMessageManager().removeMessage(MESSAGE_ID_SERVER_RUNNING);
-						}			
+						}
 					});
-				}					
-					
+				}
+
 			}
-		
+
 		};
-		
+
 		getLaunchManager().addLaunchListener(fLaunchListener);
-		
+
 	}
-    
+
 	protected void updateControls() {
-        List props = fServer.getServerDefinition().getProperty(); 
+        List props = fServer.getServerDefinition().getProperty();
         for (Iterator iter = props.iterator(); iter.hasNext();) {
             Property property = (Property) iter.next();
             if(property.getContext().equals(Property.CONTEXT_SERVER))
@@ -187,7 +187,7 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
                     t.setText( value );
                 }
             }
-        }  
+        }
     }
 
     public void createSection(Composite parent) {
@@ -198,7 +198,7 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 			section.setText(GenericServerUIMessages.ServerEditorSectionTitle);
 			section.setDescription(GenericServerUIMessages.ServerEditorSectionDescription);
 			section.setLayoutData(new GridData(SWT.FILL,SWT.NONE,true,false));
-			
+
 		Composite composite = formToolkit.createComposite(section);
 		GridLayout layout = new GridLayout();
 		layout.numColumns=3;
@@ -208,7 +208,7 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 		layout.horizontalSpacing = 15;
 		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(SWT.FILL,SWT.NONE,true,false));
-		
+
 		List props = fServer.getServerDefinition().getProperty();
 		for (Iterator iter = props.iterator(); iter.hasNext();) {
 			Property property = (Property) iter.next();
@@ -218,13 +218,13 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 
 		formToolkit.paintBordersFor(composite);
 		section.setClient(composite);
-	
-		
+
+
 		if ( getExistingLaunch() != null ){
 			getManagedForm().getMessageManager().addMessage(MESSAGE_ID_SERVER_RUNNING,GenericServerUIMessages.serverRunningCanNotSave , null, IMessageProvider.WARNING);
 		}
 	}
-	
+
 	protected void executeUpdateOperation(String propertyName, String propertyValue)
 	{
         if( !fUpdating )
@@ -236,37 +236,37 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
             fUpdating = false;
         }
 	}
-    
+
     private void createPropertyControl(Composite parent, final Property property, FormToolkit toolkit){
-    	
+
     	if( Property.TYPE_DIRECTORY.equals(property.getType())) {
     		final Text path = SWTUtil.createLabeledPath(property.getLabel(),getPropertyValue(property),parent,toolkit);
             fControls.put( property.getId(), path );
-    		path.addModifyListener(new ModifyListener() {			
+    		path.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
 					executeUpdateOperation(property.getId(),path.getText());
 				}
 			});
      	} else if( Property.TYPE_FILE.equals(property.getType())) {
-            
+
     	    final Text file = SWTUtil.createLabeledFile(property.getLabel(),getPropertyValue(property),parent,toolkit);
     		fControls.put( property.getId(), file );
             file.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
 					executeUpdateOperation(property.getId(),file.getText());
 				}
-			});	
+			});
        	}else if( Property.TYPE_BOOLEAN.equals(property.getType())) {
     	    final Button bool = SWTUtil.createLabeledCheck(property.getLabel(),("true".equals( getPropertyValue(property))),parent,toolkit); //$NON-NLS-1$
     	    fControls.put( property.getId(), bool );
-            bool.addSelectionListener(new SelectionListener() {			
+            bool.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent e) {
 					executeUpdateOperation(property.getId(),  Boolean.toString(bool.getSelection()));
 				}
 				public void widgetDefaultSelected(SelectionEvent e) {
 					// Do Nothing
 				}
-			});	
+			});
        	}else if(Property.TYPE_SELECT.equals(property.getType())) {
     		StringTokenizer tokenizer = new StringTokenizer(property.getDefault(),","); //$NON-NLS-1$
     		int tokenCount = tokenizer.countTokens();
@@ -283,14 +283,14 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 					executeUpdateOperation(property.getId(),combo.getText());
 				}
 			});
-       		combo.addSelectionListener(new SelectionListener() {		
+       		combo.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent e) {
 					executeUpdateOperation(property.getId(),combo.getText());
-				}			
+				}
 				public void widgetDefaultSelected(SelectionEvent e) {
 					// nothing to do
-				}			
-			});	
+				}
+			});
        	}else if(Property.TYPE_SELECT_EDIT.equals(property.getType())) {
     		StringTokenizer tokenizer = new StringTokenizer(property.getDefault(),","); //$NON-NLS-1$
     		int tokenCount = tokenizer.countTokens();
@@ -307,14 +307,14 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 					executeUpdateOperation(property.getId(),combo.getText());
 				}
 			});
-       		combo.addSelectionListener(new SelectionListener() {		
+       		combo.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent e) {
 					executeUpdateOperation(property.getId(),combo.getText());
-				}			
+				}
 				public void widgetDefaultSelected(SelectionEvent e) {
 					// nothing to do
-				}			
-			});	
+				}
+			});
        	}
        	else  {// Property.TYPE_TEXT
     	    final Text defaultText= SWTUtil.createLabeledText(property.getLabel(),getPropertyValue(property),parent,toolkit);
@@ -335,14 +335,14 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 	    super.dispose();
         if( server!= null )
             server.removePropertyChangeListener( fPropertyChangeListener );
-       
+
         getLaunchManager().removeLaunchListener( fLaunchListener );
 	}
-	
-	
+
+
 	public ILaunch getExistingLaunch() {
 		ILaunchManager launchManager = getLaunchManager();
-		
+
 		ILaunch[] launches = launchManager.getLaunches();
 		int size = launches.length;
 		for (int i = 0; i < size; i++) {
@@ -358,7 +358,7 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 			} catch (CoreException e) {
 				// ignore
 			}
-		}		
+		}
 		return null;
 	}
 
@@ -366,7 +366,7 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
 		return launchManager;
 	}
-	
+
 	private IStatus validate(){
 		if (getExistingLaunch() != null){
 			return new Status(IStatus.WARNING,GenericUiPlugin.PLUGIN_ID, GenericServerUIMessages.serverRunningCanNotSave);
@@ -374,7 +374,7 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 		return null;
 
 	}
-	
+
 	public IStatus[] getSaveStatus() {
 		IStatus status = validate();
 		if (status != null ){
