@@ -46,6 +46,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -60,7 +61,7 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 	protected GenericServer fServer;
 	private PropertyChangeListener fPropertyChangeListener;
 	private ILaunchesListener2 fLaunchListener;
-	private Map fControls = new HashMap();
+	private Map<String, Control> fControls = new HashMap<>();
     protected boolean fUpdating;
 
 

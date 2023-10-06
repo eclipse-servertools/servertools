@@ -38,7 +38,7 @@ import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 
 
 public class JRESelectDecorator implements GenericServerCompositeDecorator {
-	private List installedJREs;
+	private List<IVMInstall> installedJREs;
 	private String[] jreNames;
 	private GenericServerRuntime fRuntime;
 	private IWizardHandle fWizard;
@@ -68,7 +68,7 @@ public class JRESelectDecorator implements GenericServerCompositeDecorator {
 				int sel = combo.getSelectionIndex();
 				IVMInstall vmInstall = null;
 				if (sel > 0)
-					vmInstall = (IVMInstall) installedJREs.get(sel - 1);
+					vmInstall = installedJREs.get(sel - 1);
 
 				fRuntime.setVMInstall(vmInstall);
 				validate();
@@ -120,7 +120,7 @@ public class JRESelectDecorator implements GenericServerCompositeDecorator {
 	}
 
 	protected void updateJREs() {
-		installedJREs = new ArrayList();
+		installedJREs = new ArrayList<>();
 		IVMInstallType[] vmInstallTypes = JavaRuntime.getVMInstallTypes();
 		int size = vmInstallTypes.length;
 		for (int i = 0; i < size; i++) {
@@ -135,7 +135,7 @@ public class JRESelectDecorator implements GenericServerCompositeDecorator {
 		jreNames = new String[size+1];
 		jreNames[0] = GenericServerUIMessages.defaultJRE;
 		for (int i = 0; i < size; i++) {
-			IVMInstall vmInstall = (IVMInstall) installedJREs.get(i);
+			IVMInstall vmInstall = installedJREs.get(i);
 			jreNames[i+1] = vmInstall.getName();
 		}
 	}
