@@ -32,10 +32,10 @@ public class AntPublisherPropertyTester extends PropertyTester {
 			IServerWorkingCopy wc = (IServerWorkingCopy)receiver;
 			ServerRuntime runtimeDefinition = ServerTypeDefinitionUtil.getServerTypeDefinition(wc.getRuntime());
 			if ( runtimeDefinition != null ){
-				List l = runtimeDefinition.getPublisher();
-				Iterator r = l.iterator();
+				List<Publisher> l = runtimeDefinition.getPublisher();
+				Iterator<Publisher> r = l.iterator();
 				while ( r.hasNext() ){
-					Publisher publisher = (Publisher) r.next();
+					Publisher publisher = r.next();
 					if (AntPublisher.PUBLISHER_ID.equals( publisher.getId() )){
 						return true;
 					}

@@ -91,7 +91,7 @@ public interface ServerRuntime extends EObject {
 	 *        extendedMetaData="kind='element' name='property' group='#group:0'"
 	 * @generated
 	 */
-	EList getProperty();
+	EList<Property> getProperty();
 
 	/**
 	 * Returns the value of the '<em><b>Group1</b></em>' attribute list.
@@ -125,7 +125,7 @@ public interface ServerRuntime extends EObject {
 	 *        extendedMetaData="kind='element' name='port' group='#group:2'"
 	 * @generated
 	 */
-	EList getPort();
+	EList<Port> getPort();
 
 	/**
 	 * Returns the value of the '<em><b>Group2</b></em>' attribute list.
@@ -159,7 +159,7 @@ public interface ServerRuntime extends EObject {
 	 *        extendedMetaData="kind='element' name='module' group='#group:4'"
 	 * @generated
 	 */
-	EList getModule();
+	EList<Module> getModule();
 
 	/**
 	 * Returns the value of the '<em><b>Project</b></em>' containment reference.
@@ -274,7 +274,7 @@ public interface ServerRuntime extends EObject {
 	 *        extendedMetaData="kind='element' name='publisher' group='#group:9'"
 	 * @generated
 	 */
-	EList getPublisher();
+	EList<Publisher> getPublisher();
 
 	/**
 	 * Returns the value of the '<em><b>Group4</b></em>' attribute list.
@@ -308,7 +308,7 @@ public interface ServerRuntime extends EObject {
 	 *        extendedMetaData="kind='element' name='classpath' group='#group:11'"
 	 * @generated
 	 */
-	EList getClasspath();
+	EList<Classpath> getClasspath();
 
 	/**
 	 * Returns the value of the '<em><b>Jndi Connection</b></em>' containment reference.

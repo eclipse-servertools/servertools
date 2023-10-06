@@ -323,10 +323,10 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
  	 * @return status
  	 */
  	public IStatus validate() {
- 		List props = this.getServerDefinition().getProperty();
+ 		List<Property> props = this.getServerDefinition().getProperty();
  		for(int i=0;i<props.size();i++)
  		{
- 			Property property =(Property)props.get(i);
+ 			Property property =props.get(i);
  			if(property.getType().equals(Property.TYPE_DIRECTORY) || property.getType().equals(Property.TYPE_FILE))
  			{
  				String path= (String)getInstanceProperties().get(property.getId());
@@ -349,10 +349,10 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 		if (serverRuntime == null ){
 			return ;
 		}
- 		List props = this.getServerDefinition().getProperty();
+ 		List<Property> props = this.getServerDefinition().getProperty();
  		Map instancePropsMap = new HashMap();
- 		for (Iterator iter = props.iterator(); iter.hasNext();) {
-			Property element = (Property) iter.next();
+ 		for (Iterator<Property> iter = props.iterator(); iter.hasNext();) {
+			Property element = iter.next();
 			if(Property.CONTEXT_SERVER.equalsIgnoreCase(element.getContext())) {
 				//if the property type is this is a combo, parse the value and use the first token as the default
 				if (Property.TYPE_SELECT.equals(element.getType()) ||

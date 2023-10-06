@@ -47,11 +47,11 @@ public class ServerRuntimeMergeUtil {
          *
          * (2) serverdef properties can override runtimedef properties
          */
-        List properties = runtimedef.getProperty();
+        List<Property> properties = runtimedef.getProperty();
         if (properties != null) {
-            Iterator iter = properties.iterator();
+            Iterator<Property> iter = properties.iterator();
             while (iter.hasNext()) {
-                Property prop = (Property) iter.next();
+                Property prop = iter.next();
                 addPropertyIfNotPresent(serverdef.getProperty(), prop);
             }
         }
@@ -66,11 +66,11 @@ public class ServerRuntimeMergeUtil {
          *
          * (2) serverdef classpath can override runtimedef classpath by id
          */
-        List classpaths = runtimedef.getClasspath();
+        List<Classpath> classpaths = runtimedef.getClasspath();
         if (classpaths != null) {
-            Iterator iter = classpaths.iterator();
+            Iterator<Classpath> iter = classpaths.iterator();
             while (iter.hasNext()) {
-                Classpath classpath = (Classpath)iter.next();
+                Classpath classpath = iter.next();
                 addClasspathIfNotPresent(serverdef.getClasspath(), classpath);
             }
         }

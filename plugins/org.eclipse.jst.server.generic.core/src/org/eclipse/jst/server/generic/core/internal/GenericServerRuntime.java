@@ -117,9 +117,9 @@ public class GenericServerRuntime extends RuntimeDelegate implements IJavaRuntim
 	 * Checks all defined classpaths.
 	 */
 	protected IStatus validateClasspaths(ServerRuntime serverTypeDefinition) {
-		Iterator cpList  = serverTypeDefinition.getClasspath().iterator();
+		Iterator<Classpath> cpList  = serverTypeDefinition.getClasspath().iterator();
         while (cpList.hasNext()) {
-			Classpath cpth = (Classpath) cpList.next();
+			Classpath cpth = cpList.next();
 	        if(cpth.getArchive()== null || cpth.getArchive().size()<1)
 	            return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0 ,GenericServerCoreMessages.errorNoClasspath,null);
 			Iterator archIter = cpth.getArchive().iterator();
@@ -206,10 +206,10 @@ public class GenericServerRuntime extends RuntimeDelegate implements IJavaRuntim
 	}
 
 	public void setDefaults(IProgressMonitor monitor) {
-		List props = this.getServerTypeDefinition().getProperty();
+		List<Property> props = this.getServerTypeDefinition().getProperty();
  		Map<String, String> instancePropsMap = new HashMap<String, String>();
- 		for (Iterator iter = props.iterator(); iter.hasNext();) {
-			Property element = (Property) iter.next();
+ 		for (Iterator<Property> iter = props.iterator(); iter.hasNext();) {
+			Property element = iter.next();
 			if(Property.CONTEXT_RUNTIME.equalsIgnoreCase(element.getContext()))
 				instancePropsMap.put(element.getId(), element.getDefault());
 		}

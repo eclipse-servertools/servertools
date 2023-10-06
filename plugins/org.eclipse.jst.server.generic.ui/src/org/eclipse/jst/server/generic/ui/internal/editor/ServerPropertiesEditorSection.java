@@ -164,9 +164,9 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 	}
 
 	protected void updateControls() {
-        List props = fServer.getServerDefinition().getProperty();
-        for (Iterator iter = props.iterator(); iter.hasNext();) {
-            Property property = (Property) iter.next();
+        List<Property> props = fServer.getServerDefinition().getProperty();
+        for (Iterator<Property> iter = props.iterator(); iter.hasNext();) {
+            Property property = iter.next();
             if(property.getContext().equals(Property.CONTEXT_SERVER))
             {
                 if( Property.TYPE_BOOLEAN.equals(property.getType()) ){
@@ -209,9 +209,9 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(SWT.FILL,SWT.NONE,true,false));
 
-		List props = fServer.getServerDefinition().getProperty();
-		for (Iterator iter = props.iterator(); iter.hasNext();) {
-			Property property = (Property) iter.next();
+		List<Property> props = fServer.getServerDefinition().getProperty();
+		for (Iterator<Property> iter = props.iterator(); iter.hasNext();) {
+			Property property = iter.next();
 			if(property.getContext().equals(Property.CONTEXT_SERVER))
 				createPropertyControl(composite, property,formToolkit);
 		}
