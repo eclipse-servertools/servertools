@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Automatic-Module-Name: org.eclipse.jst.server.core.tests
 Bundle-Name: org.eclipse.jst.server.core.tests
 Bundle-SymbolicName: org.eclipse.jst.server.core.tests
-Bundle-Version: 1.1.500.qualifier
+Bundle-Version: 1.2.0.qualifier
 Bundle-ClassPath: tests.jar
 Bundle-Activator: org.eclipse.jst.server.core.tests.TestsPlugin
 Bundle-Vendor: Eclipse.org
