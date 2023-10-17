@@ -838,18 +838,18 @@
     <runtime
         id="org.eclipse.jst.server.tomcat.runtime.90"
         licenseUrl="https://www.apache.org/licenses/LICENSE-2.0.txt"
-        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.97/bin/apache-tomcat-9.0.97.tar.gz"
-        archivePath="apache-tomcat-9.0.97"
-        archiveSize="11691511"
-        fileCount="633"
+        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.82/bin/apache-tomcat-9.0.82.tar.gz"
+        archivePath="apache-tomcat-9.0.82"
+        archiveSize="11721126"
+        fileCount="637"
         os="linux,macosx"/>
     <runtime
         id="org.eclipse.jst.server.tomcat.runtime.90"
         licenseUrl="https://www.apache.org/licenses/LICENSE-2.0.txt"
-        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.97/bin/apache-tomcat-9.0.97.zip"
-        archivePath="apache-tomcat-9.0.97"
-        archiveSize="12235402"
-        fileCount="633"
+        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.82/bin/apache-tomcat-9.0.82.zip"
+        archivePath="apache-tomcat-9.0.82"
+        archiveSize="12266408"
+        fileCount="637"
         os="win32"/>
 
     <runtime
