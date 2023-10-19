@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Automatic-Module-Name: org.eclipse.jst.server.tomcat.core
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; singleton:=true
-Bundle-Version: 1.2.400.qualifier
+Bundle-Version: 1.2.500.qualifier
 Bundle-Activator: org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
