@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -31,30 +31,38 @@ public class ServerConfig {
 		if (!f.exists())
 			System.err.println("Config doesn't exist at " + configPath);
 		else {
-			try {
-				IMemento memento = XMLMemento.loadMemento(f);
-				Integer prt = memento.getInteger("port");
-				if (prt != null)
-					port = prt.intValue();
-				
-				IMemento[] modules2 = memento.getChildren("module");
-				int size = modules2.length;
-				List<Module> list = new ArrayList<Module>(size);
-				for (IMemento mod : modules2) {
-					String name = mod.getString("name");
-					boolean isStatic = "static".equals(mod.getString("type"));
-					String path = mod.getString("path");
-					String context = mod.getString("context");
-					if (context != null && !context.startsWith("/"))
-						context = "/" + context;
-					Module module = new Module(name, isStatic, context, path);
-					list.add(module);
+			if (!f.isDirectory()) {
+				try {
+					IMemento memento = XMLMemento.loadMemento(f);
+					Integer prt = memento.getInteger("port");
+					if (prt != null)
+						port = prt.intValue();
+					
+					IMemento[] modules2 = memento.getChildren("module");
+					int size = modules2.length;
+					List<Module> list = new ArrayList<Module>(size);
+					for (IMemento mod : modules2) {
+						String name = mod.getString("name");
+						boolean isStatic = "static".equals(mod.getString("type"));
+						String path = mod.getString("path");
+						String context = mod.getString("context");
+						if (context != null && !context.startsWith("/")) {
+							context = "/" + context;
+						}
+						Module module = new Module(name, isStatic, context, path);
+						list.add(module);
+					}
+					
+					modules = new Module[list.size()];
+					list.toArray(modules);
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-				
-				modules = new Module[list.size()];
-				list.toArray(modules);
-			} catch (Exception e) {
-				e.printStackTrace();
+			}
+			else {
+				// mostly for use during development
+				modules = new Module[1];
+				modules[0] = new Module(f.getName(), false, "/" + f.getName(), f.getPath());
 			}
 		}
 	}

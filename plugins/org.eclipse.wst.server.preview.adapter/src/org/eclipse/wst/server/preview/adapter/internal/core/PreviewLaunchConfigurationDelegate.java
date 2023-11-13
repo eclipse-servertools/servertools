@@ -38,29 +38,48 @@ import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
-/**
- *
- */
+
 public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
-	// To support running from the workbench, be careful when adding and removing
-	// bundles to this array. For instance, org.eclipse.wst.server.preview is a
-	// plug-in that can be checked out in the workbench. If it is, the classpath
-	// needs to point to the bin directory of this plug-in. This plug-in is tracked
-	// in the array with CLASSPATH_BIN_INDEX_PREVIEW_SERVER. Therefore, when updating
-	// this array, please ensure the index of org.eclipse.wst.server.preview
-	// corresponds to CLASSPATH_BIN_INDEX_PREVIEW_SERVER
+	/*
+	 * To support running from the workbench, be careful when adding and
+	 * removing bundles to this array. For instance,
+	 * org.eclipse.wst.server.preview is a plug-in that can be checked out in
+	 * the workbench. If it is, the classpath needs to point to the bin
+	 * directory of this plug-in. This plug-in is tracked in the array with
+	 * CLASSPATH_BIN_INDEX_PREVIEW_SERVER. Therefore, when updating this
+	 * array, please ensure the index of org.eclipse.wst.server.preview
+	 * corresponds to CLASSPATH_BIN_INDEX_PREVIEW_SERVER
+	 */
 	private static final String[] REQUIRED_BUNDLE_IDS = new String[] {
 		getBundleForClass(javax.servlet.ServletContext.class),
+		getBundleForClass(jakarta.servlet.ServletContext.class),
 		getBundleForClass(org.slf4j.LoggerFactory.class),
 		"org.eclipse.jetty.http",
 		"org.eclipse.jetty.io",
 		"org.eclipse.jetty.security",
 		"org.eclipse.jetty.server",
-		"org.eclipse.jetty.servlet",
+		"org.eclipse.jetty.session",
 		"org.eclipse.jetty.util",
-		"org.eclipse.jetty.webapp",
 		"org.eclipse.jetty.xml",
 		"org.apache.aries.spifly.dynamic.bundle",
+		"slf4j.simple",
+		"org.eclipse.jetty.ee8.annotations",
+		"org.eclipse.jetty.ee8.jndi",
+		"org.eclipse.jetty.ee8.plus",
+		"org.eclipse.jetty.ee8.proxy",
+		"org.eclipse.jetty.ee8.server",
+		"org.eclipse.jetty.ee8.servlet",
+		"org.eclipse.jetty.ee8.servlets",
+		"org.eclipse.jetty.ee8.webapp",
+		"org.eclipse.jetty.ee8.websocket.api",
+		"org.eclipse.jetty.ee8.websocket.client",
+		"org.eclipse.jetty.ee8.websocket.client.webapp",
+		"org.eclipse.jetty.ee8.websocket.common",
+		"org.eclipse.jetty.ee8.websocket.javax.common",
+		"org.eclipse.jetty.ee8.websocket.javax.server",
+		"org.eclipse.jetty.ee8.websocket.server",
+		"org.eclipse.jetty.ee8.websocket.servlet",
+		"jakarta.enterprise.cdi-api",
 		"org.eclipse.wst.server.preview"
 	};
 
@@ -105,6 +124,9 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 				version = bundleInfo[1];
 			}
 			Bundle[] bundles = Platform.getBundles(bundleInfo[0], version);
+			if (bundles == null) {
+				Trace.trace(Trace.SEVERE, "Missing required bundle " + REQUIRED_BUNDLE_IDS[i]);
+			}
 			// to use the lowest/exact version match
 			Arrays.sort(bundles, (bundle1, bundle2) -> bundle1.getVersion().compareTo(bundle2.getVersion()));
 			Bundle b = bundles[0];

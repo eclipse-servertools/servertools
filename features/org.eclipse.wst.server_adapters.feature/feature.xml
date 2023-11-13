@@ -15,7 +15,7 @@
 <feature
       id="org.eclipse.wst.server_adapters.feature"
       label="%featureName"
-      version="3.31.0.qualifier"
+      version="3.32.0.qualifier"
       provider-name="%providerName"
       license-feature="org.eclipse.license"
       license-feature-version="0.0.0">
@@ -47,67 +47,108 @@
    </requires>
    -->
 
-   <plugin
-         id="org.eclipse.wst.server.preview.adapter"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+	<plugin
+		id="org.eclipse.wst.server.preview.adapter"
+		download-size="0"
+		install-size="0"
+		version="0.0.0"
+		unpack="false" />
 
-   <plugin
-         id="org.eclipse.jetty.xml"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+	<plugin
+		id="org.eclipse.jetty.jndi"
+		download-size="0"
+		install-size="0"
+		version="0.0.0"
+		unpack="false" />
 
-   <plugin
-         id="org.eclipse.jetty.webapp"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+	<plugin
+		id="org.eclipse.jetty.xml"
+		download-size="0"
+		install-size="0"
+		version="0.0.0"
+		unpack="false" />
 
-   <plugin
-         id="jakarta.transaction-api"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+	<plugin
+		id="jakarta.transaction-api"
+		download-size="0"
+		install-size="0"
+		version="0.0.0"
+		unpack="false" />
 
-   <plugin
-         id="jakarta.enterprise.cdi-api"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+	<plugin
+		id="jakarta.enterprise.cdi-api"
+		download-size="0"
+		install-size="0"
+		version="0.0.0"
+		unpack="false" />
 
-   <plugin
-         id="jakarta.interceptor-api"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+	<plugin
+		id="jakarta.interceptor-api"
+		download-size="0"
+		install-size="0"
+		version="0.0.0"
+		unpack="false" />
 
-   <plugin
-         id="org.eclipse.wst.server.preview"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+	<plugin
+		id="org.eclipse.wst.server.preview"
+		download-size="0"
+		install-size="0"
+		version="0.0.0"
+		unpack="false" />
 
-   <plugin
-         id="org.eclipse.wst.server.http.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+	<plugin
+		id="org.eclipse.wst.server.http.core"
+		download-size="0"
+		install-size="0"
+		version="0.0.0"
+		unpack="false" />
 
-   <plugin
-         id="org.eclipse.wst.server.http.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+	<plugin
+		id="org.eclipse.wst.server.http.ui"
+		download-size="0"
+		install-size="0"
+		version="0.0.0"
+		unpack="false" />
 
+	<plugin
+		id="org.eclipse.jetty.ee8.annotations"
+		download-size="0"
+		install-size="0"
+		version="0.0.0"
+		unpack="false" />
+
+	<plugin
+		id="org.eclipse.jetty.ee8.jndi"
+		download-size="0"
+		install-size="0"
+		version="0.0.0"
+		unpack="false" />
+
+	<plugin
+		id="org.eclipse.jetty.ee8.plus"
+		download-size="0"
+		install-size="0"
+		version="0.0.0"
+		unpack="false" />
+
+	<plugin
+		id="org.eclipse.jetty.ee8.proxy"
+		download-size="0"
+		install-size="0"
+		version="0.0.0"
+		unpack="false" />
+
+	<plugin
+		id="org.eclipse.jetty.ee8.servlets"
+		download-size="0"
+		install-size="0"
+		version="0.0.0"
+		unpack="false" />
+
+	<plugin
+		id="org.eclipse.jetty.ee8.webapp"
+		download-size="0"
+		install-size="0"
+		version="0.0.0"
+		unpack="false" />
 </feature>

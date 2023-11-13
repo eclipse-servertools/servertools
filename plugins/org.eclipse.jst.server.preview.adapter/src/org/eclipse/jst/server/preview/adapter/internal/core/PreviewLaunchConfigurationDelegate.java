@@ -42,36 +42,55 @@ import org.osgi.framework.FrameworkUtil;
  *
  */
 public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfigurationDelegate {
-	// To support running from the workbench, be careful when adding and removing
-	// bundles to this array. For instance, org.eclipse.wst.server.preview is a
-	// plug-in that can be checked out in the workbench. If it is, the classpath
-	// needs to point to the bin directory of this plug-in. This plug-in is tracked
-	// in the array with CLASSPATH_BIN_INDEX_PREVIEW_SERVER. Therefore, when updating
-	// this array, please ensure the index of org.eclipse.wst.server.preview
-	// corresponds to CLASSPATH_BIN_INDEX_PREVIEW_SERVER
-	private static final String[] REQUIRED_BUNDLE_IDS = new String[] {
+	/*
+	 * To support running from the workbench, be careful when adding and
+	 * removing bundles to this array. For instance,
+	 * org.eclipse.wst.server.preview is a plug-in that can be checked out in
+	 * the workbench. If it is, the classpath needs to point to the bin
+	 * directory of this plug-in. This plug-in is tracked in the array with
+	 * CLASSPATH_BIN_INDEX_PREVIEW_SERVER. Therefore, when updating this
+	 * array, please ensure the index of org.eclipse.wst.server.preview
+	 * corresponds to CLASSPATH_BIN_INDEX_PREVIEW_SERVER
+	 */
+	private static final String[] REQUIRED_BUNDLE_IDS_8 = new String[] {
 		getBundleForClass(javax.servlet.ServletResponse.class),
-//		getBundleForClass(javax.servlet.http.HttpServletResponse.class),
 		getBundleForClass(javax.servlet.jsp.JspContext.class),
 		getBundleForClass(org.apache.jasper.JspCompilationContext.class),
 		getBundleForClass(javax.el.ELContext.class),
 		getBundleForClass(com.sun.el.ExpressionFactoryImpl.class),
 		getBundleForClass(org.slf4j.LoggerFactory.class),
+		getBundleForClass(javax.annotation.Resource.class),
 		"org.eclipse.jetty.http",
 		"org.eclipse.jetty.io",
+		"org.eclipse.jetty.jndi",
 		"org.eclipse.jetty.security",
 		"org.eclipse.jetty.server",
-		"org.eclipse.jetty.servlet",
+		"org.eclipse.jetty.servlet-api",
+		"org.eclipse.jetty.session",
 		"org.eclipse.jetty.util",
-		"org.eclipse.jetty.webapp",
 		"org.eclipse.jetty.xml",
+		"slf4j.api",
+		"slf4j.simple",
+		"org.objectweb.asm",
+		"org.objectweb.asm.commons",
+		"org.objectweb.asm.util",
 		"org.apache.aries.spifly.dynamic.bundle",
+		"org.eclipse.jetty.ee8.annotations",
+		"org.eclipse.jetty.ee8.jndi",
+		"org.eclipse.jetty.ee8.plus",
+		"org.eclipse.jetty.ee8.proxy",
+		"org.eclipse.jetty.ee8.security",
+		"org.eclipse.jetty.ee8.server",
+		"org.eclipse.jetty.ee8.servlet",
+		"org.eclipse.jetty.ee8.servlets",
+		"org.eclipse.jetty.ee8.webapp",
+		"jakarta.enterprise.cdi-api",
 		"org.eclipse.wst.server.preview"
 	};
 
 	// The index of org.eclipse.wst.server.preview in REQUIRED_BUNDLE_IDS, for supporting
 	// running on the workbench when the plug-in is checked out
-	private static final int CLASSPATH_BIN_INDEX_PREVIEW_SERVER = REQUIRED_BUNDLE_IDS.length-1;
+	private static final int CLASSPATH_BIN_INDEX_PREVIEW_SERVER = REQUIRED_BUNDLE_IDS_8.length-1;
 
 	/**
 	 * Gets the symbolic name of the bundle that supplies the given class.
@@ -96,15 +115,18 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 
 		PreviewServerBehaviour previewServer = (PreviewServerBehaviour) server.loadAdapter(PreviewServerBehaviour.class, null);
 
-		int size = REQUIRED_BUNDLE_IDS.length;
+		int size = REQUIRED_BUNDLE_IDS_8.length;
 		String[] jars = new String[size];
 		for (int i = 0; i < size; i++) {
-			String[] bundleInfo = REQUIRED_BUNDLE_IDS[i].split(":");
+			String[] bundleInfo = REQUIRED_BUNDLE_IDS_8[i].split(":");
 			String version = null;
 			if (bundleInfo.length > 1) {
 				version = bundleInfo[1];
 			}
 			Bundle[] bundles = Platform.getBundles(bundleInfo[0], version);
+			if (bundles == null) {
+				Trace.trace(Trace.SEVERE, "Missing required bundle " + REQUIRED_BUNDLE_IDS_8[i]);
+			}
 			// to use the lowest/exact version match
 			Arrays.sort(bundles, (bundle1, bundle2) -> bundle1.getVersion().compareTo(bundle2.getVersion()));
 			Bundle b = bundles[0];
@@ -112,7 +134,7 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 			if (b != null)
 				path = PreviewRuntime.getJarredPluginPath(b);
 			if (path == null)
-				throw new CoreException(new Status(IStatus.ERROR, PreviewPlugin.PLUGIN_ID, "Could not find required bundle " + REQUIRED_BUNDLE_IDS[i]));
+				throw new CoreException(new Status(IStatus.ERROR, PreviewPlugin.PLUGIN_ID, "Could not find required bundle " + REQUIRED_BUNDLE_IDS_8[i]));
 			jars[i] = path.toOSString();
 		}
 
@@ -146,9 +168,9 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 
 		// Classpath
 		String[] classpath2 = getClasspath(configuration);
-		String[] classpath = new String[classpath2.length + REQUIRED_BUNDLE_IDS.length];
-		System.arraycopy(jars, 0, classpath, 0, REQUIRED_BUNDLE_IDS.length);
-		System.arraycopy(classpath2, 0, classpath, REQUIRED_BUNDLE_IDS.length, classpath2.length);
+		String[] classpath = new String[classpath2.length + REQUIRED_BUNDLE_IDS_8.length];
+		System.arraycopy(jars, 0, classpath, 0, REQUIRED_BUNDLE_IDS_8.length);
+		System.arraycopy(classpath2, 0, classpath, REQUIRED_BUNDLE_IDS_8.length, classpath2.length);
 
 		// Create VM config
 		VMRunnerConfiguration runConfig = new VMRunnerConfiguration(MAIN_CLASS, classpath);

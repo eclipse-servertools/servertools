@@ -4,7 +4,7 @@
 <plugin>
    <extension id="preview"
          point="org.eclipse.core.runtime.applications">
-      <application visible="false">
+      <application visible="true">
          <run class="org.eclipse.wst.server.preview.internal.PreviewApplication"/>
       </application>
    </extension>

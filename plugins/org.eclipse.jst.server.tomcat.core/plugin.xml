@@ -824,7 +824,7 @@
         archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.95/bin/apache-tomcat-8.5.95.tar.gz"
         archivePath="apache-tomcat-8.5.95"
         archiveSize="10771165"
-        fileCount="619"
+        fileCount="623"
         os="linux,macosx"/>
     <runtime
         id="org.eclipse.jst.server.tomcat.runtime.85"
@@ -832,7 +832,7 @@
         archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.95/bin/apache-tomcat-8.5.95.zip"
         archivePath="apache-tomcat-8.5.95"
         archiveSize="11289431"
-        fileCount="619"
+        fileCount="623"
         os="win32"/>
 
     <runtime

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2022 IBM Corporation and others.
+ * Copyright (c) 2007, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -14,9 +14,12 @@ package org.eclipse.wst.server.preview.internal;
 
 import java.io.File;
 
+import org.eclipse.jetty.ee8.nested.ContextHandler;
+import org.eclipse.jetty.ee8.nested.ResourceHandler;
+import org.eclipse.jetty.ee8.webapp.WebAppContext;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+
 
 public class PreviewStarter {
 	protected String configPath;
@@ -33,49 +36,50 @@ public class PreviewStarter {
 
 	protected void run() {
 		try {
-			System.setProperty("org.mortbay.log.class", "org.eclipse.wst.server.preview.internal.WTPLogger");
+			System.setProperty("slf4j.provider", "org.slf4j.simple.SimpleServiceProvider");
+			System.setProperty("org.mortbay.log.class", "org.apache.logging.log4j.simple.SimpleLogger");
+			System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "info");
+			System.setProperty("VERBOSE", "true");
 			ServerConfig config = new ServerConfig(configPath);
 			System.out.println("Starting preview server on port " + config.getPort());
 			System.out.println();
-			Module[] m = config.getModules();
-			int size = m.length;
-			if (size > 0) {
-				System.out.println("Modules:");
-				for (Module mm : m) {
-					System.out.println("  " + mm.getName() + " (" + mm.getContext() + ")");
-				}
-				System.out.println();
-			}
-			
+
 			server = new Server(config.getPort());
 			server.setStopAtShutdown(true);
-			
-			WTPErrorHandler errorHandler = new WTPErrorHandler();
 
-			HandlerList handlers = new HandlerList();
-			for (Module module : m) {
+			System.out.println("Modules:");
+			Module[] modules = config.getModules();
+			ContextHandlerCollection handlers = new ContextHandlerCollection();
+			for (Module module : modules) {
+				System.out.println("  " + module.getName() + " (" + module.getContext() + ") ");
 				if (module.isStaticWeb()) {
-					ContextResourceHandler resourceHandler = new ContextResourceHandler();
-					resourceHandler.setResourceBase(module.getPath());
-					resourceHandler.setContext(module.getContext());
-					handlers.addHandler(resourceHandler);
-				} else {
-					WebAppContext wac = new WebAppContext();
-					wac.setContextPath(module.getContext());
-					wac.setWar(module.getPath());
-					wac.setErrorHandler(errorHandler);
-					handlers.addHandler(wac);
+					ResourceHandler handler = new ResourceHandler();
+					File f = new File(module.getPath());
+					handler.setBaseResource(f.toPath());
+					handler.setDirAllowed(true);
+					handler.setDirectoriesListed(true);
+					handler.setWelcomeFiles(new String[]{"index.html", "welcome.html"});
+					handlers.addHandler(new ContextHandler(module.getContext(), handler));
+				}
+				else {
+					WebAppContext handler = new WebAppContext();
+					handler.setBaseResourceAsString(module.getPath());
+					handler.setContextPath(module.getContext());
+					handler.setParentLoaderPriority(true);
+					handler.setLogUrlOnStart(true);
+					handler.setWelcomeFiles(new String[]{"index.html", "welcome.html"});
+					handlers.addHandler(handler);
 				}
 			}
-			
-			handlers.addHandler(new WTPDefaultHandler(config.getPort(), m));
 			server.setHandler(handlers);
+			handlers.setServer(server);
+			System.out.println();
+
+//			server.setDefaultHandler(new WTPDefaultHandler(config.getPort(), m));
+//			server.setErrorHandler(new WTPErrorHandler());
 			
-			try {
-				server.start();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			server.start();
+			server.join();
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
