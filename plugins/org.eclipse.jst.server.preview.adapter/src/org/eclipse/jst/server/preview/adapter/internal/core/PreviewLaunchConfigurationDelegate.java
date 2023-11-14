@@ -78,7 +78,6 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 		"org.eclipse.jetty.ee8.annotations",
 		"org.eclipse.jetty.ee8.jndi",
 		"org.eclipse.jetty.ee8.plus",
-//		"org.eclipse.jetty.ee8.proxy",
 		"org.eclipse.jetty.ee8.security",
 		"org.eclipse.jetty.ee8.server",
 		"org.eclipse.jetty.ee8.servlet",
