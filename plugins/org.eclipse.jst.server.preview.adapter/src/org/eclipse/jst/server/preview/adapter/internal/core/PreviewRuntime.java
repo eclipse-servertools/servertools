@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMInstallType;
 import org.eclipse.jdt.launching.JavaRuntime;
@@ -96,7 +100,7 @@ public class PreviewRuntime extends RuntimeDelegate implements IJavaRuntimeWorki
 					return vmInstall;
 			}
 		} catch (Exception e) {
-			// ignore
+			PreviewPlugin.getInstance().getLog().log(new Status(IStatus.ERROR, PreviewPlugin.PLUGIN_ID, Messages.errorNoJRE, e));
 		}
 		return null;
 	}
@@ -110,7 +114,7 @@ public class PreviewRuntime extends RuntimeDelegate implements IJavaRuntimeWorki
 			return status;
 		
 		if (getVMInstall() == null)
-			return new Status(IStatus.ERROR, PreviewPlugin.PLUGIN_ID, 0, Messages.errorJRE, null);
+			return new Status(IStatus.ERROR, PreviewPlugin.PLUGIN_ID, 0, Messages.errorNoJRE, null);
 		
 		return Status.OK_STATUS;
 	}
