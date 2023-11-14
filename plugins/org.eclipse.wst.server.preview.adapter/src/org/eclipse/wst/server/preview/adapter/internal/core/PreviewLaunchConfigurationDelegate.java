@@ -66,7 +66,7 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 		"org.eclipse.jetty.ee8.annotations",
 		"org.eclipse.jetty.ee8.jndi",
 		"org.eclipse.jetty.ee8.plus",
-		"org.eclipse.jetty.ee8.proxy",
+//		"org.eclipse.jetty.ee8.proxy",
 		"org.eclipse.jetty.ee8.server",
 		"org.eclipse.jetty.ee8.servlet",
 		"org.eclipse.jetty.ee8.servlets",
