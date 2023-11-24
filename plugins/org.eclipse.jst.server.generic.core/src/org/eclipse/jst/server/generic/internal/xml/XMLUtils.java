@@ -5,9 +5,9 @@
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors: Gorkem Ercan - initial API and implementation
- *               
+ *
  **************************************************************************************************/
 
 package org.eclipse.jst.server.generic.internal.xml;
@@ -38,12 +38,12 @@ import org.osgi.framework.Bundle;
 
 /**
  * Utility for handling the xml data from .serverdef and .runtimedef files.
- * 
+ *
  * @author Gorkem Ercan
  */
 public class XMLUtils {
 
-	
+
     private ArrayList<ServerRuntime> serverDefinitions;
     private ArrayList<ServerRuntime> runtimeDefinitions;
 
@@ -60,14 +60,14 @@ public class XMLUtils {
 	 */
 	private void refresh() {
         serverDefinitions = new ArrayList<ServerRuntime>();
-        
+
         IExtension[] serverDefExtensions = ExtensionPointUtil.getGenericServerDefinitionExtensions();
-        
+
         for (int i = 0; serverDefExtensions != null && i < serverDefExtensions.length; i++) {
             java.net.URI definitionFile = null;
             IExtension extension = serverDefExtensions[i];
             IConfigurationElement[] elements = ExtensionPointUtil.getConfigurationElements(extension);
-            
+
             for (int j = 0; j < elements.length; j++) {
                 IConfigurationElement element = elements[j];
                 definitionFile = getDefinitionFile(element);
@@ -81,14 +81,14 @@ public class XMLUtils {
         }
 
         runtimeDefinitions = new ArrayList<ServerRuntime>();
-        
+
         IExtension[] runtimeDefExtensions = ExtensionPointUtil.getGenericServerRuntimeDefinitionExtensions();
-        
+
         for (int i = 0; runtimeDefExtensions != null && i < runtimeDefExtensions.length; i++) {
             java.net.URI definitionFile = null;
             IExtension extension = runtimeDefExtensions[i];
             IConfigurationElement[] elements = ExtensionPointUtil.getConfigurationElements(extension);
-            
+
             for (int j = 0; j < elements.length; j++) {
                 IConfigurationElement element = elements[j];
                 definitionFile = getDefinitionFile(element);
@@ -103,11 +103,11 @@ public class XMLUtils {
     }
 
     private java.net.URI getDefinitionFile(IConfigurationElement element) {
-        
+
         Bundle bundle = Platform.getBundle(element.getNamespaceIdentifier());
         String definitionFile = element.getAttribute("definitionfile"); //$NON-NLS-1$
         Trace.trace(Trace.FINEST,"Loading serverdef file "+definitionFile+" from bundle "+bundle.getSymbolicName()); //$NON-NLS-1$ //$NON-NLS-2$
-        
+
         URL url = bundle.getEntry(definitionFile);
         if (url == null )
         {
@@ -194,7 +194,7 @@ public class XMLUtils {
     /**
      * Get the memory presentation for the .runtimedef file
      * @param id
-     * @return runtime 
+     * @return runtime
      */
     public ServerRuntime getRuntimeTypeDefinition(String id) {
         Iterator defs = getRuntimeTypeDefinitions().iterator();

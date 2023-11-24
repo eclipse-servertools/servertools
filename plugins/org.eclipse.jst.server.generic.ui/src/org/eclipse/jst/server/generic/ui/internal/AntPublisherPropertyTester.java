@@ -5,9 +5,9 @@
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors: Gorkem Ercan - initial API and implementation
- *               
+ *
  **************************************************************************************************/
 package org.eclipse.jst.server.generic.ui.internal;
 
@@ -32,16 +32,16 @@ public class AntPublisherPropertyTester extends PropertyTester {
 			IServerWorkingCopy wc = (IServerWorkingCopy)receiver;
 			ServerRuntime runtimeDefinition = ServerTypeDefinitionUtil.getServerTypeDefinition(wc.getRuntime());
 			if ( runtimeDefinition != null ){
-				List l = runtimeDefinition.getPublisher();
-				Iterator r = l.iterator();
+				List<Publisher> l = runtimeDefinition.getPublisher();
+				Iterator<Publisher> r = l.iterator();
 				while ( r.hasNext() ){
-					Publisher publisher = (Publisher) r.next();
+					Publisher publisher = r.next();
 					if (AntPublisher.PUBLISHER_ID.equals( publisher.getId() )){
 						return true;
 					}
 				}
 			}
-			
+
 		};
 		return false;
 	}

@@ -4,10 +4,10 @@
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
- * 
+ *
  * Contributors:
  *     Naci M. Dai - initial API and implementation
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -117,15 +117,15 @@ public class TestProject {
 		binFolder.create(false, true, null);
 		return binFolder;
 	}
-	
+
 	public IFolder createWebModule(String moduleName, String contents) throws CoreException {
 		IFolder moduleFolder = project.getFolder(moduleName);
 		moduleFolder.create(false, true, null);
-		
+
 		IFolder folder = project.getFolder(moduleName + "/WEB-INF");
 		folder.create(false, true, null);
 		folder = project.getFolder(moduleName + "/WEB-INF/classes");
-		folder.create(false, true, null); 
+		folder.create(false, true, null);
 		folder = project.getFolder(moduleName + "/WEB-INF/lib");
 		folder.create(false, true, null);
 
@@ -135,7 +135,7 @@ public class TestProject {
 
 		return moduleFolder;
 	}
-	
+
 	private void setJavaNature() throws CoreException {
 		IProjectDescription description = project.getDescription();
 		description.setNatureIds(new String[]{JavaCore.NATURE_ID});
@@ -174,11 +174,8 @@ public class TestProject {
 		return new Path(localJarURL.getPath());
 	}
 	private void waitForIndexer() throws JavaModelException {
-		new SearchEngine().searchAllTypeNames(null, null, 
-				SearchPattern.R_CASE_SENSITIVE,
-				IJavaSearchConstants.CLASS, SearchEngine
-						.createJavaSearchScope(new IJavaElement[0]),
-				new TypeNameRequestor() {
+		new SearchEngine().searchAllTypeNames(null, SearchPattern.R_EXACT_MATCH, null, SearchPattern.R_EXACT_MATCH | SearchPattern.R_CASE_SENSITIVE, IJavaSearchConstants.CLASS, SearchEngine
+				.createJavaSearchScope(new IJavaElement[0]), 				new TypeNameRequestor() {
 					public void acceptClass(char[] packageName,
 							char[] simpleTypeName, char[][] enclosingTypeNames,
 							String path) {
@@ -186,8 +183,7 @@ public class TestProject {
 					public void acceptInterface(char[] packageName,
 							char[] simpleTypeName, char[][] enclosingTypeNames,
 							String path) {
-					}
-				}, IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
+					}}, IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
 	}
 	/**
 	 * @return Returns the sourceFolder.

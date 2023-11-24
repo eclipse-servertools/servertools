@@ -46,8 +46,8 @@ public class GenericRuntimeTestCase extends TestCase {
 		mySuite.addTest(TestSuite.createTest(GenericRuntimeTestCase.class, "testSetJVM"));
 		mySuite.addTest(TestSuite.createTest(GenericRuntimeTestCase.class, "deleteRuntime"));
 		return mySuite;
-	}	
-	
+	}
+
 	protected IRuntime getRuntime() throws Exception {
 		if (runtime == null) {
 			IRuntimeType rt = ServerCore.findRuntimeType(RUNTIME_TYPE_ID);
@@ -59,7 +59,7 @@ public class GenericRuntimeTestCase extends TestCase {
 	}
 
 	protected IGenericRuntime getGenericRuntime() throws Exception {
-		return (IGenericRuntime)getRuntime().getAdapter(IGenericRuntime.class);
+		return getRuntime().getAdapter(IGenericRuntime.class);
 	}
 
 	protected IRuntime getRuntimeWC() throws Exception {
@@ -82,31 +82,31 @@ public class GenericRuntimeTestCase extends TestCase {
 		IStatus status = getRuntime().validate(null);
 		assertTrue(!status.isOK());
 	}
-	
+
 	public void testUtil() throws Exception {
 		assertTrue(GenericRuntimeUtil.isGenericJ2EERuntime(getRuntime()));
 	}
-	
+
 	public void testAdapt() throws Exception {
 		assertNotNull(getGenericRuntime());
 	}
-	
+
 	public void testAdaptWorkingCopy() throws Exception {
 		assertNotNull(getRuntime().getAdapter(IGenericRuntimeWorkingCopy.class));
 	}
-	
+
 	public void testGetJVM() throws Exception {
 		assertNotNull(getGenericRuntime().getVMInstall());
 	}
-	
+
 	public void testAdapt2() throws Exception {
 		assertNotNull(getGenericRuntimeWC());
 	}
-	
+
 	public void testAdapt3() throws Exception {
 		assertNotNull(getRuntimeWC().loadAdapter(IGenericRuntime.class, null));
 	}
-	
+
 	public void testSetJVM() throws Exception {
 		assertNotNull(getGenericRuntimeWC().getVMInstall());
 		assertNotNull(getGenericRuntimeWC().getVMInstall());

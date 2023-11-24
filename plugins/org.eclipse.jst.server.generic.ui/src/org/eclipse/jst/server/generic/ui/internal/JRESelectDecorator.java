@@ -5,9 +5,9 @@
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors: Gorkem Ercan - initial API and implementation
- *               
+ *
  **************************************************************************************************/
 package org.eclipse.jst.server.generic.ui.internal;
 
@@ -38,38 +38,38 @@ import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 
 
 public class JRESelectDecorator implements GenericServerCompositeDecorator {
-	private List installedJREs;
+	private List<IVMInstall> installedJREs;
 	private String[] jreNames;
 	private GenericServerRuntime fRuntime;
-	private IWizardHandle fWizard; 
+	private IWizardHandle fWizard;
 	public JRESelectDecorator(GenericServerRuntime runtime, IWizardHandle wizardHandle){
 		super();
 		fRuntime = runtime;
 		fWizard = wizardHandle;
 	}
-	
+
 	public void decorate(final GenericServerComposite composite) {
 		updateJREs();
 		Link link = new Link(composite,SWT.NONE);
 		link.setLayoutData(new GridData(SWT.FILL,SWT.NONE,true,false,3,1));
 		link.setText(GenericServerUIMessages.installed_jre_link);
-		
+
 		Label label = new Label(composite, SWT.NONE);
 		label.setText(GenericServerUIMessages.jre_select_label);
-		
+
 		final Combo combo = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		combo.setItems(jreNames);
 		GridData data = new GridData(SWT.FILL,SWT.NONE,false,false,2,1);
-		
+
 		combo.setLayoutData(data);
-		
+
 		combo.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				int sel = combo.getSelectionIndex();
 				IVMInstall vmInstall = null;
 				if (sel > 0)
-					vmInstall = (IVMInstall) installedJREs.get(sel - 1);
-			
+					vmInstall = installedJREs.get(sel - 1);
+
 				fRuntime.setVMInstall(vmInstall);
 				validate();
 			}
@@ -78,7 +78,7 @@ public class JRESelectDecorator implements GenericServerCompositeDecorator {
 				widgetSelected(e);
 			}
 		});
-		
+
 		link.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				String currentVM = combo.getText();
@@ -101,7 +101,7 @@ public class JRESelectDecorator implements GenericServerCompositeDecorator {
 		}
 	}
 
-	
+
 	protected boolean showPreferencePage(GenericServerComposite composite) {
 		PreferenceManager manager = PlatformUI.getWorkbench().getPreferenceManager();
 		IPreferenceNode node = manager.find("org.eclipse.jdt.ui.preferences.JavaBasePreferencePage").findSubNode("org.eclipse.jdt.debug.ui.preferences.VMPreferencePage");  //$NON-NLS-1$//$NON-NLS-2$
@@ -118,9 +118,9 @@ public class JRESelectDecorator implements GenericServerCompositeDecorator {
 		});
 		return result[0];
 	}
-	
+
 	protected void updateJREs() {
-		installedJREs = new ArrayList();
+		installedJREs = new ArrayList<>();
 		IVMInstallType[] vmInstallTypes = JavaRuntime.getVMInstallTypes();
 		int size = vmInstallTypes.length;
 		for (int i = 0; i < size; i++) {
@@ -130,18 +130,18 @@ public class JRESelectDecorator implements GenericServerCompositeDecorator {
 				installedJREs.add(vmInstalls[j]);
 			}
 		}
-		
+
 		size = installedJREs.size();
 		jreNames = new String[size+1];
 		jreNames[0] = GenericServerUIMessages.defaultJRE;
 		for (int i = 0; i < size; i++) {
-			IVMInstall vmInstall = (IVMInstall) installedJREs.get(i);
+			IVMInstall vmInstall = installedJREs.get(i);
 			jreNames[i+1] = vmInstall.getName();
 		}
 	}
-	
-	
-	
+
+
+
 	public boolean validate() {
 	    IStatus status = fRuntime.validate();
 	    if( status.getSeverity() != IStatus.OK )

@@ -6,8 +6,8 @@
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- * 
- * Contributors: Gorkem Ercan - initial API and implementation 
+ *
+ * Contributors: Gorkem Ercan - initial API and implementation
  **************************************************************************************************/
 package org.eclipse.jst.server.generic.tests;
 
@@ -25,7 +25,7 @@ import org.eclipse.wst.server.core.ServerCore;
 import junit.framework.TestCase;
 
 /**
- * 
+ *
  *
  * @author Gorkem Ercan
  */
@@ -42,18 +42,18 @@ public class GenericServerClasspathRuntimeHandlerTest extends TestCase {
         IRuntimeType type =ServerCore.findRuntimeType("org.eclipse.jst.server.generic.runtime.jonas4");
         IRuntimeWorkingCopy wc = type.createRuntime("testRuntime",null);
         GenericServerRuntime delegate = (GenericServerRuntime)wc.loadAdapter(GenericServerRuntime.class, new NullProgressMonitor());
-		HashMap props = new HashMap();
+		HashMap<String, String> props = new HashMap<>();
 		props.put("mappernames", "");
 		props.put("classPathVariableName", "JONAS");
 		props.put("serverAddress", "127.0.0.1");
 		props.put("jonasBase", SERVER_ROOT);
 		props.put("jonasRoot", SERVER_ROOT);
 		props.put("protocols", "jrmp");
-		props.put("port", "9000");		
+		props.put("port", "9000");
 	    delegate.setServerInstanceProperties(props);
 	    delegate.setServerDefinitionId(SERVER_DEF_NAME);
 		wc.save(false,null);
-		
+
 		fRuntime = wc.getOriginal();
     }
 

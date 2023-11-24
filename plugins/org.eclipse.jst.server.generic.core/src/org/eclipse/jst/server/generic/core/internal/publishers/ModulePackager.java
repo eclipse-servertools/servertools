@@ -5,9 +5,9 @@
 * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
-* 
+*
 * Contributors: Gorkem Ercan - initial API and implementation
-*               
+*
 **************************************************************************************************/
 package org.eclipse.jst.server.generic.core.internal.publishers;
 
@@ -31,17 +31,17 @@ import org.eclipse.core.runtime.Path;
 public class ModulePackager {
 	private static final int BUFFER_SIZE = 65536;
 	private byte[] readBuffers;
-	
+
 	private static final String JAR_FILE_SEPERATOR = "/"; //$NON-NLS-1$
 	private JarOutputStream outputStream;
 
 	private boolean useCompression = true;
 
-	
+
 
 	/**
 	 * Create an instance of this class.
-	 * 
+	 *
 	 * @param filename java.lang.String
 	 * @param compress boolean
 	 * @exception java.io.IOException
@@ -51,13 +51,13 @@ public class ModulePackager {
 		directoryPath = (Path) directoryPath.removeLastSegments(1);
 		File newZipFile = new File(directoryPath.toString());
 		newZipFile.mkdirs();
-		outputStream = new JarOutputStream(new FileOutputStream(filename)); 
+		outputStream = new JarOutputStream(new FileOutputStream(filename));
 		useCompression = compress;
 	}
 
 	/**
 	 * Do all required cleanup now that we're finished with the currently-open .zip
-	 * 
+	 *
 	 * @exception java.io.IOException
 	 */
 	public void finished() throws IOException {
@@ -67,7 +67,7 @@ public class ModulePackager {
 	/**
 	 * Create a new ZipEntry with the passed pathname and contents, and write it to the current
 	 * archive
-	 * 
+	 *
 	 * @param pathname
 	 *            java.lang.String
 	 * @param contents
@@ -96,7 +96,7 @@ public class ModulePackager {
 	 * @throws IOException
 	 */
 	public void writeFolder(String destinationPath) throws IOException {
-		if (!destinationPath.endsWith(JAR_FILE_SEPERATOR )) 
+		if (!destinationPath.endsWith(JAR_FILE_SEPERATOR ))
 			destinationPath = destinationPath + JAR_FILE_SEPERATOR;
 		ZipEntry newEntry = new ZipEntry(destinationPath);
 		outputStream.putNextEntry(newEntry);
@@ -105,7 +105,7 @@ public class ModulePackager {
 
 	/**
 	 * Write the passed resource to the current archive
-	 * 
+	 *
 	 * @param resource
 	 *            org.eclipse.core.resources.IFile
 	 * @param destinationPath
@@ -126,7 +126,7 @@ public class ModulePackager {
 
 	/**
 	 * Write the passed resource to the current archive
-	 * 
+	 *
 	 * @param resource
 	 *            java.io.IFile
 	 * @param destinationPath
@@ -171,7 +171,7 @@ public class ModulePackager {
 
 		write(destinationPath, output.toByteArray());
 	}
-	
+
 	/**
 	 * pack directory relative to root
 	 * @param directory
@@ -221,7 +221,7 @@ public class ModulePackager {
         folder = folder.replaceAll("\\\\", "/");  //$NON-NLS-1$ //$NON-NLS-2$
         if (folder.length() > 0 && folder.charAt(0) == '/')
               folder = folder.substring(1);
-		return folder;		
+		return folder;
 	}
-	
+
 }
