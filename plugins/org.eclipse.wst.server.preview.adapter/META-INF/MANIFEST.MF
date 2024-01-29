@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Automatic-Module-Name: org.eclipse.wst.server.preview.adapter
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.server.preview.adapter;singleton:=true
-Bundle-Version: 1.2.0.qualifier
+Bundle-Version: 1.2.100.qualifier
 Bundle-Activator: org.eclipse.wst.server.preview.adapter.internal.core.PreviewPlugin
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: %providerName

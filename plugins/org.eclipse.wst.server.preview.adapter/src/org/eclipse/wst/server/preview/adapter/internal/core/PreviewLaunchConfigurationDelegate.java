@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2023 IBM Corporation and others.
+ * Copyright (c) 2007, 2024 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -56,6 +56,7 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 		getBundleForClass(org.slf4j.LoggerFactory.class),
 		"org.eclipse.jetty.http",
 		"org.eclipse.jetty.io",
+		"org.eclipse.jetty.plus",
 		"org.eclipse.jetty.security",
 		"org.eclipse.jetty.server",
 		"org.eclipse.jetty.session",
