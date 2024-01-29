@@ -43,7 +43,7 @@ public class ServerTypeDefinitionModelTest extends TestCase {
        }
     }
 
-
+	
 	public void testServerTypeFactory(){
 		ServerTypeFactory factory = ServerTypeFactory.eINSTANCE;
 		assertNotNull(factory.createArchiveType());
@@ -58,7 +58,7 @@ public class ServerTypeDefinitionModelTest extends TestCase {
 		assertNotNull(factory.createPublisherData());
 		assertNotNull(factory.createServerRuntime());
 		assertNotNull(factory.getServerTypePackage());
-
+		
 	}
     public void testServerRuntime(){
         assertTrue(subject.getClasspath()!=null && subject.getClasspath().size()>0);
@@ -73,9 +73,9 @@ public class ServerTypeDefinitionModelTest extends TestCase {
         assertNotNull(subject.getStart());
         assertTrue(subject.getId()!= null && subject.getId().length()>0);
         assertTrue(subject.getFilename()!=null && subject.getFilename().length()>0);
-        Classpath cp = subject.getClasspath().get(0);
+        Classpath cp = (Classpath)subject.getClasspath().get(0);
         assertEquals(cp,subject.getClasspath(cp.getId()));
-        Module module = subject.getModule().get(0);
+        Module module = (Module)subject.getModule().get(0);
         assertEquals(module,subject.getModule(module.getType()));
 		assertNotNull(subject.getPublisher("org.eclipse.jst.server.generic.antpublisher"));
     }
@@ -91,17 +91,17 @@ public class ServerTypeDefinitionModelTest extends TestCase {
 		assertEquals("test.filename",subject.getFilename());
 	}
 
-
+	
     public void testClasspath()
     {
-        Classpath cp =subject.getClasspath().get(0);
+        Classpath cp =(Classpath)subject.getClasspath().get(0);
         assertTrue(cp.getId()!=null && cp.getId().length()>0);
         assertTrue(cp.getArchive()!=null && cp.getArchive().size()>0);
 		ArchiveType archiveType = (ArchiveType)cp.getArchive().get(0);
         assertTrue(archiveType.getPath()!=null && archiveType.getPath().length()>0);
-
+		
     }
-
+    
     public void testLaunchConfiguration()
     {
        LaunchConfiguration lcfg = subject.getStart();
@@ -116,7 +116,7 @@ public class ServerTypeDefinitionModelTest extends TestCase {
     }
     public void testModule()
     {
-        Module module = subject.getModule().get(0);
+        Module module = (Module)subject.getModule().get(0);
         assertNotNull(module);
         assertTrue(module.getPublishDir()!= null && module.getPublishDir().length()>0);
         assertTrue(module.getPublisherReference()!=null && module.getPublisherReference().length()>0);
@@ -124,7 +124,7 @@ public class ServerTypeDefinitionModelTest extends TestCase {
     }
     public void testPort()
     {
-        Port port = subject.getPort().get(0);
+        Port port = (Port)subject.getPort().get(0);
         assertNotNull(port);
         assertNotNull(port.getName());
         assertTrue(port.getNo()!= null && port.getNo().length()>0);
@@ -138,18 +138,18 @@ public class ServerTypeDefinitionModelTest extends TestCase {
     }
     public void testProperty()
     {
-        Property property = subject.getProperty().get(0);
+        Property property = (Property)subject.getProperty().get(0);
         assertNotNull(property);
         assertTrue(property.getContext()!=null && property.getContext().length()>0);
         assertTrue(property.getDefault()!=null && property.getDefault().length()>0);
         assertTrue(property.getId()!=null && property.getId().length()>0);
         assertTrue(property.getLabel()!= null && property.getLabel().length()>0);
         assertTrue(property.getType()!= null && property.getType().length()>0);
-
+        
     }
     public void testPublisher()
     {
-        Publisher publisher = subject.getPublisher().get(0);
+        Publisher publisher = (Publisher)subject.getPublisher().get(0);
         assertNotNull(publisher);
         assertTrue(publisher.getId()!=null && publisher.getId().length()>0);
         assertTrue(publisher.getPublisherdata()!=null && publisher.getPublisherdata().size()>0);
@@ -172,7 +172,7 @@ public class ServerTypeDefinitionModelTest extends TestCase {
             assertNotNull(property.getValue());
         }
     }
-
-
-
+    
+    
+    
 }
