@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2023 IBM Corporation and others.
+ * Copyright (c) 2007, 2024 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -84,7 +84,7 @@ public class PreviewRuntimeClasspathProvider extends RuntimeClasspathProviderDel
 			// default to the latest
 		}
 
-		String url = "https://javaee.github.io/javaee-spec/javadocs/";
+		String url = "https://jakarta.ee/specifications/servlet/6.0/apidocs/";
 		switch (eeVersion) {
 		case 3:
 			url = "https://docs.oracle.com/javaee/3/api/";
@@ -105,9 +105,13 @@ public class PreviewRuntimeClasspathProvider extends RuntimeClasspathProviderDel
 			url = "https://javaee.github.io/javaee-spec/javadocs/";
 			break;
 		case 9:
+			url = "https://jakarta.ee/specifications/servlet/5.0/apidocs/";
+			break;
 		case 10:
+			url = "https://jakarta.ee/specifications/servlet/6.0/apidocs/";
+			break;
 		default:
-			url = "https://javaee.github.io/javaee-spec/javadocs/";
+			url = "https://jakarta.ee/specifications/servlet/6.0/apidocs/";
 			break;
 		}
 		return url;

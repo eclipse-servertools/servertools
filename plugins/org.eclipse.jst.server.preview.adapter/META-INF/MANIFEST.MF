@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Automatic-Module-Name: org.eclipse.jst.server.preview.adapter
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.jst.server.preview.adapter;singleton:=true
-Bundle-Version: 1.2.100.qualifier
+Bundle-Version: 1.2.200.qualifier
 Bundle-Activator: org.eclipse.jst.server.preview.adapter.internal.PreviewPlugin
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: %providerName
