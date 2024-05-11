@@ -1,6 +1,6 @@
 <extensionDetails>
 	<feature
-		uri="http://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/updates/libertyAdapter/2019-06/"
+		uri="http://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/updates/libertyAdapter/2023-09/"
 		id="com.ibm.ws.st.tools.base.feature.group"
 		name="WebSphere® Application Server Liberty Server Adapter"
 		description="Tools for developing and administering WebSphere Application Server Liberty Server"
