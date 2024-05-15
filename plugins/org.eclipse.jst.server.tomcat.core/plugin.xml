@@ -838,17 +838,17 @@
     <runtime
         id="org.eclipse.jst.server.tomcat.runtime.90"
         licenseUrl="https://www.apache.org/licenses/LICENSE-2.0.txt"
-        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.86/bin/apache-tomcat-9.0.86.tar.gz"
-        archivePath="apache-tomcat-9.0.86"
-        archiveSize="11730625"
+        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.89/bin/apache-tomcat-9.0.89.tar.gz"
+        archivePath="apache-tomcat-9.0.89"
+        archiveSize="11756919"
         fileCount="637"
         os="linux,macosx"/>
     <runtime
         id="org.eclipse.jst.server.tomcat.runtime.90"
         licenseUrl="https://www.apache.org/licenses/LICENSE-2.0.txt"
-        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.86/bin/apache-tomcat-9.0.86.zip"
-        archivePath="apache-tomcat-9.0.86"
-        archiveSize="12280864"
+        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.89/bin/apache-tomcat-9.0.89.zip"
+        archivePath="apache-tomcat-9.0.89"
+        archiveSize="12305238"
         fileCount="637"
         os="win32"/>
 
@@ -871,17 +871,17 @@
     <runtime
         id="org.eclipse.jst.server.tomcat.runtime.101"
         licenseUrl="https://www.apache.org/licenses/LICENSE-2.0.txt"
-        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.19/bin/apache-tomcat-10.1.19.tar.gz"
-        archivePath="apache-tomcat-10.1.19"
-        archiveSize="12718453"
+        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.24/bin/apache-tomcat-10.1.24.tar.gz"
+        archivePath="apache-tomcat-10.1.24"
+        archiveSize="13008703"
         fileCount="636"
         os="linux,macosx"/>
     <runtime
         id="org.eclipse.jst.server.tomcat.runtime.101"
         licenseUrl="https://www.apache.org/licenses/LICENSE-2.0.txt"
-        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.19/bin/apache-tomcat-10.1.19.zip"
-        archivePath="apache-tomcat-10.1.19"
-        archiveSize="13279309"
+        archiveUrl="https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.24/bin/apache-tomcat-10.1.24.zip"
+        archivePath="apache-tomcat-10.1.24"
+        archiveSize="13571032"
         fileCount="636"
         os="win32"/>
   </extension>

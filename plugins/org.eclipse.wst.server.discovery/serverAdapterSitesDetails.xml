@@ -4,7 +4,7 @@
 		id="com.ibm.ws.st.tools.base.feature.group"
 		name="WebSphere® Application Server Liberty Server Adapter"
 		description="Tools for developing and administering WebSphere Application Server Liberty Server"
-		provider="IBM" version="1.0.557.v20190623_1100"
+		provider="IBM"
 		serverId="com.ibm.ws.st.server.wlp" runtime-vendor="IBM"
 		runtimeId="com.ibm.ws.st.runtime.wlp">
 	</feature>
