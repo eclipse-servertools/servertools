@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Automatic-Module-Name: org.eclipse.jst.server.generic.core
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.jst.server.generic.core; singleton:=true
-Bundle-Version: 1.1.0.qualifier
+Bundle-Version: 1.1.100.qualifier
 Bundle-Activator: org.eclipse.jst.server.generic.core.internal.CorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
