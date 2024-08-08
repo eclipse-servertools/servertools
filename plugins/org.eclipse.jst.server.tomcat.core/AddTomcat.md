@@ -15,11 +15,11 @@ When modifying files, specify the current year in the copyright headers where pr
     5. At some point add a pair of **runtime** entries to the **org.eclipse.wst.server.core.installableRuntimes** extension using existing entries as a template. See the end of this document for some commands to help with the parameters. It is best to add these after the Tomcat version is having official releases as the specific version will become obsolete very quickly prior to that.
 3. Modify **Messages.java** and **Messages.properties** to add strings for **errorJRETomcat???** and **errorSpec???**. Update the content of the strings as needed per Tomcat documention, such as the minimum version of the JRE that can be used.
 4. Modify **TomcatPlugin.java** to add a new **TOMCAT_???** string constant. Then modify its **getTomcatVersionHandler()** method to return the appropriate **Tomcat???Handler** which will be created next.
-5. Create a new **Tomcat???Handler** class by copying an existing one. 
+5. Create a new **Tomcat???Handler** class by copying an existing one that is for Tomcat 11 or newer.  Tomcat 11 dropped support for running with a security manager and copying the Tomcat 11 or newer version will ensure this change is handled properly by the new class.
     1. Modify the **verifyInstallPath()** method to use the new **TomcatPlugin.TOMCAT_???** string constant.
     2. Modify the **canAddModule()** to specify the appropriate **Messages.errorSpec???** constant. Also add any supported module version comparisons to the **if** statement.
     3. Update the version found in strings and comments to refer to the new version.
-6. Create a new **Tomcat???Configuration** class by copying an existing one. Update the version found in strings and comments to refer to the new version.  TODO: Add support for HTTP2?
+6. Create a new **Tomcat???Configuration** class by copying an existing one that is for Tomcat 11 or newer. Update the version found in strings and comments to refer to the new version.  TODO: Add support for HTTP2?
 7. Create a new **Tomcat???PublishModuleVisitor** class by copying an existing one. Update the version found in strings and comments to refer to the new version.
 8. Modify  **TomcatRuntime.java** to update the **validate()** method to support the new Tomcat version.
     1. Add a comparison of the **id** to the new version in the **if** statement related to the *Eclipse JDT compiler*.

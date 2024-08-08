@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2017 IBM Corporation and others.
+ * Copyright (c) 2003, 2024 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -170,6 +170,15 @@ public interface ITomcatVersionHandler {
 	 * @return true if this server supports separate context files
 	 */
 	public boolean supportsSeparateContextFiles();
+
+	/**
+	 * Returns true if this server supports running under a security manager.
+	 * 
+	 * @return true running under a security manager is supported
+	 */
+	public default boolean supportsSecurityManager() {
+		return true; // The default for Tomcat 10 and earlier. Override for Tomcat 11 and later.
+	}
 
 	/**
 	 * Returns the endorsed directories derived using the

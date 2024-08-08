@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2022 IBM Corporation and others.
+ * Copyright (c) 2003, 2024 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -75,6 +75,7 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 			case 10:
 			default :
 				// Jakarta EE 10 uses a different URL for each component specification
+				// Note: Not much appears available for Jakarta EE 11 at this time.
 				url = "https://jakarta.ee/specifications/servlet/6.0/apidocs/";
 				if (jarName.contains("jsp")) {
 					url = "https://jakarta.ee/specifications/pages/3.1/apidocs/";
@@ -97,8 +98,8 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 	}
 
 	private String getTomcatJavadocLocation(IRuntime runtime) {
-		/* Default to v10.1 doc. v7.0 is currently the oldest advertised version on the front page */
-		String tomcatDocURL = "http://tomcat.apache.org/tomcat-10.1-doc/api/";
+		/* Default to v11.0 doc. v9.0 is currently the oldest advertised version on the front page */
+		String tomcatDocURL = "http://tomcat.apache.org/tomcat-11.0-doc/api/";
 		String runtimeTypeId = runtime.getRuntimeType().getId();
 		if (runtimeTypeId.indexOf("101") > 0) {
 			tomcatDocURL = "http://tomcat.apache.org/tomcat-10.1-doc/api/";
@@ -137,7 +138,8 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 		if (runtimeId.indexOf("32") > 0) {
 			IPath path = installPath.append("lib");
 			addLibraryEntries(list, path.toFile(), true);
-		} else if (runtimeId.indexOf("60") > 0 || runtimeId.indexOf("70") > 0 || runtimeId.indexOf("80") > 0 || runtimeId.indexOf("85") > 0 || runtimeId.indexOf("90") > 0 || runtimeId.indexOf("100") > 0 || runtimeId.indexOf("101") > 0) {
+		} else if (runtimeId.indexOf("60") > 0 || runtimeId.indexOf("70") > 0 || runtimeId.indexOf("80") > 0 || runtimeId.indexOf("85") > 0
+				|| runtimeId.indexOf("90") > 0 || runtimeId.indexOf("100") > 0 || runtimeId.indexOf("101") > 0 || runtimeId.indexOf("110") > 0) {
 			// TODO May need some flexibility in case the installation has been configured differently
 			// This lib "simplification" may cause issues for some.
 			// Not known yet whether packaged Linux installs will go along.
@@ -184,7 +186,11 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 					IProjectFacet webModuleFacet = ProjectFacetsManager.getProjectFacet(JST_WEB_FACET_ID);
 					if (faceted.hasProjectFacet(webModuleFacet)) {
 						String servletVersionStr = faceted.getInstalledVersion(webModuleFacet).getVersionString();
-						if (servletVersionStr.equals("6.0")) {
+						if (servletVersionStr.equals("6.1")) {
+							// Jakarta EE 11 is still a work in progress so leave 10 as latest
+							eeVersion = 10;
+						}
+						else if (servletVersionStr.equals("6.0")) {
 							eeVersion = 10;
 						}
 						else if (servletVersionStr.equals("5.0")) {
@@ -213,10 +219,12 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 			}
 			catch (NumberFormatException e) {
 				// default to the latest
+				// Jakarta EE 11 is still a work in progress so leave 10 as latest
 				eeVersion = 10;
 			}
 			catch (CoreException e) {
 				// default to the latest
+				// Jakarta EE 11 is still a work in progress so leave 10 as latest
 				eeVersion = 10;
 			}
 		}
