@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2022 IBM Corporation and others.
+ * Copyright (c) 2003, 2024 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -151,7 +151,7 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 		String id = getRuntime().getRuntimeType().getId();
 		if (!found) {
 			if (id != null && (id.indexOf("55") > 0 || id.indexOf("60") > 0 || id.indexOf("70") > 0 || id.indexOf("80") > 0
-					|| id.indexOf("85") > 0 || id.indexOf("90") > 0 || id.indexOf("100") > 0 || id.indexOf("101") > 0)) {
+					|| id.indexOf("85") > 0 || id.indexOf("90") > 0 || id.indexOf("100") > 0 || id.indexOf("101") > 0 || id.indexOf("110") > 0)) {
 				found = true;
 			}
 		}
@@ -241,13 +241,24 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 			}
 		}
 
-		// Else for Tomcat 10.1, ensure we have J2SE 8.0
+		// Else for Tomcat 10.1, ensure we have J2SE 11.0
 		else if (id != null && id.indexOf("101") > 0) {
 			IVMInstall vmInstall = getVMInstall();
 			if (vmInstall instanceof IVMInstall2) {
 				String javaVersion = ((IVMInstall2)vmInstall).getJavaVersion();
 				if (javaVersion != null && !isVMMinimumVersion(javaVersion, 1100)) {
 					return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorJRETomcat101, null);
+				}
+			}
+		}
+
+		// Else for Tomcat 11.0, ensure we have J2SE 17.0
+		else if (id != null && id.indexOf("110") > 0) {
+			IVMInstall vmInstall = getVMInstall();
+			if (vmInstall instanceof IVMInstall2) {
+				String javaVersion = ((IVMInstall2)vmInstall).getJavaVersion();
+				if (javaVersion != null && !isVMMinimumVersion(javaVersion, 1700)) {
+					return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorJRETomcat110, null);
 				}
 			}
 		}

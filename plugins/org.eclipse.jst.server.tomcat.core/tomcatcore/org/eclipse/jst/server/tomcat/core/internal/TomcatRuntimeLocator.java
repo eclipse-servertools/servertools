@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2022 IBM Corporation and others.
+ * Copyright (c) 2003, 2024 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -38,7 +38,8 @@ public class TomcatRuntimeLocator extends RuntimeLocatorDelegate {
 		"org.eclipse.jst.server.tomcat.runtime.85",
 		"org.eclipse.jst.server.tomcat.runtime.90",
 		"org.eclipse.jst.server.tomcat.runtime.100",
-		"org.eclipse.jst.server.tomcat.runtime.101"};
+		"org.eclipse.jst.server.tomcat.runtime.101",
+		"org.eclipse.jst.server.tomcat.runtime.110"};
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.IRuntimeFactoryDelegate#getKnownRuntimes()

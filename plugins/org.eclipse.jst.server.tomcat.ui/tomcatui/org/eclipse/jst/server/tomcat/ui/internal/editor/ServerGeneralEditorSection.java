@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2017 IBM Corporation and others.
+ * Copyright (c) 2003, 2024 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -79,7 +79,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 				if (updating)
 					return;
 				updating = true;
-				if (TomcatServer.PROPERTY_SECURE.equals(event.getPropertyName())) {
+				if (tomcatServer.isSecurityManagerSupported() && TomcatServer.PROPERTY_SECURE.equals(event.getPropertyName())) {
 					Boolean b = (Boolean) event.getNewValue();
 					ServerGeneralEditorSection.this.secure.setSelection(b.booleanValue());
 				} else if (TomcatServer.PROPERTY_DEBUG.equals(event.getPropertyName())) {
@@ -190,20 +190,22 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 //		whs.setHelp(reloadableByDefault, ContextIds.SERVER_EDITOR_SECURE);
 		
 		// security
-		secure = toolkit.createButton(composite, Messages.serverEditorSecure, SWT.CHECK);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 3;
-		secure.setLayoutData(data);
-		secure.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent se) {
-				if (updating)
-					return;
-				updating = true;
-				execute(new SetSecureCommand(tomcatServer, secure.getSelection()));
-				updating = false;
-			}
-		});
-		whs.setHelp(secure, ContextIds.SERVER_EDITOR_SECURE);
+		if (tomcatServer.isSecurityManagerSupported()) {
+			secure = toolkit.createButton(composite, Messages.serverEditorSecure, SWT.CHECK);
+			data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+			data.horizontalSpan = 3;
+			secure.setLayoutData(data);
+			secure.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent se) {
+					if (updating)
+						return;
+					updating = true;
+					execute(new SetSecureCommand(tomcatServer, secure.getSelection()));
+					updating = false;
+				}
+			});
+			whs.setHelp(secure, ContextIds.SERVER_EDITOR_SECURE);
+		}
 	
 		// debug mode
 		debug = toolkit.createButton(composite, NLS.bind(Messages.serverEditorDebugMode, ""), SWT.CHECK);
@@ -284,7 +286,9 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 		else
 			reloadableByDefault.setEnabled(true);
 
-		secure.setSelection(tomcatServer.isSecure());
+		if (tomcatServer.isSecurityManagerSupported()) {
+			secure.setSelection(tomcatServer.isSecure());
+		}
 		
 		supported = tvh != null && tvh.supportsDebugArgument();
 		label = NLS.bind(Messages.serverEditorDebugMode,

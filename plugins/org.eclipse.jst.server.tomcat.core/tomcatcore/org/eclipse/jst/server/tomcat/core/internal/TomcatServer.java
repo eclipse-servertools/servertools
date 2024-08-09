@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2022 IBM Corporation and others.
+ * Copyright (c) 2003, 2024 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -128,6 +128,8 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 					tcConfig = new Tomcat100Configuration(folder);
 				else if (id.indexOf("101") > 0)
 					tcConfig = new Tomcat101Configuration(folder);
+				else if (id.indexOf("110") > 0)
+					tcConfig = new Tomcat110Configuration(folder);
 				else {
 					throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorUnknownVersion, null));
 				}
@@ -189,6 +191,8 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 			tcConfig = new Tomcat100Configuration(folder);
 		else if (id.indexOf("101") > 0)
 			tcConfig = new Tomcat101Configuration(folder);
+		else if (id.indexOf("110") > 0)
+			tcConfig = new Tomcat110Configuration(folder);
 		else {
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorUnknownVersion, null));
 		}
@@ -322,7 +326,15 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 			return getAttribute(PROPERTY_SAVE_SEPARATE_CONTEXT_FILES, false);
 		return false;
 	}
-	
+
+	@Override
+	public boolean isSecurityManagerSupported() {
+		ITomcatVersionHandler tvh = getTomcatVersionHandler();
+		if (tvh != null)
+			return tvh.supportsSecurityManager();
+		return true; // Return the default for Tomcat 10 and earlier
+	}
+
 	/**
 	 * Returns true if contexts should be made reloadable by default.
 	 * 
@@ -490,7 +502,13 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	 * @param b boolean
 	 */
 	public void setSecure(boolean b) {
-		setAttribute(PROPERTY_SECURE, b);
+		// Tomcat 11 no longer supports running under a security manager. Don't allow it to be set true.
+		if (versionHandler != null && !versionHandler.supportsSecurityManager()) {
+			setAttribute(PROPERTY_SECURE, false);
+		}
+		else {
+			setAttribute(PROPERTY_SECURE, b);
+		}
 	}
 
 	/**
