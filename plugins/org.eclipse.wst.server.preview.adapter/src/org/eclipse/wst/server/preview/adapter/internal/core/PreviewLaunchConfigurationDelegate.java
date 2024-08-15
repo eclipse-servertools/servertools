@@ -54,6 +54,7 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 		getBundleForClass(javax.servlet.ServletContext.class),
 		getBundleForClass(jakarta.servlet.ServletContext.class),
 		getBundleForClass(org.slf4j.LoggerFactory.class),
+		"org.apache.commons.logging",
 		"org.eclipse.jetty.http",
 		"org.eclipse.jetty.io",
 		"org.eclipse.jetty.plus",
@@ -64,6 +65,7 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 		"org.eclipse.jetty.xml",
 		"org.apache.aries.spifly.dynamic.bundle",
 		"slf4j.simple",
+		"org.eclipse.jetty.ee",
 		"org.eclipse.jetty.ee8.annotations",
 		"org.eclipse.jetty.ee8.jndi",
 		"org.eclipse.jetty.ee8.plus",
@@ -124,7 +126,7 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 				version = bundleInfo[1];
 			}
 			Bundle[] bundles = Platform.getBundles(bundleInfo[0], version);
-			if (bundles == null) {
+			if (bundles == null || bundles.length < 1) {
 				Trace.trace(Trace.SEVERE, "Missing required bundle " + REQUIRED_BUNDLE_IDS[i]);
 			}
 			// to use the lowest/exact version match

@@ -32,9 +32,6 @@ import org.eclipse.wst.server.core.IRuntime;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
-/**
- * 
- */
 public class PreviewRuntimeClasspathProvider extends RuntimeClasspathProviderDelegate {
 	private static final String[] REQUIRED_BUNDLE_IDS = new String[] {
 		getBundleForClass(javax.servlet.ServletContext.class),
@@ -57,7 +54,9 @@ public class PreviewRuntimeClasspathProvider extends RuntimeClasspathProviderDel
 				IProjectFacet webModuleFacet = ProjectFacetsManager.getProjectFacet("jst.web");
 				if (faceted.hasProjectFacet(webModuleFacet)) {
 					String servletVersionStr = faceted.getInstalledVersion(webModuleFacet).getVersionString();
-					if (servletVersionStr.equals("6.0")) {
+					if (servletVersionStr.equals("6.1")) {
+						eeVersion = 11;
+					} else if (servletVersionStr.equals("6.0")) {
 						eeVersion = 10;
 					} else if (servletVersionStr.equals("5.0")) {
 						eeVersion = 9;
@@ -109,6 +108,9 @@ public class PreviewRuntimeClasspathProvider extends RuntimeClasspathProviderDel
 			break;
 		case 10:
 			url = "https://jakarta.ee/specifications/servlet/6.0/apidocs/";
+			break;
+		case 11:
+			url = "https://jakarta.ee/specifications/servlet/6.1/apidocs/";
 			break;
 		default:
 			url = "https://jakarta.ee/specifications/servlet/6.0/apidocs/";
