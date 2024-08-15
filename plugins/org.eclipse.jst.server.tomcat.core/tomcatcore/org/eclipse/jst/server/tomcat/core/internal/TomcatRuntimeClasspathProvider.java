@@ -72,10 +72,8 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 					url = "https://jakarta.ee/specifications/authentication/2.0/apidocs/";
 				}
 				break;
+			// Jakarta EE 10 onward use a different URL for each component specification
 			case 10:
-			default :
-				// Jakarta EE 10 uses a different URL for each component specification
-				// Note: Not much appears available for Jakarta EE 11 at this time.
 				url = "https://jakarta.ee/specifications/servlet/6.0/apidocs/";
 				if (jarName.contains("jsp")) {
 					url = "https://jakarta.ee/specifications/pages/3.1/apidocs/";
@@ -84,13 +82,33 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 					url = "https://jakarta.ee/specifications/websocket/2.1/apidocs/"; // URL doesn't currently work
 				}
 				else if (jarName.contains("annotation")) {
-					url = "https://jakarta.ee/specifications/annotations/2.1/apidocs/jakarta.annotation/"; // URL doesn't currently work
+					// URL doesn't currently work, but possibly just module-summary.html not being treated as an index page?
+					url = "https://jakarta.ee/specifications/annotations/2.1/apidocs/jakarta.annotation/";
 				}
 				else if (jarName.equals("el-api.jar")) {
 					url = "https://jakarta.ee/specifications/expression-language/5.0/apidocs/";
 				}
 				else if (jarName.contains("jaspic")) {
 					url = "https://jakarta.ee/specifications/authentication/3.0/apidocs/";
+				}
+				break;
+			case 11:
+			default :
+				url = "https://jakarta.ee/specifications/servlet/6.1/apidocs/";
+				if (jarName.contains("jsp")) {
+					url = "https://jakarta.ee/specifications/pages/4.0/apidocs/";
+				}
+				else if (jarName.contains("websocket")) {
+					url = "https://jakarta.ee/specifications/websocket/2.1/apidocs/"; // URL doesn't currently work
+				}
+				else if (jarName.contains("annotation")) {
+					url = "https://jakarta.ee/specifications/annotations/3.0/apidocs/jakarta.annotation/"; // URL doesn't currently work
+				}
+				else if (jarName.equals("el-api.jar")) {
+					url = "https://jakarta.ee/specifications/expression-language/6.0/apidocs/";
+				}
+				else if (jarName.contains("jaspic")) {
+					url = "https://jakarta.ee/specifications/authentication/3.1/apidocs/";
 				}
 		}
 
