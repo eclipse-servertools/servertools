@@ -74,22 +74,22 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 				break;
 			// Jakarta EE 10 onward use a different URL for each component specification
 			case 10:
-				url = "https://jakarta.ee/specifications/servlet/6.0/apidocs/";
+				url = "https://jakarta.ee/specifications/servlet/6.0/apidocs/jakarta.servlet/";
 				if (jarName.contains("jsp")) {
-					url = "https://jakarta.ee/specifications/pages/3.1/apidocs/";
+					url = "https://jakarta.ee/specifications/pages/3.1/apidocs/jakarta.servlet.jsp/";
 				}
 				else if (jarName.contains("websocket")) {
-					url = "https://jakarta.ee/specifications/websocket/2.1/apidocs/"; // URL doesn't currently work
+					url = "https://jakarta.ee/specifications/websocket/2.1/apidocs/client/"; // URL doesn't currently work
 				}
 				else if (jarName.contains("annotation")) {
 					// URL doesn't currently work, but possibly just module-summary.html not being treated as an index page?
 					url = "https://jakarta.ee/specifications/annotations/2.1/apidocs/jakarta.annotation/";
 				}
 				else if (jarName.equals("el-api.jar")) {
-					url = "https://jakarta.ee/specifications/expression-language/5.0/apidocs/";
+					url = "https://jakarta.ee/specifications/expression-language/5.0/apidocs/jakarta.el/";
 				}
 				else if (jarName.contains("jaspic")) {
-					url = "https://jakarta.ee/specifications/authentication/3.0/apidocs/";
+					url = "https://jakarta.ee/specifications/authentication/3.0/apidocs/jakarta.security.auth.message/";
 				}
 				break;
 			case 11:

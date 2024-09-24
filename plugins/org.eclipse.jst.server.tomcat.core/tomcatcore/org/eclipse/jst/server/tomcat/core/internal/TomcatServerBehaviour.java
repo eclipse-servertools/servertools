@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2021 IBM Corporation and others.
+ * Copyright (c) 2003, 2024 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -846,6 +846,23 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			parsedVMArgs = DebugPlugin.parseArguments(existingVMArgs);
 		}
 		String [] configVMArgs = getRuntimeVMArguments();
+
+		boolean addNativeLibraryPath = true;
+		if (parsedVMArgs != null) {
+			for (int i = 0; i < parsedVMArgs.length; i++) {
+				if (parsedVMArgs[i].startsWith("java.library.path")) {
+					addNativeLibraryPath = false;
+					break;
+				}
+			}
+		}
+		if (addNativeLibraryPath) {
+			String [] newVMArgs = new String [configVMArgs.length + 1];
+			System.arraycopy(configVMArgs, 0, newVMArgs, 0, configVMArgs.length);
+			newVMArgs[configVMArgs.length] = "-Djava.library.path=\"" + getServer().getRuntime().getLocation().addTrailingSeparator().append("bin").toOSString() +"\"" ;
+			configVMArgs = newVMArgs;
+		}
+
 		if (getTomcatServer().isSecure()) {
 			boolean addSecurityArgs = true;
 			if (null != parsedVMArgs) {
