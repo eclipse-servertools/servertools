@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2024 IBM Corporation and others.
+ * Copyright (c) 2007, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -54,7 +54,8 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 		getBundleForClass(javax.servlet.ServletContext.class),
 		getBundleForClass(jakarta.servlet.ServletContext.class),
 		getBundleForClass(org.slf4j.LoggerFactory.class),
-		"org.apache.commons.logging",
+		getBundleForClass(org.apache.commons.logging.Log.class),
+		"slf4j.simple",
 		"org.eclipse.jetty.http",
 		"org.eclipse.jetty.io",
 		"org.eclipse.jetty.plus",
@@ -64,7 +65,6 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 		"org.eclipse.jetty.util",
 		"org.eclipse.jetty.xml",
 		"org.apache.aries.spifly.dynamic.bundle",
-		"slf4j.simple",
 		"org.eclipse.jetty.ee",
 		"org.eclipse.jetty.ee8.annotations",
 		"org.eclipse.jetty.ee8.jndi",
@@ -90,7 +90,7 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 	private static final int CLASSPATH_BIN_INDEX_PREVIEW_SERVER = REQUIRED_BUNDLE_IDS.length-1;
 
 	/**
-	 * Gets the symbolic name of the bundle that supplies the given class.
+	 * Gets the symbolic name of the bundle that supplies the given class. Useful if that's known to change underneath us.
 	 */
 	private static String getBundleForClass(Class<?> cls) {
 		Bundle bundle = FrameworkUtil.getBundle(cls);
