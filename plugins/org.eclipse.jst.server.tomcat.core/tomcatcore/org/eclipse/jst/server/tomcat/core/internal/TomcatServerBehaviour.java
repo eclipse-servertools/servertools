@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2024 IBM Corporation and others.
+ * Copyright (c) 2003, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -17,13 +17,27 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.*;
-import org.eclipse.debug.core.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.debug.core.DebugEvent;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.IDebugEventSetListener;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
@@ -33,11 +47,15 @@ import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.core.IJ2EEModule;
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.osgi.util.NLS;
-
-import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.internal.IModulePublishHelper;
 import org.eclipse.wst.server.core.internal.Server;
-import org.eclipse.wst.server.core.model.*;
+import org.eclipse.wst.server.core.model.IModuleFile;
+import org.eclipse.wst.server.core.model.IModuleResource;
+import org.eclipse.wst.server.core.model.IModuleResourceDelta;
+import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.eclipse.wst.server.core.util.PublishHelper;
 import org.eclipse.wst.server.core.util.SocketUtil;
 /**
@@ -850,7 +868,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		boolean addNativeLibraryPath = true;
 		if (parsedVMArgs != null) {
 			for (int i = 0; i < parsedVMArgs.length; i++) {
-				if (parsedVMArgs[i].startsWith("java.library.path")) {
+				if (parsedVMArgs[i].startsWith("-Djava.library.path")) {
 					addNativeLibraryPath = false;
 					break;
 				}
@@ -965,7 +983,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 				}
 
 				int version_num = 8;
-				if(version!=null)
+				if (version!=null)
 					version_num = Integer.parseInt(version.split("\\.")[0]);
 
 				
@@ -976,6 +994,10 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 						mergedVMArguments = mergeArguments(mergedVMArguments, endorsements, null, false);
 						workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, mergedVMArguments);
 					}
+				}
+				if (version != null && version_num >= 17 && Arrays.stream(parsedVMArgs, 0, parsedVMArgs.length).noneMatch(s -> s.startsWith("--enable-native-access="))) {
+					mergedVMArguments = mergeArguments(mergedVMArguments, getEnableNativeAccessArguments(), null, false);
+					workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, mergedVMArguments);
 				}
 				if (version != null && version_num >= 9) {
 					mergedVMArguments = mergeArguments(mergedVMArguments, getAllowReflectionArguments(), null, false);
@@ -1162,6 +1184,11 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			"--add-opens=java.base/java.util=ALL-UNNAMED",
 			"--add-opens=java.base/java.util.concurrent=ALL-UNNAMED",
 			"--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED"};
+	}
+
+	public static String[] getEnableNativeAccessArguments() {
+		return new String[] {
+					"--enable-native-access=ALL-UNNAMED"};
 	}
 
 	/**
