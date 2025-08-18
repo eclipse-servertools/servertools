@@ -72,8 +72,9 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 		"org.eclipse.jetty.session",
 		"org.eclipse.jetty.util",
 		"org.eclipse.jetty.xml",
-		"slf4j.api",
-		"slf4j.simple",
+		// don't restrict them to specific bundle names
+		// "slf4j.api",
+		// "slf4j.simple",
 		"org.objectweb.asm",
 		"org.objectweb.asm.commons",
 		"org.objectweb.asm.util",

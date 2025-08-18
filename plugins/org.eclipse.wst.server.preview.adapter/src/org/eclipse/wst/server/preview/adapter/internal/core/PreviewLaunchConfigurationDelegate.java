@@ -55,7 +55,8 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 		getBundleForClass(jakarta.servlet.ServletContext.class),
 		getBundleForClass(org.slf4j.LoggerFactory.class),
 		getBundleForClass(org.apache.commons.logging.Log.class),
-		"slf4j.simple",
+		// don't restrict them to specific bundle names
+		// "slf4j.simple",
 		"org.eclipse.jetty.http",
 		"org.eclipse.jetty.io",
 		"org.eclipse.jetty.plus",

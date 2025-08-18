@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2023 IBM Corporation and others.
+ * Copyright (c) 2007, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -36,8 +36,8 @@ public class PreviewStarter {
 
 	protected void run() {
 		try {
-			System.setProperty("slf4j.provider", "org.slf4j.simple.SimpleServiceProvider");
-			System.setProperty("org.mortbay.log.class", "org.apache.logging.log4j.simple.SimpleLogger");
+//			System.setProperty("slf4j.provider", "org.slf4j.simple.SimpleServiceProvider");
+//			System.setProperty("org.mortbay.log.class", "org.apache.logging.log4j.simple.SimpleLogger");
 			System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "info");
 			System.setProperty("VERBOSE", "true");
 			ServerConfig config = new ServerConfig(configPath);

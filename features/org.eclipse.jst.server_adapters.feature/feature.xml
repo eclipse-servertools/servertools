@@ -14,7 +14,7 @@
 <feature
       id="org.eclipse.jst.server_adapters.feature"
       label="%featureName"
-      version="3.38.0.qualifier"
+      version="3.39.0.qualifier"
       provider-name="%providerName"
       license-feature="org.eclipse.license"
       license-feature-version="0.0.0">
@@ -34,6 +34,13 @@
    <requires>
       <import feature="org.eclipse.wst.server_adapters.feature"/>
    </requires>
+
+   <plugin
+         id="com.sun.el.javax.el"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.eclipse.jst.server.preview.adapter"
