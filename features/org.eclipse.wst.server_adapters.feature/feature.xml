@@ -32,7 +32,28 @@
    </license>
 
    <plugin
+         id="org.eclipse.wst.server.preview"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.eclipse.wst.server.preview.adapter"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.wst.server.http.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.wst.server.http.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
