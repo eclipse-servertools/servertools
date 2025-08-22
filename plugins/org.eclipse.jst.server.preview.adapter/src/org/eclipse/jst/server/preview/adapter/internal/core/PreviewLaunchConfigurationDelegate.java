@@ -58,10 +58,11 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 		getBundleForClass(org.apache.jasper.JspCompilationContext.class),
 		getBundleForClass(javax.el.ELContext.class),
 		getBundleForClass(com.sun.el.ExpressionFactoryImpl.class),
-		getBundleForClass(org.slf4j.LoggerFactory.class),
 		getBundleForClass(javax.annotation.Resource.class),
+		getBundleForClass(org.slf4j.LoggerFactory.class),
 		getBundleForClass(org.apache.commons.logging.Log.class),
-		"org.eclipse.jetty.ee",
+		getBundleForClass(org.slf4j.simple.SimpleLogger.class),
+		"org.eclipse.jetty.annotations",
 		"org.eclipse.jetty.http",
 		"org.eclipse.jetty.io",
 		"org.eclipse.jetty.jndi",
@@ -79,6 +80,7 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 		"org.objectweb.asm.commons",
 		"org.objectweb.asm.util",
 		"org.apache.aries.spifly.dynamic.bundle",
+		"org.eclipse.jetty.ee.webapp",
 		"org.eclipse.jetty.ee8.annotations",
 		"org.eclipse.jetty.ee8.jndi",
 		"org.eclipse.jetty.ee8.plus",
@@ -128,6 +130,7 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 			}
 			Bundle[] bundles = Platform.getBundles(bundleInfo[0], version);
 			if (bundles == null || bundles.length < 1) {
+				PreviewPlugin.getInstance().getLog().error("Missing required bundle " + REQUIRED_BUNDLE_IDS_8[i]);
 				Trace.trace(Trace.SEVERE, "Missing required bundle " + REQUIRED_BUNDLE_IDS_8[i]);
 			}
 			// to use the lowest/exact version match

@@ -66,7 +66,7 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 		"org.eclipse.jetty.util",
 		"org.eclipse.jetty.xml",
 		"org.apache.aries.spifly.dynamic.bundle",
-		"org.eclipse.jetty.ee",
+		"org.eclipse.jetty.ee.webapp",
 		"org.eclipse.jetty.ee8.annotations",
 		"org.eclipse.jetty.ee8.jndi",
 		"org.eclipse.jetty.ee8.plus",
@@ -128,6 +128,7 @@ public class PreviewLaunchConfigurationDelegate extends LaunchConfigurationDeleg
 			}
 			Bundle[] bundles = Platform.getBundles(bundleInfo[0], version);
 			if (bundles == null || bundles.length < 1) {
+				PreviewPlugin.getInstance().getLog().error("Missing required bundle " + REQUIRED_BUNDLE_IDS[i]);
 				Trace.trace(Trace.SEVERE, "Missing required bundle " + REQUIRED_BUNDLE_IDS[i]);
 			}
 			// to use the lowest/exact version match

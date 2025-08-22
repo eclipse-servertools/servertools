@@ -50,6 +50,32 @@
     <bundle id="org.eclipse.wst.server.http.core.tests"><category name="site"/></bundle>
     <bundle id="org.eclipse.wst.server.util.tests"><category name="site"/></bundle>
 
+    <bundle id="com.sun.el.javax.el"/>
+    <bundle id="org.eclipse.jetty.annotations"/>
+    <bundle id="org.eclipse.jetty.http"/>
+    <bundle id="org.eclipse.jetty.io"/>
+    <bundle id="org.eclipse.jetty.jndi"/>
+    <bundle id="org.eclipse.jetty.plus"/>
+    <bundle id="org.eclipse.jetty.security"/>
+    <bundle id="org.eclipse.jetty.server"/>
+    <bundle id="org.eclipse.jetty.session"/>
+    <bundle id="org.eclipse.jetty.util"/>
+    <bundle id="org.eclipse.jetty.xml"/>
+    <bundle id="org.eclipse.jetty.ee.webapp"/>
+    <bundle id="org.eclipse.jetty.ee8.annotations"/>
+    <bundle id="org.eclipse.jetty.ee8.jndi"/>
+    <bundle id="org.eclipse.jetty.ee8.plus"/>
+    <bundle id="org.eclipse.jetty.ee8.security"/>
+    <bundle id="org.eclipse.jetty.ee8.server"/>
+    <bundle id="org.eclipse.jetty.ee8.servlet"/>
+    <bundle id="org.eclipse.jetty.ee8.servlets"/>
+    <bundle id="org.eclipse.jetty.ee8.webapp"/>
+    <bundle id="jakarta.enterprise.cdi-api"/>
+    <bundle id="org.objectweb.asm"/>
+    <bundle id="org.objectweb.asm.commons"/>
+    <bundle id="org.objectweb.asm.util"/>
+    <bundle id="org.apache.aries.spifly.dynamic.bundle"/>
+
     <!-- sources -->
 
     <!-- Bug 531426 - sdk.features contain no plugins (just other features) so won't produce .source bundles -->
