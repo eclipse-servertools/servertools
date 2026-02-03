@@ -75,6 +75,22 @@
     <bundle id="org.objectweb.asm.commons"/>
     <bundle id="org.objectweb.asm.util"/>
     <bundle id="org.apache.aries.spifly.dynamic.bundle"/>
+    <bundle id="jakarta.persistence-api"/>
+    <bundle id="org.apache.commons.collections"/>
+    <bundle id="org.apache.velocity.engine-core"/>
+    <bundle id="org.jdom"/>
+    <bundle id="jakarta.el"/>
+    <bundle id="jakarta.servlet"/>
+    <bundle id="jakarta.servlet.jsp"/>
+    <bundle id="jakarta.xml.bind-api"/>
+    <bundle id="javax.jws"/>
+    <bundle id="javax.wsdl"/>
+    <bundle id="javax.xml.ws"/>
+    <bundle id="com.google.javascript" version="0.0.20160315.v20161124-1903"/>
+    <bundle id="org.mozilla.javascript"/>
+    <bundle id="org.apache.xml.resolver"/>
+    <bundle id="org.apache.xerces"/>
+    <bundle id="org.apache.xml.serializer"/>
 
     <!-- sources -->
 
