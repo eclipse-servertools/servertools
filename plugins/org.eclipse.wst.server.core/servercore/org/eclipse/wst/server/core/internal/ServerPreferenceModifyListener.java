@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2026 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -33,6 +33,7 @@ public class ServerPreferenceModifyListener extends PreferenceModifyListener {
 	private static final String LOCKED_ATTRIBUTE_NAME = "locked"; //$NON-NLS-1$
 	private static final String RUNTIMES_PREFERENCE_NAME = "runtimes"; //$NON-NLS-1$
 	private static final String RUNTIME_NODE_NAME = "runtime"; //$NON-NLS-1$
+	private static final String NO_FILE = "";
 
 	/*
 	 * (non-Javadoc)
@@ -51,7 +52,11 @@ public class ServerPreferenceModifyListener extends PreferenceModifyListener {
 
 	private void removeLockedServerRuntimePreference(Preferences preferences) {
 		try {
-			File prefFile = new File(preferences.get(RUNTIMES_PREFERENCE_NAME, ""));
+			String configuredPreference = preferences.get(RUNTIMES_PREFERENCE_NAME, NO_FILE);
+			if (NO_FILE.equals(configuredPreference)) {
+				return;
+			}
+			File prefFile = new File(configuredPreference);
 			if (!prefFile.exists()) {
 				return;
 			}
