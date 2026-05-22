@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2010 Eteration Bilisim A.S. and others
+* Copyright (c) 2004, 2026 Eteration Bilisim A.S. and others
 * All rights reserved. ? This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
 * which accompanies this distribution, and is available at
@@ -65,6 +65,7 @@ public class AllTests {
 		suite.addTest(subSuite);
 		suite.addTestSuite(ServerPreferencesTestCase.class);
 		suite.addTestSuite(ServerPortTestCase.class);
+		suite.addTestSuite(ServerPreferenceModifyListenerTest.class);
 		suite.addTestSuite(ServerOperationTestCase.class);
 		
 		suite.addTestSuite(IModuleTestCase.class);
