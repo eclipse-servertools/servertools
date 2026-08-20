@@ -28,7 +28,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/servertools/webtools.servertools.git</tycho.scmUrl>
+    <tycho.scmUrl>scm:git:https://github.com:eclipse-servertools/servertools.git</tycho.scmUrl>
   </properties>
 
   <repositories>

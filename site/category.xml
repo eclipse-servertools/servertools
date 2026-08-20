@@ -51,6 +51,10 @@
     <bundle id="org.eclipse.wst.server.util.tests"><category name="site"/></bundle>
 
     <bundle id="com.sun.el.javax.el"/>
+    <bundle id="javax.servlet"/>
+    <bundle id="javax.servlet.jsp"/>
+    <bundle id="jakarta.servlet"/>
+    <bundle id="jakarta.servlet.jsp"/>
     <bundle id="org.eclipse.jetty.annotations"/>
     <bundle id="org.eclipse.jetty.http"/>
     <bundle id="org.eclipse.jetty.io"/>
@@ -83,6 +87,7 @@
     <bundle id="jakarta.servlet"/>
     <bundle id="jakarta.servlet.jsp"/>
     <bundle id="jakarta.xml.bind-api"/>
+    <bundle id="jakarta.xml.soap-api"/>
     <bundle id="javax.jws"/>
     <bundle id="javax.wsdl"/>
     <bundle id="javax.xml.ws"/>
