@@ -90,6 +90,7 @@
     <bundle id="jakarta.xml.soap-api"/>
     <bundle id="javax.jws"/>
     <bundle id="javax.wsdl"/>
+    <bundle id="javax.xml.soap"/>
     <bundle id="javax.xml.ws"/>
     <bundle id="com.google.javascript" version="0.0.20160315.v20161124-1903"/>
     <bundle id="org.mozilla.javascript"/>
