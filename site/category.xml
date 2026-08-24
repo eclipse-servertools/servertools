@@ -86,9 +86,11 @@
     <bundle id="jakarta.el"/>
     <bundle id="jakarta.servlet"/>
     <bundle id="jakarta.servlet.jsp"/>
+    <bundle id="jakarta.mail-api"/>
     <bundle id="jakarta.xml.bind-api"/>
     <bundle id="jakarta.xml.soap-api"/>
     <bundle id="javax.jws"/>
+    <bundle id="javax.xml.rpc-api"/>
     <bundle id="javax.wsdl"/>
     <bundle id="javax.xml.soap"/>
     <bundle id="javax.xml.ws"/>
