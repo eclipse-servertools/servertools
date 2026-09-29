@@ -30,6 +30,7 @@ public class AllTests {
 		}
 		suite.addTestSuite(DialogsTestCase.class);
 		suite.addTestSuite(PropertyTestCase.class);
+		suite.addTestSuite(ServerGeneralEditorSectionTestCase.class);
 		//$JUnit-END$
 		return suite;
 	}
