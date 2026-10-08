@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2021 IBM Corporation and others.
+ * Copyright (c) 2004, 2026 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -15,10 +15,16 @@ package org.eclipse.jst.server.tomcat.core.tests.internal;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
+import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServerBehaviour;
 import org.eclipse.jst.server.tomcat.core.internal.VerifyResourceSpec;
 import org.eclipse.jst.server.tomcat.core.tests.RuntimeLocation;
@@ -177,6 +183,33 @@ public class UtilTestCase extends TestCase {
 		for (int i = 0; i < parsedArguments.length; i++) {
 			assertEquals(TomcatServerBehaviour.getAllowReflectionArguments()[i], parsedArguments[i]);
 		}
+	}
+
+	public void testReplaceTomcatRuntimeClasspathEntries() {
+		IPath oldHome = new Path("/tomcat/old home");
+		assertEquals(oldHome, TomcatServerBehaviour.getCatalinaHome(
+				new String[] { "-Dcatalina.home=\"/tomcat/old home\"" }));
+
+		IRuntimeClasspathEntry oldBootstrap = JavaRuntime.newArchiveRuntimeClasspathEntry(
+				oldHome.append("bin/bootstrap.jar"));
+		IRuntimeClasspathEntry oldTomcatJuli = JavaRuntime.newArchiveRuntimeClasspathEntry(
+				oldHome.append("bin/tomcat-juli.jar"));
+		IRuntimeClasspathEntry customInOldHome = JavaRuntime.newArchiveRuntimeClasspathEntry(
+				oldHome.append("lib/custom.jar"));
+		IRuntimeClasspathEntry customExternal = JavaRuntime.newArchiveRuntimeClasspathEntry(
+				new Path("/custom/manual.jar"));
+		List<IRuntimeClasspathEntry> classpath = new ArrayList<IRuntimeClasspathEntry>();
+		classpath.add(oldBootstrap);
+		classpath.add(oldTomcatJuli);
+		classpath.add(customInOldHome);
+		classpath.add(customExternal);
+
+		TomcatServerBehaviour.removeTomcatRuntimeClasspathEntries(classpath, oldHome);
+
+		assertFalse(classpath.contains(oldBootstrap));
+		assertFalse(classpath.contains(oldTomcatJuli));
+		assertTrue(classpath.contains(customInOldHome));
+		assertTrue(classpath.contains(customExternal));
 	}
 
 	public void testBug574268() throws IOException {

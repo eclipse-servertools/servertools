@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2025 IBM Corporation and others.
+ * Copyright (c) 2003, 2026 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -853,6 +853,30 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		cp.add(entry);
 	}
 
+	public static IPath getCatalinaHome(String[] vmArgs) {
+		if (vmArgs == null)
+			return null;
+		String prefix = "-Dcatalina.home=";
+		for (String arg : vmArgs) {
+			if (arg.startsWith(prefix)) {
+				String path = arg.substring(prefix.length());
+				if (path.length() >= 2 && path.charAt(0) == '"' && path.charAt(path.length() - 1) == '"')
+					path = path.substring(1, path.length() - 1);
+				return new Path(path);
+			}
+		}
+		return null;
+	}
+
+	public static void removeTomcatRuntimeClasspathEntries(List<IRuntimeClasspathEntry> cp, IPath installPath) {
+		if (installPath == null)
+			return;
+		IPath bootstrapJar = installPath.append("bin").append("bootstrap.jar");
+		IPath tomcatJuliJar = installPath.append("bin").append("tomcat-juli.jar");
+		cp.removeIf(entry -> entry.getType() == IRuntimeClasspathEntry.ARCHIVE
+				&& (bootstrapJar.equals(entry.getPath()) || tomcatJuliJar.equals(entry.getPath())));
+	}
+
 	public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) throws CoreException {
 		String existingProgArgs = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, (String)null);
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
@@ -863,6 +887,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		if (null != existingVMArgs) {
 			parsedVMArgs = DebugPlugin.parseArguments(existingVMArgs);
 		}
+		IPath previousInstallPath = getCatalinaHome(parsedVMArgs);
 		String [] configVMArgs = getRuntimeVMArguments();
 
 		boolean addNativeLibraryPath = true;
@@ -940,6 +965,9 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		List<IRuntimeClasspathEntry> oldCp = new ArrayList<IRuntimeClasspathEntry>(originalClasspath.length + 2);
 		for (int i = 0; i < size; i++)
 			oldCp.add(originalClasspath[i]);
+		IPath installPath = getServer().getRuntime().getLocation();
+		if (previousInstallPath != null && !previousInstallPath.equals(installPath))
+			removeTomcatRuntimeClasspathEntries(oldCp, previousInstallPath);
 		
 		List cp2 = runtime.getRuntimeClasspath(getRuntimeBaseDirectory());
 		Iterator iterator = cp2.iterator();
