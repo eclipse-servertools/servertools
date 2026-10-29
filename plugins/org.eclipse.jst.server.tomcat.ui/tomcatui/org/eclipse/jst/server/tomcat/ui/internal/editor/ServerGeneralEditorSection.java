@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2024 IBM Corporation and others.
+ * Copyright (c) 2003, 2026 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -251,7 +251,10 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 	 * Initialize the fields in this editor.
 	 */
 	protected void initialize() {
-		if (secure == null || tomcatServer == null)
+		// initialize() is called from init() before the controls are created and
+		// again after createSection(). The security control is optional because
+		// Tomcat 11 no longer supports the Security Manager.
+		if (noPublish == null || tomcatServer == null)
 			return;
 		updating = true;
 		ITomcatVersionHandler tvh = tomcatServer.getTomcatVersionHandler();
@@ -286,8 +289,9 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 		else
 			reloadableByDefault.setEnabled(true);
 
-		if (tomcatServer.isSecurityManagerSupported()) {
+		if (secure != null) {
 			secure.setSelection(tomcatServer.isSecure());
+			secure.setEnabled(!readOnly);
 		}
 		
 		supported = tvh != null && tvh.supportsDebugArgument();
@@ -300,11 +304,6 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 			debug.setEnabled(true);
 			debug.setSelection(tomcatServer.isDebug());
 		}
-		
-		if (readOnly)
-			secure.setEnabled(false);
-		else
-			secure.setEnabled(true);
 		
 		updating = false;
 	}
