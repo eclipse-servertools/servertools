@@ -84,7 +84,7 @@
     <bundle id="org.apache.velocity.engine-core"/>
     <bundle id="org.jdom"/>
     <bundle id="jakarta.el"/>
-    <bundle id="jakarta.jws-api"/>
+    <bundle id="jakarta.jws-api" version="2.1.0"/>
     <bundle id="jakarta.servlet"/>
     <bundle id="jakarta.servlet.jsp"/>
     <bundle id="jakarta.mail-api"/>
