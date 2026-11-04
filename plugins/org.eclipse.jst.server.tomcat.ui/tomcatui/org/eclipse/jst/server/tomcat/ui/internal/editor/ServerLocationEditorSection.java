@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2007, 2017 IBM Corporation and others.
+ * Copyright (c) 2007, 2026 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -91,6 +91,7 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 
 	// Avoid hardcoding this at some point
 	private final static String METADATADIR = ".metadata";
+	private final static String PROPERTY_RUNTIME_ID = "runtime-id";
 	/**
 	 * ServerGeneralEditorPart constructor comment.
 	 */
@@ -109,6 +110,12 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 				updating = true;
 				if (ITomcatServer.PROPERTY_INSTANCE_DIR.equals(event.getPropertyName())
 						|| ITomcatServer.PROPERTY_TEST_ENVIRONMENT.equals(event.getPropertyName())) {
+					updateServerDirButtons();
+					updateServerDirFields();
+					validate();
+				}
+				else if (PROPERTY_RUNTIME_ID.equals(event.getPropertyName())) {
+					updateRuntime();
 					updateServerDirButtons();
 					updateServerDirFields();
 					validate();
@@ -389,12 +396,7 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 			return;
 		updating = true;
 
-		IRuntime runtime = server.getRuntime();
-		// If not Tomcat 3.2, update description to mention catalina.base
-		if (runtime != null && runtime.getRuntimeType().getId().indexOf("32") < 0)
-			section.setDescription(Messages.serverEditorLocationsDescription2);
-		if (runtime != null)
-			installDirPath = runtime.getLocation();
+		updateRuntime();
 
 		// determine if editing of locations is allowed
 		allowRestrictedEditing = false;
@@ -428,6 +430,16 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 
 		updating = false;
 		validate();
+	}
+
+	protected void updateRuntime() {
+		IRuntime runtime = server.getRuntime();
+		installDirPath = runtime == null ? null : runtime.getLocation();
+		// If not Tomcat 3.2, update description to mention catalina.base
+		if (runtime != null && runtime.getRuntimeType().getId().indexOf("32") < 0)
+			section.setDescription(Messages.serverEditorLocationsDescription2);
+		else
+			section.setDescription(Messages.serverEditorLocationsDescription);
 	}
 	
 	protected String getServerDir() {
