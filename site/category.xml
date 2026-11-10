@@ -97,7 +97,7 @@
     <bundle id="javax.xml.soap"/>
     <bundle id="javax.xml.ws"/>
     <bundle id="com.google.javascript" version="0.0.20160315.v20161124-1903"/>
-    <bundle id="org.mozilla.javascript"/>
+    <bundle id="org.mozilla.rhino"/>
     <bundle id="org.apache.xml.resolver"/>
     <bundle id="org.apache.xerces"/>
     <bundle id="org.apache.xml.serializer"/>
